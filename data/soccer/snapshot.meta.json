@@ -7,13 +7,13 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "b2b21535b1f7d292f4f30707cf2addb511da5547b35e3d7cab37235926c292b3",
+  "contentHash": "32132935534a86bbd29fe11d33846ac25f8a2eeab0028c11dfa04fe28373ec72",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 2,
         "finals": 3,
-        "games": 238,
+        "games": 239,
         "leagueGames": 167,
         "teams": 26
       },
@@ -27,7 +27,7 @@
       "sccal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 77,
+        "games": 74,
         "leagueGames": 29,
         "teams": 6
       },
@@ -54,10 +54,10 @@
       }
     },
     "finals": 5,
-    "games": 651,
+    "games": 649,
     "leagueGames": 425,
     "mismatches": 4,
-    "pending": 4,
+    "pending": 3,
     "teams": 82
   },
   "crossCheck": {
@@ -67,7 +67,7 @@
     "conflicts": 0,
     "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-21T20:39:02.500Z",
+  "fetchedAt": "2026-11-22T13:33:25.273Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 105,
     "official": 5,
-    "sblive": 26
+    "sblive": 24
   },
   "sources": [
     {
@@ -204,7 +204,7 @@
     },
     {
       "label": "lynbrook schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -324,7 +324,7 @@
     },
     {
       "label": "christopher schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -404,7 +404,7 @@
     },
     {
       "label": "san-jose schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -684,7 +684,7 @@
     },
     {
       "label": "harbor schedule",
-      "rowCount": 24,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -773,11 +773,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3911-sccal scoreboard 2026-11-17",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3912-scval-de-anza scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
@@ -805,11 +800,6 @@
     {
       "label": "sblive 3949-wbal-skyline scoreboard 2026-11-20",
       "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive scoreboard 2026-11-17",
-      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -859,7 +849,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 276,
+      "rowCount": 275,
       "status": "ok"
     },
     {
@@ -878,10 +868,10 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-21",
-  "warnings": 33,
+  "today": "2026-11-22",
+  "warnings": 32,
   "window": {
-    "firstGame": "2026-11-17T17:00:00",
+    "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
     "lastLeagueGame": "2027-02-17T18:30:00"
   }

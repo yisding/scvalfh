@@ -1,72 +1,6 @@
 {
-  "fetchedAt": "2026-11-21T20:39:02.500Z",
+  "fetchedAt": "2026-11-22T13:33:25.273Z",
   "fixtures": [
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Watsonville",
-              "name": "St. Francis",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff"
-            },
-            "contestId": "c4c6fe93-7f1e-40e3-8664-fce381cb6941",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T17:00:00",
-            "dateUtc": "2026-11-18T01:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Santa Cruz",
-              "name": "Harbor",
-              "result": null,
-              "score": null,
-              "slug": "harbor",
-              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T20:31:39",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-st-francis-watsonville/11-17-2026/?c=c4c6fe93-7f1e-40e3-8664-fce381cb6941",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/harbor-high-school-santa-cruz-ca/gam39c7d70bc5?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Harbor High School"
-            }
-          },
-          "ref": "c4c6fe93-7f1e-40e3-8664-fce381cb6941"
-        }
-      },
-      "id": "2026-11-17-name:stfrancis-at-harbor",
-      "published": [
-        {
-          "contestId": "c4c6fe93-7f1e-40e3-8664-fce381cb6941"
-        }
-      ]
-    },
     {
       "claims": {
         "maxpreps": {
@@ -1066,6 +1000,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Jose",
+              "name": "Lynbrook",
+              "result": null,
+              "score": null,
+              "slug": "lynbrook",
+              "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+            },
+            "contestId": "d40d7918-169b-4587-9541-6953979c6e06",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-24",
+            "dateLocal": "2026-11-24T12:00:36",
+            "dateUtc": "2026-11-24T20:00:36Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Santa Cruz",
+              "name": "Harbor",
+              "result": null,
+              "score": null,
+              "slug": "harbor",
+              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T17:38:58",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-lynbrook-san-jose/11-24-2026/?c=d40d7918-169b-4587-9541-6953979c6e06",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/harbor-high-school-santa-cruz-ca/game750a64ef4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "d40d7918-169b-4587-9541-6953979c6e06"
+        }
+      },
+      "id": "2026-11-24-lynbrook-at-harbor",
+      "published": [
+        {
+          "contestId": "d40d7918-169b-4587-9541-6953979c6e06"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Burlingame",
               "name": "Mercy Burlingame",
               "result": null,
@@ -1233,7 +1233,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T18:30:21",
+              "maxprepsModifiedOn": "2026-11-22T03:30:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4993,6 +4993,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Salinas",
+              "name": "Rancho San Juan",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
+            },
+            "contestId": "fc99a58d-436c-4292-8526-84a657e2a888",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-03",
+            "dateLocal": "2026-12-03T18:00:00",
+            "dateUtc": "2026-12-04T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Gilroy",
+              "name": "Christopher",
+              "result": null,
+              "score": null,
+              "slug": "christopher",
+              "teamId": "773e862d-e186-44aa-b268-461b4064ce52"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T18:49:10",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/christopher-gilroy-vs-rancho-san-juan-salinas/12-3-2026/?c=fc99a58d-436c-4292-8526-84a657e2a888",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/christopher-high-school-gilroy-ca/gam9a2aeb6ef8?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "fc99a58d-436c-4292-8526-84a657e2a888"
+        }
+      },
+      "id": "2026-12-03-name:ranchosanjuan-at-christopher",
+      "published": [
+        {
+          "contestId": "fc99a58d-436c-4292-8526-84a657e2a888"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Scotts Valley",
               "name": "Scotts Valley",
               "result": null,
@@ -6694,72 +6760,6 @@
       "published": [
         {
           "contestId": "0d847aa4-abc0-48e8-b21a-3fc708feb64c"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Santa Cruz",
-              "name": "Harbor",
-              "result": null,
-              "score": null,
-              "slug": "harbor",
-              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
-            },
-            "contestId": "69ff2132-d234-4c37-81ab-12e5aba2f54d",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-05",
-            "dateLocal": "2026-12-05T23:00:00",
-            "dateUtc": "2026-12-06T07:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "MacDonald",
-              "result": null,
-              "score": null,
-              "slug": "macdonald",
-              "teamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T14:24:20",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-macdonald-san-jose/12-5-2026/?c=69ff2132-d234-4c37-81ab-12e5aba2f54d",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "69ff2132-d234-4c37-81ab-12e5aba2f54d"
-        }
-      },
-      "id": "2026-12-05-name:harbor-at-macdonald",
-      "published": [
-        {
-          "contestId": "69ff2132-d234-4c37-81ab-12e5aba2f54d"
         }
       ]
     },
@@ -9205,7 +9205,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T04:29:50",
+              "maxprepsModifiedOn": "2026-11-22T05:28:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9228,72 +9228,6 @@
       "published": [
         {
           "contestId": "45bba447-d160-4a1c-95f2-40f1dc5ebee8"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Santa Cruz",
-              "name": "Pacific Collegiate",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a"
-            },
-            "contestId": "3281dc11-f714-4adc-9288-b112fa3889eb",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-08",
-            "dateLocal": "2026-12-08T17:00:00",
-            "dateUtc": "2026-12-09T01:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Santa Cruz",
-              "name": "Harbor",
-              "result": null,
-              "score": null,
-              "slug": "harbor",
-              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T11:37:01",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-pacific-collegiate-santa-cruz/12-8-2026/?c=3281dc11-f714-4adc-9288-b112fa3889eb",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "3281dc11-f714-4adc-9288-b112fa3889eb"
-        }
-      },
-      "id": "2026-12-08-name:pacificcollegiate-at-harbor",
-      "published": [
-        {
-          "contestId": "3281dc11-f714-4adc-9288-b112fa3889eb"
         }
       ]
     },
@@ -10064,7 +9998,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T17:59:41",
+              "maxprepsModifiedOn": "2026-11-21T22:58:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10130,7 +10064,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T17:59:26",
+              "maxprepsModifiedOn": "2026-11-22T08:28:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12482,6 +12416,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Santa Cruz",
+              "name": "Harbor",
+              "result": null,
+              "score": null,
+              "slug": "harbor",
+              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+            },
+            "contestId": "b904510a-adde-4463-80c3-ce7350c507e1",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-12",
+            "dateLocal": "2026-12-12T13:00:05",
+            "dateUtc": "2026-12-12T21:00:05Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "San Jose",
+              "result": null,
+              "score": null,
+              "slug": "san-jose",
+              "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T17:42:07",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-san-jose/12-12-2026/?c=b904510a-adde-4463-80c3-ce7350c507e1",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "b904510a-adde-4463-80c3-ce7350c507e1"
+        }
+      },
+      "id": "2026-12-12-harbor-at-san-jose",
+      "published": [
+        {
+          "contestId": "b904510a-adde-4463-80c3-ce7350c507e1"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Burlingame",
               "name": "Mercy Burlingame",
               "result": null,
@@ -13946,72 +13946,6 @@
       "published": [
         {
           "contestId": "94edfd9e-8af4-4a2f-84c0-ef305a986db3"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Santa Cruz",
-              "name": "Harbor",
-              "result": null,
-              "score": null,
-              "slug": "harbor",
-              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
-            },
-            "contestId": "a60702bb-41a7-466b-879c-68979cf6a5f1",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-15",
-            "dateLocal": "2026-12-15T19:00:00",
-            "dateUtc": "2026-12-16T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Del Mar",
-              "result": null,
-              "score": null,
-              "slug": "del-mar",
-              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T11:39:06",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/del-mar-san-jose-vs-harbor-santa-cruz/12-15-2026/?c=a60702bb-41a7-466b-879c-68979cf6a5f1",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "a60702bb-41a7-466b-879c-68979cf6a5f1"
-        }
-      },
-      "id": "2026-12-15-name:harbor-at-del-mar",
-      "published": [
-        {
-          "contestId": "a60702bb-41a7-466b-879c-68979cf6a5f1"
         }
       ]
     },
@@ -16602,72 +16536,6 @@
       "published": [
         {
           "contestId": "700564e5-5d83-48e7-a6d2-d20a627e1491"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Oakland",
-              "name": "Fremont",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "03ae181a-553a-493f-a01a-0e47f6689373"
-            },
-            "contestId": "bff37f99-92d1-4aad-917b-4d64793084a8",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-19",
-            "dateLocal": "2026-12-19T13:00:00",
-            "dateUtc": "2026-12-19T21:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Santa Cruz",
-              "name": "Harbor",
-              "result": null,
-              "score": null,
-              "slug": "harbor",
-              "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T12:32:27",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/fremont-oakland-vs-harbor-santa-cruz/12-19-2026/?c=bff37f99-92d1-4aad-917b-4d64793084a8",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/harbor-high-school-santa-cruz-ca/gamd8ff8b9b65?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
-            },
-            "venue": {
-              "text": "Harbor High School"
-            }
-          },
-          "ref": "bff37f99-92d1-4aad-917b-4d64793084a8"
-        }
-      },
-      "id": "2026-12-19-name:fremont-at-harbor",
-      "published": [
-        {
-          "contestId": "bff37f99-92d1-4aad-917b-4d64793084a8"
         }
       ]
     },
@@ -26431,7 +26299,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T08:34:57",
+              "maxprepsModifiedOn": "2026-11-22T01:59:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34058,7 +33926,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T18:58:40",
+              "maxprepsModifiedOn": "2026-11-22T09:28:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42429,7 +42297,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T15:05:55",
+              "maxprepsModifiedOn": "2026-11-22T09:28:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42594,7 +42462,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T14:31:21",
+              "maxprepsModifiedOn": "2026-11-21T20:59:56",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43106,7 +42974,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T21:59:38",
+              "maxprepsModifiedOn": "2026-11-22T01:28:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43436,7 +43304,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T21:59:25",
+              "maxprepsModifiedOn": "2026-11-22T03:59:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
