@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
   "commitSummary": "VAL +0 finals",
-  "contentHash": "68e22a7cad1b7c711fbf41d03b8635753fad6957680212df7942ab300a3c07d7",
+  "contentHash": "6eb16c3d11217a6d8de4e0eca9036acb5449891c6e7e4dda3bc9355ac5954ef2",
   "counts": {
     "byLeague": {
       "val": {
@@ -20,7 +20,7 @@
     "teams": 11
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-22T06:36:22.225Z",
+  "fetchedAt": "2026-11-22T15:33:43.288Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -46,7 +46,7 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-21",
+  "today": "2026-11-22",
   "warnings": 0,
   "window": {
     "firstGame": "2026-12-14T16:00:00",
