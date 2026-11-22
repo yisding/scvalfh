@@ -182,17 +182,17 @@ describe('the committed data/field-hockey/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-10-22, 2026-11-03, 2026-11-06 and 2026-11-13 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two; the 2026-11-03 round two, one of them on the owner confirming it; the 2026-11-06 round two; the 2026-11-13 round one, a signing and five sources), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-10-22, 2026-11-03, 2026-11-06, 2026-11-13 and 2026-11-22 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two; the 2026-11-03 round two, one of them on the owner confirming it; the 2026-11-06 round two; the 2026-11-13 round one, a signing and five sources; the 2026-11-22 round one and eight sources), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 38 commitments from 23 schools to 29 colleges (32 programs), 37 "committed" and 1 "signed", 34 high and 4 medium', () => {
-    expect(raw.capturedAt).toBe('2026-11-13');
-    expect(raw.commitments).toHaveLength(38);
-    expect(raw.colleges).toHaveLength(29);
-    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(32);
+  it('holds 39 commitments from 23 schools to 30 colleges (33 programs), 38 "committed" and 1 "signed", 35 high and 4 medium', () => {
+    expect(raw.capturedAt).toBe('2026-11-22');
+    expect(raw.commitments).toHaveLength(39);
+    expect(raw.colleges).toHaveLength(30);
+    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(33);
     expect(new Set(norcal.map((c) => c.teamSlug))).toEqual(
       new Set([
         'berkeley',
@@ -215,7 +215,8 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect(new Set(socal.map((c) => c.teamSlug))).toEqual(
       new Set(['bishops', 'canyon-hills', 'cathedral-catholic', 'harvard-westlake', 'san-dieguito-academy', 'san-marcos', 'scripps-ranch', 'temecula-valley', 'torrey-pines']),
     );
-    expect(socal).toHaveLength(15);
+    // Abby Feldman (Torrey Pines, Macalester soccer) is the 2026-11-22 round's one.
+    expect(socal).toHaveLength(16);
     // Phoebe Miller (Redwood, San Diego State lacrosse) signed on 2026-11-11: SDSU's own release of that day.
     expect(raw.commitments.filter((c) => c.status === 'signed').map((c) => [c.fullName, c.college, c.sport])).toEqual([['Phoebe Miller', 'san-diego-state', 'lacrosse']]);
     expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Reese Roldan', 'Sami Lee', 'Shyla Paredes', 'Kendall Gann']);
@@ -240,10 +241,10 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });
 
-  it('by sport: 23 field hockey, 12 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 12 field hockey, 3 lacrosse)', () => {
+  it('by sport: 23 field hockey, 12 lacrosse, 2 soccer, 1 basketball, 1 softball (SoCal: 12 field hockey, 3 lacrosse, 1 soccer)', () => {
     const sport = (s: string, list = raw.commitments) => list.filter((c) => c.sport === s).length;
-    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([23, 12, 1, 1, 1]);
-    expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([12, 3]);
+    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([23, 12, 2, 1, 1]);
+    expect([sport('field-hockey', socal), sport('lacrosse', socal), sport('soccer', socal)]).toEqual([12, 3, 1]);
     // Three colleges hold two programs: UC Davis (field hockey in the MPSF, lacrosse in the Big 12),
     // Cal (field hockey and lacrosse, both ACC) and Harvard (both Ivy League).
     expect(getCollege('uc-davis')!.programs.map((p) => [p.sport, p.conference])).toEqual([
@@ -260,21 +261,21 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     ]);
   });
 
-  it('by class: 25 from 2027 and 13 from 2028; by level: 25 Division I, 3 Division II, 10 Division III', () => {
+  it('by class: 26 from 2027 and 13 from 2028; by level: 25 Division I, 3 Division II, 11 Division III', () => {
     const classes = getCommitments().map((c) => commitClassOf(c));
-    expect(classes.filter((y) => y === 2027)).toHaveLength(25);
+    expect(classes.filter((y) => y === 2027)).toHaveLength(26);
     expect(classes.filter((y) => y === 2028)).toHaveLength(13);
     const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
-    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([25, 3, 10, 0]);
+    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([25, 3, 11, 0]);
   });
 
-  it('rests on 108 source entries on 80 distinct URLs (SoCal: 46 on 39), and 17 commitments carry a date', () => {
+  it('rests on 118 source entries on 85 distinct URLs (SoCal: 50 on 42), and 21 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(108);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(80);
+    expect(entries).toHaveLength(118);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(85);
     const socalEntries = socal.flatMap((c) => c.sources);
-    expect(socalEntries).toHaveLength(46);
-    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(39);
+    expect(socalEntries).toHaveLength(50);
+    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(42);
     expect(raw.commitments.filter((c) => c.asOf !== null).map((c) => c.asOf).sort()).toEqual([
       '2025-09-22',
       '2026-02',
@@ -292,8 +293,14 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       '2026-11-05',
       '2026-11-05',
       '2026-11-05',
+      // St. Ignatius' College Athlete Recognition Day (Sofie Stiefel, Catherine Cecchini, Gigi Colant: undated until 2026-11-22).
+      '2026-11-10',
+      '2026-11-10',
+      '2026-11-10',
       // Phoebe Miller's signing: San Diego State's release (her commitment dates from Apr 23, 2026).
       '2026-11-11',
+      // Abby Feldman: TopDrawerSoccer's Recruiting Roundup.
+      '2026-11-16',
     ]);
   });
 
@@ -322,6 +329,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       'Sofie Stiefel',
       'Zola Ducker',
       'Kendall Gann',
+      'Abby Feldman',
       'Ava Hauer',
       'Dylan Rietti',
       'Molly Waltz',
@@ -364,6 +372,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       'bryn-mawr',
       'ithaca',
       'johns-hopkins',
+      'macalester',
       'muhlenberg',
       'st-lawrence',
       'trinity-ct',
@@ -403,8 +412,8 @@ describe('lib/players/commits.ts read API', () => {
     const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
     expect(getCommitsLastChecked()).toBe(latest);
     expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
-    // The 2026-11-13 round: McKenzie Rackleff (and Lock Haven), Phoebe Miller's signing and five more sources.
-    expect(getCommitsLastChecked()).toBe('2026-11-13');
+    // The 2026-11-22 round: Abby Feldman (and Macalester) and eight more sources.
+    expect(getCommitsLastChecked()).toBe('2026-11-22');
   });
 
   it('displays a college by its short name when it has one', () => {

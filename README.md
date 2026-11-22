@@ -40,7 +40,7 @@ under `data/volleyball/`, with a match's score read as its sets won, tables orde
 player stats per set. Its /playoffs draws one bracket per division, read whole from MaxPreps' tournament pages
 (`playoffs.brackets`): the CIF State divisions an SCVAL or BVAL team plays in (the NorCal regional, then the
 state final), then the CCS's Open Division and Divisions 1-3. It has field hockey's recruiting pages too (/clubs,
-/commits, /recruiting), from research of 2026-11-13 and 2026-11-14. See "Girls volleyball" and "Girls volleyball: recruiting"
+/commits, /recruiting), from research of 2026-11-13 and 2026-11-14 (commitments again on 2026-11-22). See "Girls volleyball" and "Girls volleyball: recruiting"
 under "Local development" and docs/MULTI-SPORT.md.
 
 **Middle school girls soccer: the Valley Athletic League (VAL, 2026-27).** The same code builds a fifth site, VAL Middle
@@ -1086,8 +1086,14 @@ program has a commitment, a college has one program per sport, one commitment pe
 `rosterBehind`), or, for a row with no grade, the sources agree with each other on a class a high school roster of
 the season can hold.
 
-Coverage on 2026-11-13, counted from the file: **38 commitments, 38 players at 23 of the 102 schools, to
-29 colleges (32 programs); one, Phoebe Miller's, signed.** The 2026-11-13 round, two days after the class of
+Coverage on 2026-11-22, counted from the file: **39 commitments, 39 players at 23 of the 102 schools, to
+30 colleges (33 programs); one, Phoebe Miller's, signed.** The 2026-11-22 round (see below) added one, Abby
+Feldman, Torrey Pines, class of 2027, to Macalester in soccer (NCAA Division III, MIAC; high: TopDrawerSoccer's
+own profile page names her high school, and its Recruiting Roundup of Nov 16, 2026 lists the commitment). It also
+gave eight commitments another source: St. Ignatius' athletics site (Nov 19) names Storey Lewis, Maggie Magnano,
+Sofie Stiefel, Cate Cecchini and Gigi Colant among the 19 seniors honoured for their college commitments on Nov
+10; MAX Field Hockey's California table names Ava Hauer's and Rylie Storm's high schools; and Frankie Lemieux's
+own SportsRecruits profile now shows Dartmouth. The 2026-11-13 round, two days after the class of
 2027's fall signing day (see below), added one, McKenzie Rackleff, San Marcos, class of 2027, to Lock Haven in
 field hockey (high: her own SportsRecruits profile, already linked on her row, now shows it; Lock Haven is a
 Division II school whose field hockey team plays Division I as an Atlantic 10 affiliate), and marked Phoebe
@@ -1225,6 +1231,23 @@ field hockey program had posted a fall signing class, and no decommitment was fo
 the SportsRecruits address probe were not run (both ran whole on 2026-11-03). The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows, now 1,803): of the 107 rows that refresh added (and 6 it removed), 47 are players the round had matched under the same name (JV-list players who joined their varsity rosters, and rows MaxPreps re-created), and the other 60, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, are players who were not searched for commitments or profiles. A separate search the same day covered Sobrato's 20 among
 all 116 players of Sobrato, Cupertino, Lynbrook and Homestead, for commitments, recruiting pages and club ties: no
 commitment and no new club tie, six recruiting pages (`docs/DATA-SOURCES.md` §1.1j).
+The round of 2026-11-22 went over the rosters as refreshed on 2026-11-13 (1,775 varsity rows and the 860 JV
+players the team pages list), so the 60 rows that refresh added were matched for the first time. It read the
+lists and the clubs' commitment pages whole (MAX Field Hockey's table is now 73 pages and 1,752 rows; Stick
+Together has posted nothing since Nov 5), 4,050 stories on 964 college athletics sites' news feeds (418 of them
+signing releases dated Nov 9 or later), 11,728 posts of Nov 4 to 22 on 44 Northern California student and local
+papers' sites, ten Southern California student papers and the local outlets that answered, the Orange County
+Register's November signing list (from a copy the owner supplied), and every linked SportsRecruits profile, twice.
+Sites that refuse a plain request were read in a headless browser where it was shown the page. It found Abby
+Feldman's commitment and the eight sources above; no field hockey college in the file had posted a class-of-2027
+signing release, and no signing, changed college or decommitment was found. Not done: SportsRecruits' commits feed
+was read for program ids 1 to 112, 454 to 474 and 1,045 to 3,700 only (24,179 records; the ids between, most of the
+feed, were not read), its address probe reached 208 of the 885 class-of-2027 and class-of-2028 rows with no linked
+profile, and no name-by-name web search ran (the 50 searches made returned almost nothing published after Nov 5).
+Not read: the San Diego Union-Tribune's article bodies (subscribers only), Harvard-Westlake's, Saint Francis' and
+Harvard's sites (a bot check in the browser too), Redwood's and Marin Catholic's commitment ceremonies and San
+Diego County's signing event of Nov 12 (374 athletes, no names published). `docs/DATA-SOURCES.md` §1.1j3 has the
+rest.
 
 **When a roster refetch breaks it.** `lib/players/commits.ts` throws at import, as `lib/players/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
@@ -1753,7 +1776,7 @@ by source. Counted from the files on 2026-11-14:
   roster match counts only with a second page that names the player, the club and her school. Only the Peninsula
   and the South Bay were searched for every club (`SEARCHED_REGIONS`); /clubs says so of the others. JV players'
   clubs are not listed.
-- **College commitments** (`commits.json`): **10 players at 9 schools, to 10 colleges**. From 2026-11-13: Maura
+- **College commitments** (`commits.json`): **11 players at 9 schools, to 11 colleges** (counted 2026-11-22). From 2026-11-13: Maura
   Hambly (Palo Alto) signed with Cal on 2026-11-11 (Cal's own release names her with Palo Alto High School); Aanya
   Hotha (Saratoga) to Penn, Kylee Mark (Monta Vista) to Cal Poly and Katie Hamburger (Homestead) to Tulane in beach
   volleyball, each from her school's student paper; Emi Yu-Yang (Palo Alto) to Hamilton, medium confidence, from
@@ -1761,7 +1784,12 @@ by source. Counted from the files on 2026-11-14:
   to UC Irvine, Eileen Pfeffer (St. Ignatius) to Nevada and Whitney Fleming (Valley Christian) to UC Riverside, from
   Prep Dig's player pages and its California list (PrepVolleyball or Vision's College Bound page agreeing for
   Courtney and Fleming), and Orli Jones (Notre Dame San Jose) to Portland, from her own SportsRecruits page. Every
-  quote was checked against its page as served, twice.
+  quote was checked against its page as served, twice. From the commitment round of 2026-11-22: Stella Broshear
+  (Mitty, class of 2028) to Loyola Marymount in beach volleyball, medium confidence (Vision's College Bound page
+  lists her under its class of 2028 with "LMU (Beach)" and no school; Prep Dig's page ties her name, class and
+  Vision to Archbishop Mitty); Eileen Pfeffer signed with Nevada (Nevada's signing-day release of 2026-11-11 names
+  her with Saint Ignatius College Preparatory); and new sources for Chayse Courtney (the Mercury News' deck and
+  photo caption of 2026-11-07, "Stanford-bound"), Maura Hambly and Aanya Hotha (Vision's page).
 - **Instagram** (`instagram.json`): 27 clubs' accounts, each linked from the club's own site, and 10 of the 41
   teams' (2026-11-14; see "Instagram accounts").
 
@@ -1780,6 +1808,16 @@ What the research did not reach, so that an absence here says little:
 - **Private or bare pages.** 127 rostered players have only private Hudl profiles; about 880 live SportsRecruits
   pages show at most a class year. Notre Dame San Jose is not on Hudl, Eastside and Presentation have no girls
   volleyball team there, and Harker's Hudl rosters are stale (classes of 2021 to 2027).
+- **Commitments, since the round of 2026-11-22.** That round read 13,739 stories of Nov 10 to 22 on 950 college
+  sites (139 of the 141 women's and beach volleyball signing releases among them), Prep Dig's and PrepVolleyball's
+  lists and player pages, 36 of the 37 clubs' sites, 2,838 posts on 29 student papers' sites, 3,887 on 12 local
+  news sites and the WCAL and WBAL schools' own pages, re-read every linked SportsRecruits profile and probed
+  SportsRecruits addresses for all 512 juniors and seniors with no linked profile. Penn, Cal Poly, Hamilton, UC
+  Riverside and Portland had posted no volleyball signing release, so their players stay committed. Still open: 76
+  college sites refused and were not read, Santa Clara's signing stories among them; web searches by name reached
+  60 more juniors, leaving 208 juniors covered only through the lists and papers; SportsRecruits' commits feed for
+  program ids 475 to 1,044 has never been read for this build; no student paper was found for 32 schools; and the
+  Mercury News' and Chronicle's subscriber-only text was not read. What follows is how things stood on 2026-11-14.
 - **Commitments.** The fall signing period opened on 2026-11-11 and many colleges had posted nothing. About 890
   college athletics sites' feeds were read on 2026-11-14, but 72 refused automated reads, among them Cal, UC Irvine,
   UC Riverside, Nevada and Tulane, so a signing release naming Eileen Pfeffer (Nevada) or Whitney Fleming (UC
