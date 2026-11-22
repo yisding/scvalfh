@@ -32,8 +32,8 @@ interface RecruitingWords {
 /**
  * The words that differ by sport: where the research looked and how a place backs a match. Field hockey's
  * were written with its 2026-10 sweeps (README, "Clubs"); volleyball's with the 2026-11-13 and 2026-11-14 rounds
- * (data/volleyball/clubs.json's notes); girls soccer's and boys basketball's with the round of 2026-11-21, before its
- * report (each sentence that rests on that round is marked "2026-11-21 round").
+ * (data/volleyball/clubs.json's notes); girls soccer's and boys basketball's with the round of 2026-11-21
+ * (data/soccer/clubs.json's and data/basketball/clubs.json's notes).
  */
 const WORDS = bySport<RecruitingWords>({
   'field-hockey': {
@@ -65,35 +65,39 @@ const WORDS = bySport<RecruitingWords>({
     unsearched: null,
   },
   soccer: {
-    // 2026-11-21 round: the kinds of page the round read for club ties (Hudl team rosters, NCSA, SportsRecruits,
-    // MaxPreps career pages, club sites, school and local papers). Tune to what its report says the ties rest on.
-    clubSources: 'the club’s own site or rosters, a Hudl team roster, an NCSA or SportsRecruits profile, a MaxPreps career page, or local news',
+    // The 2026-11-21 round (data/soccer/clubs.json's notes): the ties' sources by host are PrepSoccer and
+    // TopDrawerSoccer player pages, SportsRecruits, NCSA and Hudl profiles, and MaxPreps career pages.
+    clubSources:
+      'a PrepSoccer or TopDrawerSoccer player page, a SportsRecruits, NCSA or Hudl profile, a MaxPreps career page, the club’s own site, or local news',
     place: 'a hometown in the school’s own area',
     otherClubs: 'Social-media posts, and clubs in other sports, do not count.',
-    // 2026-11-21 round: what most ties rest on is the round's finding; null until its report says.
-    restOn: null,
+    restOn:
+      'Most ties rest on one page that names the player, the club and the school: the team list of the player’s own profile, or a player page whose school link leads to the right city. No club here publishes a roster of its girls’ teams.',
     nicknameExample: '',
     nickname: 'A nickname or a given name',
     profilePlace: 'a hometown in the school’s own area',
     clubKind: null,
-    // 2026-11-21 round: null while the round covers every school of the build's six leagues; name any it did not.
-    unsearched: null,
+    // 32 of the 82 teams had a roster on MaxPreps on 2026-11-21; only rostered players can be searched.
+    unsearched:
+      'Only the teams whose 2026-27 roster MaxPreps had posted by November 21, 2026 were searched, 32 of the 82; the others’ players are not listed yet.',
   },
   basketball: {
-    // 2026-11-21 round: as soccer's, for boys basketball's clubs (most of them AAU or travel teams).
+    // The 2026-11-21 round (data/basketball/clubs.json's notes): Prep Hoops player pages and article cards first,
+    // then NCSA, MaxPreps career pages, Hudl and SportsRecruits profiles.
     clubSources:
-      'the club’s or travel team’s own site or rosters, a Hudl team roster, an NCSA or SportsRecruits profile, a MaxPreps career page, or local news',
+      'a Prep Hoops player page, an NCSA, Hudl or SportsRecruits profile, a MaxPreps career page, the club’s or travel team’s own site, or local news',
     place: 'a hometown in the school’s own area',
     otherClubs: 'Social-media posts, and clubs in other sports, do not count.',
-    // 2026-11-21 round: what most ties rest on is the round's finding; null until its report says.
-    restOn: null,
+    restOn:
+      'Most ties rest on one page that names the player, the club and the school, most often a Prep Hoops player page whose school link leads to the right city. No travel team here publishes a roster that names schools, and no public directory lists the teams, so no area was searched for every club.',
     nicknameExample: '',
     nickname: 'A nickname or a given name',
     profilePlace: 'a hometown in the school’s own area',
     // A basketball "club" is most often an AAU or travel team; the pages keep the one word.
     clubKind: 'In basketball, most club teams are AAU or travel teams, and these pages call them clubs.',
-    // 2026-11-21 round: null while the round covers every school of the build's six leagues; name any it did not.
-    unsearched: null,
+    // 58 of the 79 teams had a roster on MaxPreps on 2026-11-21; only rostered players can be searched.
+    unsearched:
+      'Only the teams whose 2026-27 roster MaxPreps had posted by November 21, 2026 were searched, 58 of the 79; the others’ players are not listed yet.',
   },
   // No recruiting pages (lib/sports/current.ts SPORT_FEATURES): the section renders nothing.
   'val-soccer': {

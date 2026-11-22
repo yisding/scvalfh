@@ -1,17 +1,43 @@
 {
   "season": "26-27",
-  "builtBy": "Research by hand, 2026-11-21: Hudl's public rosters for every school's girls soccer teams and a SportsRecruits profile-address probe, over the JV players MaxPreps lists; each page read at least twice by the pass that found it.",
+  "builtBy": "Research by hand, 2026-11-21: Hudl's public rosters for every school's girls soccer teams and a SportsRecruits profile-address probe and NCSA, over the JV players MaxPreps lists; each page read at least twice by the pass that found it.",
   "capturedAt": "2026-11-21",
   "notes": [
     "The JV players' own recruiting pages, linked by the rule of data/soccer/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has her pages in the varsity file. The stale-grade marker is varsity-only: a JV page whose class year disagrees with the JV list is not linked. Recall is partial.",
-    "Counts as written: 27 profiles for 27 JV players at 10 schools (3 SportsRecruits, 24 Hudl)."
+    "Counts as written: 32 profiles for 31 JV players at 11 schools (5 NCSA, 3 SportsRecruits, 24 Hudl)."
   ],
   "teams": [
     {
       "slug": "gunn",
       "players": [
         {
+          "name": "Eloise Edelstein",
+          "playerId": "p009751176d",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/palo-alto/henry-m-gunn-high-school/eloise-edelstein",
+              "classOf": 2030,
+              "note": "NCSA Women's Soccer profile naming Henry M. Gunn High School (Palo Alto, CA); class of 2030 agrees with the roster. Found by the 2026-11-21 NCSA name lookup; two separate loads agree."
+            }
+          ]
+        },
+        {
+          "name": "Emilia Bauer",
+          "playerId": "pb06946d1bf",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/palo-alto/henry-m-gunn-high-school/emilia-bauer",
+              "classOf": 2029,
+              "note": "NCSA Women's Volleyball profile naming Henry M. Gunn High School (Palo Alto, CA); class of 2029 agrees with the roster. Found by the 2026-11-21 NCSA name lookup; two separate loads agree.",
+              "sport": "volleyball"
+            }
+          ]
+        },
+        {
           "name": "Ashley Cuevas",
+          "playerId": "p7972d21455",
           "profiles": [
             {
               "platform": "hudl",
@@ -22,8 +48,28 @@
           ]
         },
         {
-          "name": "Gyovanna Torres Juárez",
+          "name": "Megan Moeljo",
+          "playerId": "p6bc61009e1",
           "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/palo-alto/henry-m-gunn-high-school/megan-moeljo1",
+              "classOf": 2028,
+              "note": "NCSA Women's Soccer profile naming Henry M. Gunn High School (Palo Alto, CA); class of 2028 agrees with the roster. Found by the 2026-11-21 NCSA name lookup; two separate loads agree."
+            }
+          ]
+        },
+        {
+          "name": "Gyovanna Torres Juárez",
+          "playerId": "pba1a1b346d",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/palo-alto/henry-m-gunn-high-school/gyovanna-juarez",
+              "classOf": 2028,
+              "note": "NCSA Women's Basketball profile naming Henry M. Gunn High School (Palo Alto, CA); class of 2028 agrees with the roster. Found by the 2026-11-21 NCSA name lookup; two separate loads agree.",
+              "sport": "basketball"
+            },
             {
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/29052122",
@@ -39,6 +85,7 @@
       "players": [
         {
           "name": "Sophia Newell",
+          "playerId": "p3570636b42",
           "profiles": [
             {
               "platform": "hudl",
@@ -50,6 +97,7 @@
         },
         {
           "name": "Charlotte Markovic",
+          "playerId": "pcd1046a714",
           "profiles": [
             {
               "platform": "sportsrecruits",
@@ -66,6 +114,7 @@
       "players": [
         {
           "name": "Sienna Pattisson",
+          "playerId": "p4a4637b58a",
           "profiles": [
             {
               "platform": "hudl",
@@ -77,6 +126,7 @@
         },
         {
           "name": "Caroline Zhang",
+          "playerId": "p02bb0d22d6",
           "profiles": [
             {
               "platform": "hudl",
@@ -88,6 +138,7 @@
         },
         {
           "name": "Ilika Kundu",
+          "playerId": "p6296588a73",
           "profiles": [
             {
               "platform": "hudl",
@@ -99,6 +150,7 @@
         },
         {
           "name": "Jocelyn Gold",
+          "playerId": "p13848b5ed3",
           "profiles": [
             {
               "platform": "hudl",
@@ -110,6 +162,7 @@
         },
         {
           "name": "Shalini Nagdev",
+          "playerId": "p52724c3bda",
           "profiles": [
             {
               "platform": "hudl",
@@ -121,6 +174,7 @@
         },
         {
           "name": "Noa Goldberg",
+          "playerId": "p1ec6504373",
           "profiles": [
             {
               "platform": "hudl",
@@ -132,6 +186,7 @@
         },
         {
           "name": "Mari Madalen Jan",
+          "playerId": "pf932071848",
           "profiles": [
             {
               "platform": "hudl",
@@ -143,6 +198,7 @@
         },
         {
           "name": "Julia Escober",
+          "playerId": "p8a97e818f1",
           "profiles": [
             {
               "platform": "hudl",
@@ -154,6 +210,7 @@
         },
         {
           "name": "Caroline Wilkowski",
+          "playerId": "p7678da9f69",
           "profiles": [
             {
               "platform": "hudl",
@@ -170,6 +227,7 @@
       "players": [
         {
           "name": "Mia Rojo",
+          "playerId": "p1fc141cc0a",
           "profiles": [
             {
               "platform": "hudl",
@@ -181,6 +239,7 @@
         },
         {
           "name": "Beatriz Rivera",
+          "playerId": "p765a149b0b",
           "profiles": [
             {
               "platform": "hudl",
@@ -192,6 +251,7 @@
         },
         {
           "name": "Elizabeth Lopez Acosta",
+          "playerId": "p8aa1fd875b",
           "profiles": [
             {
               "platform": "hudl",
@@ -208,6 +268,7 @@
       "players": [
         {
           "name": "Christina Mai",
+          "playerId": "pf6e7009503",
           "profiles": [
             {
               "platform": "hudl",
@@ -219,6 +280,7 @@
         },
         {
           "name": "Giana Malit",
+          "playerId": "p2fe6fef57a",
           "profiles": [
             {
               "platform": "hudl",
@@ -235,6 +297,7 @@
       "players": [
         {
           "name": "Aaminah Khan",
+          "playerId": "pd7c72f9daa",
           "profiles": [
             {
               "platform": "hudl",
@@ -246,6 +309,7 @@
         },
         {
           "name": "Aashi Raj",
+          "playerId": "pb349bbc296",
           "profiles": [
             {
               "platform": "hudl",
@@ -257,6 +321,7 @@
         },
         {
           "name": "Amy Bastola",
+          "playerId": "p8db46ef5cd",
           "profiles": [
             {
               "platform": "hudl",
@@ -268,6 +333,7 @@
         },
         {
           "name": "Ritika Sane",
+          "playerId": "p6e994eca82",
           "profiles": [
             {
               "platform": "hudl",
@@ -284,6 +350,7 @@
       "players": [
         {
           "name": "Gianna Nieto",
+          "playerId": "pe53efe6d93",
           "profiles": [
             {
               "platform": "sportsrecruits",
@@ -301,6 +368,7 @@
       "players": [
         {
           "name": "Emily Regalado",
+          "playerId": "p7703fbc337",
           "profiles": [
             {
               "platform": "hudl",
@@ -312,6 +380,7 @@
         },
         {
           "name": "Emma Burstein",
+          "playerId": "pb9cc6bf22d",
           "profiles": [
             {
               "platform": "hudl",
@@ -328,6 +397,7 @@
       "players": [
         {
           "name": "Jenna Yiseer",
+          "playerId": "p87f419e5d1",
           "profiles": [
             {
               "platform": "sportsrecruits",
@@ -341,10 +411,28 @@
       ]
     },
     {
+      "slug": "notre-dame-san-jose",
+      "players": [
+        {
+          "name": "Claire Koch",
+          "playerId": "p2211909df2",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/notre-dame-high-school-san-jose/claire-koch2",
+              "classOf": 2029,
+              "note": "NCSA Women's Soccer profile naming Notre Dame High School (San Jose) (San Jose, CA); class of 2029 agrees with the roster. Found by the 2026-11-21 NCSA name lookup; two separate loads agree."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "slug": "half-moon-bay",
       "players": [
         {
           "name": "Yulissa Figueroa",
+          "playerId": "p0c9f5da05f",
           "profiles": [
             {
               "platform": "hudl",

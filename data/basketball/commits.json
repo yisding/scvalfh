@@ -135,6 +135,7 @@
     {
       "teamSlug": "palo-alto",
       "athleteId": "27426c69-1954-4e24-84f2-5dbfe105d995",
+      "playerId": "p3c06e5a35b",
       "fullName": "Rocco Smith",
       "college": "linfield",
       "sport": "basketball",
@@ -164,6 +165,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "07b6b1cf-6339-4b1f-abfc-80e70377b186",
+      "playerId": "pfa282ef7df",
       "fullName": "Brady Clugage",
       "college": "chapman",
       "sport": "basketball",
@@ -185,6 +187,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "42342be0-7332-49d1-9f65-7929de077ff4",
+      "playerId": "pe0d69e1abd",
       "fullName": "Emmanuel Ahamefule",
       "college": "oregon-state",
       "sport": "basketball",
@@ -238,6 +241,7 @@
     {
       "teamSlug": "serra",
       "athleteId": "c1542f49-eb72-4bd1-bb90-f3b337d31239",
+      "playerId": "pabb1983d07",
       "fullName": "Jace Cannon",
       "college": "usc",
       "sport": "football",
@@ -267,6 +271,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "a9a17c91-cb47-41e4-bb9a-d43f6f3f1d81",
+      "playerId": "pb7d8ad04cd",
       "fullName": "Adrian Barnett",
       "college": "washington-state",
       "sport": "football",

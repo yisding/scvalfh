@@ -1,14 +1,14 @@
 {
-  "builtBy": "Research by hand, 2026-11-21, for the girls soccer build: the club records from each club's own website; the ties from PrepSoccer and TopDrawerSoccer player pages, the players' Hudl, SportsRecruits and claimed MaxPreps career pages, and the commitment sources. Every tie's sources re-read at assembly by a separate script; no script rebuilds this file.",
+  "builtBy": "Research by hand, 2026-11-21, for the girls soccer build: the club records from each club's own website; the ties from PrepSoccer and TopDrawerSoccer player pages, the players' Hudl, SportsRecruits, NCSA and claimed MaxPreps career pages, and the commitment sources. Every tie's sources re-read at assembly by a separate script; no script rebuilds this file.",
   "capturedAt": "2026-11-21",
   "season": "26-27",
   "notes": [
     "The youth soccer clubs players on the tracked girls varsity soccer rosters (the 82 schools of the SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL; 32 with a MaxPreps roster on 2026-11-21) are tied to, and the other girls' clubs in San Francisco, San Mateo, Santa Clara and Santa Cruz counties. The linking rule is field hockey's (README, \"Clubs\"): a public page must name the player and a soccer club, and either name the player's high school (with the right city where the name has namesakes), or give a class year equal to the roster's along with a hometown in the school's own area. A name alone never counts, a class year that disagrees with the roster rules a match out, and social media is never a source.",
     "Club records (50): each written from the club's own website (about 270 club pages read). The candidate list was NorCal Premier's club directory (302 clubs, 73 in the four counties), Girls Academy's member lists and the Aspire directory, and Cal North District 2's list. San Francisco, the Peninsula and the South Bay were searched for every club; Santa Cruz County was too, but not Monterey or San Benito County, so the Central Coast is not searched completely; the one East Bay record (Mustang Soccer League) is there because a player is tied to it. Cal North District 1's list and ECNL's member list (drawn by script) were not read; ECNL membership is as each club's own site says. By region: south-bay 19, peninsula 15, san-francisco 10, central-coast 5, east-bay 1.",
-    "Ties: from PrepSoccer player pages (reached by an address probe of all 634 varsity rows: 752 addresses, 63 live) whose school link resolves to the right city, TopDrawerSoccer club-player profiles (634 searches, 35 profiles read), the players' Hudl profiles (each on the school's own soccer team; the team list's club entries, latest per club, entries before sixth grade dropped), the club-teams block of claimed MaxPreps career pages, the club block of kept SportsRecruits soccer profiles, and the commitment sources (a college's signing release, SoccerWire, TopDrawerSoccer and PrepSoccer). One tie per player and club, the sources of every pass merged.",
-    "Status. current: a source dated 2026 or the 2026-27 club season (a MaxPreps entry joined or edited in 2026, a Hudl entry reaching 2026, a page dated 2026 that says so). past: a Hudl entry that ends in 2024 or earlier, or a MaxPreps entry last edited before 2025. unknown: everything else, such as a Hudl entry for 2025, a MaxPreps entry edited in 2025, an undated profile (SportsRecruits' club blocks carry no season) or a PrepSoccer page created before 2026. Team names such as '09G ECNL' are birth-year labels and date nothing.",
+    "Ties: from PrepSoccer player pages (reached by an address probe of all 634 varsity rows: 752 addresses, 63 live) whose school link resolves to the right city, TopDrawerSoccer club-player profiles (634 searches, 35 profiles read), the players' Hudl profiles (each on the school's own soccer team; the team list's club entries, latest per club, entries before sixth grade dropped), the club-teams block of claimed MaxPreps career pages, the club block of kept SportsRecruits soccer profiles, the dated 'Club Information' lines of kept NCSA soccer profiles (the undated header club, events, camps and leagues not used), and the commitment sources (a college's signing release, SoccerWire, TopDrawerSoccer and PrepSoccer). One tie per player and club, the sources of every pass merged.",
+    "Status. current: a source dated 2026 or the 2026-27 club season (a MaxPreps entry joined or edited in 2026, a Hudl entry reaching 2026, an NCSA club line for 2026, a page dated 2026 that says so). An NCSA club line dated after 2026 is a team's class label and dates nothing (unknown). past: a Hudl entry that ends in 2024 or earlier, or a MaxPreps entry last edited before 2025. unknown: everything else, such as a Hudl entry for 2025, a MaxPreps entry edited in 2025, an undated profile (SportsRecruits' club blocks carry no season) or a PrepSoccer page created before 2026. Team names such as '09G ECNL' are birth-year labels and date nothing.",
     "Second reader at assembly (2026-11-21): a separate script re-fetched every tie's every source and checked the quote on the page as served (Hudl and SportsRecruits through the data the page itself loads; pages the pass read rendered, in headless Chromium). Every source confirmed. MaxPreps' club entries are cited on the career page's Bio tab, where the pass read them, and quoted as the page's own run of fields. A PrepSoccer program page is quoted as its class heading and the player's row. 2 ties found on a player's JV-list row are left out because the same player's varsity row has a grade whose class year the page contradicts.",
-    "No record, so no tie shown, although a player's page names the club: El Camino FC (1: sobrato / Lauren Crowell, maxpreps); alum rock fc (1: overfelt / Violeta Murillo, maxpreps); Marin FC (1: carlmont / Delaney Kumer, commits); Hawaii Rush Soccer (Girls) (1: valley-christian / Alessia Costa, sportsrecruits). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
+    "No record, so no tie shown, although a player's page names the club: El Camino FC (sobrato / Lauren Crowell, maxpreps); alum rock fc (overfelt / Violeta Murillo, maxpreps); Marin FC (carlmont / Delaney Kumer, commits; carlmont / Delaney Kumer, ncsa); Hawaii Rush Soccer (Girls) (valley-christian / Alessia Costa, sportsrecruits); Newark 1974 FC (santa-clara / Dhiaan Plaha, ncsa); Reno Apex (cupertino / Emily Sugimura, ncsa); AllStars FC (sobrato / Isabella Larsen, ncsa); Alum Rock Futbol Club (overfelt / Violeta Murillo, ncsa); Silicon Valley Soccer Club (carlmont / Gianna Armanini, ncsa). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). Nor is \"Surf\" on one Mitty player's NCSA page mapped (Santa Cruz Mid-County also goes by Surf); her Bay Area Surf tie rests on other pages and is listed. TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
     "JV players' club ties are not listed: jvAffiliations is empty. A player on both the JV and the varsity list has her ties on the varsity row."
   ],
   "clubs": [
@@ -2455,6 +2455,7 @@
     {
       "teamSlug": "gunn",
       "athleteId": "d9273c1e-14a5-4f1b-8bf0-c4fd76d9c8bb",
+      "playerId": "p97b273c64e",
       "fullName": "Deborah Romero",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL",
@@ -2475,7 +2476,30 @@
     },
     {
       "teamSlug": "homestead",
+      "athleteId": "07fe52e2-12a2-400e-88db-75d56cbb4cf6",
+      "playerId": "p6de0cdb595",
+      "fullName": "Emily Regidor",
+      "club": "sunnyvale-alliance-soccer-club",
+      "clubTeam": "N1NPL",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/cupertino/homestead-high-school2/emily-regidor",
+          "kind": "ncsa",
+          "quote": "2026 Sunnyvale Alliance (N1NPL)",
+          "statedSchool": "Homestead High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "homestead",
       "athleteId": "69688c5f-2390-4449-848b-2e4a2fee93e2",
+      "playerId": "p96d001e5d3",
       "fullName": "Kaelyn Walukiewicz",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL-RL",
@@ -2503,8 +2527,75 @@
       "basis": "Her own SportsRecruits soccer profile (The page names Homestead High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Homestead (Cupertino, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season. Merged at assembly from sportsrecruits, maxpreps; status from the sportsrecruits entry. Every source re-read at assembly on 2026-11-21."
     },
     {
+      "teamSlug": "homestead",
+      "athleteId": "91e7ba41-31ca-4c7c-91fe-0daac95227e7",
+      "playerId": "p59927b371b",
+      "fullName": "Shira Levy",
+      "club": "mvla-soccer-club",
+      "clubTeam": "NPL1",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/cupertino/homestead-high-school2/shira-levy3",
+          "kind": "ncsa",
+          "quote": "2026 MVLA (NPL1)",
+          "statedSchool": "Homestead High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "homestead",
+      "athleteId": "91e7ba41-31ca-4c7c-91fe-0daac95227e7",
+      "playerId": "p59927b371b",
+      "fullName": "Shira Levy",
+      "club": "sunnyvale-alliance-soccer-club",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/cupertino/homestead-high-school2/shira-levy3",
+          "kind": "ncsa",
+          "quote": "2025 Sunnyvale Alliance",
+          "statedSchool": "Homestead High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "19d861d1-3d5c-4383-8669-393c0a5a5445",
+      "playerId": "pf4a9caae28",
+      "fullName": "Brooke Neschleba",
+      "club": "mvla-soccer-club",
+      "clubTeam": "ECNL",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/los-altos/los-altos-high-school-los-altos/brooke-neschleba",
+          "kind": "ncsa",
+          "quote": "2025 MVLA (ECNL)",
+          "statedSchool": "Los Altos High School (Los Altos)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
       "teamSlug": "los-altos",
       "athleteId": "46a0b985-5a95-4d60-8faa-3ecf9196fc80",
+      "playerId": "p2b5b74b9aa",
       "fullName": "Dylan Harrison",
       "club": "bay-area-surf",
       "clubTeam": "Bay Area Surf 09G",
@@ -2526,6 +2617,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "46a0b985-5a95-4d60-8faa-3ecf9196fc80",
+      "playerId": "p2b5b74b9aa",
       "fullName": "Dylan Harrison",
       "club": "mvla-soccer-club",
       "clubTeam": "2009/10G ECRL",
@@ -2547,6 +2639,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "8bde4b98-e037-4f0f-88d0-e01f0b4c9f33",
+      "playerId": "pa32413d39e",
       "fullName": "Fernanda Mendieta",
       "club": "de-anza-force",
       "clubTeam": "2010G ECNL",
@@ -2568,6 +2661,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "5575e150-efbd-4ec1-b2d0-6a845d266926",
+      "playerId": "pacfb769548",
       "fullName": "Rebecca Guting",
       "club": "almaden-fc",
       "clubTeam": null,
@@ -2597,13 +2691,30 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "a7306d64-e4e7-45e5-99d5-bec7179b8a72",
+      "playerId": "p8e823aa0a2",
       "fullName": "Selya Sen",
       "club": "de-anza-force",
-      "clubTeam": "09G ECNL",
+      "clubTeam": "ECNL",
       "status": "unknown",
-      "asOf": null,
+      "asOf": "2025",
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/los-altos/los-altos-high-school1/selya-sen",
+          "kind": "ncsa",
+          "quote": "2024 De Anza Force (ECNL)",
+          "statedSchool": "Los Altos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/los-altos/los-altos-high-school-los-altos/selya-sen1",
+          "kind": "ncsa",
+          "quote": "2025 De Anza Force (ECNL)",
+          "statedSchool": "Los Altos High School (Los Altos)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
         {
           "url": "https://my.sportsrecruits.com/athlete/selya_sen",
           "kind": "sportsrecruits",
@@ -2613,11 +2724,12 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names Los Altos High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Her own SportsRecruits soccer profile (The page names Los Altos High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from ncsa, sportsrecruits; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "los-gatos",
       "athleteId": "05e269b6-26da-41b5-9a3d-62c38b268b33",
+      "playerId": "p7b6a4f99d7",
       "fullName": "Kinsley Ozawa",
       "club": "mvla-soccer-club",
       "clubTeam": null,
@@ -2647,6 +2759,7 @@
     {
       "teamSlug": "mountain-view",
       "athleteId": "0769fa18-500c-4d79-b4bf-920fe44fbc26",
+      "playerId": "p93536997d6",
       "fullName": "Kristen Honer",
       "club": "almaden-fc",
       "clubTeam": "AFC U17 GA",
@@ -2668,6 +2781,7 @@
     {
       "teamSlug": "mountain-view",
       "athleteId": "9357a5bd-77e5-4641-b3ad-a5aa3d8c8696",
+      "playerId": "p072d0df993",
       "fullName": "Lexie Scundi",
       "club": "mvla-soccer-club",
       "clubTeam": "Juventus ECNL",
@@ -2689,13 +2803,22 @@
     {
       "teamSlug": "mountain-view",
       "athleteId": "b278f040-c229-42da-811f-1cf20ab8a792",
+      "playerId": "p593691e46c",
       "fullName": "Megan Pan",
       "club": "santa-clara-sporting-club",
-      "clubTeam": "Santa Clara Sporting 09G GA",
-      "status": "past",
-      "asOf": "2021",
+      "clubTeam": "ECNL-RL",
+      "status": "unknown",
+      "asOf": null,
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/mountain-view/mountain-view-high-school30/megan-pan",
+          "kind": "ncsa",
+          "quote": "2027 Santa Clara Sporting (ECNL-RL)",
+          "statedSchool": "Mountain View High School (Mountain View)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
         {
           "url": "https://www.hudl.com/profile/19328331",
           "kind": "hudl",
@@ -2705,11 +2828,34 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Santa Clara, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Santa Clara, CA. Merged at assembly from ncsa, hudl; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "santa-clara",
+      "athleteId": "294104e7-a246-4114-8945-30e762339945",
+      "playerId": "p6545239ad1",
+      "fullName": "Dhiaan Plaha",
+      "club": "santa-clara-sporting-club",
+      "clubTeam": "Elite, Girls Academy",
+      "status": "past",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/santa-clara/santa-clara-high-school1/dhiaan-plaha",
+          "kind": "ncsa",
+          "quote": "2025 Santa Clara Sporting (Elite, Girls Academy)",
+          "statedSchool": "Santa Clara High School (Santa Clara)",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "santa-clara",
       "athleteId": "6f30382c-f787-4562-8f30-2770982e1b1d",
+      "playerId": "pf0c651be9c",
       "fullName": "Zoe Nesvacil",
       "club": "de-anza-force",
       "clubTeam": "ECNL-RL",
@@ -2731,6 +2877,7 @@
     {
       "teamSlug": "cupertino",
       "athleteId": "bfed6f35-3190-412c-a211-3f4ebfce08e3",
+      "playerId": "pd89637aa7e",
       "fullName": "Ayelet Lee",
       "club": "de-anza-force",
       "clubTeam": "10g Black",
@@ -2750,8 +2897,53 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Cupertino (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. Every source re-read at assembly on 2026-11-21."
     },
     {
+      "teamSlug": "cupertino",
+      "athleteId": "cd5660a8-e9a5-4980-8dae-f74e12c87dc1",
+      "playerId": "p24c8abcf7f",
+      "fullName": "Emily Sugimura",
+      "club": "almaden-fc",
+      "clubTeam": "National 1",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/cupertino/cupertino-high-school/emily-sugimura",
+          "kind": "ncsa",
+          "quote": "2026 Almaden FC (National 1)",
+          "statedSchool": "Cupertino High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "cupertino",
+      "athleteId": "cd5660a8-e9a5-4980-8dae-f74e12c87dc1",
+      "playerId": "p24c8abcf7f",
+      "fullName": "Emily Sugimura",
+      "club": "los-gatos-united-soccer-club",
+      "clubTeam": "State Premier",
+      "status": "past",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/cupertino/cupertino-high-school/emily-sugimura",
+          "kind": "ncsa",
+          "quote": "2025 Los Gatos United (State Premier)",
+          "statedSchool": "Cupertino High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
       "teamSlug": "milpitas",
       "athleteId": "f6c11459-d9e2-4284-97a3-ace0c088c13e",
+      "playerId": "p6ef6a9c52b",
       "fullName": "Madeline Garrison",
       "club": "fc-milpitas",
       "clubTeam": "Huskies",
@@ -2773,6 +2965,29 @@
     {
       "teamSlug": "milpitas",
       "athleteId": "2476f527-d661-43d0-be6d-f1897792f32e",
+      "playerId": "p5e11ade283",
+      "fullName": "Maya Coriell",
+      "club": "de-anza-force",
+      "clubTeam": "ECNL-RL",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/milpitas/milpitas-high-school/maya-coriell",
+          "kind": "ncsa",
+          "quote": "2026 DeAnza Force (ECNL-RL)",
+          "statedSchool": "Milpitas High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "milpitas",
+      "athleteId": "2476f527-d661-43d0-be6d-f1897792f32e",
+      "playerId": "p5e11ade283",
       "fullName": "Maya Coriell",
       "club": "san-francisco-elite-academy",
       "clubTeam": "2009G RL-ECNL",
@@ -2787,13 +3002,22 @@
           "statedSchool": "Milpitas High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/milpitas/milpitas-high-school/maya-coriell",
+          "kind": "ncsa",
+          "quote": "2025 San Francisco Elite Academy (ECNL-RL)",
+          "statedSchool": "Milpitas High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names Milpitas High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21."
+      "basis": "Her own SportsRecruits soccer profile (The page names Milpitas High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from sportsrecruits, ncsa; status from the sportsrecruits entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "milpitas",
       "athleteId": "596f0b88-7060-4364-8176-622c2b8318b5",
+      "playerId": "p849c236c75",
       "fullName": "Neirah Hafis",
       "club": "de-anza-force",
       "clubTeam": "2010G ECNL",
@@ -2815,6 +3039,7 @@
     {
       "teamSlug": "milpitas",
       "athleteId": "e468d690-ca71-4677-8607-7d5ea6a23e0f",
+      "playerId": "p892dc7ba60",
       "fullName": "Téa Eugenio",
       "club": "de-anza-force",
       "clubTeam": "ECNL",
@@ -2847,6 +3072,14 @@
           "sourceDate": null
         },
         {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/milpitas/milpitas-high-school/ta-eugenio",
+          "kind": "ncsa",
+          "quote": "2025 DeAnza Force (ECNL)",
+          "statedSchool": "Milpitas High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
           "url": "https://my.sportsrecruits.com/athlete/tea_eugenio2",
           "kind": "sportsrecruits",
           "quote": "09G ECNL, De Anza Force SC-Girls",
@@ -2855,11 +3088,56 @@
           "sourceDate": null
         }
       ],
-      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force-3/) and her school \"Milpitas\", linked to the team page titled \"Milpitas High School Soccer | Milpitas, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2023-03-10, modified 2025-05-12. PrepSoccer's program page for the club lists her under Class of 2027 with high school Milpitas (same site; agrees). TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"De Anza Force SC\" (team \"De Anza Force SC (ECNL)\"), high school \"Milpitas High School\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2027, which equals the roster. Undated. Status unknown: no source is dated 2026 (latest date 2025-05-12). Two independent sites agree. Her own SportsRecruits soccer profile (The page names Milpitas High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from clubs, sportsrecruits; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force-3/) and her school \"Milpitas\", linked to the team page titled \"Milpitas High School Soccer | Milpitas, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2023-03-10, modified 2025-05-12. PrepSoccer's program page for the club lists her under Class of 2027 with high school Milpitas (same site; agrees). TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"De Anza Force SC\" (team \"De Anza Force SC (ECNL)\"), high school \"Milpitas High School\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2027, which equals the roster. Undated. Status unknown: no source is dated 2026 (latest date 2025-05-12). Two independent sites agree. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Her own SportsRecruits soccer profile (The page names Milpitas High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from clubs, ncsa, sportsrecruits; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "milpitas",
+      "athleteId": "e468d690-ca71-4677-8607-7d5ea6a23e0f",
+      "playerId": "p892dc7ba60",
+      "fullName": "Téa Eugenio",
+      "club": "mvla-soccer-club",
+      "clubTeam": "ECNL-RL",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/milpitas/milpitas-high-school/ta-eugenio",
+          "kind": "ncsa",
+          "quote": "2024 MVLA (ECNL-RL)",
+          "statedSchool": "Milpitas High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "milpitas",
+      "athleteId": "e468d690-ca71-4677-8607-7d5ea6a23e0f",
+      "playerId": "p892dc7ba60",
+      "fullName": "Téa Eugenio",
+      "club": "san-francisco-elite-academy",
+      "clubTeam": "09G Girls Academy",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/milpitas/milpitas-high-school/ta-eugenio",
+          "kind": "ncsa",
+          "quote": "2024 SF Elite (09G Girls Academy)",
+          "statedSchool": "Milpitas High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "monta-vista",
       "athleteId": "a160b21a-a20f-425a-9aed-ac316ceb8d00",
+      "playerId": "pd5fc7bcbad",
       "fullName": "Emerinne Denina",
       "club": "de-anza-force",
       "clubTeam": "De Anza Force ECNL-RL 10G",
@@ -2881,6 +3159,7 @@
     {
       "teamSlug": "saratoga",
       "athleteId": "c8d33131-3d71-499d-990b-f809ab30ff72",
+      "playerId": "p7ca6f74b5e",
       "fullName": "Ava Porter",
       "club": "de-anza-force",
       "clubTeam": "Force ECNL RL",
@@ -2902,6 +3181,7 @@
     {
       "teamSlug": "saratoga",
       "athleteId": "d18e9626-60c2-443e-9525-b39813a8e492",
+      "playerId": "pe00a160860",
       "fullName": "Claire Chen",
       "club": "bay-area-surf",
       "clubTeam": "ECNL Girls 09",
@@ -2923,6 +3203,7 @@
     {
       "teamSlug": "saratoga",
       "athleteId": "d18e9626-60c2-443e-9525-b39813a8e492",
+      "playerId": "pe00a160860",
       "fullName": "Claire Chen",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2008/09",
@@ -2944,6 +3225,7 @@
     {
       "teamSlug": "wilcox",
       "athleteId": "f2bad743-e554-4637-b395-5e2fe7645ebd",
+      "playerId": "p12679aaacb",
       "fullName": "Melanie Adler",
       "club": "bay-area-surf",
       "clubTeam": "FC Bay Area Surf 2010G",
@@ -2965,6 +3247,7 @@
     {
       "teamSlug": "wilcox",
       "athleteId": "f2bad743-e554-4637-b395-5e2fe7645ebd",
+      "playerId": "p12679aaacb",
       "fullName": "Melanie Adler",
       "club": "santa-clara-sporting-club",
       "clubTeam": "Santa Clara Sporting 10G GA",
@@ -2986,6 +3269,7 @@
     {
       "teamSlug": "wilcox",
       "athleteId": "fd62b685-113c-43e8-8e48-7e3d50ea2cec",
+      "playerId": "pd2fd883a09",
       "fullName": "Sonja Gradwohl",
       "club": "santa-clara-sporting-club",
       "clubTeam": "Santa Clara Sporting G ECNL-RL U17",
@@ -3005,8 +3289,31 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Wilcox (Santa Clara, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026. Every source re-read at assembly on 2026-11-21."
     },
     {
+      "teamSlug": "wilcox",
+      "athleteId": "9d3445ba-73ac-40f4-a5e6-ad50475c37aa",
+      "playerId": "p09624181b9",
+      "fullName": "Tuhina Samaddar",
+      "club": "sunnyvale-alliance-soccer-club",
+      "clubTeam": "NorCal Gold Level",
+      "status": "unknown",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/santa-clara/adrian-wilcox-high-school1/tuhina-samaddar",
+          "kind": "ncsa",
+          "quote": "2024 Sunnyvale Alliance (NorCal Gold Level)",
+          "statedSchool": "Adrian Wilcox High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
       "teamSlug": "branham",
       "athleteId": "09a2fcd7-1c7b-4563-a99e-17fadc918f7b",
+      "playerId": "pc040e046a7",
       "fullName": "Audrey Baker",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL-RL",
@@ -3028,6 +3335,7 @@
     {
       "teamSlug": "branham",
       "athleteId": "a449abb7-9015-4c73-a6db-a7f8710c8c5a",
+      "playerId": "p38c69e1298",
       "fullName": "Brooklynn Borbons",
       "club": "mvla-soccer-club",
       "clubTeam": "Gunners",
@@ -3049,6 +3357,7 @@
     {
       "teamSlug": "branham",
       "athleteId": "a1b51256-93bd-4d69-862b-9e036e540cf5",
+      "playerId": "p38503448a4",
       "fullName": "Ciara Kroum-Bruno",
       "club": "los-gatos-united-soccer-club",
       "clubTeam": "LGU Girls Academy, ECNL RL",
@@ -3070,6 +3379,7 @@
     {
       "teamSlug": "branham",
       "athleteId": "f18dd85c-9e74-43e7-8b30-f321890d985a",
+      "playerId": "p5a6f025999",
       "fullName": "Graciela Ebner",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL-RL",
@@ -3091,6 +3401,7 @@
     {
       "teamSlug": "branham",
       "athleteId": "e0444a9d-e53a-48ef-8a09-84e7e2d7cd97",
+      "playerId": "p9aaf08fad5",
       "fullName": "Kylee Fore",
       "club": "de-anza-force",
       "clubTeam": "2010G ECNL",
@@ -3128,6 +3439,7 @@
     {
       "teamSlug": "branham",
       "athleteId": "28b8a8a6-b612-423d-9730-ce8dd29386d0",
+      "playerId": "p17539a54b4",
       "fullName": "Megan Hellgren",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2008/09",
@@ -3158,13 +3470,22 @@
           "statedSchool": "Branham High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/branham-high-school/megan-hellgren",
+          "kind": "ncsa",
+          "quote": "2028 De Anza Force (Ecnl)",
+          "statedSchool": "Branham High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
         }
       ],
-      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force-2/) and her school \"Branham\", linked to the team page titled \"Branham High School Soccer | San Jose, CA | Prep Soccer\"; class 2028 equals the roster. Server-rendered HTML; profile created 2025-03-06. Status unknown: no source is dated 2026 (latest date 2025-03-06). The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Mateo, CA. Her own SportsRecruits soccer profile (The page names Branham High School and class of 2028, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from clubs, hudl, sportsrecruits; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force-2/) and her school \"Branham\", linked to the team page titled \"Branham High School Soccer | San Jose, CA | Prep Soccer\"; class 2028 equals the roster. Server-rendered HTML; profile created 2025-03-06. Status unknown: no source is dated 2026 (latest date 2025-03-06). The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Mateo, CA. Her own SportsRecruits soccer profile (The page names Branham High School and class of 2028, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from clubs, hudl, sportsrecruits, ncsa; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "leland",
       "athleteId": "d564504f-fe1f-4190-a2d1-c05578b9e015",
+      "playerId": "pf31ccd98b9",
       "fullName": "Allison Park",
       "club": "mvla-soccer-club",
       "clubTeam": null,
@@ -3194,6 +3515,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "6cac873b-cdbf-47c0-b546-fc59cc7ca8c9",
+      "playerId": "p88fc8c3a7d",
       "fullName": "Ellie Tarabichi",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2010/11",
@@ -3215,6 +3537,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "45a8c9a9-8e1d-4779-be4f-1f20c6ef91e3",
+      "playerId": "p6227d4d00b",
       "fullName": "Jessica Teixeira",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2009/10",
@@ -3259,7 +3582,30 @@
     },
     {
       "teamSlug": "leland",
+      "athleteId": "72f869f3-0806-4dc1-80a4-75f7ec41fcbc",
+      "playerId": "pe49008760e",
+      "fullName": "Kailani Bock",
+      "club": "santa-clara-sporting-club",
+      "clubTeam": "Girls Academy",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/leland-high-school1/kailani-bock",
+          "kind": "ncsa",
+          "quote": "2026 Santa Clara Sporting (Girls Academy)",
+          "statedSchool": "Leland High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "leland",
       "athleteId": "96029421-9df3-4cc7-9c91-0fd0c2f2f8a0",
+      "playerId": "p94267c70c1",
       "fullName": "Kaylani Ahn",
       "club": "mvla-soccer-club",
       "clubTeam": "MVLA Madrid ECNL",
@@ -3305,6 +3651,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "05a900b6-f1d1-4080-9852-0173521ece5e",
+      "playerId": "pc2cb71dab5",
       "fullName": "Kiana Van every",
       "club": "almaden-fc",
       "clubTeam": "09 NPL",
@@ -3326,6 +3673,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "53cb6174-f296-47f5-b66e-7b8fecbb678e",
+      "playerId": "p8f4ecd9a2d",
       "fullName": "Maile Bock",
       "club": "almaden-fc",
       "clubTeam": "AFC U18 GA",
@@ -3347,6 +3695,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "3605d6ce-a719-4f9b-9459-ebc84544f679",
+      "playerId": "p1f2aeddded",
       "fullName": "Marley Dorsey",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2010/11",
@@ -3376,6 +3725,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "915bdeb6-a28f-43fc-ace3-ec3b1b430f65",
+      "playerId": "p03e831648c",
       "fullName": "Quinn Murphy",
       "club": "almaden-fc",
       "clubTeam": "Quicksilver Green 2009 and 08/07 GA",
@@ -3396,7 +3746,30 @@
     },
     {
       "teamSlug": "leland",
+      "athleteId": "124e3a22-f5ba-4be3-a427-64159805666f",
+      "playerId": "p2d1587a847",
+      "fullName": "Rylan Hickey",
+      "club": "almaden-fc",
+      "clubTeam": "GA",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/leland-high-school1/rylan-hickey",
+          "kind": "ncsa",
+          "quote": "2027 Almaden Futbol Club (GA)",
+          "statedSchool": "Leland High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "leland",
       "athleteId": "6a5a8400-8c40-4703-9c98-9f9134fad8ad",
+      "playerId": "p2ff447758a",
       "fullName": "Taytem Condit",
       "club": "almaden-fc",
       "clubTeam": "AFC U13 GA",
@@ -3418,6 +3791,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "99cf4d3f-3798-43d1-99f4-25222b646ded",
+      "playerId": "pc3dc3509d6",
       "fullName": "Yoonwoo Kim",
       "club": "almaden-fc",
       "clubTeam": "AFC U16 GA",
@@ -3439,6 +3813,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "99cf4d3f-3798-43d1-99f4-25222b646ded",
+      "playerId": "pc3dc3509d6",
       "fullName": "Yoonwoo Kim",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2010/11",
@@ -3460,6 +3835,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "74bb9630-6ad6-44e0-a764-8dd4fdf83861",
+      "playerId": "p4185826b4d",
       "fullName": "Addison Subala",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2009/10",
@@ -3489,6 +3865,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "40857e24-b2a1-4d2b-b05d-910a47eb4c80",
+      "playerId": "pba532f1e2b",
       "fullName": "Brooke Benak",
       "club": "almaden-fc",
       "clubTeam": "AFC U16 GA",
@@ -3510,6 +3887,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "332ffcff-56ab-447f-a39b-514b1997a8b7",
+      "playerId": "pe2d3efde55",
       "fullName": "Fiona Benak",
       "club": "almaden-fc",
       "clubTeam": "AFC U16 GA",
@@ -3531,6 +3909,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "e7f77c07-dd3c-4597-b360-918f9d9e0d56",
+      "playerId": "p569c6ae8f8",
       "fullName": "Hayden Casey",
       "club": "almaden-fc",
       "clubTeam": "Almaden FC 2011 Girls Academy",
@@ -3559,7 +3938,30 @@
     },
     {
       "teamSlug": "pioneer",
+      "athleteId": "7bd3b66a-780b-44d2-b9a8-1a642f7338a1",
+      "playerId": "p90ff709490",
+      "fullName": "Isabella Guillebeaux",
+      "club": "de-anza-force",
+      "clubTeam": "ECNL",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/pioneer-high-school11/isabella-guillebeaux1",
+          "kind": "ncsa",
+          "quote": "2028 De Anza Force (ECNL)",
+          "statedSchool": "Pioneer High School (San Jose)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "pioneer",
       "athleteId": "38928e3b-ed51-4339-b608-3e7d7eb57d46",
+      "playerId": "p94fde9157e",
       "fullName": "Kayla Hellman",
       "club": "almaden-fc",
       "clubTeam": "AFC U13 GA",
@@ -3589,6 +3991,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "8b77577c-c970-402e-9956-ee71d4a43495",
+      "playerId": "p93c92ed419",
       "fullName": "Valerie Contreras",
       "club": "bay-area-surf",
       "clubTeam": null,
@@ -3618,6 +4021,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "b561eaa6-15b1-452a-8bba-ded2e5494656",
+      "playerId": "p4b35a20bcc",
       "fullName": "Yasmeen Akra",
       "club": "almaden-fc",
       "clubTeam": "AFC U18 GA",
@@ -3647,6 +4051,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "c325bd81-c2da-4fcf-b281-697818269625",
+      "playerId": "pf0e6389e7c",
       "fullName": "Giselle Mata",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL-RL",
@@ -3668,6 +4073,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "f8b3cf71-c3f0-4596-9514-75ddcc9fc12e",
+      "playerId": "pf406fab983",
       "fullName": "Makenna Wenski",
       "club": "almaden-fc",
       "clubTeam": "Quicksilver Green 2009",
@@ -3689,6 +4095,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "40745129-dcbf-4384-aca0-027ad904871d",
+      "playerId": "p5476e9ab2f",
       "fullName": "Sierra Wilser",
       "club": "de-anza-force",
       "clubTeam": "ECNL",
@@ -3718,6 +4125,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "bd18d6e9-3c57-4800-b108-2f58e4bda9dd",
+      "playerId": "pf263b3908e",
       "fullName": "Story Mettee",
       "club": "almaden-fc",
       "clubTeam": null,
@@ -3738,7 +4146,30 @@
     },
     {
       "teamSlug": "evergreen-valley",
+      "athleteId": "692fd2b9-f756-4b7d-9f3f-833d9bad3741",
+      "playerId": "p281bdc8274",
+      "fullName": "Aubrielle Torres",
+      "club": "mvla-soccer-club",
+      "clubTeam": "Gold",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/evergreen-valley-high-school/aubrielle-torres",
+          "kind": "ncsa",
+          "quote": "2028 MVLASJ (Gold)",
+          "statedSchool": "Evergreen Valley High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "evergreen-valley",
       "athleteId": "fcc144d8-9d7e-4948-8e4a-e907fdeeeb20",
+      "playerId": "p065656c608",
       "fullName": "Camila Valencia",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL",
@@ -3760,6 +4191,7 @@
     {
       "teamSlug": "evergreen-valley",
       "athleteId": "88e9ca98-13be-4b7b-adb1-07ef6ea642de",
+      "playerId": "pf4077149ff",
       "fullName": "Evelyn Delgadillo",
       "club": "de-anza-force",
       "clubTeam": "Force (CA) ECNL G2008/09",
@@ -3781,6 +4213,7 @@
     {
       "teamSlug": "evergreen-valley",
       "athleteId": "e50c004c-2344-4268-9a1c-8a5552239044",
+      "playerId": "pc0b62fd5cb",
       "fullName": "Mahi Nanda",
       "club": "almaden-fc",
       "clubTeam": "AFC U18 GA",
@@ -3802,6 +4235,7 @@
     {
       "teamSlug": "silver-creek",
       "athleteId": "c600e4d8-31b2-4422-9038-61b8c20bbec7",
+      "playerId": "p3d10423c1f",
       "fullName": "Joslyn Barajas",
       "club": "de-anza-force",
       "clubTeam": null,
@@ -3821,8 +4255,53 @@
       "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force/) and her school \"Silver Creek\", linked to the team page titled \"Silver Creek High School Soccer | San Jose, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2025-04-02, modified 2025-05-19. Status unknown: no source is dated 2026 (latest date 2025-05-19). Every source re-read at assembly on 2026-11-21."
     },
     {
+      "teamSlug": "sobrato",
+      "athleteId": "49b1dda6-835e-4135-a858-55731931a086",
+      "playerId": "p9c26a72189",
+      "fullName": "Isabella Larsen",
+      "club": "almaden-fc",
+      "clubTeam": "GA & NPL 1",
+      "status": "past",
+      "asOf": "2023",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/morgan-hill/ann-sobrato-high-school1/isabella-larsen3",
+          "kind": "ncsa",
+          "quote": "2023 Almaden FC (GA & NPL 1 )",
+          "statedSchool": "Ann Sobrato High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "49b1dda6-835e-4135-a858-55731931a086",
+      "playerId": "p9c26a72189",
+      "fullName": "Isabella Larsen",
+      "club": "bay-area-surf",
+      "clubTeam": "ECNL-RL",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/morgan-hill/ann-sobrato-high-school1/isabella-larsen3",
+          "kind": "ncsa",
+          "quote": "2025 Bay Area Surf (ECNL-RL)",
+          "statedSchool": "Ann Sobrato High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
       "teamSlug": "independence",
       "athleteId": "ccb2f55a-5683-4d32-b955-58b9a88cddc6",
+      "playerId": "p08f21ea5ae",
       "fullName": "Joscelyn Santa Cruz",
       "club": "san-francisco-elite-academy",
       "clubTeam": "Elite",
@@ -3842,8 +4321,75 @@
       "basis": "Her own SportsRecruits soccer profile (The page names Independence High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21."
     },
     {
+      "teamSlug": "prospect",
+      "athleteId": "376ff19b-d75e-418e-9b33-e18916093fcb",
+      "playerId": "pe92cdd84dc",
+      "fullName": "Kaitlyn Babbage",
+      "club": "allstars-sc",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2023",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/saratoga/prospect-high-school2/kaitlyn-babbage",
+          "kind": "ncsa",
+          "quote": "2023 ALLSTARS United",
+          "statedSchool": "Prospect High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "prospect",
+      "athleteId": "376ff19b-d75e-418e-9b33-e18916093fcb",
+      "playerId": "pe92cdd84dc",
+      "fullName": "Kaitlyn Babbage",
+      "club": "santa-clara-sporting-club",
+      "clubTeam": "ECNL-RL",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/saratoga/prospect-high-school2/kaitlyn-babbage",
+          "kind": "ncsa",
+          "quote": "2026 Santa Clara Sporting (ECNL-RL)",
+          "statedSchool": "Prospect High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "prospect",
+      "athleteId": "c0566b31-20cd-4769-868f-9fa07485fcf3",
+      "playerId": "p800df79e3a",
+      "fullName": "Valyn Rubina",
+      "club": "mvla-soccer-club",
+      "clubTeam": "ECNL RL",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/saratoga/prospect-high-school2/valyn-rubina",
+          "kind": "ncsa",
+          "quote": "2030 MVLA (ECNL RL)",
+          "statedSchool": "Prospect High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
       "teamSlug": "mitty",
       "athleteId": "519fce09-d77f-40af-a572-aa52c0625429",
+      "playerId": "p0f7354bd7b",
       "fullName": "Aashi Ahuja",
       "club": "almaden-fc",
       "clubTeam": "AFC",
@@ -3865,6 +4411,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "f1caec4d-f490-4107-991c-2194d1ed6644",
+      "playerId": "p563987f65b",
       "fullName": "Avery Richter",
       "club": "de-anza-force",
       "clubTeam": "2010",
@@ -3910,6 +4457,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "3a3ff4ee-650b-4a5b-95bc-dc9ba78ae4b6",
+      "playerId": "p7ace4651aa",
       "fullName": "Ayla Briski",
       "club": "bay-area-surf",
       "clubTeam": "Bay Area Surf ECNL 2010G",
@@ -3946,7 +4494,60 @@
     },
     {
       "teamSlug": "mitty",
+      "athleteId": "3a3ff4ee-650b-4a5b-95bc-dc9ba78ae4b6",
+      "playerId": "p7ace4651aa",
+      "fullName": "Ayla Briski",
+      "club": "de-anza-force",
+      "clubTeam": "ECNL",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/ayla-briski",
+          "kind": "ncsa",
+          "quote": "2024 De Anza Force (ECNL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/ayla-briski1",
+          "kind": "ncsa",
+          "quote": "2024 De Anza Force (ECNL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "3a3ff4ee-650b-4a5b-95bc-dc9ba78ae4b6",
+      "playerId": "p7ace4651aa",
+      "fullName": "Ayla Briski",
+      "club": "mvla-soccer-club",
+      "clubTeam": "ECRL",
+      "status": "past",
+      "asOf": "2021",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/ayla-briski1",
+          "kind": "ncsa",
+          "quote": "2021 MVLA (ECRL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
       "athleteId": "c637626b-e31f-4dab-8692-0ec5ef52aa01",
+      "playerId": "pd9cb1bd486",
       "fullName": "Iyana Thompson",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL-RL",
@@ -3968,6 +4569,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "63d9a5a7-1933-4e2b-80a5-3f397bf71bb4",
+      "playerId": "pc9bdc50645",
       "fullName": "Kate Gutierrez",
       "club": "bay-area-surf",
       "clubTeam": "09G ECNL",
@@ -3997,6 +4599,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "7295c409-4715-48c6-9737-840396ea3382",
+      "playerId": "pc9eb12fa14",
       "fullName": "Layla Tucakovic",
       "club": "bay-area-surf",
       "clubTeam": "ECNL",
@@ -4025,7 +4628,52 @@
     },
     {
       "teamSlug": "mitty",
+      "athleteId": "7100a5c2-7efd-4ad0-9397-7569fb12a3de",
+      "playerId": "p8241f64510",
+      "fullName": "Lilly Jones",
+      "club": "almaden-fc",
+      "clubTeam": "GA",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/lilly-jones23",
+          "kind": "ncsa",
+          "quote": "2026 Almaden FC (GA)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "ea7f9784-a369-40a0-a8ac-038fd2ac8c29",
+      "playerId": "p5986d22630",
+      "fullName": "Megan Azevedo",
+      "club": "de-anza-force",
+      "clubTeam": "'07 ECNL RL",
+      "status": "unknown",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/megan-azevedo",
+          "kind": "ncsa",
+          "quote": "2024 DeAnza Force ('07 ECNL RL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
       "athleteId": "a61d395e-9c57-4804-a993-8d17f070cecf",
+      "playerId": "pbc3c9a3e51",
       "fullName": "Penny Dela Cruz",
       "club": "bay-area-surf",
       "clubTeam": "09 ECNL",
@@ -4047,9 +4695,10 @@
     {
       "teamSlug": "mitty",
       "athleteId": "c901ec8b-7d57-43ff-9a74-7859998183b4",
+      "playerId": "p3c0add0bd5",
       "fullName": "Sally Burns",
       "club": "mustang-soccer-league",
-      "clubTeam": null,
+      "clubTeam": "ECNL",
       "status": "unknown",
       "asOf": "2025-08-04",
       "confidence": "high",
@@ -4069,13 +4718,22 @@
           "statedSchool": "Archbishop Mitty",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/sally-burns",
+          "kind": "ncsa",
+          "quote": "2025 Mustang SC (ECNL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
         }
       ],
-      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"Mustang SC ECNL\" (linked to https://prepsoccer.com/program/mustang-sc-ecnl/) and her school \"Archbishop Mitty\", linked to the team page titled \"Archbishop Mitty High School Soccer | San Jose, CA | Prep Soccer\"; class 2029 equals the roster. Server-rendered HTML; profile created 2025-08-04. PrepSoccer's program page for the club lists her under Class of 2029 with high school Archbishop Mitty (same site; agrees). Status unknown: no source is dated 2026 (latest date 2025-08-04). Every source re-read at assembly on 2026-11-21."
+      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"Mustang SC ECNL\" (linked to https://prepsoccer.com/program/mustang-sc-ecnl/) and her school \"Archbishop Mitty\", linked to the team page titled \"Archbishop Mitty High School Soccer | San Jose, CA | Prep Soccer\"; class 2029 equals the roster. Server-rendered HTML; profile created 2025-08-04. PrepSoccer's program page for the club lists her under Class of 2029 with high school Archbishop Mitty (same site; agrees). Status unknown: no source is dated 2026 (latest date 2025-08-04). The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from clubs, ncsa; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "mitty",
       "athleteId": "1ba0f0fc-4145-48ab-8084-42f8782eedff",
+      "playerId": "p0bdde0e756",
       "fullName": "Scarlett Martinez",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL",
@@ -4097,13 +4755,22 @@
     {
       "teamSlug": "mitty",
       "athleteId": "9da12c56-0dca-4076-b794-e4b19b559681",
+      "playerId": "pd329224c43",
       "fullName": "Sora Cerniglia",
       "club": "mvla-soccer-club",
-      "clubTeam": "10G Juventus ECNL-RL",
+      "clubTeam": "Premier",
       "status": "unknown",
-      "asOf": null,
+      "asOf": "2024",
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/sora-cerniglia",
+          "kind": "ncsa",
+          "quote": "2024 Mountain View Los Altos (Premier)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
         {
           "url": "https://www.topdrawersoccer.com/club-player-profile/sora-cerniglia/pid-176363",
           "kind": "other",
@@ -4121,11 +4788,12 @@
           "sourceDate": null
         }
       ],
-      "basis": "TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"Mtn. View Los Altos SC\" (team \"Mtn. View Los Altos SC (10G Juventus ECNL-RL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2028, which equals the roster. Undated. Status unknown: no source is dated 2026. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from clubs, sportsrecruits; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"Mtn. View Los Altos SC\" (team \"Mtn. View Los Altos SC (10G Juventus ECNL-RL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2028, which equals the roster. Undated. Status unknown: no source is dated 2026. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from ncsa, clubs, sportsrecruits; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "mitty",
       "athleteId": "f48f6981-af40-4f8f-b21e-fda15287e3b7",
+      "playerId": "p3a0bf680a3",
       "fullName": "Vivian Baker",
       "club": "bay-area-surf",
       "clubTeam": "Bay Area Surf ECNL",
@@ -4178,7 +4846,30 @@
     },
     {
       "teamSlug": "mitty",
+      "athleteId": "f48f6981-af40-4f8f-b21e-fda15287e3b7",
+      "playerId": "p3a0bf680a3",
+      "fullName": "Vivian Baker",
+      "club": "de-anza-force",
+      "clubTeam": "ECNL",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/vivian-baker2",
+          "kind": "ncsa",
+          "quote": "2028 De Anza Force (ECNL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
       "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
+      "playerId": "p5ebfd3c972",
       "fullName": "Zuri Brandt",
       "club": "de-anza-force",
       "clubTeam": "2009G",
@@ -4219,6 +4910,14 @@
           "sourceDate": null
         },
         {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt",
+          "kind": "ncsa",
+          "quote": "2025 De Anza Force (ECNL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
           "url": "https://www.soccerwire.com/player/zuri-brandt/",
           "kind": "other",
           "quote": "Committed: Washington Women Youth club: De Anza Force Youth league: ECNL Girls Zuri Brandt high school: Archbishop Mitty graduation: 2027",
@@ -4251,11 +4950,78 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Archbishop Mitty (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The page is not claimed, though the block is filled in. PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force/) and her school \"Archbishop Mitty\", linked to the team page titled \"Archbishop Mitty High School Soccer | San Jose, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2023-03-10, modified 2025-05-07. PrepSoccer's program page for the club lists her under Class of 2027 with high school Archbishop Mitty (same site; agrees). TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"De Anza Force SC\" (team \"De Anza Force SC (ECNL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2027, which equals the roster. Undated. Status unknown: no source is dated 2026 (latest date 2025-05-07). Two independent sites agree. SoccerWire and TopDrawerSoccer (both naming Archbishop Mitty, class 2027) and PrepSoccer's 2026-02-23 story agree on De Anza Force ECNL. Undated pages and a 2025-26-season story, so status unknown. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from maxpreps, clubs, commits, sportsrecruits; status from the maxpreps entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Archbishop Mitty (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The page is not claimed, though the block is filled in. PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force/) and her school \"Archbishop Mitty\", linked to the team page titled \"Archbishop Mitty High School Soccer | San Jose, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2023-03-10, modified 2025-05-07. PrepSoccer's program page for the club lists her under Class of 2027 with high school Archbishop Mitty (same site; agrees). TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"De Anza Force SC\" (team \"De Anza Force SC (ECNL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2027, which equals the roster. Undated. Status unknown: no source is dated 2026 (latest date 2025-05-07). Two independent sites agree. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. SoccerWire and TopDrawerSoccer (both naming Archbishop Mitty, class 2027) and PrepSoccer's 2026-02-23 story agree on De Anza Force ECNL. Undated pages and a 2025-26-season story, so status unknown. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from maxpreps, clubs, ncsa, commits, sportsrecruits; status from the maxpreps entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
+      "playerId": "p5ebfd3c972",
+      "fullName": "Zuri Brandt",
+      "club": "mvla-soccer-club",
+      "clubTeam": "ECNL-RL",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt",
+          "kind": "ncsa",
+          "quote": "2024 MVLA (ECNL-RL)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
+      "playerId": "p5ebfd3c972",
+      "fullName": "Zuri Brandt",
+      "club": "san-francisco-elite-academy",
+      "clubTeam": "GA",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt",
+          "kind": "ncsa",
+          "quote": "2024 San Francisco Elite (GA)",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "11612bcc-65a8-4e70-8918-b64bcd38280d",
+      "playerId": "p1e1b6d74f5",
+      "fullName": "Alessia Costa",
+      "club": "bay-area-surf",
+      "clubTeam": "ECNL",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/valley-christian-high-school10/alessia-costa3",
+          "kind": "ncsa",
+          "quote": "2025 Bay Area Surf (ECNL)",
+          "statedSchool": "Valley Christian High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "valley-christian",
       "athleteId": "dcb9e2e5-4835-4578-a9dc-87ac16ec4165",
+      "playerId": "p9fa3e2c75a",
       "fullName": "Arrielle Shabaglian",
       "club": "mvla-soccer-club",
       "clubTeam": "2010 Juventus",
@@ -4277,6 +5043,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "7bda9462-326d-45a0-b6c4-f77a784c71bc",
+      "playerId": "pcd9362c866",
       "fullName": "Madison McDougall",
       "club": "almaden-fc",
       "clubTeam": "Quicksilver green",
@@ -4298,6 +5065,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "ad3ef452-a288-4dcc-841b-9ad990cb25eb",
+      "playerId": "pd8b0b4f157",
       "fullName": "Samantha Botelho",
       "club": "bay-area-surf",
       "clubTeam": "Bay Area Surf ECNL",
@@ -4319,6 +5087,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "af21030d-66f5-4b50-a63d-d17c96a229bd",
+      "playerId": "p4909f7cefa",
       "fullName": "Tanisha Rameshkumar",
       "club": "bay-area-surf",
       "clubTeam": "ECNL G10",
@@ -4333,13 +5102,52 @@
           "statedSchool": "Valley Christian (San Jose, CA)",
           "statedClassYear": 2028,
           "sourceDate": "2025-06-19"
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/valley-christian-high-school7/tanisha-rameshkumar2",
+          "kind": "ncsa",
+          "quote": "2025 Bay Area Surf (ECNL )",
+          "statedSchool": "Valley Christian High School - San Jose",
+          "statedClassYear": 2028,
+          "sourceDate": null
         }
       ],
-      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Valley Christian (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. Every source re-read at assembly on 2026-11-21."
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Valley Christian (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from maxpreps, ncsa; status from the maxpreps entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "d9f07072-c1ca-4280-b196-3b5ca54eda88",
+      "playerId": "pf283d01879",
+      "fullName": "Taylor Skovmand",
+      "club": "los-gatos-united-soccer-club",
+      "clubTeam": "ECNL RL",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/valley-christian-high-school7/taylor-skovmand1",
+          "kind": "ncsa",
+          "quote": "2026 Los Gatos United (ECNL RL)",
+          "statedSchool": "Valley Christian High School - San Jose",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/valley-christian-high-school7/taylor-skovmand1",
+          "kind": "ncsa",
+          "quote": "2025 Los Gatos Untied (Gold)",
+          "statedSchool": "Valley Christian High School - San Jose",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "4a2495a7-2f65-4ec0-9aa2-7ffcfb31f99f",
+      "playerId": "pa2e071bdde",
       "fullName": "Frankie Shannon",
       "club": "burlingame-soccer-club",
       "clubTeam": "Burlingame SC 2011G Gold",
@@ -4361,6 +5169,7 @@
     {
       "teamSlug": "carlmont",
       "athleteId": "27d0c3b9-6efd-4eb0-a2e3-cf2289dd4e93",
+      "playerId": "p4693ae544e",
       "fullName": "Ashleigh Bieser",
       "club": "de-anza-force",
       "clubTeam": "ECNL",
@@ -4414,6 +5223,37 @@
     {
       "teamSlug": "carlmont",
       "athleteId": "896dd17b-da2a-4255-9a70-6263c86b4672",
+      "playerId": "pbf50e157eb",
+      "fullName": "Gianna Armanini",
+      "club": "belmont-united-soccer-club",
+      "clubTeam": "Gold",
+      "status": "past",
+      "asOf": "2019",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/belmont/carlmont-high-school1/gianna-armanini",
+          "kind": "ncsa",
+          "quote": "2019 Belmont United (Gold)",
+          "statedSchool": "Carlmont High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/belmont/carlmont-high-school1/gianna-armanini",
+          "kind": "ncsa",
+          "quote": "2019 Belmont United Soccer Club (Gold)",
+          "statedSchool": "Carlmont High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "carlmont",
+      "athleteId": "896dd17b-da2a-4255-9a70-6263c86b4672",
+      "playerId": "pbf50e157eb",
       "fullName": "Gianna Armanini",
       "club": "palo-alto-soccer-club",
       "clubTeam": "U19 GA SVSA (Silicon Valley Soccer Academy)",
@@ -4442,7 +5282,38 @@
     },
     {
       "teamSlug": "carlmont",
+      "athleteId": "896dd17b-da2a-4255-9a70-6263c86b4672",
+      "playerId": "pbf50e157eb",
+      "fullName": "Gianna Armanini",
+      "club": "silicon-valley-soccer-academy",
+      "clubTeam": "Girls Academy",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/belmont/carlmont-high-school1/gianna-armanini",
+          "kind": "ncsa",
+          "quote": "2026 U19 SVSA Girls Academy (Girls Academy)",
+          "statedSchool": "Carlmont High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/belmont/carlmont-high-school1/gianna-armanini",
+          "kind": "ncsa",
+          "quote": "2025 U18 SVSA Girls Academy (Girls Academy)",
+          "statedSchool": "Carlmont High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "carlmont",
       "athleteId": "a4015f0d-7da6-4811-8b4e-1c41d7f18932",
+      "playerId": "p2e6937f8f8",
       "fullName": "Grace Hardman",
       "club": "palo-alto-soccer-club",
       "clubTeam": "11G, GA & NPL",
@@ -4464,6 +5335,7 @@
     {
       "teamSlug": "carlmont",
       "athleteId": "8170dcbf-47d7-43a6-8d3c-f3c5406f51af",
+      "playerId": "pc954298a69",
       "fullName": "Kiyo Aretun",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "SVSA Girls Academy II",
@@ -4484,7 +5356,52 @@
     },
     {
       "teamSlug": "carlmont",
+      "athleteId": "14bc223d-3b8e-4a8a-a4ad-0def6e4566ef",
+      "playerId": "pa9eb7176c0",
+      "fullName": "Lauren McLinden",
+      "club": "burlingame-soccer-club",
+      "clubTeam": "Ecnl rl",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/belmont/carlmont-high-school1/lauren-mclinden",
+          "kind": "ncsa",
+          "quote": "2025 Burlingame Soccer Club (Ecnl rl)",
+          "statedSchool": "Carlmont High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "carlmont",
+      "athleteId": "14bc223d-3b8e-4a8a-a4ad-0def6e4566ef",
+      "playerId": "pa9eb7176c0",
+      "fullName": "Lauren McLinden",
+      "club": "san-carlos-united",
+      "clubTeam": "Gold",
+      "status": "past",
+      "asOf": "2015",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/belmont/carlmont-high-school1/lauren-mclinden",
+          "kind": "ncsa",
+          "quote": "2015 San Carlos United (Gold)",
+          "statedSchool": "Carlmont High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "carlmont",
       "athleteId": "9def461c-2a71-4575-86f4-31337f737818",
+      "playerId": "pc443725bd0",
       "fullName": "Lila Latta",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "09 GA",
@@ -4506,6 +5423,7 @@
     {
       "teamSlug": "carlmont",
       "athleteId": "7d3314d0-258a-473a-a030-8a7717fb1cef",
+      "playerId": "p01d70c5c56",
       "fullName": "Paige Rouspil",
       "club": "albion-sc-silicon-valley",
       "clubTeam": "Blue",
@@ -4527,6 +5445,7 @@
     {
       "teamSlug": "menlo-atherton",
       "athleteId": "90f02940-2218-4b5c-9c90-635d6a00b5ad",
+      "playerId": "p5079afa05f",
       "fullName": "Ashlan Klemmer",
       "club": "mvla-soccer-club",
       "clubTeam": null,
@@ -4556,6 +5475,7 @@
     {
       "teamSlug": "menlo-atherton",
       "athleteId": "da798873-e028-4396-9944-06cee3cab96b",
+      "playerId": "p0603253362",
       "fullName": "Atessa Gholamy",
       "club": "de-anza-force",
       "clubTeam": "09G ECNL-RL",
@@ -4585,9 +5505,32 @@
     {
       "teamSlug": "menlo-atherton",
       "athleteId": "3c34f0ef-7de7-4119-9d81-f66a67fbb620",
+      "playerId": "p0c19304ae5",
+      "fullName": "Emma Holtz",
+      "club": "bay-area-surf",
+      "clubTeam": "ECNL",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/atherton/menloatherton-high-school/emma-holtz2",
+          "kind": "ncsa",
+          "quote": "2024 Bay Area Surf (ECNL)",
+          "statedSchool": "Menlo-Atherton High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "menlo-atherton",
+      "athleteId": "3c34f0ef-7de7-4119-9d81-f66a67fbb620",
+      "playerId": "p0c19304ae5",
       "fullName": "Emma Holtz",
       "club": "de-anza-force",
-      "clubTeam": null,
+      "clubTeam": "ECNL",
       "status": "current",
       "asOf": "2026-03-31",
       "confidence": "high",
@@ -4607,13 +5550,96 @@
           "statedSchool": "Menlo-Atherton",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/atherton/menloatherton-high-school/emma-holtz2",
+          "kind": "ncsa",
+          "quote": "2025 De Anza Force (ECNL)",
+          "statedSchool": "Menlo-Atherton High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
         }
       ],
-      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force/) and her school \"Menlo-Atherton\", linked to the team page titled \"Menlo-Atherton High School Soccer | Atherton, CA | Prep Soccer\"; class 2029 equals the roster. Server-rendered HTML; profile created 2026-03-31. PrepSoccer's program page for the club lists her under Class of 2029 with high school Menlo-Atherton (same site; agrees). Status current: a source dated 2026-03-31 (2026) states the club in the present tense. Every source re-read at assembly on 2026-11-21."
+      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force/) and her school \"Menlo-Atherton\", linked to the team page titled \"Menlo-Atherton High School Soccer | Atherton, CA | Prep Soccer\"; class 2029 equals the roster. Server-rendered HTML; profile created 2026-03-31. PrepSoccer's program page for the club lists her under Class of 2029 with high school Menlo-Atherton (same site; agrees). Status current: a source dated 2026-03-31 (2026) states the club in the present tense. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from clubs, ncsa; status from the clubs entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "half-moon-bay",
+      "athleteId": "740aecd7-6628-4712-807f-f6cc3cd0c9ec",
+      "playerId": "p79593e5f81",
+      "fullName": "Harper Satterlee",
+      "club": "albion-sc-silicon-valley",
+      "clubTeam": "DPL",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/half-moon-bay/half-moon-bay-high-school1/harper-satterlee",
+          "kind": "ncsa",
+          "quote": "2026 ABLION SC silicon valley (DPL)",
+          "statedSchool": "Half Moon Bay High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/half-moon-bay/half-moon-bay-high-school1/harper-satterlee",
+          "kind": "ncsa",
+          "quote": "2026 Albion SC Silicon Valley (State premier)",
+          "statedSchool": "Half Moon Bay High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "half-moon-bay",
+      "athleteId": "740aecd7-6628-4712-807f-f6cc3cd0c9ec",
+      "playerId": "p79593e5f81",
+      "fullName": "Harper Satterlee",
+      "club": "half-moon-bay-soccer-club",
+      "clubTeam": "Silver",
+      "status": "past",
+      "asOf": "2023",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/half-moon-bay/half-moon-bay-high-school1/harper-satterlee",
+          "kind": "ncsa",
+          "quote": "2023 Half Moon Bay Soccer Club (Silver)",
+          "statedSchool": "Half Moon Bay High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "half-moon-bay",
+      "athleteId": "740aecd7-6628-4712-807f-f6cc3cd0c9ec",
+      "playerId": "p79593e5f81",
+      "fullName": "Harper Satterlee",
+      "club": "los-gatos-united-soccer-club",
+      "clubTeam": "ECNL-RL",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/half-moon-bay/half-moon-bay-high-school1/harper-satterlee",
+          "kind": "ncsa",
+          "quote": "2027 Los Gatos United (ECNL-RL)",
+          "statedSchool": "Half Moon Bay High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "san-mateo",
       "athleteId": "cfbab5b6-abb5-45eb-8223-aae0e6ddf963",
+      "playerId": "pda822c84aa",
       "fullName": "Allison Clark",
       "club": "peninsula-youth-soccer-club",
       "clubTeam": "Thunder",
@@ -4635,13 +5661,22 @@
     {
       "teamSlug": "san-mateo",
       "athleteId": "b2652e42-c6c6-4303-89a4-71f932a1425c",
+      "playerId": "p629b6bace9",
       "fullName": "Nur Ziv",
       "club": "burlingame-soccer-club",
-      "clubTeam": "(G10) Burlingame SC ECNL RL G10",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "ECNL-RL",
+      "status": "current",
+      "asOf": "2026",
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-mateo/san-mateo-high-school1/nur-ziv",
+          "kind": "ncsa",
+          "quote": "2026 Burlingame FC ECNL-RL G10 (ECNL-RL)",
+          "statedSchool": "San Mateo High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
         {
           "url": "https://my.sportsrecruits.com/athlete/nur_ziv",
           "kind": "sportsrecruits",
@@ -4651,11 +5686,12 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names San Mateo High School and class of 2029, which agrees with the roster.) lists the club (Burlingame) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Her own SportsRecruits soccer profile (The page names San Mateo High School and class of 2029, which agrees with the roster.) lists the club (Burlingame) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from ncsa, sportsrecruits; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "san-mateo",
       "athleteId": "d0337bf3-9242-4ee9-b8ea-0379ac840526",
+      "playerId": "pe94a9a69eb",
       "fullName": "Violette Vestner",
       "club": "de-anza-force",
       "clubTeam": "2010G ECNL-RL",
@@ -4673,6 +5709,124 @@
         }
       ],
       "basis": "Her own SportsRecruits soccer profile (The page names San Mateo High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "san-mateo",
+      "athleteId": "c9962508-a8e7-40d6-b8dd-d99650923b55",
+      "playerId": "p99b2032f9f",
+      "fullName": "Zoe Lichaa",
+      "club": "peninsula-youth-soccer-club",
+      "clubTeam": "NPL",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-mateo/san-mateo-high-school1/zoe-lichaa",
+          "kind": "ncsa",
+          "quote": "2025 Peninsula (NPL)",
+          "statedSchool": "San Mateo High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "72a98bbd-c1a5-4745-baec-982f036fce73",
+      "playerId": "p54272a271b",
+      "fullName": "Leala Bennett",
+      "club": "santa-cruz-united-fc",
+      "clubTeam": "ECNL",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/soquel/soquel-high-school1/leala-bennett",
+          "kind": "ncsa",
+          "quote": "2025 Santa Cruz United FC (ECNL)",
+          "statedSchool": "Soquel High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "4240bc9e-657f-42fd-9521-e069b4299111",
+      "playerId": "p3bf7ecdd9a",
+      "fullName": "Marissa Garcia",
+      "club": "santa-cruz-united-fc",
+      "clubTeam": "ECNL",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/soquel/soquel-high-school1/marissa-garcia72",
+          "kind": "ncsa",
+          "quote": "2026 Santa Cruz United FC (ECNL)",
+          "statedSchool": "Soquel High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "889d3545-4b40-4a4e-be8a-df87c2842bb4",
+      "playerId": "p663740e1ed",
+      "fullName": "Mia Medina",
+      "club": "santa-cruz-city-youth-soccer-club",
+      "clubTeam": "NPL",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/soquel/soquel-high-school1/mia-medina20",
+          "kind": "ncsa",
+          "quote": "2027 Santa Cruz city Jaw (NPL )",
+          "statedSchool": "Soquel High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/soquel/soquel-high-school1/mia-medina20",
+          "kind": "ncsa",
+          "quote": "2024 Santa Cruz Jaws (NPL )",
+          "statedSchool": "Soquel High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "889d3545-4b40-4a4e-be8a-df87c2842bb4",
+      "playerId": "p663740e1ed",
+      "fullName": "Mia Medina",
+      "club": "silicon-valley-soccer-academy",
+      "clubTeam": "GA",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/soquel/soquel-high-school1/mia-medina20",
+          "kind": "ncsa",
+          "quote": "2026 Silicon Valley Soccer Academy (GA)",
+          "statedSchool": "Soquel High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
     }
   ]
 }

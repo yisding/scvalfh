@@ -1,9 +1,9 @@
 {
   "season": "26-27",
-  "builtBy": "Research by hand, 2026-11-21: Hudl's public rosters for every school's boys basketball teams and a SportsRecruits profile-address probe, over the 279 JV players MaxPreps lists; each Hudl page read twice.",
+  "builtBy": "Research by hand, 2026-11-21: Hudl's public rosters for every school's boys basketball teams, NCSA's school pages and name lookups and a SportsRecruits profile-address probe, over the 279 JV players MaxPreps lists; each Hudl and NCSA page read twice.",
   "capturedAt": "2026-11-21",
   "notes": [
-    "The JV players' own recruiting pages, linked by the rule of data/basketball/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. 60 pages for 60 players (60 Hudl). No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has his pages in the varsity file. A JV page stating a class year one ahead of a stale MaxPreps grade is not linked (the JV check has no grade-conflict marker). Recall is partial."
+    "The JV players' own recruiting pages, linked by the rule of data/basketball/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. 62 pages for 61 players (2 NCSA, 60 Hudl). No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has his pages in the varsity file. A JV page stating a class year one ahead of a stale MaxPreps grade is not linked (the JV check has no grade-conflict marker). Recall is partial."
   ],
   "teams": [
     {
@@ -11,6 +11,7 @@
       "players": [
         {
           "name": "Cruz Pardo De Zela",
+          "playerId": "p49b1ee2a64",
           "profiles": [
             {
               "platform": "hudl",
@@ -27,6 +28,7 @@
       "players": [
         {
           "name": "Ngundeng Liah",
+          "playerId": "p1908f92de2",
           "profiles": [
             {
               "platform": "hudl",
@@ -38,6 +40,7 @@
         },
         {
           "name": "Karl kekobad",
+          "playerId": "p755e802206",
           "profiles": [
             {
               "platform": "hudl",
@@ -49,6 +52,7 @@
         },
         {
           "name": "Valentino Ortega",
+          "playerId": "p5ef4027c5c",
           "profiles": [
             {
               "platform": "hudl",
@@ -60,6 +64,7 @@
         },
         {
           "name": "Max Svantesson",
+          "playerId": "p49b62599d7",
           "profiles": [
             {
               "platform": "hudl",
@@ -71,6 +76,7 @@
         },
         {
           "name": "kriday Ramkumar",
+          "playerId": "p689c21d907",
           "profiles": [
             {
               "platform": "hudl",
@@ -82,6 +88,7 @@
         },
         {
           "name": "Nathaniel Cabrera Jr.",
+          "playerId": "p2ee632c711",
           "profiles": [
             {
               "platform": "hudl",
@@ -93,6 +100,7 @@
         },
         {
           "name": "Matthew Jairee Matias",
+          "playerId": "pfad025e76a",
           "profiles": [
             {
               "platform": "hudl",
@@ -104,6 +112,7 @@
         },
         {
           "name": "Gerard Jacob San Luis",
+          "playerId": "p7653879467",
           "profiles": [
             {
               "platform": "hudl",
@@ -115,6 +124,7 @@
         },
         {
           "name": "Amari Williams",
+          "playerId": "p16bf35a297",
           "profiles": [
             {
               "platform": "hudl",
@@ -131,6 +141,7 @@
       "players": [
         {
           "name": "Ian Denny",
+          "playerId": "p1ac777d1c1",
           "profiles": [
             {
               "platform": "hudl",
@@ -141,7 +152,20 @@
           ]
         },
         {
+          "name": "Lucas Contente Balla",
+          "playerId": "p3349021857",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/santa-clara/santa-clara-high-school1/lucas-contente-balla",
+              "classOf": 2030,
+              "note": "NCSA men's basketball profile naming Santa Clara High School (Santa Clara); class of 2030 agrees with the roster. Found by the 2026-11-21 NCSA pass and read twice."
+            }
+          ]
+        },
+        {
           "name": "Yaozeng Huang",
+          "playerId": "p1b3f6d0a04",
           "profiles": [
             {
               "platform": "hudl",
@@ -153,6 +177,7 @@
         },
         {
           "name": "Austin Leader",
+          "playerId": "pfd29e05f45",
           "profiles": [
             {
               "platform": "hudl",
@@ -164,6 +189,7 @@
         },
         {
           "name": "Elijah Palomino",
+          "playerId": "p884504fc6d",
           "profiles": [
             {
               "platform": "hudl",
@@ -175,6 +201,7 @@
         },
         {
           "name": "Nicholas DeRuna",
+          "playerId": "pba14c431a6",
           "profiles": [
             {
               "platform": "hudl",
@@ -186,6 +213,7 @@
         },
         {
           "name": "Evann Sun",
+          "playerId": "p1c062850c6",
           "profiles": [
             {
               "platform": "hudl",
@@ -197,6 +225,7 @@
         },
         {
           "name": "Owen Grace",
+          "playerId": "pf344013466",
           "profiles": [
             {
               "platform": "hudl",
@@ -208,6 +237,7 @@
         },
         {
           "name": "Arya Gupta",
+          "playerId": "pfc6e93953a",
           "profiles": [
             {
               "platform": "hudl",
@@ -224,6 +254,7 @@
       "players": [
         {
           "name": "Leo Song",
+          "playerId": "p1d0a47df76",
           "profiles": [
             {
               "platform": "hudl",
@@ -240,6 +271,7 @@
       "players": [
         {
           "name": "Ryan Liu",
+          "playerId": "p8594f89c27",
           "profiles": [
             {
               "platform": "hudl",
@@ -251,6 +283,7 @@
         },
         {
           "name": "Jaden Francisco",
+          "playerId": "p001e050271",
           "profiles": [
             {
               "platform": "hudl",
@@ -262,6 +295,7 @@
         },
         {
           "name": "Jiho Lee",
+          "playerId": "pd5d381f95c",
           "profiles": [
             {
               "platform": "hudl",
@@ -273,6 +307,7 @@
         },
         {
           "name": "Ron Yeung",
+          "playerId": "pe0928f1e01",
           "profiles": [
             {
               "platform": "hudl",
@@ -284,6 +319,7 @@
         },
         {
           "name": "Benjamin Naret",
+          "playerId": "pd3cc8ca67d",
           "profiles": [
             {
               "platform": "hudl",
@@ -295,6 +331,7 @@
         },
         {
           "name": "Nikko Jung",
+          "playerId": "p2321d9f94e",
           "profiles": [
             {
               "platform": "hudl",
@@ -306,6 +343,7 @@
         },
         {
           "name": "Parker Nguyen",
+          "playerId": "pa73b315dd5",
           "profiles": [
             {
               "platform": "hudl",
@@ -317,6 +355,7 @@
         },
         {
           "name": "Lucas Yi",
+          "playerId": "pf07e5af2d1",
           "profiles": [
             {
               "platform": "hudl",
@@ -328,6 +367,7 @@
         },
         {
           "name": "Marcus Chang",
+          "playerId": "p89abdde937",
           "profiles": [
             {
               "platform": "hudl",
@@ -339,6 +379,7 @@
         },
         {
           "name": "Swaraj Kompalli",
+          "playerId": "p7c7c93ab4f",
           "profiles": [
             {
               "platform": "hudl",
@@ -350,6 +391,7 @@
         },
         {
           "name": "Jacob Richardson",
+          "playerId": "p2648f684a5",
           "profiles": [
             {
               "platform": "hudl",
@@ -361,6 +403,7 @@
         },
         {
           "name": "John Walsh",
+          "playerId": "p8b5d05b46d",
           "profiles": [
             {
               "platform": "hudl",
@@ -377,6 +420,7 @@
       "players": [
         {
           "name": "Zackary Forbis",
+          "playerId": "pc48605f73f",
           "profiles": [
             {
               "platform": "hudl",
@@ -388,6 +432,7 @@
         },
         {
           "name": "Jacob Rivera",
+          "playerId": "p8b2f996322",
           "profiles": [
             {
               "platform": "hudl",
@@ -399,6 +444,7 @@
         },
         {
           "name": "Noah Omron",
+          "playerId": "pb43d3f8e04",
           "profiles": [
             {
               "platform": "hudl",
@@ -410,6 +456,7 @@
         },
         {
           "name": "Mason Gerhardt",
+          "playerId": "pd0be45286d",
           "profiles": [
             {
               "platform": "hudl",
@@ -421,6 +468,7 @@
         },
         {
           "name": "Tristan Hernandez",
+          "playerId": "p31341508e6",
           "profiles": [
             {
               "platform": "hudl",
@@ -432,6 +480,7 @@
         },
         {
           "name": "David Benavidez",
+          "playerId": "p2b3ce4ee5f",
           "profiles": [
             {
               "platform": "hudl",
@@ -448,6 +497,7 @@
       "players": [
         {
           "name": "Joel Garat",
+          "playerId": "p1cae8512d7",
           "profiles": [
             {
               "platform": "hudl",
@@ -459,6 +509,7 @@
         },
         {
           "name": "Javen Auyang",
+          "playerId": "pfeeba6404c",
           "profiles": [
             {
               "platform": "hudl",
@@ -470,6 +521,7 @@
         },
         {
           "name": "Jayden Santos-Cooper",
+          "playerId": "p15c4a4d08f",
           "profiles": [
             {
               "platform": "hudl",
@@ -481,6 +533,7 @@
         },
         {
           "name": "Myles Bautista",
+          "playerId": "p61bd7458c3",
           "profiles": [
             {
               "platform": "hudl",
@@ -492,6 +545,7 @@
         },
         {
           "name": "Hunter Munoz",
+          "playerId": "p060cd2a352",
           "profiles": [
             {
               "platform": "hudl",
@@ -503,6 +557,7 @@
         },
         {
           "name": "Montell Oliver",
+          "playerId": "pcb20802631",
           "profiles": [
             {
               "platform": "hudl",
@@ -514,6 +569,7 @@
         },
         {
           "name": "Jaymond Lin",
+          "playerId": "pe82ca15668",
           "profiles": [
             {
               "platform": "hudl",
@@ -525,6 +581,7 @@
         },
         {
           "name": "Jake Madden",
+          "playerId": "p4ced0efaa3",
           "profiles": [
             {
               "platform": "hudl",
@@ -536,6 +593,7 @@
         },
         {
           "name": "Nixon Tuala",
+          "playerId": "p4af8b3d104",
           "profiles": [
             {
               "platform": "hudl",
@@ -547,17 +605,25 @@
         },
         {
           "name": "Cole Cherry",
+          "playerId": "p04a6f4e7f2",
           "profiles": [
             {
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/24961319",
               "classOf": 2028,
               "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            },
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/cole-cherry2",
+              "classOf": 2028,
+              "note": "NCSA men's basketball profile naming Sacred Heart Cathedral Preparatory; class of 2028 agrees with the roster. Found by the 2026-11-21 NCSA pass and read twice."
             }
           ]
         },
         {
           "name": "Bey Peters",
+          "playerId": "pa9e85aeabc",
           "profiles": [
             {
               "platform": "hudl",
@@ -569,6 +635,7 @@
         },
         {
           "name": "Jayden Cortez",
+          "playerId": "pa26bc194d1",
           "profiles": [
             {
               "platform": "hudl",
@@ -585,6 +652,7 @@
       "players": [
         {
           "name": "Paxton Cunningham",
+          "playerId": "p747fdf14bf",
           "profiles": [
             {
               "platform": "hudl",
@@ -596,6 +664,7 @@
         },
         {
           "name": "Tahir Damji",
+          "playerId": "pf4ce362b79",
           "profiles": [
             {
               "platform": "hudl",
@@ -607,6 +676,7 @@
         },
         {
           "name": "Walker Fogarty",
+          "playerId": "p32cdcc8311",
           "profiles": [
             {
               "platform": "hudl",
@@ -618,6 +688,7 @@
         },
         {
           "name": "Gelston Howell",
+          "playerId": "pa988c2cce1",
           "profiles": [
             {
               "platform": "hudl",
@@ -629,6 +700,7 @@
         },
         {
           "name": "Henry Iwersen",
+          "playerId": "pbaf0525ba9",
           "profiles": [
             {
               "platform": "hudl",
@@ -640,6 +712,7 @@
         },
         {
           "name": "Thomas Iwersen",
+          "playerId": "pe985c22996",
           "profiles": [
             {
               "platform": "hudl",
@@ -651,6 +724,7 @@
         },
         {
           "name": "Sonny Kline",
+          "playerId": "p3983f760ac",
           "profiles": [
             {
               "platform": "hudl",
@@ -662,6 +736,7 @@
         },
         {
           "name": "Desmond Miller",
+          "playerId": "p4408d323ef",
           "profiles": [
             {
               "platform": "hudl",
@@ -673,6 +748,7 @@
         },
         {
           "name": "Dylan Courson",
+          "playerId": "p4ab65d03ed",
           "profiles": [
             {
               "platform": "hudl",
@@ -684,6 +760,7 @@
         },
         {
           "name": "Blake Danielewicz",
+          "playerId": "p3c2b9ea3b6",
           "profiles": [
             {
               "platform": "hudl",
@@ -695,6 +772,7 @@
         },
         {
           "name": "Jan Wilkiewicz",
+          "playerId": "p3db930dcfd",
           "profiles": [
             {
               "platform": "hudl",

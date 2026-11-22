@@ -304,6 +304,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "19d861d1-3d5c-4383-8669-393c0a5a5445",
+      "playerId": "pf4a9caae28",
       "fullName": "Brooke Neschleba",
       "college": "brandeis",
       "sport": "soccer",
@@ -341,6 +342,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "165848d1-6e5e-40cc-bbbf-6f8c5848ada5",
+      "playerId": "pb651fcf719",
       "fullName": "Kat Smith",
       "college": "ithaca",
       "sport": "field-hockey",
@@ -370,6 +372,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "a7306d64-e4e7-45e5-99d5-bec7179b8a72",
+      "playerId": "p8e823aa0a2",
       "fullName": "Selya Sen",
       "college": "franklin-marshall",
       "sport": "soccer",
@@ -391,6 +394,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "38d2ca33-511a-4281-b419-7f353844d357",
+      "playerId": "p92d1e4c0b7",
       "fullName": "Isabella Cain",
       "college": "princeton",
       "sport": "soccer",
@@ -428,6 +432,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "d564504f-fe1f-4190-a2d1-c05578b9e015",
+      "playerId": "pf31ccd98b9",
       "fullName": "Allison Park",
       "college": "illinois",
       "sport": "soccer",
@@ -473,6 +478,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "72f869f3-0806-4dc1-80a4-75f7ec41fcbc",
+      "playerId": "pe49008760e",
       "fullName": "Kailani Bock",
       "college": "uc-san-diego",
       "sport": "soccer",
@@ -502,6 +508,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "3a3ff4ee-650b-4a5b-95bc-dc9ba78ae4b6",
+      "playerId": "p7ace4651aa",
       "fullName": "Ayla Briski",
       "college": "brown",
       "sport": "soccer",
@@ -539,6 +546,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "7295c409-4715-48c6-9737-840396ea3382",
+      "playerId": "pc9eb12fa14",
       "fullName": "Layla Tucakovic",
       "college": "usc",
       "sport": "soccer",
@@ -584,6 +592,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "f48f6981-af40-4f8f-b21e-fda15287e3b7",
+      "playerId": "p3a0bf680a3",
       "fullName": "Vivian Baker",
       "college": "louisville",
       "sport": "soccer",
@@ -621,6 +630,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
+      "playerId": "p5ebfd3c972",
       "fullName": "Zuri Brandt",
       "college": "washington",
       "sport": "soccer",
@@ -674,6 +684,7 @@
     {
       "teamSlug": "carlmont",
       "athleteId": "27d0c3b9-6efd-4eb0-a2e3-cf2289dd4e93",
+      "playerId": "p4693ae544e",
       "fullName": "Ashleigh Bieser",
       "college": "columbia",
       "sport": "soccer",
@@ -719,6 +730,7 @@
     {
       "teamSlug": "carlmont",
       "athleteId": "fdb10e26-8517-4627-977e-12087b17ae9e",
+      "playerId": "p184ecb6e48",
       "fullName": "Delaney Kumer",
       "college": "uc-davis",
       "sport": "soccer",
@@ -756,6 +768,7 @@
     {
       "teamSlug": "menlo-atherton",
       "athleteId": "db4d21f6-e04c-47ef-9645-d5e06db38570",
+      "playerId": "p9908d7f128",
       "fullName": "Juliana Pandolfo",
       "college": "chicago",
       "sport": "softball",
