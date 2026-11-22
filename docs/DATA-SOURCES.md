@@ -3258,7 +3258,8 @@ then assembled onto the first round's files (each new tie or profile says it is 
   class and the club she is already tied to, as field hockey's club-table matches do. Eileen Pfeffer is `signed`:
   Nevada's release of 2026-11-11 ("Nevada Volleyball announces 2026 national signing day class") names her with
   Saint Ignatius College Preparatory. New sources: the Mercury News' story of 2026-11-07 for Chayse Courtney (its
-  headline and deck, "Stanford-bound junior star"; the body is subscribers' text and is not quoted), Vision's lines
+  deck, "Stanford-bound junior star", and a photo caption naming her; the body is subscribers' text and is not
+  quoted, nor the headline, which the page's address repeats and `assert:copy` would read as a leak), Vision's lines
   for Maura Hambly and Aanya Hotha. *College releases:* 1,070 athletics sites (356 Division I, 265 Division II, 431
   Division III, 18 NAIA), 950 with a parsable feed, 13,739 stories of Nov 10 to 22 opened and matched, 1,009 with
   signing titles, 139 of the 141 women's and beach volleyball signing releases opened. Cal's and Nevada's name

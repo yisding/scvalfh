@@ -1788,8 +1788,8 @@ by source. Counted from the files on 2026-11-14:
   (Mitty, class of 2028) to Loyola Marymount in beach volleyball, medium confidence (Vision's College Bound page
   lists her under its class of 2028 with "LMU (Beach)" and no school; Prep Dig's page ties her name, class and
   Vision to Archbishop Mitty); Eileen Pfeffer signed with Nevada (Nevada's signing-day release of 2026-11-11 names
-  her with Saint Ignatius College Preparatory); and new sources for Chayse Courtney (the Mercury News' headline and
-  deck of 2026-11-07, "Stanford-bound"), Maura Hambly and Aanya Hotha (Vision's page).
+  her with Saint Ignatius College Preparatory); and new sources for Chayse Courtney (the Mercury News' deck and
+  photo caption of 2026-11-07, "Stanford-bound"), Maura Hambly and Aanya Hotha (Vision's page).
 - **Instagram** (`instagram.json`): 27 clubs' accounts, each linked from the club's own site, and 10 of the 41
   teams' (2026-11-14; see "Instagram accounts").
 
