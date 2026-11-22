@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import MissingValue from '../ui/MissingValue';
 import { plural } from '../words/plural';
@@ -56,22 +57,40 @@ function PlayerName({ name, href, standalone = false }: { name: string; href: st
  * The grade and position the player's roster row prints ("Junior · Midfield"), on a line of their
  * own under the name, as /leaders prints them; nothing where the line joins no roster row (and on
  * the game page, which passes none). The dot is drawn, a screen reader hears a comma.
+ *
+ * The line wraps after the dot and after each slash of a multi-position entry, never inside a
+ * position: it is the widest thing in the name column, and kept whole, "Junior · Outside hitter /
+ * Defensive specialist" (St. Ignatius volleyball) held that column at 325px, pushing a five-column
+ * table 63px past its 544px group and over the table beside it at 1280, and past a 320px phone.
  */
 function Facts({ facts }: { facts: string[] | undefined }) {
   if (!facts || facts.length === 0) return null;
   return (
     <span className="block text-cell font-normal text-ink-2">
-      {facts.map((fact, i) => (
-        <span key={fact} className="whitespace-nowrap">
-          {i > 0 ? (
-            <>
-              <span aria-hidden="true"> · </span>
-              <span className="sr-only">, </span>
-            </>
-          ) : null}
-          {fact}
-        </span>
-      ))}
+      {facts.map((fact, i) => {
+        const parts = fact.split(' / ');
+        return (
+          <Fragment key={fact}>
+            {i > 0 ? (
+              <>
+                <span aria-hidden="true" className="whitespace-nowrap">
+                  {' ·'}
+                </span>
+                <span className="sr-only">,</span>{' '}
+              </>
+            ) : null}
+            {parts.map((part, j) => (
+              <Fragment key={j}>
+                {j > 0 ? ' ' : null}
+                <span className="whitespace-nowrap">
+                  {part}
+                  {j < parts.length - 1 ? ' /' : ''}
+                </span>
+              </Fragment>
+            ))}
+          </Fragment>
+        );
+      })}
     </span>
   );
 }
