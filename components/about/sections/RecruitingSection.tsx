@@ -208,7 +208,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             whatever club they play for, so a school with no one here may still have plenty of club
             players.{clubs.regionsWithoutClubsSentence ? ` ${clubs.regionsWithoutClubsSentence}` : ''}
             {clubs.regionsNotSearchedSentence ? ` ${clubs.regionsNotSearchedSentence}` : ''}
-            {WORDS.unsearched ? ` ${WORDS.unsearched}` : ''}
+            {WORDS.unsearched && clubs.researched ? ` ${WORDS.unsearched}` : ''}
           </p>
         </section>
 
@@ -253,7 +253,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
           <p>
             Recall is partial. A player with no public page that meets the rule is not listed, so a
             school with no one here may still have players headed to a college team.
-            {WORDS.unsearched ? ` ${WORDS.unsearched}` : ''}
+            {WORDS.unsearched && commits.researched ? ` ${WORDS.unsearched}` : ''}
           </p>
         </section>
 
@@ -313,7 +313,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             media is never used, apart from commitment posts by official college, school and club
             accounts. Recall is partial, so a player who is not listed here may still have
             a profile, play for a club or have committed.
-            {WORDS.unsearched ? ` ${WORDS.unsearched}` : ''}
+            {WORDS.unsearched && recruiting.researched.profiles ? ` ${WORDS.unsearched}` : ''}
           </p>
         </section>
       </div>

@@ -158,6 +158,10 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
       if (e.positions && p!.position !== null) fail(team.slug, e.fullName, 'positions would overwrite a MaxPreps value');
       if (e.jersey && p!.jersey !== null) fail(team.slug, e.fullName, 'jersey would overwrite a MaxPreps value');
       if (e.height && p!.height !== null) fail(team.slug, e.fullName, 'height would overwrite a MaxPreps value');
+      // MaxPreps catching up ends a `rosterBehind` conflict: once the roster shows the grade the conflict's page
+      // gave (`other`), the record is settled, not broken, and it is dropped here, so that the roster refresh which
+      // brings the corrected grade loads without a hand edit of the overlay.
+      e.conflicts = e.conflicts.filter((c) => !(c.rosterBehind && p!.grade !== null && String(p!.grade) === c.other));
       for (const c of e.conflicts) {
         const own =
           c.field === 'grade' ? (p!.grade === null ? (e.grade ? String(e.grade.value) : null) : String(p!.grade))

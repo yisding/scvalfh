@@ -1215,6 +1215,23 @@ describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last seas
     expect(loadError(withProfile(classOf(base.season, 12), true))).toBe('');
     expect(loadError(withProfile(classOf(base.season, 13), true))).toMatch(/ncsa profile says class of 2026, the roster shows grade 11/);
 
+    // MaxPreps catching up: on a row that now shows the conflict's corrected grade, the conflict is settled and the
+    // file still loads (the refresh that brings the grade needs no hand edit).
+    let senior: { slug: string; athleteId: string; fullName: string } | undefined;
+    for (const t of base.teams) {
+      const p = t.players.find((x) => x.grade === 12 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`));
+      if (p) {
+        senior = { slug: t.slug, athleteId: p.athleteId!, fullName: p.fullName };
+        break;
+      }
+    }
+    expect(senior).toBeDefined();
+    const caughtUp = structuredClone(raw);
+    const settled = recordFor(caughtUp, senior!.slug, senior!.athleteId, senior!.fullName);
+    settled.profiles.push({ platform: 'ncsa', url, classOf: classOf(base.season, 12), note: null });
+    settled.conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
+    expect(loadError(caughtUp)).toBe('');
+
     // A grade the overlay filled is not MaxPreps' stale grade.
     const filled = structuredClone(raw);
     const team = filled.teams.find((t) => t.players.some((p) => p.grade !== null && p.grade.value < 12))!;

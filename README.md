@@ -1890,6 +1890,8 @@ Valley 3, Santa Clara 2, Branham 2, San Lorenzo Valley 2, and 1 each at MacDonal
 Academy, Woodside, Capuchino and Mills), 107 citing the player's Hudl profile and 2 an NCSA profile; they let in 107
 Hudl, 21 NCSA and 4 SportsRecruits profiles, 12 club ties and 3 commitments. **2 soccer rows** carry one, at Santa
 Clara (a Hudl profile) and Sobrato (an NCSA profile). Every page let in this way was re-read at assembly.
+When MaxPreps corrects a row's grade to the one its conflict cites, the conflict is settled: the loader drops it, so the
+roster refresh that brings the corrected grade needs no hand edit.
 
 What the research did not reach, so that an absence here says little:
 
