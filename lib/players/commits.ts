@@ -45,7 +45,7 @@ import {
   type CommitsFile,
 } from './commits-schema';
 import { joinToRoster, playerKey } from './roster-join';
-import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import { classOf, effectiveClassOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
@@ -129,12 +129,17 @@ export function getCommittedPlayer(c: Pick<Commitment, 'teamSlug' | 'athleteId'>
 }
 
 /**
- * The class a committed player graduates with: the roster grade's (MaxPreps', else the overlay's),
- * else the one class year the sources state (loadCommits checked they agree), else null.
+ * The class a committed player graduates with: the roster grade's (MaxPreps', else the overlay's, or
+ * the corrected grade where the overlay records MaxPreps' roster shows last season's — lib/players/rosters.ts
+ * effectiveClassOf), else the one class year the sources state (loadCommits checked they agree), else null.
+ * `row` is the merged row the commitment joined to; the tests pass one built in memory.
  */
-export function commitClassOf(c: Commitment): number | null {
-  const grade = getCommittedPlayer(c).grade;
-  if (grade !== null) return classOf(SEASON, grade);
+export function commitClassOf(
+  c: Commitment,
+  row: Pick<MergedPlayer, 'grade' | 'conflicts'> = getCommittedPlayer(c),
+): number | null {
+  const cls = effectiveClassOf(SEASON, row);
+  if (cls !== null) return cls;
   return c.sources.find((s) => s.statedClassYear !== null)?.statedClassYear ?? null;
 }
 

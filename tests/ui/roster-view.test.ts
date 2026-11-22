@@ -13,12 +13,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
-import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
+import { buildRosterView, conflictLine, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
 import { getPlayerClubs } from '../../lib/players/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
-import { getEnrichedTeamRoster } from '../../lib/players/rosters';
+import { classOf, getEnrichedTeamRoster, getRosters, type RosterConflict } from '../../lib/players/rosters';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
-import { textOf } from './html-text';
+import { decodeEntities, stripTags, textOf } from './html-text';
 
 /** Rosters cover every registry team, all five leagues: 49 views. */
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));
@@ -638,5 +638,43 @@ describe('profile link text', () => {
     expect(profileLabel({ platform: 'hudl', sport: 'softball' })).toBe('Hudl softball profile');
     expect(profileLabel({ platform: 'personal' })).toBe('Recruiting site');
     expect(profileLabel({ platform: 'personal', sport: 'water-polo' })).toBe('Water polo recruiting site');
+  });
+});
+
+describe('a rosterBehind grade conflict: MaxPreps\' roster shows last season\'s grade', () => {
+  const player = { athleteId: 'a1', fullName: 'Jane Doe' };
+  const conflict = (kind: RosterConflict['kind'], source: string): RosterConflict => ({
+    field: 'grade', kept: '11', other: '12', kind, source, note: null, rosterBehind: true,
+  });
+  const senior = `senior (class of ${classOf(getRosters().season, 12)})`;
+
+  it('names the grade, the class year and the page, whichever kind cites it', () => {
+    const cases: Array<[RosterConflict['kind'], string, string]> = [
+      ['hudl', 'https://www.hudl.com/profile/123456/Jane-Doe', 'the player’s Hudl profile'],
+      ['recruiting-profile', 'https://www.ncsasports.org/basketball-recruiting/california/x/y/jane-doe', 'the player’s NCSA profile'],
+      ['recruiting-profile', 'https://my.sportsrecruits.com/athlete/jane_doe', 'the player’s SportsRecruits profile'],
+      ['scouting-site', 'https://prephoops.com/player/jane-doe/', 'the player’s Prep Hoops page'],
+      ['scouting-site', 'https://www.on3.com/rivals/jane-doe-1/', 'the player’s On3 page'],
+      ['news', 'https://example-student-paper.org/2026/11/story', 'a news story'],
+    ];
+    for (const [kind, url, label] of cases) {
+      expect(conflictLine(player, conflict(kind, url), 0), url).toMatchObject({
+        field: 'grade', shown: 'junior', other: senior, now: null, derived: false, sourceLabel: label, sourceUrl: url, rosterBehind: true,
+      });
+    }
+    // The same grade conflict without the marker reads as it always did.
+    const plain = { ...conflict('hudl', 'https://www.hudl.com/team/v2/1/roster'), rosterBehind: undefined };
+    expect(conflictLine(player, plain, 0)).toMatchObject({ other: 'senior', sourceLabel: 'the team’s Hudl page', rosterBehind: false });
+  });
+
+  it('says on the page that the roster shows last season\'s grade', () => {
+    const base = buildRosterView(TEAMS[0].slug)!;
+    const line = conflictLine(player, conflict('recruiting-profile', 'https://www.ncsasports.org/a/b/jane-doe'), 0);
+    const text = decodeEntities(stripTags(renderToStaticMarkup(createElement(TeamRoster, { view: { ...base, conflicts: [line] } })), ''))
+      .replace(/\s+/g, ' ')
+      .replace(/ \(opens in a new tab\)/g, ''); // the link's screen-reader note
+    expect(text).toContain(
+      `Jane Doe: grade junior here, ${senior} on the player’s NCSA profile; MaxPreps’ roster still shows last season’s grade.`,
+    );
   });
 });

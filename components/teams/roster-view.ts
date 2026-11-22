@@ -25,7 +25,9 @@
 
 import { getCommitsFile } from '../../lib/players/commits';
 import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
+import { PROFILE_HOSTS } from '../../lib/players/rosters-schema';
 import {
+  classOf,
   getEnrichedTeamRoster,
   getRosters,
   sortedPlayers,
@@ -50,7 +52,7 @@ import { playerAnchors } from './player-anchors';
  * `news` covers student papers and local news alike (the Redwood Bark, BenitoLink), so it says
  * neither.
  */
-const KIND_WORDS: Record<EnrichmentSource['kind'], string> = {
+const KIND_WORDS: Record<RosterConflict['kind'], string> = {
   'school-site': 'the school site',
   'school-pdf': 'the school’s roster PDF',
   news: 'a news story',
@@ -58,7 +60,38 @@ const KIND_WORDS: Record<EnrichmentSource['kind'], string> = {
   'maxpreps-career': 'a MaxPreps career page',
   'maxpreps-team': 'MaxPreps’ team page',
   hudl: 'the team’s Hudl page',
+  'recruiting-profile': 'the player’s recruiting profile',
+  'scouting-site': 'a scouting site’s player page',
 };
+
+/** Scouting services a `scouting-site` conflict may cite, by host, as a sentence names them. */
+const SCOUTING_SITE_WORDS: Record<string, string> = {
+  'prephoops.com': 'Prep Hoops',
+  'on3.com': 'On3',
+};
+
+/**
+ * How a conflict sentence names a page about one player, which KIND_WORDS' kind alone cannot: a
+ * player's Hudl profile is not the team's Hudl page, and a recruiting profile or scouting page says
+ * which site it is on ("the player’s NCSA profile", "the player’s Prep Hoops page").
+ */
+function conflictSourceLabel(c: Pick<RosterConflict, 'kind' | 'source'>): string {
+  const host = hostLabel(c.source);
+  if (host === null) return KIND_WORDS[c.kind];
+  const on = (domain: string) => host === domain || host.endsWith(`.${domain}`);
+  if (c.kind === 'hudl' && on('hudl.com') && /^\/profile\//.test(new URL(c.source).pathname)) {
+    return 'the player’s Hudl profile';
+  }
+  if (c.kind === 'recruiting-profile') {
+    const platform = (Object.keys(PROFILE_HOSTS) as Array<keyof typeof PROFILE_HOSTS>).find((k) => on(PROFILE_HOSTS[k]));
+    return platform ? `the player’s ${PROFILE_WORDS[platform].link}` : KIND_WORDS[c.kind];
+  }
+  if (c.kind === 'scouting-site') {
+    const site = Object.keys(SCOUTING_SITE_WORDS).find(on);
+    return site ? `the player’s ${SCOUTING_SITE_WORDS[site]} page` : `the player’s page on ${host}`;
+  }
+  return KIND_WORDS[c.kind];
+}
 
 /** How the † footnote names each kind of source a shown value came from. */
 const FOOTNOTE_WORDS: Record<EnrichmentSource['kind'], [one: string, many: string]> = {
@@ -201,6 +234,12 @@ export interface RosterConflictLine {
   /** "the school site", "a news story", "MaxPreps' 2025-26 roster" … */
   sourceLabel: string;
   sourceUrl: string;
+  /**
+   * true for a `rosterBehind` grade conflict: the source shows MaxPreps' roster still carries last
+   * season's grade. `other` then names the class year too ("senior (class of 2027)"), and the line
+   * says the roster's grade is last season's.
+   */
+  rosterBehind: boolean;
 }
 
 export interface RosterSourceLink {
@@ -274,7 +313,11 @@ function conflictValue(field: RosterConflict['field'], value: string): string {
  * stored a season on (a 2025-26 freshman is stored as 10); the line says what that page shows and
  * what it means now, so it never prints a grade the page does not show.
  */
-function conflictLine(p: MergedPlayer, c: RosterConflict, i: number): RosterConflictLine {
+export function conflictLine(
+  p: Pick<MergedPlayer, 'athleteId' | 'fullName'>,
+  c: RosterConflict,
+  i: number,
+): RosterConflictLine {
   const page = seasonPage(c.source);
   const base = {
     key: `${p.athleteId ?? p.fullName}-${c.field}-${i}`,
@@ -282,7 +325,19 @@ function conflictLine(p: MergedPlayer, c: RosterConflict, i: number): RosterConf
     field: FIELD_WORDS[c.field],
     shown: c.kept === null ? null : conflictValue(c.field, c.kept),
     sourceUrl: c.source,
+    rosterBehind: false,
   };
+  if (c.rosterBehind) {
+    // The schema allows the marker only on a grade conflict whose other grade is kept + 1.
+    return {
+      ...base,
+      other: `${conflictValue('grade', c.other)} (class of ${classOf(getRosters().season, Number(c.other))})`,
+      now: null,
+      derived: false,
+      sourceLabel: conflictSourceLabel(c),
+      rosterBehind: true,
+    };
+  }
   if (page) {
     const sourceLabel = `MaxPreps’ ${page.label}`;
     const since = seasonsSince(page.season);
@@ -303,7 +358,7 @@ function conflictLine(p: MergedPlayer, c: RosterConflict, i: number): RosterConf
     other: conflictValue(c.field, c.other),
     now: null,
     derived: c.field === 'grade' && c.kind === 'maxpreps-career',
-    sourceLabel: KIND_WORDS[c.kind],
+    sourceLabel: conflictSourceLabel(c),
   };
 }
 

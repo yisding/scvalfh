@@ -43,7 +43,7 @@ import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '../../lib
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
 import { regionOf } from '../../lib/leagues';
-import { getRosters } from '../../lib/players/rosters';
+import { effectiveGrade, getRosters } from '../../lib/players/rosters';
 import { SPORT, SPORT_ID } from '../../lib/sports/current';
 import { isResearched } from '../../lib/schema-primitives';
 import { getTeamBySlug } from '../../lib/teams';
@@ -362,6 +362,7 @@ export interface CommitsView {
 
 function commitRow(c: Commitment): CommitRow {
   const row = getCommittedPlayer(c);
+  const grade = effectiveGrade(row);
   const { college, program } = commitProgram(c);
   const seen = new Set<string>();
   const sources = c.sources.filter((s) => (seen.has(s.url) ? false : (seen.add(s.url), true)));
@@ -370,7 +371,8 @@ function commitRow(c: Commitment): CommitRow {
     anchor: commitAnchor(c),
     name: row.fullName,
     school: { name: schoolName(c.teamSlug), href: `/teams/${c.teamSlug}#roster`, slug: c.teamSlug },
-    facts: row.grade !== null ? [gradeWord(row.grade)] : [],
+    // The grade the class heading is read from (commitClassOf): a stale MaxPreps grade corrected.
+    facts: grade !== null ? [gradeWord(grade)] : [],
     college: {
       name: collegeDisplayName(college),
       fullName: college.shortName !== null ? college.name : null,

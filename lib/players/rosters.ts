@@ -126,9 +126,10 @@ function loadRosters(): Rosters {
 /**
  * The overlay's rules, asserted against the base at load time (the schema alone cannot see both
  * files): every record joins to a MaxPreps row of the same team, a filled field was null on
- * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own, a recruiting profile that
- * states a class year agrees with the grade the row shows, and a claimed MaxPreps profile is the
- * row's own career page.
+ * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own (and a `rosterBehind` one's is a
+ * grade MaxPreps shows), a recruiting profile that states a class year agrees with the grade the row
+ * shows (or with the corrected grade of a `rosterBehind` conflict: classYearAgrees), and a claimed
+ * MaxPreps profile is the row's own career page.
  */
 function loadEnrichment(base: Rosters): RosterEnrichment {
   const enrichment = validateData(
@@ -166,14 +167,18 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
         if (c.kept !== own) {
           fail(team.slug, e.fullName, `conflict on ${c.field} says kept="${c.kept}" but the roster shows "${own}"`);
         }
+        // A stale grade is MaxPreps' own: a grade the overlay filled is not "the roster's last season".
+        if (c.rosterBehind && p!.grade === null) {
+          fail(team.slug, e.fullName, 'rosterBehind says MaxPreps shows last season\'s grade, but MaxPreps shows no grade');
+        }
       }
-      const grade = p!.grade ?? e.grade?.value ?? null;
+      const row = { grade: p!.grade ?? e.grade?.value ?? null, conflicts: e.conflicts };
       for (const x of e.profiles) {
         if (x.platform === 'maxpreps' && x.url !== p!.careerUrl) {
           fail(team.slug, e.fullName, `maxpreps profile ${x.url} is not this row's career page (${p!.careerUrl})`);
         }
-        if (x.classOf !== null && grade !== null && x.classOf !== classOf(base.season, grade)) {
-          fail(team.slug, e.fullName, `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${grade}`);
+        if (x.classOf !== null && !classYearAgrees(base.season, row, x.classOf)) {
+          fail(team.slug, e.fullName, `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${row.grade}`);
         }
       }
     }
@@ -186,6 +191,44 @@ export function classOf(season: string, grade: number): number {
   const m = /^(\d{2})-(\d{2})$/.exec(season);
   if (!m) throw new Error(`lib/players/rosters.ts: cannot read season "${season}"`);
   return 2000 + Number(m[2]) + (12 - grade);
+}
+
+/** What the class-year helpers read from a row: its grade and its recorded conflicts. */
+type GradedRow = { grade: number | null; conflicts: readonly RosterConflict[] };
+
+/**
+ * The grade a `rosterBehind` conflict gives a row — the player's real one, a grade above the stale
+ * grade MaxPreps' roster still shows (lib/players/rosters-schema.ts RosterConflictSchema) — or null.
+ */
+export function rosterBehindGrade(p: Pick<GradedRow, 'conflicts'>): number | null {
+  const c = p.conflicts.find((x) => x.field === 'grade' && x.rosterBehind === true);
+  return c ? Number(c.other) : null;
+}
+
+/**
+ * The grade the recruiting pages read a row's class year from: a `rosterBehind` conflict's, else the
+ * grade the roster shows. The roster table itself keeps showing MaxPreps' grade.
+ */
+export function effectiveGrade(p: GradedRow): number | null {
+  return rosterBehindGrade(p) ?? p.grade;
+}
+
+/** The class a row's player graduates with, by effectiveGrade; null without a grade. */
+export function effectiveClassOf(season: string, p: GradedRow): number | null {
+  const grade = effectiveGrade(p);
+  return grade === null ? null : classOf(season, grade);
+}
+
+/**
+ * Whether a class year a source states agrees with a row: true for a row with no grade, else when it
+ * is the roster grade's class or, for a row with a `rosterBehind` conflict, the corrected grade's.
+ * The one test profiles (above), club ties and commitments (lib/players/roster-join.ts) share.
+ */
+export function classYearAgrees(season: string, p: GradedRow, stated: number): boolean {
+  if (p.grade === null) return true;
+  if (stated === classOf(season, p.grade)) return true;
+  const behind = rosterBehindGrade(p);
+  return behind !== null && stated === classOf(season, behind);
 }
 
 const rosters = loadRosters();
