@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T20:52:34.419Z",
+  "fetchedAt": "2026-11-22T14:27:31.199Z",
   "fixtures": [
     {
       "claims": {
@@ -798,72 +798,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Salinas",
-              "name": "Alisal",
-              "result": "L",
-              "score": 29,
-              "slug": null,
-              "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
-            },
-            "contestId": "c484c8ae-39b3-496b-81f8-92cd8a548205",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": "REG",
-            "forfeitBy": null,
-            "home": {
-              "city": "Santa Cruz",
-              "name": "Santa Cruz",
-              "result": "W",
-              "score": 39,
-              "slug": "santa-cruz",
-              "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T06:00:07",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "final",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088812?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/alisal-salinas-vs-santa-cruz/11-19-2026/?c=c484c8ae-39b3-496b-81f8-92cd8a548205",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/santa-cruz-high-school-santa-cruz-ca/gam5b65921dec?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Santa Cruz HS"
-            }
-          },
-          "ref": "c484c8ae-39b3-496b-81f8-92cd8a548205"
-        }
-      },
-      "id": "2026-11-19-name:alisal-at-santa-cruz",
-      "published": [
-        {
-          "contestId": "c484c8ae-39b3-496b-81f8-92cd8a548205"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Watsonville",
               "name": "Watsonville",
               "result": null,
@@ -1194,14 +1128,14 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Francisco",
-              "name": "Washington",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "b0583c73-e6f5-4d2c-95d1-8d7406652719"
+              "city": "Los Altos Hills",
+              "name": "Pinewood",
+              "result": "L",
+              "score": 52,
+              "slug": "pinewood",
+              "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6"
             },
-            "contestId": "f5f7b11d-7249-41e6-8b3e-83a280c4ea9c",
+            "contestId": "0cc767e4-94f9-43e1-856f-6bd7f9e8145e",
             "contestTypes": {
               "away": 1,
               "home": 1
@@ -1210,15 +1144,15 @@
             "dateKey": "2026-11-21",
             "dateLocal": "2026-11-21T13:30:00",
             "dateUtc": "2026-11-21T21:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
-              "city": "Santa Clara",
-              "name": "Wilcox",
-              "result": null,
-              "score": null,
-              "slug": "wilcox",
-              "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee"
+              "city": "Morgan Hill",
+              "name": "Oakwood",
+              "result": "W",
+              "score": 73,
+              "slug": null,
+              "teamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -1229,29 +1163,29 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-23T12:04:16",
+              "maxprepsModifiedOn": "2026-11-22T10:37:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/washington-san-francisco-vs-wilcox-santa-clara/11-21-2026/?c=f5f7b11d-7249-41e6-8b3e-83a280c4ea9c",
-              "nfhsStream": null
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/oakwood-morgan-hill-vs-pinewood-los-altos-hills/11-21-2026/?c=0cc767e4-94f9-43e1-856f-6bd7f9e8145e",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/oakwood-high-school-morgan-hill-ca/gama21add3b15?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": "Scrimmage"
+              "text": "Oakwood Country School-Morgan Hill"
             }
           },
-          "ref": "f5f7b11d-7249-41e6-8b3e-83a280c4ea9c"
+          "ref": "0cc767e4-94f9-43e1-856f-6bd7f9e8145e"
         }
       },
-      "id": "2026-11-21-name:washington-at-wilcox",
+      "id": "2026-11-21-pinewood-at-name:oakwood",
       "published": [
         {
-          "contestId": "f5f7b11d-7249-41e6-8b3e-83a280c4ea9c"
+          "contestId": "0cc767e4-94f9-43e1-856f-6bd7f9e8145e"
         }
       ]
     },
@@ -1301,11 +1235,11 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": "https://gofan.co/event/7097583?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7097583?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/carlmont-belmont-vs-valley-christian-san-jose/11-21-2026/?c=3560f345-a9ab-44e1-9490-49a16a80477a",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gamfd47681083?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gamfd47681083?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Carlmont High School"
@@ -2604,7 +2538,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-21T20:52:34.419Z",
+          "builtAt": "2026-11-22T14:27:31.199Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -3530,72 +3464,6 @@
       "published": [
         {
           "contestId": "7dd82622-c3e2-4923-9801-961c4743362c"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Bakersfield",
-              "name": "Independence",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "d74e4255-19f5-493e-ad49-2ed492f950c7"
-            },
-            "contestId": "3d89dfb2-76d0-4f6d-9aa1-34bd4d3ef793",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-28",
-            "dateLocal": "2026-11-28T18:30:00",
-            "dateUtc": "2026-11-29T02:30:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Santa Clara",
-              "name": "Santa Clara",
-              "result": null,
-              "score": null,
-              "slug": "santa-clara",
-              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-10-13T11:37:01",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/independence-bakersfield-vs-santa-clara/11-28-2026/?c=3d89dfb2-76d0-4f6d-9aa1-34bd4d3ef793",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "3d89dfb2-76d0-4f6d-9aa1-34bd4d3ef793"
-        }
-      },
-      "id": "2026-11-28-name:independence-at-santa-clara",
-      "published": [
-        {
-          "contestId": "3d89dfb2-76d0-4f6d-9aa1-34bd4d3ef793"
         }
       ]
     },
@@ -18388,6 +18256,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Los Altos",
+              "name": "Los Altos",
+              "result": null,
+              "score": null,
+              "slug": "los-altos",
+              "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
+            },
+            "contestId": "bd4fed31-317a-4141-bd49-1f8005ef38d7",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-18",
+            "dateLocal": "2026-12-18T16:30:00",
+            "dateUtc": "2026-12-19T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Mission Viejo",
+              "name": "Capistrano Valley",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "798d6999-8ca6-4f0a-a96f-a48f2bcc1e8f"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T21:37:15",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capistrano-valley-mission-viejo-vs-los-altos/12-18-2026/?c=bd4fed31-317a-4141-bd49-1f8005ef38d7",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "@ Sonora  HS"
+            }
+          },
+          "ref": "bd4fed31-317a-4141-bd49-1f8005ef38d7"
+        }
+      },
+      "id": "2026-12-18-los-altos-at-name:capistranovalley",
+      "published": [
+        {
+          "contestId": "bd4fed31-317a-4141-bd49-1f8005ef38d7"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Atherton",
               "name": "Menlo-Atherton",
               "result": null,
@@ -30757,7 +30691,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-02T00:20:11",
+              "maxprepsModifiedOn": "2026-11-22T10:58:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30770,7 +30704,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/el-camino-high-school-san-francisco-south-san-francisco-ca/gamdc4c802053?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "El Camino High School-South San Francisco"
             }
           },
           "ref": "85d1618d-7a0e-4ddd-8d07-19ccae6fbf5b"
@@ -42415,6 +42349,72 @@
       "published": [
         {
           "contestId": "31bcdd97-f541-4d5d-97da-a24d8354d530"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "contestId": "f0178eae-4c74-4563-8006-7a0630338fdc",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-22",
+            "dateLocal": "2027-01-22T12:30:00",
+            "dateUtc": "2027-01-22T20:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Salinas",
+              "name": "Rancho San Juan",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-22T00:34:52",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gilroy-vs-rancho-san-juan-salinas/1-22-2027/?c=f0178eae-4c74-4563-8006-7a0630338fdc",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "f0178eae-4c74-4563-8006-7a0630338fdc"
+        }
+      },
+      "id": "2027-01-22-gilroy-at-name:ranchosanjuan",
+      "published": [
+        {
+          "contestId": "f0178eae-4c74-4563-8006-7a0630338fdc"
         }
       ]
     },
