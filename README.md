@@ -18,7 +18,9 @@ School Girls Soccer, when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls socc
 BVAL's 26 (Mt. Hamilton 8, Santa Teresa 8, West Valley 10), the WCAL's 6, the WBAL's 13 (Foothill 7, Skyline 6), the
 PAL's 16 (Bay 7, Ocean 9) and the SCCAL's 6, 82 teams, winter 2026-27, from the data under `data/soccer/`. The WCAL and
 the WBAL were added on 2026-11-14 (see "WCAL and WBAL in the soccer build"), the PAL and the SCCAL on 2026-11-21 (see
-"PAL and SCCAL in the winter builds"). See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
+"PAL and SCCAL in the winter builds"). It has the recruiting pages too (/clubs, /commits, /recruiting), from research
+of 2026-11-21. See "Girls soccer" and "Girls soccer and boys basketball: recruiting" under "Local development" and
+docs/MULTI-SPORT.md.
 
 **Boys basketball (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL, 2026-27).** The same code builds a third site, NorCal High
 School Boys Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys basketball teams (De Anza 7, El
@@ -27,7 +29,8 @@ Camino 8), the BVAL's 26 (Mt. Hamilton 7, Santa Teresa 6, Almaden Valley 6, West
 with tables ordered on the league record and a JV schedule read from SCVAL's and BVAL's own documents. BVAL was added
 to both winter builds on 2026-11-13 so the ratings count SCVAL's many non-league games against BVAL schools (see
 "BVAL in the winter builds"); the WCAL, the WBAL, the PAL and the SCCAL on 2026-11-21 (see "PAL and SCCAL in the
-winter builds"). See "Boys basketball" under "Local development" and docs/MULTI-SPORT.md.
+winter builds"). It has the recruiting pages too (/clubs, /commits, /recruiting), from research of 2026-11-21. See
+"Boys basketball" and "Girls soccer and boys basketball: recruiting" under "Local development" and docs/MULTI-SPORT.md.
 
 **Girls volleyball (SCVAL, BVAL, WCAL and WBAL, 2026).** The same code builds a fourth site, NorCal High School Girls
 Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8),
@@ -199,7 +202,9 @@ neither: it is linked from `/teams`, from the Roster section of every team page 
 `/club-calendar` is not in the nav either: it is linked from `/clubs` and from every club page with an event.
 Nor is `/commits`: it is linked from `/teams`, from `/about` and from the roster of every team page
 with a committed player. Nor is `/recruiting`: it is linked from `/teams`, `/clubs`, `/commits` and the roster of every
-team page with a listed player.
+team page with a listed player. The `/clubs`, `/clubs/[slug]`, `/commits` and `/recruiting` rows hold for every high
+school build, each from its own `data/<sport>/` files (volleyball since 2026-11-13, soccer and basketball since
+2026-11-21); the VAL's middle school build renders them as 404s, and `/club-calendar` is field hockey's alone.
 
 ## How data flows
 
@@ -467,7 +472,13 @@ Academy's first-name-and-initial list); a team without it says "we have not chec
 sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
 with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
 other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same
-way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/players/rosters.ts` is the read API:
+way, under the player's `conflicts`. Since 2026-11-21 a grade conflict may be marked `rosterBehind`: the cited page
+shows that MaxPreps' roster still carries last season's grade, so `other` is exactly `kept` + 1 (one such conflict a
+player, on a grade MaxPreps shows). MaxPreps' grade stays on the roster, which says so beside the row, and a class
+year a profile, club-tie or commitment source states may then be either grade's ("Girls soccer and boys basketball:
+recruiting"). A conflict may also cite, for a grade only, a player's recruiting profile (`recruiting-profile`) or a
+scouting site's page for the player (`scouting-site`), two kinds that never fill a value. Every value carries its
+source URL, kind and a confidence. `lib/players/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
 page, in all nine leagues and the five independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
@@ -492,7 +503,8 @@ pages for 116 players (52 NorCal, 66 SoCal): 91 lacrosse, 15 softball, 6 field h
 and field, so the file holds 519 for 410 players. A page is linked only when it names the player and a
 sport and either names the school or shows the class year the roster shows plus a California hometown
 (for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
-agree with the row's grade (checked at load). On 2026-10-13 every row's MaxPreps career page was
+agree with the row's grade, or with the grade above it on a row marked `rosterBehind` (checked at load).
+On 2026-10-13 every row's MaxPreps career page was
 read for MaxPreps' own claimed flag (`isClaimed`, a page the player or a parent has claimed): the 260
 claimed pages, on 73 teams, are linked as "MaxPreps profile" (`platform: "maxpreps"`, always the row's
 own `careerUrl`, checked at load), 159 of them for players with no other profile, so the file held
@@ -930,7 +942,8 @@ join in `lib/players/clubs.ts`): club slugs are unique, every affiliation names 
 per affiliation; `asOf` is a date, a month, a year, a season (`2025-26`) or a range (`2015-2018`);
 the file's `season` is `data/field-hockey/rosters.json`'s; every affiliation joins a row of that team under the
 row's own `fullName`, and the row is not JV; every stated class year agrees with the row's grade
-(MaxPreps', else the overlay's; a row with no grade has nothing to check).
+(MaxPreps', else the overlay's, or the grade above it on a row marked `rosterBehind`; a row with no grade has
+nothing to check).
 
 Coverage, counted from the file: **28 clubs** and **171 affiliations for 149 of the 1,673 varsity rows, at
 48 of the 102 schools** (2026-10-07). NorCal: 16 clubs (San Francisco 2, South Bay 7, East Bay 2, Marin 1, the
@@ -1042,7 +1055,8 @@ source gives for it: a day, a month or a year, never after `capturedAt`), a `con
 `medium`) and its sources: URL, kind, a verbatim quote of at most 300 characters, and the school,
 class year and date the page states. `basis` says, for maintainers, what the match rests on. A
 college record (`colleges`) has its name and display name, city and state, one `programs` entry per
-sport a player here committed to it in (the NCAA division, or NAIA, that team plays in, its
+sport a player here committed to it in (the NCAA division, or NAIA, or since 2026-11-21 NJCAA or
+CCCAA, that team plays in, its
 conference and its page on the college's athletics site: a college's teams can sit in different
 divisions and conferences), and the pages each fact was read from; the file holds only colleges and
 programs somebody committed to.
@@ -1068,8 +1082,9 @@ Checked at load (`lib/players/commits-schema.ts`, then the join in `lib/players/
 unique, every commitment names a college that has a program in its sport, every college and every
 program has a commitment, a college has one program per sport, one commitment per player; https only, never social media except an `official-social` source that is a post by the account it names; a source for every college and commitment; the file's
 `season` is `data/field-hockey/rosters.json`'s; every commitment joins a non-JV row of that team under its own
-`fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
-sources agree with each other on a class a high school roster of the season can hold.
+`fullName`; every stated class year agrees with the row's grade (or the grade above it on a row marked
+`rosterBehind`), or, for a row with no grade, the sources agree with each other on a class a high school roster of
+the season can hold.
 
 Coverage on 2026-11-13, counted from the file: **38 commitments, 38 players at 23 of the 102 schools, to
 29 colleges (32 programs); one, Phoebe Miller's, signed.** The 2026-11-13 round, two days after the class of
@@ -1511,8 +1526,8 @@ What the soccer build has: SCVAL's two divisions from the official 2026-27 girls
 CCS ladder (De Anza 1-3 and El Camino 1 are automatic), standings, schedules, scores, team and game pages,
 leaders, JV, /playoffs and /history/2025-26 (SCVAL's 2025-26 final standings, varsity and JV, and all-league
 teams, from SCVAL's own PDFs, and the WCAL's and the WBAL's from theirs; see "Last season's standings in the soccer
-and basketball builds" and "WCAL and WBAL last season"). What it
-leaves out: /clubs, /commits and /recruiting (field hockey's research; each renders a 404), the VNN
+and basketball builds" and "WCAL and WBAL last season"), and, since 2026-11-21, /clubs, /clubs/[slug], /commits
+and /recruiting ("Girls soccer and boys basketball: recruiting"). What it leaves out: /club-calendar, the VNN
 calendars and the region toggle. It reads si.com's girls soccer pages as field hockey reads its own: the scores
 cross-check MaxPreps' and backfill a missing one under the same rules, except that a MaxPreps 0-0 is never
 replaced (a draw is a real soccer result; `SPORT.sblive.replacesZeroZeroTies`), and each school's si.com JV team
@@ -1620,8 +1635,9 @@ What is basketball's own (each from a document read 2026-11-10, cited in
   aside.
 
 Like soccer, it has /history/2025-26 (SCVAL's 2025-26 final standings and all-league first, second and third
-teams). What it leaves out, as soccer does: /clubs, /commits and /recruiting, the VNN calendars and the
-region toggle. Like soccer it reads si.com, under si.com's `basketball` segment (its boys basketball; `boys-basketball`
+teams), and, as soccer has since 2026-11-21, /clubs, /clubs/[slug], /commits and /recruiting ("Girls soccer and boys
+basketball: recruiting"). What it leaves out, as soccer does: /club-calendar, the VNN calendars and the region toggle.
+Like soccer it reads si.com, under si.com's `basketball` segment (its boys basketball; `boys-basketball`
 is a 404), with every team's si.com ids in `lib/registry/basketball/`. MaxPreps also has a freshman season for some of these schools; the SCVAL
 fields two official boys teams, varsity and JV (By-Laws Article II), and the site covers those two.
 
@@ -1778,13 +1794,151 @@ What the research did not reach, so that an absence here says little:
 after editing any of these files. A roster refetch that drops or respells a tied or committed player fails
 `pnpm test` and the build for this sport as it does for field hockey ("When a roster refetch breaks it").
 
+### Girls soccer and boys basketball: recruiting
+
+The soccer and basketball builds have /clubs, /clubs/[slug], /commits and /recruiting since 2026-11-21, and their
+team rosters show the same profile, club and commitment lines field hockey's and volleyball's do (`HAS_RECRUITING`
+in `lib/sports/current.ts`, now every high school build's; the VAL's middle school build has none). The data is
+research by hand in `data/soccer/` and `data/basketball/` (`rosters-enrichment.json`, `jv-profiles.json`,
+`clubs.json`, `commits.json`), under field hockey's schemas, loaders and rules ("Rosters", "Clubs" and "College
+commitments" above), with volleyball's change of place: rule (b) asks for the roster's class year plus a hometown
+in the school's own area (its city or a neighbouring one). One round, 2026-11-21, over the rosters MaxPreps had
+posted that day, early in the season: girls soccer 32 of the 82 teams (634 varsity rows, 160 of them with no grade
+yet, and 704 JV rows), boys basketball 58 of the 79 (782 varsity rows, 72 with no grade, and 279 JV rows). A team
+with no roster yet has nothing linked. DATA-SOURCES §1.15 has the method, source by source. Counted from the files
+on 2026-11-21:
+
+**Girls soccer**
+
+- **Recruiting profiles** (`rosters-enrichment.json`, `profiles[]` only): **394 for 285 of the 634 varsity rows,
+  at all 32 schools with a roster** (164 Hudl, 112 claimed MaxPreps pages, 76 NCSA, 42 SportsRecruits); 282 of
+  them, for 225 players, are on a recruiting platform rather than MaxPreps. A soccer profile names no sport;
+  profiles in another sport: 3 track and field, 3 volleyball, 2 softball. `jv-profiles.json` holds **32 for 31 JV
+  players at 11 schools** (24 Hudl, 5 NCSA, 3 SportsRecruits; 1 each in volleyball, basketball, softball and
+  lacrosse). Hudl's public rosters were read for every school's girls soccer teams, NCSA by name for every varsity
+  row and 305 of the JV rows, every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits
+  address probe over every varsity and JV row.
+- **Clubs** (`clubs.json`): **50 clubs** (South Bay 19, Peninsula 15, San Francisco 10, Central Coast 5, East Bay
+  1) and **128 ties for 105 of the 634 varsity rows, at 28 of the 32 schools**: 29 current, 76 listed (unknown) and
+  23 earlier; 18 players are tied to more than one club; 127 high confidence, 1 medium. The most ties: De Anza
+  Force 38, Almaden FC 21, MVLA 16, Bay Area Surf 14, Santa Clara Sporting 6, Los Gatos United, San Francisco Elite
+  Academy and Silicon Valley Soccer Academy 4 each. 29 clubs have no tied player. The ties rest on 198 source
+  entries on 165 URLs (NCSA 60, PrepSoccer 38, SportsRecruits 35, MaxPreps career pages 27, Hudl 22,
+  TopDrawerSoccer 11, SoccerWire 4, a college release 1). San Francisco, the Peninsula and the South Bay were
+  searched for every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast,
+  so /clubs does not claim it. JV players' clubs are not listed.
+- **College commitments** (`commits.json`): **13 players at 6 schools, to 13 colleges**, 11 in soccer, 1 in field
+  hockey and 1 in softball; 9 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
+  Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos)
+  to Brandeis, Selya Sen (Los Altos) to Franklin & Marshall and Kat Smith (Los Altos) to Ithaca in field hockey,
+  from The Talon, Los Altos' student paper (Smith's is medium: the story says she left soccer in her junior year,
+  so the soccer row being hers wants confirming). Ayla Briski to Brown, Layla Tucakovic to USC, Vivian Baker to
+  Louisville and Zuri Brandt to Washington, all Mitty, from their SoccerWire and TopDrawerSoccer pages, which name
+  Archbishop Mitty (PrepSoccer agreeing for Tucakovic and Brandt, and Brandt's own SportsRecruits page). Juliana
+  Pandolfo (Menlo-Atherton) to Chicago in softball, from her own SportsRecruits page. Four are medium, resting on
+  the class year and a hometown with no school named: Kailani Bock (Leland) to UC San Diego and Isabella Cain (Los
+  Gatos, whose roster row has no grade) to Princeton, from TopDrawerSoccer's commitment lists; Ashleigh Bieser
+  (Carlmont) to Columbia (TopDrawerSoccer, SoccerWire and her own SportsRecruits page) and Delaney Kumer (Carlmont)
+  to UC Davis (TopDrawerSoccer and PrepSoccer). Park, Bock, Cain and Neschleba were last season's research ("Soccer
+  and basketball: last season's commitments" below). Every quote was checked against its page as served, by the
+  pass that found it and again at assembly.
+
+**Boys basketball**
+
+- **Recruiting profiles**: **834 for 569 of the 782 varsity rows, at 56 of the 58 schools with a roster** (467
+  Hudl, 251 claimed MaxPreps pages, 103 NCSA, 13 SportsRecruits); 583 of them, for 494 players, are on a recruiting
+  platform rather than MaxPreps. No profile was found at Burlingame or El Camino (South San Francisco). Profiles in
+  another sport: 7 football, 7 baseball, 1 each track and field, lacrosse and water polo. `jv-profiles.json` holds
+  **62 for 61 JV players at 8 schools** (60 Hudl, 2 NCSA). Scouting pages (Prep Hoops, Prep Redzone, On3) are not
+  the players' own and are never linked as profiles; they serve as club and commitment sources.
+- **Clubs**: **13 clubs** (South Bay 4, East Bay 4, Peninsula 3, San Francisco 1, Marin 1) and **50 ties for 47 of
+  the 782 varsity rows, at 27 of the 58 schools**: 4 current, 40 listed (unknown) and 6 earlier; 3 players are tied
+  to more than one club; 47 high confidence, 3 medium. The most ties: Team Esface 11, Silicon Valley Soldiers 9, San
+  Jose Spartans 7, Oakland Soldiers 7, Team Lillard 4, Peninsula Gold 4, Bay City Basketball 3. Shark City Hoops and
+  Bay Area Wildcats have no tied player. The ties rest on 74 source entries on 70 URLs (Prep Hoops 45, NCSA 10,
+  MaxPreps career pages 9, Hudl 8, SportsRecruits 2), most of them Prep Hoops player pages ("attends <school> ...
+  and plays club basketball for <club>", the school linked to its team page in the right city). No public
+  directory lists the boys' travel programs of any area, so no area was searched for every club: `SEARCHED_REGIONS`
+  is empty and /clubs names none as searched. JV players' clubs are not listed.
+- **College commitments**: **5 players at 5 schools, to 5 colleges**, 3 in basketball and 2 in football; 3 to NCAA
+  Division I programs and 2 to Division III. Emmanuel Ahamefule (Riordan) signed with Oregon State on 2026-11-12
+  (Oregon State's own release names him with Archbishop Riordan High School in San Francisco; On3, Cal-Hi Sports
+  and Prep Hoops agree). Adrian Barnett (King's Academy) to Washington State in football, from On3, the
+  Spokesman-Review and Prep Redzone. Three rest on pages that put the player a class above the grade MaxPreps'
+  roster still shows (below): Rocco Smith (Palo Alto) to Linfield, from his Prep Hoops page and its commitments
+  list; Jace Cannon (Serra) to USC in football, from On3 and Cal-Hi Sports; and Brady Clugage (Mitty) to Chapman,
+  medium, from one row of Prep Hoops' commitments list. Every quote was re-read at assembly. No commitment to a
+  two-year college was found, though every sport's `commits.json` takes `njcaa` and `cccaa` levels since
+  2026-11-21.
+
+**Rosters whose grades are last season's.** On 2026-11-21 MaxPreps' 2026-27 rosters at several schools still showed
+the 2025-26 grades. In basketball, 183 Hudl profiles on the school's own team stated a class exactly one year earlier
+than the roster's; Archbishop Mitty's roster has no senior; and in `data/players.json` 7 Palo Alto and 9 Branham
+players carry the same grade in their 2025-26 and 2026-27 varsity stints. The linking rule refused every such page,
+so these players would have shown nothing although their pages were plainly theirs. The owner decided on 2026-11-21
+to accept them. A grade conflict in the overlay may now be marked `rosterBehind` (`lib/players/rosters-schema.ts`:
+one a player, on a grade MaxPreps shows, with `other` exactly `kept` + 1 and a cited page); a profile, club-tie
+source or commitment source stating the corrected class then passes (`classYearAgrees` in `lib/players/rosters.ts`).
+The roster keeps MaxPreps' grade and says beside the row that MaxPreps' roster still shows last season's grade;
+/commits groups the player by the corrected class and prints the corrected grade. A row was marked only where a page
+that names the right school (for Hudl, the profile's own team list has the school's team) states the class one year
+earlier: never on class year and hometown alone, never for a two-year gap or a page a year later, never on a JV-list
+row (the JV check has no marker), and never on a roster grade 12 (65 Hudl pages stating the class of 2026 on such
+rows stay out). **109 basketball rows at 23 schools** carry one (Mitty 17, Palo Alto 15, St. Ignatius 8, Sacred
+Heart Prep 8, Aptos 8, Priory 7, Serra 6, Crystal Springs 6, Aragon 6, Lincoln 5, Leigh 4, Milpitas 3, Scotts
+Valley 3, Santa Clara 2, Branham 2, San Lorenzo Valley 2, and 1 each at MacDonald, Sobrato, Valley Christian, King's
+Academy, Woodside, Capuchino and Mills), 107 citing the player's Hudl profile and 2 an NCSA profile; they let in 107
+Hudl, 21 NCSA and 4 SportsRecruits profiles, 12 club ties and 3 commitments. **2 soccer rows** carry one, at Santa
+Clara (a Hudl profile) and Sobrato (an NCSA profile). Every page let in this way was re-read at assembly.
+
+What the research did not reach, so that an absence here says little:
+
+- **Soccer.**
+  - NCSA: suffix 2 of the athlete address was not tried for 202 varsity names whose first two addresses were
+    missing, and 399 of the 704 JV rows were not looked up (time).
+  - Hudl: Notre Dame San Jose is not on Hudl; Homestead, Cupertino, Milpitas, Prospect and Terra Nova have no girls
+    soccer team there and nine schools only empty rosters; 79 matched players' profiles are private.
+  - SportsRecruits: suffix 1 and suffixes above 30 were not probed; most live pages show at most a class year.
+  - Clubs: the Central Coast outside Santa Cruz County was not searched; Cal North District 1's list and ECNL's
+    member list (drawn by script) were not read. Clubs named on a player's page with no record, so the tie is not
+    shown: El Camino FC, Alum Rock FC, Marin FC, Hawaii Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon
+    Valley Soccer Club.
+  - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
+    San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
+    feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
+  - The 160 rows with no grade match only on a page that names the school.
+- **Basketball.**
+  - MaxPreps: Burlingame's 10 career pages lead to MaxPreps' "Inactive Careers" notice.
+  - Hudl: Westmoor is not on Hudl; Homestead, Cupertino and El Camino have no boys team there, and Monta Vista, Mt.
+    Pleasant and Yerba Buena only empty rosters; 67 matched rows have only private profiles; four pages redirect to
+    Hudl's fan site and could not be read.
+  - NCSA: suffix 2 was not tried for 503 varsity names, and 217 of the 279 JV rows were not looked up (time).
+  - Clubs: no area was searched for every club (the Nike EYBL team list is an image, Puma's and others are drawn by
+    script or refuse automated reads); 34 club names on players' pages have no record (All In Elite, Team
+    California, Seattle Rotary and Roadrunners among them; `clubs.json`'s notes list all), so those ties are not
+    shown.
+  - Commitments: Prep Hoops' and On3's article bodies are paywalled; 247Sports, VerbalCommits and Perfect Game could
+    not be read; the NCAA directory's API answered 403; most seniors and every junior were not searched by name;
+    the community colleges' sites were not read.
+  - Grades: a JV player's page one class ahead of a stale grade is not linked, nor any page on a roster grade 12.
+
+`pnpm build-players` stamped each record's `playerId` and added the profiles to `data/players.json`. Re-run it
+after editing any of these files. A roster refetch that drops or respells a tied or committed player fails
+`pnpm test` and the build for that sport, as for field hockey ("When a roster refetch breaks it"); so does one that
+gives a marked row the corrected grade, until the conflict is removed (its `kept` must be MaxPreps' grade).
+
 ### Soccer and basketball: last season's commitments
 
 `data/soccer/prior-commits.json` and `data/basketball/prior-commits.json` hold which of the 2025-26 varsity
 juniors (class of 2027) and sophomores (class of 2028) a public page says have committed to, or signed with, a
-college team, in their own sport or any other. **Data only for now**: no page reads them, the soccer and
-basketball builds still render /commits as a 404, and `tests/prior-commits.test.ts` fails if anything under
-`app/` or `components/` names them. Last season's seniors are not included.
+college team, in their own sport or any other, as researched on 2026-11-18. They stay as that research's record;
+no page reads them. On 2026-11-21 the four players of the soccer file who are on a 2026-27 roster, Allison Park
+(Leland), Kailani Bock (Leland), Isabella Cain (Los Gatos) and Brooke Neschleba (Los Altos), were copied by hand
+into `data/soccer/commits.json` as ordinary commitments, with no label of their own (owner decision), and re-read
+that day (Park's is signed now: Illinois' release of 2026-11-11 could be read); /commits and the rosters show them
+from there. The other four, Saara Lahtela, Teagan Kaefer, Abby Nelson and Avery Edson, are on no 2026-27 roster
+MaxPreps listed on 2026-11-21 and are not shown. The basketball file holds none. `tests/prior-commits.test.ts` no
+longer fails when something under `app/` or `components/` names the files. Last season's seniors are not included.
 
 They follow `data/field-hockey/commits.json`'s rules ("College commitments") and reuse its source, college and program shapes
 (`lib/players/prior-commits-schema.ts`), with these differences:
@@ -1796,7 +1950,8 @@ They follow `data/field-hockey/commits.json`'s rules ("College commitments") and
 - `joinPriorCommits` checks every commitment against the registry: the player exists, has a varsity stint in
   the file's sport at that team in 2025-26 or 2026-27, is known under `fullName`, and agrees with `grade` (each
   season's stint grade, the registry's class year and every class year a source states).
-- A program's level may also be `njcaa` or `cccaa` (two-year colleges); since 2026-11-21 every sport's `commits.json` takes them too, and /commits words them "NJCAA" and "CCCAA".
+- A program's level may be `njcaa` or `cccaa` (two-year colleges). Until 2026-11-21 only these files took them;
+  since then every sport's `commits.json` does too, and /commits words them "NJCAA" and "CCCAA".
 
 Coverage, researched 2026-11-18 (the method is DATA-SOURCES §1.13): **soccer, 8 commitments**, all in soccer, at
 four schools. Saara Lahtela (Homestead) and Teagan Kaefer (Los Gatos) signed with Santa Clara, whose release of

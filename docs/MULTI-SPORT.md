@@ -27,8 +27,10 @@ own origin (a subdomain such as `soccer.` is a hosting choice on top of this). W
   league"), so they are per sport by nature.
 
 The cost: `/clubs`, `/commits` and `/recruiting` existed only for field hockey at first, so their presence
-is per sport (`HAS_RECRUITING`: field hockey, and volleyball since 2026-11-13; `/club-calendar` is still field
-hockey's alone, `HAS_CLUB_CALENDAR`). (`/jv` and `/history/2025-26` are every build's now.) A page that shows one school across several
+is per sport (`HAS_RECRUITING`: field hockey, volleyball since 2026-11-13, and girls soccer and boys basketball since
+2026-11-21, so every high school build; the VAL's middle school build, `val-soccer`, has none; `/club-calendar` is
+still field hockey's alone, `HAS_CLUB_CALENDAR`).
+(`/jv` and `/history/2025-26` are every build's now.) A page that shows one school across several
 sports would need links between origins: since 2026-11-16 the footer links every other sport's site and a team
 page links the same school's page on each other site that covers it (`lib/sports/sites.ts`,
 `lib/schools/other-sports.ts`; README, "Links between the sport sites").
@@ -210,11 +212,12 @@ aside), and the field hockey tests, golden files and asserts pass as they were.
   PDF and a hand transcription of its all-league PDFs (`official/scval-all-league-2025-26.json`), and BVAL's
   standings sheet (added 2026-11-16), and
   validated like field hockey's; clubs, commits and the bracket files (the 2025 history brackets included: a
-  CCS bracket's other schools are not in this registry) are empty placeholders the loaders serve without field
-  hockey's validation.
+  CCS bracket's other schools are not in this registry) were empty placeholders the loaders served without field
+  hockey's validation (the clubs and commits files until 2026-11-21: "Recruiting, winter builds" below).
 - **Pages.** /history/2025-26 shows SCVAL's two divisions (final standings, varsity and JV, and the
-  all-league teams), and its jump pills go to the divisions. /clubs, /clubs/[slug], /commits and /recruiting render a 404 and are
-  linked from nowhere; the region toggle is hidden; copy that named field hockey's leagues or counted
+  all-league teams), and its jump pills go to the divisions. /clubs, /clubs/[slug], /commits and /recruiting rendered
+  a 404 and were linked from nowhere until 2026-11-21, when the build got them;
+  the region toggle is hidden; copy that named field hockey's leagues or counted
   "N leagues" reads from config.
 
 Not done yet, for the owner to decide or schedule:
@@ -365,6 +368,36 @@ volleyball like we did for field hockey". The volleyball build now has /clubs, /
   (`CLUB_TIE_WORDS`), and a club's own description is data, so a club that also runs a boys' program is not the
   site naming another build's program.
 - /club-calendar stays field hockey's (`HAS_CLUB_CALENDAR`): `data/field-hockey/club-events.json` is field hockey research.
+
+**Recruiting, winter builds (2026-11-21).** The owner asked to "run the recruiting pages search for both soccer and
+basketball". The soccer and basketball builds now have /clubs, /clubs/[slug], /commits and /recruiting
+(`HAS_RECRUITING` is every high school build's; `val-soccer`, which lists no players, stays without them), from
+`data/{soccer,basketball}/{clubs,commits,rosters-enrichment,jv-profiles}.json` (README, "Girls soccer and boys
+basketball: recruiting"; DATA-SOURCES §1.15). The owner also asked that last season's soccer commitments of players
+now on a roster be shown with no label of their own, that the two-year colleges' levels be added, and, when the
+research found MaxPreps' winter rosters a season behind on grades, to "accept the players with outdated grades for
+now". What made that possible:
+
+- `SPORT_FEATURES` turns `recruiting` on for soccer and basketball. A file no round has filled (no `notes`, no
+  records) is a placeholder (`isResearched` in `lib/schema-primitives.ts`): its pages name no searched area and
+  print no research date, and a clubs file may hold no club (`lib/players/clubs-schema.ts`). `SEARCHED_REGIONS` is a
+  `bySport` choice (soccer: San Francisco, the Peninsula and the South Bay; basketball: none, since no directory
+  lists the boys' travel programs), and so are the /about recruiting section's sport words.
+- The copy rules read a player's commitment in another sport (a basketball player's football commitment) as data
+  about the player, not the site naming another build's program (`scripts/assert-copy.ts`); basketball, with no
+  tied games, takes volleyball's exception for a player's tie to a club (`scripts/copy-rules.ts`).
+- Last season's commitments: the four players of `data/soccer/prior-commits.json` on a 2026-27 roster were copied by
+  hand into `data/soccer/commits.json` as ordinary commitments; the prior-commits files stay as the 2026-11-18
+  record, and `tests/prior-commits.test.ts` no longer forbids pages naming them.
+- `COLLEGE_DIVISIONS` gained `njcaa` and `cccaa` in every sport's `commits.json` (`lib/players/commits-schema.ts`),
+  worded "NJCAA" and "CCCAA" on /commits ("a CCCAA program").
+- Stale grades: a grade conflict in the roster overlay may be marked `rosterBehind` (`other` exactly `kept` + 1),
+  and may cite a recruiting profile or a scouting site (`CONFLICT_KINDS`, `lib/players/rosters-schema.ts`). Profiles,
+  club ties and commitments check a stated class year through one function, `classYearAgrees`
+  (`lib/players/rosters.ts`, called by `lib/players/roster-join.ts`), which accepts the corrected class on a marked
+  row. The roster keeps MaxPreps' grade and says MaxPreps shows last season's; /commits groups and labels the player
+  by `effectiveGrade` / `effectiveClassOf`; the recruiting and club pages keep MaxPreps' grade. 109 basketball rows
+  and 2 soccer rows carry the marker.
 
 **WCAL and WBAL (2026-11-14).** The owner asked for the two leagues on the volleyball site too.
 `lib/league-config/volleyball/{wcal,wbal}.ts` and `lib/registry/volleyball/{wcal,wbal}.ts` add the same 19 schools

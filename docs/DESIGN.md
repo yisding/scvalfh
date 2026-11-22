@@ -3338,7 +3338,7 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   committed there and from which schools, and each program's page on the college's own athletics
   site ("Stanford field hockey", "St. Lawrence soccer", off-site links). Colleges with the most
   players come first, then by the highest level of any of their programs here (Division I before
-  II, III and NAIA), then by name.
+  II, III, NAIA, NJCAA and CCCAA), then by name.
 - **Nothing found** is a real state: the lede says no public page we found shows a commitment, one
   empty state stands where the classes would be, and the colleges section is left out.
 
@@ -5165,8 +5165,9 @@ refreshes it. Everything in §1-§32 still stands.
   in calendar order, then those with no dates posted, then those already over, latest first; each
   "Hosts", "On its schedule", "Hosted" or "Played", linking `/club-calendar#<event id>`), with a "Club
   calendar" header action.
-- **Field hockey's alone**, like the club pages: another sport's build renders it as a 404, and the
-  sitemap lists it only where `HAS_RECRUITING`.
+- **Field hockey's alone** (`HAS_CLUB_CALENDAR`): another sport's build renders it as a 404, though the club
+  pages are every high school build's (`HAS_RECRUITING`, since 2026-11-21), and the sitemap lists it only where
+  both are set.
 
 ### 34.2 The page
 
