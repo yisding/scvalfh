@@ -1,7 +1,710 @@
 {
   "season": "26-27",
-  "builtBy": "Nothing yet: JV players' recruiting profiles are not researched for the basketball build.",
-  "capturedAt": "2026-11-10",
-  "notes": [],
-  "teams": []
+  "builtBy": "Research by hand, 2026-11-21: Hudl's public rosters for every school's boys basketball teams and a SportsRecruits profile-address probe, over the 279 JV players MaxPreps lists; each Hudl page read twice.",
+  "capturedAt": "2026-11-21",
+  "notes": [
+    "The JV players' own recruiting pages, linked by the rule of data/basketball/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. 60 pages for 60 players (60 Hudl). No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has his pages in the varsity file. A JV page stating a class year one ahead of a stale MaxPreps grade is not linked (the JV check has no grade-conflict marker). Recall is partial."
+  ],
+  "teams": [
+    {
+      "slug": "los-altos",
+      "players": [
+        {
+          "name": "Cruz Pardo De Zela",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29208464",
+              "classOf": 2029,
+              "note": "On Los Altos High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "macdonald",
+      "players": [
+        {
+          "name": "Ngundeng Liah",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31303746",
+              "classOf": 2030,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2026 - Present); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Karl kekobad",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33070912",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Valentino Ortega",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28749547",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Max Svantesson",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/30677630",
+              "classOf": 2030,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2026 - Present); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "kriday Ramkumar",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28749555",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Nathaniel Cabrera Jr.",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31190101",
+              "classOf": null,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2026 - Present); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Matthew Jairee Matias",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28749531",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Gerard Jacob San Luis",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33066031",
+              "classOf": 2030,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2026 - Present); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Amari Williams",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33160285",
+              "classOf": 2030,
+              "note": "On Kathleen MacDonald High School's own boys basketball team on Hudl (Boys JV basketball, 2026 - Present); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "santa-clara",
+      "players": [
+        {
+          "name": "Ian Denny",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28904771",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Yaozeng Huang",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28751734",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Austin Leader",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29174094",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Elijah Palomino",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26651522",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys Varsity Basketball, 2025); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Nicholas DeRuna",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29023935",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Evann Sun",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28751599",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Owen Grace",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28761832",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Arya Gupta",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33172690",
+              "classOf": 2028,
+              "note": "On Santa Clara High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "branham",
+      "players": [
+        {
+          "name": "Leo Song",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28926882",
+              "classOf": null,
+              "note": "On Branham High School's own boys basketball team on Hudl (Boys JV Basketball, 2025); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "leland",
+      "players": [
+        {
+          "name": "Ryan Liu",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29169713",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jaden Francisco",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29165006",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys Freshman Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jiho Lee",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29169494",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys Freshman Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Ron Yeung",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29378105",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Benjamin Naret",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27088391",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Nikko Jung",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29304471",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Parker Nguyen",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29166477",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Lucas Yi",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29169460",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Marcus Chang",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29200292",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Swaraj Kompalli",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29169714",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jacob Richardson",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29552589",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "John Walsh",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29200271",
+              "classOf": 2029,
+              "note": "On Leland High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "live-oak",
+      "players": [
+        {
+          "name": "Zackary Forbis",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28956571",
+              "classOf": 2029,
+              "note": "On Live Oak High School's own boys basketball team on Hudl (Live Oak JV Boys Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jacob Rivera",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28415069",
+              "classOf": 2029,
+              "note": "On Live Oak High School's own boys basketball team on Hudl (Live Oak JV Boys Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Noah Omron",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28956537",
+              "classOf": 2029,
+              "note": "On Live Oak High School's own boys basketball team on Hudl (Live Oak JV Boys Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Mason Gerhardt",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28961668",
+              "classOf": 2029,
+              "note": "On Live Oak High School's own boys basketball team on Hudl (Live Oak JV Boys Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Tristan Hernandez",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28962530",
+              "classOf": 2029,
+              "note": "On Live Oak High School's own boys basketball team on Hudl (Live Oak JV Boys Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "David Benavidez",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28962025",
+              "classOf": 2029,
+              "note": "On Live Oak High School's own boys basketball team on Hudl (Live Oak JV Boys Basketball, 2025 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "sacred-heart-cathedral",
+      "players": [
+        {
+          "name": "Joel Garat",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27340419",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Javen Auyang",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28924581",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jayden Santos-Cooper",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28924590",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. The page's name is \"Jayden Santos\", the roster's \"Jayden Santos-Cooper\": kept because school and class year both agree. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Myles Bautista",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27738732",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Hunter Munoz",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24884882",
+              "classOf": 2028,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Montell Oliver",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28241939",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jaymond Lin",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24884941",
+              "classOf": 2028,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jake Madden",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28924575",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Nixon Tuala",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28234552",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Cole Cherry",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24961319",
+              "classOf": 2028,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2025 - Present); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Bey Peters",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28924568",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jayden Cortez",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28924521",
+              "classOf": 2029,
+              "note": "On Sacred Heart Cathedral High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "menlo-atherton",
+      "players": [
+        {
+          "name": "Paxton Cunningham",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33080465",
+              "classOf": 2029,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Tahir Damji",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33080442",
+              "classOf": null,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Walker Fogarty",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28529850",
+              "classOf": 2030,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Gelston Howell",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33080449",
+              "classOf": null,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Henry Iwersen",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33080400",
+              "classOf": null,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Thomas Iwersen",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24873067",
+              "classOf": null,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Sonny Kline",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26808574",
+              "classOf": 2029,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Desmond Miller",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/30270532",
+              "classOf": 2029,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Dylan Courson",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26672858",
+              "classOf": 2029,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Blake Danielewicz",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26807563",
+              "classOf": 2029,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Jan Wilkiewicz",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33022482",
+              "classOf": null,
+              "note": "On Menlo-Atherton High School's own boys basketball team on Hudl (Boys JV Basketball, 2026 - Present); the page states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice."
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

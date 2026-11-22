@@ -1,7 +1,360 @@
 {
   "season": "26-27",
-  "builtBy": "Nothing yet: JV players' recruiting profiles are not researched for the soccer build.",
-  "capturedAt": "2026-11-06",
-  "notes": [],
-  "teams": []
+  "builtBy": "Research by hand, 2026-11-21: Hudl's public rosters for every school's girls soccer teams and a SportsRecruits profile-address probe, over the JV players MaxPreps lists; each page read at least twice by the pass that found it.",
+  "capturedAt": "2026-11-21",
+  "notes": [
+    "The JV players' own recruiting pages, linked by the rule of data/soccer/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has her pages in the varsity file. The stale-grade marker is varsity-only: a JV page whose class year disagrees with the JV list is not linked. Recall is partial.",
+    "Counts as written: 27 profiles for 27 JV players at 10 schools (3 SportsRecruits, 24 Hudl)."
+  ],
+  "teams": [
+    {
+      "slug": "gunn",
+      "players": [
+        {
+          "name": "Ashley Cuevas",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29171874",
+              "classOf": null,
+              "note": "On Gunn High School's own girls soccer team on Hudl (2026 Girls Soccer); states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Gyovanna Torres Juárez",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29052122",
+              "classOf": null,
+              "note": "On Gunn High School's own girls soccer team on Hudl (2026 Girls Soccer); states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "los-gatos",
+      "players": [
+        {
+          "name": "Sophia Newell",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29588708",
+              "classOf": null,
+              "note": "On Los Gatos High School's own girls soccer team on Hudl (Girls JV Soccer); states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Charlotte Markovic",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/charlotte_markovic",
+              "classOf": 2028,
+              "note": "The page names Los Gatos High School and class of 2028, which agrees with the roster. Read from the page's own profile JSON (served without login) in three separate fetches that agree."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "mountain-view",
+      "players": [
+        {
+          "name": "Sienna Pattisson",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27849447",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Caroline Zhang",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31302218",
+              "classOf": 2030,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Ilika Kundu",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27824792",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Jocelyn Gold",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28842241",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Shalini Nagdev",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28842272",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Noa Goldberg",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28169808",
+              "classOf": 2030,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Mari Madalen Jan",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28169746",
+              "classOf": 2030,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Julia Escober",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28842196",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Caroline Wilkowski",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28842319",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "santa-clara",
+      "players": [
+        {
+          "name": "Mia Rojo",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28752311",
+              "classOf": 2028,
+              "note": "On Santa Clara High School's own girls soccer team on Hudl (Soccer - Girls JV); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Beatriz Rivera",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27838503",
+              "classOf": 2029,
+              "note": "On Santa Clara High School's own girls soccer team on Hudl (Soccer - Girls JV); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Elizabeth Lopez Acosta",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28751352",
+              "classOf": 2030,
+              "note": "On Santa Clara High School's own girls soccer team on Hudl (Soccer - Girls JV); class of 2030 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "macdonald",
+      "players": [
+        {
+          "name": "Christina Mai",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25053929",
+              "classOf": 2028,
+              "note": "On Kathleen MacDonald High School's own girls soccer team on Hudl (Womens JV Soccer); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Giana Malit",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25051836",
+              "classOf": 2028,
+              "note": "On Kathleen MacDonald High School's own girls soccer team on Hudl (Womens JV Soccer); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "monta-vista",
+      "players": [
+        {
+          "name": "Aaminah Khan",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28846451",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own girls soccer team on Hudl (Girls JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Aashi Raj",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28846450",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own girls soccer team on Hudl (Girls JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Amy Bastola",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25466669",
+              "classOf": 2028,
+              "note": "On Monta Vista High School's own girls soccer team on Hudl (Girls JV Soccer); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Ritika Sane",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27356881",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own girls soccer team on Hudl (Girls JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "wilcox",
+      "players": [
+        {
+          "name": "Gianna Nieto",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/gianna_nieto2",
+              "classOf": 2029,
+              "note": "SportsRecruits softball profile. The page names Wilcox High School and class of 2029, which agrees with the roster. Read from the page's own profile JSON (served without login) in three separate fetches that agree.",
+              "sport": "softball"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "branham",
+      "players": [
+        {
+          "name": "Emily Regalado",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28802037",
+              "classOf": 2029,
+              "note": "On Branham High School's own girls soccer team on Hudl (Girls JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        },
+        {
+          "name": "Emma Burstein",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27001834",
+              "classOf": 2029,
+              "note": "On Branham High School's own girls soccer team on Hudl (Girls JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "leland",
+      "players": [
+        {
+          "name": "Jenna Yiseer",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/jenna_yiseer",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile. The page names Leland High School and class of 2029, which agrees with the roster. Read from the page's own profile JSON (served without login) in three separate fetches that agree.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "half-moon-bay",
+      "players": [
+        {
+          "name": "Yulissa Figueroa",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29634294",
+              "classOf": null,
+              "note": "On Half Moon Bay High School's own girls soccer team on Hudl (Girls Varsity/JV Soccer); states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -1,8 +1,313 @@
 {
-  "builtBy": "Nothing yet: college commitments are not researched for the basketball build.",
-  "capturedAt": "2026-11-10",
+  "builtBy": "Research by hand, 2026-11-21, for the boys basketball build: Prep Hoops' and Prep Redzone's commitment lists and player pages, On3/Rivals class rankings, Prep Baseball Report's California list, 304 college men's basketball news feeds, school athletics sites and student and local papers, and the players' own recruiting pages. Every quote was re-read at assembly on 2026-11-21.",
+  "capturedAt": "2026-11-21",
   "season": "26-27",
-  "notes": [],
-  "colleges": [],
-  "commitments": []
+  "notes": [
+    "Players on the 58 boys basketball rosters MaxPreps lists so far whom a public page says have committed to, or signed with, a college team, in basketball or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names his high school or gives the roster's class year with a hometown in the school's own area; offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
+    "5 commitments. Emmanuel Ahamefule (Archbishop Riordan) signed with Oregon State: its release of 2026-11-12 names him with his school. Adrian Barnett (The King's Academy) committed to Washington State football (On3/Rivals and the Spokesman-Review). Three rest on pages that put the player a class above the grade MaxPreps' 2026-27 roster still shows, which is last season's (each row carries a grade conflict in data/basketball/rosters-enrichment.json): Rocco Smith (Palo Alto, Linfield, Prep Hoops' page and commitments list), Jace Cannon (Serra, USC football, On3/Rivals and Cal-Hi Sports) and Brady Clugage (Archbishop Mitty, Chapman, medium: one row of Prep Hoops' commitments list).",
+    "Recall is partial. The signing period had just opened; Prep Hoops' article bodies and On3's NorCal pages are paywalled; 247Sports, VerbalCommits and Perfect Game refuse automated reads or draw their pages by script; most seniors and every junior were not searched name by name, and the community colleges' sites were not read. Wyatt Vonblanco (Serra), whose Prep Hoops page says Cal State San Marcos, is not listed: the page puts him in the class of 2026, a class above a roster grade 12."
+  ],
+  "colleges": [
+    {
+      "slug": "oregon-state",
+      "name": "Oregon State University",
+      "shortName": "Oregon State",
+      "city": "Corvallis",
+      "state": "OR",
+      "programs": [
+        {
+          "sport": "basketball",
+          "division": "ncaa-d1",
+          "conference": "Pac-12 Conference",
+          "url": "https://osubeavers.com/sports/mens-basketball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://pac-12.com/standings.aspx?path=mbball",
+          "what": "The Pac-12's '2026-27 Men's Basketball Standings' list Oregon State first; the page's metadata gives Division 'DI' and Conference 'Pac-12 Conference'."
+        },
+        {
+          "url": "https://osubeavers.com/sports/mens-basketball",
+          "what": "Oregon State's own Sidearm site metadata: clientDivision 'DI'. (Its conferenceName field reads 'Western Athletic Conference', a stale site setting; the Pac-12 standings are used for the conference.)"
+        },
+        {
+          "url": "https://osubeavers.com/news/2026/11/12/mens-basketball-beavers-sign-trio-of-outstanding-players",
+          "what": "Oregon State's men's basketball signing release of 2026-11-12 (CORVALLIS dateline)."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "washington-state",
+      "name": "Washington State University",
+      "shortName": "Washington State",
+      "city": "Pullman",
+      "state": "WA",
+      "programs": [
+        {
+          "sport": "football",
+          "division": "ncaa-d1",
+          "conference": "Pac-12 Conference",
+          "url": "https://wsucougars.com/sports/football"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://pac-12.com/standings.aspx?path=football",
+          "what": "The Pac-12's '2026 Football Standings' list Washington State; the page's metadata gives Division 'DI' and Conference 'Pac-12 Conference'."
+        },
+        {
+          "url": "https://www.spokesman.com/stories/2026/jun/02/wsu-lands-commitment-from-athlete-adrian-barnett-f/",
+          "what": "The Spokesman-Review (PULLMAN dateline) on WSU football's class of 2027."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "linfield",
+      "name": "Linfield University",
+      "shortName": "Linfield",
+      "city": "McMinnville",
+      "state": "OR",
+      "programs": [
+        {
+          "sport": "basketball",
+          "division": "ncaa-d3",
+          "conference": "Northwest Conference",
+          "url": "https://golinfieldwildcats.com/sports/mens-basketball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://golinfieldwildcats.com/sports/mens-basketball",
+          "what": "Linfield's own Sidearm site metadata: schoolAttributes Division 'DIII', Conference 'Northwest (NWC)'; its schedule rows give 'Northwest Conference'."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "chapman",
+      "name": "Chapman University",
+      "shortName": "Chapman",
+      "city": "Orange",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "basketball",
+          "division": "ncaa-d3",
+          "conference": "Southern California Intercollegiate Athletic Conference",
+          "url": "https://chapmanathletics.com/sports/mens-basketball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://chapmanathletics.com/sports/mens-basketball",
+          "what": "Chapman's own Sidearm site metadata: schoolAttributes Division 'DIII', Conference 'SCIAC'; schedule rows give 'Southern California Intercollegiate Athletic Conference'."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "usc",
+      "name": "University of Southern California",
+      "shortName": "USC",
+      "city": "Los Angeles",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "football",
+          "division": "ncaa-d1",
+          "conference": "Big Ten Conference",
+          "url": "https://usctrojans.com/sports/football"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://usctrojans.com/sports/football",
+          "what": "USC's own Sidearm site metadata: clientDivision 'DI', conferenceName 'Big Ten'."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    }
+  ],
+  "commitments": [
+    {
+      "teamSlug": "palo-alto",
+      "athleteId": "27426c69-1954-4e24-84f2-5dbfe105d995",
+      "fullName": "Rocco Smith",
+      "college": "linfield",
+      "sport": "basketball",
+      "status": "committed",
+      "asOf": "2026-10-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/rocco-smith/",
+          "kind": "other",
+          "quote": "Rocco Smith is a 5'9\" Shooting Guard/Combo Guard in the 2027 class. Smith attends Palo Alto in Northern California. … Linfield Committed",
+          "statedSchool": "Palo Alto (page links prephoops.com/team/ca/palo-alto/, titled 'Palo Alto High School Basketball | Palo Alto, CA')",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/commitments/?state=Northern+California",
+          "kind": "event",
+          "quote": "Rocco Smith SG/CG Class 2027 State: Northern California High School: Palo Alto COMMITTED 10/27/26",
+          "statedSchool": "Palo Alto",
+          "statedClassYear": 2027,
+          "sourceDate": "10/27/26"
+        }
+      ],
+      "basis": "Prep Hoops' page for him names Palo Alto (linking the school's Prep Hoops team page in Palo Alto, CA), class 2027, and \"Linfield Committed\"; Prep Hoops' Northern California commitments list has the entry of 10/27/26 with the same school and class. Class 2027 is a grade above the one MaxPreps' 2026-27 roster still shows (grade 11, last season's): accepted on the row's stale-grade conflict; both pages re-fetched at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "07b6b1cf-6339-4b1f-abfc-80e70377b186",
+      "fullName": "Brady Clugage",
+      "college": "chapman",
+      "sport": "basketball",
+      "status": "committed",
+      "asOf": "2026-10-13",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://prephoops.com/commitments/?state=Northern+California",
+          "kind": "event",
+          "quote": "Brady Clugage SG/CG Class 2027 State: Northern California High School: Archbishop Mitty COMMITTED 10/13/26",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": "10/13/26"
+        }
+      ],
+      "basis": "One source: Prep Hoops' Northern California commitments list, entry of 10/13/26, names Brady Clugage of Archbishop Mitty, class 2027, committed to Chapman (the college column of the row). His own Prep Hoops page (Archbishop Mitty, linking the school's San Jose team page, class 2027) shows no recruiting block. Class 2027 is a grade above the one MaxPreps' 2026-27 roster still shows: accepted on the row's stale-grade conflict; re-fetched at assembly on 2026-11-21. Medium: a single list row."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "42342be0-7332-49d1-9f65-7929de077ff4",
+      "fullName": "Emmanuel Ahamefule",
+      "college": "oregon-state",
+      "sport": "basketball",
+      "status": "signed",
+      "asOf": "2026-11-12",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://osubeavers.com/news/2026/11/12/mens-basketball-beavers-sign-trio-of-outstanding-players",
+          "kind": "college",
+          "quote": "Emmanuel Ahamefule, Fallilou Mbengue and Malcolm Price have all signed, and will join the Oregon State squad next season.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-11-12"
+        },
+        {
+          "url": "https://osubeavers.com/news/2026/11/12/mens-basketball-beavers-sign-trio-of-outstanding-players",
+          "kind": "college",
+          "quote": "He is a four-star recruit and is currently playing at Archbishop Riordan High School in San Francisco, Calif.",
+          "statedSchool": "Archbishop Riordan High School, San Francisco",
+          "statedClassYear": null,
+          "sourceDate": "2026-11-12"
+        },
+        {
+          "url": "https://www.on3.com/rivals/emmanuel-ahamefule-290203/",
+          "kind": "other",
+          "quote": "Oregon State Beavers Signed · 9/23/2026 Claim Profile → Emmanuel Ahamefule San Francisco, CA · Archbishop Riordan Pos PF HT / WT 6-9 / 215 Class 2027",
+          "statedSchool": "Archbishop Riordan, San Francisco, CA",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.calhisports.com/2026/11/12/preseason-top-40-boys-bb-ranks/",
+          "kind": "news",
+          "quote": "Oregon State-bound Emmanuel Ahamefule (6-9, Sr.) has a chance to be a dominant presence after sitting out last season and is a big-time talent.",
+          "statedSchool": "Archbishop Riordan (San Francisco): the paragraph is the entry headed '11. (12) Archbishop Riordan (San Francisco) 26-2'",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-11-12"
+        },
+        {
+          "url": "https://prephoops.com/player/emmanuel-ahamefule/",
+          "kind": "other",
+          "quote": "Emmanuel Ahamefule is a 6'9\" Power Forward in the 2027 class. Ahamefule attends Archbishop Riordan in Northern California and plays club basketball for Team Lillard. … Oregon State Committed",
+          "statedSchool": "Archbishop Riordan (page links prephoops.com/team/ca/archbishop-riordan/, titled 'Archbishop Riordan High School Basketball | San Francisco, CA')",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Oregon State's own men's basketball release of 2026-11-12 says he signed and is 'currently playing at Archbishop Riordan High School in San Francisco, Calif.' (rule (a), school with city). On3/Rivals (server-rendered) gives Archbishop Riordan, San Francisco, class 2027 (the roster's class) and 'Signed'; Prep Hoops lists the Oregon State commitment on a page that names Archbishop Riordan and links its San Francisco team page. On3's '9/23/2026' is its commitment date, not the signing date; asOf is the release's date."
+    },
+    {
+      "teamSlug": "serra",
+      "athleteId": "c1542f49-eb72-4bd1-bb90-f3b337d31239",
+      "fullName": "Jace Cannon",
+      "college": "usc",
+      "sport": "football",
+      "status": "committed",
+      "asOf": "2026-04-11",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.on3.com/rivals/jace-cannon-281350/",
+          "kind": "other",
+          "quote": "USC Trojans Committed · 4/11/2026 Claim Profile → Jace Cannon San Mateo, CA · Junipero Serra Pos TE",
+          "statedSchool": "Junipero Serra, San Mateo, CA",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.calhisports.com/2026/07/29/2025-26-grid-hoop-all-state-team/",
+          "kind": "news",
+          "quote": "He received numerous offers and has committed to USC.",
+          "statedSchool": "Serra, San Mateo",
+          "statedClassYear": null,
+          "sourceDate": "2026-07-29"
+        }
+      ],
+      "basis": "On3/Rivals (served HTML) names him with \"San Mateo, CA · Junipero Serra\", tight end, class 2027, and \"USC Trojans Committed · 4/11/2026\" (rule (a), the school with its city). Cal-Hi Sports' 2025-26 grid-hoop all-state team of 2026-07-29 lists \"Jace Cannon (Serra, San Mateo) 6-5 Jr.\" and says he has committed to USC. Football, not basketball. Class 2027 is a grade above the one MaxPreps' 2026-27 basketball roster still shows: accepted on the row's stale-grade conflict; both pages re-fetched at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "kings-academy",
+      "athleteId": "a9a17c91-cb47-41e4-bb9a-d43f6f3f1d81",
+      "fullName": "Adrian Barnett",
+      "college": "washington-state",
+      "sport": "football",
+      "status": "committed",
+      "asOf": "2026-06-02",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.on3.com/rivals/adrian-barnett-285180/",
+          "kind": "other",
+          "quote": "Washington State Cougars Committed · 6/2/2026 Claim Profile → Adrian Barnett Sunnyvale, CA · The Kings Academy Pos WR HT / WT 6-4 / 191 Class 2027",
+          "statedSchool": "The Kings Academy, Sunnyvale, CA",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.spokesman.com/stories/2026/jun/02/wsu-lands-commitment-from-athlete-adrian-barnett-f/",
+          "kind": "news",
+          "quote": "The Cougars have landed a commitment from class of 2027 athlete Adrian Barnett, who announced his decision on social media Tuesday, giving his new team their seventh pledge of the class.",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-06-02"
+        },
+        {
+          "url": "https://www.spokesman.com/stories/2026/jun/02/wsu-lands-commitment-from-athlete-adrian-barnett-f/",
+          "kind": "news",
+          "quote": "Barnett hails from the King’s Academy in Sunnydale, California, where last fall he played wide receiver and defensive back.",
+          "statedSchool": "the King’s Academy in 'Sunnydale' (sic), California",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-06-02"
+        },
+        {
+          "url": "https://prepredzone.com/player/adrian-barnett/",
+          "kind": "other",
+          "quote": "Adrian Barnett is a 6'3\" Athlete in the 2027 class. Barnett attends The King's Academy in California. … Washington State Committed on06/02/2026",
+          "statedSchool": "The King's Academy (California; the page's team link wrongly points to a Georgia team page)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "On3/Rivals (server-rendered) names him with 'Sunnyvale, CA · The Kings Academy', class 2027 (the roster's class) and 'Washington State Cougars Committed · 6/2/2026' (rule (a): school with its city). The Spokesman-Review of 2026-06-02 reports the commitment of the class-of-2027 athlete from 'the King’s Academy in Sunnydale [sic], California'; Prep Redzone lists the same commitment. He is on The King's Academy's 2026-27 varsity basketball roster (grade 12). Football, not basketball."
+    }
+  ]
 }

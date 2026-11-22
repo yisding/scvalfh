@@ -1,8 +1,778 @@
 {
-  "builtBy": "Nothing yet: college commitments are not researched for the soccer build.",
-  "capturedAt": "2026-11-06",
+  "builtBy": "Research by hand, 2026-11-21, for the girls soccer build: commitment lists (TopDrawerSoccer, SoccerWire, PrepSoccer), college athletics sites' news feeds, school and local papers, the clubs' commitment pages and the players' own SportsRecruits pages. Every quote checked against its page as served (or rendered, where the page is drawn by script) by the pass and again at assembly.",
+  "capturedAt": "2026-11-21",
   "season": "26-27",
-  "notes": [],
-  "colleges": [],
-  "commitments": []
+  "notes": [
+    "Players on the tracked girls varsity soccer rosters a public page says have committed to, or signed with, a college team, in soccer or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names her high school or gives the roster's class year with a hometown in the school's own area (a row with no grade needs the school, with one exception below); offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
+    "13 commitments: 11 soccer, 1 field hockey, 1 softball; 1 signed. Allison Park's (Illinois) is signed: the college's own signing release names her with her high school. Isabella Cain's row on Los Gatos' roster has no grade: her sources (TopDrawerSoccer) give class of 2028 and Los Gatos as her hometown but name no school, so her commitment is medium confidence. Kat Smith's is a field hockey commitment (Ithaca), on her soccer roster row.",
+    "Read: TopDrawerSoccer's California girls commitment search for 2027 (225) and 2028 (128) and its player profiles, SoccerWire's commitment tracker (2027 and 2028), PrepSoccer's California list and 1,704 posts since 2025-11-01, 1,043 college athletics sites' news feeds (NCAA Division I, II and III women's soccer members and 19 NAIA; 6,237 stories opened, 3,236 dated 2026-11-11 or later), 12 student papers and 8 local papers, the clubs' commitment pages (MVLA, De Anza Force, SVSA, Bay Area Surf, Valley Surf, Los Gatos United), and the players' own SportsRecruits pages (\"Committed to …\", dated by the entry on the profile). Every quote was read twice by the pass and re-read at assembly by a separate script on 2026-11-21.",
+    "Recall is partial: no name-by-name search of every senior, junior or ungraded row; no student paper was found for 20 of the schools; the San Mateo Daily Journal, the Los Altos Town Crier and the Half Moon Bay Review were not read; 96 college sites gave no feed; community-college sites were not retried; MVLA's and SF Elite's commitment widgets are drawn by script. Leads left out because no page meets the rule: four players named with a college but no school, hometown or agreeing class year (a Mercy Burlingame, a Soquel and two Valley Christian players)."
+  ],
+  "colleges": [
+    {
+      "slug": "brandeis",
+      "name": "Brandeis University",
+      "shortName": "Brandeis",
+      "city": "Waltham",
+      "state": "MA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d3",
+          "conference": "University Athletic Association",
+          "url": "https://www.brandeisjudges.com/sports/wsoc/index"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=III&sportCode=WSO",
+          "what": "The NCAA directory's Division III women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Brandeis University, University Athletic Association."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "illinois",
+      "name": "University of Illinois Urbana-Champaign",
+      "shortName": "Illinois",
+      "city": "Champaign",
+      "state": "IL",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Big Ten Conference",
+          "url": "https://fightingillini.com/sports/soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of Illinois Urbana-Champaign, Big Ten Conference."
+        },
+        {
+          "url": "https://fightingillini.com/news/2026/11/11/illinois-soccer-pens-seven-to-2027-signing-class",
+          "what": "Illinois' signing release of 2026-11-11: 'Illinois soccer head coach Katie Hultin announced the signing of seven incoming freshmen to the 2027 signing class on Wednesday (Nov. 11).'"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "uc-san-diego",
+      "name": "University of California, San Diego",
+      "shortName": "UC San Diego",
+      "city": "La Jolla",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Big West Conference",
+          "url": "https://ucsdtritons.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of California, San Diego, Big West Conference."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "princeton",
+      "name": "Princeton University",
+      "shortName": "Princeton",
+      "city": "Princeton",
+      "state": "NJ",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "The Ivy League",
+          "url": "https://goprincetontigers.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Princeton University, The Ivy League."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "washington",
+      "name": "University of Washington",
+      "shortName": "Washington",
+      "city": "Seattle",
+      "state": "WA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Big Ten Conference",
+          "url": "https://gohuskies.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of Washington, Big Ten Conference."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "usc",
+      "name": "University of Southern California",
+      "shortName": "USC",
+      "city": "Los Angeles",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Big Ten Conference",
+          "url": "https://usctrojans.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of Southern California, Big Ten Conference."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "louisville",
+      "name": "University of Louisville",
+      "shortName": "Louisville",
+      "city": "Louisville",
+      "state": "KY",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Atlantic Coast Conference",
+          "url": "https://gocards.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of Louisville, Atlantic Coast Conference."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "brown",
+      "name": "Brown University",
+      "shortName": "Brown",
+      "city": "Providence",
+      "state": "RI",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "The Ivy League",
+          "url": "https://brownbears.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Brown University, The Ivy League."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "columbia",
+      "name": "Columbia University",
+      "shortName": "Columbia",
+      "city": "New York",
+      "state": "NY",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "The Ivy League",
+          "url": "https://gocolumbialions.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Columbia University-Barnard College, The Ivy League."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "uc-davis",
+      "name": "University of California, Davis",
+      "shortName": "UC Davis",
+      "city": "Davis",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Mountain West Conference",
+          "url": "https://ucdavisaggies.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of California, Davis, Mountain West Conference."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "franklin-marshall",
+      "name": "Franklin & Marshall College",
+      "shortName": "Franklin & Marshall",
+      "city": "Lancaster",
+      "state": "PA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d3",
+          "conference": "Centennial Conference",
+          "url": "https://godiplomats.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=III&sportCode=WSO",
+          "what": "The NCAA directory's Division III women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Franklin & Marshall College, Centennial Conference."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "ithaca",
+      "name": "Ithaca College",
+      "shortName": "Ithaca",
+      "city": "Ithaca",
+      "state": "NY",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "Liberty League",
+          "url": "https://athletics.ithaca.edu/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=III&sportCode=WFH",
+          "what": "The NCAA directory's Division III field hockey member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Ithaca College, Liberty League."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "chicago",
+      "name": "University of Chicago",
+      "shortName": "Chicago",
+      "city": "Chicago",
+      "state": "IL",
+      "programs": [
+        {
+          "sport": "softball",
+          "division": "ncaa-d3",
+          "conference": "University Athletic Association",
+          "url": "https://athletics.uchicago.edu/sports/softball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://athletics.uchicago.edu/sports/softball",
+          "what": "The University of Chicago's softball page (read 2026-11-21): its Sidearm metadata gives Division 'DIII' and Conference 'UAA', and its schedule names the conference 'University Athletic Association'."
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    }
+  ],
+  "commitments": [
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "19d861d1-3d5c-4383-8669-393c0a5a5445",
+      "fullName": "Brooke Neschleba",
+      "college": "brandeis",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2026-10-16",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://lahstalon.org/brooke-neschleba-gets-the-ball-rolling-with-brandeis-commitment/",
+          "kind": "news",
+          "quote": "Senior Brooke Neschleba shows off her Brandeis University gear to announce her commitment to Division III women’s soccer.",
+          "statedSchool": "Los Altos High School (The Talon is its student newspaper)",
+          "statedClassYear": null,
+          "sourceDate": "2026-10-16"
+        },
+        {
+          "url": "https://lahstalon.org/brooke-neschleba-gets-the-ball-rolling-with-brandeis-commitment/",
+          "kind": "news",
+          "quote": "After four years of playing for Los Altos, Brooke is ready to take the same energy and work ethic with her to Brandeis.",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": "2026-10-16"
+        },
+        {
+          "url": "https://www.mvlasc.org/commitments",
+          "kind": "club-site",
+          "quote": "Congratulations to Brooke Neschleba from our 09G ECNL team on her commitment to Brandeis!",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The Talon, Los Altos High School's student paper (2026-10-16), names her as a senior on the Los Altos team committed to Brandeis women's soccer (NCAA Division III); senior = class of 2027, the roster's class. MVLA SC's commitments page agrees (no school named there, so it is support only). Carried over from data/soccer/prior-commits.json and re-read 2026-11-21; Brandeis is Division III, which has no National Letter of Intent, and no signing source was found. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "165848d1-6e5e-40cc-bbbf-6f8c5848ada5",
+      "fullName": "Kat Smith",
+      "college": "ithaca",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": "2026-09-18",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/",
+          "kind": "news",
+          "quote": "Senior Kat Smith poses wearing Ithaca College merch after committing for Division III field hockey.",
+          "statedSchool": "Los Altos High School (The Talon is its student newspaper)",
+          "statedClassYear": null,
+          "sourceDate": "2026-09-18"
+        },
+        {
+          "url": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/",
+          "kind": "news",
+          "quote": "So when Los Altos field hockey coach Mary Donahue approached her at Sports Night",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": "2026-09-18"
+        }
+      ],
+      "basis": "The Talon, Los Altos High School's paper (2026-09-18), names senior Kat (Katarina) Smith of Los Altos and her NCAA Division III field hockey commitment to Ithaca; the soccer roster row is \"Kat Smith\", grade 12. The same commitment is in data/field-hockey/commits.json under \"Katarina Smith\" (playerId p3db6c58013; the soccer row is pb651fcf719, a separate registry id). Medium only because the story says she quit soccer in her junior year to focus on field hockey, so a reader should confirm the soccer row is the same girl (same name, school and class make it very likely). Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "a7306d64-e4e7-45e5-99d5-bec7179b8a72",
+      "fullName": "Selya Sen",
+      "college": "franklin-marshall",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2026-09-18",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://lahstalon.org/selya-sen-kicks-off-a-new-chapter-of-her-soccer-career-franklin-and-marshall-college/",
+          "kind": "news",
+          "quote": "Senior Selya Sen is officially a Diplomat since she announced her commitment to play NCAA Division III soccer at Franklin & Marshall College in Lancaster, PA.",
+          "statedSchool": "Los Altos High School (The Talon is its student newspaper)",
+          "statedClassYear": null,
+          "sourceDate": "2026-09-18"
+        }
+      ],
+      "basis": "The Talon, Los Altos High School's student paper (2026-09-18), names senior Selya Sen (class of 2027, the roster's class) and her commitment to Franklin & Marshall's NCAA Division III soccer team. Division III has no National Letter of Intent. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "38d2ca33-511a-4281-b419-7f353844d357",
+      "fullName": "Isabella Cain",
+      "college": "princeton",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.topdrawersoccer.com/college/conference/?genderId=&conferenceId=12&conferenceName=ivy-league&tab=commitments",
+          "kind": "other",
+          "quote": "Isabella Cain 2028 Los Gatos California",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/princeton/clgid-110/tab-commitments",
+          "kind": "other",
+          "quote": "Isabella Cain 2028 F Los Gatos California Los Gatos SC",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/isabella-cain/pid-170312",
+          "kind": "other",
+          "quote": "Isabella Cain Forward - Class of 2028 - Princeton",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "RULE CAVEAT: Los Gatos' 2026-27 roster has no grades, and the BRIEF matches a no-grade row only by rule (a); no commitment source names Los Gatos High School (her TopDrawerSoccer profile says \"High School: N/A\"). The sources give class 2028 and hometown Los Gatos (rule (b)); the registry has her on Los Gatos' 2025-26 varsity in grade 10 (class 2028), and PrepSoccer's Los Gatos preview of 2026-11-19 lists \"Isabella Cain\" among Los Gatos' rising juniors (no commitment named). Carried over from prior-commits.json as instructed; the assembler should decide whether to keep it. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "leland",
+      "athleteId": "d564504f-fe1f-4190-a2d1-c05578b9e015",
+      "fullName": "Allison Park",
+      "college": "illinois",
+      "sport": "soccer",
+      "status": "signed",
+      "asOf": "2026-11-11",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://fightingillini.com/news/2026/11/11/illinois-soccer-pens-seven-to-2027-signing-class",
+          "kind": "college",
+          "quote": "Illinois soccer head coach Katie Hultin announced the signing of seven incoming freshmen to the 2027 signing class on Wednesday (Nov. 11).",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-11-11"
+        },
+        {
+          "url": "https://fightingillini.com/news/2026/11/11/illinois-soccer-pens-seven-to-2027-signing-class",
+          "kind": "college",
+          "quote": "ALLISON PARK | MIDFIELDER | SAN JOSE, CALIF. | LELAND HIGH SCHOOL | MOUNTAIN VIEW LOS ALTOS (MVLA)",
+          "statedSchool": "Leland High School",
+          "statedClassYear": null,
+          "sourceDate": "2026-11-11"
+        },
+        {
+          "url": "https://prepsoccer.com/2026/02/lelands-dramatic-win-comes-from-a-last-gasp-goal-in-90th-minute/",
+          "kind": "news",
+          "quote": "Midfielder - 2027 - High School: Leland, CA - Illinois Commit",
+          "statedSchool": "Leland",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-03"
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/illinois/clgid-225/tab-commitments",
+          "kind": "other",
+          "quote": "Allison Park 2027 F San Jose California Mtn. View Los Altos SC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Illinois' own signing release of 2026-11-11 names her with Leland High School, San Jose, among seven signees of its 2027 class: signed. PrepSoccer's Leland game story (2026-02-03, read rendered) lists her as a 2027 Leland player and Illinois commit; TopDrawerSoccer's Illinois list gives class 2027 and San Jose. Carried over from prior-commits.json (committed there; the Illinois release, unreadable on 2026-11-18, was read today) and upgraded to signed. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "leland",
+      "athleteId": "72f869f3-0806-4dc1-80a4-75f7ec41fcbc",
+      "fullName": "Kailani Bock",
+      "college": "uc-san-diego",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/uc-san-diego/clgid-592/tab-commitments",
+          "kind": "other",
+          "quote": "Kailani Bock 2027 D San Jose California Mtn. View Los Altos SC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/kailani-bock/pid-239673",
+          "kind": "other",
+          "quote": "Kailani Bock Defender - Class of 2027 - UC San Diego",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (b): TopDrawerSoccer's UC San Diego commitments list gives class 2027 (the roster's grade 12) and hometown San Jose (Leland's city); her TopDrawerSoccer profile agrees on class and college and gives no high school. Medium: self-reported lines on one site; the list names MVLA where PrepSoccer's profile names Santa Clara Sporting. No UC San Diego signing release in its women's soccer feed or page on 2026-11-21. Carried over from prior-commits.json. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "3a3ff4ee-650b-4a5b-95bc-dc9ba78ae4b6",
+      "fullName": "Ayla Briski",
+      "college": "brown",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.soccerwire.com/player/ayla-briski/",
+          "kind": "other",
+          "quote": "Committed: Brown Women Youth club: Bay Area Surf Youth league: ECNL Girls Ayla Briski high school: Archbishop Mitty graduation: 2028",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/ayla-briski/pid-168684",
+          "kind": "other",
+          "quote": "Ayla Briski Defender - Class of 2028 - Brown",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/brown/clgid-113/tab-commitments",
+          "kind": "other",
+          "quote": "Ayla Briski 2028 D San Jose California FC Bay Area",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (a): her SoccerWire page and TopDrawerSoccer profile (\"High School: Archbishop Mitty\") name Archbishop Mitty (San Jose), class 2028 (roster grade 11), committed to Brown; Brown's list on TopDrawerSoccer agrees (San Jose). Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "7295c409-4715-48c6-9737-840396ea3382",
+      "fullName": "Layla Tucakovic",
+      "college": "usc",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2026-02-23",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepsoccer.com/2026/02/penalty-shootout-win-sends-archbishop-mitty-to-the-semifinals/",
+          "kind": "news",
+          "quote": "2027 - Archbishop Mitty - Goalkeeper - Bay Area Surf ECNL - USC commit",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-23"
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/layla-tucakovic/pid-168221",
+          "kind": "other",
+          "quote": "Layla Tucakovic Goalkeeper - Class of 2027 - USC",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/usc/clgid-271/tab-commitments",
+          "kind": "other",
+          "quote": "Layla Tucakovic 2027 GK San Jose California FC Bay Area",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.soccerwire.com/player/layla-tucakovic/",
+          "kind": "other",
+          "quote": "Committed: USC Women Youth club: Bay Area Surf Youth league: ECNL Girls Layla Tucakovic graduation: 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (a): PrepSoccer's Mitty playoff story (2026-02-23, read rendered) lists her as a 2027 Archbishop Mitty goalkeeper and USC commit, and her TopDrawerSoccer profile gives \"High School: Archbishop Mitty\"; TopDrawerSoccer's USC list (class 2027, San Jose) and SoccerWire agree. PrepSoccer's player tag still reads \"Del Mar\" (her earlier school, San Jose), which the same site's stories contradict. USC's women's soccer feed had no signing release by 2026-11-21 (its coach left on 2026-11-06), so committed. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "f48f6981-af40-4f8f-b21e-fda15287e3b7",
+      "fullName": "Vivian Baker",
+      "college": "louisville",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.soccerwire.com/player/vivian-baker/",
+          "kind": "other",
+          "quote": "Committed: Louisville Women Youth club: Bay Area Surf Youth league: ECNL Girls Vivian Baker high school: Archbishop Mitty graduation: 2028",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/vivian-baker/pid-166914",
+          "kind": "other",
+          "quote": "Vivian Baker Goalkeeper - Class of 2028 - Louisville",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/louisville/clgid-527/tab-commitments",
+          "kind": "other",
+          "quote": "Vivian Baker 2028 GK Saratoga California FC Bay Area",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (a): her SoccerWire page and TopDrawerSoccer profile (\"High School: Archbishop Mitty\") name Archbishop Mitty (San Jose), class 2028 (roster grade 11), committed to Louisville; Louisville's list on TopDrawerSoccer agrees (hometown Saratoga). Class of 2028 cannot sign until November 2027. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
+      "fullName": "Zuri Brandt",
+      "college": "washington",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2025-10-06",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.soccerwire.com/player/zuri-brandt/",
+          "kind": "other",
+          "quote": "Committed: Washington Women Youth club: De Anza Force Youth league: ECNL Girls Zuri Brandt high school: Archbishop Mitty graduation: 2027",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/zuri-brandt/pid-164492",
+          "kind": "other",
+          "quote": "Zuri Brandt Forward - Class of 2027 - Washington",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepsoccer.com/2026/02/penalty-shootout-win-sends-archbishop-mitty-to-the-semifinals/",
+          "kind": "news",
+          "quote": "2027 - Archbishop Mitty - Forward - De Anza Force ECNL - Washington commit",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-23"
+        },
+        {
+          "url": "https://prepsoccer.com/player/zuri-brandt/",
+          "kind": "other",
+          "quote": "Washington (WA) Committed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://my.sportsrecruits.com/athlete/zuri_brandt2",
+          "kind": "sportsrecruits",
+          "quote": "Committed to University of Washington",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (a): her SoccerWire page and TopDrawerSoccer profile (\"High School: Archbishop Mitty\") each name Archbishop Mitty (San Jose) with class 2027 (roster grade 12) and a Washington commitment; PrepSoccer's Mitty playoff story (2026-02-23, read rendered) lists her as a 2027 Archbishop Mitty forward and Washington commit. asOf is that story's date (no commitment date is stated). No Washington signing release in its women's soccer feed on 2026-11-21. SportsRecruits pass: Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2027, which agrees with the roster.) shows \"Committed to University of Washington\" in its server-rendered meta description; the profile JSON dates the entry 2025-10-06; read in three separate fetches that agree. asOf is the earliest date a source gives (2025-10-06). Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "carlmont",
+      "athleteId": "27d0c3b9-6efd-4eb0-a2e3-cf2289dd4e93",
+      "fullName": "Ashleigh Bieser",
+      "college": "columbia",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2026-08-21",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/columbia/clgid-114/tab-commitments",
+          "kind": "other",
+          "quote": "Ashleigh Bieser 2028 MF Belmont California De Anza Force SC",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/ashleigh-bieser/pid-190337",
+          "kind": "other",
+          "quote": "Ashleigh Bieser Midfielder - Class of 2028 - Columbia",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.soccerwire.com/player/ashleigh-bieser/",
+          "kind": "other",
+          "quote": "Committed: Columbia Women Youth club: De Anza Force Youth league: ECNL Girls Ashleigh Bieser graduation: 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://my.sportsrecruits.com/athlete/ashleigh_bieser2",
+          "kind": "sportsrecruits",
+          "quote": "Committed to Columbia University",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (b): TopDrawerSoccer's Columbia list gives class 2028 (roster grade 11) and hometown Belmont (Carlmont's city); her profile there and SoccerWire agree (class 2028, De Anza Force, Columbia). Neither names a school. Her PrepSoccer page (\"Ashleigh Bieser D/M Class 2028 ... HS Carlmont | CA\", De Anza Force) ties the same class and club to Carlmont but names no college. Medium. SportsRecruits pass: Her own SportsRecruits soccer profile (No school named: class of 2028 agrees with the roster and the hometown Belmont, CA is the school's own city.) shows \"Committed to Columbia University\" in its server-rendered meta description; the profile JSON dates the entry 2026-08-21; read in three separate fetches that agree. asOf is the earliest date a source gives (2026-08-21). Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "carlmont",
+      "athleteId": "fdb10e26-8517-4627-977e-12087b17ae9e",
+      "fullName": "Delaney Kumer",
+      "college": "uc-davis",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/uc-davis/clgid-513/tab-commitments",
+          "kind": "other",
+          "quote": "Delaney Kumer 2027 MF San Carlos California Marin FC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/delaney-kumer/pid-239742",
+          "kind": "other",
+          "quote": "Delaney Kumer Midfielder - Class of 2027 - UC Davis",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepsoccer.com/player/delaney-kumer/",
+          "kind": "other",
+          "quote": "UC-Davis Committed",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (b): TopDrawerSoccer's UC Davis list gives class 2027 (roster grade 12) and hometown San Carlos, which borders Belmont (Carlmont); her TopDrawerSoccer profile and PrepSoccer page (class 2027, CA) agree on UC Davis. No source names a school. Medium. No UC Davis signing release in its women's soccer feed or page on 2026-11-21. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "menlo-atherton",
+      "athleteId": "db4d21f6-e04c-47ef-9645-d5e06db38570",
+      "fullName": "Juliana Pandolfo",
+      "college": "chicago",
+      "sport": "softball",
+      "status": "committed",
+      "asOf": "2026-11-10",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://my.sportsrecruits.com/athlete/juliana_pandolfo",
+          "kind": "sportsrecruits",
+          "quote": "Committed to University of Chicago",
+          "statedSchool": "Menlo-Atherton High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits softball profile (The page names Menlo-Atherton High School and class of 2027, which agrees with the roster.) shows \"Committed to University of Chicago\" in its server-rendered meta description; the profile JSON dates the entry 2026-11-10; read in three separate fetches that agree. Every source re-read at assembly on 2026-11-21."
+    }
+  ]
 }
