@@ -99,7 +99,7 @@ export type AffiliationStatus = (typeof AFFILIATION_STATUSES)[number];
 
 /**
  * high    one first-hand page names player, club and school (or is the player's own profile)
- * medium  the match rests on a club roster's class-year heading plus the club's location, on a
+ * medium  the match rests on a club or league roster's class year plus the club's location, on a
  *         team nickname standing for the school, on a player's nickname or given name the page
  *         does not tie to the school, or on a single self-reported line
  */
@@ -122,6 +122,12 @@ export const CLUB_SOURCE_KINDS = [
   'college',
   /** the club-teams block on a MaxPreps career page */
   'maxpreps-career',
+  /**
+   * a team's public roster on its league's own schedule site (ECNL's team pages), read from the kept
+   * copy in data/soccer/club-rosters.json (lib/players/club-rosters.ts): it gives a class year and
+   * never a school
+   */
+  'league-roster',
   'other',
 ] as const;
 export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];

@@ -135,6 +135,8 @@ export function sourceLabel(src: Pick<AffiliationSource, 'url' | 'kind'>, pageCl
     case 'fieldlevel':
     case 'maxpreps-career':
       return PLATFORM_WORDS[src.kind].label;
+    case 'league-roster':
+      return 'league team roster';
     case 'club-site': {
       const { owner, roster } = clubSite(src.url, pageClub);
       if (owner === null) return hostOf(src.url);
@@ -156,6 +158,8 @@ export function sourceName(src: Pick<AffiliationSource, 'url' | 'kind'>, pageClu
     case 'fieldlevel':
     case 'maxpreps-career':
       return PLATFORM_WORDS[src.kind].inSentence;
+    case 'league-roster':
+      return 'the league’s team roster';
     case 'club-site': {
       const { owner } = clubSite(src.url, pageClub);
       if (owner === null) return hostOf(src.url);

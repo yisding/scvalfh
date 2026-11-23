@@ -17,6 +17,8 @@
     "fetch-prior-season": "tsx scripts/fetch-prior-season.ts",
     "fetch-prior-players": "tsx scripts/fetch-prior-players.ts",
     "build-players": "tsx scripts/build-players.ts",
+    "fetch-club-rosters": "node scripts/fetch-club-rosters.mjs",
+    "compare-club-rosters": "SCVAL_SPORT=soccer tsx scripts/compare-club-rosters.ts",
     "fetch-mascots": "tsx scripts/fetch-mascots.ts",
     "claims-seed": "tsx scripts/claims-seed.ts",
     "claims-diff": "tsx scripts/claims-diff.ts",

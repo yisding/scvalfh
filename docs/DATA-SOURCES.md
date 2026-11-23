@@ -3464,7 +3464,25 @@ assembler per sport built the files from them with a second read, and they are k
 - **Club registries.** Soccer: the candidates were NorCal Premier's club directory (302 clubs, 73 in San Francisco,
   San Mateo, Santa Clara and Santa Cruz counties), Girls Academy's member lists and the Aspire directory, and Cal North
   District 2's list; about 270 club pages read, each record from the club's own site. Cal North District 1's list and
-  ECNL's member list (drawn by script) were not read; ECNL membership is as each club's site says. Club sites post no
+  ECNL's member list (drawn by script) were not read on 2026-11-21; ECNL membership is as each club's site says (the
+  leagues' own team lists were read the next day: the next entry).
+- **ECNL league rosters** (2026-11-22; `data/soccer/club-rosters.json`, `pnpm fetch-club-rosters`, README "Girls
+  soccer: club rosters"). ECNL's schedule site is TotalGlobalSports' Athlete One: one public "event" per league and
+  season, `https://app.athleteone.com/public/event/<id>/schedules-standings` (4267 ECNL Girls Northern Cal 2026-27,
+  4307 ECNL RL Girls NorCal 2026-27; NorCal Premier's ECNL Regional League page links the second, and theecnl.com's
+  own widget for the first answered nothing that day). The page loads its data from `api.athleteone.com/api/…`,
+  which answers the loaded page only (403 to a plain request, with or without a browser's user agent), so the
+  script reads it through the page in a local Chromium: `Event/get-event-schedule-or-standings-athleteone/<event>`
+  (divisions and flights), `Event/get-standings-by-div-and-flight/<division>/<flight>/<event>` (the teams) and
+  `Event/get-individual-event-team-info/<event>/<team>` (the team page: `teamStandingInfo`, `playerList` with first
+  and last name, position, `gradYear`, `playerType` and `hideFromPublicTeamRoster`, and a staff list the script
+  never keeps). About 210 requests, 0.3 s apart. The team page prints the roster under its Roster button as name,
+  position, label and number; the class year is in the data only. 199 teams, 3,255 players of high school age kept,
+  833 younger left out, none hidden; 3 teams showed no player. Compared with all 634 varsity and 415 other JV rows
+  by `pnpm compare-club-rosters`: 157 rows share a name with a roster row, 94 pass the league-roster rule, and 96
+  ties in `clubs.json` cite a roster (kind `league-roster`; two more by hand, each resting on another page too). A
+  second script opened the 34 team pages involved, pressed Roster and matched every cited row on the dialog as
+  displayed. Club sites post no
   girls' rosters and their commitment lists name no school. Basketball: no directory lists the boys' travel programs
   of any area (the Nike EYBL team list is an image, the Puma Pro16 address redirects to a script-drawn page,
   `madehoops.com` answers 403, `jamonit.com` an empty page); only the adidas 3SSB program directory was read whole.
