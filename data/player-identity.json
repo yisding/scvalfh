@@ -738,6 +738,440 @@
       "name": "Kailaya Estrada",
       "careerId": "gde1g1sfdjs66",
       "basis": "One player. \"Kai Estrada\": volleyball 26-27 jv #7 grade 10 (MaxPreps JV roster, recruiting profile (hudl)). \"Kailaya Estrada\": volleyball 25-26 jv grade 9 (all-league list). Same school, both class of 2029. No other player of the team has either name. Last season's all-league list and this season's MaxPreps career are one class year, one grade apart; the career begins the season after the list. Read from the repository's copies of the lists (data/volleyball/), not the live pages. Decided 2026-11-16."
+    },
+    {
+      "sport": "soccer",
+      "team": "los-altos",
+      "name": "Kat Smith",
+      "careerId": "2dta2143cb766",
+      "basis": "One player. \"Kat Smith\": soccer 26-27 varsity grade 12 (MaxPreps roster); soccer 26-27 jv grade 12 (MaxPreps JV roster). \"Katarina Smith\": field-hockey 25-26 varsity grade 11 (all-league list); field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay (news), recruiting profile (sportsrecruits), recruiting profile (maxpreps)). Same school, both class of 2027. No other player of the school has either name. Kat is the short form of Katarina: the field hockey player (a senior defender, second-team all-league in 2025) is on the 26-27 girls soccer rosters under her nickname and a second MaxPreps career. The site's owner, who knows the teams, confirmed it. The Los Altos Talon's piece on her college commitment is addressed kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment (lahstalon.org; the address is in the registry, the page was not re-read). Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "los-altos",
+      "name": "Katie Byon",
+      "careerId": "h89k4knnccudd",
+      "basis": "One player. \"Katie Byon\": soccer 26-27 varsity grade 12 (MaxPreps roster); soccer 26-27 jv grade 12 (MaxPreps JV roster). \"Kaitlyn Byon\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay (news)). Same school, both class of 2027. No other player of the school has either name. Katie is a short form of Kaitlyn, the surname is the only Byon in the registry's Los Altos lists, and both rows are seniors: field hockey in the fall, soccer in the winter, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "andrew-hill",
+      "name": "Daisy Regaldo",
+      "careerId": "c2itqjfqubnqa",
+      "basis": "One player. \"Daisy Regaldo\": soccer 26-27 varsity grade 10 (MaxPreps roster). \"Daisy Regalado\": volleyball 26-27 varsity #2 grade 10 (MaxPreps roster). Same school, both class of 2029. No other player of the school has either name. One first name, the surnames one letter apart (Regaldo is Regalado with a letter dropped), both sophomores in 26-27: volleyball in the fall, soccer in the winter, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "christopher",
+      "name": "Sophie McGhie",
+      "careerId": "md29nbfo44h33",
+      "basis": "One player. \"Sophie McGhie\": soccer 25-26 varsity #20 grade 9 (MaxPreps stat sheet). \"Sophia McGhie\": volleyball 26-27 jv #6 grade 10 (MaxPreps JV roster, recruiting profile (hudl)). Same school, both class of 2029. No other player of the school has either name. Sophie is a short form of Sophia; a rare surname, a freshman on the 25-26 soccer stat sheet and a sophomore on the 26-27 JV volleyball roster, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "del-mar",
+      "name": "Maddie Miner",
+      "careerId": "55tsgn6cge2rb",
+      "basis": "One player. \"Maddie Miner\": soccer 25-26 varsity #15 grade 9 (MaxPreps stat sheet). \"Maddy Miner\": volleyball 26-27 varsity #3 grade 10 (MaxPreps roster, MaxPreps stat sheet); volleyball 26-27 jv #1 grade 10 (MaxPreps JV roster). Same school, both class of 2029. No other player of the school has either name. Two spellings of one nickname; a freshman on the 25-26 soccer stat sheet and a sophomore on the 26-27 volleyball rosters, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "fremont",
+      "name": "Julia Keineth",
+      "careerId": "nf7uufcq8cvh1",
+      "basis": "One player. \"Julia Keineth\": soccer 25-26 varsity grade 10 (all-league list). \"Julia Keinath\": field-hockey 25-26 varsity #1 grade 10 (MaxPreps stat sheet, all-league list); field-hockey 26-27 varsity #18 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. No other player of the school has either name. The 25-26 soccer all-league list's spelling is one letter off the field hockey rosters' (the all-league lists hold most of the registry's spelling slips); both a sophomore forward in 25-26, second-team all-league in each sport. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "homestead",
+      "name": "Malena Lyssand",
+      "careerId": "1jeb111o79mtd",
+      "basis": "One player. \"Malena Lyssand\": soccer 26-27 jv (MaxPreps JV roster). \"Malena Lysand\": field-hockey 26-27 jv #28 grade 9 (MaxPreps JV roster). Same school, classes of unknown and 2030. No other player of the school has either name. One first name, the surnames one letter apart; a freshman on the 26-27 JV field hockey roster and on the 26-27 JV soccer roster (which gives no grade), each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "independence",
+      "name": "Jimena Casarrubias",
+      "careerId": "ug3ko6mqv1r11",
+      "basis": "One player. \"Jimena Casarrubias\": soccer 26-27 varsity (MaxPreps roster); soccer 26-27 jv (MaxPreps JV roster). \"Jimena Casarrubias Diaz\": volleyball 26-27 jv #6 grade 9 (MaxPreps JV roster). Same school, classes of unknown and 2030. No other player of the school has either name. The soccer rosters leave out her second surname; a freshman on the 26-27 JV volleyball roster, on the 26-27 soccer rosters (which give no grade) under another MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "los-gatos",
+      "name": "Leighton Ozawa",
+      "careerId": "0qpp2mkdvl4dd",
+      "basis": "One player. \"Leighton Ozawa\": soccer 25-26 varsity #17 grade 12 (MaxPreps stat sheet). \"Leighton Osawa\": field-hockey 25-26 varsity #7 grade 12 (MaxPreps stat sheet). Same school, both class of 2026. No other player of the school has either name. One first name, the surnames one letter apart (Osawa on the field hockey stat sheet, Ozawa on the soccer one), both a senior in 25-26; each sheet under its own MaxPreps career. Which spelling is right is not established. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "san-jose",
+      "name": "Mj Meza",
+      "careerId": "sv1fkiqosf9td",
+      "basis": "One player. \"Mj Meza\": soccer 25-26 varsity #11 grade 10 (MaxPreps stat sheet). \"Maryjane Meza\": volleyball 26-27 varsity #4 grade 11 (MaxPreps roster, recruiting profile (ncsa)). Same school, both class of 2028. No other player of the school has either name. MJ is Maryjane's initials; a sophomore on the 25-26 soccer stat sheet and a junior on the 26-27 volleyball roster, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "valley-christian",
+      "name": "Jessica Lashgari",
+      "careerId": "ahts9ocjh8o44",
+      "basis": "One player. \"Jessica Lashgari\": soccer 26-27 varsity grade 11 (MaxPreps roster). \"Jess Lashgari\": field-hockey 26-27 varsity #23 grade 11 (MaxPreps roster). Same school, both class of 2028. No other player of the school has either name. Jess is the short form of Jessica; a rare surname, both rows juniors in 26-27: field hockey in the fall, soccer in the winter, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "valley-christian",
+      "name": "Madison McDougall",
+      "careerId": "9er65ph3het66",
+      "basis": "One player. \"Madison McDougall\": soccer 26-27 varsity grade 11 (MaxPreps roster, recruiting profile (sportsrecruits)). \"Maddie McDougall\": field-hockey 26-27 varsity #16 grade 11 (MaxPreps roster, recruiting profile (hudl)). Same school, both class of 2028. No other player of the school has either name. Maddie is a short form of Madison; both rows juniors in 26-27, class of 2028 on both recruiting profiles: field hockey in the fall, soccer in the winter, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "valley-christian",
+      "name": "Guiliana (GiGi) Borello",
+      "careerId": "0m3unn7lofh88",
+      "basis": "One player. \"Guiliana (GiGi) Borello\": soccer 26-27 varsity grade 11 (MaxPreps roster). \"Giuliana Borello\": field-hockey 25-26 varsity #6 grade 10 (MaxPreps stat sheet, all-league list); field-hockey 26-27 varsity #6 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. No other player of the school has either name. The soccer roster's row gives both her name (two letters transposed) and her nickname, the two the field hockey lists use (joined 2026-11-14); both juniors in 26-27. The other Borello at the school is a freshman. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "mercy-burlingame",
+      "name": "Abigail Volker",
+      "careerId": "pg0ov4egb5nrb",
+      "basis": "One player. \"Abigail Volker\": soccer 25-26 varsity (all-league list). \"Abby Voelker\": soccer 26-27 varsity #00 grade 11 (MaxPreps roster). Same school, classes of unknown and 2028. No other player of the school has either name. Abby is the short form of Abigail and the surnames are one letter apart: the 25-26 all-league list (which gives no grade) against the 26-27 roster's junior goalkeeper. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "mercy-burlingame",
+      "name": "Liliana Klingler",
+      "careerId": "pg4gqcdhsfeh1",
+      "basis": "One player. \"Liliana Klingler\": soccer 25-26 varsity (all-league list). \"Liliana Klingler\": soccer 26-27 varsity #11 grade 10 (MaxPreps roster, recruiting profile (hudl)); volleyball 26-27 varsity #12 grade 10 (MaxPreps roster, MaxPreps stat sheet). Same school, classes of unknown and 2029. No other player of the school has either name. The 25-26 soccer all-league list spells her as the 26-27 volleyball roster does; the 26-27 soccer roster, under the same MaxPreps career as the volleyball one, drops a letter (\"Lilana\"), which kept the rule from joining the list's row. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "valley-christian",
+      "name": "Luciana Lulu Gorse",
+      "careerId": "h3v0v10iqev99",
+      "basis": "One player. \"Luciana Lulu Gorse\": field-hockey 25-26 varsity #18 grade 11 (MaxPreps stat sheet). \"Lulu Gorshe\": field-hockey 26-27 varsity #1 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027. No other player of the school has either name. The 25-26 stat sheet writes her nickname in as a middle name; the 26-27 roster uses the nickname alone and spells the surname a letter longer. A junior, then a senior; the career begins the season after the stat sheet's. Which surname spelling is right is not established. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "leland",
+      "name": "Alex Kolubelov",
+      "careerId": "u15tiq7p4m977",
+      "basis": "One player. \"Alex Kolubelov\": basketball 26-27 varsity #32 grade 10 (MaxPreps roster, recruiting profile (ncsa), recruiting profile (hudl)). \"Alexander Kolubelov\": basketball 26-27 varsity #32 (MaxPreps roster, recruiting profile (ncsa)); basketball 26-27 jv #32 (MaxPreps JV roster). Same school, both class of 2029. No other player of the school has either name. Both rows wear #32 on the 26-27 rosters: MaxPreps lists him twice, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "leland",
+      "name": "Ben Naret",
+      "careerId": "uloo0pdql3nm6",
+      "basis": "One player. \"Ben Naret\": basketball 26-27 jv #11 grade 10 (MaxPreps JV roster). \"Benjamin Naret\": basketball 26-27 jv #11 (MaxPreps JV roster, recruiting profile (hudl)). Same school, both class of 2029. No other player of the school has either name. Both rows wear #11 on the 26-27 JV roster: MaxPreps lists him twice, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "leland",
+      "name": "Nikko Jung",
+      "careerId": "n1rdndlnfd155",
+      "basis": "One player. \"Nikko Jung\": basketball 26-27 jv #12 grade 10 (MaxPreps JV roster, recruiting profile (hudl)). \"Nicholas Jung\": basketball 26-27 jv #12 (MaxPreps JV roster). Same school, classes of 2029 and unknown. No other player of the school has either name. Both rows wear #12 on the 26-27 JV roster: MaxPreps lists him twice, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "leland",
+      "name": "Ranvijay Abhimanyu Sinha",
+      "careerId": "sb3evtvu47v99",
+      "basis": "One player. \"Ranvijay Abhimanyu Sinha\": basketball 26-27 varsity #13 (MaxPreps roster); basketball 26-27 jv #13 (MaxPreps JV roster). \"Ranvi Sinha\": basketball 26-27 varsity #13 grade 11 (MaxPreps roster, recruiting profile (hudl)). Same school, classes of unknown and 2028. No other player of the school has either name. Both rows wear #13 on the 26-27 varsity roster: MaxPreps lists him twice, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "monta-vista",
+      "name": "Edward Fan",
+      "careerId": "ihmpbfjnmpevf",
+      "basis": "One player. \"Edward Fan\": basketball 26-27 varsity #34 (MaxPreps roster); basketball 26-27 jv #34 (MaxPreps JV roster). \"Eddie Fan\": basketball 26-27 varsity #34 grade 12 (MaxPreps roster). Same school, classes of unknown and 2027. No other player of the school has either name. Both rows wear #34 on the 26-27 varsity roster: MaxPreps lists him twice, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "st-ignatius",
+      "name": "Neve Harlen",
+      "careerId": "gto6c6sitk4td",
+      "basis": "One player. \"Neve Harlen\": volleyball 25-26 varsity grade 11 (all-league list). \"Neve Harlan\": volleyball 25-26 varsity #11 grade 11 (MaxPreps stat sheet); volleyball 26-27 varsity #11 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile (ncsa), recruiting profile (sportsrecruits), recruiting profile (hudl), recruiting profile (maxpreps)). Same school, both class of 2027. No other player of the school has either name. The 25-26 all-league list's spelling is one letter off the stat sheet's of the same season; both a junior. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "notre-dame-belmont",
+      "name": "Arianna Juarez",
+      "careerId": "12qs8ju75fn88",
+      "basis": "One player. \"Arianna Juarez\": volleyball 25-26 varsity (all-league list). \"Arianna Ari Juarez\": volleyball 25-26 varsity #4 grade 12 (MaxPreps stat sheet). Same school, classes of unknown and 2026. No other player of the school has either name. The 25-26 stat sheet writes her nickname in as a middle name; the all-league list of the same season leaves it out. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "pinewood",
+      "name": "Abi Wessel",
+      "careerId": "esn2tbdtpsa77",
+      "basis": "One player. \"Abi Wessel\": volleyball 25-26 varsity (all-league list). \"Abigail Wessel\": volleyball 25-26 varsity #4 grade 12 (MaxPreps stat sheet). Same school, classes of unknown and 2026. No other player of the school has either name. Abi is a short form of Abigail: the 25-26 all-league list against the stat sheet of the same season. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "saratoga",
+      "name": "Kiera Sturzu",
+      "careerId": "no6uv1pi5f922",
+      "basis": "One player. \"Kiera Sturzu\": soccer 25-26 varsity #15 grade 10 (MaxPreps stat sheet). \"Keira Sturzu\": soccer 26-27 varsity (MaxPreps roster); soccer 26-27 jv (MaxPreps JV roster). Same school, classes of 2028 and unknown. No other player of the school has either name. A rare surname, the first names two letters transposed: a sophomore on the 25-26 stat sheet, on the 26-27 rosters under a new MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "saratoga",
+      "name": "Theresa Berger",
+      "careerId": "ceka7md1hiaue",
+      "basis": "One player. \"Theresa Berger\": soccer 25-26 varsity #9 grade 10 (MaxPreps stat sheet). \"Tessie Berger\": soccer 26-27 varsity (MaxPreps roster); soccer 26-27 jv (MaxPreps JV roster). Same school, classes of 2028 and unknown. No other player of the school has either name. Tessie is a short form of Theresa: a sophomore on the 25-26 stat sheet, on the 26-27 rosters under a new MaxPreps career and her nickname. The weaker of Saratoga's two: nothing but the name and the school ties them. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "gunn",
+      "name": "Toby Lobell",
+      "careerId": "uudbven7o4hp9",
+      "basis": "One player. \"Toby Lobell\": basketball 25-26 varsity grade 11 (all-league list). \"Tobias Lobell\": basketball 26-27 varsity #5 (MaxPreps roster, recruiting profile (ncsa)); basketball 26-27 jv #5 (MaxPreps JV roster). Same school, both class of 2027. No other player of the school has either name. Toby is the short form of Tobias: the 25-26 all-league list (a junior) against the 26-27 rosters. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "homestead",
+      "name": "Daren Lee",
+      "careerId": "i39mp8pprta77",
+      "basis": "One player. \"Daren Lee\": basketball 25-26 jv grade 10 (all-league list). \"Darren Lee\": basketball 26-27 varsity #10 grade 11 (MaxPreps roster). Same school, both class of 2028. No other player of the school has either name. The 25-26 JV all-league list's spelling is one letter off the 26-27 roster's; a sophomore, then a junior. A common surname: it rests on the first name and the class year. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "homestead",
+      "name": "Varun Panikkar",
+      "careerId": "m0ujvqum5uesc",
+      "basis": "One player. \"Varun Panikkar\": basketball 25-26 jv grade 10 (all-league list). \"Varun Pannikar\": basketball 26-27 varsity #22 grade 11 (MaxPreps roster). Same school, both class of 2028. No other player of the school has either name. The 25-26 JV all-league list's spelling moves one letter of the 26-27 roster's; a sophomore, then a junior. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "milpitas",
+      "name": "Matthew Johnson",
+      "careerId": "3jq71n30f88dd",
+      "basis": "One player. \"Matthew Johnson\": basketball 25-26 jv grade 10 (all-league list). \"Matt Johnson\": basketball 26-27 varsity #2 grade 11 (MaxPreps roster). Same school, both class of 2028. No other player of the school has either name. Matt is the short form of Matthew: a sophomore on the 25-26 JV all-league list, a junior on the 26-27 varsity roster. A common name: it rests on the class year and on no other Johnson of that name on the team's lists. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "saratoga",
+      "name": "Hritish Raj",
+      "careerId": "mb8s4o4j8a200",
+      "basis": "One player. \"Hritish Raj\": basketball 25-26 jv grade 10 (all-league list). \"Hritish Rai\": basketball 26-27 varsity #14 grade 11 (MaxPreps roster, recruiting profile (hudl)). Same school, both class of 2028. No other player of the school has either name. A rare first name, the surnames one letter apart: a sophomore on the 25-26 JV all-league list, a junior on the 26-27 varsity roster. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "saratoga",
+      "name": "Kashap Vangala",
+      "careerId": "rjduoj73hsrvf",
+      "basis": "One player. \"Kashap Vangala\": basketball 25-26 jv grade 9 (all-league list). \"Kashyap Vangala\": basketball 26-27 varsity #23 grade 10 (MaxPreps roster, recruiting profile (hudl)). Same school, both class of 2029. No other player of the school has either name. The 25-26 JV all-league list drops a letter of his first name: a freshman then, a sophomore on the 26-27 varsity roster. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "cupertino",
+      "name": "Jasial Desai",
+      "careerId": "p6mv91dkhnhl5",
+      "basis": "One player. \"Jasial Desai\": basketball 25-26 jv grade 9 (all-league list). \"Jaisal Desai\": basketball 26-27 varsity #10 (MaxPreps roster); basketball 26-27 jv #10 (MaxPreps JV roster). Same school, classes of 2029 and unknown. No other player of the school has either name. The 25-26 JV all-league list transposes two letters of his first name; on the 26-27 rosters (which give no grade) as Jaisal. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "gunn",
+      "name": "Kostya Antonov",
+      "careerId": "3mg4l8oahjhi2",
+      "basis": "One player. \"Kostya Antonov\": basketball 25-26 varsity grade 11 (all-league list). \"Konstantin Antonov\": basketball 26-27 varsity #24 (MaxPreps roster, recruiting profile (hudl)); basketball 26-27 jv #24 (MaxPreps JV roster). Same school, classes of 2027 and unknown. No other player of the school has either name. Kostya is the Russian short form of Konstantin: the 25-26 all-league list (a junior) against the 26-27 rosters. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "eastside",
+      "name": "Rae Cantrell",
+      "careerId": "5rsoojad8mkcc",
+      "basis": "One player. \"Rae Cantrell\": volleyball 25-26 varsity (all-league list). \"Raevynn Cantrell\": volleyball 26-27 varsity #6 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile (ncsa), recruiting profile (maxpreps)). Same school, classes of unknown and 2027. No other player of the school has either name. Rae is the short form of Raevynn: the 25-26 all-league list against the 26-27 roster's senior. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "los-gatos",
+      "name": "Mary Moorehouse",
+      "careerId": "h4cv1kae6b522",
+      "basis": "One player. \"Mary Moorehouse\": soccer 26-27 jv #15 (MaxPreps JV roster). \"Lizzie Moorehouse\": field-hockey 25-26 varsity #37 grade 10 (MaxPreps stat sheet); field-hockey 26-27 varsity grade 11 (MaxPreps roster, overlay, overlay (school-site), recruiting profile (ncsa), recruiting profile (sportsrecruits), recruiting profile (maxpreps), recruiting profile (maxfh)). Same school, classes of unknown and 2028. No other player of the school has either name. Her NCSA profile, filed under the field hockey rows, is addressed mary-elizabeth-moorehouse: Lizzie is Mary Elizabeth, and the 26-27 JV soccer roster lists her by her first name under a second MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "cupertino",
+      "name": "Brianna Sulocha",
+      "careerId": "399emk3qc66vf",
+      "basis": "One player. \"Brianna Sulocha\": field-hockey 26-27 jv grade 9 (school JV list). \"Brianna Sulocha\": soccer 26-27 jv (MaxPreps JV roster). Same school, classes of 2030 and unknown. No other player of the school has either name. One name, a rare surname: on the school's 26-27 JV field hockey list (a freshman) and on MaxPreps' 26-27 JV soccer roster. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "cupertino",
+      "name": "Nour Bahnas",
+      "careerId": "muos35dg7s600",
+      "basis": "One player. \"Nour Bahnas\": field-hockey 26-27 jv grade 11 (school JV list). \"Nour Bahnas\": soccer 26-27 varsity (MaxPreps roster); soccer 26-27 jv (MaxPreps JV roster). Same school, classes of 2028 and unknown. No other player of the school has either name. One name, a rare surname: on the school's 26-27 JV field hockey list (a junior) and on MaxPreps' 26-27 soccer rosters. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "mitty",
+      "name": "Lilly Jones",
+      "careerId": "6rreidmrg62rb",
+      "basis": "One player. \"Lilly Jones\": field-hockey 25-26 varsity #8 grade 10 (MaxPreps stat sheet, all-league list); field-hockey 26-27 varsity #8 grade 11 (MaxPreps roster, MaxPreps stat sheet, recruiting profile (hudl)). \"Lilly Jones\": soccer 25-26 varsity grade 10 (all-league list); soccer 26-27 varsity #19 grade 11 (MaxPreps roster, recruiting profile (ncsa), recruiting profile (hudl)). Same school, both class of 2028. No other player of the school has either name. MaxPreps keeps a career for each sport, and the two carry one Hudl profile (hudl.com/profile/25154237, as recorded in the registry); both a sophomore in 25-26 and a junior in 26-27, all-league in both sports in 25-26. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "willow-glen",
+      "name": "Blake Penhallegon",
+      "careerId": "9bhhth9gkc2qa",
+      "basis": "One player. \"Blake Penhallegon\": volleyball 26-27 jv (school JV list). \"Blake Penhallegon\": soccer 26-27 jv grade 9 (MaxPreps JV roster). Same school, classes of unknown and 2030. No other player of the school has either name. One name, a rare surname: on the school's 26-27 JV volleyball list and on MaxPreps' 26-27 JV soccer roster (a freshman). Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "willow-glen",
+      "name": "Caoilinn Kavanagh",
+      "careerId": "aoeen3914kgrb",
+      "basis": "One player. \"Caoilinn Kavanagh\": volleyball 26-27 jv (school JV list). \"Caoilinn Kavanagh\": soccer 26-27 jv grade 9 (MaxPreps JV roster). Same school, classes of unknown and 2030. No other player of the school has either name. One rare name: on the school's 26-27 JV volleyball list and on MaxPreps' 26-27 JV soccer roster (a freshman). Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "willow-glen",
+      "name": "Ellie Crew",
+      "careerId": "gd6kvqd8bsstd",
+      "basis": "One player. \"Ellie Crew\": volleyball 26-27 jv (school JV list). \"Ellie Crew\": soccer 26-27 jv grade 9 (MaxPreps JV roster). Same school, classes of unknown and 2030. No other player of the school has either name. One name: on the school's 26-27 JV volleyball list and on MaxPreps' 26-27 JV soccer roster (a freshman), beside two classmates on both lists (Blake Penhallegon, Caoilinn Kavanagh). Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "kings-academy",
+      "name": "Addison Bartell",
+      "careerId": "nujnb9kmpk3h1",
+      "basis": "One player. \"Addison Bartell\": soccer 25-26 varsity (all-league list). \"Addison Bartell\": volleyball 25-26 varsity #13 grade 12 (MaxPreps stat sheet). Same school, classes of unknown and 2026. No other player of the school has either name. One name: on the 25-26 soccer all-league list and on the 25-26 volleyball stat sheet (a senior). Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "kings-academy",
+      "name": "Emerson Kjellesvig",
+      "careerId": "stdh0tb2d6jdd",
+      "basis": "One player. \"Emerson Kjellesvig\": soccer 25-26 varsity (all-league list). \"Emerson Kjellesvig\": volleyball 25-26 varsity #24 grade 11 (MaxPreps stat sheet, all-league list); volleyball 26-27 varsity #24 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile (hudl), recruiting profile (maxpreps)). Same school, classes of unknown and 2027. No other player of the school has either name. One name, a rare surname: on the 25-26 soccer all-league list and on the volleyball lists of both seasons. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "notre-dame-belmont",
+      "name": "Brooklyn Denegri",
+      "careerId": "5a1rq9ssi49sc",
+      "basis": "One player. \"Brooklyn Denegri\": soccer 25-26 varsity (all-league list). \"Brooklyn Denegri\": volleyball 26-27 jv #18 grade 10 (MaxPreps JV roster). Same school, classes of unknown and 2029. No other player of the school has either name. One name, a rare surname: on the 25-26 soccer all-league list and on the 26-27 JV volleyball roster (a sophomore). Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "st-ignatius",
+      "name": "Bryce Killion",
+      "careerId": "mdn215lfbuotd",
+      "basis": "One player. \"Bryce Killion\": soccer 25-26 varsity grade 10 (all-league list). \"Bryce Killion\": volleyball 25-26 varsity #16 grade 10 (MaxPreps stat sheet); volleyball 26-27 varsity #17 grade 11 (MaxPreps roster, MaxPreps stat sheet, recruiting profile (sportsrecruits), recruiting profile (hudl)). Same school, both class of 2028. No other player of the school has either name. One name: a sophomore on the 25-26 soccer all-league list and on the 25-26 volleyball stat sheet. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "hollister",
+      "name": "Aubrey Torres",
+      "careerId": "lao0edi18u4o8",
+      "basis": "One player. \"Aubrey Torres\": field-hockey 26-27 varsity grade 11 (MaxPreps roster); field-hockey 26-27 jv grade 11 (MaxPreps JV roster). \"Aubrey Torrez\": field-hockey 26-27 varsity #32 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. No other player of the school has either name. MaxPreps lists four Hollister players twice in 26-27: a row with no number on both the varsity and the JV roster, and a numbered varsity row under another career with the name spelled another way (Torres / Torrez, Gabriella / Gabby Sanchez, Brooklynn / Brooklyn Green, Zubiate-Gutierrez / Gutierrez). Both rows a junior. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "hollister",
+      "name": "Gabriella Sanchez",
+      "careerId": "ljgku00mfh2dd",
+      "basis": "One player. \"Gabriella Sanchez\": field-hockey 26-27 varsity grade 12 (MaxPreps roster); field-hockey 26-27 jv grade 12 (MaxPreps JV roster). \"Gabby Sanchez\": field-hockey 26-27 varsity #24 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027. No other player of the school has either name. Gabby is the short form of Gabriella; one of four Hollister players MaxPreps lists twice in 26-27 (see Aubrey Torres): a row with no number on both rosters and a numbered varsity row under another career. Both rows a senior. A common name: it rests on that pattern. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "hollister",
+      "name": "Brooklyn Green",
+      "careerId": "g1b4dojoauo99",
+      "basis": "One player. \"Brooklyn Green\": field-hockey 26-27 varsity #69 grade 12 (MaxPreps roster, overlay (news), MaxPreps stat sheet). \"Brooklynn Green\": field-hockey 25-26 varsity #69 grade 11 (MaxPreps stat sheet); field-hockey 26-27 varsity grade 12 (MaxPreps roster); field-hockey 26-27 jv grade 12 (MaxPreps JV roster). Same school, both class of 2027. No other player of the school has either name. #69 on the 25-26 stat sheet as Brooklynn and on the 26-27 roster as Brooklyn, a junior and then a senior; one of four Hollister players MaxPreps lists twice in 26-27 (see Aubrey Torres). Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "hollister",
+      "name": "Victoria Zubiate-Gutierrez",
+      "careerId": "af7ig91l503ff",
+      "basis": "One player. \"Victoria Zubiate-Gutierrez\": field-hockey 26-27 varsity grade 12 (MaxPreps roster); field-hockey 26-27 jv grade 12 (MaxPreps JV roster). \"Victoria Gutierrez\": field-hockey 26-27 varsity #98 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027. No other player of the school has either name. The numbered row leaves out her first surname; one of four Hollister players MaxPreps lists twice in 26-27 (see Aubrey Torres). Both rows a senior. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "huntington-beach",
+      "name": "Lulu Guevera",
+      "careerId": "rhsqc8qe1ulg0",
+      "basis": "One player. \"Lulu Guevera\": field-hockey 26-27 varsity #3 grade 12 (MaxPreps roster, MaxPreps stat sheet). \"Louella (lulu) Guevara\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay (school-site)); field-hockey 26-27 jv (MaxPreps JV roster). Same school, both class of 2027. No other player of the school has either name. The rows with no number give her name and her nickname, the numbered varsity row the nickname alone and the surname with two letters swapped; both a senior. MaxPreps lists her twice on the 26-27 varsity roster, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "monta-vista",
+      "name": "Ishani Chaudhuri",
+      "careerId": "ha9ktccgfjn33",
+      "basis": "One player. \"Ishani Chaudhuri\": soccer 26-27 varsity (MaxPreps roster); soccer 26-27 jv (MaxPreps JV roster). \"Ishani Chaudhury\": soccer 26-27 varsity grade 9 (MaxPreps roster). Same school, classes of unknown and 2030. No other player of the school has either name. A rare first name, the surnames one letter apart, neither row with a number: MaxPreps lists her twice on the 26-27 varsity roster, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "volleyball",
+      "team": "riordan",
+      "name": "Izzy Saavedra",
+      "careerId": "b2inplipc5grb",
+      "basis": "One player. \"Izzy Saavedra\": volleyball 26-27 varsity #2 grade 10 (MaxPreps roster). \"Isabella Saavedra\": volleyball 26-27 varsity grade 10 (MaxPreps roster, recruiting profile (sportsrecruits), recruiting profile (hudl)). Same school, both class of 2029. No other player of the school has either name. Izzy is the short form of Isabella; both rows a sophomore setter on the 26-27 varsity roster, one with a number and one without, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "santa-clara",
+      "name": "Yaozeng Huang",
+      "careerId": "hkptnv47go2ff",
+      "basis": "One player. \"Yaozeng Huang\": basketball 26-27 jv #10 (MaxPreps JV roster, recruiting profile (hudl)). \"Aaron (Yaozeng) Huang\": basketball 26-27 jv #11 grade 10 (MaxPreps JV roster). Same school, both class of 2029. No other player of the school has either name. The second row's name holds the first's in parentheses: \"Aaron (Yaozeng) Huang\". Both a forward of the class of 2029 on the 26-27 JV roster, under two careers; the rows give #10 and #11. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "santa-clara",
+      "name": "Elijah Palomino-Hendricks",
+      "careerId": "8tdtj3k72fk44",
+      "basis": "One player. \"Elijah Palomino-Hendricks\": basketball 26-27 jv #25 grade 10 (MaxPreps JV roster). \"Elijah Palomino\": basketball 25-26 varsity #25 grade 9 (MaxPreps stat sheet); basketball 26-27 jv #20 (MaxPreps JV roster, recruiting profile (hudl)). Same school, both class of 2029. No other player of the school has either name. #25 on the 25-26 stat sheet as Elijah Palomino and on the 26-27 JV roster as Elijah Palomino-Hendricks, a freshman and then a sophomore; the 26-27 JV roster lists him twice, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "santa-clara",
+      "name": "Sofia Mateos",
+      "careerId": "8euhno6n6pen7",
+      "basis": "One player. \"Sofia Mateos\": soccer 26-27 jv (MaxPreps JV roster). \"Sofia Mateos-Acevedo\": soccer 26-27 jv #12 grade 11 (MaxPreps JV roster). Same school, classes of unknown and 2028. No other player of the school has either name. The row with no number leaves out her second surname: MaxPreps lists her twice on the 26-27 JV roster, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "santa-clara",
+      "name": "Kalea Nicole Trapsi",
+      "careerId": "0npa9ihldln66",
+      "basis": "One player. \"Kalea Nicole Trapsi\": soccer 26-27 jv (MaxPreps JV roster). \"Kalea Trapsi\": soccer 26-27 jv #2 grade 9 (MaxPreps JV roster). Same school, classes of unknown and 2030. No other player of the school has either name. A rare name; the row with no number adds a middle name: MaxPreps lists her twice on the 26-27 JV roster, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "university-city",
+      "name": "Paula Neira",
+      "careerId": "uld6vgnosne22",
+      "basis": "One player. \"Paula Neira\": field-hockey 26-27 jv #7 grade 11 (MaxPreps JV roster). \"Paula Neira Munoz\": field-hockey 26-27 varsity #6 grade 11 (MaxPreps roster, MaxPreps stat sheet); field-hockey 26-27 jv (MaxPreps JV roster, school JV list). Same school, both class of 2028. No other player of the school has either name. The JV roster's numbered row leaves out her second surname; the school's own JV list has one Paula Neira Munoz. Both rows a junior, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "los-gatos",
+      "name": "Noelani Wedemeyer",
+      "careerId": "d7lbjfac32uj3",
+      "basis": "One player. \"Noelani Wedemeyer\": soccer 25-26 varsity (MaxPreps stat sheet). \"Noe Wedemeyer\": soccer 25-26 varsity #8 grade 11 (MaxPreps stat sheet, all-league list). Same school, classes of unknown and 2027. No other player of the school has either name. Noe is the short form of Noelani and the surname is rare: the 25-26 stat sheet lists her twice, a numbered row (#8, a junior defender, second-team all-league) and a row with nothing but the name, under two careers. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "mountain-view",
+      "name": "Tyler Tsai",
+      "careerId": "q46olkesfc1vf",
+      "basis": "One player. \"Tyler Tsai\": basketball 25-26 jv grade 10 (all-league list). \"Tyler Tsui\": basketball 26-27 varsity #25 grade 11 (MaxPreps roster, recruiting profile (hudl)). Same school, both class of 2028. No other player of the school has either name. The all-league list's \"Tsai\" is a slip for Tsui. MaxPreps' 2025-26 Mountain View JV roster lists #23 Tyler Tsui, So., and no Tsai, and his career page carries that season's JV game stats (15 points against Monta Vista on 2026-02-03) ahead of the 2026-27 varsity row (read 2026-11-22). Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "branham",
+      "name": "Nicholas Mego",
+      "careerId": "5eftm4i44s1l5",
+      "basis": "One player. \"Nicholas Mego\": basketball 26-27 varsity #13 grade 12 (MaxPreps roster). \"Nick Mego\": basketball 25-26 varsity #13 grade 12 (MaxPreps stat sheet). Same school, classes of 2027 and 2026. No other player of the school has either name. Both #13. MaxPreps' career page for Nick Mego gives a senior of the class of 2026 with varsity seasons back to 2022-23; the \"Nicholas Mego\" career holds nothing but a 2026-27 roster row added 2026-11-15. Branham's 2026-27 roster is last season's entered again (the same players, numbers and grades, 2025-26's seniors still seniors), so the row is a second record of him and not a brother, and its class of 2027 is the roster's stale grade (read 2026-11-22). Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "palo-alto",
+      "name": "Gabe Andrade",
+      "careerId": "87u9157t1dfk4",
+      "basis": "One player. \"Gabe Andrade\": basketball 25-26 varsity #14 grade 9 (MaxPreps stat sheet). \"Gabriel Andrade\": basketball 26-27 varsity #0 grade 9 (MaxPreps roster, overlay (hudl), recruiting profile (hudl)). Same school, classes of 2029 and 2030. No other player of the school has either name. MaxPreps has Gabe Andrade (class of 2029, #14) on 2025-26 varsity with game stats, and Gabriel Andrade (#0, 5'8\", 140 lbs, PG, \"Fr.\") under a career that holds only a 2026-27 roster row added 2026-11-15; the 2026-27 roster has no Gabe or #14. The Hudl profile filed under the new row (hudl.com/profile/28804530) gives Gabriel Andrade, class of 2029, PG, 5'8\", 140 lbs, with Palo Alto varsity 2025-26 in its team history: the new row's height, weight and position and the old one's class and season. The new row's \"Fr.\" is wrong (read 2026-11-22). Decided 2026-11-22."
     }
   ],
   "rowSplits": [
@@ -814,6 +1248,20 @@
       "name": "Megumi Pugel",
       "official": "Megumi Pugel",
       "basis": "One against one: Fremont's MaxPreps JV roster has \"Megumi Pugel\" (#12, grade 9; row created 2026-08-27) and the school's JV list \"Magumi Pugel\" (#5, grade 9); joined by sameAs 2026-11-16. Megumi is a Japanese given name and Magumi is not one, so the school list's spelling is the slip. Decided 2026-11-16."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "valley-christian",
+      "name": "Giuliana Borello",
+      "official": "Giuliana Borello",
+      "basis": "Joining her 26-27 soccer row (sameAs, 2026-11-22) brought in \"Guiliana (GiGi) Borello\", which the rule took for her fullest name; it is the soccer roster's slip (two letters transposed) with her nickname in parentheses. The school's own rosters (gowarriors.net, read 2026-11-14) and the 25-26 all-league list spell her Giuliana Borello. Decided 2026-11-22."
+    },
+    {
+      "sport": "soccer",
+      "team": "saratoga",
+      "name": "Theresa Berger",
+      "official": "Theresa Berger",
+      "basis": "Tessie is a short form of Theresa that the nickname table (lib/players/nicknames.ts) does not hold, so the rule read the two as unrelated spellings and took the 26-27 rosters' \"Tessie Berger\"; the 25-26 stat sheet gives her full name. Joined by sameAs 2026-11-22. Decided 2026-11-22."
     }
   ]
 }

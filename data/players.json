@@ -36,15 +36,15 @@
   "builtBy": "scripts/build-players.ts",
   "counts": {
     "classOfConflicts": 277,
-    "multiSeason": 1172,
-    "multiSport": 62,
-    "nameOnly": 593,
+    "multiSeason": 1192,
+    "multiSport": 86,
+    "nameOnly": 568,
     "observations": 14615,
-    "players": 6905,
-    "review": 98,
-    "stintConflicts": 172,
-    "stints": 8697,
-    "withCareer": 6312
+    "players": 6843,
+    "review": 65,
+    "stintConflicts": 174,
+    "stints": 8676,
+    "withCareer": 6275
   },
   "notes": [
     "One record per person across every sport and season this repository holds. Internal: no page reads this file.",
@@ -108,20 +108,33 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "short-form",
+          "name": "Jimena Casarrubias"
+        }
+      ],
+      "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p25ed922679"
+      ],
       "id": "p0012025952",
       "identifiers": [
         {
           "careerId": "ip2tmvvmgp8cc",
           "careerProfileId": "047cb2ce-4cee-462d-b0e6-ca4fb40eca28",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "ug3ko6mqv1r11",
+          "careerProfileId": "1a9a7012-cfa5-4c3b-af3c-7dacda911434",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Jimena Casarrubias",
+      "name": "Jimena Casarrubias Diaz",
       "names": [
+        "Jimena Casarrubias Diaz",
         "Jimena Casarrubias"
       ],
       "stints": [
@@ -163,6 +176,33 @@
           "positions": [],
           "season": "26-27",
           "sport": "soccer",
+          "team": "independence"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": "6",
+          "level": "jv",
+          "name": "Jimena Casarrubias Diaz",
+          "observations": [
+            {
+              "athleteId": "4ba3b68b-c70c-46d6-9276-659786590e27",
+              "grade": 9,
+              "jersey": "6",
+              "name": "Jimena Casarrubias Diaz",
+              "positions": [
+                "MB"
+              ],
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "positions": [
+            "MB"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
           "team": "independence"
         }
       ]
@@ -392,23 +432,62 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Katie Byon"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pc952c336ef"
+      ],
       "id": "p0044784dff",
       "identifiers": [
         {
           "careerId": "0e0l65j0fh2aa",
           "careerProfileId": "704c5d8b-9da8-44e1-9c93-ae68ad3f9e25",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "h89k4knnccudd",
+          "careerProfileId": "dc6cebe5-67f2-4818-9b3b-8cee0e1a9deb",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Katie Byon",
+      "name": "Kaitlyn Byon",
       "names": [
+        "Kaitlyn Byon",
         "Katie Byon"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kaitlyn Byon",
+          "observations": [
+            {
+              "athleteId": "78cb7004-abd2-42ee-ae1e-e9f31d6e61ba",
+              "name": "Kaitlyn Byon",
+              "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "news",
+              "src": "enrichment",
+              "url": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "los-altos"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -1081,47 +1160,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "gunn"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p009f47d55c",
-      "identifiers": [
-        {
-          "careerId": "tljmtll026s88",
-          "careerProfileId": null,
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Maddie Miner",
-      "names": [
-        "Maddie Miner"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": "15",
-          "level": "varsity",
-          "name": "Maddie Miner",
-          "observations": [
-            {
-              "grade": 9,
-              "jersey": "15",
-              "name": "Maddie Miner",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "del-mar"
         }
       ]
     },
@@ -10092,55 +10130,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p075211d9b3",
-      "identifiers": [
-        {
-          "careerId": "ihmpbfjnmpevf",
-          "careerProfileId": "a35f7dcb-abce-4629-ab49-ef964d9bc941",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Eddie Fan",
-      "names": [
-        "Eddie Fan"
-      ],
-      "stints": [
-        {
-          "captain": true,
-          "conflicts": [],
-          "grade": 12,
-          "height": "6'2\"",
-          "jersey": "34",
-          "level": "varsity",
-          "name": "Eddie Fan",
-          "observations": [
-            {
-              "athleteId": "de7af60f-0042-492e-89d0-93a19fe517c2",
-              "captain": true,
-              "grade": 12,
-              "height": "6'2\"",
-              "jersey": "34",
-              "name": "Eddie Fan",
-              "positions": [
-                "C"
-              ],
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [
-            "C"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "monta-vista"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -13900,7 +13889,9 @@
       "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pcdbae75667"
+      ],
       "id": "p0a0f930c10",
       "identifiers": [
         {
@@ -13933,6 +13924,26 @@
           "positions": [],
           "season": "26-27",
           "sport": "soccer",
+          "team": "willow-glen"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Blake Penhallegon",
+          "observations": [
+            {
+              "name": "Blake Penhallegon",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
           "team": "willow-glen"
         }
       ]
@@ -15942,12 +15953,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Izzy Saavedra"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p658928626a"
+      ],
       "id": "p0bc655f22e",
       "identifiers": [
+        {
+          "careerId": "4d4podjeudhee",
+          "careerProfileId": "8fcb2a2a-9b34-4970-80ab-9ff228205a0f",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "b2inplipc5grb",
           "careerProfileId": "79739823-27f8-4e26-a5b3-97479adb5408",
@@ -15956,7 +15979,8 @@
       ],
       "name": "Isabella Saavedra",
       "names": [
-        "Isabella Saavedra"
+        "Isabella Saavedra",
+        "Izzy Saavedra"
       ],
       "stints": [
         {
@@ -15964,10 +15988,20 @@
           "conflicts": [],
           "grade": 10,
           "height": null,
-          "jersey": null,
+          "jersey": "2",
           "level": "varsity",
-          "name": "Isabella Saavedra",
+          "name": "Izzy Saavedra",
           "observations": [
+            {
+              "athleteId": "c722d53b-019b-4395-b9d4-1cf43b04e6c5",
+              "grade": 10,
+              "jersey": "2",
+              "name": "Izzy Saavedra",
+              "positions": [
+                "S"
+              ],
+              "src": "maxpreps-roster"
+            },
             {
               "athleteId": "7e88cf62-cce3-4412-87f2-2604a565b4ba",
               "grade": 10,
@@ -16364,9 +16398,16 @@
       "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p8241f64510"
+      ],
       "id": "p0bf1364382",
       "identifiers": [
+        {
+          "careerId": "6rreidmrg62rb",
+          "careerProfileId": "995b4070-0cca-4ffe-ad58-ef813a25ddd5",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "lc1nd6qu7vaqa",
           "careerProfileId": "27368bcd-7226-4130-9f4b-b73b9f7809d3",
@@ -16413,6 +16454,32 @@
         {
           "captain": false,
           "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lilly Jones",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "grade": 10,
+              "name": "Lilly Jones",
+              "positions": [
+                "Forward"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "Forward"
+          ],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "mitty"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
           "grade": 11,
           "height": null,
           "jersey": "8",
@@ -16448,6 +16515,48 @@
           ],
           "season": "26-27",
           "sport": "field-hockey",
+          "team": "mitty"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "5'7\"",
+          "jersey": "19",
+          "level": "varsity",
+          "name": "Lilly Jones",
+          "observations": [
+            {
+              "athleteId": "7100a5c2-7efd-4ad0-9397-7569fb12a3de",
+              "grade": 11,
+              "height": "5'7\"",
+              "jersey": "19",
+              "name": "Lilly Jones",
+              "positions": [
+                "FORW",
+                "MF"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/lilly-jones23"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25154237"
+            }
+          ],
+          "positions": [
+            "FORW",
+            "MF"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
           "team": "mitty"
         }
       ]
@@ -17813,10 +17922,17 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Kostya Antonov"
+        }
+      ],
+      "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p9ae2461565"
+      ],
       "id": "p0cc41542f0",
       "identifiers": [
         {
@@ -17827,9 +17943,36 @@
       ],
       "name": "Konstantin Antonov",
       "names": [
-        "Konstantin Antonov"
+        "Konstantin Antonov",
+        "Kostya Antonov"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kostya Antonov",
+          "observations": [
+            {
+              "award": "thirdTeam",
+              "grade": 11,
+              "name": "Kostya Antonov",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "gunn"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -26920,10 +27063,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Rae Cantrell"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p2e6e2aff79"
+      ],
       "id": "p12988a9c89",
       "identifiers": [
         {
@@ -26934,9 +27084,30 @@
       ],
       "name": "Raevynn Cantrell",
       "names": [
-        "Raevynn Cantrell"
+        "Raevynn Cantrell",
+        "Rae Cantrell"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Rae Cantrell",
+          "observations": [
+            {
+              "award": "honorableMention",
+              "name": "Rae Cantrell",
+              "src": "all-league"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "volleyball",
+          "team": "eastside"
+        },
         {
           "captain": true,
           "conflicts": [],
@@ -31412,9 +31583,11 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p2a7283543b"
+      ],
       "id": "p158476abd8",
       "identifiers": [
         {
@@ -31428,6 +31601,27 @@
         "Nour Bahnas"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Nour Bahnas",
+          "observations": [
+            {
+              "grade": 11,
+              "name": "Nour Bahnas",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "cupertino"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -33734,20 +33928,33 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Luciana Lulu Gorse"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pfe8e15e6c4"
+      ],
       "id": "p16dc1190bd",
       "identifiers": [
         {
           "careerId": "fl59hduuglc33",
           "careerProfileId": null,
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "h3v0v10iqev99",
+          "careerProfileId": "68e905db-9bdb-4467-a7b6-51f7a6f7f96c",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Luciana Lulu Gorse",
+      "name": "Lulu Gorshe",
       "names": [
+        "Lulu Gorshe",
         "Luciana Lulu Gorse"
       ],
       "stints": [
@@ -33769,6 +33976,34 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "field-hockey",
+          "team": "valley-christian"
+        },
+        {
+          "captain": true,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": "1",
+          "level": "varsity",
+          "name": "Lulu Gorshe",
+          "observations": [
+            {
+              "athleteId": "c491c419-f629-40df-a690-e6a66b651334",
+              "captain": true,
+              "grade": 12,
+              "jersey": "1",
+              "name": "Lulu Gorshe",
+              "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "L. Gorshe",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "field-hockey",
           "team": "valley-christian"
         }
@@ -35785,12 +36020,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Jess Lashgari"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pb2d4fd78db"
+      ],
       "id": "p184a23123a",
       "identifiers": [
+        {
+          "careerId": "ahts9ocjh8o44",
+          "careerProfileId": "02f91267-e249-401c-b8ca-dbbb35fbc0da",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "jefbfcputfa99",
           "careerProfileId": "bf9e0365-8f67-4a96-afe7-6e2eea35015c",
@@ -35799,9 +36046,32 @@
       ],
       "name": "Jessica Lashgari",
       "names": [
-        "Jessica Lashgari"
+        "Jessica Lashgari",
+        "Jess Lashgari"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": "23",
+          "level": "varsity",
+          "name": "Jess Lashgari",
+          "observations": [
+            {
+              "athleteId": "2966663d-29d6-479a-ae38-5491fe572447",
+              "grade": 11,
+              "jersey": "23",
+              "name": "Jess Lashgari",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "valley-christian"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -37606,53 +37876,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p19550a3553",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "tylertsai",
-          "sport": "basketball",
-          "team": "mountain-view"
-        }
-      ],
-      "name": "Tyler Tsai",
-      "names": [
-        "Tyler Tsai"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Tyler Tsai",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "grade": 10,
-              "name": "Tyler Tsai",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "mountain-view"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -38753,48 +38976,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p19c55b8f5a",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "briannasulocha",
-          "sport": "field-hockey",
-          "team": "cupertino"
-        }
-      ],
-      "name": "Brianna Sulocha",
-      "names": [
-        "Brianna Sulocha"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Brianna Sulocha",
-          "observations": [
-            {
-              "grade": 9,
-              "name": "Brianna Sulocha",
-              "src": "school-jv-roster",
-              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "cupertino"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -39375,47 +39556,6 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "willow-glen"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p1a2bf07ca2",
-      "identifiers": [
-        {
-          "careerId": "fjv2fb0asbtdd",
-          "careerProfileId": null,
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Kiera Sturzu",
-      "names": [
-        "Kiera Sturzu"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "15",
-          "level": "varsity",
-          "name": "Kiera Sturzu",
-          "observations": [
-            {
-              "grade": 10,
-              "jersey": "15",
-              "name": "Kiera Sturzu",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "saratoga"
         }
       ]
     },
@@ -41192,32 +41332,62 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Yaozeng Huang"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p6a0d9913fb"
+      ],
       "id": "p1b3f6d0a04",
       "identifiers": [
+        {
+          "careerId": "hkptnv47go2ff",
+          "careerProfileId": "f9c13309-7a15-453d-92b7-82e88ecc05a1",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "j6fnrsulitrk4",
           "careerProfileId": "70032ad5-8529-4636-9c0a-96d943731a79",
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Yaozeng Huang",
+      "name": "Aaron (Yaozeng) Huang",
       "names": [
+        "Aaron (Yaozeng) Huang",
         "Yaozeng Huang"
       ],
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
-          "grade": null,
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "11",
+              "other": "10",
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "grade": 10,
           "height": null,
-          "jersey": "10",
+          "jersey": "11",
           "level": "jv",
-          "name": "Yaozeng Huang",
+          "name": "Aaron (Yaozeng) Huang",
           "observations": [
+            {
+              "athleteId": "9dc829c0-3f3b-4a18-bd16-56a47b01c12d",
+              "grade": 10,
+              "jersey": "11",
+              "name": "Aaron (Yaozeng) Huang",
+              "positions": [
+                "F"
+              ],
+              "src": "maxpreps-jv-roster"
+            },
             {
               "athleteId": "36bcdf4e-264d-4097-8174-6a56ea718a11",
               "jersey": "10",
@@ -41237,8 +41407,7 @@
             }
           ],
           "positions": [
-            "F",
-            "SF"
+            "F"
           ],
           "season": "26-27",
           "sport": "basketball",
@@ -42186,20 +42355,33 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Mj Meza"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p399216a918"
+      ],
       "id": "p1be147e212",
       "identifiers": [
         {
           "careerId": "mkge5agr5iq22",
           "careerProfileId": null,
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "sv1fkiqosf9td",
+          "careerProfileId": "b275cc8d-f40f-469a-b4a8-2bd4fab09b14",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Mj Meza",
+      "name": "Maryjane Meza",
       "names": [
+        "Maryjane Meza",
         "Mj Meza"
       ],
       "stints": [
@@ -42222,6 +42404,43 @@
           "positions": [],
           "season": "25-26",
           "sport": "soccer",
+          "team": "san-jose"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": "4",
+          "level": "varsity",
+          "name": "Maryjane Meza",
+          "observations": [
+            {
+              "athleteId": "21240bf5-f9cc-45af-aad6-e79c48b4c573",
+              "grade": 11,
+              "jersey": "4",
+              "name": "Maryjane Meza",
+              "positions": [
+                "DS",
+                "L",
+                "S"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/san-jose/san-jose-high-academy/maryjane-meza1"
+            }
+          ],
+          "positions": [
+            "DS",
+            "L",
+            "S"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
           "team": "san-jose"
         }
       ]
@@ -51800,35 +52019,55 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "short-form",
+          "name": "Sofia Mateos"
+        }
+      ],
+      "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p78e6d89908"
+      ],
       "id": "p224581a169",
       "identifiers": [
         {
           "careerId": "795fsrc4g5kcc",
           "careerProfileId": "bccd96dd-d716-458a-b0b4-820a3d37435f",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "8euhno6n6pen7",
+          "careerProfileId": "19520a35-a1d8-4c22-99d6-74e0eb81e5d2",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Sofia Mateos",
+      "name": "Sofia Mateos-Acevedo",
       "names": [
+        "Sofia Mateos-Acevedo",
         "Sofia Mateos"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 11,
           "height": null,
-          "jersey": null,
+          "jersey": "12",
           "level": "jv",
           "name": "Sofia Mateos",
           "observations": [
             {
               "athleteId": "32920c1e-f5ee-4be6-af8d-d6cfcc0c3cc6",
               "name": "Sofia Mateos",
+              "src": "maxpreps-jv-roster"
+            },
+            {
+              "athleteId": "4202fb18-96ed-4dae-9a66-961839598e8c",
+              "grade": 11,
+              "jersey": "12",
+              "name": "Sofia Mateos-Acevedo",
               "src": "maxpreps-jv-roster"
             }
           ],
@@ -53340,21 +53579,34 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Nicholas Jung"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p87f168f167"
+      ],
       "id": "p2321d9f94e",
       "identifiers": [
         {
           "careerId": "glm33nhd5c788",
           "careerProfileId": "29c3b45c-18f0-42a9-94d0-4ea8da26468c",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "n1rdndlnfd155",
+          "careerProfileId": "7fc626bf-ec1c-4678-a071-7fa99ff5c606",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Nikko Jung",
       "names": [
-        "Nikko Jung"
+        "Nikko Jung",
+        "Nicholas Jung"
       ],
       "stints": [
         {
@@ -53371,6 +53623,15 @@
               "grade": 10,
               "jersey": "12",
               "name": "Nikko Jung",
+              "positions": [
+                "G"
+              ],
+              "src": "maxpreps-jv-roster"
+            },
+            {
+              "athleteId": "1b39f0ea-1264-47a9-b3bc-729bef1a5e4a",
+              "jersey": "12",
+              "name": "Nicholas Jung",
               "positions": [
                 "G"
               ],
@@ -57747,53 +58008,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p25ed922679",
-      "identifiers": [
-        {
-          "careerId": "ug3ko6mqv1r11",
-          "careerProfileId": "1a9a7012-cfa5-4c3b-af3c-7dacda911434",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Jimena Casarrubias Diaz",
-      "names": [
-        "Jimena Casarrubias Diaz"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": "6",
-          "level": "jv",
-          "name": "Jimena Casarrubias Diaz",
-          "observations": [
-            {
-              "athleteId": "4ba3b68b-c70c-46d6-9276-659786590e27",
-              "grade": 9,
-              "jersey": "6",
-              "name": "Jimena Casarrubias Diaz",
-              "positions": [
-                "MB"
-              ],
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [
-            "MB"
-          ],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "independence"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -59594,53 +59808,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p26b3e2210b",
-      "identifiers": [
-        {
-          "careerId": "lao0edi18u4o8",
-          "careerProfileId": "6ac0b0a5-529f-4bdb-8658-efa9bff8d209",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Aubrey Torrez",
-      "names": [
-        "Aubrey Torrez"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "32",
-          "level": "varsity",
-          "name": "Aubrey Torrez",
-          "observations": [
-            {
-              "athleteId": "9798ab8d-986e-4489-92a6-0d3af1b8c92c",
-              "grade": 11,
-              "jersey": "32",
-              "name": "Aubrey Torrez",
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "32",
-              "name": "A. Torrez",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "hollister"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -60679,47 +60846,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "evergreen-valley"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p27b495dc8c",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "abiwessel",
-          "sport": "volleyball",
-          "team": "pinewood"
-        }
-      ],
-      "name": "Abi Wessel",
-      "names": [
-        "Abi Wessel"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Abi Wessel",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "name": "Abi Wessel",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "volleyball",
-          "team": "pinewood"
         }
       ]
     },
@@ -62752,53 +62878,6 @@
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
-      "id": "p2938f2775f",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "darenlee",
-          "sport": "basketball",
-          "team": "homestead"
-        }
-      ],
-      "name": "Daren Lee",
-      "names": [
-        "Daren Lee"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Daren Lee",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "grade": 10,
-              "name": "Daren Lee",
-              "positions": [
-                "G"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "G"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "homestead"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
       "id": "p293b77aece",
       "identifiers": [
         {
@@ -64348,48 +64427,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p2a7283543b",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "nourbahnas",
-          "sport": "field-hockey",
-          "team": "cupertino"
-        }
-      ],
-      "name": "Nour Bahnas",
-      "names": [
-        "Nour Bahnas"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Nour Bahnas",
-          "observations": [
-            {
-              "grade": 11,
-              "name": "Nour Bahnas",
-              "src": "school-jv-roster",
-              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "cupertino"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -64791,53 +64828,6 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "escondido"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p2acbc593e0",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "juliakeineth",
-          "sport": "soccer",
-          "team": "fremont"
-        }
-      ],
-      "name": "Julia Keineth",
-      "names": [
-        "Julia Keineth"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Julia Keineth",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "grade": 10,
-              "name": "Julia Keineth",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "fremont"
         }
       ]
     },
@@ -70552,47 +70542,6 @@
     },
     {
       "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p2e6e2aff79",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "raecantrell",
-          "sport": "volleyball",
-          "team": "eastside"
-        }
-      ],
-      "name": "Rae Cantrell",
-      "names": [
-        "Rae Cantrell"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Rae Cantrell",
-          "observations": [
-            {
-              "award": "honorableMention",
-              "name": "Rae Cantrell",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "volleyball",
-          "team": "eastside"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -71871,12 +71820,24 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Malena Lysand"
+        }
+      ],
+      "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p9bc989bdca"
+      ],
       "id": "p2f91d5232d",
       "identifiers": [
+        {
+          "careerId": "1jeb111o79mtd",
+          "careerProfileId": "ae2d3f20-e1fc-4643-9af6-fd1af433ddaf",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "pk3egrk8m4nm6",
           "careerProfileId": "7cd9614b-fcbb-4aea-a994-9cfef7d4a5a0",
@@ -71885,9 +71846,32 @@
       ],
       "name": "Malena Lyssand",
       "names": [
-        "Malena Lyssand"
+        "Malena Lyssand",
+        "Malena Lysand"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": "28",
+          "level": "jv",
+          "name": "Malena Lysand",
+          "observations": [
+            {
+              "athleteId": "3f748fda-884a-462c-a528-d23237103adb",
+              "grade": 9,
+              "jersey": "28",
+              "name": "Malena Lysand",
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "homestead"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -73466,20 +73450,33 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Noe Wedemeyer"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p3b0b1dd96f"
+      ],
       "id": "p30adceed1e",
       "identifiers": [
+        {
+          "careerId": "599e9vgkkfgbb",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "d7lbjfac32uj3",
           "careerProfileId": null,
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Noe Wedemeyer",
+      "name": "Noelani Wedemeyer",
       "names": [
+        "Noelani Wedemeyer",
         "Noe Wedemeyer"
       ],
       "stints": [
@@ -73492,6 +73489,10 @@
           "level": "varsity",
           "name": "Noe Wedemeyer",
           "observations": [
+            {
+              "name": "Noelani Wedemeyer",
+              "src": "maxpreps-stats"
+            },
             {
               "grade": 11,
               "jersey": "8",
@@ -77077,53 +77078,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "mercy-burlingame"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p3317313e4e",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "brycekillion",
-          "sport": "soccer",
-          "team": "st-ignatius"
-        }
-      ],
-      "name": "Bryce Killion",
-      "names": [
-        "Bryce Killion"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Bryce Killion",
-          "observations": [
-            {
-              "award": "honorableMention",
-              "grade": 10,
-              "name": "Bryce Killion",
-              "positions": [
-                "Midfielder"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "Midfielder"
-          ],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "st-ignatius"
         }
       ]
     },
@@ -86741,63 +86695,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p399216a918",
-      "identifiers": [
-        {
-          "careerId": "sv1fkiqosf9td",
-          "careerProfileId": "b275cc8d-f40f-469a-b4a8-2bd4fab09b14",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Maryjane Meza",
-      "names": [
-        "Maryjane Meza"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "4",
-          "level": "varsity",
-          "name": "Maryjane Meza",
-          "observations": [
-            {
-              "athleteId": "21240bf5-f9cc-45af-aad6-e79c48b4c573",
-              "grade": 11,
-              "jersey": "4",
-              "name": "Maryjane Meza",
-              "positions": [
-                "DS",
-                "L",
-                "S"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2028,
-              "kind": "ncsa",
-              "src": "profile",
-              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/san-jose/san-jose-high-academy/maryjane-meza1"
-            }
-          ],
-          "positions": [
-            "DS",
-            "L",
-            "S"
-          ],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "san-jose"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -87434,20 +87331,33 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Maddie McDougall"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pcd9362c866"
+      ],
       "id": "p39c9a62a6f",
       "identifiers": [
         {
           "careerId": "9er65ph3het66",
           "careerProfileId": "e8077170-0ec4-4abf-a1c3-e89691616a02",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "qg7nt9q2am588",
+          "careerProfileId": "72d1bef0-a50d-47da-9a7b-1bc6ac21dbd9",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Maddie McDougall",
+      "name": "Madison McDougall",
       "names": [
+        "Madison McDougall",
         "Maddie McDougall"
       ],
       "stints": [
@@ -87477,6 +87387,33 @@
           "positions": [],
           "season": "26-27",
           "sport": "field-hockey",
+          "team": "valley-christian"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Madison McDougall",
+          "observations": [
+            {
+              "athleteId": "7bda9462-326d-45a0-b6c4-f77a784c71bc",
+              "grade": 11,
+              "name": "Madison McDougall",
+              "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/madison_mcdougall3"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
           "team": "valley-christian"
         }
       ]
@@ -89090,6 +89027,10 @@
           "name": "GiGi Borello"
         },
         {
+          "kind": "spelling",
+          "name": "Guiliana (GiGi) Borello"
+        },
+        {
           "kind": "nickname",
           "name": "Giuliana Gigi Borello"
         }
@@ -89098,13 +89039,19 @@
       "classOfConflicts": [],
       "formerIds": [
         "p5bd41f1111",
-        "p683d4f0f5e"
+        "p683d4f0f5e",
+        "p6e3a6a98e2"
       ],
       "id": "p3abcc4c02a",
       "identifiers": [
         {
           "careerId": "0m3unn7lofh88",
           "careerProfileId": "d31e4e68-aea0-415e-bb72-a4fa51b87640",
+          "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "39p75i8cs6kn7",
+          "careerProfileId": "491225fa-5891-4b30-947e-568d9ede7bfc",
           "kind": "maxpreps-career"
         },
         {
@@ -89117,6 +89064,7 @@
       "names": [
         "Giuliana Borello",
         "GiGi Borello",
+        "Guiliana (GiGi) Borello",
         "Giuliana Gigi Borello"
       ],
       "stints": [
@@ -89177,6 +89125,27 @@
           "positions": [],
           "season": "26-27",
           "sport": "field-hockey",
+          "team": "valley-christian"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Guiliana (GiGi) Borello",
+          "observations": [
+            {
+              "athleteId": "7f4c2fb6-6bad-4edb-ab4e-e1e34b304b82",
+              "grade": 11,
+              "name": "Guiliana (GiGi) Borello",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
           "team": "valley-christian"
         }
       ]
@@ -89567,45 +89536,6 @@
           "season": "25-26",
           "sport": "basketball",
           "team": "san-jose"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p3b0b1dd96f",
-      "identifiers": [
-        {
-          "careerId": "599e9vgkkfgbb",
-          "careerProfileId": null,
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Noelani Wedemeyer",
-      "names": [
-        "Noelani Wedemeyer"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Noelani Wedemeyer",
-          "observations": [
-            {
-              "name": "Noelani Wedemeyer",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "los-gatos"
         }
       ]
     },
@@ -94676,21 +94606,34 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Kat Smith"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pb651fcf719"
+      ],
       "id": "p3db6c58013",
       "identifiers": [
         {
           "careerId": "2dta2143cb766",
           "careerProfileId": "a0971cdc-fadd-4ffe-b3ae-d5d45493f5f3",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "boudfkoq5mv88",
+          "careerProfileId": "450ab35d-fb92-489e-842a-48eb1374bff8",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Katarina Smith",
       "names": [
-        "Katarina Smith"
+        "Katarina Smith",
+        "Kat Smith"
       ],
       "stints": [
         {
@@ -94755,6 +94698,48 @@
           "positions": [],
           "season": "26-27",
           "sport": "field-hockey",
+          "team": "los-altos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kat Smith",
+          "observations": [
+            {
+              "athleteId": "165848d1-6e5e-40cc-bbbf-6f8c5848ada5",
+              "grade": 12,
+              "name": "Kat Smith",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-altos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Kat Smith",
+          "observations": [
+            {
+              "athleteId": "4b7da99c-e23f-4679-8d51-54f2bc3c06af",
+              "grade": 12,
+              "name": "Kat Smith",
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
           "team": "los-altos"
         }
       ]
@@ -99584,47 +99569,6 @@
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
-      "id": "p40dc6065f9",
-      "identifiers": [
-        {
-          "careerId": "kg3br7c8124m6",
-          "careerProfileId": null,
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Theresa Berger",
-      "names": [
-        "Theresa Berger"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "9",
-          "level": "varsity",
-          "name": "Theresa Berger",
-          "observations": [
-            {
-              "grade": 10,
-              "jersey": "9",
-              "name": "Theresa Berger",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "saratoga"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
       "id": "p40e6312615",
       "identifiers": [
         {
@@ -102670,12 +102614,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Gabby Sanchez"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pba5cf2cdf9"
+      ],
       "id": "p42ceb0040a",
       "identifiers": [
+        {
+          "careerId": "ljgku00mfh2dd",
+          "careerProfileId": "f91c450d-613a-424c-a8c1-7046b2b3605a",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "tsici7f6skb22",
           "careerProfileId": "57458428-726a-493d-9c02-0c3636c04a12",
@@ -102684,7 +102640,8 @@
       ],
       "name": "Gabriella Sanchez",
       "names": [
-        "Gabriella Sanchez"
+        "Gabriella Sanchez",
+        "Gabby Sanchez"
       ],
       "stints": [
         {
@@ -102692,15 +102649,27 @@
           "conflicts": [],
           "grade": 12,
           "height": null,
-          "jersey": null,
+          "jersey": "24",
           "level": "varsity",
-          "name": "Gabriella Sanchez",
+          "name": "Gabby Sanchez",
           "observations": [
+            {
+              "athleteId": "96ba0fe8-f5d2-4e2f-ad3e-63d6eabacf2e",
+              "grade": 12,
+              "jersey": "24",
+              "name": "Gabby Sanchez",
+              "src": "maxpreps-roster"
+            },
             {
               "athleteId": "3e08641c-89e2-4e6a-b410-48ee8acb6a30",
               "grade": 12,
               "name": "Gabriella Sanchez",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "24",
+              "name": "G. Sanchez",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -104658,53 +104627,6 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "mission-hills"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p43c4b54980",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "jasialdesai",
-          "sport": "basketball",
-          "team": "cupertino"
-        }
-      ],
-      "name": "Jasial Desai",
-      "names": [
-        "Jasial Desai"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Jasial Desai",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "grade": 9,
-              "name": "Jasial Desai",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "cupertino"
         }
       ]
     },
@@ -107231,12 +107153,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Lulu Guevera"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pf84c6fa41c"
+      ],
       "id": "p452f1d2565",
       "identifiers": [
+        {
+          "careerId": "89ad10j3h6l99",
+          "careerProfileId": "155f6331-201c-4ffb-8035-59dac9d7f728",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "rhsqc8qe1ulg0",
           "careerProfileId": "0b77a194-4fd4-44b9-9312-0fe3b9f3c5e4",
@@ -107245,7 +107179,8 @@
       ],
       "name": "Louella (lulu) Guevara",
       "names": [
-        "Louella (lulu) Guevara"
+        "Louella (lulu) Guevara",
+        "Lulu Guevera"
       ],
       "stints": [
         {
@@ -107253,10 +107188,21 @@
           "conflicts": [],
           "grade": 12,
           "height": null,
-          "jersey": null,
+          "jersey": "3",
           "level": "varsity",
-          "name": "Louella (lulu) Guevara",
+          "name": "Lulu Guevera",
           "observations": [
+            {
+              "athleteId": "4b6e1b2f-5b5a-46d2-a56a-721dcb87c564",
+              "grade": 12,
+              "jersey": "3",
+              "name": "Lulu Guevera",
+              "positions": [
+                "D",
+                "F"
+              ],
+              "src": "maxpreps-roster"
+            },
             {
               "athleteId": "e06ded2f-2014-486c-a751-149b8e8c7514",
               "name": "Louella (lulu) Guevara",
@@ -107267,9 +107213,17 @@
               "kind": "school-site",
               "src": "enrichment",
               "url": "https://www.hbfieldhockey.com/"
+            },
+            {
+              "jersey": "3",
+              "name": "L. Guevera",
+              "src": "maxpreps-stats"
             }
           ],
-          "positions": [],
+          "positions": [
+            "D",
+            "F"
+          ],
           "season": "26-27",
           "sport": "field-hockey",
           "team": "huntington-beach"
@@ -113872,10 +113826,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Daren Lee"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p2938f2775f"
+      ],
       "id": "p494fbea5de",
       "identifiers": [
         {
@@ -113886,9 +113847,36 @@
       ],
       "name": "Darren Lee",
       "names": [
-        "Darren Lee"
+        "Darren Lee",
+        "Daren Lee"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Daren Lee",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "grade": 10,
+              "name": "Daren Lee",
+              "positions": [
+                "G"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "G"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "homestead"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -116948,53 +116936,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p4b2b8f3309",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "neveharlen",
-          "sport": "volleyball",
-          "team": "st-ignatius"
-        }
-      ],
-      "name": "Neve Harlen",
-      "names": [
-        "Neve Harlen"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Neve Harlen",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "grade": 11,
-              "name": "Neve Harlen",
-              "positions": [
-                "Outside Hitter"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "Outside Hitter"
-          ],
-          "season": "25-26",
-          "sport": "volleyball",
-          "team": "st-ignatius"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -119452,10 +119393,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Matt Johnson"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p4ed1719e17"
+      ],
       "id": "p4c9e4c1a03",
       "identifiers": [
         {
@@ -119464,11 +119412,38 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Matt Johnson",
+      "name": "Matthew Johnson",
       "names": [
+        "Matthew Johnson",
         "Matt Johnson"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Matthew Johnson",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "grade": 10,
+              "name": "Matthew Johnson",
+              "positions": [
+                "G"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "G"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "milpitas"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -120629,21 +120604,34 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Aubrey Torrez"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p26b3e2210b"
+      ],
       "id": "p4d4ea3b04d",
       "identifiers": [
         {
           "careerId": "4b9gubr9almbb",
           "careerProfileId": "fca66d95-6617-4047-8834-f831bb9f01b8",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "lao0edi18u4o8",
+          "careerProfileId": "6ac0b0a5-529f-4bdb-8658-efa9bff8d209",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Aubrey Torres",
       "names": [
-        "Aubrey Torres"
+        "Aubrey Torres",
+        "Aubrey Torrez"
       ],
       "stints": [
         {
@@ -120651,7 +120639,7 @@
           "conflicts": [],
           "grade": 11,
           "height": null,
-          "jersey": null,
+          "jersey": "32",
           "level": "varsity",
           "name": "Aubrey Torres",
           "observations": [
@@ -120660,6 +120648,18 @@
               "grade": 11,
               "name": "Aubrey Torres",
               "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "9798ab8d-986e-4489-92a6-0d3af1b8c92c",
+              "grade": 11,
+              "jersey": "32",
+              "name": "Aubrey Torrez",
+              "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "32",
+              "name": "A. Torrez",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -122493,53 +122493,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p4ed1719e17",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "matthewjohnson",
-          "sport": "basketball",
-          "team": "milpitas"
-        }
-      ],
-      "name": "Matthew Johnson",
-      "names": [
-        "Matthew Johnson"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Matthew Johnson",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "grade": 10,
-              "name": "Matthew Johnson",
-              "positions": [
-                "G"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "G"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "milpitas"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -124320,53 +124273,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "gunn"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p4fc7088d4c",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "hritishraj",
-          "sport": "basketball",
-          "team": "saratoga"
-        }
-      ],
-      "name": "Hritish Raj",
-      "names": [
-        "Hritish Raj"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Hritish Raj",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "grade": 10,
-              "name": "Hritish Raj",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "saratoga"
         }
       ]
     },
@@ -128793,7 +128699,9 @@
       "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p7aee9a6ea1"
+      ],
       "id": "p5295fc5a75",
       "identifiers": [
         {
@@ -128826,6 +128734,26 @@
           "positions": [],
           "season": "26-27",
           "sport": "soccer",
+          "team": "willow-glen"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Caoilinn Kavanagh",
+          "observations": [
+            {
+              "name": "Caoilinn Kavanagh",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
           "team": "willow-glen"
         }
       ]
@@ -129283,47 +129211,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "menlo-atherton"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p52c06e4953",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "addisonbartell",
-          "sport": "soccer",
-          "team": "kings-academy"
-        }
-      ],
-      "name": "Addison Bartell",
-      "names": [
-        "Addison Bartell"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Addison Bartell",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "name": "Addison Bartell",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "kings-academy"
         }
       ]
     },
@@ -130589,20 +130476,42 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Gabe Andrade"
+        }
+      ],
       "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2030,
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "maxpreps-roster",
+          "team": "palo-alto"
+        }
+      ],
+      "formerIds": [
+        "p6959b25cfa"
+      ],
       "id": "p53e08aa1c3",
       "identifiers": [
+        {
+          "careerId": "87u9157t1dfk4",
+          "careerProfileId": "742992ae-8c4c-4e89-a2c1-e87e9093ffcb",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "oi7s3crl8ej77",
           "careerProfileId": null,
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Gabe Andrade",
+      "name": "Gabriel Andrade",
       "names": [
+        "Gabriel Andrade",
         "Gabe Andrade"
       ],
       "stints": [
@@ -130624,6 +130533,56 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "basketball",
+          "team": "palo-alto"
+        },
+        {
+          "captain": false,
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "kind": "hudl",
+              "other": "10",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28804530"
+            }
+          ],
+          "grade": 9,
+          "height": "5'8\"",
+          "jersey": "0",
+          "level": "varsity",
+          "name": "Gabriel Andrade",
+          "observations": [
+            {
+              "athleteId": "28aafc46-34bf-4c8f-b43e-dcae8d8593d8",
+              "grade": 9,
+              "height": "5'8\"",
+              "jersey": "0",
+              "name": "Gabriel Andrade",
+              "positions": [
+                "PG"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "grade": 10,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28804530"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28804530"
+            }
+          ],
+          "positions": [
+            "PG"
+          ],
+          "season": "26-27",
           "sport": "basketball",
           "team": "palo-alto"
         }
@@ -136121,47 +136080,6 @@
     },
     {
       "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p57743a7dd3",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "brooklyndenegri",
-          "sport": "soccer",
-          "team": "notre-dame-belmont"
-        }
-      ],
-      "name": "Brooklyn Denegri",
-      "names": [
-        "Brooklyn Denegri"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Brooklyn Denegri",
-          "observations": [
-            {
-              "award": "honorableMention",
-              "name": "Brooklyn Denegri",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "notre-dame-belmont"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -141235,23 +141153,57 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Leighton Ozawa"
+        }
+      ],
       "classOf": 2026,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pf6e23f0556"
+      ],
       "id": "p5b1ae7d490",
       "identifiers": [
+        {
+          "careerId": "0qpp2mkdvl4dd",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "rv214slc5bovf",
           "careerProfileId": null,
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Leighton Ozawa",
+      "name": "Leighton Osawa",
       "names": [
+        "Leighton Osawa",
         "Leighton Ozawa"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": "7",
+          "level": "varsity",
+          "name": "Leighton Osawa",
+          "observations": [
+            {
+              "grade": 12,
+              "jersey": "7",
+              "name": "Leighton Osawa",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "field-hockey",
+          "team": "los-gatos"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -156367,65 +156319,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p64198ab420",
-      "identifiers": [
-        {
-          "careerId": "cak7rm92kpm44",
-          "careerProfileId": "9ffe1d58-55ec-475c-941a-138bb9db7752",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Alex Kolubelov",
-      "names": [
-        "Alex Kolubelov"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "32",
-          "level": "varsity",
-          "name": "Alex Kolubelov",
-          "observations": [
-            {
-              "athleteId": "50d5da27-ac5c-45f6-a294-ac31104b10c5",
-              "grade": 10,
-              "jersey": "32",
-              "name": "Alex Kolubelov",
-              "positions": [
-                "F"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2029,
-              "kind": "ncsa",
-              "src": "profile",
-              "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-jose/leland-high-school1/alex-kolubelov"
-            },
-            {
-              "classOf": 2029,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/29378152"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "leland"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -159009,53 +158902,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p658928626a",
-      "identifiers": [
-        {
-          "careerId": "4d4podjeudhee",
-          "careerProfileId": "8fcb2a2a-9b34-4970-80ab-9ff228205a0f",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Izzy Saavedra",
-      "names": [
-        "Izzy Saavedra"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "2",
-          "level": "varsity",
-          "name": "Izzy Saavedra",
-          "observations": [
-            {
-              "athleteId": "c722d53b-019b-4395-b9d4-1cf43b04e6c5",
-              "grade": 10,
-              "jersey": "2",
-              "name": "Izzy Saavedra",
-              "positions": [
-                "S"
-              ],
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [
-            "S"
-          ],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "riordan"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -160588,7 +160434,9 @@
       ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p81b9680449"
+      ],
       "id": "p66929b521a",
       "identifiers": [
         {
@@ -160603,6 +160451,26 @@
         "Lilana Klingler"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Liliana Klingler",
+          "observations": [
+            {
+              "award": "secondTeam",
+              "name": "Liliana Klingler",
+              "src": "all-league"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "mercy-burlingame"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -165343,97 +165211,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [
-        {
-          "classOf": 2029,
-          "kind": "hudl",
-          "level": "varsity",
-          "season": "26-27",
-          "sport": "basketball",
-          "src": "enrichment",
-          "team": "palo-alto",
-          "url": "https://www.hudl.com/profile/28804530"
-        },
-        {
-          "classOf": 2029,
-          "kind": "hudl",
-          "level": "varsity",
-          "season": "26-27",
-          "sport": "basketball",
-          "src": "profile",
-          "team": "palo-alto",
-          "url": "https://www.hudl.com/profile/28804530"
-        }
-      ],
-      "formerIds": [],
-      "id": "p6959b25cfa",
-      "identifiers": [
-        {
-          "careerId": "87u9157t1dfk4",
-          "careerProfileId": "742992ae-8c4c-4e89-a2c1-e87e9093ffcb",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Gabriel Andrade",
-      "names": [
-        "Gabriel Andrade"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [
-            {
-              "field": "grade",
-              "kept": "9",
-              "kind": "hudl",
-              "other": "10",
-              "src": "enrichment",
-              "url": "https://www.hudl.com/profile/28804530"
-            }
-          ],
-          "grade": 9,
-          "height": "5'8\"",
-          "jersey": "0",
-          "level": "varsity",
-          "name": "Gabriel Andrade",
-          "observations": [
-            {
-              "athleteId": "28aafc46-34bf-4c8f-b43e-dcae8d8593d8",
-              "grade": 9,
-              "height": "5'8\"",
-              "jersey": "0",
-              "name": "Gabriel Andrade",
-              "positions": [
-                "PG"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "grade": 10,
-              "kind": "hudl",
-              "rejected": true,
-              "src": "enrichment",
-              "url": "https://www.hudl.com/profile/28804530"
-            },
-            {
-              "classOf": 2029,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/28804530"
-            }
-          ],
-          "positions": [
-            "PG"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "palo-alto"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -166336,53 +166113,6 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "overfelt"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p6a0d9913fb",
-      "identifiers": [
-        {
-          "careerId": "hkptnv47go2ff",
-          "careerProfileId": "f9c13309-7a15-453d-92b7-82e88ecc05a1",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Aaron (Yaozeng) Huang",
-      "names": [
-        "Aaron (Yaozeng) Huang"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "11",
-          "level": "jv",
-          "name": "Aaron (Yaozeng) Huang",
-          "observations": [
-            {
-              "athleteId": "9dc829c0-3f3b-4a18-bd16-56a47b01c12d",
-              "grade": 10,
-              "jersey": "11",
-              "name": "Aaron (Yaozeng) Huang",
-              "positions": [
-                "F"
-              ],
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "santa-clara"
         }
       ]
     },
@@ -172936,47 +172666,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p6e3a6a98e2",
-      "identifiers": [
-        {
-          "careerId": "39p75i8cs6kn7",
-          "careerProfileId": "491225fa-5891-4b30-947e-568d9ede7bfc",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Guiliana (GiGi) Borello",
-      "names": [
-        "Guiliana (GiGi) Borello"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Guiliana (GiGi) Borello",
-          "observations": [
-            {
-              "athleteId": "7f4c2fb6-6bad-4edb-ab4e-e1e34b304b82",
-              "grade": 11,
-              "name": "Guiliana (GiGi) Borello",
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "valley-christian"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -175016,47 +174705,6 @@
     },
     {
       "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p70379ca8f0",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "abigailvolker",
-          "sport": "soccer",
-          "team": "mercy-burlingame"
-        }
-      ],
-      "name": "Abigail Volker",
-      "names": [
-        "Abigail Volker"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Abigail Volker",
-          "observations": [
-            {
-              "award": "honorableMention",
-              "name": "Abigail Volker",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "mercy-burlingame"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -175184,10 +174832,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Hritish Raj"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p4fc7088d4c"
+      ],
       "id": "p705a44aeed",
       "identifiers": [
         {
@@ -175198,9 +174853,36 @@
       ],
       "name": "Hritish Rai",
       "names": [
-        "Hritish Rai"
+        "Hritish Rai",
+        "Hritish Raj"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Hritish Raj",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "grade": 10,
+              "name": "Hritish Raj",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "saratoga"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -183339,23 +183021,57 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Tessie Berger"
+        }
+      ],
+      "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p40dc6065f9"
+      ],
       "id": "p765b401400",
       "identifiers": [
         {
           "careerId": "ceka7md1hiaue",
           "careerProfileId": "0756013a-96a2-4f6b-99a7-ab517c405415",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "kg3br7c8124m6",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Tessie Berger",
+      "name": "Theresa Berger",
       "names": [
+        "Theresa Berger",
         "Tessie Berger"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": "9",
+          "level": "varsity",
+          "name": "Theresa Berger",
+          "observations": [
+            {
+              "grade": 10,
+              "jersey": "9",
+              "name": "Theresa Berger",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "saratoga"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -184684,48 +184400,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p77732ab99e",
-      "identifiers": [
-        {
-          "careerId": "pn5rm3i88k0i2",
-          "careerProfileId": "69f589e9-bc5e-4b16-98ab-d2cd80de9313",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Paula Neira",
-      "names": [
-        "Paula Neira"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "7",
-          "level": "jv",
-          "name": "Paula Neira",
-          "observations": [
-            {
-              "athleteId": "d0f8a4b7-7735-4749-bb0c-bb478556ba95",
-              "grade": 11,
-              "jersey": "7",
-              "name": "Paula Neira",
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "university-city"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -185889,24 +185563,31 @@
       "aliases": [
         {
           "kind": "variant",
-          "name": "Mary Moorehouse"
+          "name": "Lizzie Moorehouse"
         }
       ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pfe98351267"
+      ],
       "id": "p785e349571",
       "identifiers": [
         {
           "careerId": "h4cv1kae6b522",
           "careerProfileId": "4ba875b7-af94-4de0-9703-30ccf0c3dc8f",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "vtu9beq0ebr44",
+          "careerProfileId": "041f315f-a7d6-4632-af3d-1fd2900ce7b9",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Lizzie Moorehouse",
+      "name": "Mary Moorehouse",
       "names": [
-        "Lizzie Moorehouse",
-        "Mary Moorehouse"
+        "Mary Moorehouse",
+        "Lizzie Moorehouse"
       ],
       "stints": [
         {
@@ -185983,14 +185664,42 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "15",
+          "level": "jv",
+          "name": "Mary Moorehouse",
+          "observations": [
+            {
+              "athleteId": "dd66de73-e5fb-4868-908f-f13b42e6b96f",
+              "jersey": "15",
+              "name": "Mary Moorehouse",
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Abigail Volker"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p70379ca8f0"
+      ],
       "id": "p785eaffd93",
       "identifiers": [
         {
@@ -186001,9 +185710,30 @@
       ],
       "name": "Abby Voelker",
       "names": [
-        "Abby Voelker"
+        "Abby Voelker",
+        "Abigail Volker"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Abigail Volker",
+          "observations": [
+            {
+              "award": "honorableMention",
+              "name": "Abigail Volker",
+              "src": "all-league"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "mercy-burlingame"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -186652,48 +186382,6 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "eastlake"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p78e6d89908",
-      "identifiers": [
-        {
-          "careerId": "8euhno6n6pen7",
-          "careerProfileId": "19520a35-a1d8-4c22-99d6-74e0eb81e5d2",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Sofia Mateos-Acevedo",
-      "names": [
-        "Sofia Mateos-Acevedo"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "12",
-          "level": "jv",
-          "name": "Sofia Mateos-Acevedo",
-          "observations": [
-            {
-              "athleteId": "4202fb18-96ed-4dae-9a66-961839598e8c",
-              "grade": 11,
-              "jersey": "12",
-              "name": "Sofia Mateos-Acevedo",
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "santa-clara"
         }
       ]
     },
@@ -189592,47 +189280,6 @@
     },
     {
       "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p7aee9a6ea1",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "caoilinnkavanagh",
-          "sport": "volleyball",
-          "team": "willow-glen"
-        }
-      ],
-      "name": "Caoilinn Kavanagh",
-      "names": [
-        "Caoilinn Kavanagh"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Caoilinn Kavanagh",
-          "observations": [
-            {
-              "name": "Caoilinn Kavanagh",
-              "src": "school-jv-roster",
-              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "willow-glen"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -190452,64 +190099,6 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "willow-glen"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p7b3bc48124",
-      "identifiers": [
-        {
-          "careerId": "u8jd1of0et5td",
-          "careerProfileId": "2f30c366-edfd-4847-9f91-13b5e8ccc019",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Brooklyn Green",
-      "names": [
-        "Brooklyn Green"
-      ],
-      "stints": [
-        {
-          "captain": true,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "69",
-          "level": "varsity",
-          "name": "Brooklyn Green",
-          "observations": [
-            {
-              "athleteId": "9ad43063-3f82-41b9-a982-b69e3bf03d81",
-              "captain": true,
-              "grade": 12,
-              "jersey": "69",
-              "name": "Brooklyn Green",
-              "src": "maxpreps-roster"
-            },
-            {
-              "kind": "news",
-              "positions": [
-                "M"
-              ],
-              "src": "enrichment",
-              "url": "https://benitolink.com/baler-alumna-takes-reins-of-field-hockey-program/"
-            },
-            {
-              "jersey": "69",
-              "name": "B. Green",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [
-            "M"
-          ],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "hollister"
         }
       ]
     },
@@ -197964,27 +197553,40 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Ranvi Sinha"
+        }
+      ],
+      "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pe6072348a3"
+      ],
       "id": "p805b8872f9",
       "identifiers": [
         {
           "careerId": "5kfmrs9u1b8l5",
           "careerProfileId": "9576eae3-b513-466e-a9c9-185919edc954",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "sb3evtvu47v99",
+          "careerProfileId": "d53cbf39-3550-4b82-a931-b357af6213db",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Ranvijay Abhimanyu Sinha",
       "names": [
-        "Ranvijay Abhimanyu Sinha"
+        "Ranvijay Abhimanyu Sinha",
+        "Ranvi Sinha"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 11,
           "height": null,
           "jersey": "13",
           "level": "varsity",
@@ -197998,6 +197600,22 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "315c78cd-fe8e-4f98-9f30-442b2e03bc54",
+              "grade": 11,
+              "jersey": "13",
+              "name": "Ranvi Sinha",
+              "positions": [
+                "G"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29378056"
             }
           ],
           "positions": [
@@ -199907,47 +199525,6 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p81b9680449",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "lilianaklingler",
-          "sport": "soccer",
-          "team": "mercy-burlingame"
-        }
-      ],
-      "name": "Liliana Klingler",
-      "names": [
-        "Liliana Klingler"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Liliana Klingler",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "name": "Liliana Klingler",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "mercy-burlingame"
-        }
-      ]
-    },
-    {
       "aliases": [
         {
           "kind": "variant",
@@ -200467,94 +200044,6 @@
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
-      "id": "p8241f64510",
-      "identifiers": [
-        {
-          "careerId": "6rreidmrg62rb",
-          "careerProfileId": "995b4070-0cca-4ffe-ad58-ef813a25ddd5",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Lilly Jones",
-      "names": [
-        "Lilly Jones"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Lilly Jones",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "grade": 10,
-              "name": "Lilly Jones",
-              "positions": [
-                "Forward"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "Forward"
-          ],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "mitty"
-        },
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": "5'7\"",
-          "jersey": "19",
-          "level": "varsity",
-          "name": "Lilly Jones",
-          "observations": [
-            {
-              "athleteId": "7100a5c2-7efd-4ad0-9397-7569fb12a3de",
-              "grade": 11,
-              "height": "5'7\"",
-              "jersey": "19",
-              "name": "Lilly Jones",
-              "positions": [
-                "FORW",
-                "MF"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2028,
-              "kind": "ncsa",
-              "src": "profile",
-              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/lilly-jones23"
-            },
-            {
-              "classOf": 2028,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/25154237"
-            }
-          ],
-          "positions": [
-            "FORW",
-            "MF"
-          ],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "mitty"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
       "id": "p825da6d4c5",
       "identifiers": [
         {
@@ -200672,10 +200161,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Kashap Vangala"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pe87451c67b"
+      ],
       "id": "p828c838248",
       "identifiers": [
         {
@@ -200686,9 +200182,36 @@
       ],
       "name": "Kashyap Vangala",
       "names": [
-        "Kashyap Vangala"
+        "Kashyap Vangala",
+        "Kashap Vangala"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Kashap Vangala",
+          "observations": [
+            {
+              "award": "secondTeam",
+              "grade": 9,
+              "name": "Kashap Vangala",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "saratoga"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -201948,10 +201471,17 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Jasial Desai"
+        }
+      ],
+      "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p43c4b54980"
+      ],
       "id": "p8355e1c08e",
       "identifiers": [
         {
@@ -201962,9 +201492,36 @@
       ],
       "name": "Jaisal Desai",
       "names": [
-        "Jaisal Desai"
+        "Jaisal Desai",
+        "Jasial Desai"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Jasial Desai",
+          "observations": [
+            {
+              "award": "secondTeam",
+              "grade": 9,
+              "name": "Jasial Desai",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "cupertino"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -204911,12 +204468,24 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "short-form",
+          "name": "Kalea Trapsi"
+        }
+      ],
+      "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pd255002c97"
+      ],
       "id": "p8549e98623",
       "identifiers": [
+        {
+          "careerId": "0npa9ihldln66",
+          "careerProfileId": "19b4f656-e83a-445f-bc28-f4f06156c03e",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "4rrh7avgt1hcc",
           "careerProfileId": "ac7f6a50-a244-459e-a159-0a13578383d2",
@@ -204925,18 +204494,26 @@
       ],
       "name": "Kalea Nicole Trapsi",
       "names": [
-        "Kalea Nicole Trapsi"
+        "Kalea Nicole Trapsi",
+        "Kalea Trapsi"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 9,
           "height": null,
-          "jersey": null,
+          "jersey": "2",
           "level": "jv",
-          "name": "Kalea Nicole Trapsi",
+          "name": "Kalea Trapsi",
           "observations": [
+            {
+              "athleteId": "56bb8d8b-be67-4188-b6d1-c52932127605",
+              "grade": 9,
+              "jersey": "2",
+              "name": "Kalea Trapsi",
+              "src": "maxpreps-jv-roster"
+            },
             {
               "athleteId": "8a6e45b2-a9ea-4be0-9fa5-0ed13a11cd5b",
               "name": "Kalea Nicole Trapsi",
@@ -207492,20 +207069,42 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": 2026,
-      "classOfConflicts": [],
-      "formerIds": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Nick Mego"
+        }
+      ],
+      "classOf": 2027,
+      "classOfConflicts": [
+        {
+          "classOf": 2026,
+          "level": "varsity",
+          "season": "25-26",
+          "sport": "basketball",
+          "src": "maxpreps-stats",
+          "team": "branham"
+        }
+      ],
+      "formerIds": [
+        "pf7b35dfcf5"
+      ],
       "id": "p86d4733bad",
       "identifiers": [
         {
           "careerId": "5eftm4i44s1l5",
           "careerProfileId": null,
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "r3lvil6nqg7dd",
+          "careerProfileId": "3de29a91-e0e9-4792-88b7-8e45eb5c4454",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Nick Mego",
+      "name": "Nicholas Mego",
       "names": [
+        "Nicholas Mego",
         "Nick Mego"
       ],
       "stints": [
@@ -207527,6 +207126,33 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "basketball",
+          "team": "branham"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": "13",
+          "level": "varsity",
+          "name": "Nicholas Mego",
+          "observations": [
+            {
+              "athleteId": "f77fd0ba-8f04-4c42-a590-adc4b9ad9fad",
+              "grade": 12,
+              "jersey": "13",
+              "name": "Nicholas Mego",
+              "positions": [
+                "C"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "C"
+          ],
+          "season": "26-27",
           "sport": "basketball",
           "team": "branham"
         }
@@ -209495,52 +209121,6 @@
     },
     {
       "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p87f168f167",
-      "identifiers": [
-        {
-          "careerId": "n1rdndlnfd155",
-          "careerProfileId": "7fc626bf-ec1c-4678-a071-7fa99ff5c606",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Nicholas Jung",
-      "names": [
-        "Nicholas Jung"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": "12",
-          "level": "jv",
-          "name": "Nicholas Jung",
-          "observations": [
-            {
-              "athleteId": "1b39f0ea-1264-47a9-b3bc-729bef1a5e4a",
-              "jersey": "12",
-              "name": "Nicholas Jung",
-              "positions": [
-                "G"
-              ],
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [
-            "G"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "leland"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -209955,20 +209535,33 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "short-form",
+          "name": "Elijah Palomino"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pe7dad1371e"
+      ],
       "id": "p884504fc6d",
       "identifiers": [
         {
           "careerId": "8tdtj3k72fk44",
           "careerProfileId": "3a05c570-6037-48bc-8332-bbeacbee434b",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "ltt3ussqtadvf",
+          "careerProfileId": "0ba76aef-7730-420b-a807-f2b51c565340",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Elijah Palomino",
+      "name": "Elijah Palomino-Hendricks",
       "names": [
+        "Elijah Palomino-Hendricks",
         "Elijah Palomino"
       ],
       "stints": [
@@ -209995,8 +209588,15 @@
         },
         {
           "captain": false,
-          "conflicts": [],
-          "grade": null,
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "20",
+              "other": "25",
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "grade": 10,
           "height": null,
           "jersey": "20",
           "level": "jv",
@@ -210009,6 +209609,17 @@
               "positions": [
                 "G",
                 "SF"
+              ],
+              "src": "maxpreps-jv-roster"
+            },
+            {
+              "athleteId": "387d22e8-b703-42cc-bf27-655774abfb46",
+              "grade": 10,
+              "jersey": "25",
+              "name": "Elijah Palomino-Hendricks",
+              "positions": [
+                "G",
+                "F"
               ],
               "src": "maxpreps-jv-roster"
             },
@@ -212626,47 +212237,6 @@
     },
     {
       "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p89dbf3981b",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "elliecrew",
-          "sport": "volleyball",
-          "team": "willow-glen"
-        }
-      ],
-      "name": "Ellie Crew",
-      "names": [
-        "Ellie Crew"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Ellie Crew",
-          "observations": [
-            {
-              "name": "Ellie Crew",
-              "src": "school-jv-roster",
-              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "willow-glen"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -214259,21 +213829,34 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "short-form",
+          "name": "Victoria Gutierrez"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pb10149603f"
+      ],
       "id": "p8acd074d86",
       "identifiers": [
         {
           "careerId": "7mq708d3k37p9",
           "careerProfileId": "ce7b9f8c-c3cd-4f09-936b-17a3adf1c227",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "af7ig91l503ff",
+          "careerProfileId": "e276482d-7463-4946-82ba-04c08320ea99",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Victoria Zubiate-Gutierrez",
       "names": [
-        "Victoria Zubiate-Gutierrez"
+        "Victoria Zubiate-Gutierrez",
+        "Victoria Gutierrez"
       ],
       "stints": [
         {
@@ -214281,7 +213864,7 @@
           "conflicts": [],
           "grade": 12,
           "height": null,
-          "jersey": null,
+          "jersey": "98",
           "level": "varsity",
           "name": "Victoria Zubiate-Gutierrez",
           "observations": [
@@ -214290,6 +213873,18 @@
               "grade": 12,
               "name": "Victoria Zubiate-Gutierrez",
               "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "c2f2ee4c-95a0-4986-9536-5718851014d8",
+              "grade": 12,
+              "jersey": "98",
+              "name": "Victoria Gutierrez",
+              "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "98",
+              "name": "V. Gutierrez",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -217356,12 +216951,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Daisy Regaldo"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pd81bb8e88e"
+      ],
       "id": "p8d0ef34422",
       "identifiers": [
+        {
+          "careerId": "6h246tcn37a22",
+          "careerProfileId": "8a1da587-e0c5-4e31-9748-434ff3650c04",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "c2itqjfqubnqa",
           "careerProfileId": "96f0d01c-ee67-40ba-b96b-2723d9ae78b5",
@@ -217370,9 +216977,31 @@
       ],
       "name": "Daisy Regalado",
       "names": [
-        "Daisy Regalado"
+        "Daisy Regalado",
+        "Daisy Regaldo"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Daisy Regaldo",
+          "observations": [
+            {
+              "athleteId": "3f1dc0d6-56e6-4a88-b6df-bb090e1a61b1",
+              "grade": 10,
+              "name": "Daisy Regaldo",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "andrew-hill"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -217408,7 +217037,9 @@
       "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p3317313e4e"
+      ],
       "id": "p8d1032f4ef",
       "identifiers": [
         {
@@ -217422,6 +217053,32 @@
         "Bryce Killion"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Bryce Killion",
+          "observations": [
+            {
+              "award": "honorableMention",
+              "grade": 10,
+              "name": "Bryce Killion",
+              "positions": [
+                "Midfielder"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "Midfielder"
+          ],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "st-ignatius"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -218371,47 +218028,6 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "sacred-heart-cathedral"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p8d68ddff6f",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "ariannajuarez",
-          "sport": "volleyball",
-          "team": "notre-dame-belmont"
-        }
-      ],
-      "name": "Arianna Juarez",
-      "names": [
-        "Arianna Juarez"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Arianna Juarez",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "name": "Arianna Juarez",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "volleyball",
-          "team": "notre-dame-belmont"
         }
       ]
     },
@@ -221508,10 +221124,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Arianna Ari Juarez"
+        }
+      ],
       "classOf": 2026,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p8d68ddff6f"
+      ],
       "id": "p8f46d203f3",
       "identifiers": [
         {
@@ -221520,8 +221143,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Arianna Ari Juarez",
+      "name": "Arianna Juarez",
       "names": [
+        "Arianna Juarez",
         "Arianna Ari Juarez"
       ],
       "stints": [
@@ -221532,13 +221156,18 @@
           "height": null,
           "jersey": "4",
           "level": "varsity",
-          "name": "Arianna Ari Juarez",
+          "name": "Arianna Juarez",
           "observations": [
             {
               "grade": 12,
               "jersey": "4",
               "name": "Arianna Ari Juarez",
               "src": "maxpreps-stats"
+            },
+            {
+              "award": "secondTeam",
+              "name": "Arianna Juarez",
+              "src": "all-league"
             }
           ],
           "positions": [],
@@ -226206,21 +225835,34 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Brooklyn Green"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p7b3bc48124"
+      ],
       "id": "p924e120b40",
       "identifiers": [
         {
           "careerId": "g1b4dojoauo99",
           "careerProfileId": "f5890745-1a36-485e-ad2c-795fbcfb21f5",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "u8jd1of0et5td",
+          "careerProfileId": "2f30c366-edfd-4847-9f91-13b5e8ccc019",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Brooklynn Green",
       "names": [
-        "Brooklynn Green"
+        "Brooklynn Green",
+        "Brooklyn Green"
       ],
       "stints": [
         {
@@ -226245,11 +225887,11 @@
           "team": "hollister"
         },
         {
-          "captain": false,
+          "captain": true,
           "conflicts": [],
           "grade": 12,
           "height": null,
-          "jersey": null,
+          "jersey": "69",
           "level": "varsity",
           "name": "Brooklynn Green",
           "observations": [
@@ -226258,9 +225900,32 @@
               "grade": 12,
               "name": "Brooklynn Green",
               "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "9ad43063-3f82-41b9-a982-b69e3bf03d81",
+              "captain": true,
+              "grade": 12,
+              "jersey": "69",
+              "name": "Brooklyn Green",
+              "src": "maxpreps-roster"
+            },
+            {
+              "kind": "news",
+              "positions": [
+                "M"
+              ],
+              "src": "enrichment",
+              "url": "https://benitolink.com/baler-alumna-takes-reins-of-field-hockey-program/"
+            },
+            {
+              "jersey": "69",
+              "name": "B. Green",
+              "src": "maxpreps-stats"
             }
           ],
-          "positions": [],
+          "positions": [
+            "M"
+          ],
           "season": "26-27",
           "sport": "field-hockey",
           "team": "hollister"
@@ -228168,53 +227833,6 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "palo-alto"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p937569ebf2",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "varunpanikkar",
-          "sport": "basketball",
-          "team": "homestead"
-        }
-      ],
-      "name": "Varun Panikkar",
-      "names": [
-        "Varun Panikkar"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Varun Panikkar",
-          "observations": [
-            {
-              "award": "thirdTeam",
-              "grade": 10,
-              "name": "Varun Panikkar",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "homestead"
         }
       ]
     },
@@ -237456,53 +237074,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p9ae2461565",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "kostyaantonov",
-          "sport": "basketball",
-          "team": "gunn"
-        }
-      ],
-      "name": "Kostya Antonov",
-      "names": [
-        "Kostya Antonov"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Kostya Antonov",
-          "observations": [
-            {
-              "award": "thirdTeam",
-              "grade": 11,
-              "name": "Kostya Antonov",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "gunn"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -238620,48 +238191,6 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "canyon-crest-academy"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p9bc989bdca",
-      "identifiers": [
-        {
-          "careerId": "1jeb111o79mtd",
-          "careerProfileId": "ae2d3f20-e1fc-4643-9af6-fd1af433ddaf",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Malena Lysand",
-      "names": [
-        "Malena Lysand"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": "28",
-          "level": "jv",
-          "name": "Malena Lysand",
-          "observations": [
-            {
-              "athleteId": "3f748fda-884a-462c-a528-d23237103adb",
-              "grade": 9,
-              "jersey": "28",
-              "name": "Malena Lysand",
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "homestead"
         }
       ]
     },
@@ -240776,10 +240305,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Abi Wessel"
+        }
+      ],
       "classOf": 2026,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p27b495dc8c"
+      ],
       "id": "p9d3ec7bd42",
       "identifiers": [
         {
@@ -240790,7 +240326,8 @@
       ],
       "name": "Abigail Wessel",
       "names": [
-        "Abigail Wessel"
+        "Abigail Wessel",
+        "Abi Wessel"
       ],
       "stints": [
         {
@@ -240800,13 +240337,18 @@
           "height": null,
           "jersey": "4",
           "level": "varsity",
-          "name": "Abigail Wessel",
+          "name": "Abi Wessel",
           "observations": [
             {
               "grade": 12,
               "jersey": "4",
               "name": "Abigail Wessel",
               "src": "maxpreps-stats"
+            },
+            {
+              "award": "secondTeam",
+              "name": "Abi Wessel",
+              "src": "all-league"
             }
           ],
           "positions": [],
@@ -243750,12 +243292,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "short-form",
+          "name": "Paula Neira"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p77732ab99e"
+      ],
       "id": "p9f20cbca63",
       "identifiers": [
+        {
+          "careerId": "pn5rm3i88k0i2",
+          "careerProfileId": "69f589e9-bc5e-4b16-98ab-d2cd80de9313",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "uld6vgnosne22",
           "careerProfileId": "f55dfe79-4c3a-40a2-9d80-0376245861a9",
@@ -243764,7 +243318,8 @@
       ],
       "name": "Paula Neira Munoz",
       "names": [
-        "Paula Neira Munoz"
+        "Paula Neira Munoz",
+        "Paula Neira"
       ],
       "stints": [
         {
@@ -243797,12 +243352,19 @@
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 11,
           "height": null,
-          "jersey": null,
+          "jersey": "7",
           "level": "jv",
-          "name": "Paula Neira Munoz",
+          "name": "Paula Neira",
           "observations": [
+            {
+              "athleteId": "d0f8a4b7-7735-4749-bb0c-bb478556ba95",
+              "grade": 11,
+              "jersey": "7",
+              "name": "Paula Neira",
+              "src": "maxpreps-jv-roster"
+            },
             {
               "athleteId": "cc0c122b-033b-4de2-b402-1201f963c2c9",
               "name": "Paula Neira Munoz",
@@ -245769,28 +245331,41 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Eddie Fan"
+        }
+      ],
+      "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p075211d9b3"
+      ],
       "id": "pa06f3e83b8",
       "identifiers": [
         {
           "careerId": "8nh9fpbnq81h1",
           "careerProfileId": "efa6b803-9f44-4f79-bb25-346ff609b81c",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "ihmpbfjnmpevf",
+          "careerProfileId": "a35f7dcb-abce-4629-ab49-ef964d9bc941",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Edward Fan",
       "names": [
-        "Edward Fan"
+        "Edward Fan",
+        "Eddie Fan"
       ],
       "stints": [
         {
-          "captain": false,
+          "captain": true,
           "conflicts": [],
-          "grade": null,
-          "height": null,
+          "grade": 12,
+          "height": "6'2\"",
           "jersey": "34",
           "level": "varsity",
           "name": "Edward Fan",
@@ -245801,6 +245376,18 @@
               "name": "Edward Fan",
               "positions": [
                 "F",
+                "C"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "de7af60f-0042-492e-89d0-93a19fe517c2",
+              "captain": true,
+              "grade": 12,
+              "height": "6'2\"",
+              "jersey": "34",
+              "name": "Eddie Fan",
+              "positions": [
                 "C"
               ],
               "src": "maxpreps-roster"
@@ -256557,10 +256144,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Neve Harlen"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p4b2b8f3309"
+      ],
       "id": "pa7c735aee0",
       "identifiers": [
         {
@@ -256571,7 +256165,8 @@
       ],
       "name": "Neve Harlan",
       "names": [
-        "Neve Harlan"
+        "Neve Harlan",
+        "Neve Harlen"
       ],
       "stints": [
         {
@@ -256581,16 +256176,27 @@
           "height": null,
           "jersey": "11",
           "level": "varsity",
-          "name": "Neve Harlan",
+          "name": "Neve Harlen",
           "observations": [
             {
               "grade": 11,
               "jersey": "11",
               "name": "Neve Harlan",
               "src": "maxpreps-stats"
+            },
+            {
+              "award": "secondTeam",
+              "grade": 11,
+              "name": "Neve Harlen",
+              "positions": [
+                "Outside Hitter"
+              ],
+              "src": "all-league"
             }
           ],
-          "positions": [],
+          "positions": [
+            "Outside Hitter"
+          ],
           "season": "25-26",
           "sport": "volleyball",
           "team": "st-ignatius"
@@ -261921,9 +261527,11 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p19c55b8f5a"
+      ],
       "id": "pab479de048",
       "identifiers": [
         {
@@ -261937,6 +261545,27 @@
         "Brianna Sulocha"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Brianna Sulocha",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Brianna Sulocha",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "cupertino"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -262679,47 +262308,6 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "serra"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pabb34826f1",
-      "identifiers": [
-        {
-          "careerId": "ha9ktccgfjn33",
-          "careerProfileId": "68dad30d-4533-4527-abf4-e949b69544c4",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Ishani Chaudhury",
-      "names": [
-        "Ishani Chaudhury"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Ishani Chaudhury",
-          "observations": [
-            {
-              "athleteId": "0531b54e-ca32-49ec-8c7a-2af51b91a038",
-              "grade": 9,
-              "name": "Ishani Chaudhury",
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "monta-vista"
         }
       ]
     },
@@ -263695,7 +263283,9 @@
       "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pc29cd82ba6"
+      ],
       "id": "pac3ce0560c",
       "identifiers": [
         {
@@ -263709,6 +263299,26 @@
         "Emerson Kjellesvig"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Emerson Kjellesvig",
+          "observations": [
+            {
+              "award": "secondTeam",
+              "name": "Emerson Kjellesvig",
+              "src": "all-league"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "kings-academy"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -270227,23 +269837,57 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Maddy Miner"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p009f47d55c"
+      ],
       "id": "pb0c793bff6",
       "identifiers": [
         {
           "careerId": "55tsgn6cge2rb",
           "careerProfileId": "2f5b858d-be04-4bc8-9bda-ab6796b07855",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "tljmtll026s88",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Maddy Miner",
+      "name": "Maddie Miner",
       "names": [
+        "Maddie Miner",
         "Maddy Miner"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": "15",
+          "level": "varsity",
+          "name": "Maddie Miner",
+          "observations": [
+            {
+              "grade": 9,
+              "jersey": "15",
+              "name": "Maddie Miner",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "del-mar"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -270550,53 +270194,6 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "mountain-view"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pb10149603f",
-      "identifiers": [
-        {
-          "careerId": "af7ig91l503ff",
-          "careerProfileId": "e276482d-7463-4946-82ba-04c08320ea99",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Victoria Gutierrez",
-      "names": [
-        "Victoria Gutierrez"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "98",
-          "level": "varsity",
-          "name": "Victoria Gutierrez",
-          "observations": [
-            {
-              "athleteId": "c2f2ee4c-95a0-4986-9536-5718851014d8",
-              "grade": 12,
-              "jersey": "98",
-              "name": "Victoria Gutierrez",
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "98",
-              "name": "V. Gutierrez",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "hollister"
         }
       ]
     },
@@ -273598,48 +273195,6 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "wilcox"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pb2d4fd78db",
-      "identifiers": [
-        {
-          "careerId": "ahts9ocjh8o44",
-          "careerProfileId": "02f91267-e249-401c-b8ca-dbbb35fbc0da",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Jess Lashgari",
-      "names": [
-        "Jess Lashgari"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "23",
-          "level": "varsity",
-          "name": "Jess Lashgari",
-          "observations": [
-            {
-              "athleteId": "2966663d-29d6-479a-ae38-5491fe572447",
-              "grade": 11,
-              "jersey": "23",
-              "name": "Jess Lashgari",
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "valley-christian"
         }
       ]
     },
@@ -277984,68 +277539,6 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "los-gatos"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pb651fcf719",
-      "identifiers": [
-        {
-          "careerId": "boudfkoq5mv88",
-          "careerProfileId": "450ab35d-fb92-489e-842a-48eb1374bff8",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Kat Smith",
-      "names": [
-        "Kat Smith"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Kat Smith",
-          "observations": [
-            {
-              "athleteId": "165848d1-6e5e-40cc-bbbf-6f8c5848ada5",
-              "grade": 12,
-              "name": "Kat Smith",
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "los-altos"
-        },
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Kat Smith",
-          "observations": [
-            {
-              "athleteId": "4b7da99c-e23f-4679-8d51-54f2bc3c06af",
-              "grade": 12,
-              "name": "Kat Smith",
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "los-altos"
         }
       ]
     },
@@ -283772,53 +283265,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pba5cf2cdf9",
-      "identifiers": [
-        {
-          "careerId": "ljgku00mfh2dd",
-          "careerProfileId": "f91c450d-613a-424c-a8c1-7046b2b3605a",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Gabby Sanchez",
-      "names": [
-        "Gabby Sanchez"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "24",
-          "level": "varsity",
-          "name": "Gabby Sanchez",
-          "observations": [
-            {
-              "athleteId": "96ba0fe8-f5d2-4e2f-ad3e-63d6eabacf2e",
-              "grade": 12,
-              "jersey": "24",
-              "name": "Gabby Sanchez",
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "24",
-              "name": "G. Sanchez",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "hollister"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -285274,12 +284720,24 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Kiera Sturzu"
+        }
+      ],
+      "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p1a2bf07ca2"
+      ],
       "id": "pbb9dbce860",
       "identifiers": [
+        {
+          "careerId": "fjv2fb0asbtdd",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "no6uv1pi5f922",
           "careerProfileId": "054b307a-e392-49db-a8cc-9ce3ef4cccc4",
@@ -285288,9 +284746,31 @@
       ],
       "name": "Keira Sturzu",
       "names": [
-        "Keira Sturzu"
+        "Keira Sturzu",
+        "Kiera Sturzu"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": "15",
+          "level": "varsity",
+          "name": "Kiera Sturzu",
+          "observations": [
+            {
+              "grade": 10,
+              "jersey": "15",
+              "name": "Kiera Sturzu",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "saratoga"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -296111,47 +295591,6 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pc29cd82ba6",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "emersonkjellesvig",
-          "sport": "soccer",
-          "team": "kings-academy"
-        }
-      ],
-      "name": "Emerson Kjellesvig",
-      "names": [
-        "Emerson Kjellesvig"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Emerson Kjellesvig",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "name": "Emerson Kjellesvig",
-              "src": "all-league"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "kings-academy"
-        }
-      ]
-    },
-    {
       "aliases": [
         {
           "kind": "nickname",
@@ -296719,12 +296158,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Alex Kolubelov"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p64198ab420"
+      ],
       "id": "pc30839e03d",
       "identifiers": [
+        {
+          "careerId": "cak7rm92kpm44",
+          "careerProfileId": "9ffe1d58-55ec-475c-941a-138bb9db7752",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "u15tiq7p4m977",
           "careerProfileId": "10aa1ded-23ef-45a7-a0dd-f2a2b8e35d65",
@@ -296733,18 +296184,29 @@
       ],
       "name": "Alexander Kolubelov",
       "names": [
-        "Alexander Kolubelov"
+        "Alexander Kolubelov",
+        "Alex Kolubelov"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 10,
           "height": null,
           "jersey": "32",
           "level": "varsity",
-          "name": "Alexander Kolubelov",
+          "name": "Alex Kolubelov",
           "observations": [
+            {
+              "athleteId": "50d5da27-ac5c-45f6-a294-ac31104b10c5",
+              "grade": 10,
+              "jersey": "32",
+              "name": "Alex Kolubelov",
+              "positions": [
+                "F"
+              ],
+              "src": "maxpreps-roster"
+            },
             {
               "athleteId": "3c12f3b2-1982-4902-84ff-869f8443b818",
               "jersey": "32",
@@ -296753,6 +296215,18 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-jose/leland-high-school1/alex-kolubelov"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29378152"
             },
             {
               "classOf": 2029,
@@ -305238,52 +304712,6 @@
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
-      "id": "pc952c336ef",
-      "identifiers": [
-        {
-          "careerId": "h89k4knnccudd",
-          "careerProfileId": "dc6cebe5-67f2-4818-9b3b-8cee0e1a9deb",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Kaitlyn Byon",
-      "names": [
-        "Kaitlyn Byon"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Kaitlyn Byon",
-          "observations": [
-            {
-              "athleteId": "78cb7004-abd2-42ee-ae1e-e9f31d6e61ba",
-              "name": "Kaitlyn Byon",
-              "src": "maxpreps-roster"
-            },
-            {
-              "grade": 12,
-              "kind": "news",
-              "src": "enrichment",
-              "url": "https://lahstalon.org/kat-smith-gears-up-for-collegiate-field-hockey-with-an-ithaca-college-commitment/"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "los-altos"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
       "id": "pc954298a69",
       "identifiers": [
         {
@@ -311593,53 +311021,6 @@
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
-      "id": "pcd9362c866",
-      "identifiers": [
-        {
-          "careerId": "qg7nt9q2am588",
-          "careerProfileId": "72d1bef0-a50d-47da-9a7b-1bc6ac21dbd9",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Madison McDougall",
-      "names": [
-        "Madison McDougall"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Madison McDougall",
-          "observations": [
-            {
-              "athleteId": "7bda9462-326d-45a0-b6c4-f77a784c71bc",
-              "grade": 11,
-              "name": "Madison McDougall",
-              "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2028,
-              "kind": "sportsrecruits",
-              "src": "profile",
-              "url": "https://my.sportsrecruits.com/athlete/madison_mcdougall3"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "valley-christian"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
       "id": "pcd96983f36",
       "identifiers": [
         {
@@ -311897,47 +311278,6 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "los-gatos"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pcdbae75667",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "blakepenhallegon",
-          "sport": "volleyball",
-          "team": "willow-glen"
-        }
-      ],
-      "name": "Blake Penhallegon",
-      "names": [
-        "Blake Penhallegon"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Blake Penhallegon",
-          "observations": [
-            {
-              "name": "Blake Penhallegon",
-              "src": "school-jv-roster",
-              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "willow-glen"
         }
       ]
     },
@@ -318820,48 +318160,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pd255002c97",
-      "identifiers": [
-        {
-          "careerId": "0npa9ihldln66",
-          "careerProfileId": "19b4f656-e83a-445f-bc28-f4f06156c03e",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Kalea Trapsi",
-      "names": [
-        "Kalea Trapsi"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": "2",
-          "level": "jv",
-          "name": "Kalea Trapsi",
-          "observations": [
-            {
-              "athleteId": "56bb8d8b-be67-4188-b6d1-c52932127605",
-              "grade": 9,
-              "jersey": "2",
-              "name": "Kalea Trapsi",
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "santa-clara"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -321085,12 +320383,24 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Ben Naret"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pe4d0470b58"
+      ],
       "id": "pd3cc8ca67d",
       "identifiers": [
+        {
+          "careerId": "4qq4pdrrpttaa",
+          "careerProfileId": "cd48c000-4835-41ab-8922-a522dea5c1c2",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "uloo0pdql3nm6",
           "careerProfileId": "4318e647-f0af-4bd1-b382-56e279127d0e",
@@ -321099,18 +320409,29 @@
       ],
       "name": "Benjamin Naret",
       "names": [
-        "Benjamin Naret"
+        "Benjamin Naret",
+        "Ben Naret"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 10,
           "height": null,
           "jersey": "11",
           "level": "jv",
-          "name": "Benjamin Naret",
+          "name": "Ben Naret",
           "observations": [
+            {
+              "athleteId": "f514aa76-2bca-44e9-948b-e9508f45eef8",
+              "grade": 10,
+              "jersey": "11",
+              "name": "Ben Naret",
+              "positions": [
+                "F"
+              ],
+              "src": "maxpreps-jv-roster"
+            },
             {
               "athleteId": "7acef896-37e1-48f3-aed7-c9180b585caa",
               "jersey": "11",
@@ -322516,20 +321837,33 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Sophie McGhie"
+        }
+      ],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pee57eee5fa"
+      ],
       "id": "pd4f77507a4",
       "identifiers": [
         {
           "careerId": "lfnhjce1t82qa",
           "careerProfileId": null,
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "md29nbfo44h33",
+          "careerProfileId": "f079eea5-7318-4c46-afcd-7f4fd62a3fa4",
+          "kind": "maxpreps-career"
         }
       ],
-      "name": "Sophie McGhie",
+      "name": "Sophia McGhie",
       "names": [
+        "Sophia McGhie",
         "Sophie McGhie"
       ],
       "stints": [
@@ -322552,6 +321886,41 @@
           "positions": [],
           "season": "25-26",
           "sport": "soccer",
+          "team": "christopher"
+        },
+        {
+          "captain": true,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": "6",
+          "level": "jv",
+          "name": "Sophia McGhie",
+          "observations": [
+            {
+              "athleteId": "62ffaa67-bc49-4b67-b842-839706989c0e",
+              "captain": true,
+              "grade": 10,
+              "jersey": "6",
+              "name": "Sophia McGhie",
+              "positions": [
+                "OH"
+              ],
+              "src": "maxpreps-jv-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "name": "Sophia McGhie",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/32071034"
+            }
+          ],
+          "positions": [
+            "OH"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
           "team": "christopher"
         }
       ]
@@ -324535,7 +323904,9 @@
       "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p89dbf3981b"
+      ],
       "id": "pd62b1a6bf6",
       "identifiers": [
         {
@@ -324568,6 +323939,26 @@
           "positions": [],
           "season": "26-27",
           "sport": "soccer",
+          "team": "willow-glen"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ellie Crew",
+          "observations": [
+            {
+              "name": "Ellie Crew",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
           "team": "willow-glen"
         }
       ]
@@ -325075,10 +324466,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Varun Panikkar"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p937569ebf2"
+      ],
       "id": "pd6a9e89914",
       "identifiers": [
         {
@@ -325089,9 +324487,36 @@
       ],
       "name": "Varun Pannikar",
       "names": [
-        "Varun Pannikar"
+        "Varun Pannikar",
+        "Varun Panikkar"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Varun Panikkar",
+          "observations": [
+            {
+              "award": "thirdTeam",
+              "grade": 10,
+              "name": "Varun Panikkar",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "homestead"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -326683,47 +326108,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "cupertino"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pd81bb8e88e",
-      "identifiers": [
-        {
-          "careerId": "6h246tcn37a22",
-          "careerProfileId": "8a1da587-e0c5-4e31-9748-434ff3650c04",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Daisy Regaldo",
-      "names": [
-        "Daisy Regaldo"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Daisy Regaldo",
-          "observations": [
-            {
-              "athleteId": "3f1dc0d6-56e6-4a88-b6df-bb090e1a61b1",
-              "grade": 10,
-              "name": "Daisy Regaldo",
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "andrew-hill"
         }
       ]
     },
@@ -328332,27 +327716,40 @@
       ]
     },
     {
-      "aliases": [],
-      "classOf": null,
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Ishani Chaudhury"
+        }
+      ],
+      "classOf": 2030,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pabb34826f1"
+      ],
       "id": "pd8f617548c",
       "identifiers": [
         {
           "careerId": "fsfhlo44s6366",
           "careerProfileId": "be9148f4-3f0b-49cc-b649-c8f6eadf9b39",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "ha9ktccgfjn33",
+          "careerProfileId": "68dad30d-4533-4527-abf4-e949b69544c4",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Ishani Chaudhuri",
       "names": [
-        "Ishani Chaudhuri"
+        "Ishani Chaudhuri",
+        "Ishani Chaudhury"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 9,
           "height": null,
           "jersey": null,
           "level": "varsity",
@@ -328361,6 +327758,12 @@
             {
               "athleteId": "0e444790-89ae-4cdb-892b-ebb31da5930d",
               "name": "Ishani Chaudhuri",
+              "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "0531b54e-ca32-49ec-8c7a-2af51b91a038",
+              "grade": 9,
+              "name": "Ishani Chaudhury",
               "src": "maxpreps-roster"
             }
           ],
@@ -331110,10 +330513,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "nickname",
+          "name": "Toby Lobell"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pdbecc93d12"
+      ],
       "id": "pdaa7cae7c7",
       "identifiers": [
         {
@@ -331124,9 +330534,36 @@
       ],
       "name": "Tobias Lobell",
       "names": [
-        "Tobias Lobell"
+        "Tobias Lobell",
+        "Toby Lobell"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Toby Lobell",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "grade": 11,
+              "name": "Toby Lobell",
+              "positions": [
+                "G"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "G"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "gunn"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -333214,53 +332651,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "half-moon-bay"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pdbecc93d12",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "tobylobell",
-          "sport": "basketball",
-          "team": "gunn"
-        }
-      ],
-      "name": "Toby Lobell",
-      "names": [
-        "Toby Lobell"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Toby Lobell",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "grade": 11,
-              "name": "Toby Lobell",
-              "positions": [
-                "G"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "G"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "gunn"
         }
       ]
     },
@@ -343924,53 +343314,6 @@
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
-      "id": "pe4d0470b58",
-      "identifiers": [
-        {
-          "careerId": "4qq4pdrrpttaa",
-          "careerProfileId": "cd48c000-4835-41ab-8922-a522dea5c1c2",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Ben Naret",
-      "names": [
-        "Ben Naret"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "11",
-          "level": "jv",
-          "name": "Ben Naret",
-          "observations": [
-            {
-              "athleteId": "f514aa76-2bca-44e9-948b-e9508f45eef8",
-              "grade": 10,
-              "jersey": "11",
-              "name": "Ben Naret",
-              "positions": [
-                "F"
-              ],
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "leland"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
       "id": "pe4df781064",
       "identifiers": [
         {
@@ -345231,59 +344574,6 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "monta-vista"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pe6072348a3",
-      "identifiers": [
-        {
-          "careerId": "sb3evtvu47v99",
-          "careerProfileId": "d53cbf39-3550-4b82-a931-b357af6213db",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Ranvi Sinha",
-      "names": [
-        "Ranvi Sinha"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "13",
-          "level": "varsity",
-          "name": "Ranvi Sinha",
-          "observations": [
-            {
-              "athleteId": "315c78cd-fe8e-4f98-9f30-442b2e03bc54",
-              "grade": 11,
-              "jersey": "13",
-              "name": "Ranvi Sinha",
-              "positions": [
-                "G"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2028,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/29378056"
-            }
-          ],
-          "positions": [
-            "G"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "leland"
         }
       ]
     },
@@ -348116,55 +347406,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pe7dad1371e",
-      "identifiers": [
-        {
-          "careerId": "ltt3ussqtadvf",
-          "careerProfileId": "0ba76aef-7730-420b-a807-f2b51c565340",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Elijah Palomino-Hendricks",
-      "names": [
-        "Elijah Palomino-Hendricks"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "25",
-          "level": "jv",
-          "name": "Elijah Palomino-Hendricks",
-          "observations": [
-            {
-              "athleteId": "387d22e8-b703-42cc-bf27-655774abfb46",
-              "grade": 10,
-              "jersey": "25",
-              "name": "Elijah Palomino-Hendricks",
-              "positions": [
-                "G",
-                "F"
-              ],
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [
-            "G",
-            "F"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "santa-clara"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -349147,53 +348388,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "san-mateo"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pe87451c67b",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "kashapvangala",
-          "sport": "basketball",
-          "team": "saratoga"
-        }
-      ],
-      "name": "Kashap Vangala",
-      "names": [
-        "Kashap Vangala"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Kashap Vangala",
-          "observations": [
-            {
-              "award": "secondTeam",
-              "grade": 9,
-              "name": "Kashap Vangala",
-              "positions": [
-                "F"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "F"
-          ],
-          "season": "25-26",
-          "sport": "basketball",
-          "team": "saratoga"
         }
       ]
     },
@@ -358245,61 +357439,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pee57eee5fa",
-      "identifiers": [
-        {
-          "careerId": "md29nbfo44h33",
-          "careerProfileId": "f079eea5-7318-4c46-afcd-7f4fd62a3fa4",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Sophia McGhie",
-      "names": [
-        "Sophia McGhie"
-      ],
-      "stints": [
-        {
-          "captain": true,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": "6",
-          "level": "jv",
-          "name": "Sophia McGhie",
-          "observations": [
-            {
-              "athleteId": "62ffaa67-bc49-4b67-b842-839706989c0e",
-              "captain": true,
-              "grade": 10,
-              "jersey": "6",
-              "name": "Sophia McGhie",
-              "positions": [
-                "OH"
-              ],
-              "src": "maxpreps-jv-roster"
-            },
-            {
-              "classOf": 2029,
-              "kind": "hudl",
-              "name": "Sophia McGhie",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/32071034"
-            }
-          ],
-          "positions": [
-            "OH"
-          ],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "christopher"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -365367,10 +364506,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Julia Keineth"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p2acbc593e0"
+      ],
       "id": "pf39d9665e9",
       "identifiers": [
         {
@@ -365381,7 +364527,8 @@
       ],
       "name": "Julia Keinath",
       "names": [
-        "Julia Keinath"
+        "Julia Keinath",
+        "Julia Keineth"
       ],
       "stints": [
         {
@@ -365414,6 +364561,32 @@
           ],
           "season": "25-26",
           "sport": "field-hockey",
+          "team": "fremont"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Julia Keineth",
+          "observations": [
+            {
+              "award": "secondTeam",
+              "grade": 10,
+              "name": "Julia Keineth",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "soccer",
           "team": "fremont"
         },
         {
@@ -368236,7 +367409,9 @@
       "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p52c06e4953"
+      ],
       "id": "pf5b7549ae0",
       "identifiers": [
         {
@@ -368250,6 +367425,26 @@
         "Addison Bartell"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Addison Bartell",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "name": "Addison Bartell",
+              "src": "all-league"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "kings-academy"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -370071,47 +369266,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2026,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pf6e23f0556",
-      "identifiers": [
-        {
-          "careerId": "0qpp2mkdvl4dd",
-          "careerProfileId": null,
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Leighton Osawa",
-      "names": [
-        "Leighton Osawa"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "7",
-          "level": "varsity",
-          "name": "Leighton Osawa",
-          "observations": [
-            {
-              "grade": 12,
-              "jersey": "7",
-              "name": "Leighton Osawa",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "field-hockey",
-          "team": "los-gatos"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -371286,53 +370440,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pf7b35dfcf5",
-      "identifiers": [
-        {
-          "careerId": "r3lvil6nqg7dd",
-          "careerProfileId": "3de29a91-e0e9-4792-88b7-8e45eb5c4454",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Nicholas Mego",
-      "names": [
-        "Nicholas Mego"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "13",
-          "level": "varsity",
-          "name": "Nicholas Mego",
-          "observations": [
-            {
-              "athleteId": "f77fd0ba-8f04-4c42-a590-adc4b9ad9fad",
-              "grade": 12,
-              "jersey": "13",
-              "name": "Nicholas Mego",
-              "positions": [
-                "C"
-              ],
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [
-            "C"
-          ],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "branham"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
@@ -371376,7 +370483,9 @@
       "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p57743a7dd3"
+      ],
       "id": "pf7d645d974",
       "identifiers": [
         {
@@ -371390,6 +370499,26 @@
         "Brooklyn Denegri"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Brooklyn Denegri",
+          "observations": [
+            {
+              "award": "honorableMention",
+              "name": "Brooklyn Denegri",
+              "src": "all-league"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "notre-dame-belmont"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -371973,60 +371102,6 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "del-mar"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pf84c6fa41c",
-      "identifiers": [
-        {
-          "careerId": "89ad10j3h6l99",
-          "careerProfileId": "155f6331-201c-4ffb-8035-59dac9d7f728",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Lulu Guevera",
-      "names": [
-        "Lulu Guevera"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "3",
-          "level": "varsity",
-          "name": "Lulu Guevera",
-          "observations": [
-            {
-              "athleteId": "4b6e1b2f-5b5a-46d2-a56a-721dcb87c564",
-              "grade": 12,
-              "jersey": "3",
-              "name": "Lulu Guevera",
-              "positions": [
-                "D",
-                "F"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "3",
-              "name": "L. Guevera",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [
-            "D",
-            "F"
-          ],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "huntington-beach"
         }
       ]
     },
@@ -381349,10 +380424,17 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "spelling",
+          "name": "Tyler Tsai"
+        }
+      ],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p19550a3553"
+      ],
       "id": "pfe797cd2e4",
       "identifiers": [
         {
@@ -381363,9 +380445,36 @@
       ],
       "name": "Tyler Tsui",
       "names": [
-        "Tyler Tsui"
+        "Tyler Tsui",
+        "Tyler Tsai"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Tyler Tsai",
+          "observations": [
+            {
+              "award": "secondTeam",
+              "grade": 10,
+              "name": "Tyler Tsai",
+              "positions": [
+                "F"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "F"
+          ],
+          "season": "25-26",
+          "sport": "basketball",
+          "team": "mountain-view"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -381614,95 +380723,6 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "mitty"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pfe8e15e6c4",
-      "identifiers": [
-        {
-          "careerId": "h3v0v10iqev99",
-          "careerProfileId": "68e905db-9bdb-4467-a7b6-51f7a6f7f96c",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Lulu Gorshe",
-      "names": [
-        "Lulu Gorshe"
-      ],
-      "stints": [
-        {
-          "captain": true,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "1",
-          "level": "varsity",
-          "name": "Lulu Gorshe",
-          "observations": [
-            {
-              "athleteId": "c491c419-f629-40df-a690-e6a66b651334",
-              "captain": true,
-              "grade": 12,
-              "jersey": "1",
-              "name": "Lulu Gorshe",
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "1",
-              "name": "L. Gorshe",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "field-hockey",
-          "team": "valley-christian"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": null,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pfe98351267",
-      "identifiers": [
-        {
-          "careerId": "vtu9beq0ebr44",
-          "careerProfileId": "041f315f-a7d6-4632-af3d-1fd2900ce7b9",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Mary Moorehouse",
-      "names": [
-        "Mary Moorehouse"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": null,
-          "height": null,
-          "jersey": "15",
-          "level": "jv",
-          "name": "Mary Moorehouse",
-          "observations": [
-            {
-              "athleteId": "dd66de73-e5fb-4868-908f-f13b42e6b96f",
-              "jersey": "15",
-              "name": "Mary Moorehouse",
-              "src": "maxpreps-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "los-gatos"
         }
       ]
     },
@@ -383663,577 +382683,6 @@
       ],
       "sport": "volleyball",
       "team": "sacred-heart-cathedral"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Nick Mego",
-        "Nicholas Mego"
-      ],
-      "note": "\"Nick Mego\" (25-26) and \"Nicholas Mego\" (26-27) may be one player of this team; both wear #13; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p86d4733bad",
-        "pf7b35dfcf5"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "branham"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Jaisal Desai",
-        "Jasial Desai"
-      ],
-      "note": "\"Jaisal Desai\" (26-27) and \"Jasial Desai\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p8355e1c08e",
-        "p43c4b54980"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "cupertino"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Konstantin Antonov",
-        "Kostya Antonov"
-      ],
-      "note": "\"Konstantin Antonov\" (26-27) and \"Kostya Antonov\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p0cc41542f0",
-        "p9ae2461565"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "gunn"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Tobias Lobell",
-        "Toby Lobell"
-      ],
-      "note": "\"Tobias Lobell\" (26-27) and \"Toby Lobell\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "pdaa7cae7c7",
-        "pdbecc93d12"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "gunn"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Darren Lee",
-        "Daren Lee"
-      ],
-      "note": "\"Darren Lee\" (26-27) and \"Daren Lee\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p494fbea5de",
-        "p2938f2775f"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "homestead"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Varun Pannikar",
-        "Varun Panikkar"
-      ],
-      "note": "\"Varun Pannikar\" (26-27) and \"Varun Panikkar\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "pd6a9e89914",
-        "p937569ebf2"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "homestead"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Alex Kolubelov",
-        "Alexander Kolubelov"
-      ],
-      "note": "\"Alex Kolubelov\" (26-27) and \"Alexander Kolubelov\" (26-27) may be one player of this team; both wear #32; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p64198ab420",
-        "pc30839e03d"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "leland"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Ben Naret",
-        "Benjamin Naret"
-      ],
-      "note": "\"Ben Naret\" (26-27) and \"Benjamin Naret\" (26-27) may be one player of this team; both wear #11; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "pe4d0470b58",
-        "pd3cc8ca67d"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "leland"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Nikko Jung",
-        "Nicholas Jung"
-      ],
-      "note": "\"Nikko Jung\" (26-27) and \"Nicholas Jung\" (26-27) may be one player of this team; both wear #12; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p2321d9f94e",
-        "p87f168f167"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "leland"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Ranvijay Abhimanyu Sinha",
-        "Ranvi Sinha"
-      ],
-      "note": "\"Ranvijay Abhimanyu Sinha\" (26-27) and \"Ranvi Sinha\" (26-27) may be one player of this team; both wear #13; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p805b8872f9",
-        "pe6072348a3"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "leland"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Matt Johnson",
-        "Matthew Johnson"
-      ],
-      "note": "\"Matt Johnson\" (26-27) and \"Matthew Johnson\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p4c9e4c1a03",
-        "p4ed1719e17"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "milpitas"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Edward Fan",
-        "Eddie Fan"
-      ],
-      "note": "\"Edward Fan\" (26-27) and \"Eddie Fan\" (26-27) may be one player of this team; both wear #34; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "pa06f3e83b8",
-        "p075211d9b3"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "monta-vista"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Tyler Tsui",
-        "Tyler Tsai"
-      ],
-      "note": "\"Tyler Tsui\" (26-27) and \"Tyler Tsai\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "pfe797cd2e4",
-        "p19550a3553"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "mountain-view"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Gabriel Andrade",
-        "Gabe Andrade"
-      ],
-      "note": "\"Gabriel Andrade\" (26-27) and \"Gabe Andrade\" (25-26) may be one player of this team; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p6959b25cfa",
-        "p53e08aa1c3"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "palo-alto"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Hritish Rai",
-        "Hritish Raj"
-      ],
-      "note": "\"Hritish Rai\" (26-27) and \"Hritish Raj\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p705a44aeed",
-        "p4fc7088d4c"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "saratoga"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Kashyap Vangala",
-        "Kashap Vangala"
-      ],
-      "note": "\"Kashyap Vangala\" (26-27) and \"Kashap Vangala\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p828c838248",
-        "pe87451c67b"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "basketball",
-      "team": "saratoga"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Kiera Sturzu",
-        "Keira Sturzu"
-      ],
-      "note": "\"Kiera Sturzu\" (25-26) and \"Keira Sturzu\" (26-27) may be one player of this team; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p1a2bf07ca2",
-        "pbb9dbce860"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "saratoga"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Tessie Berger",
-        "Theresa Berger"
-      ],
-      "note": "\"Tessie Berger\" (26-27) and \"Theresa Berger\" (25-26) may be one player of this team; each has its own MaxPreps career id: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p765b401400",
-        "p40dc6065f9"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "saratoga"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Raevynn Cantrell",
-        "Rae Cantrell"
-      ],
-      "note": "\"Raevynn Cantrell\" (26-27) and \"Rae Cantrell\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p12988a9c89",
-        "p2e6e2aff79"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "volleyball",
-      "team": "eastside"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Arianna Ari Juarez",
-        "Arianna Juarez"
-      ],
-      "note": "\"Arianna Ari Juarez\" (25-26) and \"Arianna Juarez\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p8f46d203f3",
-        "p8d68ddff6f"
-      ],
-      "seasons": [
-        "25-26"
-      ],
-      "sport": "volleyball",
-      "team": "notre-dame-belmont"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Abigail Wessel",
-        "Abi Wessel"
-      ],
-      "note": "\"Abigail Wessel\" (25-26) and \"Abi Wessel\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "p9d3ec7bd42",
-        "p27b495dc8c"
-      ],
-      "seasons": [
-        "25-26"
-      ],
-      "sport": "volleyball",
-      "team": "pinewood"
-    },
-    {
-      "kind": "possible-match",
-      "names": [
-        "Neve Harlan",
-        "Neve Harlen"
-      ],
-      "note": "\"Neve Harlan\" (25-26, 26-27) and \"Neve Harlen\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
-      "players": [
-        "pa7c735aee0",
-        "p4b2b8f3309"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "volleyball",
-      "team": "st-ignatius"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Lizzie Moorehouse",
-        "Mary Moorehouse"
-      ],
-      "note": "Lizzie Moorehouse (field-hockey) and Mary Moorehouse (soccer) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "p785e349571",
-        "pfe98351267"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "field-hockey",
-      "team": "los-gatos"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Brianna Sulocha"
-      ],
-      "note": "Brianna Sulocha (soccer) and Brianna Sulocha (field-hockey) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "pab479de048",
-        "p19c55b8f5a"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "cupertino"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Nour Bahnas"
-      ],
-      "note": "Nour Bahnas (soccer) and Nour Bahnas (field-hockey) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "p158476abd8",
-        "p2a7283543b"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "cupertino"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Lilly Jones"
-      ],
-      "note": "Lilly Jones (soccer) and Lilly Jones (field-hockey) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "p8241f64510",
-        "p0bf1364382"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "mitty"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Blake Penhallegon"
-      ],
-      "note": "Blake Penhallegon (soccer) and Blake Penhallegon (volleyball) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "p0a0f930c10",
-        "pcdbae75667"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "willow-glen"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Caoilinn Kavanagh"
-      ],
-      "note": "Caoilinn Kavanagh (soccer) and Caoilinn Kavanagh (volleyball) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "p5295fc5a75",
-        "p7aee9a6ea1"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "willow-glen"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Ellie Crew"
-      ],
-      "note": "Ellie Crew (soccer) and Ellie Crew (volleyball) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "pd62b1a6bf6",
-        "p89dbf3981b"
-      ],
-      "seasons": [
-        "26-27"
-      ],
-      "sport": "soccer",
-      "team": "willow-glen"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Addison Bartell"
-      ],
-      "note": "Addison Bartell (volleyball) and Addison Bartell (soccer) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "pf5b7549ae0",
-        "p52c06e4953"
-      ],
-      "seasons": [
-        "25-26"
-      ],
-      "sport": "volleyball",
-      "team": "kings-academy"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Emerson Kjellesvig"
-      ],
-      "note": "Emerson Kjellesvig (volleyball) and Emerson Kjellesvig (soccer) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "pac3ce0560c",
-        "pc29cd82ba6"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "volleyball",
-      "team": "kings-academy"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Brooklyn Denegri"
-      ],
-      "note": "Brooklyn Denegri (volleyball) and Brooklyn Denegri (soccer) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "pf7d645d974",
-        "p57743a7dd3"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "volleyball",
-      "team": "notre-dame-belmont"
-    },
-    {
-      "kind": "same-name-other-sport",
-      "names": [
-        "Bryce Killion"
-      ],
-      "note": "Bryce Killion (volleyball) and Bryce Killion (soccer) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.",
-      "players": [
-        "p8d1032f4ef",
-        "p3317313e4e"
-      ],
-      "seasons": [
-        "25-26",
-        "26-27"
-      ],
-      "sport": "volleyball",
-      "team": "st-ignatius"
     },
     {
       "kind": "same-name-two-careers",

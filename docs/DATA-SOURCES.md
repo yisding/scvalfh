@@ -2112,6 +2112,36 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   a freshman, a year apart). **The weakest**: Pioneer's Mary / Marianggy Gonzalez (#8 then #7, a common
   last name; same class, one career ending as the other begins), and Saratoga's three, whose school list
   gives no grade.
+- **62 more joins on 2026-11-22**, after the site's owner pointed out that Los Altos soccer's Kat Smith is
+  field hockey's Katarina Smith: a pair no rule lists, because look-alike names are only compared inside
+  one sport's team and a name in two sports only when it is spelled the same. A one-off scan of every
+  school's players for like names (a shared or one-letter-off surname with a first name that is the same,
+  a short form, or shares an initial; class years not contradicting) found the rest. **13 across sports**
+  under two MaxPreps careers or a career and a list (Kat / Katarina Smith and Katie / Kaitlyn Byon at Los
+  Altos, Jess / Jessica Lashgari, Maddie / Madison McDougall and Giuliana Borello's soccer row at Valley
+  Christian, Leighton Osawa / Ozawa, Mj / Maryjane Meza); **3 inside one sport** the look-alike rule
+  missed because both words differ (Abigail Volker / Abby Voelker, Luciana Lulu Gorse / Lulu Gorshe,
+  and Liliana Klingler, whose soccer roster row drops a letter); **the 22 `possible-match` questions** left
+  from the basketball and later builds; **the 11 `same-name-other-sport` questions** (Lizzie Moorehouse's
+  NCSA profile is addressed mary-elizabeth-moorehouse; Mitty's two Lilly Jones careers carry one Hudl
+  profile); and **13 players MaxPreps lists twice on one roster** under two careers, which the look-alike
+  rule reads as two people when the rows do not share a number (four at Hollister, each a numberless row
+  on both rosters and a numbered varsity row spelled another way; Santa Clara's Yaozeng / "Aaron (Yaozeng)"
+  Huang). Three were read on the live pages (2026-11-22): Tyler Tsui (the all-league list's "Tsai";
+  MaxPreps' 25-26 JV roster has Tsui and no Tsai), Nick / Nicholas Mego (Branham's 26-27 roster is last
+  season's entered again, so the merged record's class of 2027 is a stale grade: he is class of 2026) and
+  Gabe / Gabriel Andrade (the new row's "Fr." is wrong; Hudl has him class of 2029). The rest rest on the
+  repository's copies of the lists. **The weakest**: Hollister's Gabriella / Gabby Sanchez, Homestead's
+  Darren / Daren Lee and Milpitas's Matt / Matthew Johnson (common names), Saratoga's Tessie / Theresa
+  Berger, and Riordan's Isabella / Izzy Saavedra. **Left apart, not established**: Eastside's Ally Ruiz
+  (25-26 soccer all-league) and Ally Ruiz-Oxlaj (volleyball), Homestead's Grace Brunner (JV soccer) and
+  Grace (Lizzie) Brunner (JV field hockey), and Wilcox's Yareli and Arely Hernandez; MaxPreps' career
+  pages tie none of them. **`sameAs` cannot reach a record no source lists any more**: MacDonald's second
+  Dewyond Williams (#13), Yerba Buena's Uriyah Pacual and Monta Vista's Hanna Mohammed are rows their
+  coaches have since replaced (by #0 Dewyond Williams, Uriyah Pascsual and Hanaa Mohamed), and stay in the
+  registry as separate records marked `gone`. Two `names` entries keep an official name the joins would
+  have changed (Giuliana Borello, Theresa Berger). After the build: 6,843 players (6,275 with a MaxPreps
+  career, 568 known by name alone), 86 in more than one sport, and no question left on the review list.
 - **2026-11-16 build**: 5,475 players (4,955 with a MaxPreps career, 520 known by name alone), 6,766 stints,
   11,153 observations, 984 in more than one season, 36 in more than one sport, 59 conflicts inside a stint
   and 60 class-year conflicts. The review list holds only what a rule decided: 44 joined careers and 9

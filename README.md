@@ -2042,7 +2042,7 @@ files. It also writes each player's `playerId` into `data/field-hockey/clubs.jso
 Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
 nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under
 `review` in the file. The 87 look-alike pairs of the first build were answered on 2026-11-14 (85 joined, 2
-kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65, and its schools' own JV lists to 76: its new items are not answered yet. The answers go in `data/player-identity.json` (each with its reason), never into
+kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65, and its schools' own JV lists to 76: those were answered on 2026-11-16, and the questions left by later builds on 2026-11-22, with the cross-sport nickname pairs no rule lists (Kat / Katarina Smith). The answers go in `data/player-identity.json` (each with its reason), never into
 `data/players.json` by hand: `sameAs` for a pair that is one player, `notSame` for a pair that is two.
 Deleting a `sameAs` entry undoes the join on the next build that still reads that season's files. After a
 rollover it does not (a carried-forward season is kept as it was): `docs/DATA-SOURCES.md` §1.1 (m) gives
