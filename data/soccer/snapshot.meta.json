@@ -1,33 +1,33 @@
 {
   "cifssCrossCheck": {
-    "agreements": 0,
+    "agreements": 1,
     "cifssOnlyScored": 0,
-    "compared": 0,
+    "compared": 1,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "1c78b2065f80c6d3b3a767a7c4924a0910f9da8bf03156f9a3bfaa2563780935",
+  "contentHash": "1faedb291dd3194ef15af358914e6cc5cbb8ec1090df37c5300e3cfe8fac833c",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 2,
         "finals": 3,
-        "games": 239,
-        "leagueGames": 167,
+        "games": 252,
+        "leagueGames": 177,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
         "finals": 2,
-        "games": 150,
+        "games": 152,
         "leagueGames": 96,
         "teams": 16
       },
       "sccal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 74,
+        "games": 75,
         "leagueGames": 29,
         "teams": 6
       },
@@ -41,33 +41,33 @@
       "wbal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 88,
-        "leagueGames": 28,
+        "games": 95,
+        "leagueGames": 29,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 50,
+        "games": 51,
         "leagueGames": 18,
         "teams": 6
       }
     },
     "finals": 5,
-    "games": 649,
-    "leagueGames": 425,
+    "games": 668,
+    "leagueGames": 436,
     "mismatches": 4,
     "pending": 3,
     "teams": 82
   },
   "crossCheck": {
-    "agreements": 1,
+    "agreements": 2,
     "backfilled": 2,
     "compared": 40,
     "conflicts": 0,
     "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-22T14:36:48.530Z",
+  "fetchedAt": "2026-11-23T05:37:46.525Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -124,7 +124,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 46,
+  "officialFixturesUnmatched": 36,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 105,
@@ -314,7 +314,7 @@
     },
     {
       "label": "westmont schedule",
-      "rowCount": 14,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -324,7 +324,7 @@
     },
     {
       "label": "christopher schedule",
-      "rowCount": 12,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -334,7 +334,7 @@
     },
     {
       "label": "lincoln schedule",
-      "rowCount": 13,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -344,12 +344,12 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 11,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 14,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -359,12 +359,12 @@
     },
     {
       "label": "sobrato schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
       "label": "andrew-hill schedule",
-      "rowCount": 11,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -374,7 +374,7 @@
     },
     {
       "label": "gunderson schedule",
-      "rowCount": 11,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -389,17 +389,17 @@
     },
     {
       "label": "mt-pleasant schedule",
-      "rowCount": 11,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "overfelt schedule",
-      "rowCount": 13,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "prospect schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -459,7 +459,7 @@
     },
     {
       "label": "riordan schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -504,12 +504,12 @@
     },
     {
       "label": "castilleja schedule",
-      "rowCount": 5,
+      "rowCount": 7,
       "status": "ok"
     },
     {
       "label": "crystal-springs schedule",
-      "rowCount": 5,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -519,12 +519,12 @@
     },
     {
       "label": "menlo schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -534,7 +534,7 @@
     },
     {
       "label": "sacred-heart-prep schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -544,7 +544,7 @@
     },
     {
       "label": "harker schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -594,7 +594,7 @@
     },
     {
       "label": "burlingame schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -654,7 +654,7 @@
     },
     {
       "label": "south-san-francisco schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -694,7 +694,7 @@
     },
     {
       "label": "santa-cruz schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -849,12 +849,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 275,
+      "rowCount": 277,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 32,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -869,7 +869,7 @@
     }
   ],
   "today": "2026-11-22",
-  "warnings": 32,
+  "warnings": 33,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
