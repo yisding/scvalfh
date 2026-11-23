@@ -7,7 +7,9 @@
  * links the two regions is the finals between them, few so far, so the board's method says how many (this
  * season's from the snapshot, last season's from data/field-hockey/prior-season.json, both counted at build time, never
  * typed in). The board's minimum counts the games its fit counts this season, by the rule of
- * ranking.ts qualifyingMinimum; a team under it is still rated on its own page, as provisional. The ratings
+ * ranking.ts eloMinimum (half the median, no 1-game floor: before most rated teams have played, the
+ * board ranks every rated team, last season's starts included); a team under it is still rated on its
+ * own page, as provisional. The ratings
  * start from last season's (data/field-hockey/prior-season.json); synthetic sources without one start every team at
  * average.
  */
@@ -31,7 +33,7 @@ import type { Game, RegionId, Team, TeamSlug } from '../../lib/types';
 import { plural } from '../words/plural';
 import { SCORE_UNIT, SCORE_UNITS } from '../words/score-words';
 import { num, schoolBoard } from './board-kit';
-import { byName, qualifyingMinimum } from './ranking';
+import { byName, eloMinimum } from './ranking';
 import { AND_INDEPENDENTS, LEAGUE_COUNT, THE_LEAGUES, regionScope } from './scope';
 import type { CrossRegionFinals, LeaderBoard } from './types';
 
@@ -56,7 +58,7 @@ export interface EloBoardView {
   ratingBySlug: Map<TeamSlug, TeamRating>;
   /** The season the ratings start from ("2025-26"); null when every team starts at average. */
   seededFrom: string | null;
-  /** The board's minimum: half the median of its rated teams' counted games. */
+  /** The board's minimum: half the median of its rated teams' counted games (0 included), rounded up; 0 before most have played. */
   minimum: { min: number; median: number };
   /** "Del Mar (1)": teams that have played this season but fewer than the minimum, fewest first. */
   below: string[];
@@ -112,7 +114,7 @@ export function buildEloBoard(
     const team = teamById.get(rating.teamId);
     return team ? [{ team, rating }] : [];
   });
-  const minimum = qualifyingMinimum(lines.map((l) => l.rating.games));
+  const minimum = eloMinimum(lines.map((l) => l.rating.games));
   // A team with no counted final last season (new to the registry, or only forfeits and unscored
   // games then) has no rating from it and starts at average: say so only when there is one, so
   // the note never claims a start a team did not have.
@@ -129,7 +131,8 @@ export function buildEloBoard(
       id: 'elo-rating',
       title: 'Highest Elo rating',
       navLabel: 'Elo rating',
-      meta: `At least ${plural(minimum.min, 'game')}`,
+      // With no minimum yet, the board ranks every rated team, those rated from last season alone included.
+      meta: minimum.min > 0 ? `At least ${plural(minimum.min, 'game')}` : 'Preseason ratings included',
       sorted: lines
         .filter((l) => l.rating.games >= minimum.min)
         .sort((a, b) => b.rating.elo - a.rating.elo || byName(a.team.name, b.team.name)),
@@ -148,7 +151,7 @@ export function buildEloBoard(
         `${seeded}${across} Forfeits and games against schools outside ${THE_LEAGUES}${AND_INDEPENDENTS} are left out.${PROVISIONAL_NOTE}`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
-        : `No completed game between two of the ${plural(fitTeams, 'team')} yet this season.`,
+        : `No completed game between two of the ${plural(fitTeams, 'team')} yet this season, and no rating from last season.`,
     },
     scope,
   );

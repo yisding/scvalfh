@@ -374,7 +374,8 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
     : [
     ...recordBoards,
     scoredBoard,
-    adjustedGoalsBoard(teams, adjusted, elo.minimum.min, scope, unadjusted),
+    // The adjusted board keeps a 1-game floor: a team that has not played has no goals to adjust.
+    adjustedGoalsBoard(teams, adjusted, Math.max(1, elo.minimum.min), scope, unadjusted),
     allowedBoard,
     schoolBoard(
       {

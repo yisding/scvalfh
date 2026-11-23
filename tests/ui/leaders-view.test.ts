@@ -24,7 +24,7 @@ import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } fro
 import { buildLeadersView } from '../../components/leaders/leaders-view';
 import { buildRosterView } from '../../components/teams/roster-view';
 import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '../../components/leaders/scope';
-import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
+import { BOARD_PLACES, EXPANDED_PLACES, eloMinimum, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
 import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '../../components/leaders/types';
 import { statText } from '../../components/teams/player-stats-view';
 import { positionWords } from '../../components/words/position-words';
@@ -50,6 +50,9 @@ import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 import { game } from '../helpers';
 import { textOf } from './html-text';
+
+/** The Elo board's minimum as its meta prints it: 0 while it ranks every rated team, starts included. */
+const eloMinOf = (meta: string) => (meta === 'Preseason ratings included' ? 0 : Number(/At least (\d+)/.exec(meta)![1]));
 
 const PLAYER_IDS = ['most-points', 'player-goals', 'adjusted-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
 const SCHOOL_IDS = [
@@ -183,7 +186,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
     const adjusted = getAdjustedScoring();
     for (const r of view.regions) {
       const board = r.players.find((b) => unsuffixed(b.id) === 'adjusted-points')!;
-      const min = Number(/At least (\d+)/.exec(r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!.meta)![1]);
+      // A schedule factor needs a counted game, even while the Elo board ranks last season's starts.
+      const min = Math.max(1, eloMinOf(r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!.meta));
       expect(board.columns.map((c) => c.label)).toEqual(['Pts', '×', 'Adj']);
       const rows = [...board.rows, ...(board.extra?.rows ?? [])];
       expect(rows.length, r.region).toBeGreaterThan(0);
@@ -209,8 +213,9 @@ describe('buildLeadersView — rules, over the committed data', () => {
     for (const r of view.regions) {
       const board = r.schools.find((b) => unsuffixed(b.id) === 'adjusted-goals')!;
       const elo = r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!;
-      expect(board.meta).toBe(elo.meta);
-      const min = Number(/At least (\d+)/.exec(board.meta)![1]);
+      // The Elo board's minimum, but never below 1: a team that has not played has no goals to adjust.
+      const min = Math.max(1, eloMinOf(elo.meta));
+      expect(board.meta).toBe(`At least ${min} game${min === 1 ? '' : 's'}`);
       expect(board.columns.map((c) => c.label)).toEqual(['GP', 'Avg', 'Adj']);
       expect(board.rows.length, r.region).toBeGreaterThan(0);
       for (const row of board.rows) {
@@ -292,7 +297,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
     for (const r of view.regions) {
       const board = r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!;
       expect(board.id).toBe(`elo-rating${r.idSuffix}`);
-      const min = Number(/At least (\d+)/.exec(board.meta)![1]);
+      const min = eloMinOf(board.meta);
       expect(board.columns.map((c) => c.label)).toEqual(['GP', 'Elo']);
       for (const row of board.rows) {
         const rating = bySlug.get(row.team.slug)!;
@@ -382,6 +387,18 @@ describe('rankBoard and qualifyingMinimum', () => {
     expect(qualifyingMinimum([7, 6, 6, 6, 1])).toEqual({ min: 3, median: 6 });
     expect(qualifyingMinimum([2, 3])).toEqual({ min: 2, median: 2.5 });
     expect(qualifyingMinimum([0, 0])).toEqual({ min: 1, median: 0 });
+  });
+
+  it('is, for the Elo board, half the median of every rated team, those yet to play included, with no 1-game floor', () => {
+    expect(eloMinimum([10, 10, 9, 11, 1])).toEqual({ min: 5, median: 10 });
+    // Most rated teams have played: the minimum is half the median, as the record boards'.
+    expect(eloMinimum([7, 6, 6, 0, 0])).toEqual({ min: 3, median: 6 });
+    // Half have played: the median sits between 0 and 1, so one game is enough.
+    expect(eloMinimum([0, 0, 1, 1])).toEqual({ min: 1, median: 0.5 });
+    // Most have not: no minimum, and every rated team is ranked.
+    expect(eloMinimum([0, 0, 0, 1])).toEqual({ min: 0, median: 0 });
+    expect(eloMinimum([0, 0])).toEqual({ min: 0, median: 0 });
+    expect(eloMinimum([])).toEqual({ min: 0, median: 0 });
   });
 });
 
@@ -525,6 +542,43 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(note).toContain('rating (worked out the same way from last season’s 1 game), or from average if it had no counted 2025-26 game;');
     // The committed season seeds every rated team, so its note makes no such claim.
     expect(said(nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!)).not.toContain('or from average');
+  });
+
+  it('ranks every rated team, those rated from last season alone included, before most have played', () => {
+    const id = (slug: string) => getTeamBySlug(slug)!.id;
+    const priorGame = (contestId: string, home: string, away: string, homeScore: number, awayScore: number) => ({
+      contestId,
+      date: '2025-09-10',
+      homeId: id(home),
+      homeSlug: home,
+      awayId: id(away),
+      awaySlug: away,
+      homeScore,
+      awayScore,
+      site: 'home' as const,
+    });
+    const prior = {
+      ...getPriorSeason(),
+      // Six teams rated from last season; this season only Mitty and Leigh have played.
+      games: [
+        priorGame('p1', 'fremont', 'saratoga', 3, 0),
+        priorGame('p2', 'stevenson', 'tamalpais', 1, 0),
+        priorGame('p3', 'mitty', 'leigh', 2, 1),
+      ],
+    };
+    const played = [game({ home: 'mitty', away: 'leigh', hs: 2, as: 0, league: false, date: '2026-09-10' })];
+    const region = nc(buildLeadersView({ ...sources(played), prior }));
+    const elo = region.schools.find((b) => b.id === 'elo-rating')!;
+    // Counted games 1, 1, 0, 0, 0, 0: the median is 0, so there is no minimum yet.
+    expect(elo.meta).toBe('Preseason ratings included');
+    expect(elo.rows.map((r) => r.team.slug).sort()).toEqual(['fremont', 'leigh', 'mitty', 'saratoga', 'stevenson', 'tamalpais']);
+    expect(elo.rows.find((r) => r.team.slug === 'fremont')!.cells[0].text).toBe('0');
+    // Nobody is under a minimum, so no note names one.
+    expect(region.schoolNotes.some((n) => n.includes('Elo board need'))).toBe(false);
+    // The Elo-adjusted goals board still needs a counted game: only Mitty, who scored, is on it.
+    const adjustedGoals = region.schools.find((b) => b.id === 'adjusted-goals')!;
+    expect(adjustedGoals.meta).toBe('At least 1 game');
+    expect(adjustedGoals.rows.map((r) => r.team.slug)).toEqual(['mitty']);
   });
 
   it('starts the committed board from last season, and says so', () => {

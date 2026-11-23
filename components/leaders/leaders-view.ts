@@ -79,7 +79,8 @@ function buildRegion(input: RegionInput): RegionLeadersView {
     games,
     rosters,
     adjusted,
-    factorMin: elo.minimum.min,
+    // A schedule factor needs a counted game, even while the Elo board's minimum is 0.
+    factorMin: Math.max(1, elo.minimum.min),
     unadjusted,
     scope: scope.board,
   });

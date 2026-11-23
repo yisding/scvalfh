@@ -59,3 +59,15 @@ export function qualifyingMinimum(gamesPlayed: readonly number[]): { min: number
   const m = median(gamesPlayed.filter((gp) => gp > 0));
   return { min: Math.max(1, Math.ceil(m / 2)), median: m };
 }
+
+/**
+ * The Elo board's minimum: half the median of every rated team's counted games, rounded up, with no
+ * floor. Unlike qualifyingMinimum, a team rated from last season alone (0 games) counts toward the
+ * median and can meet a minimum of 0: early in a season, while most rated teams have not played, the
+ * board ranks every rated team, starts included; once most have played it is half the median as the
+ * record boards' rule.
+ */
+export function eloMinimum(gamesCounted: readonly number[]): { min: number; median: number } {
+  const m = median(gamesCounted);
+  return { min: Math.ceil(m / 2), median: m };
+}

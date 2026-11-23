@@ -2725,8 +2725,11 @@ at once, at every build, starting from last season's:
   The model's constants (the 5-goal cap, the one-game weight of last season, 175 points a goal) were
   set on NorCal seasons and have not been tested on Southern California's.
 - **The board.** A team needs half the median team's counted games this season, in its own region,
-  to be on that region's `/leaders` board, as the record boards do; below that its team page shows the rating as
-  provisional. A team page names its place only when the board lists it (the top 10).
+  to be on that region's `/leaders` board; below that its team page shows the rating as provisional.
+  Unlike the record boards, the median counts every rated team, those that have not played yet
+  included, and there is no 1-game floor: early in a season, while most rated teams have not played,
+  the minimum is 0 and the board ranks every rated team, last season's starts included ("Preseason
+  ratings included"). The Elo-adjusted boards still need at least one counted game. A team page names its place only when the board lists it (the top 10).
 - **Known soft spot.** MCAL links to the three CCS leagues through few games (nine in 2025-26,
   five so far in 2026, as counted before the EAL joined), so how MCAL teams compare with the CCS
   leagues rests on those results and can move several dozen points with one more cross-league game.
