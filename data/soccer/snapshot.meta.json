@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "1faedb291dd3194ef15af358914e6cc5cbb8ec1090df37c5300e3cfe8fac833c",
+  "contentHash": "405ae355ea50f64ece9f7d07a5d7dec9faea77953edafb26e59aeb567860b220",
   "counts": {
     "byLeague": {
       "bval": {
@@ -63,11 +63,11 @@
   "crossCheck": {
     "agreements": 2,
     "backfilled": 2,
-    "compared": 40,
+    "compared": 41,
     "conflicts": 0,
     "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-23T05:37:46.525Z",
+  "fetchedAt": "2026-11-23T14:37:14.431Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 105,
     "official": 5,
-    "sblive": 24
+    "sblive": 33
   },
   "sources": [
     {
@@ -723,6 +723,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-23",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
@@ -735,6 +740,11 @@
     {
       "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-20",
       "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-23",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -753,6 +763,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-23",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3887-pal-bay scoreboard 2026-11-19",
       "rowCount": 1,
       "status": "ok"
@@ -763,12 +778,22 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3887-pal-bay scoreboard 2026-11-23",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3888-pal-ocean scoreboard 2026-11-19",
       "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "sblive 3888-pal-ocean scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3888-pal-ocean scoreboard 2026-11-23",
       "rowCount": 0,
       "status": "ok"
     },
@@ -798,7 +823,22 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3948-wbal-foothill scoreboard 2026-11-23",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3949-wbal-skyline scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3949-wbal-skyline scoreboard 2026-11-23",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3950-wcal scoreboard 2026-11-23",
       "rowCount": 0,
       "status": "ok"
     },
@@ -814,6 +854,11 @@
     },
     {
       "label": "sblive scoreboard 2026-11-20",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-23",
       "rowCount": 24,
       "status": "ok"
     },
@@ -834,7 +879,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -844,17 +889,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 277,
+      "rowCount": 304,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 30,
+      "rowCount": 34,
       "status": "ok"
     },
     {
@@ -868,8 +913,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-22",
-  "warnings": 33,
+  "today": "2026-11-23",
+  "warnings": 34,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
