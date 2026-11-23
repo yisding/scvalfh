@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-23T06:32:09.647Z",
+  "fetchedAt": "2026-11-23T15:15:19.284Z",
   "fixtures": [
     {
       "claims": {
@@ -2219,7 +2219,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T16:29:39",
+              "maxprepsModifiedOn": "2026-11-23T14:07:13",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2604,7 +2604,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-23T06:32:09.647Z",
+          "builtAt": "2026-11-23T15:15:19.284Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -3441,7 +3441,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T03:02:14",
+              "maxprepsModifiedOn": "2026-11-23T08:32:58",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8106,8 +8106,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-12-03",
-            "dateLocal": "2026-12-03T19:30:00",
-            "dateUtc": "2026-12-04T03:30:00Z",
+            "dateLocal": "2026-12-03T19:00:00",
+            "dateUtc": "2026-12-04T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -8127,7 +8127,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-11T04:53:42",
+              "maxprepsModifiedOn": "2026-11-23T08:33:10",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8140,7 +8140,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/aptos-high-school-aptos-ca/gamda9d2efcec?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Aptos High School"
             }
           },
           "ref": "b0aaae9e-1713-4eac-98d9-27aa7b361d30"
@@ -8612,6 +8612,72 @@
       "published": [
         {
           "contestId": "51898299-e2e6-4839-b9c7-66b7585453b7"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Scotts Valley",
+              "name": "Scotts Valley",
+              "result": null,
+              "score": null,
+              "slug": "scotts-valley",
+              "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121"
+            },
+            "contestId": "7e86ceb8-7d57-4371-9783-816784cdbf6f",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-03",
+            "dateLocal": "2026-12-03T20:00:00",
+            "dateUtc": "2026-12-04T04:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Santa Cruz",
+              "name": "Santa Cruz",
+              "result": null,
+              "score": null,
+              "slug": "santa-cruz",
+              "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "sccal",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-23T15:13:31",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/santa-cruz-vs-scotts-valley/12-3-2026/?c=7e86ceb8-7d57-4371-9783-816784cdbf6f",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Dad's Club Tournament"
+            }
+          },
+          "ref": "7e86ceb8-7d57-4371-9783-816784cdbf6f"
+        }
+      },
+      "id": "2026-12-03-scotts-valley-at-santa-cruz",
+      "published": [
+        {
+          "contestId": "7e86ceb8-7d57-4371-9783-816784cdbf6f"
         }
       ]
     },
@@ -9777,7 +9843,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T01:35:16",
+              "maxprepsModifiedOn": "2026-11-23T08:34:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
