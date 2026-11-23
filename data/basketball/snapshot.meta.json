@@ -7,27 +7,27 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "222cb8ccc1038265a64b8e5ead78aa49448352088223ce790abff72acdb73099",
+  "contentHash": "a1f457854cd06efe2f85c46c0c0f9ee5262f8efa08cf805738eeee5767469699",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 280,
-        "leagueGames": 125,
+        "games": 281,
+        "leagueGames": 126,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 217,
+        "games": 219,
         "leagueGames": 106,
         "teams": 16
       },
       "sccal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 75,
+        "games": 77,
         "leagueGames": 25,
         "teams": 6
       },
@@ -48,14 +48,14 @@
       "wcal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 111,
+        "games": 113,
         "leagueGames": 56,
         "teams": 8
       }
     },
     "finals": 4,
-    "games": 875,
-    "leagueGames": 447,
+    "games": 881,
+    "leagueGames": 448,
     "mismatches": 1,
     "pending": 15,
     "teams": 79
@@ -63,11 +63,11 @@
   "crossCheck": {
     "agreements": 3,
     "backfilled": 0,
-    "compared": 79,
+    "compared": 112,
     "conflicts": 0,
     "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-11-22T15:13:11.613Z",
+  "fetchedAt": "2026-11-23T06:32:09.647Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -124,12 +124,12 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 21,
+  "officialFixturesUnmatched": 20,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 102,
     "official": 6,
-    "sblive": 40
+    "sblive": 42
   },
   "sources": [
     {
@@ -394,7 +394,7 @@
     },
     {
       "label": "del-mar schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -404,7 +404,7 @@
     },
     {
       "label": "james-lick schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -494,7 +494,7 @@
     },
     {
       "label": "sacred-heart-cathedral schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -509,7 +509,7 @@
     },
     {
       "label": "valley-christian schedule",
-      "rowCount": 31,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -589,7 +589,7 @@
     },
     {
       "label": "burlingame schedule",
-      "rowCount": 30,
+      "rowCount": 31,
       "status": "ok"
     },
     {
@@ -649,7 +649,7 @@
     },
     {
       "label": "south-san-francisco schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -694,12 +694,12 @@
     },
     {
       "label": "scotts-valley schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "soquel schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -709,7 +709,7 @@
     },
     {
       "label": "sblive 2125-bval-mt-hamilton scoreboard 2026-11-19",
-      "rowCount": 2,
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -734,7 +734,7 @@
     },
     {
       "label": "sblive 2263-pal-bay scoreboard 2026-11-19",
-      "rowCount": 6,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -754,7 +754,7 @@
     },
     {
       "label": "sblive 2264-pal-ocean scoreboard 2026-11-19",
-      "rowCount": 4,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -774,7 +774,7 @@
     },
     {
       "label": "sblive 2282-scval-de-anza scoreboard 2026-11-19",
-      "rowCount": 5,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -789,7 +789,7 @@
     },
     {
       "label": "sblive 2283-scval-el-camino scoreboard 2026-11-19",
-      "rowCount": 5,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -804,7 +804,7 @@
     },
     {
       "label": "sblive 2284-sccal scoreboard 2026-11-19",
-      "rowCount": 3,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -824,7 +824,7 @@
     },
     {
       "label": "sblive 2327-wcal scoreboard 2026-11-19",
-      "rowCount": 5,
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -839,7 +839,7 @@
     },
     {
       "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-19",
-      "rowCount": 1,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -849,7 +849,7 @@
     },
     {
       "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-19",
-      "rowCount": 1,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -888,8 +888,18 @@
       "status": "ok"
     },
     {
+      "label": "sblive jefferson games",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
       "label": "sblive los-altos games",
       "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "sblive menlo-atherton games",
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -909,7 +919,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 52,
+      "rowCount": 50,
       "status": "ok"
     },
     {
@@ -924,7 +934,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 921,
+      "rowCount": 933,
       "status": "ok"
     },
     {
