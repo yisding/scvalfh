@@ -1856,13 +1856,15 @@ on 2026-11-21:
   lacrosse). Hudl's public rosters were read for every school's girls soccer teams, NCSA by name for every varsity
   row and 305 of the JV rows, every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits
   address probe over every varsity and JV row.
-- **Clubs** (`clubs.json`): **50 clubs** (South Bay 19, Peninsula 15, San Francisco 10, Central Coast 5, East Bay
-  1) and **128 ties for 105 of the 634 varsity rows, at 28 of the 32 schools**: 29 current, 76 listed (unknown) and
-  23 earlier; 18 players are tied to more than one club; 127 high confidence, 1 medium. The most ties: De Anza
-  Force 38, Almaden FC 21, MVLA 16, Bay Area Surf 14, Santa Clara Sporting 6, Los Gatos United, San Francisco Elite
-  Academy and Silicon Valley Soccer Academy 4 each. 29 clubs have no tied player. The ties rest on 198 source
-  entries on 165 URLs (NCSA 60, PrepSoccer 38, SportsRecruits 35, MaxPreps career pages 27, Hudl 22,
-  TopDrawerSoccer 11, SoccerWire 4, a college release 1). San Francisco, the Peninsula and the South Bay were
+- **Clubs** (`clubs.json`; recounted on 2026-11-22, after the league rosters of "Girls soccer: club rosters"
+  below): **51 clubs** (South Bay 19, Peninsula 15, San Francisco 10, Central Coast 5, East Bay 1, Marin 1) and
+  **192 ties for 157 of the 634 varsity rows, at 30 of the 32 schools**: 115 current, 55 listed (unknown) and 22
+  earlier; 30 players are tied to more than one club; 127 high confidence, 65 medium (63 of them resting on a league
+  roster alone: a class year and the club's location). The most ties: De Anza Force 40, MVLA 26, Bay Area Surf 22, Almaden
+  FC 21, Los Gatos United 19, Santa Clara Sporting 11, Burlingame and Stanford Strikers 8 each, Palo Alto SC 7.
+  28 clubs have no tied player. The ties rest on 309 source entries on 198 URLs (league rosters 110, NCSA 60,
+  PrepSoccer 38, SportsRecruits 35, MaxPreps career pages 27, Hudl 22, TopDrawerSoccer 12, SoccerWire 4, a college
+  release 1). San Francisco, the Peninsula and the South Bay were
   searched for every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast,
   so /clubs does not claim it. JV players' clubs are not listed.
 - **College commitments** (`commits.json`): **13 players at 6 schools, to 13 colleges**, 11 in soccer, 1 in field
@@ -1939,10 +1941,11 @@ What the research did not reach, so that an absence here says little:
   - Hudl: Notre Dame San Jose is not on Hudl; Homestead, Cupertino, Milpitas, Prospect and Terra Nova have no girls
     soccer team there and nine schools only empty rosters; 79 matched players' profiles are private.
   - SportsRecruits: suffix 1 and suffixes above 30 were not probed; most live pages show at most a class year.
-  - Clubs: the Central Coast outside Santa Cruz County was not searched; Cal North District 1's list and ECNL's
-    member list (drawn by script) were not read. Clubs named on a player's page with no record, so the tie is not
-    shown: El Camino FC, Alum Rock FC, Marin FC, Hawaii Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon
-    Valley Soccer Club.
+  - Clubs: the Central Coast outside Santa Cruz County was not searched; Cal North District 1's list was not read
+    (ECNL's member clubs were read on 2026-11-22 from the leagues' own team lists, "Girls soccer: club rosters").
+    Clubs named on a player's page with no record, so the tie is not shown: El Camino FC, Alum Rock FC, Hawaii
+    Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon Valley Soccer Club. The rosters of Girls Academy,
+    NorCal Premier's own leagues and Cal North were not read: only ECNL's two leagues are kept.
   - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
     San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
     feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
@@ -1966,6 +1969,61 @@ What the research did not reach, so that an absence here says little:
 after editing any of these files. A roster refetch that drops or respells a tied or committed player fails
 `pnpm test` and the build for that sport, as for field hockey ("When a roster refetch breaks it"); so does one that
 gives a marked row the corrected grade, until the conflict is removed (its `kept` must be MaxPreps' grade).
+
+### Girls soccer: club rosters
+
+`data/soccer/club-rosters.json` is a kept copy of the public team rosters of the two Northern California girls
+leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's NorCal division, the GU14 through GU18/19
+age groups. It is there so that a high school roster can be compared with the club rosters the day a school posts
+it, without reading the leagues' pages again. Read on 2026-11-22: **199 teams of 55 clubs, 3,255 players** (60
+ECNL teams of 12 clubs, 139 Regional League teams of 43).
+
+```bash
+pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 3 minutes)
+pnpm fetch-club-rosters --dry-run   # fetch and count, write nothing
+pnpm compare-club-rosters           # compare with the varsity and JV rosters; list the matches clubs.json does not cite
+pnpm compare-club-rosters --all     # every row that shares a name with a roster row, by outcome
+```
+
+- **Where it is read.** Each league's own Schedules & Standings page (`app.athleteone.com/public/event/4267/…`
+  and `…/4307/…`; NorCal Premier's ECNL Regional League page links the second). The page is drawn by script and its
+  data refuses any request that does not come from the page, so `scripts/fetch-club-rosters.mjs` drives the local
+  Chromium (`CHROME_BIN`, default `/usr/bin/chromium`) over the DevTools protocol and reads what the page itself
+  loads: a division's standings for its teams, then each team's page, whose Roster button lists the players. No
+  dependency, one request at a time. It is not on the cron: run it by hand when the club season turns over or a
+  roster is known to have changed.
+- **What is kept.** Per team: league, age group, name, club and public page. Per player: name, position, the class
+  year the page's data carries (the Roster dialog does not print it) and the roster's label ("First Team Player",
+  "Club Player Pool"). Not kept: staff, jersey numbers, account ids, a player a team hides from its public roster,
+  and a player too young to be in high school this season (833 left out). **The file is never rendered and nothing
+  in the site imports it**: it names players who are on no tracked roster.
+- **The league-roster rule** (`lib/players/club-rosters.ts`, a narrower case of the clubs' linking rule). A roster
+  row and a high school row are the same player when the folded names are equal; the high school row has a grade
+  and the roster's class year is that grade's; no other tracked school has a row under the name, varsity or JV;
+  every roster row that agrees is at one club; and the club has a record in `clubs.json` and is based where the
+  schools are (San Francisco, the Peninsula, the South Bay, the Central Coast). A name alone never links: a row
+  with no grade, a roster row with no class year and a class year that disagrees are reported and left alone. A
+  roster names no school, so a tie that rests on one alone is **medium** confidence; the club's location stands in
+  for the hometown rule (b) asks for.
+- **Linking is by hand.** `pnpm compare-club-rosters` reads and reports only. For a match it lists, open the team
+  page, press Roster, and add the tie to `clubs.json` with a `league-roster` source (the team page's URL, the
+  team's name and the player's row as the quote, the class year, `sourceDate` the league season), status
+  `current`; then `SCVAL_SPORT=soccer pnpm build-players`. `clubSlugs` in the kept file maps a league club to its
+  `clubs.json` record and is kept by hand; a club with no entry is compared but never linked.
+  `tests/club-rosters.test.ts` fails if a `league-roster` source cites a team page the kept copy does not have, or
+  one whose roster no longer lists the player with that class year, so re-check those ties after a refetch.
+- **Linked on 2026-11-22**, over the 32 varsity and the JV rosters posted that day: **96 ties cite a roster**, at
+  22 schools. 63 are new and rest on a roster alone; 32 are ties other pages had already made, which gain the
+  roster and now read current for 2026-27 (Sally Burns's to Mustang Soccer in the East Bay among them); and
+  Delaney Kumer's (Carlmont) to Marin FC is new, resting on TopDrawerSoccer's UC Davis list with the roster. By
+  club: De Anza Force 17, Los Gatos United 16, MVLA 15, Bay Area Surf 11, Santa Clara Sporting and Stanford
+  Strikers 8 each, Burlingame 7, Palo Alto SC 6, Santa Cruz United 5, SF Elite, Mustang and Marin FC 1 each. A
+  second script opened every cited team page in Chromium, pressed Roster and found each row as displayed.
+- **Not linked.** 30 varsity and 11 JV rows with no grade yet whose name is on a roster (they link when MaxPreps
+  posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of the name;
+  5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three players at
+  clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed the
+  rule, and `clubs.json` lists no JV ties in any case.
 
 ### Soccer and basketball: last season's commitments
 
