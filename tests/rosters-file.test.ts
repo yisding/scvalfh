@@ -20,7 +20,7 @@ import {
   type Rosters,
 } from '../lib/players/rosters-schema';
 import { getRosters, getTeamRoster, sortedPlayers } from '../lib/players/rosters';
-import { pendingRoster } from '../lib/sources/maxpreps-roster';
+import { jerseyOf, pendingRoster } from '../lib/sources/maxpreps-roster';
 import { JV_SPORT_SEASON_ID, SPORT_SEASON_ID } from '../lib/season';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { rosterFailureAnnotations } from '../scripts/fetch-rosters';
@@ -54,6 +54,21 @@ const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-
 const read = (file: string) => JSON.parse(readFileSync(file, 'utf8')) as Rosters;
 /** A team's entry without the stamp of when its rows were read. */
 const unstamped = <T extends { fetchedAt: string | null }>(t: T) => ({ ...t, fetchedAt: null });
+
+describe('every committed roster file', () => {
+  it('holds no "no number" marker as a jersey: the parser reads "n/a", "na" and bare punctuation as null', () => {
+    for (const sport of ['field-hockey', 'soccer', 'basketball', 'volleyball', 'val-soccer']) {
+      for (const name of ['rosters.json', 'jv-rosters.json']) {
+        const file = path.join(REPO, 'data', sport, name);
+        if (!existsSync(file)) continue;
+        const rosters = JSON.parse(readFileSync(file, 'utf8')) as { teams: { slug: string; players: { jersey: string | null; fullName: string }[] }[] };
+        for (const t of rosters.teams) {
+          for (const p of t.players) expect(jerseyOf(p.jersey), `${sport} ${name} ${t.slug} / ${p.fullName}`).toBe(p.jersey);
+        }
+      }
+    }
+  });
+});
 
 describe('data/field-hockey/rosters.json', () => {
   it('validates against the contract', () => {

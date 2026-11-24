@@ -20,6 +20,7 @@ import {
   OtherSeasonRosterError,
   ROSTER_ROW_LENGTH,
   careerIdFromUrl,
+  jerseyOf,
   parseRosterPage,
   pendingRoster,
   parseRosterTable,
@@ -530,6 +531,19 @@ describe('maxpreps roster: the current layout (38 columns, isClaimed)', () => {
       row[COL.isClaimed] = false;
     });
     expect(() => parseIt(flipped)).toThrow(/isClaimed is false in athleteData but the rendered table shows a "Claimed profile" badge/);
+  });
+
+  it('reads a jersey typed as "n/a", "na" or bare punctuation as no number, on both sides of the cross-check', () => {
+    for (const typed of ['n/a', 'na', 'N/A', 'N.A.', '.', '#', '-!']) {
+      const marked = withPageProps(html, (pp) => {
+        rows(pp)[0][COL.jersey] = typed;
+      });
+      // athleteData now reads null; the table still prints the real number, so the cross-check names the null.
+      const first = parseIt(html).players[0];
+      expect(() => parseIt(marked), typed).toThrow(new RegExp(`${first.fullName}: jersey is "null" in athleteData`));
+    }
+    for (const real of ['00', '21/88', '#12', 'GK', 'Sub', 'G1', 'Nate', 'NA1']) expect(jerseyOf(real), real).toBe(real);
+    for (const none of ['n/a', 'na', 'N/A', 'n / a', 'N.A.', '-', '.', '#', '-!', null]) expect(jerseyOf(none), String(none)).toBeNull();
   });
 
   it('reads a jersey typed as "-" as no number, as the table prints a blank one', () => {

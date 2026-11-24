@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 86,
     "nameOnly": 568,
-    "observations": 14825,
+    "observations": 14842,
     "players": 7034,
     "review": 64,
     "stintConflicts": 161,
@@ -14454,7 +14454,7 @@
           "conflicts": [],
           "grade": 10,
           "height": "5'11\"",
-          "jersey": "-!",
+          "jersey": null,
           "level": "jv",
           "name": "Jia-Shu Lu",
           "observations": [
@@ -14462,7 +14462,6 @@
               "athleteId": "399bcc87-6ea7-46c6-bf9e-89c329340063",
               "grade": 10,
               "height": "5'11\"",
-              "jersey": "-!",
               "name": "Jia-Shu Lu",
               "src": "maxpreps-jv-roster"
             }
@@ -25701,6 +25700,11 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "12",
+              "name": "S. P",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -71213,14 +71217,13 @@
           "conflicts": [],
           "grade": 11,
           "height": null,
-          "jersey": "na",
+          "jersey": null,
           "level": "varsity",
           "name": "Madden Phoncharum",
           "observations": [
             {
               "athleteId": "90dde2c2-2013-4d50-9f24-fb984e72ad7f",
               "grade": 11,
-              "jersey": "na",
               "name": "Madden Phoncharum",
               "src": "maxpreps-roster"
             }
@@ -75149,6 +75152,11 @@
               "jersey": "5",
               "name": "Joey Diffenderfer",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "5",
+              "name": "J. Diffenderfer",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -86384,6 +86392,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "10",
+              "name": "F. C",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -86596,6 +86609,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "3",
+              "name": "T. Wang",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -93801,6 +93819,11 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "24",
+              "name": "M. Chang",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -98893,6 +98916,11 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "25",
+              "name": "E. Zhang",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -100436,6 +100464,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "3",
+              "name": "R. R",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -108775,6 +108808,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "23",
+              "name": "B. Mfonfu",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "ncsa",
               "src": "profile",
@@ -109623,6 +109661,11 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "2",
+              "name": "S. Gao",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2029,
@@ -120464,14 +120507,13 @@
           "conflicts": [],
           "grade": 11,
           "height": null,
-          "jersey": "n/a",
+          "jersey": null,
           "level": "varsity",
           "name": "Luca Papoulias",
           "observations": [
             {
               "athleteId": "be75971e-906a-4af1-bb78-432293d8d7fb",
               "grade": 11,
-              "jersey": "n/a",
               "name": "Luca Papoulias",
               "src": "maxpreps-roster"
             }
@@ -133997,7 +134039,7 @@
           "conflicts": [],
           "grade": 10,
           "height": "5'11\"",
-          "jersey": ".",
+          "jersey": null,
           "level": "jv",
           "name": "Lucas Zhao",
           "observations": [
@@ -134006,7 +134048,6 @@
               "captain": true,
               "grade": 10,
               "height": "5'11\"",
-              "jersey": ".",
               "name": "Lucas Zhao",
               "src": "maxpreps-jv-roster"
             }
@@ -164076,6 +164117,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "1",
+              "name": "L. Huang",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "maxpreps",
               "src": "profile",
@@ -177976,6 +178022,11 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "K. N",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -179736,6 +179787,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "R. Sehgal",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -193319,7 +193375,7 @@
           "conflicts": [],
           "grade": 10,
           "height": "5'9\"",
-          "jersey": "#",
+          "jersey": null,
           "level": "jv",
           "name": "Warren Lilles",
           "observations": [
@@ -193327,7 +193383,6 @@
               "athleteId": "494a4e1b-2638-484f-a2f3-bc02057f4f36",
               "grade": 10,
               "height": "5'9\"",
-              "jersey": "#",
               "name": "Warren Lilles",
               "src": "maxpreps-jv-roster"
             }
@@ -215524,6 +215579,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "12",
+              "name": "K. Bhatia",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -304795,6 +304855,11 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "10",
+              "name": "D. Wang",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -318680,6 +318745,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "11",
+              "name": "K. Wubet",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2030,
@@ -360465,14 +360535,13 @@
           "conflicts": [],
           "grade": 10,
           "height": null,
-          "jersey": "N/A",
+          "jersey": null,
           "level": "jv",
           "name": "Elijah Cady-Oster",
           "observations": [
             {
               "athleteId": "8f83fb57-e072-4632-b6ff-03dadae191ab",
               "grade": 10,
-              "jersey": "N/A",
               "name": "Elijah Cady-Oster",
               "positions": [
                 "G"
@@ -374057,6 +374126,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "13",
+              "name": "E. Xu",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -389522,6 +389596,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "2",
+              "name": "K. M",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
