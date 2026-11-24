@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-24T05:37:22.967Z",
+  "fetchedAt": "2026-11-24T14:38:07.037Z",
   "fixtures": [
     {
       "claims": {
@@ -705,7 +705,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T04:42:15",
+              "maxprepsModifiedOn": "2026-11-24T13:33:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -837,7 +837,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T17:57:45",
+              "maxprepsModifiedOn": "2026-11-24T08:29:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -854,7 +854,66 @@
             }
           },
           "ref": "0fddcbaf-8f4b-4f51-b1b5-773ccc2c8bd0"
-        }
+        },
+        "sblive": [
+          {
+            "fill": {
+              "contestId": "0fddcbaf-8f4b-4f51-b1b5-773ccc2c8bd0",
+              "published": {
+                "away": {
+                  "result": "L",
+                  "score": 1
+                },
+                "backfill": {
+                  "maxpreps": null,
+                  "note": "MaxPreps lists this game without a score, so the score is si.com’s.",
+                  "rule": "score-pending",
+                  "sbliveGameId": "6829710"
+                },
+                "decider": "REG",
+                "forfeitBy": null,
+                "home": {
+                  "result": "W",
+                  "score": 5
+                },
+                "isForfeit": false,
+                "isOt": false,
+                "otPeriods": 0,
+                "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/games/6829710-notre-dame-vs-santa-teresa"
+              },
+              "rule": "score-pending"
+            },
+            "ref": "6829710",
+            "row": {
+              "dateIso": "2026-11-23T19:00:00.000-08:00",
+              "dateKey": "2026-11-23",
+              "gameTypeLabel": null,
+              "isFinal": true,
+              "isScored": true,
+              "origin": "scoreboard",
+              "sbliveGameId": "6829710",
+              "sides": [
+                {
+                  "name": "Notre Dame",
+                  "sbliveSchoolId": "2824",
+                  "sbliveTeamId": null,
+                  "score": 1,
+                  "slug": "notre-dame-san-jose",
+                  "via": "school-id"
+                },
+                {
+                  "name": "Santa Teresa",
+                  "sbliveSchoolId": "10749",
+                  "sbliveTeamId": null,
+                  "score": 5,
+                  "slug": "santa-teresa",
+                  "via": "school-id"
+                }
+              ],
+              "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/6829710-notre-dame-vs-santa-teresa"
+            }
+          }
+        ]
       },
       "id": "2026-11-23-notre-dame-san-jose-at-santa-teresa",
       "published": [
@@ -5886,9 +5945,9 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7106540?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-gilroy/12-4-2026/?c=d014d382-5fea-4ca0-820b-ecb457056434",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/alisal-high-school-salinas-ca/gamc6ebde56ef?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -10921,7 +10980,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T23:30:16",
+              "maxprepsModifiedOn": "2026-11-24T09:40:11",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10934,7 +10993,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/the-kings-academy-sunnyvale-ca/gam54c2009fdb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "King's Academy High School"
             }
           },
           "ref": "6b51b5e4-e8f7-4ae4-9a40-8a98887ed11f"
@@ -17237,7 +17296,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T01:30:50",
+              "maxprepsModifiedOn": "2026-11-24T08:30:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18454,7 +18513,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T20:28:24",
+              "maxprepsModifiedOn": "2026-11-24T08:30:26",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29012,7 +29071,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T19:59:29",
+              "maxprepsModifiedOn": "2026-11-24T08:29:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29864,7 +29923,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T03:00:18",
+              "maxprepsModifiedOn": "2026-11-24T08:29:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30252,7 +30311,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T16:49:10",
+              "maxprepsModifiedOn": "2026-11-24T08:31:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32756,7 +32815,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T16:35:29",
+              "maxprepsModifiedOn": "2026-11-24T08:29:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -52458,7 +52517,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T17:59:38",
+              "maxprepsModifiedOn": "2026-11-24T08:29:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
