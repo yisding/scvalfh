@@ -7,19 +7,19 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "405ae355ea50f64ece9f7d07a5d7dec9faea77953edafb26e59aeb567860b220",
+  "contentHash": "b1c5a5be1537f0e23bf2f0ffb252d5d1e18316598a6f012a95fe5053490097b6",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 2,
         "finals": 3,
-        "games": 252,
-        "leagueGames": 177,
+        "games": 253,
+        "leagueGames": 178,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
-        "finals": 2,
+        "finals": 3,
         "games": 152,
         "leagueGames": 96,
         "teams": 16
@@ -34,15 +34,15 @@
       "scval": {
         "backfilled": 1,
         "finals": 1,
-        "games": 158,
-        "leagueGames": 87,
+        "games": 159,
+        "leagueGames": 88,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 95,
-        "leagueGames": 29,
+        "games": 97,
+        "leagueGames": 30,
         "teams": 13
       },
       "wcal": {
@@ -53,11 +53,11 @@
         "teams": 6
       }
     },
-    "finals": 5,
-    "games": 668,
-    "leagueGames": 436,
+    "finals": 6,
+    "games": 672,
+    "leagueGames": 439,
     "mismatches": 4,
-    "pending": 3,
+    "pending": 6,
     "teams": 82
   },
   "crossCheck": {
@@ -67,7 +67,7 @@
     "conflicts": 0,
     "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-23T14:37:14.431Z",
+  "fetchedAt": "2026-11-24T05:37:22.967Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -124,7 +124,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 36,
+  "officialFixturesUnmatched": 34,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 105,
@@ -199,7 +199,7 @@
     },
     {
       "label": "fremont schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -229,7 +229,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 17,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -374,7 +374,7 @@
     },
     {
       "label": "gunderson schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -389,7 +389,7 @@
     },
     {
       "label": "mt-pleasant schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -514,7 +514,7 @@
     },
     {
       "label": "kings-academy schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -529,12 +529,12 @@
     },
     {
       "label": "presentation schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "sacred-heart-prep schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -759,7 +759,7 @@
     },
     {
       "label": "sblive 3760-bval-west-valley scoreboard 2026-11-20",
-      "rowCount": 1,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -894,7 +894,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 304,
+      "rowCount": 303,
       "status": "ok"
     },
     {
@@ -914,7 +914,7 @@
     }
   ],
   "today": "2026-11-23",
-  "warnings": 34,
+  "warnings": 36,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
