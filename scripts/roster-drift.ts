@@ -148,10 +148,6 @@ async function identity(o: Options): Promise<number> {
   const { describeDrift } = await import('../lib/players/roster-drift');
   const drift: RosterDrift[] = [];
   buildRegistry(readBuildInput(process.cwd(), 'scripts/roster-drift.ts'), { onDrift: (d) => drift.push(d) });
-  if (o.json) {
-    process.stdout.write(`${JSON.stringify(drift)}\n`);
-    return 0;
-  }
   type Entry = { sport: string; team: string; name?: string; careerIds?: string[] };
   const entriesByKey = (raw: Raw | null): Map<string, string[]> => {
     const out = new Map<string, string[]>();
@@ -167,6 +163,10 @@ async function identity(o: Options): Promise<number> {
   const then = o.base === null ? new Map<string, string[]>() : entriesByKey(readAt(o.base, IDENTITY_FILE));
   const same = (a: string[] = [], b: string[] = []) => a.length === b.length && [...a].sort().join('\n') === [...b].sort().join('\n');
   const mine = (d: RosterDrift) => !same(now.get(`${d.teamSlug} ${d.key}`), then.get(`${d.teamSlug} ${d.key}`));
+  if (o.json) {
+    process.stdout.write(`${JSON.stringify(drift)}\n`);
+    return o.base !== null && drift.some(mine) ? 1 : 0;
+  }
   return report(o, 'registry', drift, mine, describeDrift) > 0 ? 1 : 0;
 }
 
@@ -185,11 +185,13 @@ export async function main(argv: readonly string[]): Promise<number> {
   const { nameKey } = await import('../lib/jv/jv-rosters');
   const { describeDrift, getRosterDrift } = await import('../lib/players/roster-drift');
   const drift = getRosterDrift();
+  // The verdict does not depend on the output: --json --base still fails on drift the change made.
+  const made = drift.map((d) => o.base !== null && !inherited(d, DATA_DIR, o.base, nameKey));
   if (o.json) {
     process.stdout.write(`${JSON.stringify(drift)}\n`);
-    return 0;
+    return made.some(Boolean) ? 1 : 0;
   }
-  const own = report(o, SPORT_ID, drift, (d) => !inherited(d, DATA_DIR, o.base as string, nameKey), describeDrift);
+  const own = report(o, SPORT_ID, drift, (d) => made[drift.indexOf(d)], describeDrift);
   return own > 0 ? 1 : 0;
 }
 
