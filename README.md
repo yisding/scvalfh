@@ -1995,7 +1995,8 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   State's 4300, found by reading the event names of 4250-4300 through the public page, owner-approved). A club's
   Golden State teams carry its ECNL club id, so `clubSlugs` covers both. The page is drawn by script and its
   data refuses any request that does not come from the page, so `scripts/fetch-club-rosters.mjs` drives the local
-  Chromium (`CHROME_BIN`, default `/usr/bin/chromium`) over the DevTools protocol and reads what the page itself
+  Chromium (`CHROME_BIN`, default `/usr/bin/chromium`; as root in an isolated container, `CHROME_NO_SANDBOX=1`)
+  over the DevTools protocol and reads what the page itself
   loads: a division's standings for its teams, then each team's page, whose Roster button lists the players. No
   dependency, one request at a time. It is not on the cron: run it by hand when the club season turns over or a
   roster is known to have changed.

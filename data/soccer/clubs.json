@@ -5096,7 +5096,7 @@
       "playerId": "pd329224c43",
       "fullName": "Sora Cerniglia",
       "club": "mvla-soccer-club",
-      "clubTeam": "Premier",
+      "clubTeam": "MVLA ECNL RL G2009/10",
       "status": "current",
       "asOf": "2026-27",
       "confidence": "high",
@@ -5134,7 +5134,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"Mtn. View Los Altos SC\" (team \"Mtn. View Los Altos SC (10G Juventus ECNL-RL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2028, which equals the roster. Undated. Status unknown: no source is dated 2026. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from ncsa, clubs, sportsrecruits; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: MVLA ECNL RL G2009/10) also lists a player of this name with class year 2028, which agrees with the roster grade: read from the kept copy (data/soccer/club-rosters.json) and again on the team page's Roster dialog as displayed, 2026-11-24; the tie is current on that roster."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"Mtn. View Los Altos SC\" (team \"Mtn. View Los Altos SC (10G Juventus ECNL-RL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2028, which equals the roster. Undated. Status unknown: no source is dated 2026. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from ncsa, clubs, sportsrecruits; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: MVLA ECNL RL G2009/10) also lists a player of this name with class year 2028, which agrees with the roster grade: read from the kept copy (data/soccer/club-rosters.json) and again on the team page's Roster dialog as displayed, 2026-11-24; the tie is current on that roster. The club team is the roster's (MVLA ECNL RL G2009/10): the 2024 NCSA line's \"Premier\" names an earlier team, not the current one."
     },
     {
       "teamSlug": "mitty",
@@ -6538,7 +6538,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL Girls Northern Cal 2026-27: Force (CA) ECNL G2011/12) lists a player of this name with class year 2030, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (None). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the two leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-22."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL Girls Northern Cal 2026-27: Force (CA) ECNL G2011/12) lists a player of this name with class year 2030, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the two leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-22."
     },
     {
       "teamSlug": "monta-vista",
@@ -6670,7 +6670,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL Girls Northern Cal 2026-27: Force (CA) ECNL G2010/11) lists a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (None). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the two leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-22."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL Girls Northern Cal 2026-27: Force (CA) ECNL G2010/11) lists a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the two leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-22."
     },
     {
       "teamSlug": "willow-glen",
@@ -8150,7 +8150,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (None). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
     },
     {
       "teamSlug": "monta-vista",
@@ -8172,7 +8172,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2010/11) lists a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (None). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2010/11) lists a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
     },
     {
       "teamSlug": "branham",
@@ -8312,7 +8312,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2011/12) lists a player of this name with class year 2030, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (None). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2011/12) lists a player of this name with class year 2030, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
     },
     {
       "teamSlug": "mitty",
@@ -8378,7 +8378,7 @@
           "sourceDate": "2026-27"
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (None). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
     },
     {
       "teamSlug": "mitty",

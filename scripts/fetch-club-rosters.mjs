@@ -12,6 +12,9 @@
  *   pnpm fetch-club-rosters             rewrite data/soccer/club-rosters.json
  *   pnpm fetch-club-rosters --dry-run   fetch and count, write nothing
  *
+ * Chromium will not start as root without its sandbox turned off; in an isolated container that runs as root,
+ * set CHROME_NO_SANDBOX=1 to turn it off. It is never turned off otherwise.
+ *
  * The leagues' schedule site is a script-drawn page whose data answers only the page itself (a plain
  * request gets 403), so this drives a local headless Chromium over the DevTools protocol: it opens
  * each league's public Schedules & Standings page and reads, through the page, what the page itself
@@ -64,25 +67,45 @@ async function launch() {
       '--headless=new',
       '--disable-gpu',
       '--no-first-run',
-      // Chromium refuses to start as root (a container) without it.
-      ...(process.getuid?.() === 0 ? ['--no-sandbox'] : []),
+      // Chromium will not start as root without it; only where asked for (an isolated container running as root).
+      ...(process.env.CHROME_NO_SANDBOX === '1' ? ['--no-sandbox'] : []),
       `--user-data-dir=${profile}`,
       '--remote-debugging-port=0',
       'about:blank',
     ],
     { stdio: 'ignore' },
   );
-  const portFile = path.join(profile, 'DevToolsActivePort');
-  for (let i = 0; i < 100 && !existsSync(portFile); i += 1) await sleep(200);
-  if (!existsSync(portFile)) throw new Error(`${CHROME} did not start (set CHROME_BIN)`);
-  const port = readFileSync(portFile, 'utf8').split('\n')[0];
-  const exited = new Promise((resolve) => child.once('exit', resolve));
+  // Listened for from the start, so an exit during the wait below is not missed.
+  let running = true;
+  const exited = new Promise((resolve) => {
+    child.once('exit', () => {
+      running = false;
+      resolve();
+    });
+    child.once('error', () => {
+      running = false;
+      resolve();
+    });
+  });
   /** Stops Chromium and, once it has exited (it writes to its profile until then), removes the profile. */
   const close = async () => {
-    child.kill();
-    await exited;
+    if (running) {
+      child.kill();
+      const stopped = await Promise.race([exited.then(() => true), sleep(10_000).then(() => false)]);
+      if (!stopped) {
+        child.kill('SIGKILL');
+        await Promise.race([exited, sleep(5_000)]);
+      }
+    }
     rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   };
+  const portFile = path.join(profile, 'DevToolsActivePort');
+  for (let i = 0; i < 100 && running && !existsSync(portFile); i += 1) await sleep(200);
+  if (!running || !existsSync(portFile)) {
+    await close();
+    throw new Error(`${CHROME} did not start (set CHROME_BIN; as root, also CHROME_NO_SANDBOX=1)`);
+  }
+  const port = readFileSync(portFile, 'utf8').split('\n')[0];
   return { port, close };
 }
 

@@ -74,12 +74,13 @@ export function soccerClubTeamWords(clubTeam: string, clubNames: readonly string
 
   // Leagues first, before any club name goes: some aliases carry one ("MVLA ECNL", "Force ECNL").
   // Kept in the order the source wrote them ("Girls Academy, ECNL RL" reads "GA and ECNL RL").
+  // Every occurrence, so a second "ECNL RL" is not read again as "ECNL".
   const found: Array<{ at: number; words: string }> = [];
   for (const [pattern, label] of LEAGUES) {
-    const m = pattern.exec(s);
-    if (!m) continue;
-    found.push({ at: m.index, words: m[1] ? `${label} ${m[1]}` : label });
-    s = s.slice(0, m.index) + ' '.repeat(m[0].length) + s.slice(m.index + m[0].length);
+    for (const m of [...s.matchAll(new RegExp(pattern.source, 'gi'))]) {
+      found.push({ at: m.index, words: m[1] ? `${label} ${m[1]}` : label });
+      s = s.slice(0, m.index) + ' '.repeat(m[0].length) + s.slice(m.index + m[0].length);
+    }
   }
   const leagues = [...new Set(found.sort((x, y) => x.at - y.at).map((f) => f.words))];
 
@@ -89,6 +90,8 @@ export function soccerClubTeamWords(clubTeam: string, clubNames: readonly string
   }
   s = s.replace(/\(CA\)/gi, ' ');
 
+  // Age groups before birth years: the 16 of "U-16" is not a birth year.
+  s = s.replace(AGE_WORDS, ' ');
   const years: string[] = [];
   s = s.replace(BIRTH_YEARS, (_, first: string, second: string | undefined) => {
     const words = birthYearWords(first, second);
@@ -98,7 +101,6 @@ export function soccerClubTeamWords(clubTeam: string, clubNames: readonly string
 
   const rest = titled(
     s
-      .replace(AGE_WORDS, ' ')
       .replace(/\(\s*\)/g, ' ')
       .replace(/(?:^|\s)(?:and|&)(?=\s|$)/gi, ' ')
       .replace(/[,&()–-]/g, ' ')

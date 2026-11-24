@@ -108,7 +108,6 @@ describe('soccerClubTeamWords', () => {
       NPL: 'NPL',
       NPL1: 'NPL 1',
       'Palo Alto SC ECNL RL G2008/09': 'ECNL RL G2008/09',
-      Premier: 'Premier',
       'Quicksilver green': 'Quicksilver Green',
       'Quicksilver Green 2009': 'Quicksilver Green G2009',
       'Quicksilver Green 2009 and 08/07 GA': 'Quicksilver Green GA G2009 and G2007/08',
@@ -150,7 +149,7 @@ describe('soccerClubTeamWords', () => {
   it('writes a birth year as G and the year, a pair earlier first, whatever shape the source used', () => {
     for (const raw of ['2009', '2009G', 'G2009', '09G', '09g', '09', 'G09', "'09", 'Girls 09']) expect(words(`ECNL ${raw}`)).toBe('ECNL G2009');
     for (const raw of ['G2008/09', '2008/09', '2008/09G', '08/09', '2009/08', '09/08']) expect(words(`ECNL RL ${raw}`)).toBe('ECNL RL G2008/09');
-    expect(words('ECNL RL U17')).toBe('ECNL RL'); // an age group is not a birth year
+    for (const raw of ['U17', 'U-16', '16u']) expect(words(`ECNL RL ${raw}`)).toBe('ECNL RL'); // an age group is not a birth year
   });
 
   it('names the National 1 League N1, however the source writes it', () => {
@@ -162,5 +161,6 @@ describe('soccerClubTeamWords', () => {
     for (const raw of ['GA', 'Girls Academy', 'girls academy']) expect(words(raw)).toBe('GA');
     expect(words('Girls Academy, ECNL RL')).toBe('GA and ECNL RL');
     expect(words('ECNL RL & GA')).toBe('ECNL RL and GA');
+    expect(words('ECNL RL G2009 and ECNL RL G2010')).toBe('ECNL RL G2009 and G2010'); // one league, read twice
   });
 });
