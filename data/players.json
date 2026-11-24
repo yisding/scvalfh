@@ -14454,7 +14454,7 @@
           "conflicts": [],
           "grade": 10,
           "height": "5'11\"",
-          "jersey": "-!",
+          "jersey": null,
           "level": "jv",
           "name": "Jia-Shu Lu",
           "observations": [
@@ -14462,7 +14462,6 @@
               "athleteId": "399bcc87-6ea7-46c6-bf9e-89c329340063",
               "grade": 10,
               "height": "5'11\"",
-              "jersey": "-!",
               "name": "Jia-Shu Lu",
               "src": "maxpreps-jv-roster"
             }
@@ -71213,14 +71212,13 @@
           "conflicts": [],
           "grade": 11,
           "height": null,
-          "jersey": "na",
+          "jersey": null,
           "level": "varsity",
           "name": "Madden Phoncharum",
           "observations": [
             {
               "athleteId": "90dde2c2-2013-4d50-9f24-fb984e72ad7f",
               "grade": 11,
-              "jersey": "na",
               "name": "Madden Phoncharum",
               "src": "maxpreps-roster"
             }
@@ -120464,14 +120462,13 @@
           "conflicts": [],
           "grade": 11,
           "height": null,
-          "jersey": "n/a",
+          "jersey": null,
           "level": "varsity",
           "name": "Luca Papoulias",
           "observations": [
             {
               "athleteId": "be75971e-906a-4af1-bb78-432293d8d7fb",
               "grade": 11,
-              "jersey": "n/a",
               "name": "Luca Papoulias",
               "src": "maxpreps-roster"
             }
@@ -133997,7 +133994,7 @@
           "conflicts": [],
           "grade": 10,
           "height": "5'11\"",
-          "jersey": ".",
+          "jersey": null,
           "level": "jv",
           "name": "Lucas Zhao",
           "observations": [
@@ -134006,7 +134003,6 @@
               "captain": true,
               "grade": 10,
               "height": "5'11\"",
-              "jersey": ".",
               "name": "Lucas Zhao",
               "src": "maxpreps-jv-roster"
             }
@@ -193319,7 +193315,7 @@
           "conflicts": [],
           "grade": 10,
           "height": "5'9\"",
-          "jersey": "#",
+          "jersey": null,
           "level": "jv",
           "name": "Warren Lilles",
           "observations": [
@@ -193327,7 +193323,6 @@
               "athleteId": "494a4e1b-2638-484f-a2f3-bc02057f4f36",
               "grade": 10,
               "height": "5'9\"",
-              "jersey": "#",
               "name": "Warren Lilles",
               "src": "maxpreps-jv-roster"
             }
@@ -360465,14 +360460,13 @@
           "conflicts": [],
           "grade": 10,
           "height": null,
-          "jersey": "N/A",
+          "jersey": null,
           "level": "jv",
           "name": "Elijah Cady-Oster",
           "observations": [
             {
               "athleteId": "8f83fb57-e072-4632-b6ff-03dadae191ab",
               "grade": 10,
-              "jersey": "N/A",
               "name": "Elijah Cady-Oster",
               "positions": [
                 "G"

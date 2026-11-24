@@ -240,6 +240,18 @@ const cell = (s: string): string | null => {
 const urlPath = (u: string): string => u.replace(/^https?:\/\/[^/]+/i, '');
 
 /**
+ * A jersey cell or athleteData value, or null for what a coach types to mean "no number": any text with no letter or
+ * digit in it (the table's own "-" for a blank one; ".", "#" and "-!" on Mills boys basketball JV, 2026-11) and a
+ * spelled-out n/a ("n/a" and "na" on Lincoln boys basketball, "N/A" on Santa Cruz's JV, 2026-11), which the team page
+ * would otherwise announce as "Number n/a". Applied to both sides of the table cross-check alike, so it still compares
+ * what the coach typed. Every real number stays as typed: "00", "21/88", "#12", "GK", "Sub".
+ */
+export function jerseyOf(v: string | null): string | null {
+  if (v === null) return null;
+  return !/[\p{L}\p{N}]/u.test(v) || /^n\s*\.?\s*\/?\s*a\s*\.?$/i.test(v) ? null : v;
+}
+
+/**
  * The table's height cell against the player's heightFeet/heightInches. The table prints `5'7"`, but a
  * whole number of feet comes out as `6'0` with no inch mark (Mitty girls soccer, 2026-11-21: Layla
  * Tucakovic, heightFeet 6, heightInches 0), so the mark is optional when the inches are 0 and
@@ -306,7 +318,7 @@ export function parseRosterTable(html: string): RosterTableRow[] | null {
     const badge = /<span[^>]*>\s*Claimed profile\s*<\/span>/;
     const claimed = badge.test(inner);
     rows.push({
-      jersey: cell(tds[0]),
+      jersey: jerseyOf(cell(tds[0])),
       name: collapse(claimed ? inner.replace(badge, ' ') : inner),
       href: anchor ? htmlUnescape(anchor[1]) : null,
       claimed,
@@ -458,8 +470,8 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
       lastName,
       fullName,
       // A coach who types "-" for a number means none: the table prints its own "-" for a blank one, so
-      // either way the player has no jersey (Willow Glen boys basketball, 2026-11-13).
-      jersey: str(row[C.jersey]) === '-' ? null : str(row[C.jersey]),
+      // either way the player has no jersey (Willow Glen boys basketball, 2026-11-13); so do "n/a" and the like.
+      jersey: jerseyOf(str(row[C.jersey])),
       grade,
       gradeClass,
       positions,
