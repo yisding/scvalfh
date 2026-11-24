@@ -175,12 +175,16 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
   const fixtureLeagues = leagues
     .map((league) => ({ league, rows: fixtures.filter((f) => f.league === league.id) }))
     .filter((block) => block.rows.length > 0);
-  // The day's JV games, after everything varsity (lib/jv/jv.ts), apart from every varsity count; one block per region.
+  // The day's JV games, after everything varsity (lib/jv/jv.ts), apart from every varsity count; one block per region,
+  // and inside it one slice per league of the region, so a league tab filters JV as it filters varsity.
   const jvBlocks = REGIONS.map((region) => ({
     region: region.id,
     shortName: region.shortName,
     idSuffix: regionIdSuffix(region.id),
     view: buildDayJvView(date, region.id),
+    leagues: leagues
+      .filter((league) => league.region === region.id)
+      .map((league) => ({ league, view: buildDayJvView(date, region.id, league.id) })),
   })).filter((block) => block.view.rows.length > 0);
 
   /** A day's games with a side in the region (a NorCal vs SoCal game is in both). */
@@ -334,7 +338,10 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
           {/* JV last of the games: the same schools' other teams, never mixed into the varsity
               groups above or their counts. One block per region (`#jv`, `#jv-socal`), each scoped to
               it and omitted when the region has no JV game that day. When both render (no
-              JavaScript), each names its region, so the two headings differ. */}
+              JavaScript), each names its region, so the two headings differ. Inside, the list once
+              for every league (`data-scope="none"`, the All tab) and once per league of the region
+              (`data-scope="<league>"`), as the varsity groups are, so the league tab filters it too;
+              the block itself stays unscoped, since a JV game's page links to its `#jv` anchor. */}
           {jvBlocks.map((block) => (
             <section
               key={block.region}
@@ -348,7 +355,18 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
                 kicker={`${SECOND_LEVEL.short} games`}
                 meta={jvBlocks.length > 1 ? block.shortName : undefined}
               />
-              <JvDayGames view={block.view} />
+              <div data-scope="none">
+                <JvDayGames view={block.view} />
+              </div>
+              {block.leagues.map(({ league, view }) => (
+                <div key={league.id} data-scope={league.id}>
+                  {view.rows.length > 0 ? (
+                    <JvDayGames view={view} />
+                  ) : (
+                    <p className="sx-empty">{`No ${league.shortName} ${SECOND_LEVEL.short} games on this day.`}</p>
+                  )}
+                </div>
+              ))}
             </section>
           ))}
 
