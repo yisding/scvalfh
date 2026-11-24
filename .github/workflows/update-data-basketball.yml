@@ -145,24 +145,22 @@ jobs:
         timeout-minutes: 10
         run: scripts/refresh-player-registry.sh basketball
 
-      # The basketball test files load every basketball data file through its validating loader (and hold the
-      # JV schedule to one JV game per league fixture). When they fail and the stats or JV file changed in this
-      # run, both go back to the committed ones and they run again, so only a bad snapshot blocks the commit.
+      # The basketball test files load every basketball data file through its validating loader (and hold the JV
+      # schedule to one JV game per league fixture). When they fail, scripts/refresh-test.sh puts back the one file
+      # group they refuse (this run's JV games, stats or rosters with the registry) and keeps the others, so only a
+      # bad snapshot blocks the commit.
       # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
       - name: Test
         id: test
-        run: |
-          set -uo pipefail
-          run() { pnpm exec vitest run tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts; }
-          if run; then exit 0; fi
-          if git diff --quiet -- data/basketball/player-stats.json data/basketball/jv.json data/basketball/rosters.json data/basketball/jv-rosters.json; then
-            echo "::error::the basketball tests failed and neither the basketball stats nor the basketball JV file changed in this run"
-            exit 1
-          fi
-          echo "::warning::the basketball tests failed; testing again with the committed stats and JV files"
-          git checkout -- data/basketball/player-stats.json data/basketball/jv.json data/basketball/rosters.json data/basketball/jv-rosters.json data/players.json
-          echo "restored=true" >> "$GITHUB_OUTPUT"
-          run
+        run: scripts/refresh-test.sh basketball tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts
+
+      # Never fatal. The curated files' records the new rosters no longer support (a departed player, a re-entered
+      # roster, a corrected grade): the loaders leave them out of the build instead of failing it
+      # (lib/players/roster-drift.ts), and this turns each into a warning on the run page, for a person to fix by hand.
+      - name: Report roster drift
+        continue-on-error: true
+        timeout-minutes: 5
+        run: pnpm -s roster-drift --github
 
       - name: Commit the data that changed
         id: commit
@@ -280,5 +278,5 @@ jobs:
             echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
             echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
             echo "- player registry: \`${{ steps.registry.outcome || 'skipped' }}\`"
-            echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
+            echo "- restored after failing the tests: JV \`${{ steps.test.outputs.restored_jv || 'false' }}\`, stats \`${{ steps.test.outputs.restored_stats || 'false' }}\`, rosters \`${{ steps.test.outputs.restored_rosters || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

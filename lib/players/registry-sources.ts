@@ -224,11 +224,11 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
         const extra = row.athleteId !== null ? overlay.get(`${team.slug} ${row.athleteId}`) : undefined;
         // MaxPreps' "Player #4" (lib/players/placeholder-name.ts) is a number, not a player, until a source
         // names it; then it is that player, under that name.
-        const named = extra?.name ?? null;
-        // The rule lib/players/rosters.ts holds the overlay to at load, held here too: this reads the file itself.
-        if (named !== null && (!isPlaceholderRow(row) || row.jersey === null)) {
-          throw new Error(`registry: ${team.slug} / ${row.fullName}: rosters-enrichment names a row that is not a numbered "Player #N" stand-in`);
-        }
+        // The rule lib/players/rosters.ts holds the overlay to at load, held here too (this reads the file itself),
+        // and as leniently: a name only ever fills a numbered stand-in. A row MaxPreps has named since (a roster
+        // refresh) is MaxPreps' row again, and the overlay's name is roster drift the loader reports, not a
+        // reason to fail the registry build and with it the refresh (lib/players/roster-drift.ts).
+        const named = extra?.name && isPlaceholderRow(row) && row.jersey !== null ? extra.name : null;
         if (named === null && (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, '')))) continue;
         const asRow = named ? { ...row, firstName: named.firstName, lastName: named.lastName, fullName: named.value } : row;
         // MaxPreps' row says the number and nothing of the name; the name is the source's.

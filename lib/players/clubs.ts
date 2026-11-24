@@ -24,11 +24,12 @@
  * lib/players/commits.ts, whose step 3 asks more because /commits shows a class year; a club page never does.
  * A JV affiliation (`jvAffiliations`) must pass 1 and 3 too, and must be a JV row instead.
  *
- * A roster refetch can break this. If `pnpm fetch-rosters` drops a tied player's row or respells
- * the name, or a season rollover changes `season`, this module throws at import — and so `pnpm
- * test` and the build fail — naming the team, the player and the club. That is the posture of
- * data/field-hockey/rosters-enrichment.json, and right for research data: re-check that affiliation's sources,
- * then edit or drop it by hand. Never prune it automatically.
+ * A roster refetch can break a tie that held when it was written: `pnpm fetch-rosters` drops a tied player's
+ * row, respells the name or moves it to JV. That is roster drift (lib/players/roster-drift.ts), not a load
+ * failure, so one departed player no longer holds back a refresh's every roster change: the tie is left out
+ * of what this module serves and reported (`pnpm roster-drift`, a warning on the refresh's run page). The
+ * file itself keeps it: re-check that affiliation's sources, then edit or drop it by hand. Never prune it
+ * automatically. A file of another season (a rollover) still throws at import.
  */
 
 import bundledFieldHockey from '../../data/field-hockey/clubs.json';
@@ -91,13 +92,18 @@ function loadAndJoin(
   if (file.season !== season) {
     throw new Error(`clubs.json is for season ${file.season}, rosters for ${season}`);
   }
-  const rows = joinToRoster(file.affiliations, teams, season, { label: 'clubs', noun: 'clubs', subject: (a) => a.club });
-  const jvRows = joinToRoster(file.jvAffiliations, teams, season, {
+  // A tie the roster no longer supports is left out of the file this module serves (lib/players/roster-drift.ts).
+  const varsity = joinToRoster(file.affiliations, teams, season, { label: 'clubs', noun: 'clubs', subject: (a) => a.club });
+  const jv = joinToRoster(file.jvAffiliations, teams, season, {
     label: 'clubs',
     noun: 'jvAffiliations',
     subject: (a) => a.club,
     level: 'jv',
   });
+  file.affiliations = varsity.joined;
+  file.jvAffiliations = jv.joined;
+  const rows = varsity.rows;
+  const jvRows = jv.rows;
   // The schema keeps a player out of both lists, so the two maps never share a key.
   for (const [key, row] of jvRows) rows.set(key, row);
   return { file, rows };
