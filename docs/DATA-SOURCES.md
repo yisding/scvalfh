@@ -3500,7 +3500,8 @@ assembler per sport built the files from them with a second read, and they are k
   soccer: club rosters"). ECNL's schedule site is TotalGlobalSports' Athlete One: one public "event" per league and
   season, `https://app.athleteone.com/public/event/<id>/schedules-standings` (4267 ECNL Girls Northern Cal 2026-27,
   4307 ECNL RL Girls NorCal 2026-27; NorCal Premier's ECNL Regional League page links the second, and theecnl.com's
-  own widget for the first answered nothing that day). The page loads its data from `api.athleteone.com/api/…`,
+  own widget for the first answered nothing that day; 4300 ECNL RL Girls Golden State 2026-27, added 2026-11-24, see
+  the next entry). The page loads its data from `api.athleteone.com/api/…`,
   which answers the loaded page only (403 to a plain request, with or without a browser's user agent), so the
   script reads it through the page in a local Chromium: `Event/get-event-schedule-or-standings-athleteone/<event>`
   (divisions and flights), `Event/get-standings-by-div-and-flight/<division>/<flight>/<event>` (the teams) and
@@ -3522,6 +3523,18 @@ assembler per sport built the files from them with a second read, and they are k
   elsewhere were ruled out by reading them (Splash City is a Minnesota podcast; West Coast Elite a Los Angeles
   program; `norcalwildcats.com` is Davis'). A club named with no site or city found has no record, so its ties are
   not shown (`clubs.json`'s notes list them).
+- **ECNL RL Golden State** (2026-11-24). The ECNL Regional League runs a second Northern California girls conference,
+  Golden State, for the second teams of the ECNL Northern Cal clubs (De Anza Force's "About ECNL RL Golden State"
+  page; leaguetables.soccer's 2026-27 conference list). Ties in `clubs.json` already named these teams ("09G
+  ECNL-RL" at De Anza Force, MVLA's and Bay Area Surf's RL teams) with no roster behind them. No public page links
+  its Athlete One event: theecnl.com's Regional League standings widget draws nothing in a headless browser, and the
+  clubs' pages link none. With the owner's approval the event names of 4250-4300 were read, one request 0.3 s apart
+  through the public page (`team/get-event-details-by-eventID/<id>`), stopping at 4300 "ECNL RL Girls Golden State
+  2026-27"; the owner confirmed the id. Read the same way as the other two: 57 teams of the 12 ECNL clubs (Santa Rosa
+  United GU14-16 only, California Odyssey GU14-17), 1,167 players of high school age kept, 322 younger left out.
+  The other two leagues, re-read the same day, had lost one player and gained one class year. `pnpm
+  compare-club-rosters` then listed 38 varsity rows the copy matches and `clubs.json` does not cite (33 new ties,
+  5 ties another page had made), at MVLA, Bay Area Surf and De Anza Force; not yet linked.
 - **College releases.** Soccer: 1,043 athletics hosts (the NCAA directory's women's soccer member lists, D1 349, D2
   261, D3 415, read through headless Chromium since the API answers curl with 403, and 19 NAIA sites), 947 with a
   feed that parsed: 12,387 stories listed, 6,237 opened (3,236 dated 2026-11-11 or later); one names a rostered

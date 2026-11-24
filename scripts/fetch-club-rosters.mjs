@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 /**
- * Keep a copy of the public team rosters of the two Northern California girls leagues ECNL runs, so the
+ * Keep a copy of the public team rosters of the three Northern California girls leagues ECNL runs, so the
  * high school rosters can be compared with them whenever a school posts one (`pnpm compare-club-rosters`):
  *
- *   ECNL Girls Northern Cal        https://app.athleteone.com/public/event/4267/schedules-standings
- *   ECNL Regional League, NorCal   https://app.athleteone.com/public/event/4307/schedules-standings
+ *   ECNL Girls Northern Cal              https://app.athleteone.com/public/event/4267/schedules-standings
+ *   ECNL Regional League, NorCal         https://app.athleteone.com/public/event/4307/schedules-standings
+ *   ECNL Regional League, Golden State   https://app.athleteone.com/public/event/4300/schedules-standings
+ *     (the ECNL Northern Cal clubs' second teams; no public page links it: found 2026-11-24 by reading the
+ *     names of Athlete One events 4250-4300 through the public page, with the owner's approval)
  *
  *   pnpm fetch-club-rosters             rewrite data/soccer/club-rosters.json
  *   pnpm fetch-club-rosters --dry-run   fetch and count, write nothing
@@ -46,6 +49,7 @@ const OLDEST_CLASS = 2026;
 const LEAGUES = [
   { id: 'ecnl', eventId: 4267 },
   { id: 'ecnl-rl', eventId: 4307 },
+  { id: 'ecnl-rl-golden-state', eventId: 4300 },
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -56,15 +60,27 @@ async function launch() {
   const profile = mkdtempSync(path.join(process.env.TMPDIR ?? os.tmpdir(), 'club-rosters-chrome-'));
   const child = spawn(
     CHROME,
-    ['--headless=new', '--disable-gpu', '--no-first-run', `--user-data-dir=${profile}`, '--remote-debugging-port=0', 'about:blank'],
+    [
+      '--headless=new',
+      '--disable-gpu',
+      '--no-first-run',
+      // Chromium refuses to start as root (a container) without it.
+      ...(process.getuid?.() === 0 ? ['--no-sandbox'] : []),
+      `--user-data-dir=${profile}`,
+      '--remote-debugging-port=0',
+      'about:blank',
+    ],
     { stdio: 'ignore' },
   );
   const portFile = path.join(profile, 'DevToolsActivePort');
   for (let i = 0; i < 100 && !existsSync(portFile); i += 1) await sleep(200);
   if (!existsSync(portFile)) throw new Error(`${CHROME} did not start (set CHROME_BIN)`);
   const port = readFileSync(portFile, 'utf8').split('\n')[0];
-  const close = () => {
+  const exited = new Promise((resolve) => child.once('exit', resolve));
+  /** Stops Chromium and, once it has exited (it writes to its profile until then), removes the profile. */
+  const close = async () => {
     child.kill();
+    await exited;
     rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   };
   return { port, close };
@@ -214,7 +230,7 @@ async function main() {
     const fetchedAt = new Date().toISOString();
     const file = {
       builtBy:
-        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and ECNL Regional League Girls NorCal, read through each league\'s own Schedules & Standings page in a local Chromium. clubSlugs is kept by hand.',
+        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. clubSlugs is kept by hand.',
       fetchedAt,
       season: SEASON,
       notes: previous?.notes ?? [],
@@ -235,7 +251,7 @@ async function main() {
       console.log(`wrote ${path.relative(process.cwd(), OUT)}`);
     }
   } finally {
-    browser.close();
+    await browser.close();
   }
 }
 

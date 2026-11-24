@@ -24,8 +24,8 @@ const file = ClubRostersFileSchema.parse(json('data/soccer/club-rosters.json'));
 const clubs = json('data/soccer/clubs.json') as ClubsFile;
 
 describe('data/soccer/club-rosters.json', () => {
-  it('holds both leagues, and only players who can be in high school this season', () => {
-    expect(file.leagues.map((l) => l.id)).toEqual(['ecnl', 'ecnl-rl']);
+  it('holds the three leagues, and only players who can be in high school this season', () => {
+    expect(file.leagues.map((l) => l.id)).toEqual(['ecnl', 'ecnl-rl', 'ecnl-rl-golden-state']);
     expect(file.season).toBe(clubs.season);
     const last = 2000 + Number(file.season.slice(3)) + 3; // this season's freshmen
     for (const t of file.teams) {

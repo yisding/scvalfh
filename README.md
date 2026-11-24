@@ -1945,7 +1945,7 @@ What the research did not reach, so that an absence here says little:
     (ECNL's member clubs were read on 2026-11-22 from the leagues' own team lists, "Girls soccer: club rosters").
     Clubs named on a player's page with no record, so the tie is not shown: El Camino FC, Alum Rock FC, Hawaii
     Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon Valley Soccer Club. The rosters of Girls Academy,
-    NorCal Premier's own leagues and Cal North were not read: only ECNL's two leagues are kept.
+    NorCal Premier's own leagues and Cal North were not read: only ECNL's three Northern California leagues are kept.
   - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
     San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
     feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
@@ -1972,21 +1972,25 @@ gives a marked row the corrected grade, until the conflict is removed (its `kept
 
 ### Girls soccer: club rosters
 
-`data/soccer/club-rosters.json` is a kept copy of the public team rosters of the two Northern California girls
-leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's NorCal division, the GU14 through GU18/19
-age groups. It is there so that a high school roster can be compared with the club rosters the day a school posts
-it, without reading the leagues' pages again. Read on 2026-11-22: **199 teams of 55 clubs, 3,255 players** (60
-ECNL teams of 12 clubs, 139 Regional League teams of 43).
+`data/soccer/club-rosters.json` is a kept copy of the public team rosters of the three Northern California girls
+leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's two conferences here, NorCal (NorCal
+Premier's) and Golden State (the second teams of the 12 ECNL Northern Cal clubs), the GU14 through GU18/19 age
+groups. It is there so that a high school roster can be compared with the club rosters the day a school posts it,
+without reading the leagues' pages again. Read on 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL
+teams of 12 clubs, 139 NorCal Regional League teams of 43, 57 Golden State teams of the 12 ECNL clubs). Golden State
+was added that day; the other two leagues were first read on 2026-11-22.
 
 ```bash
-pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 3 minutes)
+pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
 pnpm fetch-club-rosters --dry-run   # fetch and count, write nothing
 pnpm compare-club-rosters           # compare with the varsity and JV rosters; list the matches clubs.json does not cite
 pnpm compare-club-rosters --all     # every row that shares a name with a roster row, by outcome
 ```
 
-- **Where it is read.** Each league's own Schedules & Standings page (`app.athleteone.com/public/event/4267/…`
-  and `…/4307/…`; NorCal Premier's ECNL Regional League page links the second). The page is drawn by script and its
+- **Where it is read.** Each league's own Schedules & Standings page (`app.athleteone.com/public/event/4267/…`,
+  `…/4307/…` and `…/4300/…`; NorCal Premier's ECNL Regional League page links 4307; no public page links Golden
+  State's 4300, found by reading the event names of 4250-4300 through the public page, owner-approved). A club's
+  Golden State teams carry its ECNL club id, so `clubSlugs` covers both. The page is drawn by script and its
   data refuses any request that does not come from the page, so `scripts/fetch-club-rosters.mjs` drives the local
   Chromium (`CHROME_BIN`, default `/usr/bin/chromium`) over the DevTools protocol and reads what the page itself
   loads: a division's standings for its teams, then each team's page, whose Roster button lists the players. No
