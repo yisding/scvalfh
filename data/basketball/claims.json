@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-24T06:24:17.289Z",
+  "fetchedAt": "2026-11-24T15:14:56.931Z",
   "fixtures": [
     {
       "claims": {
@@ -1246,26 +1246,7 @@
             }
           },
           "ref": "4aaad53b-7c20-449f-8f19-29f0f508cf9e"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "4aaad53b-7c20-449f-8f19-29f0f508cf9e",
-              "published": {
-                "away": 55,
-                "home": 57
-              },
-              "scoreConflict": {
-                "note": "Sources disagree: we show MaxPreps’ 55-57 (Capuchino–Woodside); si.com reports 0-0. MaxPreps’ score stands.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:4aaad53b-7c20-449f-8f19-29f0f508cf9e"
-          }
-        ]
+        }
       },
       "id": "2026-11-23-capuchino-at-woodside",
       "published": [
@@ -1380,7 +1361,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T06:03:23",
+              "maxprepsModifiedOn": "2026-11-24T08:04:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1446,7 +1427,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T06:10:04",
+              "maxprepsModifiedOn": "2026-11-24T07:16:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1463,26 +1444,7 @@
             }
           },
           "ref": "925e45b1-e5e1-4cce-91be-fc3279d2e690"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "925e45b1-e5e1-4cce-91be-fc3279d2e690",
-              "published": {
-                "away": 73,
-                "home": 59
-              },
-              "scoreConflict": {
-                "note": "Sources disagree: we show MaxPreps’ 73-59 (Enochs–Silver Creek); si.com reports 0-0. MaxPreps’ score stands.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:925e45b1-e5e1-4cce-91be-fc3279d2e690"
-          }
-        ]
+        }
       },
       "id": "2026-11-23-name:enochs-at-silver-creek",
       "published": [
@@ -1498,8 +1460,8 @@
             "away": {
               "city": "San Jose",
               "name": "Harker",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 69,
               "slug": "harker",
               "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa"
             },
@@ -1512,13 +1474,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T19:30:00",
             "dateUtc": "2026-11-24T03:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Del Mar",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 28,
               "slug": "del-mar",
               "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
             },
@@ -1531,13 +1493,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-18T15:53:18",
+              "maxprepsModifiedOn": "2026-11-24T06:41:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": "https://gofan.co/event/7106403?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-harker-san-jose/11-23-2026/?c=0712bbeb-ed36-45fb-a5de-ef471116be86",
@@ -1548,26 +1510,7 @@
             }
           },
           "ref": "0712bbeb-ed36-45fb-a5de-ef471116be86"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "0712bbeb-ed36-45fb-a5de-ef471116be86",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports Del Mar 0, Harker 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:0712bbeb-ed36-45fb-a5de-ef471116be86"
-          }
-        ]
+        }
       },
       "id": "2026-11-23-name:harker-at-del-mar",
       "published": [
@@ -1633,26 +1576,7 @@
             }
           },
           "ref": "bc74c027-37a1-4a84-bb81-27fea967e53a"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "bc74c027-37a1-4a84-bb81-27fea967e53a",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports More 0, Woodside Priory 0; MaxPreps has not published a score, so this game stays unreported. One side is not one of our teams.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:bc74c027-37a1-4a84-bb81-27fea967e53a"
-          }
-        ]
+        }
       },
       "id": "2026-11-23-name:more-at-priory",
       "published": [
@@ -1800,8 +1724,8 @@
             "away": {
               "city": "San Jose",
               "name": "San Jose",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 62,
               "slug": "san-jose",
               "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
             },
@@ -1814,13 +1738,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T19:00:00",
             "dateUtc": "2026-11-24T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Lincoln",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 60,
               "slug": "lincoln",
               "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
             },
@@ -1833,13 +1757,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T00:06:24",
+              "maxprepsModifiedOn": "2026-11-24T10:03:10",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": "https://gofan.co/event/7106242?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lincoln-san-jose-vs-san-jose/11-23-2026/?c=7152b514-2886-4654-9b68-eb1a2443ff71",
@@ -1850,26 +1774,7 @@
             }
           },
           "ref": "7152b514-2886-4654-9b68-eb1a2443ff71"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "7152b514-2886-4654-9b68-eb1a2443ff71",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports Lincoln 0, San Jose 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:7152b514-2886-4654-9b68-eb1a2443ff71"
-          }
-        ]
+        }
       },
       "id": "2026-11-23-san-jose-at-lincoln",
       "published": [
@@ -1918,7 +1823,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T04:46:19",
+              "maxprepsModifiedOn": "2026-11-24T08:04:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2001,26 +1906,7 @@
             }
           },
           "ref": "b0c91878-f470-42cb-9910-9a2776884326"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "b0c91878-f470-42cb-9910-9a2776884326",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports Prospect 0, Yerba Buena 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:b0c91878-f470-42cb-9910-9a2776884326"
-          }
-        ]
+        }
       },
       "id": "2026-11-23-yerba-buena-at-prospect",
       "published": [
@@ -2135,7 +2021,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T05:02:50",
+              "maxprepsModifiedOn": "2026-11-24T08:31:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2652,7 +2538,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-24T06:24:17.289Z",
+          "builtAt": "2026-11-24T15:14:56.931Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -9363,7 +9249,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-21T18:49:25",
+              "maxprepsModifiedOn": "2026-11-24T08:30:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9376,7 +9262,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "San Jose High Academy"
             }
           },
           "ref": "2b5666e5-50d2-4802-98fa-b9246ab6da6b"
@@ -17217,7 +17103,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T05:03:12",
+              "maxprepsModifiedOn": "2026-11-24T08:34:04",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17283,7 +17169,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-28T21:02:09",
+              "maxprepsModifiedOn": "2026-11-24T08:33:26",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17296,7 +17182,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Irvington High School"
             }
           },
           "ref": "d0d6dceb-ad66-40fc-befb-8fcdfa9fcdd0"
@@ -18009,7 +17895,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:47:18",
+              "maxprepsModifiedOn": "2026-11-24T08:32:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18022,7 +17908,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/dougherty-valley-high-school-san-ramon-ca/gamec2156d3de?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Dougherty Valley HS"
             }
           },
           "ref": "7a475485-43c5-4598-bc62-8abad2d54721"
@@ -21507,7 +21393,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-17T18:49:29",
+              "maxprepsModifiedOn": "2026-11-24T08:31:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21520,7 +21406,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/james-logan-high-school-union-city-ca/gamb4c8c6c75f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "James Logan High School"
             }
           },
           "ref": "6b0b0d04-afd7-453b-8cdc-b409ecf2de2d"
@@ -22629,7 +22515,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T20:37:05",
+              "maxprepsModifiedOn": "2026-11-24T09:37:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -22642,7 +22528,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Granada High School"
             }
           },
           "ref": "c18e1913-2b30-48ec-a389-12e40385e873"
@@ -41963,7 +41849,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T04:34:19",
+              "maxprepsModifiedOn": "2026-11-24T08:31:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62352,7 +62238,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T21:02:30",
+              "maxprepsModifiedOn": "2026-11-24T08:31:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62365,7 +62251,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/andrew-hill-high-school-san-jose-ca/gam931ce7f82e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Andrew Hill High School"
             }
           },
           "ref": "9939b604-5d68-40d2-b7cb-42520e2deb79"
@@ -62644,6 +62530,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Independence",
+              "result": null,
+              "score": null,
+              "slug": "independence",
+              "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
+            },
+            "contestId": "406c6c82-a075-4fd0-9f37-6c243e0d9ce1",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-12",
+            "dateLocal": "2027-02-12T19:00:00",
+            "dateUtc": "2027-02-13T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-24T00:32:53",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/independence-san-jose-vs-silver-creek-san-jose/2-12-2027/?c=406c6c82-a075-4fd0-9f37-6c243e0d9ce1",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/silver-creek-high-school-san-jose-ca/gamfb322b640b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Silver Creek High School"
+            }
+          },
+          "ref": "406c6c82-a075-4fd0-9f37-6c243e0d9ce1"
+        },
         "official": {
           "fixture": {
             "awayName": "Independence",
@@ -62661,10 +62603,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "406c6c82-a075-4fd0-9f37-6c243e0d9ce1",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-02-12:independence@silver-creek",
+              "jv": {
+                "dateKey": "2027-02-12",
+                "time": "17:30"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-02-12",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-02-12:independence@silver-creek"
         }
       },
-      "id": "2027-02-12-independence-at-silver-creek"
+      "id": "2027-02-12-independence-at-silver-creek~2",
+      "published": [
+        {
+          "contestId": "406c6c82-a075-4fd0-9f37-6c243e0d9ce1"
+        }
+      ]
     },
     {
       "claims": {
