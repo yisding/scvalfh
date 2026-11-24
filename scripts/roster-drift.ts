@@ -5,7 +5,10 @@
  * support, which the loaders leave out of the build instead of failing it.
  *
  *   SCVAL_SPORT=soccer pnpm roster-drift              one line per drift; exit 0
- *   pnpm roster-drift --all                           every sport that lists players, one after another
+ *   pnpm roster-drift --all                           every sport that lists players, one after another, then
+ *                                                     data/player-identity.json
+ *   pnpm roster-drift --identity                      data/player-identity.json alone: the curation the registry
+ *                                                     build no longer finds in any source (scripts/build-players.ts)
  *   pnpm roster-drift --github                        also a `::warning` annotation per drift (the refreshes)
  *   pnpm roster-drift --json                          the drift as a JSON array, nothing else (the tests)
  *   pnpm roster-drift --base origin/main              exit 1 on drift the change itself made (CI on a pull request)
@@ -25,16 +28,18 @@ import type { DriftFile, RosterDrift } from '../lib/players/roster-drift';
 
 interface Options {
   all: boolean;
+  identity: boolean;
   github: boolean;
   json: boolean;
   base: string | null;
 }
 
 function parse(argv: readonly string[]): Options {
-  const o: Options = { all: false, github: false, json: false, base: null };
+  const o: Options = { all: false, identity: false, github: false, json: false, base: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--all') o.all = true;
+    else if (a === '--identity') o.identity = true;
     else if (a === '--github') o.github = true;
     else if (a === '--json') o.json = true;
     else if (a === '--base') {
@@ -44,6 +49,7 @@ function parse(argv: readonly string[]): Options {
     } else throw new Error(`unknown argument ${a}`);
   }
   if (o.all && o.json) throw new Error('--json reads one sport: set SCVAL_SPORT instead of --all');
+  if (o.all && o.identity) throw new Error('--all already reads data/player-identity.json');
   return o;
 }
 
@@ -101,8 +107,8 @@ function inherited(d: RosterDrift, dataDir: string, base: string, nameKey: (name
   return now.length === then.length && [...now].sort().join('\n') === [...then].sort().join('\n');
 }
 
-/** The children `--all` runs: every sport whose build lists players. */
-async function allSports(argv: readonly string[]): Promise<number> {
+/** The children `--all` runs: every sport whose build lists players; then the curation file, here. */
+async function allSports(o: Options, argv: readonly string[]): Promise<number> {
   const { SPORT_IDS, SPORT_LISTS_PLAYERS } = await import('../lib/sports/current');
   const self = fileURLToPath(import.meta.url);
   let code = 0;
@@ -113,12 +119,61 @@ async function allSports(argv: readonly string[]): Promise<number> {
     });
     if (run.status !== 0) code = 1;
   }
-  return code;
+  return Math.max(code, await identity(o));
+}
+
+/** Prints one label's drift; returns how many the change itself made (`mine`). */
+function report(o: Options, label: string, drift: readonly RosterDrift[], mine: (d: RosterDrift) => boolean, describe: (d: RosterDrift) => string): number {
+  let own = 0;
+  for (const d of drift) {
+    const made = o.base !== null && mine(d);
+    if (made) own++;
+    const line = `${label} ${describe(d)}${made ? ` — not in ${o.base}: this change made it` : ''}`;
+    console.log(line);
+    if (o.github) console.log(`::${made ? 'error' : 'warning'} title=Roster drift (${label})::${line}`);
+  }
+  console.log(`${label}: ${drift.length} roster drift${drift.length === 1 ? '' : 's'}${o.base !== null ? `, ${own} this change made` : ''}`);
+  return own;
+}
+
+const IDENTITY_FILE = 'data/player-identity.json';
+
+/**
+ * data/player-identity.json's drift: what the registry build (lib/players/registry-build.ts) finds no source for.
+ * An entry is the change's own unless the base has it exactly as it is.
+ */
+async function identity(o: Options): Promise<number> {
+  const { readBuildInput } = await import('../lib/players/registry-file');
+  const { buildRegistry, identityDriftKey } = await import('../lib/players/registry-build');
+  const { describeDrift } = await import('../lib/players/roster-drift');
+  const drift: RosterDrift[] = [];
+  buildRegistry(readBuildInput(process.cwd(), 'scripts/roster-drift.ts'), { onDrift: (d) => drift.push(d) });
+  type Entry = { sport: string; team: string; name?: string; careerIds?: string[] };
+  const entriesByKey = (raw: Raw | null): Map<string, string[]> => {
+    const out = new Map<string, string[]>();
+    for (const section of ['sameAs', 'rowSplits', 'distinct', 'names']) {
+      for (const e of (raw?.[section] ?? []) as Entry[]) {
+        const key = `${e.team} ${identityDriftKey(section, e.sport, e.name ?? (e.careerIds ?? []).join(' / '))}`;
+        out.set(key, [...(out.get(key) ?? []), stable(e)]);
+      }
+    }
+    return out;
+  };
+  const now = entriesByKey(readAt(null, IDENTITY_FILE));
+  const then = o.base === null ? new Map<string, string[]>() : entriesByKey(readAt(o.base, IDENTITY_FILE));
+  const same = (a: string[] = [], b: string[] = []) => a.length === b.length && [...a].sort().join('\n') === [...b].sort().join('\n');
+  const mine = (d: RosterDrift) => !same(now.get(`${d.teamSlug} ${d.key}`), then.get(`${d.teamSlug} ${d.key}`));
+  if (o.json) {
+    process.stdout.write(`${JSON.stringify(drift)}\n`);
+    return o.base !== null && drift.some(mine) ? 1 : 0;
+  }
+  return report(o, 'registry', drift, mine, describeDrift) > 0 ? 1 : 0;
 }
 
 export async function main(argv: readonly string[]): Promise<number> {
   const o = parse(argv);
-  if (o.all) return allSports(argv);
+  if (o.all) return allSports(o, argv);
+  if (o.identity) return identity(o);
   const { DATA_DIR, SPORT_ID, HAS_RECRUITING } = await import('../lib/sports/current');
   await import('../lib/players/rosters');
   // The clubs and commitments are joined only by the builds with recruiting pages; a build without them serves neither.
@@ -136,15 +191,7 @@ export async function main(argv: readonly string[]): Promise<number> {
     process.stdout.write(`${JSON.stringify(drift)}\n`);
     return made.some(Boolean) ? 1 : 0;
   }
-  let own = 0;
-  for (const [i, d] of drift.entries()) {
-    const mine = made[i];
-    if (mine) own++;
-    const line = `${SPORT_ID} ${describeDrift(d)}${mine ? ` — not in ${o.base}: this change made it` : ''}`;
-    console.log(line);
-    if (o.github) console.log(`::${mine ? 'error' : 'warning'} title=Roster drift (${SPORT_ID})::${line}`);
-  }
-  console.log(`${SPORT_ID}: ${drift.length} roster drift${drift.length === 1 ? '' : 's'}${o.base !== null ? `, ${own} this change made` : ''}`);
+  const own = report(o, SPORT_ID, drift, (d) => made[drift.indexOf(d)], describeDrift);
   return own > 0 ? 1 : 0;
 }
 
