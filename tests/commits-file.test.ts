@@ -627,14 +627,16 @@ describe('the join to the rosters refuses a file, or leaves a commitment out as 
     const f = fileWith([
       { ...c, sources: [{ ...c.sources[0], statedClassYear: 2027 }, { ...c.sources[0], url: 'https://example.com/b', statedClassYear: 2028 }] },
     ]);
-    expect(load(f)).toThrow('sources disagree on the class year (2027, 2028) and the roster has no grade');
+    expect(problems(f)).toContain('sources disagree on the class year (2027, 2028) and the roster has no grade');
+    // A refresh that takes the grade away makes this; it is left out, not thrown.
+    expect(loadCommits(f, teams, season).commitments).toEqual([]);
   });
 
   it('a class year no high school roster of the season can hold, for a player with no grade', () => {
     const c = commitmentFor(noGrade);
     for (const year of [classOf(season, 12) - 1, classOf(season, 9) + 1]) {
       const f = fileWith([{ ...c, sources: [{ ...c.sources[0], statedClassYear: year }] }]);
-      expect(load(f)).toThrow(`a source says class of ${year}, not a class on a ${season} high school roster`);
+      expect(problems(f)).toContain(`a source says class of ${year}, not a class on a ${season} high school roster`);
     }
   });
 
