@@ -3083,7 +3083,10 @@ empty state says what was and was not found (§8).
   from ("Pages about the club"; a roster page is listed once, under the rosters, not again there),
   with a sentence saying that only tracked players are named here (and, where the club has a public
   roster, that it lists many more players than this page does). Each player row: the name; the
-  school linking `/teams/<slug>#roster`, the grade and the club team when known; the status (§17.3);
+  school linking `/teams/<slug>#roster`, the grade and the club team when known (in soccer, in one
+  shape for every club whatever the source wrote: the team's own name, then its league, as "Juventus
+  ECNL", "ECNL RL", "Quicksilver Green GA", with no club name or age group;
+  `components/words/club-team-words.ts`); the status (§17.3);
   and the source links. The list's lede says recall is partial, as the empty state does. In "Teams
   and programs", the page most programs were read from (when two or more were) is linked once, under
   the list ("Listed on the club’s site: Programs overview", or "Programs without a link of their own
