@@ -2140,7 +2140,9 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   pages tie none of them. **`sameAs` cannot reach a record no source lists any more**: MacDonald's second
   Dewyond Williams (#13), Yerba Buena's Uriyah Pacual and Monta Vista's Hanna Mohammed are rows their
   coaches have since replaced (by #0 Dewyond Williams, Uriyah Pascsual and Hanaa Mohamed), and stay in the
-  registry as separate records marked `gone`. Two `names` entries keep an official name the joins would
+  registry as separate records marked `gone`. (Since 2026-11-24 an entry whose career or name no source lists any
+  more is curation drift: the build leaves it out with a warning instead of failing, and `pnpm roster-drift
+  --identity` lists it; CI fails only a pull request that added or edited such an entry.) Two `names` entries keep an official name the joins would
   have changed (Giuliana Borello, Theresa Berger). After the build: 6,843 players (6,275 with a MaxPreps
   career, 568 known by name alone), 86 in more than one sport, and no question left on the review list.
 - **2026-11-16 build**: 5,475 players (4,955 with a MaxPreps career, 520 known by name alone), 6,766 stints,

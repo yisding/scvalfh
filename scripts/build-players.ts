@@ -43,6 +43,7 @@ import { buildReviewReport, formatReviewReport } from '../lib/players/review-rep
 import type { PlayersFile } from '../lib/players/registry-schema';
 import { SPORT_IDS, type SportId } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
+import { describeDrift } from '../lib/players/roster-drift';
 import { runCliIfMain } from './cli';
 
 const USAGE = 'Usage: pnpm build-players [--check | --dry-run] [--review] [--drafts <file>] [--no-stamp]';
@@ -190,7 +191,14 @@ export function main(argv: readonly string[]): number {
   const root = process.cwd();
   const input = readBuildInput(root, 'scripts/build-players.ts');
   for (const line of input.skipped) console.warn(`WARN ${line}`);
-  const file = buildRegistry(input);
+  // Curation the sources no longer support (a roster refresh dropped a career): a warning, on a refresh's run page
+  // an annotation, never a failed build (lib/players/roster-drift.ts; `pnpm roster-drift` fails a change that made it).
+  const file = buildRegistry(input, {
+    onDrift: (d) => {
+      const line = describeDrift(d);
+      console.warn(process.env.GITHUB_ACTIONS === 'true' ? `::warning title=Player registry curation drift::${line}` : `WARN ${line}`);
+    },
+  });
   const text = stableStringify(file);
   const out = path.join(root, PLAYERS_FILE);
   const before = existsSync(out) ? readFileSync(out, 'utf8') : null;

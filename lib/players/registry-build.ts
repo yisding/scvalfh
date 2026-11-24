@@ -74,6 +74,7 @@ import type { SportId } from '../sports/current';
 import { isPlaceholderName } from './placeholder-name';
 import { editDistance, nameKey, nameTokens, slipApart } from './name-compare';
 import { chooseNames } from './official-name';
+import type { RosterDrift } from './roster-drift';
 
 export { nameKey, nameTokens };
 
@@ -386,8 +387,23 @@ interface Row extends Sighting {
 
 const ROSTER_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'school-jv-roster']);
 
-export function buildRegistry(input: BuildInput): PlayersFile {
+/** What a build may say beside the file it returns. */
+export interface BuildOptions {
+  /**
+   * Told of each data/player-identity.json entry the sources no longer support (lib/players/roster-drift.ts): a
+   * `sameAs`, `rowSplits` or `distinct` career no source lists, a `names` entry that fits no player. A roster
+   * refresh makes these (a coach re-entering a roster, MaxPreps dropping a duplicate row) with no edit of the
+   * curation file, so they are left out and reported rather than failing the build, and with it the refresh's
+   * rosters. scripts/roster-drift.ts fails a pull request whose own entries drift (a mistyped career id).
+   */
+  onDrift?: (d: RosterDrift) => void;
+}
+
+export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOptions = {}): PlayersFile {
   const { previous, identity } = input;
+  /** Reports a curation entry the sources no longer support. `section` names its list in the file. */
+  const drift = (section: 'sameAs' | 'rowSplits' | 'distinct' | 'names', e: { sport: string; team: string; name?: string }, who: string, what: string) =>
+    onDrift({ file: 'player-identity', teamSlug: e.team, who, key: identityDriftKey(section, e.sport, e.name ?? who), what, leftOut: 'record' });
   const builtPairs = new Set(input.built.map((b) => pairKey(b.sport, b.season)));
   if (builtPairs.size !== input.built.length) throw new Error('registry: a (sport, season) pair is listed twice under built');
   /** pair → the sources read afresh for it; absent for a pair rebuilt in full. */
@@ -439,11 +455,28 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   }
 
   // ---- 1. curation, then one fixed order: nothing below depends on the order rows arrived in
-  const sameAs = new Map(identity.sameAs.map((e) => [`${e.sport} ${e.team} ${nameKey(e.name)}`, e]));
-  const all: Row[] = [...carried, ...input.sightings.map((s): Row => ({ ...s, formerKeys: [] }))]
+  const rows: Row[] = [...carried, ...input.sightings.map((s): Row => ({ ...s, formerKeys: [] }))]
     .map((s): Row => ({ ...s, nameKeys: [...new Set(s.nameKeys.filter((k) => k !== ''))].sort(), careerIds: [...new Set(s.careerIds)].sort() }))
     // A row with neither an id nor a usable name (a name with no Latin letter) names nobody.
-    .filter((s) => s.careerIds.length > 0 || s.nameKeys.length > 0)
+    .filter((s) => s.careerIds.length > 0 || s.nameKeys.length > 0);
+  // A curated career no source lists is curation drift (BuildOptions.onDrift): a sameAs to it is left out, since
+  // tying a name to it would only make a player of a career nobody lists; a rowSplit or a distinct pair naming it
+  // has nothing to act on, and is reported.
+  const knownCareers = new Set(rows.flatMap((s) => (s.curated ? [] : s.careerIds)));
+  const unlisted = (careerId: string) => `MaxPreps career ${careerId}, which no source lists`;
+  const liveSameAs = identity.sameAs.filter((e) => {
+    if (e.careerId === undefined || knownCareers.has(e.careerId)) return true;
+    drift('sameAs', e, e.name, `sameAs ties this name to ${unlisted(e.careerId)}`);
+    return false;
+  });
+  for (const e of identity.rowSplits) {
+    if (!knownCareers.has(e.careerId)) drift('rowSplits', e, e.name, `rowSplits names ${unlisted(e.careerId)}`);
+  }
+  for (const e of identity.distinct) {
+    for (const id of e.careerIds) if (!knownCareers.has(id)) drift('distinct', e, e.careerIds.join(' / '), `distinct names ${unlisted(id)}`);
+  }
+  const sameAs = new Map(liveSameAs.map((e) => [`${e.sport} ${e.team} ${nameKey(e.name)}`, e]));
+  const all: Row[] = rows
     .map((s): Row => {
       // A row with a career of its own is joined after the careers are (below), not rewritten here.
       if (s.careerIds.length > 0) return s;
@@ -457,12 +490,6 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   const orderKey = (s: Row) =>
     [s.sport, s.season, s.team, PLAYER_LEVELS.indexOf(s.level), s.careerIds.join(','), s.nameKeys.join(','), JSON.stringify(s.observations), s.prev ?? ''].join('\u0001');
   all.sort((a, b) => byText(orderKey(a), orderKey(b)));
-  const knownCareers = new Set(all.flatMap((s) => (s.curated ? [] : s.careerIds)));
-  for (const e of identity.sameAs) {
-    if (e.careerId !== undefined && !knownCareers.has(e.careerId)) {
-      throw new Error(`registry: data/player-identity.json sameAs ties "${e.name}" (${e.team}) to MaxPreps career ${e.careerId}, which no source lists`);
-    }
-  }
 
   // ---- 2. one career id, one player — unless the id is carrying two people
   type PendingReview = Omit<ReviewItem, 'players' | 'seasons'> & { rows: number[] };
@@ -551,7 +578,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   for (const groups of groupsOf.values()) for (const g of groups.slice(1)) for (const i of g.slice(1)) clusters.union(g[0], i);
   // What a person decided about a name whose rows have a career of their own ("Addy Paradiso",
   // under this year's id, is last year's "Addison Paradiso"): the two records are joined whole.
-  for (const e of identity.sameAs) {
+  for (const e of liveSameAs) {
     const named = (name: string) => all.flatMap((s, i) => (s.sport === e.sport && s.team === e.team && s.nameKeys.includes(nameKey(name)) ? [i] : []));
     const from = named(e.name);
     const to = e.careerId !== undefined ? [firstWithCareer.get(e.careerId)].flatMap((i) => (i === undefined ? [] : [i])) : named(e.isName as string);
@@ -955,6 +982,11 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   });
   for (const e of identity.names) {
     const by = namesUsedBy.get(e) ?? [];
+    // No player any more: the name left every source (curation drift), and the entry has nothing to decide.
+    if (by.length === 0) {
+      drift('names', e, e.name, 'names gives the official name of a player no source lists under this name');
+      continue;
+    }
     if (by.length !== 1) {
       throw new Error(
         `registry: data/player-identity.json names "${e.name}" (${e.sport} ${e.team}) fits ${by.length === 0 ? 'no player' : `${by.length} players (${by.join(', ')})`}: name one player by a spelling her lists use`,
@@ -1013,6 +1045,11 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     );
   }
   return checked.data;
+}
+
+/** RosterDrift.key of a data/player-identity.json entry: its list, sport and name (or, for `distinct`, its careers). */
+export function identityDriftKey(section: string, sport: string, name: string): string {
+  return `${section} ${sport} ${nameKey(name)}`;
 }
 
 /**

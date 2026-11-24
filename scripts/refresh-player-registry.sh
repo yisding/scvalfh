@@ -6,12 +6,15 @@
 #   scripts/refresh-player-registry.sh <sport>
 #
 # A roster that moved on upstream can leave the hand-curated data/player-identity.json pointing at a MaxPreps career
-# no source lists any more (a coach re-entering a roster, 2026-11-21), which the registry build refuses. Committing
-# such rosters would turn every later check of main red, so when the build or the tests fail, this puts the rosters
-# and data/players.json back as they were committed, says why as an error annotation, and exits 1: the refresh still
-# commits its other files, and the rosters wait until a person updates the curation file and runs
-# `pnpm build-players` (the error names the entry). It never writes the hand-curated field hockey files the build
-# stamps (--no-stamp): a rebuild that would re-stamp them fails the tests instead, and is done by hand.
+# no source lists any more (a coach re-entering a roster, 2026-11-21; Leland's duplicate rows, 2026-11-24). That is
+# curation drift (lib/players/roster-drift.ts): the build leaves the entry out and warns, and the tests pass over
+# curated records drift leaves out, so it no longer holds the rosters back; `pnpm roster-drift --identity` lists it
+# for a person. What still fails is a registry the build or its tests refuse for another reason. Committing such
+# rosters would turn every later check of main red, so then this puts the rosters and data/players.json back as they
+# were committed, says why as an error annotation, and exits 1: the refresh still commits its other files, and the
+# rosters wait until a person fixes it and runs `pnpm build-players` (the error says what). It never writes the
+# hand-curated files the build stamps (--no-stamp): a rebuild that would re-stamp a record drift does not leave out
+# fails the tests instead, and is done by hand.
 #
 # Exit 0: rosters unchanged (nothing to do), or rebuilt and tested. Exit 1: rosters and registry restored.
 set -uo pipefail

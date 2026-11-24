@@ -3,7 +3,8 @@
  *
  * data/<sport>/rosters-enrichment.json, clubs.json and commits.json join to the roster rows by team slug and
  * MaxPreps athleteId, and jv-profiles.json to the team page's JV list by name; their loaders check every record
- * against the row it joins to. The rows are rewritten
+ * against the row it joins to. data/player-identity.json names MaxPreps careers and players' names, which the
+ * registry build (lib/players/registry-build.ts) checks against every source the same way. The rows are rewritten
  * by every roster refresh: a coach drops a player, re-enters the roster under new athleteIds, corrects a spelling,
  * or fills in a grade the overlay had filled. Each of those makes a record that was right when it was written wrong
  * now, through no edit of the overlay.
@@ -23,14 +24,17 @@
  */
 
 /** The overlay files a drift is in, as data/<sport>/<file>.json. */
-export type DriftFile = 'rosters-enrichment' | 'clubs' | 'commits' | 'jv-profiles';
+export type DriftFile = 'rosters-enrichment' | 'clubs' | 'commits' | 'jv-profiles' | 'player-identity';
 
 export interface RosterDrift {
   file: DriftFile;
   teamSlug: string;
   /** The player as the record names them, and for a club tie or a commitment the club or college: `Ann Lee (sf-hawks)`. */
   who: string;
-  /** What the record joins on: the MaxPreps athleteId, or for jv-profiles the JV list's name (as `nameKey` folds it). */
+  /**
+   * What the record joins on: the MaxPreps athleteId; for jv-profiles the JV list's name (as `nameKey` folds it);
+   * for player-identity the entry's list, sport and name (lib/players/registry-build.ts identityDriftKey).
+   */
   key: string;
   /** What the roster now says that the record does not agree with. */
   what: string;
