@@ -7,8 +7,9 @@
  * A JV player has no join key both JV sources share (a school's own list gives names only), so an
  * entry joins on team slug + the player's name as the team page's JV list spells it
  * (lib/jv/jv-rosters.ts getJvRoster, the varsity players already taken out), compared the way that
- * module compares names across sources (`nameKey`). Asserted at load time, so a bad file fails at
- * import rather than half-way through a render:
+ * module compares names across sources (`nameKey`). Checked at load time; the first two rules read the JV list a
+ * roster refresh rewrites, so an entry that breaks one is roster drift (lib/players/roster-drift.ts), left out and
+ * reported, while the last two still fail the import:
  *   - every entry is a player on the JV list the school's team page shows, and not on its varsity
  *     roster (a player who moves up gets her profiles in data/field-hockey/rosters-enrichment.json instead);
  *   - a class year a profile states agrees with the grade the JV list shows;
@@ -32,6 +33,7 @@ import bundledVolleyball from '../../data/volleyball/jv-profiles.json';
 import bundledSoccer from '../../data/soccer/jv-profiles.json';
 import bundledValSoccer from '../../data/val-soccer/jv-profiles.json';
 import { validateData } from '../data-file';
+import { reportDrift } from '../players/roster-drift';
 import { classOf, getRosterEnrichment } from '../players/rosters';
 import { PlayerProfileSchema, profileSportKey, type PlayerProfile } from '../players/rosters-schema';
 import { dateKey, playerId } from '../schema-primitives';
@@ -115,20 +117,33 @@ function load(): JvProfilesFile {
   for (const team of file.teams) {
     const roster = getJvRoster(team.slug as TeamSlug);
     const byName = new Map((roster?.players ?? []).map((p) => [nameKey(p.name), p]));
-    for (const e of team.players) {
+    // The JV list is rewritten by every roster refresh: a player it no longer lists (or whose grade it changed) is
+    // roster drift (lib/players/roster-drift.ts), left out and reported, not a load failure.
+    team.players = team.players.filter((e) => {
+      const drift = (what: string, leftOut: 'record' | 'field') =>
+        reportDrift({ file: 'jv-profiles', teamSlug: team.slug, who: e.name, key: nameKey(e.name), what, leftOut });
       const p = byName.get(nameKey(e.name));
-      if (!p) fail(team.slug, e.name, 'not a player on the JV list the team page shows (or now on the varsity roster)');
+      if (!p) {
+        drift('not a player on the JV list the team page shows (or now on the varsity roster)', 'record');
+        return false;
+      }
       if (overlayJv.has(`${team.slug} ${nameKey(e.name)}`)) {
         fail(team.slug, e.name, `${DATA_DIR}/rosters-enrichment.json marks this MaxPreps row JV: link the profile there`);
       }
       for (const x of e.profiles) {
         if (varsityUrls.has(x.url)) fail(team.slug, e.name, `${x.url} is already linked to a varsity player`);
-        if (x.classOf !== null && p!.grade !== null && x.classOf !== classOf(file.season, p!.grade)) {
-          fail(team.slug, e.name, `${x.platform} profile says class of ${x.classOf}, the JV list shows grade ${p!.grade}`);
-        }
       }
-    }
+      e.profiles = e.profiles.filter((x) => {
+        if (x.classOf !== null && p.grade !== null && x.classOf !== classOf(file.season, p.grade)) {
+          drift(`${x.platform} profile says class of ${x.classOf}, the JV list shows grade ${p.grade}`, 'field');
+          return false;
+        }
+        return true;
+      });
+      return e.profiles.length > 0;
+    });
   }
+  file.teams = file.teams.filter((t) => t.players.length > 0);
   return file;
 }
 

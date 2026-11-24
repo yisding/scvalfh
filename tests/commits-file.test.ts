@@ -44,7 +44,7 @@ import {
 import { joinToRoster } from '../lib/players/roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type RosterConflict } from '../lib/players/rosters';
 import { getTeamBySlug } from '../lib/teams';
-import { REPO } from './helpers';
+import { loadProblems, REPO } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'commits.json'), 'utf8')) as CommitsFile;
 const teams = getAllEnrichedRosters();
@@ -113,6 +113,8 @@ function schemaIssues(f: unknown): string[] {
 }
 
 const load = (f: unknown) => () => loadCommits(f, teams, season);
+/** The error loadCommits throws on `f`, else the roster drift it reports, else '' (tests/helpers.ts loadProblems). */
+const problems = (f: unknown) => loadProblems(load(f));
 
 describe('the committed data/field-hockey/commits.json', () => {
   it('validates and loads against the rosters', () => {
@@ -587,7 +589,7 @@ describe('the schema refuses a bad file, naming the path', () => {
   });
 });
 
-describe('the join to the rosters refuses, naming team, player and college', () => {
+describe('the join to the rosters refuses a file, or leaves a commitment out as roster drift, naming team, player and college', () => {
   it('another season', () => {
     expect(() => loadCommits(fileWith([commitmentFor(senior)]), teams, '27-28')).toThrow(
       `commits.json is for season ${season}, rosters for 27-28`,
@@ -596,12 +598,14 @@ describe('the join to the rosters refuses, naming team, player and college', () 
 
   it('an athleteId that is not a row of the team', () => {
     const f = fileWith([commitmentFor(senior, { athleteId: '00000000-0000-0000-0000-000000000000' })]);
-    expect(load(f)).toThrow(`commits: ${senior.teamSlug} / ${senior.row.fullName} (example-college): athleteId`);
+    expect(problems(f)).toContain(`commits: ${senior.teamSlug} / ${senior.row.fullName} (example-college): athleteId`);
+    // Left out of what the module serves, not thrown: a roster refresh that drops a player must not fail the build.
+    expect(loadCommits(f, teams, season).commitments).toEqual([]);
   });
 
   it('another spelling of the name', () => {
     const f = fileWith([commitmentFor(senior, { fullName: `${senior.row.fullName}x` })]);
-    expect(load(f)).toThrow(`MaxPreps spells this player "${senior.row.fullName}"`);
+    expect(problems(f)).toContain(`MaxPreps spells this player "${senior.row.fullName}"`);
   });
 
   it('a JV row', () => {
@@ -609,13 +613,13 @@ describe('the join to the rosters refuses, naming team, player and college', () 
       (r) => r.row.level === 'jv' && r.row.athleteId !== null,
     );
     expect(jv, 'Los Gatos lists JV rows on MaxPreps').toBeDefined();
-    expect(load(fileWith([commitmentFor(jv!)]))).toThrow('a JV row: commitments list varsity rows only');
+    expect(problems(fileWith([commitmentFor(jv!)]))).toContain('a JV row: commitments list varsity rows only');
   });
 
   it('a stated class year that disagrees with the grade', () => {
     const c = commitmentFor(junior);
     const f = fileWith([{ ...c, sources: [{ ...c.sources[0], statedClassYear: classOf(season, 12) }] }]);
-    expect(load(f)).toThrow(`sportsrecruits source says class of ${classOf(season, 12)}, the roster shows grade 11`);
+    expect(problems(f)).toContain(`sportsrecruits source says class of ${classOf(season, 12)}, the roster shows grade 11`);
   });
 
   it('sources that disagree on the class year of a player with no grade', () => {
@@ -623,14 +627,16 @@ describe('the join to the rosters refuses, naming team, player and college', () 
     const f = fileWith([
       { ...c, sources: [{ ...c.sources[0], statedClassYear: 2027 }, { ...c.sources[0], url: 'https://example.com/b', statedClassYear: 2028 }] },
     ]);
-    expect(load(f)).toThrow('sources disagree on the class year (2027, 2028) and the roster has no grade');
+    expect(problems(f)).toContain('sources disagree on the class year (2027, 2028) and the roster has no grade');
+    // A refresh that takes the grade away makes this; it is left out, not thrown.
+    expect(loadCommits(f, teams, season).commitments).toEqual([]);
   });
 
   it('a class year no high school roster of the season can hold, for a player with no grade', () => {
     const c = commitmentFor(noGrade);
     for (const year of [classOf(season, 12) - 1, classOf(season, 9) + 1]) {
       const f = fileWith([{ ...c, sources: [{ ...c.sources[0], statedClassYear: year }] }]);
-      expect(load(f)).toThrow(`a source says class of ${year}, not a class on a ${season} high school roster`);
+      expect(problems(f)).toContain(`a source says class of ${year}, not a class on a ${season} high school roster`);
     }
   });
 
@@ -667,28 +673,30 @@ describe('a roster row whose MaxPreps grade is last season\'s (a rosterBehind gr
 
   it('takes a commitment source one class year ahead only with the marker', () => {
     const senior = stating(classOf(season, 12));
-    expect(() => loadCommits(fileWith([senior]), marked, season)).not.toThrow();
-    expect(() => loadCommits(fileWith([senior]), unmarked, season)).toThrow(
+    expect(loadProblems(() => loadCommits(fileWith([senior]), marked, season))).toBe('');
+    expect(loadProblems(() => loadCommits(fileWith([senior]), unmarked, season))).toContain(
       `sportsrecruits source says class of ${classOf(season, 12)}, the roster shows grade 11`,
     );
     // The roster grade's own class still passes; a class year two off still fails.
-    expect(() => loadCommits(fileWith([stating(classOf(season, 11))]), marked, season)).not.toThrow();
-    expect(() => loadCommits(fileWith([stating(classOf(season, 10))]), marked, season)).toThrow(
+    expect(loadProblems(() => loadCommits(fileWith([stating(classOf(season, 11))]), marked, season))).toBe('');
+    expect(loadProblems(() => loadCommits(fileWith([stating(classOf(season, 10))]), marked, season))).toContain(
       `sportsrecruits source says class of ${classOf(season, 10)}, the roster shows grade 11`,
     );
   });
 
   it('takes a club-tie source one class year ahead only with the marker (the same join)', () => {
     const tie = { teamSlug: junior.teamSlug, athleteId: junior.row.athleteId!, fullName: junior.row.fullName, club: 'x' };
-    const join = (t: typeof teams, year: number) => () =>
-      joinToRoster([{ ...tie, sources: [{ kind: 'event', statedClassYear: year }] }], t, season, {
-        label: 'clubs',
-        noun: 'clubs',
-        subject: (r) => r.club,
-      });
-    expect(join(marked, classOf(season, 12))).not.toThrow();
-    expect(join(unmarked, classOf(season, 12))).toThrow(`event source says class of ${classOf(season, 12)}, the roster shows grade 11`);
-    expect(join(marked, classOf(season, 13))).toThrow(`event source says class of ${classOf(season, 13)}, the roster shows grade 11`);
+    const join = (t: typeof teams, year: number) =>
+      loadProblems(() =>
+        joinToRoster([{ ...tie, sources: [{ kind: 'event', statedClassYear: year }] }], t, season, {
+          label: 'clubs',
+          noun: 'clubs',
+          subject: (r) => r.club,
+        }),
+      );
+    expect(join(marked, classOf(season, 12))).toBe('');
+    expect(join(unmarked, classOf(season, 12))).toContain(`event source says class of ${classOf(season, 12)}, the roster shows grade 11`);
+    expect(join(marked, classOf(season, 13))).toContain(`event source says class of ${classOf(season, 13)}, the roster shows grade 11`);
   });
 
   it('lists the player under the corrected class: commitClassOf reads the grade the conflict gives', () => {

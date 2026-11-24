@@ -11,6 +11,7 @@ import { afterAll, beforeAll, vi } from 'vitest';
 import { readManifest } from '../lib/pipeline/corpus';
 import { resolveFile, runtimeImports, specifierBase } from './import-graph';
 import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/players/player-stats-schema';
+import { describeDrift, getRosterDrift } from '../lib/players/roster-drift';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
@@ -335,6 +336,21 @@ export function stubCorpusSnapshot(corpus: CorpusName): void {
     vi.unstubAllEnvs();
     vi.resetModules();
   });
+}
+
+/**
+ * What a call to an overlay loader found wrong: the error it threw, else the roster drift it reported
+ * (lib/players/roster-drift.ts), one `describeDrift` line each; '' when it loaded clean. A loader leaves a record the
+ * roster no longer supports out instead of throwing, so this is how a test sees either kind of refusal.
+ */
+export function loadProblems(fn: () => unknown): string {
+  const before = getRosterDrift().length;
+  try {
+    fn();
+  } catch (err) {
+    return (err as Error).message;
+  }
+  return getRosterDrift().slice(before).map(describeDrift).join('\n');
 }
 
 // ---------------------------------------------------------------- synthetic games

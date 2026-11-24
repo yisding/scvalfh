@@ -111,6 +111,24 @@ jobs:
         env:
           CI_GATE: '1'
 
+      # The curated overlays' records the rosters no longer support (lib/players/roster-drift.ts), in every sport
+      # that lists players. The loaders leave such a record out instead of failing the build, so a roster refresh
+      # that drops a player never blocks the rest of its rosters; that same leniency would let a mistyped athleteId
+      # in a pull request vanish without a word. So on a pull request, drift on a player whose records the pull
+      # request added or edited fails here, and drift on records exactly as the base branch has them (a refresh's
+      # doing) is only a warning. On a push it is only reported.
+      - name: Roster drift
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          if [ -n "$BASE_REF" ]; then
+            git fetch --no-tags --depth=1 origin "+refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
+            pnpm -s roster-drift --all --github --base "origin/$BASE_REF"
+          else
+            pnpm -s roster-drift --all --github
+          fi
+
       # SCVAL_BUILD_AT pins the instant the "stale snapshot" warning is measured against
       # (components/layout/build-instant.ts), so two builds of one commit are byte-identical.
       - name: Build

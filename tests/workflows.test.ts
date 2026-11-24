@@ -442,8 +442,15 @@ describe('the soccer refresh', () => {
     const order = ['Fetch rosters', 'Rebuild the player registry', 'Test'].map((n) => updateSoccer.indexOf(`- name: ${n}\n`));
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    // A Test failure that restores the rosters restores the registry rebuilt from them.
-    expect(stepBody(updateSoccer, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // The Test step puts back only the file group the tests refuse; its rosters group carries the registry rebuilt
+    // from them (scripts/refresh-test.sh, tests/refresh-test.test.ts).
+    expect(stepBody(updateSoccer, 'Test')).toContain('run: scripts/refresh-test.sh soccer tests/');
+    // Roster drift is reported after the tests, never fatal, and before the commit.
+    const drift = stepBody(updateSoccer, 'Report roster drift');
+    expect(drift).toContain('run: pnpm -s roster-drift --github');
+    expect(drift).toContain('continue-on-error: true');
+    expect(updateSoccer.indexOf('- name: Test\n')).toBeLessThan(updateSoccer.indexOf('- name: Report roster drift\n'));
+    expect(updateSoccer.indexOf('- name: Report roster drift\n')).toBeLessThan(updateSoccer.indexOf('- name: Commit the data that changed\n'));
     // A registry step that did not succeed, its timeout included (which kills the script before it restores),
     // commits neither rosters nor registry.
     const commit = stepBody(updateSoccer, 'Commit the data that changed');
@@ -459,7 +466,7 @@ describe('the soccer refresh', () => {
   });
 
   it('tests the soccer data files it just wrote', () => {
-    expect(stepBody(updateSoccer, 'Test')).toContain('vitest run tests/soccer.test.ts');
+    expect(stepBody(updateSoccer, 'Test')).toContain('scripts/refresh-test.sh soccer tests/soccer.test.ts');
   });
 
   it('reads si.com (scores and JV team pages) but no school calendar, which is field hockey’s', () => {
@@ -487,8 +494,15 @@ describe('the basketball refresh', () => {
     const order = ['Fetch rosters', 'Rebuild the player registry', 'Test'].map((n) => updateBasketball.indexOf(`- name: ${n}\n`));
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    // A Test failure that restores the rosters restores the registry rebuilt from them.
-    expect(stepBody(updateBasketball, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // The Test step puts back only the file group the tests refuse; its rosters group carries the registry rebuilt
+    // from them (scripts/refresh-test.sh, tests/refresh-test.test.ts).
+    expect(stepBody(updateBasketball, 'Test')).toContain('run: scripts/refresh-test.sh basketball tests/');
+    // Roster drift is reported after the tests, never fatal, and before the commit.
+    const drift = stepBody(updateBasketball, 'Report roster drift');
+    expect(drift).toContain('run: pnpm -s roster-drift --github');
+    expect(drift).toContain('continue-on-error: true');
+    expect(updateBasketball.indexOf('- name: Test\n')).toBeLessThan(updateBasketball.indexOf('- name: Report roster drift\n'));
+    expect(updateBasketball.indexOf('- name: Report roster drift\n')).toBeLessThan(updateBasketball.indexOf('- name: Commit the data that changed\n'));
     // A registry step that did not succeed, its timeout included (which kills the script before it restores),
     // commits neither rosters nor registry.
     const commit = stepBody(updateBasketball, 'Commit the data that changed');
@@ -540,8 +554,15 @@ describe('the volleyball refresh', () => {
     const order = ['Fetch rosters', 'Rebuild the player registry', 'Test'].map((n) => updateVolleyball.indexOf(`- name: ${n}\n`));
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    // A Test failure that restores the rosters restores the registry rebuilt from them.
-    expect(stepBody(updateVolleyball, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // The Test step puts back only the file group the tests refuse; its rosters group carries the registry rebuilt
+    // from them (scripts/refresh-test.sh, tests/refresh-test.test.ts).
+    expect(stepBody(updateVolleyball, 'Test')).toContain('run: scripts/refresh-test.sh volleyball tests/');
+    // Roster drift is reported after the tests, never fatal, and before the commit.
+    const drift = stepBody(updateVolleyball, 'Report roster drift');
+    expect(drift).toContain('run: pnpm -s roster-drift --github');
+    expect(drift).toContain('continue-on-error: true');
+    expect(updateVolleyball.indexOf('- name: Test\n')).toBeLessThan(updateVolleyball.indexOf('- name: Report roster drift\n'));
+    expect(updateVolleyball.indexOf('- name: Report roster drift\n')).toBeLessThan(updateVolleyball.indexOf('- name: Commit the data that changed\n'));
     // A registry step that did not succeed, its timeout included (which kills the script before it restores),
     // commits neither rosters nor registry.
     const commit = stepBody(updateVolleyball, 'Commit the data that changed');

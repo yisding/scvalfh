@@ -54,6 +54,7 @@ import {
   type TeamRoster,
 } from './rosters-schema';
 import { isPlaceholderRow } from './placeholder-name';
+import { reportDrift } from './roster-drift';
 import { dateKey, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
 
@@ -124,12 +125,19 @@ function loadRosters(): Rosters {
 }
 
 /**
- * The overlay's rules, asserted against the base at load time (the schema alone cannot see both
- * files): every record joins to a MaxPreps row of the same team, a filled field was null on
- * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own (and a `rosterBehind` one's is a
- * grade MaxPreps shows), a recruiting profile that states a class year agrees with the grade the row
- * shows (or with the corrected grade of a `rosterBehind` conflict: classYearAgrees), and a claimed
+ * The overlay's rules, checked against the base at load time (the schema alone cannot see both files):
+ * every record joins to a MaxPreps row of the same team under the row's own fullName, a filled field
+ * was null on MaxPreps, a recorded conflict's `kept` value is MaxPreps' own (and a `rosterBehind` one's
+ * is a grade MaxPreps shows), a recruiting profile that states a class year agrees with the grade the
+ * row shows (or with the corrected grade of a `rosterBehind` conflict: classYearAgrees), and a claimed
  * MaxPreps profile is the row's own career page.
+ *
+ * Every one of those rules reads the MaxPreps row, which each roster refresh rewrites, so a record that
+ * held when it was written can break with no edit of the overlay. A break is roster drift
+ * (lib/players/roster-drift.ts), not a load failure: the part of the record the row no longer supports
+ * is left out (the whole record when it no longer joins, else the one field, conflict or profile) and
+ * the drift is reported. MaxPreps' value is what the page shows either way. Only a file of another
+ * season or a team rosters.json does not hold still throws.
  */
 function loadEnrichment(base: Rosters): RosterEnrichment {
   const enrichment = validateData(
@@ -140,52 +148,82 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
   if (enrichment.season !== base.season) {
     throw new Error(`rosters-enrichment is for season ${enrichment.season}, rosters for ${base.season}`);
   }
-  const fail = (slug: string, who: string, what: string): never => {
-    throw new Error(`rosters-enrichment: ${slug} / ${who}: ${what}`);
-  };
   for (const team of enrichment.teams) {
     const baseTeam = base.teams.find((t) => t.slug === team.slug);
-    if (!baseTeam) fail(team.slug, '-', 'no such team in rosters.json');
-    const byId = new Map(baseTeam!.players.map((p) => [p.athleteId, p]));
-    for (const e of team.players) {
+    if (!baseTeam) throw new Error(`rosters-enrichment: ${team.slug} / -: no such team in rosters.json`);
+    const byId = new Map(baseTeam.players.map((p) => [p.athleteId, p]));
+    team.players = team.players.filter((e) => {
+      const drift = (what: string, leftOut: 'record' | 'field') =>
+        reportDrift({ file: 'rosters-enrichment', teamSlug: team.slug, who: e.fullName, key: e.athleteId, what, leftOut });
       const p = byId.get(e.athleteId);
-      if (!p) fail(team.slug, e.fullName, `athleteId ${e.athleteId} is not a MaxPreps row of this team`);
-      if (e.fullName !== p!.fullName) fail(team.slug, e.fullName, `MaxPreps spells this player "${p!.fullName}"`);
+      if (!p) {
+        drift(`athleteId ${e.athleteId} is not a MaxPreps row of this team`, 'record');
+        return false;
+      }
+      if (e.fullName !== p.fullName) {
+        // A record whose name no longer matches may name someone else now: leave it all out, never misattribute it.
+        drift(`MaxPreps spells this player "${p.fullName}"`, 'record');
+        return false;
+      }
       // A name fills only the one blank MaxPreps leaves in a name: its stand-in for a bare number.
-      if (e.name && !isPlaceholderRow(p!)) fail(team.slug, e.fullName, 'name would overwrite a MaxPreps name');
-      if (e.name && p!.jersey === null) fail(team.slug, e.fullName, 'a name is tied to a number, and this row has none');
-      if (e.grade && p!.grade !== null) fail(team.slug, e.fullName, 'grade would overwrite a MaxPreps value');
-      if (e.positions && p!.position !== null) fail(team.slug, e.fullName, 'positions would overwrite a MaxPreps value');
-      if (e.jersey && p!.jersey !== null) fail(team.slug, e.fullName, 'jersey would overwrite a MaxPreps value');
-      if (e.height && p!.height !== null) fail(team.slug, e.fullName, 'height would overwrite a MaxPreps value');
+      if (e.name && !isPlaceholderRow(p)) {
+        drift('name would overwrite a MaxPreps name', 'field');
+        e.name = null;
+      }
+      if (e.name && p.jersey === null) {
+        drift('a name is tied to a number, and this row has none', 'field');
+        e.name = null;
+      }
+      if (e.grade && p.grade !== null) {
+        drift('grade would overwrite a MaxPreps value', 'field');
+        e.grade = null;
+      }
+      if (e.positions && p.position !== null) {
+        drift('positions would overwrite a MaxPreps value', 'field');
+        e.positions = null;
+      }
+      if (e.jersey && p.jersey !== null) {
+        drift('jersey would overwrite a MaxPreps value', 'field');
+        e.jersey = null;
+      }
+      if (e.height && p.height !== null) {
+        drift('height would overwrite a MaxPreps value', 'field');
+        e.height = null;
+      }
       // MaxPreps catching up ends a `rosterBehind` conflict: once the roster shows the grade the conflict's page
-      // gave (`other`), the record is settled, not broken, and it is dropped here, so that the roster refresh which
-      // brings the corrected grade loads without a hand edit of the overlay.
-      e.conflicts = e.conflicts.filter((c) => !(c.rosterBehind && p!.grade !== null && String(p!.grade) === c.other));
-      for (const c of e.conflicts) {
+      // gave (`other`), the record is settled, not broken, and it is dropped here without a report.
+      e.conflicts = e.conflicts.filter((c) => !(c.rosterBehind && p.grade !== null && String(p.grade) === c.other));
+      e.conflicts = e.conflicts.filter((c) => {
         const own =
-          c.field === 'grade' ? (p!.grade === null ? (e.grade ? String(e.grade.value) : null) : String(p!.grade))
-          : c.field === 'jersey' ? p!.jersey
-          : c.field === 'position' ? p!.position
-          : p!.height;
+          c.field === 'grade' ? (p.grade === null ? (e.grade ? String(e.grade.value) : null) : String(p.grade))
+          : c.field === 'jersey' ? p.jersey
+          : c.field === 'position' ? p.position
+          : p.height;
         if (c.kept !== own) {
-          fail(team.slug, e.fullName, `conflict on ${c.field} says kept="${c.kept}" but the roster shows "${own}"`);
+          drift(`conflict on ${c.field} says kept="${c.kept}" but the roster shows "${own}"`, 'field');
+          return false;
         }
         // A stale grade is MaxPreps' own: a grade the overlay filled is not "the roster's last season".
-        if (c.rosterBehind && p!.grade === null) {
-          fail(team.slug, e.fullName, 'rosterBehind says MaxPreps shows last season\'s grade, but MaxPreps shows no grade');
+        if (c.rosterBehind && p.grade === null) {
+          drift("rosterBehind says MaxPreps shows last season's grade, but MaxPreps shows no grade", 'field');
+          return false;
         }
-      }
-      const row = { grade: p!.grade ?? e.grade?.value ?? null, conflicts: e.conflicts };
-      for (const x of e.profiles) {
-        if (x.platform === 'maxpreps' && x.url !== p!.careerUrl) {
-          fail(team.slug, e.fullName, `maxpreps profile ${x.url} is not this row's career page (${p!.careerUrl})`);
+        return true;
+      });
+      const row = { grade: p.grade ?? e.grade?.value ?? null, conflicts: e.conflicts };
+      e.profiles = e.profiles.filter((x) => {
+        if (x.platform === 'maxpreps' && x.url !== p.careerUrl) {
+          drift(`maxpreps profile ${x.url} is not this row's career page (${p.careerUrl})`, 'field');
+          return false;
         }
         if (x.classOf !== null && !classYearAgrees(base.season, row, x.classOf)) {
-          fail(team.slug, e.fullName, `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${row.grade}`);
+          drift(`${x.platform} profile says class of ${x.classOf}, the roster shows grade ${row.grade}`, 'field');
+          return false;
         }
-      }
-    }
+        return true;
+      });
+      return true;
+    });
   }
   return enrichment;
 }
