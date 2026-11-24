@@ -203,13 +203,23 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
  * game with a side in each region would be listed in both blocks, each the JV schedule of that region's
  * team: data/field-hockey/jv.json of 2026-10-06 has none (every JV game in it is between two schools of one region), and
  * the varsity page's NorCal vs SoCal block is for varsity alone.
+ *
+ * With `league` as well, only the games with a side in that league: a league tab's slice of the block,
+ * as `gamesOfLeague` (components/schedule/day-summary.ts) slices the varsity groups.
  */
-export function buildDayJvView(dateKey: string, region?: RegionId): JvListSummary & { rows: JvRowView[] } {
+export function buildDayJvView(
+  dateKey: string,
+  region?: RegionId,
+  league?: LeagueId,
+): JvListSummary & { rows: JvRowView[] } {
   const inRegion = (side: GameSide) => {
     const team = side.slug ? getTeamBySlug(side.slug) : undefined;
     return team !== undefined && regionOf(team.league) === region;
   };
-  const games = getJvGamesOn(dateKey).filter((g) => region === undefined || inRegion(g.home) || inRegion(g.away));
+  const games = getJvGamesOn(dateKey).filter(
+    (g) =>
+      (region === undefined || inRegion(g.home) || inRegion(g.away)) && (league === undefined || inLeague(g, league)),
+  );
   return { rows: rowsOf(games), ...summarize(games) };
 }
 

@@ -37,6 +37,8 @@ type Day = typeof import('../../components/schedule/day-summary');
 let data: Data;
 let day: Day;
 let jvView: typeof import('../../components/jv/jv-view');
+let teams: typeof import('../../lib/teams');
+let levels: typeof import('../../components/words/level-words');
 let renderDay: (date: string) => Promise<string>;
 let describeDay: (date: string) => Promise<string>;
 
@@ -44,6 +46,8 @@ beforeAll(async () => {
   data = await import('../../lib/data');
   day = await import('../../components/schedule/day-summary');
   jvView = await import('../../components/jv/jv-view');
+  teams = await import('../../lib/teams');
+  levels = await import('../../components/words/level-words');
   const page = await import('../../app/scores/[date]/page');
   renderDay = async (date) =>
     renderToStaticMarkup((await page.default({ params: Promise.resolve({ date }) } as never)) as ReactElement);
@@ -317,6 +321,36 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
       const one = await renderDay(socalJvOnly);
       expect(one).not.toContain('id="jv"');
       expect(one).toContain('id="jv-socal"');
+    }
+  });
+
+  it('slices each JV block per league, so a league tab filters the JV games as it filters varsity', async () => {
+    // A NorCal day where some league has JV games and another of the region's leagues has fewer than all.
+    const norcal = data.getLeagueSummaries().filter((league) => league.region === 'norcal');
+    const date = data.getGameDates().find((d) => {
+      const all = jvView.buildDayJvView(d, 'norcal').rows.length;
+      const per = norcal.map((league) => jvView.buildDayJvView(d, 'norcal', league.id).rows.length);
+      return all > 0 && per.some((n) => n > 0) && per.some((n) => n < all);
+    });
+    expect(date, 'data: a date with NorCal JV games not all in one league').toBeDefined();
+    const html = await renderDay(date!);
+    const start = html.indexOf('<section id="jv"');
+    const section = html.slice(start, html.indexOf('</section>', start));
+    const rowsIn = (scope: string) => {
+      const at = section.indexOf(`<div data-scope="${scope}">`);
+      expect(at, `#jv holds a data-scope="${scope}" slice`).toBeGreaterThan(-1);
+      const next = section.indexOf('<div data-scope="', at + 1);
+      return section.slice(at, next === -1 ? undefined : next).split('class="sx-game-link"').length - 1;
+    };
+    expect(rowsIn('none')).toBe(jvView.buildDayJvView(date!, 'norcal').rows.length);
+    for (const league of norcal) {
+      const n = jvView.buildDayJvView(date!, 'norcal', league.id).rows.length;
+      expect(rowsIn(league.id), `${league.id}'s JV slice`).toBe(n);
+      if (n === 0) expect(section).toContain(`No ${league.shortName} ${levels.SECOND_LEVEL.short} games on this day.`);
+      for (const { game } of jvView.buildDayJvView(date!, 'norcal', league.id).rows) {
+        const leagues = [game.home, game.away].map((side) => (side.slug ? teams.getTeamBySlug(side.slug)?.league : undefined));
+        expect(leagues).toContain(league.id);
+      }
     }
   });
 });
