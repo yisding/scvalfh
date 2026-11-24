@@ -2003,8 +2003,8 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
 - **What is kept.** Per team: league, age group, name, club and public page. Per player: name, position, the class
   year the page's data carries (the Roster dialog does not print it) and the roster's label ("First Team Player",
   "Club Player Pool"). Not kept: staff, jersey numbers, account ids, a player a team hides from its public roster,
-  and a player too young to be in high school this season (833 left out). **The file is never rendered and nothing
-  in the site imports it**: it names players who are on no tracked roster.
+  and a player too young to be in high school this season (1,155 left out on 2026-11-24). **The file is never
+  rendered and nothing in the site imports it**: it names players who are on no tracked roster.
 - **The league-roster rule** (`lib/players/club-rosters.ts`, a narrower case of the clubs' linking rule). A roster
   row and a high school row are the same player when the folded names are equal; the high school row has a grade
   and the roster's class year is that grade's; no other tracked school has a row under the name, varsity or JV;
@@ -2032,11 +2032,11 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   schools); 5 are ties other pages had already made, which gain the roster and now read current for 2026-27. The
   same second script found all 40 cited rows on the 12 team pages' Roster dialogs. 3 JV rows pass the rule and are
   not listed, as before.
-- **Not linked.** 30 varsity and 11 JV rows with no grade yet whose name is on a roster (they link when MaxPreps
-  posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of the name;
-  5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three players at
-  clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed the
-  rule, and `clubs.json` lists no JV ties in any case.
+- **Not linked on 2026-11-22.** 30 varsity and 11 JV rows with no grade yet whose name is on a roster (they link
+  when MaxPreps posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of
+  the name; 5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three
+  players at clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed
+  the rule, and `clubs.json` lists no JV ties in any case.
 
 ### Soccer and basketball: last season's commitments
 
