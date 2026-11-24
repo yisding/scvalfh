@@ -3534,7 +3534,8 @@ assembler per sport built the files from them with a second read, and they are k
   United GU14-16 only, California Odyssey GU14-17), 1,167 players of high school age kept, 322 younger left out.
   The other two leagues, re-read the same day, had lost one player and gained one class year. `pnpm
   compare-club-rosters` then listed 38 varsity rows the copy matches and `clubs.json` does not cite (33 new ties,
-  5 ties another page had made), at MVLA, Bay Area Surf and De Anza Force; not yet linked.
+  5 ties another page had made), at MVLA, Bay Area Surf and De Anza Force; all 38 linked the same day (`clubs.json`
+  notes), after a second script found each of the 40 cited rows on its team page's Roster dialog as displayed.
 - **College releases.** Soccer: 1,043 athletics hosts (the NCAA directory's women's soccer member lists, D1 349, D2
   261, D3 415, read through headless Chromium since the API answers curl with 403, and 19 NAIA sites), 947 with a
   feed that parsed: 12,387 stories listed, 6,237 opened (3,236 dated 2026-11-11 or later); one names a rostered

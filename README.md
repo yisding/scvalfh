@@ -2023,6 +2023,11 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   club: De Anza Force 17, Los Gatos United 16, MVLA 15, Bay Area Surf 11, Santa Clara Sporting and Stanford
   Strikers 8 each, Burlingame 7, Palo Alto SC 6, Santa Cruz United 5, SF Elite, Mustang and Marin FC 1 each. A
   second script opened every cited team page in Chromium, pressed Roster and found each row as displayed.
+- **Linked on 2026-11-24**, over the Golden State conference's 57 teams: **38 more ties cite a roster** (134 in
+  all, at 23 schools). 33 are new and rest on a roster alone (MVLA 23, Bay Area Surf 6, De Anza Force 4, at 11
+  schools); 5 are ties other pages had already made, which gain the roster and now read current for 2026-27. The
+  same second script found all 40 cited rows on the 12 team pages' Roster dialogs. 3 JV rows pass the rule and are
+  not listed, as before.
 - **Not linked.** 30 varsity and 11 JV rows with no grade yet whose name is on a roster (they link when MaxPreps
   posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of the name;
   5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three players at
