@@ -137,9 +137,10 @@ jobs:
           exit "$rc"
 
       # Never fatal. When the roster fetch changed a roster file, rebuild data/players.json from the new rosters and
-      # hold it to tests/players-registry.test.ts (scripts/refresh-player-registry.sh). When either fails (a hand-curated
-      # data/player-identity.json entry the new rosters no longer support), the rosters and the registry go back to the
-      # committed ones and an error annotation names the entry, so main never holds rosters its registry refuses.
+      # hold it to tests/players-registry.test.ts (scripts/refresh-player-registry.sh). A hand-curated
+      # data/player-identity.json entry the new rosters no longer support is curation drift: a warning, not a failure.
+      # When the build or the tests fail for another reason, the rosters and the registry go back to the committed
+      # ones and an error annotation says why, so main never holds rosters its registry refuses.
       - name: Rebuild the player registry
         id: registry
         continue-on-error: true
@@ -147,24 +148,21 @@ jobs:
         run: scripts/refresh-player-registry.sh soccer
 
       # tests/soccer.test.ts loads every soccer data file through its validating loader, and tests/jv-hub.test.ts
-      # (which reads the job's SCVAL_SPORT) holds the JV pages to the JV games just fetched. When they fail
-      # and the stats or JV file changed in this run, both go back to the committed ones and it runs
-      # again, so only a bad snapshot blocks the commit.
+      # (which reads the job's SCVAL_SPORT) holds the JV pages to the JV games just fetched. When they fail,
+      # scripts/refresh-test.sh puts back the one file group they refuse (this run's JV games, stats or rosters with
+      # the registry) and keeps the others, so only a bad snapshot blocks the commit.
       # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
       - name: Test
         id: test
-        run: |
-          set -uo pipefail
-          run() { pnpm exec vitest run tests/soccer.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts; }
-          if run; then exit 0; fi
-          if git diff --quiet -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json; then
-            echo "::error::tests/soccer.test.ts failed and neither the soccer stats nor the soccer JV file changed in this run"
-            exit 1
-          fi
-          echo "::warning::tests/soccer.test.ts failed; testing again with the committed stats and JV files"
-          git checkout -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json data/players.json
-          echo "restored=true" >> "$GITHUB_OUTPUT"
-          run
+        run: scripts/refresh-test.sh soccer tests/soccer.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts
+
+      # Never fatal. The curated files' records the new rosters no longer support (a departed player, a re-entered
+      # roster, a corrected grade): the loaders leave them out of the build instead of failing it
+      # (lib/players/roster-drift.ts), and this turns each into a warning on the run page, for a person to fix by hand.
+      - name: Report roster drift
+        continue-on-error: true
+        timeout-minutes: 5
+        run: pnpm -s roster-drift --github
 
       - name: Commit the data that changed
         id: commit
@@ -282,5 +280,5 @@ jobs:
             echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
             echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
             echo "- player registry: \`${{ steps.registry.outcome || 'skipped' }}\`"
-            echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
+            echo "- restored after failing the tests: JV \`${{ steps.test.outputs.restored_jv || 'false' }}\`, stats \`${{ steps.test.outputs.restored_stats || 'false' }}\`, rosters \`${{ steps.test.outputs.restored_rosters || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

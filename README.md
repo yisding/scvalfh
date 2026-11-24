@@ -999,11 +999,14 @@ club records (each re-read from the club's own site).
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 
-**When a roster refetch breaks it.** `lib/players/clubs.ts` throws at import if `pnpm fetch-rosters` drops
-or respells a tied player's row, if the overlay marks that row JV, or if a season rollover moves
-`data/field-hockey/rosters.json` to a season `data/field-hockey/clubs.json` is not for; `pnpm test` and the build then fail
-with `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources, then edit or
-drop it by hand (on a rollover, redo the research for the new season). Never prune it
+**When a roster refetch breaks it.** If `pnpm fetch-rosters` drops or respells a tied player's row, or the
+overlay marks that row JV, the tie is roster drift (`lib/players/roster-drift.ts`): `lib/players/clubs.ts` leaves
+it out of what the site shows and reports it as `clubs: <team> / <player> (<club>): <what>`, so one departed
+player never holds back a refresh's other roster changes. `pnpm roster-drift` lists the drift of every curated
+file; the refreshes turn each line into a warning on the run page, and CI fails a pull request only for drift on
+records the pull request itself added or edited. A season rollover (rosters.json for a season
+`data/field-hockey/clubs.json` is not for) still throws at import. Re-check a drifting affiliation's sources, then
+edit or drop it by hand (on a rollover, redo the research for the new season). Never prune it
 automatically. Each affiliation also carries the player's `playerId` (see "The player registry"), which
 does not change with the season: on a rollover it is what says which new row a record was about.
 
@@ -1249,11 +1252,11 @@ Harvard's sites (a bot check in the browser too), Redwood's and Marin Catholic's
 Diego County's signing event of Nov 12 (374 athletes, no names published). `docs/DATA-SOURCES.md` §1.1j3 has the
 rest.
 
-**When a roster refetch breaks it.** `lib/players/commits.ts` throws at import, as `lib/players/clubs.ts` does, if
-`pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
-season rollover moves `data/field-hockey/rosters.json` to another season; `pnpm test` and the build then fail
-with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's sources, then edit
-or drop it by hand. On a rollover the seniors graduate: redo the research for the new season. Each
+**When a roster refetch breaks it.** As for the clubs: a commitment whose player's row `pnpm fetch-rosters`
+drops or respells, or the overlay marks JV, is roster drift, left out of the site and reported as
+`commits: <team> / <player> (<college>): <what>` (`pnpm roster-drift`, a warning on the refresh's run page). A
+season rollover still throws at import. Re-check the commitment's sources, then edit or drop it by hand. On a
+rollover the seniors graduate: redo the research for the new season. Each
 commitment also carries the player's `playerId` (see "The player registry").
 
 `lib/players/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then

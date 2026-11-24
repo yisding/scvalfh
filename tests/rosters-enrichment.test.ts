@@ -33,6 +33,7 @@ import {
   rosterBehindGrade,
 } from '../lib/players/rosters';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
+import { describeDrift, type RosterDrift } from '../lib/players/roster-drift';
 import { REPO, runScript } from './helpers';
 
 /**
@@ -120,8 +121,10 @@ const pre: RosterEnrichment = {
 };
 
 /**
- * Load lib/players/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
- * to stderr ('' when it loaded). The load-time checks need both files, so only a real load shows them.
+ * Load lib/players/rosters.ts in a child process with `enrichment` swapped in (through scripts/roster-drift.ts), and
+ * return what it found wrong: what it printed to stderr when the load failed, else the overlay's roster drift
+ * (lib/players/roster-drift.ts: a record or field the roster no longer supports is left out, not thrown), one line
+ * each; '' when it loaded clean. The load-time checks need both files, so only a real load shows them.
  */
 function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-enrich-'));
@@ -132,8 +135,10 @@ function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
     env.SCVAL_ROSTERS = path.join(dir, 'rosters.json');
     writeFileSync(env.SCVAL_ROSTERS, JSON.stringify(rosters));
   }
-  const run = runScript('lib/players/rosters.ts', [], { env });
-  return run.status === 0 ? '' : run.stderr;
+  const run = runScript('scripts/roster-drift.ts', ['--json'], { env });
+  if (run.status !== 0) return run.stderr;
+  const drift = JSON.parse(run.stdout.trim().split('\n').at(-1)!) as RosterDrift[];
+  return drift.filter((d) => d.file === 'rosters-enrichment').map(describeDrift).join('\n');
 }
 
 /** A team's enrichment record for a MaxPreps row, created empty if the file has none yet. */

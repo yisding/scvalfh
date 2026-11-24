@@ -12,6 +12,7 @@
     "test": "vitest run",
     "fetch-data": "tsx scripts/fetch-data.ts",
     "fetch-rosters": "tsx scripts/fetch-rosters.ts",
+    "roster-drift": "tsx scripts/roster-drift.ts",
     "fetch-player-stats": "tsx scripts/fetch-player-stats.ts",
     "fetch-jv": "tsx scripts/fetch-jv.ts",
     "fetch-prior-season": "tsx scripts/fetch-prior-season.ts",

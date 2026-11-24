@@ -1130,12 +1130,13 @@ Southern California gotchas, all **[V]** on 2026-10-06:
   the players' own pages and the watchlists, and schools there are nearly blank.
 
 *When a roster refetch breaks it.* The join is checked at load against the merged rosters. If
-`pnpm fetch-rosters` drops or respells a tied player's row, if the overlay marks it JV, or if a
-season rollover moves `data/field-hockey/rosters.json` to a season `data/field-hockey/clubs.json` is not for, `lib/players/clubs.ts`
-throws at import, so `pnpm test` and the build fail with
-`clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources and edit or drop
-it by hand (on a rollover, redo the research for the new season). It is never pruned
-automatically.
+`pnpm fetch-rosters` drops or respells a tied player's row, or the overlay marks it JV, the tie is roster
+drift (`lib/players/roster-drift.ts`): `lib/players/clubs.ts` leaves it out of the site and reports
+`clubs: <team> / <player> (<club>): <what>` (`pnpm roster-drift`; a warning on the refresh's run page; a CI
+failure only on a pull request that added or edited the record). A season rollover that moves
+`data/field-hockey/rosters.json` to a season `data/field-hockey/clubs.json` is not for still throws at import.
+Re-check a drifting affiliation's sources and edit or drop it by hand (on a rollover, redo the research for the
+new season). It is never pruned automatically.
 
 *JV ties.* `jvAffiliations` holds ties for players on JV rows, kept apart from `affiliations`, which
 list varsity rows only and are all the club pages, the club counts and the roster's club lines
@@ -1746,10 +1747,10 @@ unsigned recruit, so a college's own site rarely shows a class of 2027 or 2028 c
 November signing period. No source found said any player had signed. The class of 2027's signings
 and the class of 2028's commitments are when a new sweep would change the file most.
 
-*When a roster refetch breaks it.* As for §1.1j2: `lib/players/commits.ts` throws at import if a committed
-player's row is dropped, respelled or marked JV, or if `data/field-hockey/rosters.json` moves to another season,
-with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment and edit or drop it by
-hand; on a rollover, redo the research (the seniors will have graduated).
+*When a roster refetch breaks it.* As for §1.1j2: a commitment whose player's row is dropped, respelled or
+marked JV is roster drift, left out of the site and reported as `commits: <team> / <player> (<college>): <what>`;
+`data/field-hockey/rosters.json` moving to another season still throws at import. Re-check the commitment and
+edit or drop it by hand; on a rollover, redo the research (the seniors will have graduated).
 
 **(k) Player stats** —
 `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=` on the ghost API
@@ -2139,7 +2140,9 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   pages tie none of them. **`sameAs` cannot reach a record no source lists any more**: MacDonald's second
   Dewyond Williams (#13), Yerba Buena's Uriyah Pacual and Monta Vista's Hanna Mohammed are rows their
   coaches have since replaced (by #0 Dewyond Williams, Uriyah Pascsual and Hanaa Mohamed), and stay in the
-  registry as separate records marked `gone`. Two `names` entries keep an official name the joins would
+  registry as separate records marked `gone`. (Since 2026-11-24 an entry whose career or name no source lists any
+  more is curation drift: the build leaves it out with a warning instead of failing, and `pnpm roster-drift
+  --identity` lists it; CI fails only a pull request that added or edited such an entry.) Two `names` entries keep an official name the joins would
   have changed (Giuliana Borello, Theresa Berger). After the build: 6,843 players (6,275 with a MaxPreps
   career, 568 known by name alone), 86 in more than one sport, and no question left on the review list.
 - **2026-11-16 build**: 5,475 players (4,955 with a MaxPreps career, 520 known by name alone), 6,766 stints,

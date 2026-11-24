@@ -42,7 +42,7 @@ import { LEAGUES } from '../lib/leagues';
 import { classOf, classYearAgrees, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
 import { isHttpsUrl, isResearched } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
-import { REPO } from './helpers';
+import { loadProblems, REPO } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'clubs.json'), 'utf8')) as ClubsFile;
 /** The twelve club records the 2026-10-06 Southern California sweep added. */
@@ -72,13 +72,12 @@ function refusals(f: unknown): string[] {
 }
 
 /** loadClubs' message for `f` (schema, then the join), or '' when it loads. */
+/**
+ * What loading `f` found wrong: the error loadClubs threw, else the roster drift it reported for a tie the rosters no
+ * longer support (left out, not thrown: tests/helpers.ts loadProblems), else ''.
+ */
 function loadError(f: unknown, ...rest: [typeof teams?, string?]): string {
-  try {
-    loadClubs(f, ...rest);
-    return '';
-  } catch (err) {
-    return (err as Error).message;
-  }
+  return loadProblems(() => loadClubs(f, ...rest));
 }
 
 /** Every URL the file holds: websites, program and roster pages, and every source. */
@@ -790,6 +789,8 @@ describe('a bad file is refused at load', () => {
     bad.affiliations[0].athleteId = '00000000-0000-0000-0000-000000000000';
     expect(refusals(bad)).toEqual([]);
     expect(loadError(bad)).toMatch(/st-ignatius \/ Caitlyn Hughes \(sf-hawks\): athleteId 0{8}-.* is not a MaxPreps row of this team/);
+    // Left out of what the module serves, not thrown: a roster refresh that drops a player must not fail the build.
+    expect(loadClubs(bad).affiliations).toHaveLength(raw.affiliations.length - 1);
     // A real athlete under the wrong team is the same failure.
     const moved = structuredClone(raw);
     moved.affiliations[0].teamSlug = 'leigh';

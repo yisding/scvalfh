@@ -5452,7 +5452,7 @@
       ],
       "players": [
         {
-          "athleteId": "ad9884bb-b742-4ca7-9230-c1685502a810",
+          "athleteId": "009e99b0-cef4-41c9-97fe-9c2deda60fc5",
           "playerId": "p64e8486f0e",
           "conflicts": [],
           "fullName": "Chima Abraham-Igwe",
@@ -5753,28 +5753,6 @@
               "note": null,
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/ivan-le/?careerid=0rauln8iq4u99"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "3c12f3b2-1982-4902-84ff-869f8443b818",
-          "playerId": "pc30839e03d",
-          "conflicts": [],
-          "fullName": "Alexander Kolubelov",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2029,
-              "note": "NCSA men's basketball profile naming Leland High School; class of 2029 agrees with the roster. Found by the 2026-11-21 NCSA pass and read twice.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-jose/leland-high-school1/alexander-kolubelov"
             }
           ],
           "sourceName": null
