@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-23T15:15:19.284Z",
+  "fetchedAt": "2026-11-24T06:24:17.289Z",
   "fixtures": [
     {
       "claims": {
@@ -526,72 +526,6 @@
       "published": [
         {
           "contestId": "7640f42e-d185-481b-ab1f-5dc54c9d2f16"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Bruno",
-              "name": "Capuchino",
-              "result": "L",
-              "score": 48,
-              "slug": "capuchino",
-              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
-            },
-            "contestId": "efad9b8f-5e97-411d-b8e4-b15985059048",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": "REG",
-            "forfeitBy": null,
-            "home": {
-              "city": "San Mateo",
-              "name": "Hillsdale",
-              "result": "W",
-              "score": 52,
-              "slug": "hillsdale",
-              "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T00:01:24",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "final",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088759?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-hillsdale-fighting-knights-san-mateo/11-19-2026/?c=efad9b8f-5e97-411d-b8e4-b15985059048",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Hillsdale High School"
-            }
-          },
-          "ref": "efad9b8f-5e97-411d-b8e4-b15985059048"
-        }
-      },
-      "id": "2026-11-19-capuchino-at-hillsdale",
-      "published": [
-        {
-          "contestId": "efad9b8f-5e97-411d-b8e4-b15985059048"
         }
       ]
     },
@@ -1128,72 +1062,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Los Altos Hills",
-              "name": "Pinewood",
-              "result": "L",
-              "score": 52,
-              "slug": "pinewood",
-              "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6"
-            },
-            "contestId": "0cc767e4-94f9-43e1-856f-6bd7f9e8145e",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-21",
-            "dateLocal": "2026-11-21T13:30:00",
-            "dateUtc": "2026-11-21T21:30:00Z",
-            "decider": "REG",
-            "forfeitBy": null,
-            "home": {
-              "city": "Morgan Hill",
-              "name": "Oakwood",
-              "result": "W",
-              "score": 73,
-              "slug": null,
-              "teamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T10:37:36",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "final",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/oakwood-morgan-hill-vs-pinewood-los-altos-hills/11-21-2026/?c=0cc767e4-94f9-43e1-856f-6bd7f9e8145e",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/oakwood-high-school-morgan-hill-ca/gama21add3b15?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Oakwood Country School-Morgan Hill"
-            }
-          },
-          "ref": "0cc767e4-94f9-43e1-856f-6bd7f9e8145e"
-        }
-      },
-      "id": "2026-11-21-pinewood-at-name:oakwood",
-      "published": [
-        {
-          "contestId": "0cc767e4-94f9-43e1-856f-6bd7f9e8145e"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "San Jose",
               "name": "Valley Christian",
               "result": null,
@@ -1262,8 +1130,8 @@
             "away": {
               "city": "San Jose",
               "name": "Andrew Hill",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 38,
               "slug": "andrew-hill",
               "teamId": "847b67d2-64a0-459a-b726-484e88392ba6"
             },
@@ -1276,13 +1144,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T13:30:00",
             "dateUtc": "2026-11-23T21:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "MacDonald",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 46,
               "slug": "macdonald",
               "teamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef"
             },
@@ -1295,15 +1163,15 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:11:11",
+              "maxprepsModifiedOn": "2026-11-24T05:38:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7083039?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7083039?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/hill-san-jose-vs-macdonald-san-jose/11-23-2026/?c=59f44c5c-ab2f-4126-8418-4c0f03e49cfa",
               "nfhsStream": null
             },
@@ -1326,10 +1194,95 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Bruno",
+              "name": "Capuchino",
+              "result": "L",
+              "score": 55,
+              "slug": "capuchino",
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+            },
+            "contestId": "4aaad53b-7c20-449f-8f19-29f0f508cf9e",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-23",
+            "dateLocal": "2026-11-23T18:30:00",
+            "dateUtc": "2026-11-24T02:30:00Z",
+            "decider": "REG",
+            "forfeitBy": null,
+            "home": {
+              "city": "Woodside",
+              "name": "Woodside",
+              "result": "W",
+              "score": 57,
+              "slug": "woodside",
+              "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-24T06:08:21",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "final",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-woodside/11-23-2026/?c=4aaad53b-7c20-449f-8f19-29f0f508cf9e",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "4aaad53b-7c20-449f-8f19-29f0f508cf9e"
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "4aaad53b-7c20-449f-8f19-29f0f508cf9e",
+              "published": {
+                "away": 55,
+                "home": 57
+              },
+              "scoreConflict": {
+                "note": "Sources disagree: we show MaxPreps’ 55-57 (Capuchino–Woodside); si.com reports 0-0. MaxPreps’ score stands.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:4aaad53b-7c20-449f-8f19-29f0f508cf9e"
+          }
+        ]
+      },
+      "id": "2026-11-23-capuchino-at-woodside",
+      "published": [
+        {
+          "contestId": "4aaad53b-7c20-449f-8f19-29f0f508cf9e"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Gilroy",
               "name": "Gilroy",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 50,
               "slug": "gilroy",
               "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
             },
@@ -1342,13 +1295,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T15:00:00",
             "dateUtc": "2026-11-23T23:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Felton",
               "name": "San Lorenzo Valley",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 39,
               "slug": "san-lorenzo-valley",
               "teamId": "1b3a82da-476f-4a32-9652-c238da7764c7"
             },
@@ -1361,13 +1314,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T11:07:47",
+              "maxprepsModifiedOn": "2026-11-24T02:05:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "neutral",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gilroy-vs-san-lorenzo-valley-felton/11-23-2026/?c=e1735d60-b97c-4dd0-a0a5-1f99b9f4faf1",
@@ -1394,8 +1347,8 @@
             "away": {
               "city": "Los Altos",
               "name": "Los Altos",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 61,
               "slug": "los-altos",
               "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
             },
@@ -1408,13 +1361,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T17:30:00",
             "dateUtc": "2026-11-24T01:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Evergreen Valley",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 70,
               "slug": "evergreen-valley",
               "teamId": "554a6e7c-06b6-473a-9461-9f155294d249"
             },
@@ -1427,17 +1380,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-13T22:29:36",
+              "maxprepsModifiedOn": "2026-11-24T06:03:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7086212?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7086212?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/evergreen-valley-san-jose-vs-los-altos/11-23-2026/?c=e1b2947e-8682-49ae-8c85-f413962b8b8e",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/evergreen-valley-high-school-san-jose-ca/gam745a66ad38?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/evergreen-valley-high-school-san-jose-ca/gam745a66ad38?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": null
@@ -1460,8 +1413,8 @@
             "away": {
               "city": "Modesto",
               "name": "Enochs",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 73,
               "slug": null,
               "teamId": "47f224b6-3a28-41dd-a107-2fdf0cc5a355"
             },
@@ -1474,13 +1427,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T19:00:00",
             "dateUtc": "2026-11-24T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Silver Creek",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 59,
               "slug": "silver-creek",
               "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
             },
@@ -1493,24 +1446,43 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T19:01:11",
+              "maxprepsModifiedOn": "2026-11-24T06:10:04",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/enochs-modesto-vs-silver-creek-san-jose/11-23-2026/?c=925e45b1-e5e1-4cce-91be-fc3279d2e690",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/silver-creek-high-school-san-jose-ca/gam3445a3c0ec?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/silver-creek-high-school-san-jose-ca/gam3445a3c0ec?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Silver Creek High School"
             }
           },
           "ref": "925e45b1-e5e1-4cce-91be-fc3279d2e690"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "925e45b1-e5e1-4cce-91be-fc3279d2e690",
+              "published": {
+                "away": 73,
+                "home": 59
+              },
+              "scoreConflict": {
+                "note": "Sources disagree: we show MaxPreps’ 73-59 (Enochs–Silver Creek); si.com reports 0-0. MaxPreps’ score stands.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:925e45b1-e5e1-4cce-91be-fc3279d2e690"
+          }
+        ]
       },
       "id": "2026-11-23-name:enochs-at-silver-creek",
       "published": [
@@ -1565,18 +1537,37 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7106403?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-harker-san-jose/11-23-2026/?c=0712bbeb-ed36-45fb-a5de-ef471116be86",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gam0d3de560fd?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": null
             },
             "venue": {
               "text": null
             }
           },
           "ref": "0712bbeb-ed36-45fb-a5de-ef471116be86"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "0712bbeb-ed36-45fb-a5de-ef471116be86",
+              "published": {
+                "away": null,
+                "home": null
+              },
+              "scoreConflict": {
+                "note": "si.com reports Del Mar 0, Harker 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:0712bbeb-ed36-45fb-a5de-ef471116be86"
+          }
+        ]
       },
       "id": "2026-11-23-name:harker-at-del-mar",
       "published": [
@@ -1631,18 +1622,37 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/more-san-jose-vs-priory-portola-valley/11-23-2026/?c=bc74c027-37a1-4a84-bb81-27fea967e53a",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/priory-portola-valley-ca/gam540fe21c64?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": null
             },
             "venue": {
               "text": null
             }
           },
           "ref": "bc74c027-37a1-4a84-bb81-27fea967e53a"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "bc74c027-37a1-4a84-bb81-27fea967e53a",
+              "published": {
+                "away": null,
+                "home": null
+              },
+              "scoreConflict": {
+                "note": "si.com reports More 0, Woodside Priory 0; MaxPreps has not published a score, so this game stays unreported. One side is not one of our teams.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:bc74c027-37a1-4a84-bb81-27fea967e53a"
+          }
+        ]
       },
       "id": "2026-11-23-name:more-at-priory",
       "published": [
@@ -1658,8 +1668,8 @@
             "away": {
               "city": "Daly City",
               "name": "Summit Shasta",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 63,
               "slug": null,
               "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82"
             },
@@ -1672,13 +1682,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T18:00:00",
             "dateUtc": "2026-11-24T02:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Millbrae",
               "name": "Mills",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 57,
               "slug": "mills",
               "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
             },
@@ -1691,17 +1701,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-04T18:03:33",
+              "maxprepsModifiedOn": "2026-11-24T04:43:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7096262?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7096262?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/mills-millbrae-vs-summit-shasta-daly-city/11-23-2026/?c=81008bdb-b222-4518-9f5d-4d6a36a8207e",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gam52f3d509fd?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gam52f3d509fd?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": null
@@ -1724,8 +1734,8 @@
             "away": {
               "city": "San Jose",
               "name": "Overfelt",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 44,
               "slug": "overfelt",
               "teamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866"
             },
@@ -1738,13 +1748,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T19:00:00",
             "dateUtc": "2026-11-24T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Leland",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 75,
               "slug": "leland",
               "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
             },
@@ -1757,15 +1767,15 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T17:59:53",
+              "maxprepsModifiedOn": "2026-11-24T04:53:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7037317?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7037317?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leland-san-jose-vs-overfelt-san-jose/11-23-2026/?c=0f5928fc-d802-490f-bc68-a44232a7723a",
               "nfhsStream": null
             },
@@ -1829,9 +1839,9 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7106242?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lincoln-san-jose-vs-san-jose/11-23-2026/?c=7152b514-2886-4654-9b68-eb1a2443ff71",
               "nfhsStream": null
             },
@@ -1840,7 +1850,26 @@
             }
           },
           "ref": "7152b514-2886-4654-9b68-eb1a2443ff71"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "7152b514-2886-4654-9b68-eb1a2443ff71",
+              "published": {
+                "away": null,
+                "home": null
+              },
+              "scoreConflict": {
+                "note": "si.com reports Lincoln 0, San Jose 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:7152b514-2886-4654-9b68-eb1a2443ff71"
+          }
+        ]
       },
       "id": "2026-11-23-san-jose-at-lincoln",
       "published": [
@@ -1856,8 +1885,8 @@
             "away": {
               "city": "San Mateo",
               "name": "San Mateo",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 50,
               "slug": "san-mateo",
               "teamId": "55853f70-2545-4bfe-a107-4142093e929a"
             },
@@ -1870,13 +1899,13 @@
             "dateKey": "2026-11-23",
             "dateLocal": "2026-11-23T18:00:00",
             "dateUtc": "2026-11-24T02:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Francisco",
               "name": "Burton",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 41,
               "slug": null,
               "teamId": "feb89b14-0af4-4872-92b0-428bb67d71ed"
             },
@@ -1889,13 +1918,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-04T20:08:03",
+              "maxprepsModifiedOn": "2026-11-24T04:46:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/burton-san-francisco-vs-san-mateo/11-23-2026/?c=61a561cf-a3f6-41ab-ad4f-28ac0b49f25b",
@@ -1961,18 +1990,37 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7106157?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/prospect-saratoga-vs-yerba-buena-san-jose/11-23-2026/?c=b0c91878-f470-42cb-9910-9a2776884326",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/prospect-high-school-saratoga-ca/gamf91a2c53ba?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/prospect-high-school-saratoga-ca/gamf91a2c53ba?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Prospect High School"
             }
           },
           "ref": "b0c91878-f470-42cb-9910-9a2776884326"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "b0c91878-f470-42cb-9910-9a2776884326",
+              "published": {
+                "away": null,
+                "home": null
+              },
+              "scoreConflict": {
+                "note": "si.com reports Prospect 0, Yerba Buena 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:b0c91878-f470-42cb-9910-9a2776884326"
+          }
+        ]
       },
       "id": "2026-11-23-yerba-buena-at-prospect",
       "published": [
@@ -2087,7 +2135,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T22:06:23",
+              "maxprepsModifiedOn": "2026-11-24T05:02:50",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2100,7 +2148,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/gonzales-high-school-gonzales-ca/gam37b8c48412?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gonzales High School"
             }
           },
           "ref": "feb23c4c-f9f6-4832-894c-dfa9a8401134"
@@ -2604,7 +2652,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-23T15:15:19.284Z",
+          "builtAt": "2026-11-24T06:24:17.289Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -3177,7 +3225,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T01:01:59",
+              "maxprepsModifiedOn": "2026-11-23T17:45:26",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3190,7 +3238,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/menlo-school-high-school-atherton-ca/gam72d7592be9?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "Menlo School  DO NOT USE"
+              "text": null
             }
           },
           "ref": "340d051b-f37a-4d1a-9469-4d414c27053d"
@@ -3243,7 +3291,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T00:59:53",
+              "maxprepsModifiedOn": "2026-11-24T01:00:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3274,12 +3322,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Jose",
-              "name": "Archbishop Mitty",
+              "city": "San Lorenzo",
+              "name": "San Lorenzo",
               "result": null,
               "score": null,
-              "slug": "mitty",
-              "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+              "slug": null,
+              "teamId": "bf856da2-e3b3-4ab4-a46b-39606e30bb46"
             },
             "contestId": "b47a61a4-e6c5-4a4b-8f5d-8c177101e4de",
             "contestTypes": {
@@ -3293,12 +3341,12 @@
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "San Lorenzo",
-              "name": "San Lorenzo",
+              "city": "San Jose",
+              "name": "Archbishop Mitty",
               "result": null,
               "score": null,
-              "slug": null,
-              "teamId": "bf856da2-e3b3-4ab4-a46b-39606e30bb46"
+              "slug": "mitty",
+              "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -3309,12 +3357,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-11T05:30:31",
+              "maxprepsModifiedOn": "2026-11-23T18:07:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -3322,7 +3370,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "Bishop O'Dowd Thanksgiving Showcase"
+              "text": "The Cummins Center"
             }
           },
           "ref": "b47a61a4-e6c5-4a4b-8f5d-8c177101e4de"
@@ -3441,7 +3489,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T08:32:58",
+              "maxprepsModifiedOn": "2026-11-23T17:34:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3639,7 +3687,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T01:25:21",
+              "maxprepsModifiedOn": "2026-11-23T20:33:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3652,7 +3700,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "Varsity at Willow Glen"
+              "text": "Willow Glen High School"
             }
           },
           "ref": "ab83294b-12b3-4749-96e4-ee9a216b1780"
@@ -4431,7 +4479,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T01:00:53",
+              "maxprepsModifiedOn": "2026-11-24T01:01:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4703,9 +4751,9 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7106458?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/alisal-salinas-vs-harbor-santa-cruz/12-1-2026/?c=4a619c01-752c-4abd-9b02-753159e91c95",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/alisal-high-school-salinas-ca/gam68fb93b8da?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -4901,7 +4949,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105942?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-jefferson-daly-city/12-1-2026/?c=335c284d-8533-4c74-93b9-54032cb25d45",
               "nfhsStream": null
             },
@@ -7071,7 +7119,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T18:04:54",
+              "maxprepsModifiedOn": "2026-11-23T23:01:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -7741,7 +7789,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/concord-vs-valley-christian-san-jose/12-3-2026/?c=473544ea-f9e5-4527-ab60-a1a259600e00",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/de-la-salle-high-school-concord-ca/gamfdf78e86b3?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": "De Le Salle Tournament"
@@ -8127,7 +8175,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T08:33:10",
+              "maxprepsModifiedOn": "2026-11-24T00:07:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8150,72 +8198,6 @@
       "published": [
         {
           "contestId": "b0aaae9e-1713-4eac-98d9-27aa7b361d30"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Salinas",
-              "name": "Salinas",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
-            },
-            "contestId": "eea867e2-7e2a-485f-80b2-a537fdd31aeb",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-03",
-            "dateLocal": "2026-12-03T19:00:00",
-            "dateUtc": "2026-12-04T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Gilroy",
-              "name": "Gilroy",
-              "result": null,
-              "score": null,
-              "slug": "gilroy",
-              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:43:22",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gilroy-vs-salinas/12-3-2026/?c=eea867e2-7e2a-485f-80b2-a537fdd31aeb",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "eea867e2-7e2a-485f-80b2-a537fdd31aeb"
-        }
-      },
-      "id": "2026-12-03-name:salinas-at-gilroy",
-      "published": [
-        {
-          "contestId": "eea867e2-7e2a-485f-80b2-a537fdd31aeb"
         }
       ]
     },
@@ -9249,7 +9231,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-01T23:07:11",
+              "maxprepsModifiedOn": "2026-11-23T16:57:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9262,7 +9244,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Carmel High School"
             }
           },
           "ref": "7be422b6-b437-4f7c-ae8d-1ff2432a83e2"
@@ -9272,72 +9254,6 @@
       "published": [
         {
           "contestId": "7be422b6-b437-4f7c-ae8d-1ff2432a83e2"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Atherton",
-              "name": "Menlo School",
-              "result": null,
-              "score": null,
-              "slug": "menlo",
-              "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
-            },
-            "contestId": "2c4d4b19-a067-4002-b637-7e85d7936439",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-04",
-            "dateLocal": "2026-12-04T19:00:00",
-            "dateUtc": "2026-12-05T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Soledad",
-              "name": "Soledad",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T10:29:15",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/menlo-school-atherton-vs-soledad/12-4-2026/?c=2c4d4b19-a067-4002-b637-7e85d7936439",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gamc3cc7fa229?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
-            },
-            "venue": {
-              "text": "Soledad High School"
-            }
-          },
-          "ref": "2c4d4b19-a067-4002-b637-7e85d7936439"
-        }
-      },
-      "id": "2026-12-04-menlo-at-name:soledad",
-      "published": [
-        {
-          "contestId": "2c4d4b19-a067-4002-b637-7e85d7936439"
         }
       ]
     },
@@ -12097,7 +12013,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-summit-tahoma-san-jose/12-8-2026/?c=c1d232ea-0330-4ee8-99d0-381a4f8b1244",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam55d395f5fe?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -12316,72 +12232,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Scotts Valley",
-              "name": "Scotts Valley",
-              "result": null,
-              "score": null,
-              "slug": "scotts-valley",
-              "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121"
-            },
-            "contestId": "ad4911de-9fbb-4386-a6f4-4c9cdaa3ed4f",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-08",
-            "dateLocal": "2026-12-08T19:00:00",
-            "dateUtc": "2026-12-09T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Soledad",
-              "name": "Soledad",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T14:56:29",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/scotts-valley-vs-soledad/12-8-2026/?c=ad4911de-9fbb-4386-a6f4-4c9cdaa3ed4f",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/game5fcaa1404?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
-            },
-            "venue": {
-              "text": "Soledad High School"
-            }
-          },
-          "ref": "ad4911de-9fbb-4386-a6f4-4c9cdaa3ed4f"
-        }
-      },
-      "id": "2026-12-08-scotts-valley-at-name:soledad",
-      "published": [
-        {
-          "contestId": "ad4911de-9fbb-4386-a6f4-4c9cdaa3ed4f"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "San Jose",
               "name": "Yerba Buena",
               "result": null,
@@ -12417,7 +12267,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-20T08:56:08",
+              "maxprepsModifiedOn": "2026-11-23T17:03:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12430,7 +12280,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/william-c-overfelt-high-school-san-jose-ca/gam162260b081?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Overfelt (William C.) High School"
             }
           },
           "ref": "c3a3827a-9539-4a6b-aadf-cb85ecdf7741"
@@ -13108,6 +12958,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Saratoga",
+              "name": "Saratoga",
+              "result": null,
+              "score": null,
+              "slug": "saratoga",
+              "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
+            },
+            "contestId": "35662020-4e7a-4ff6-be16-5714c3dcacb1",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-09",
+            "dateLocal": "2026-12-09T16:30:00",
+            "dateUtc": "2026-12-10T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-24T04:16:06",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/saratoga-vs-terra-nova-pacifica/12-9-2026/?c=35662020-4e7a-4ff6-be16-5714c3dcacb1",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Pirates Treasure Tourney at Harbor"
+            }
+          },
+          "ref": "35662020-4e7a-4ff6-be16-5714c3dcacb1"
+        }
+      },
+      "id": "2026-12-09-saratoga-at-terra-nova",
+      "published": [
+        {
+          "contestId": "35662020-4e7a-4ff6-be16-5714c3dcacb1"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Redwood City",
               "name": "Sequoia",
               "result": null,
@@ -13209,7 +13125,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-08T10:19:06",
+              "maxprepsModifiedOn": "2026-11-23T21:38:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13219,10 +13135,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-hillsdale-fighting-knights-san-mateo/12-10-2026/?c=f825c9c6-194c-45ed-ab45-3825081ad7ea",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam0f24f174a4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "f825c9c6-194c-45ed-ab45-3825081ad7ea"
@@ -14737,7 +14653,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/de-la-salle-concord-vs-sacred-heart-cathedral-preparatory-san-francisco/12-11-2026/?c=80b4b01a-4a85-45e2-86a1-cc69d352e331",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/de-la-salle-high-school-concord-ca/gam62e711ed65?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": "De La Salle Christian Brothers Classic"
@@ -16057,7 +15973,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-design-tech-redwood-city/12-14-2026/?c=43150bc9-d01f-4349-a7c5-2839e10bde7c",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam56cadedc49?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -16905,7 +16821,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T18:16:29",
+              "maxprepsModifiedOn": "2026-11-23T21:33:58",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16979,7 +16895,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105738?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/milpitas-vs-windsor/12-16-2026/?c=e7f50e8f-4361-4588-ac4b-08afb812129d",
               "nfhsStream": null
             },
@@ -17060,6 +16976,72 @@
       "published": [
         {
           "contestId": "16f722bb-fdb0-46d9-98f0-9cbc5049019d"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Oak Grove",
+              "result": null,
+              "score": null,
+              "slug": "oak-grove",
+              "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
+            },
+            "contestId": "699f58f8-a76e-44bc-8405-54ce81b16924",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-16",
+            "dateLocal": "2026-12-16T19:00:00",
+            "dateUtc": "2026-12-17T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "James Lick",
+              "result": null,
+              "score": null,
+              "slug": "james-lick",
+              "teamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-23T13:40:11",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/james-lick-san-jose-vs-oak-grove-san-jose/12-16-2026/?c=699f58f8-a76e-44bc-8405-54ce81b16924",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gamc2a31ff24c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Lick (James) High School"
+            }
+          },
+          "ref": "699f58f8-a76e-44bc-8405-54ce81b16924"
+        }
+      },
+      "id": "2026-12-16-oak-grove-at-james-lick",
+      "published": [
+        {
+          "contestId": "699f58f8-a76e-44bc-8405-54ce81b16924"
         }
       ]
     },
@@ -17235,12 +17217,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:44:25",
+              "maxprepsModifiedOn": "2026-11-24T05:03:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -17248,7 +17230,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Clayton Valley HS"
             }
           },
           "ref": "42318698-93a2-460b-a922-feadce621a2d"
@@ -18468,8 +18450,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-12-18",
-            "dateLocal": "2026-12-18T19:00:00",
-            "dateUtc": "2026-12-19T03:00:00Z",
+            "dateLocal": "2026-12-18T18:00:00",
+            "dateUtc": "2026-12-19T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -18489,7 +18471,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:47:20",
+              "maxprepsModifiedOn": "2026-11-24T01:05:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20250,8 +20232,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-12-19",
-            "dateLocal": "2026-12-19T00:00:00",
-            "dateUtc": "2026-12-19T08:00:00Z",
+            "dateLocal": "2026-12-19T14:00:00",
+            "dateUtc": "2026-12-19T22:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -20266,12 +20248,12 @@
             "isForfeit": false,
             "isLeague": false,
             "isOt": false,
-            "isTimeTba": true,
+            "isTimeTba": false,
             "leagueDivision": null,
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T16:41:35",
+              "maxprepsModifiedOn": "2026-11-23T21:39:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20281,10 +20263,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-st-francis-watsonville/12-19-2026/?c=c566fdc5-0047-480d-a6f9-75cfefb48a13",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam11ff970052?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "c566fdc5-0047-480d-a6f9-75cfefb48a13"
@@ -20413,7 +20395,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/archbishop-riordan-san-francisco-vs-de-la-salle-concord/12-19-2026/?c=c355c03a-65a4-4ef1-a7b9-926ce41919b4",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/de-la-salle-high-school-concord-ca/gamff5d2e724c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -22383,7 +22365,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T14:09:05",
+              "maxprepsModifiedOn": "2026-11-23T18:37:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -22396,7 +22378,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "San Jose High Academy"
             }
           },
           "ref": "e0438d0f-bea9-4918-94f5-7a20c6f711aa"
@@ -23117,7 +23099,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105949?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-santa-cruz/12-23-2026/?c=a0bdfc5e-371e-414c-95ca-1042faf00eb1",
               "nfhsStream": null
             },
@@ -26419,7 +26401,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-hillbrook-san-jose/1-5-2027/?c=be819f0e-74e6-4b59-9f2c-78c354d48af8",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam0ca9748fb7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -29808,7 +29790,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105950?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-menlo-atherton/1-8-2027/?c=24d9c4ab-e12a-47b8-a6e0-6c4908565168",
               "nfhsStream": null
             },
@@ -30986,6 +30968,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "contestId": "7de218fe-75c8-45a7-8650-9d0fa6dffafa",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-08",
+            "dateLocal": "2027-01-08T19:45:00",
+            "dateUtc": "2027-01-09T03:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Bruno",
+              "name": "Capuchino",
+              "result": null,
+              "score": null,
+              "slug": "capuchino",
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-23T09:55:02",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/6863960?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-south-san-francisco/1-8-2027/?c=7de218fe-75c8-45a7-8650-9d0fa6dffafa",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/capuchino-high-school-san-bruno-ca/gam76e1bdcbbf?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "7de218fe-75c8-45a7-8650-9d0fa6dffafa"
+        }
+      },
+      "id": "2027-01-08-south-san-francisco-at-capuchino",
+      "published": [
+        {
+          "contestId": "7de218fe-75c8-45a7-8650-9d0fa6dffafa"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Pacifica",
               "name": "Terra Nova",
               "result": null,
@@ -31648,7 +31696,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-13T18:58:52",
+              "maxprepsModifiedOn": "2026-11-23T21:36:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -31658,10 +31706,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-san-mateo/1-9-2027/?c=e999ef0f-3433-4a23-9f70-b23e643d9ddf",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/game38fc68810?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "e999ef0f-3433-4a23-9f70-b23e643d9ddf"
@@ -32233,7 +32281,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105951?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/carlmont-belmont-vs-half-moon-bay/1-12-2027/?c=c3692fb5-5c93-44a4-bccb-83172fd06069",
               "nfhsStream": null
             },
@@ -32468,8 +32516,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-12",
-            "dateLocal": "2027-01-12T19:30:00",
-            "dateUtc": "2027-01-13T03:30:00Z",
+            "dateLocal": "2027-01-12T18:00:00",
+            "dateUtc": "2027-01-13T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -32489,7 +32537,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-23T21:00:32",
+              "maxprepsModifiedOn": "2026-11-23T23:02:01",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32502,7 +32550,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Burlingame High School"
             }
           },
           "ref": "c896a15b-83bc-4c90-89ce-efde3673bc71"
@@ -34956,7 +35004,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-24T19:49:40",
+              "maxprepsModifiedOn": "2026-11-23T21:40:26",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34966,10 +35014,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-pinewood-los-altos-hills/1-14-2027/?c=04586744-9b46-4e1c-8365-4449866a96af",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gambf3017de9e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "04586744-9b46-4e1c-8365-4449866a96af"
@@ -41725,7 +41773,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105943?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/burlingame-vs-half-moon-bay/1-21-2027/?c=f424d9dd-0e95-4e2e-b065-21088bc633b0",
               "nfhsStream": null
             },
@@ -41762,8 +41810,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-21",
-            "dateLocal": "2027-01-21T00:00:00",
-            "dateUtc": "2027-01-21T08:00:00Z",
+            "dateLocal": "2027-01-21T18:30:00",
+            "dateUtc": "2027-01-22T02:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -41778,12 +41826,12 @@
             "isForfeit": false,
             "isLeague": true,
             "isOt": false,
-            "isTimeTba": true,
+            "isTimeTba": false,
             "leagueDivision": "wbal",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-08T10:35:22",
+              "maxprepsModifiedOn": "2026-11-23T21:36:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41793,10 +41841,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-harker-san-jose/1-21-2027/?c=6eb796f5-56d4-4985-b59f-ec990ab2b188",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gamf6efb27973?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "6eb796f5-56d4-4985-b59f-ec990ab2b188"
@@ -41915,7 +41963,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-02T00:23:28",
+              "maxprepsModifiedOn": "2026-11-24T04:34:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41928,7 +41976,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gamb800faa881?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Westmoor High School"
             }
           },
           "ref": "91280e97-269a-4a1d-bdc6-f6c0956a9f9c"
@@ -42179,7 +42227,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-25T09:49:46",
+              "maxprepsModifiedOn": "2026-11-24T04:02:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42192,7 +42240,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/el-camino-high-school-san-francisco-south-san-francisco-ca/gam9f5843640e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "El Camino High School-South San Francisco"
             }
           },
           "ref": "1c4c67e4-288e-40ed-bb13-6cf4d0f09642"
@@ -43067,6 +43115,72 @@
       "published": [
         {
           "contestId": "91bc615f-4c0b-4c7a-ad7a-d61d8b4245a2"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Daly City",
+              "name": "Jefferson",
+              "result": null,
+              "score": null,
+              "slug": "jefferson",
+              "teamId": "c88b0d9e-48e6-4dc5-86b0-274410c5823a"
+            },
+            "contestId": "310a9c21-f8e0-430c-b55c-252f95f0922e",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-22",
+            "dateLocal": "2027-01-22T19:45:00",
+            "dateUtc": "2027-01-23T03:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Bruno",
+              "name": "Capuchino",
+              "result": null,
+              "score": null,
+              "slug": "capuchino",
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-23T09:56:22",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/6863951?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-jefferson-daly-city/1-22-2027/?c=310a9c21-f8e0-430c-b55c-252f95f0922e",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/capuchino-high-school-san-bruno-ca/gam9934d2cc4a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "310a9c21-f8e0-430c-b55c-252f95f0922e"
+        }
+      },
+      "id": "2027-01-22-jefferson-at-capuchino",
+      "published": [
+        {
+          "contestId": "310a9c21-f8e0-430c-b55c-252f95f0922e"
         }
       ]
     },
@@ -46347,8 +46461,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-26",
-            "dateLocal": "2027-01-26T00:00:00",
-            "dateUtc": "2027-01-26T08:00:00Z",
+            "dateLocal": "2027-01-26T19:00:00",
+            "dateUtc": "2027-01-27T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -46363,12 +46477,12 @@
             "isForfeit": false,
             "isLeague": true,
             "isOt": false,
-            "isTimeTba": true,
+            "isTimeTba": false,
             "leagueDivision": "wbal",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-05T13:59:52",
+              "maxprepsModifiedOn": "2026-11-23T21:37:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -46378,10 +46492,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-sacred-heart-prep-atherton/1-26-2027/?c=e20d18aa-b248-47cf-ad67-4f05993e0633",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam408a70e88b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "e20d18aa-b248-47cf-ad67-4f05993e0633"
@@ -46508,7 +46622,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105944?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-sequoia-redwood-city/1-26-2027/?c=0b668d3d-f12c-4583-83d4-01da7cd568c4",
               "nfhsStream": null
             },
@@ -49222,6 +49336,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Bruno",
+              "name": "Capuchino",
+              "result": null,
+              "score": null,
+              "slug": "capuchino",
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+            },
+            "contestId": "7900c1e1-e2d9-456e-9dea-1f2c7d0a21c3",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-29",
+            "dateLocal": "2027-01-29T19:45:00",
+            "dateUtc": "2027-01-30T03:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-23T09:54:10",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-south-san-francisco/1-29-2027/?c=7900c1e1-e2d9-456e-9dea-1f2c7d0a21c3",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/south-san-francisco-high-school-south-san-francisco-ca/gam91b2fe7130?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "7900c1e1-e2d9-456e-9dea-1f2c7d0a21c3"
+        }
+      },
+      "id": "2027-01-29-capuchino-at-south-san-francisco",
+      "published": [
+        {
+          "contestId": "7900c1e1-e2d9-456e-9dea-1f2c7d0a21c3"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Belmont",
               "name": "Carlmont",
               "result": null,
@@ -49432,7 +49612,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-eastside-college-prep-east-palo-alto/1-29-2027/?c=2cd3da43-cf19-47ce-8123-fb1eed5bbde7",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam515129bc7a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -56030,7 +56210,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105945?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-woodside/2-3-2027/?c=61659126-09c0-408d-9113-b9ec3703a740",
               "nfhsStream": null
             },
@@ -56096,7 +56276,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105946?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/aragon-san-mateo-vs-half-moon-bay/2-5-2027/?c=6e1a65fc-0d00-484d-b98e-7cc974a2d4ca",
               "nfhsStream": null
             },
@@ -56284,12 +56464,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Bruno",
-              "name": "Capuchino",
+              "city": "South San Francisco",
+              "name": "El Camino",
               "result": null,
               "score": null,
-              "slug": "capuchino",
-              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+              "slug": "el-camino-ssf",
+              "teamId": "f78ab2a3-b319-43a1-9bc4-29b19ec87189"
             },
             "contestId": "72e6bad4-44ab-47d9-89d4-6c8cff8e2901",
             "contestTypes": {
@@ -56298,17 +56478,17 @@
             },
             "countsFor": null,
             "dateKey": "2027-02-05",
-            "dateLocal": "2027-02-05T18:00:00",
-            "dateUtc": "2027-02-06T02:00:00Z",
+            "dateLocal": "2027-02-05T19:45:00",
+            "dateUtc": "2027-02-06T03:45:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "South San Francisco",
-              "name": "El Camino",
+              "city": "San Bruno",
+              "name": "Capuchino",
               "result": null,
               "score": null,
-              "slug": "el-camino-ssf",
-              "teamId": "f78ab2a3-b319-43a1-9bc4-29b19ec87189"
+              "slug": "capuchino",
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -56319,7 +56499,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:14:00",
+              "maxprepsModifiedOn": "2026-11-23T17:51:11",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -59351,8 +59531,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-02-09",
-            "dateLocal": "2027-02-09T00:00:00",
-            "dateUtc": "2027-02-09T08:00:00Z",
+            "dateLocal": "2027-02-09T18:30:00",
+            "dateUtc": "2027-02-10T02:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -59367,12 +59547,12 @@
             "isForfeit": false,
             "isLeague": true,
             "isOt": false,
-            "isTimeTba": true,
+            "isTimeTba": false,
             "leagueDivision": "wbal",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-08T10:37:33",
+              "maxprepsModifiedOn": "2026-11-23T21:38:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -59382,10 +59562,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/crystal-springs-uplands-hillsborough-vs-menlo-school-atherton/2-9-2027/?c=5fca6554-47f7-4794-9e91-28dff4d0e603",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/crystal-uplands-high-school-hillsborough-ca/gam6dde856dea?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Crystal Springs Uplands (Upper School Campus)"
             }
           },
           "ref": "5fca6554-47f7-4794-9e91-28dff4d0e603"
@@ -61782,6 +61962,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Bruno",
+              "name": "Capuchino",
+              "result": null,
+              "score": null,
+              "slug": "capuchino",
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+            },
+            "contestId": "4ab55d69-8bc8-4baa-9fa1-1e1df29aebce",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-12",
+            "dateLocal": "2027-02-12T19:45:00",
+            "dateUtc": "2027-02-13T03:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Daly City",
+              "name": "Jefferson",
+              "result": null,
+              "score": null,
+              "slug": "jefferson",
+              "teamId": "c88b0d9e-48e6-4dc5-86b0-274410c5823a"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-23T09:56:56",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-jefferson-daly-city/2-12-2027/?c=4ab55d69-8bc8-4baa-9fa1-1e1df29aebce",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/jefferson-high-school-daly-city-daly-city-ca/gamdf6b1425c4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "4ab55d69-8bc8-4baa-9fa1-1e1df29aebce"
+        }
+      },
+      "id": "2027-02-12-capuchino-at-jefferson",
+      "published": [
+        {
+          "contestId": "4ab55d69-8bc8-4baa-9fa1-1e1df29aebce"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Gilroy",
               "name": "Christopher",
               "result": null,
@@ -61916,7 +62162,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T21:01:14",
+              "maxprepsModifiedOn": "2026-11-23T18:34:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62378,7 +62624,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105961?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-hillsdale-fighting-knights-san-mateo/2-12-2027/?c=f9806118-254f-4231-af48-5da8adaa05c7",
               "nfhsStream": null
             },
@@ -64406,7 +64652,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7105952?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-terra-nova-pacifica/2-13-2027/?c=50456411-cb4b-4401-9c59-cbc24f015842",
               "nfhsStream": null
             },

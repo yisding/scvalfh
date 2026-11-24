@@ -1,47 +1,47 @@
 {
   "cifssCrossCheck": {
-    "agreements": 1,
+    "agreements": 3,
     "cifssOnlyScored": 0,
-    "compared": 1,
+    "compared": 3,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "26b7993c1e1bfc06af7ebdb41cfee408194e5e118fcb215f9997b5632c456596",
+  "contentHash": "fd8ecd4e83635188c7208850f299cb6ae3dabbf440061d4a1f47febeeb6b256a",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 0,
+        "finals": 5,
         "games": 281,
         "leagueGames": 126,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 219,
-        "leagueGames": 106,
+        "finals": 3,
+        "games": 224,
+        "leagueGames": 110,
         "teams": 16
       },
       "sccal": {
         "backfilled": 0,
-        "finals": 0,
-        "games": 78,
+        "finals": 1,
+        "games": 77,
         "leagueGames": 25,
         "teams": 6
       },
       "scval": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 195,
+        "finals": 3,
+        "games": 196,
         "leagueGames": 96,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 121,
+        "finals": 0,
+        "games": 119,
         "leagueGames": 39,
         "teams": 8
       },
@@ -53,21 +53,21 @@
         "teams": 8
       }
     },
-    "finals": 4,
-    "games": 882,
-    "leagueGames": 448,
-    "mismatches": 1,
-    "pending": 15,
+    "finals": 10,
+    "games": 884,
+    "leagueGames": 452,
+    "mismatches": 0,
+    "pending": 19,
     "teams": 79
   },
   "crossCheck": {
-    "agreements": 3,
+    "agreements": 8,
     "backfilled": 0,
-    "compared": 121,
-    "conflicts": 0,
-    "sbliveOnlyScored": 5
+    "compared": 123,
+    "conflicts": 2,
+    "sbliveOnlyScored": 10
   },
-  "fetchedAt": "2026-11-23T15:15:19.284Z",
+  "fetchedAt": "2026-11-24T06:24:17.289Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -369,7 +369,7 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -404,7 +404,7 @@
     },
     {
       "label": "james-lick schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -619,12 +619,12 @@
     },
     {
       "label": "woodside schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
       "label": "capuchino schedule",
-      "rowCount": 19,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -634,7 +634,7 @@
     },
     {
       "label": "jefferson schedule",
-      "rowCount": 19,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -649,12 +649,12 @@
     },
     {
       "label": "south-san-francisco schedule",
-      "rowCount": 19,
+      "rowCount": 21,
       "status": "ok"
     },
     {
       "label": "terra-nova schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -753,6 +753,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2264-pal-ocean scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2264-pal-ocean scoreboard 2026-11-19",
       "rowCount": 2,
       "status": "ok"
@@ -800,11 +805,6 @@
     {
       "label": "sblive 2326-wbal scoreboard 2026-11-18",
       "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2326-wbal scoreboard 2026-11-21",
-      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -934,12 +934,12 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 62,
+      "rowCount": 64,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 1046,
+      "rowCount": 1062,
       "status": "ok"
     },
     {
@@ -959,7 +959,7 @@
     }
   ],
   "today": "2026-11-23",
-  "warnings": 18,
+  "warnings": 20,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",
