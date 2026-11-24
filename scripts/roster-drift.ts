@@ -130,13 +130,15 @@ export async function main(argv: readonly string[]): Promise<number> {
   const { nameKey } = await import('../lib/jv/jv-rosters');
   const { describeDrift, getRosterDrift } = await import('../lib/players/roster-drift');
   const drift = getRosterDrift();
+  // The verdict does not depend on the output: --json --base still fails on drift the change made.
+  const made = drift.map((d) => o.base !== null && !inherited(d, DATA_DIR, o.base, nameKey));
   if (o.json) {
     process.stdout.write(`${JSON.stringify(drift)}\n`);
-    return 0;
+    return made.some(Boolean) ? 1 : 0;
   }
   let own = 0;
-  for (const d of drift) {
-    const mine = o.base !== null && !inherited(d, DATA_DIR, o.base, nameKey);
+  for (const [i, d] of drift.entries()) {
+    const mine = made[i];
     if (mine) own++;
     const line = `${SPORT_ID} ${describeDrift(d)}${mine ? ` — not in ${o.base}: this change made it` : ''}`;
     console.log(line);

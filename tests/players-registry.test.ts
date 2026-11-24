@@ -1070,6 +1070,38 @@ describe('the sources as sightings', () => {
     expect(sightings[0].observations[0]).toMatchObject({ src: 'maxpreps-roster', name: 'Xia Lam' });
   });
 
+  it('reads none of an overlay record whose row MaxPreps has since respelled (it may be about someone else now)', () => {
+    const { sightings } = currentSeasonSightings(
+      {
+        sport: 'volleyball',
+        rosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({})] }] },
+        jvRosters: null,
+        enrichment: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'alpha',
+              players: [
+                {
+                  athleteId: 'a1', fullName: 'Player #6', sourceName: 'Ann Other', level: null,
+                  grade: { value: 11, derived: false, kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
+                  positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                },
+              ],
+            },
+          ],
+        },
+        playerStats: null,
+        jvSchoolSites: null,
+        jvProfiles: null,
+      },
+      NO_IDENTITY,
+    );
+    expect(sightings).toHaveLength(1);
+    expect(sightings[0].observations).toEqual([expect.objectContaining({ src: 'maxpreps-roster' })]);
+    expect(sightings[0].nameKeys).toEqual(['xialam']);
+  });
+
   it('a past season is its stat sheets and its all-league lists', () => {
     const sightings = pastSeasonSightings({
       sport: 'field-hockey',

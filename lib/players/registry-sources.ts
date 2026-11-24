@@ -221,13 +221,15 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
   const fromPage = (file: z.infer<typeof RostersInput>, page: PlayerLevel, overlay: Map<string, z.infer<typeof EnrichmentInput>['teams'][number]['players'][number]>) => {
     for (const team of file.teams) {
       for (const row of team.players) {
-        const extra = row.athleteId !== null ? overlay.get(`${team.slug} ${row.athleteId}`) : undefined;
+        // The rules lib/players/rosters.ts holds the overlay to at load, held here too (this reads the file itself),
+        // and as leniently (lib/players/roster-drift.ts): a record joins its row only under the row's own fullName.
+        // One whose row MaxPreps has since respelled or renamed (a "Player #12" that became Xia Lam) may now be
+        // about someone else, so none of it is read, as the loader leaves all of it out.
+        const joined = row.athleteId !== null ? overlay.get(`${team.slug} ${row.athleteId}`) : undefined;
+        const extra = joined !== undefined && joined.fullName === row.fullName ? joined : undefined;
         // MaxPreps' "Player #4" (lib/players/placeholder-name.ts) is a number, not a player, until a source
-        // names it; then it is that player, under that name.
-        // The rule lib/players/rosters.ts holds the overlay to at load, held here too (this reads the file itself),
-        // and as leniently: a name only ever fills a numbered stand-in. A row MaxPreps has named since (a roster
-        // refresh) is MaxPreps' row again, and the overlay's name is roster drift the loader reports, not a
-        // reason to fail the registry build and with it the refresh (lib/players/roster-drift.ts).
+        // names it; then it is that player, under that name. A name only ever fills a numbered stand-in: on a row
+        // MaxPreps has named since, the overlay's name is roster drift, not a reason to fail the registry build.
         const named = extra?.name && isPlaceholderRow(row) && row.jersey !== null ? extra.name : null;
         if (named === null && (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, '')))) continue;
         const asRow = named ? { ...row, firstName: named.firstName, lastName: named.lastName, fullName: named.value } : row;

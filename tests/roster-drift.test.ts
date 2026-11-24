@@ -83,5 +83,9 @@ describe('roster drift', () => {
     expect(run.stdout).toContain('::error title=Roster drift (field-hockey)::');
     expect(run.stdout).toContain('athleteId 00000000-0000-0000-0000-000000000000 is not a MaxPreps row of this team');
     expect(run.stdout).toContain('this change made it');
+    // --json prints the same drift, and still fails on it.
+    const json = drift(['--json', '--base', 'HEAD'], { enrichment: e });
+    expect(json.status, json.output).toBe(1);
+    expect((JSON.parse(json.stdout.trim().split('\n').at(-1)!) as RosterDrift[]).some((d) => d.key === '00000000-0000-0000-0000-000000000000')).toBe(true);
   });
 });
