@@ -3,19 +3,23 @@
  *
  * `clubTeam` holds whatever its source wrote ("Force (CA) ECNL G2008/09", "09G ECNL-RL", "Ecnl rl",
  * "2009G RL-ECNL", "Bay Area Surf ECNL"), so the same team read six ways across clubs. A club page
- * prints one shape instead: the team's own name, if it has one, then its league, as the leagues
- * name their teams themselves:
+ * prints one shape instead: the team's own name, if it has one, then its league, then its birth
+ * years, as the leagues name their teams themselves:
  *
- *   Juventus ECNL   Madrid ECNL   Quicksilver Green GA   Gold   ECNL RL   GA and NPL 1
+ *   ECNL RL G2008/09   Juventus ECNL G2010   Madrid ECNL   Quicksilver Green GA G2009   Gold G2011
  *
- *   - the league in one spelling each: ECNL, ECNL RL, GA (Girls Academy), DPL, NPL, State Premier;
- *     two leagues are joined with "and";
+ *   - the league in one spelling each: ECNL, ECNL RL, GA (Girls Academy), N1 (the National League,
+ *     which sources also write "National 1" and "N1NPL"), DPL, NPL, State Premier; two leagues are
+ *     joined with "and";
+ *   - the birth years when the source gives them, in the leagues' own form whatever shape the source
+ *     used (G2008/09, 2009/10G, 09G, 10g, G10, '07, "Girls 09"): G and the year, G2009, or two years,
+ *     the earlier first, G2008/09; two teams' years are joined with "and". An age group (U17, U-16,
+ *     16u) is not a birth year (it moves with the season) and is left out, as is a birth year the
+ *     source does not give: nothing is worked out from the player's grade;
  *   - no club name (the page is the club's; a row can also name a partner club, "SVSA"), no "(CA)";
- *   - no age group or birth year (G2008/09, 09G, '07, U17, 10g): the row prints the player's grade
- *     beside it, and the sources give the team's age in five shapes or not at all;
  *   - what is left is the team's own name ("Juventus", "Quicksilver Green", "Gold"), with each
  *     word capitalized;
- *   - null when nothing is left ("2009G", "AFC", "Bay Area Surf 09G"): the row prints no team.
+ *   - null when nothing is left ("AFC", "Bay Area Surf"): the row prints no team.
  *
  * The data file keeps its own wording: this is display only, so a source's spelling is still there
  * for a maintainer, and a tie added by hand later is printed in the same shape without an edit.
@@ -27,27 +31,33 @@ const LEAGUES: ReadonlyArray<readonly [RegExp, string]> = [
   [/\b(?:ECNL[\s-]*RL|RL[\s-]*ECNL|ECRL)\b/i, 'ECNL RL'],
   [/\bECNL\b/i, 'ECNL'],
   [/\b(?:GA|Girls Academy)(?:\s+(II))?\b/i, 'GA'],
+  // N1 before NPL: "N1NPL" is the National League, not two leagues.
+  [/\b(?:N1(?:NPL)?|National 1|National League)\b/i, 'N1'],
   [/\bDPL\b/i, 'DPL'],
   [/\bNPL\s*(1)?\b/i, 'NPL'],
   [/\bState Premier\b/i, 'State Premier'],
 ];
 
 /**
- * An age group or a birth year, in each shape the sources use: 2009, 2009/10, G2008/09, 2010G, 09G,
- * 10g, G10, 08/07, '07, U17, U-16, 16u, and "Girls"/"G" standing alone.
+ * A birth year or a pair of them, in each shape the sources use: 2009, 2009/10, G2008/09, 2010G,
+ * 09G, 10g, G10, 08/07, '07. Two digits, standing alone or with a G or an apostrophe; never part of
+ * a longer word (U17, 16u, N1).
  */
-const AGE = new RegExp(
-  [
-    String.raw`\bG?(?:19|20)\d{2}(?:/\d{2,4})?G?\b`,
-    String.raw`\bG?\d{2}(?:/\d{2})?G?\b`,
-    String.raw`'\d{2}\b`,
-    String.raw`\bU-?\d{2}\b`,
-    String.raw`\b\d{2}U\b`,
-    String.raw`\bGirls\b`,
-    String.raw`\bG\b`,
-  ].join('|'),
-  'gi',
-);
+const BIRTH_YEARS = /(?<![\w/'])(?:G|')?((?:19|20)?\d{2})(?:\/((?:19|20)?\d{2}))?G?(?![\w/])/gi;
+
+/** What else marks a team's age and is not printed: an age group, and "Girls"/"G" standing alone. */
+const AGE_WORDS = /\bU-?\d{2}\b|\b\d{2}U\b|\bGirls\b|\bG\b/gi;
+
+const fullYear = (y: string) => (y.length === 4 ? Number(y) : 2000 + Number(y));
+
+/** "G2009", or "G2008/09" for a pair, the earlier year first. */
+function birthYearWords(first: string, second: string | undefined): string {
+  const a = fullYear(first);
+  if (second === undefined) return `G${a}`;
+  const b = fullYear(second);
+  const [lo, hi] = a <= b ? [a, b] : [b, a];
+  return lo === hi ? `G${lo}` : `G${lo}/${String(hi).slice(2)}`;
+}
 
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -55,13 +65,12 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const titled = (s: string) => s.replace(/(^|\s)(\p{Ll})/gu, (_, sp: string, c: string) => sp + c.toUpperCase());
 
 /**
- * A soccer `clubTeam` as a club page prints it, or null when it names no team beyond its club and
- * age. `clubNames` holds every name a club goes by (each club's `name`, `shortName` and `aliases`),
- * each removed where it stands as whole words, longest first.
+ * A soccer `clubTeam` as a club page prints it, or null when it names no team beyond its club.
+ * `clubNames` holds every name a club goes by (each club's `name`, `shortName` and `aliases`), each
+ * removed where it stands as whole words, longest first.
  */
 export function soccerClubTeamWords(clubTeam: string, clubNames: readonly string[]): string | null {
-  // "N1NPL" is two words run together: "N1", then the league.
-  let s = ` ${clubTeam} `.replace(/\bN1NPL\b/gi, 'N1 NPL');
+  let s = ` ${clubTeam} `;
 
   // Leagues first, before any club name goes: some aliases carry one ("MVLA ECNL", "Force ECNL").
   // Kept in the order the source wrote them ("Girls Academy, ECNL RL" reads "GA and ECNL RL").
@@ -80,9 +89,16 @@ export function soccerClubTeamWords(clubTeam: string, clubNames: readonly string
   }
   s = s.replace(/\(CA\)/gi, ' ');
 
+  const years: string[] = [];
+  s = s.replace(BIRTH_YEARS, (_, first: string, second: string | undefined) => {
+    const words = birthYearWords(first, second);
+    if (!years.includes(words)) years.push(words);
+    return ' ';
+  });
+
   const rest = titled(
     s
-      .replace(AGE, ' ')
+      .replace(AGE_WORDS, ' ')
       .replace(/\(\s*\)/g, ' ')
       .replace(/(?:^|\s)(?:and|&)(?=\s|$)/gi, ' ')
       .replace(/[,&()–-]/g, ' ')
@@ -90,6 +106,6 @@ export function soccerClubTeamWords(clubTeam: string, clubNames: readonly string
       .trim(),
   );
 
-  const words = [rest, leagues.join(' and ')].filter((w) => w.length > 0).join(' ');
+  const words = [rest, leagues.join(' and '), years.join(' and ')].filter((w) => w.length > 0).join(' ');
   return words.length > 0 ? words : null;
 }

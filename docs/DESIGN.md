@@ -3084,8 +3084,9 @@ empty state says what was and was not found (§8).
   with a sentence saying that only tracked players are named here (and, where the club has a public
   roster, that it lists many more players than this page does). Each player row: the name; the
   school linking `/teams/<slug>#roster`, the grade and the club team when known (in soccer, in one
-  shape for every club whatever the source wrote: the team's own name, then its league, as "Juventus
-  ECNL", "ECNL RL", "Quicksilver Green GA", with no club name or age group;
+  shape for every club whatever the source wrote: the team's own name, then its league, then the
+  birth years when the source gives them, as "Juventus ECNL G2010", "ECNL RL G2008/09", "Quicksilver
+  Green GA", with no club name or age group (U17);
   `components/words/club-team-words.ts`); the status (§17.3);
   and the source links. The list's lede says recall is partial, as the empty state does. In "Teams
   and programs", the page most programs were read from (when two or more were) is linked once, under

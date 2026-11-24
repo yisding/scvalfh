@@ -23,55 +23,55 @@ describe('soccerClubTeamWords', () => {
     const values = [...new Set([...clubs.affiliations, ...clubs.jvAffiliations].flatMap((a) => (a.clubTeam !== null ? [a.clubTeam] : [])))];
     const table = Object.fromEntries(values.sort((x, y) => x.localeCompare(y)).map((v) => [v, words(v)]));
     expect(table).toEqual({
-      "'07 ECNL RL": 'ECNL RL',
-      '09 ECNL': 'ECNL',
-      '09 GA': 'GA',
-      '09 NPL': 'NPL',
-      '09G ECNL': 'ECNL',
-      '09G ECNL-RL': 'ECNL RL',
-      '09G Girls Academy': 'GA',
-      '10g Black': 'Black',
-      '11G, GA & NPL': 'GA and NPL',
-      '2009/10G ECRL': 'ECNL RL',
-      '2009G': null,
-      '2009G RL-ECNL': 'ECNL RL',
-      '2010': null,
-      '2010 Juventus': 'Juventus',
-      '2010G ECNL': 'ECNL',
-      '2010G ECNL-RL': 'ECNL RL',
+      "'07 ECNL RL": 'ECNL RL G2007',
+      '09 ECNL': 'ECNL G2009',
+      '09 GA': 'GA G2009',
+      '09 NPL': 'NPL G2009',
+      '09G ECNL': 'ECNL G2009',
+      '09G ECNL-RL': 'ECNL RL G2009',
+      '09G Girls Academy': 'GA G2009',
+      '10g Black': 'Black G2010',
+      '11G, GA & NPL': 'GA and NPL G2011',
+      '2009/10G ECRL': 'ECNL RL G2009/10',
+      '2009G': 'G2009',
+      '2009G RL-ECNL': 'ECNL RL G2009',
+      '2010': 'G2010',
+      '2010 Juventus': 'Juventus G2010',
+      '2010G ECNL': 'ECNL G2010',
+      '2010G ECNL-RL': 'ECNL RL G2010',
       AFC: null,
       'AFC U13 GA': 'GA',
       'AFC U16 GA': 'GA',
       'AFC U17 GA': 'GA',
       'AFC U18 GA': 'GA',
-      'Almaden FC 2011 Girls Academy': 'GA',
-      'Bay Area Surf - ECNL G2011/12': 'ECNL',
-      'Bay Area Surf 09G': null,
+      'Almaden FC 2011 Girls Academy': 'GA G2011',
+      'Bay Area Surf - ECNL G2011/12': 'ECNL G2011/12',
+      'Bay Area Surf 09G': 'G2009',
       'Bay Area Surf ECNL': 'ECNL',
-      'Bay Area Surf ECNL 2010G': 'ECNL',
-      'Bay Area Surf ECNL G2008/09': 'ECNL',
-      'Bay Area Surf ECNL G2009/10': 'ECNL',
+      'Bay Area Surf ECNL 2010G': 'ECNL G2010',
+      'Bay Area Surf ECNL G2008/09': 'ECNL G2008/09',
+      'Bay Area Surf ECNL G2009/10': 'ECNL G2009/10',
       Blue: 'Blue',
-      'Burlingame SC - ECNL RL G2011/12': 'ECNL RL',
-      'Burlingame SC 2011G Gold': 'Gold',
-      'Burlingame SC ECNL RL G2008/09': 'ECNL RL',
-      'Burlingame SC ECNL RL G2009/10': 'ECNL RL',
-      'De Anza Force ECNL-RL 10G': 'ECNL RL',
+      'Burlingame SC - ECNL RL G2011/12': 'ECNL RL G2011/12',
+      'Burlingame SC 2011G Gold': 'Gold G2011',
+      'Burlingame SC ECNL RL G2008/09': 'ECNL RL G2008/09',
+      'Burlingame SC ECNL RL G2009/10': 'ECNL RL G2009/10',
+      'De Anza Force ECNL-RL 10G': 'ECNL RL G2010',
       DPL: 'DPL',
       ECNL: 'ECNL',
-      'ECNL G10': 'ECNL',
-      'ECNL Girls 09': 'ECNL',
+      'ECNL G10': 'ECNL G2010',
+      'ECNL Girls 09': 'ECNL G2009',
       'ECNL RL': 'ECNL RL',
       'Ecnl rl': 'ECNL RL',
       'ECNL-RL': 'ECNL RL',
       ECRL: 'ECNL RL',
       Elite: 'Elite',
       'Elite, Girls Academy': 'Elite GA',
-      'FC Bay Area Surf 2010G': null,
-      'Force (CA) ECNL G2008/09': 'ECNL',
-      'Force (CA) ECNL G2009/10': 'ECNL',
-      'Force (CA) ECNL G2010/11': 'ECNL',
-      'Force (CA) ECNL G2011/12': 'ECNL',
+      'FC Bay Area Surf 2010G': 'G2010',
+      'Force (CA) ECNL G2008/09': 'ECNL G2008/09',
+      'Force (CA) ECNL G2009/10': 'ECNL G2009/10',
+      'Force (CA) ECNL G2010/11': 'ECNL G2010/11',
+      'Force (CA) ECNL G2011/12': 'ECNL G2011/12',
       'Force ECNL RL': 'ECNL RL',
       GA: 'GA',
       'GA & NPL 1': 'GA and NPL 1',
@@ -81,36 +81,36 @@ describe('soccerClubTeamWords', () => {
       Huskies: 'Huskies',
       'Juventus ECNL': 'Juventus ECNL',
       'LGU Girls Academy, ECNL RL': 'GA and ECNL RL',
-      'Los Gatos United Soccer Club ECNL RL G2008/09': 'ECNL RL',
-      'Los Gatos United Soccer Club ECNL RL G2009/10': 'ECNL RL',
-      'Los Gatos United Soccer Club ECNL RL G2010/11': 'ECNL RL',
-      'Marin FC ECNL G2008/09': 'ECNL',
-      'MVLA ECNL G2008/09': 'ECNL',
-      'MVLA ECNL G2009/10': 'ECNL',
-      'MVLA ECNL G2010/11': 'ECNL',
-      'MVLA ECNL G2011/12': 'ECNL',
+      'Los Gatos United Soccer Club ECNL RL G2008/09': 'ECNL RL G2008/09',
+      'Los Gatos United Soccer Club ECNL RL G2009/10': 'ECNL RL G2009/10',
+      'Los Gatos United Soccer Club ECNL RL G2010/11': 'ECNL RL G2010/11',
+      'Marin FC ECNL G2008/09': 'ECNL G2008/09',
+      'MVLA ECNL G2008/09': 'ECNL G2008/09',
+      'MVLA ECNL G2009/10': 'ECNL G2009/10',
+      'MVLA ECNL G2010/11': 'ECNL G2010/11',
+      'MVLA ECNL G2011/12': 'ECNL G2011/12',
       'MVLA Madrid ECNL': 'Madrid ECNL',
-      'N1NPL': 'N1 NPL',
-      'National 1': 'National 1',
+      'N1NPL': 'N1',
+      'National 1': 'N1',
       'NorCal Gold Level': 'NorCal Gold Level',
       NPL: 'NPL',
       NPL1: 'NPL 1',
-      'Palo Alto SC ECNL RL G2008/09': 'ECNL RL',
+      'Palo Alto SC ECNL RL G2008/09': 'ECNL RL G2008/09',
       Premier: 'Premier',
-      'Quicksilver Green 2009': 'Quicksilver Green',
-      'Quicksilver Green 2009 and 08/07 GA': 'Quicksilver Green GA',
+      'Quicksilver Green 2009': 'Quicksilver Green G2009',
+      'Quicksilver Green 2009 and 08/07 GA': 'Quicksilver Green GA G2009 and G2007/08',
       'Quicksilver green': 'Quicksilver Green',
-      'San Francisco Elite Academy ECNL RL G2011/12': 'ECNL RL',
-      'Santa Clara Sporting 10G GA': 'GA',
-      'Santa Clara Sporting ECNL RL G2008/09': 'ECNL RL',
-      'Santa Clara Sporting ECNL RL G2009/10': 'ECNL RL',
-      'Santa Clara Sporting ECNL RL G2010/11': 'ECNL RL',
+      'San Francisco Elite Academy ECNL RL G2011/12': 'ECNL RL G2011/12',
+      'Santa Clara Sporting 10G GA': 'GA G2010',
+      'Santa Clara Sporting ECNL RL G2008/09': 'ECNL RL G2008/09',
+      'Santa Clara Sporting ECNL RL G2009/10': 'ECNL RL G2009/10',
+      'Santa Clara Sporting ECNL RL G2010/11': 'ECNL RL G2010/11',
       'Santa Clara Sporting G ECNL-RL U17': 'ECNL RL',
-      'Santa Cruz United FC ECNL RL G2008/09': 'ECNL RL',
-      'Santa Cruz United FC ECNL RL G2010/11': 'ECNL RL',
+      'Santa Cruz United FC ECNL RL G2008/09': 'ECNL RL G2008/09',
+      'Santa Cruz United FC ECNL RL G2010/11': 'ECNL RL G2010/11',
       Silver: 'Silver',
-      'Stanford Strikers ECNL RL G2008/09': 'ECNL RL',
-      'Stanford Strikers ECNL RL G2009/10': 'ECNL RL',
+      'Stanford Strikers ECNL RL G2008/09': 'ECNL RL G2008/09',
+      'Stanford Strikers ECNL RL G2009/10': 'ECNL RL G2009/10',
       'State Premier': 'State Premier',
       'SVSA Girls Academy II': 'GA II',
       Thunder: 'Thunder',
@@ -118,17 +118,31 @@ describe('soccerClubTeamWords', () => {
     });
   });
 
-  it('never prints a club name, a birth year or an age group', () => {
+  it('never prints a club name or an age group, and writes every birth year one way, last', () => {
     const printed = [...clubs.affiliations, ...clubs.jvAffiliations].flatMap((a) => {
       const w = a.clubTeam !== null ? words(a.clubTeam) : null;
       return w !== null ? [w] : [];
     });
     for (const w of printed) {
-      expect(w).not.toMatch(/\d{2}/);
+      // Digits only in a birth year (G2009, G2008/09) or a league's own number (N1, NPL 1).
+      const years = w.replace(/\b(?:N1|NPL 1)\b/g, '');
+      for (const token of years.match(/\S*\d\S*/g) ?? []) expect(token).toMatch(/^G20\d{2}(?:\/\d{2})?$/);
+      const at = w.search(/\bG20\d{2}/);
+      if (at >= 0) expect(w.slice(at)).toMatch(/^G20\d{2}(?:\/\d{2})?(?: and G20\d{2}(?:\/\d{2})?)*$/); // years come last
       expect(w).not.toMatch(/\bU-?\d/i);
       expect(w).not.toMatch(/\bGirls\b/);
       for (const name of NAMES) expect(` ${w} `.toLowerCase()).not.toContain(` ${name.toLowerCase()} `);
     }
+  });
+
+  it('writes a birth year as G and the year, a pair earlier first, whatever shape the source used', () => {
+    for (const raw of ['2009', '2009G', 'G2009', '09G', '09g', '09', 'G09', "'09", 'Girls 09']) expect(words(`ECNL ${raw}`)).toBe('ECNL G2009');
+    for (const raw of ['G2008/09', '2008/09', '2008/09G', '08/09', '2009/08', '09/08']) expect(words(`ECNL RL ${raw}`)).toBe('ECNL RL G2008/09');
+    expect(words('ECNL RL U17')).toBe('ECNL RL'); // an age group is not a birth year
+  });
+
+  it('names the National League N1, however the source writes it', () => {
+    for (const raw of ['N1', 'N1NPL', 'National 1', 'National League']) expect(words(raw)).toBe('N1');
   });
 
   it('spells each league one way, and keeps the order the source gives two in', () => {

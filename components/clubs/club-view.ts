@@ -592,7 +592,7 @@ function rosterPageLabel(url: string, club: Club): string {
 }
 
 /**
- * The club team a row prints, if any. In soccer, one shape for every club ("Juventus ECNL", "ECNL RL",
+ * The club team a row prints, if any. In soccer, one shape for every club ("Juventus ECNL G2010", "ECNL RL G2008/09",
  * "Quicksilver Green GA"; components/words/club-team-words.ts), whatever the source wrote; in the other
  * sports, the source's own words.
  */
