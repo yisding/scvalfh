@@ -8,7 +8,7 @@
  *
  *   ECNL RL G2008/09   Juventus ECNL G2010   Madrid ECNL   Quicksilver Green GA G2009   Gold G2011
  *
- *   - the league in one spelling each: ECNL, ECNL RL, GA (Girls Academy), N1 (the National League,
+ *   - the league in one spelling each: ECNL, ECNL RL, GA (Girls Academy), N1 (the National 1 League,
  *     which sources also write "National 1" and "N1NPL"), DPL, NPL, State Premier; two leagues are
  *     joined with "and";
  *   - the birth years when the source gives them, in the leagues' own form whatever shape the source
@@ -31,8 +31,8 @@ const LEAGUES: ReadonlyArray<readonly [RegExp, string]> = [
   [/\b(?:ECNL[\s-]*RL|RL[\s-]*ECNL|ECRL)\b/i, 'ECNL RL'],
   [/\bECNL\b/i, 'ECNL'],
   [/\b(?:GA|Girls Academy)(?:\s+(II))?\b/i, 'GA'],
-  // N1 before NPL: "N1NPL" is the National League, not two leagues.
-  [/\b(?:N1(?:NPL)?|National 1|National League)\b/i, 'N1'],
+  // N1 before NPL: "N1NPL" is the National 1 League, not two leagues.
+  [/\b(?:N1(?:NPL)?|National 1(?: League)?)\b/i, 'N1'],
   [/\bDPL\b/i, 'DPL'],
   [/\bNPL\s*(1)?\b/i, 'NPL'],
   [/\bState Premier\b/i, 'State Premier'],

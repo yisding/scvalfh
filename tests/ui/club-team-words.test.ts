@@ -141,8 +141,8 @@ describe('soccerClubTeamWords', () => {
     expect(words('ECNL RL U17')).toBe('ECNL RL'); // an age group is not a birth year
   });
 
-  it('names the National League N1, however the source writes it', () => {
-    for (const raw of ['N1', 'N1NPL', 'National 1', 'National League']) expect(words(raw)).toBe('N1');
+  it('names the National 1 League N1, however the source writes it', () => {
+    for (const raw of ['N1', 'N1NPL', 'National 1', 'National 1 League']) expect(words(raw)).toBe('N1');
   });
 
   it('spells each league one way, and keeps the order the source gives two in', () => {
