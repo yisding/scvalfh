@@ -44,6 +44,7 @@ import {
   type Commitment,
   type CommitsFile,
 } from './commits-schema';
+import { reportDrift } from './roster-drift';
 import { joinToRoster, playerKey } from './roster-join';
 import { classOf, effectiveClassOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { getTeamBySlug } from '../teams';
@@ -96,22 +97,23 @@ function loadAndJoin(
     noun: 'commitments',
     subject: (c) => c.college,
   });
-  file.commitments = joined;
   // Step 3 for a row with no grade (lib/players/roster-join.ts checked the rest): the sources must settle
-  // on one class year a high school roster of the season can hold, which commitClassOf shows.
-  for (const c of file.commitments) {
-    if (rows.get(playerKey(c.teamSlug, c.athleteId))!.grade !== null) continue;
-    const fail = (what: string): never => {
-      throw new Error(`commits: ${c.teamSlug} / ${c.fullName} (${c.college}): ${what}`);
-    };
+  // on one class year a high school roster of the season can hold, which commitClassOf shows. It reads the
+  // row's grade, which a refresh can take away (or a rosterBehind correction with it), so a commitment that
+  // fails it is roster drift too: left out and reported, not thrown.
+  file.commitments = joined.filter((c) => {
+    if (rows.get(playerKey(c.teamSlug, c.athleteId))!.grade !== null) return true;
     const stated = [...new Set(c.sources.flatMap((s) => (s.statedClassYear === null ? [] : [s.statedClassYear])))];
-    if (stated.length > 1) {
-      fail(`sources disagree on the class year (${stated.join(', ')}) and the roster has no grade`);
-    } else if (stated.length === 1 && (stated[0] < classOf(season, 12) || stated[0] > classOf(season, 9))) {
+    const why =
+      stated.length > 1 ? `sources disagree on the class year (${stated.join(', ')}) and the roster has no grade`
       // A roster row is a 9th- to 12th-grader: any other class year is a graduate, or someone else.
-      fail(`a source says class of ${stated[0]}, not a class on a ${season} high school roster`);
-    }
-  }
+      : stated.length === 1 && (stated[0] < classOf(season, 12) || stated[0] > classOf(season, 9)) ? `a source says class of ${stated[0]}, not a class on a ${season} high school roster`
+      : null;
+    if (why === null) return true;
+    reportDrift({ file: 'commits', teamSlug: c.teamSlug, who: `${c.fullName} (${c.college})`, key: c.athleteId, what: why, leftOut: 'record' });
+    rows.delete(playerKey(c.teamSlug, c.athleteId));
+    return false;
+  });
   return { file, rows };
 }
 
