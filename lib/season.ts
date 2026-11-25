@@ -61,6 +61,12 @@ export const TEAM_LEVEL = SPORT_SEASON.level;
  * call with this id; the team id stays the school's own (the registry id). scripts/fetch-jv.ts only.
  */
 export const JV_SPORT_SEASON_ID: string = MAXPREPS_SEASON?.jvSportSeasonId ?? '';
+/**
+ * [V] The freshman season of the same sport (lib/sports/shape.ts `freshmanSportSeasonId`), read from a school's
+ * season list; null in a build that does not cover the freshman level. Read with the school's own id, as the JV
+ * season is. `scripts/fetch-jv.ts --level freshman` only.
+ */
+export const FRESHMAN_SPORT_SEASON_ID: string | null = MAXPREPS_SEASON?.freshmanSportSeasonId ?? null;
 
 /** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4); null before MaxPreps makes one. */
 export const CCS_BRACKET_URL: string | null =
@@ -81,9 +87,17 @@ export const SOURCE_LINKS = {
  * one (girls soccer: `/soccer/girls/winter/` → `/soccer/girls/jv/winter/`). Ends in '/'.
  */
 export function maxprepsJvTeamUrl(varsityUrl: string): string {
+  return maxprepsLevelTeamUrl(varsityUrl, 'jv');
+}
+
+/**
+ * A school's team page at another level on MaxPreps, from its varsity team URL, by maxprepsJvTeamUrl's rule:
+ * `/soccer/girls/winter/` → `/soccer/girls/freshman/winter/`, `/basketball/winter/` → `/basketball/freshman/winter/`.
+ */
+export function maxprepsLevelTeamUrl(varsityUrl: string, level: 'jv' | 'freshman'): string {
   const base = varsityUrl.endsWith('/') ? varsityUrl : `${varsityUrl}/`;
   const m = /^(.*\/)(fall|winter|spring)\/$/.exec(base);
-  return m ? `${m[1]}jv/${m[2]}/` : `${base}jv/`;
+  return m ? `${m[1]}${level}/${m[2]}/` : `${base}${level}/`;
 }
 
 /** The IANA zone every date on the site is formatted in (lib/time-zone.ts, the leaf lib/format loads). */

@@ -121,6 +121,11 @@ export const VOLLEYBALL_GIRLS_2026 = {
   hubSportSeasonId: null,
   /** [V] each school's season picker: the 26-27 season whose page is `<team URL>jv/`. */
   jvSportSeasonId: 'd23401c4-759f-41af-b044-94497d049dd1',
+  /**
+   * Not covered yet: the fall sports get the freshman level from their 2027 season (owner decision, 2026-11-25).
+   * Saint Francis' season list has "Girls Volleyball Freshman Fall 26-27" as 6d93cc95-77a0-485b-b4af-7f6a6555a86c.
+   */
+  freshmanSportSeasonId: null,
   /** [V] the tournament page every CCS playoff team's schedule names (lib/league-config/volleyball/sections.ts). */
   ccsBracketPath: '/tournament/TPozgxV2DkGkNEbD5cAlqA/volleyball-26/2026-central-coast-section-girls-volleyball-championship.htm',
 } as const satisfies MaxprepsSportSeason;

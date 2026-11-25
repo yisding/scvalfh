@@ -1,6 +1,6 @@
 /**
- * Games between two levels: one school's varsity against a team that is not a varsity team, or one school's JV
- * against a team that is not a JV team.
+ * Games between two levels: one school's varsity against a team that is not a varsity team, one school's JV
+ * against a team that is not a JV team, or one school's freshman team against a team that is not a freshman team.
  *
  * MaxPreps does not file such a game under the other school's team at the other level. The coach enters it against
  * one of two placeholder teams, each with an id of its own (read 2026-11-21, every sport the same ids):
@@ -11,6 +11,8 @@
  *                                       (or a scrimmage a coach entered: Piedmont Hills' Nov 17 row, its Milpitas
  *                                       scrimmage, is left out by lib/jv/jv-corrections.ts)
  *                                       (soccer: six JV games to come; field hockey: University City, La Jolla)
+ *   "Non Freshman Opponent" 505c1a99-…  in a FRESHMAN schedule: the opponent was a varsity, JV or club side
+ *                                       (soccer, read 2026-11-25: St. Ignatius' 10-0 of Nov 19 and three to come)
  *
  * So the game is a real game (it is played and scored; MaxPreps counts it in the school's record), but the other side
  * is not a school, and it is not the same team from one game to the next. This module is how the site says so:
@@ -33,7 +35,7 @@
  * Pure: no imports, so a page, a script and a test can all reach it.
  */
 
-export type CrossLevelKind = 'non-varsity' | 'non-jv';
+export type CrossLevelKind = 'non-varsity' | 'non-jv' | 'non-freshman';
 
 export interface CrossLevelOpponent {
   kind: CrossLevelKind;
@@ -45,10 +47,12 @@ export interface CrossLevelOpponent {
 
 export const NON_VARSITY_OPPONENT_ID = '4fc9dcd1-3d2c-4d0a-998e-4340bac0ac02';
 export const NON_JV_OPPONENT_ID = 'd1bd084e-1f5b-4e7c-8f99-6c63e0e9e855';
+export const NON_FRESHMAN_OPPONENT_ID = '505c1a99-e49f-4daa-8ec8-355baf311697';
 
 const OPPONENTS: Readonly<Record<string, CrossLevelOpponent>> = {
   [NON_VARSITY_OPPONENT_ID]: { kind: 'non-varsity', name: 'Non-varsity team', maxprepsName: 'Non Varsity Opponent' },
   [NON_JV_OPPONENT_ID]: { kind: 'non-jv', name: 'Non-JV team', maxprepsName: 'Non JV Opponent' },
+  [NON_FRESHMAN_OPPONENT_ID]: { kind: 'non-freshman', name: 'Non-freshman team', maxprepsName: 'Non Freshman Opponent' },
 };
 
 /** The line under a cross-level placeholder's name on a scoreboard, in place of the non-member note. */
@@ -101,11 +105,22 @@ export function withCrossLevelNames<G extends Sided>(games: readonly G[]): G[] {
 export function crossLevelNote(game: Sided, schoolName: string): string | null {
   const sides = crossLevelSides(game);
   if (!sides) return null;
-  return sides.opponent.kind === 'non-varsity'
-    ? `MaxPreps lists the opponent only as “${sides.opponent.maxprepsName}”: ${schoolName}’s varsity played a JV, ` +
-        `frosh-soph or club side it does not name. The game counts in ${schoolName}’s overall record, as on MaxPreps, ` +
-        'but in no league table and no rating.'
-    : `MaxPreps lists the opponent only as “${sides.opponent.maxprepsName}”: ${schoolName}’s JV played a varsity, ` +
-        `frosh-soph or club side it does not name. The game counts in ${schoolName}’s JV record, as on MaxPreps, ` +
-        'but in no JV table.';
+  const lead = `MaxPreps lists the opponent only as “${sides.opponent.maxprepsName}”: `;
+  switch (sides.opponent.kind) {
+    case 'non-varsity':
+      return (
+        `${lead}${schoolName}’s varsity played a JV, frosh-soph or club side it does not name. ` +
+        `The game counts in ${schoolName}’s overall record, as on MaxPreps, but in no league table and no rating.`
+      );
+    case 'non-jv':
+      return (
+        `${lead}${schoolName}’s JV played a varsity, frosh-soph or club side it does not name. ` +
+        `The game counts in ${schoolName}’s JV record, as on MaxPreps, but in no JV table.`
+      );
+    case 'non-freshman':
+      return (
+        `${lead}${schoolName}’s freshman team played a varsity, JV or club side it does not name. ` +
+        `The game counts in ${schoolName}’s freshman record, as on MaxPreps.`
+      );
+  }
 }

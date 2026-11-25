@@ -1,5 +1,12 @@
 #!/usr/bin/env tsx
 /**
+ * `--level freshman` (added 2026-11-25, girls soccer and boys basketball: owner decision) reads the freshman level the
+ * same way: each school's MaxPreps schedule feed with the freshman season id (lib/season.ts FRESHMAN_SPORT_SEASON_ID)
+ * instead of the JV one, into data/<sport>/freshman.json, a file of the JV file's shape (lib/jv/jv-schema.ts). It reads
+ * MaxPreps only: si.com is unavailable for every school, and none of the JV file's other sources (school sites, league
+ * schedules) is read. A build with no freshman season id (the fall sports, the VAL) refuses the flag. Captures and
+ * fixtures are `freshman-sched-<slug>.json`. Everything else below holds for both levels.
+ *
  * Fetch every registry school's JV games into data/field-hockey/jv.json: MaxPreps' JV schedule feed for all 102
  * schools, and si.com's JV team page for each of the 102 (lib/jv/jv-teams.ts).
  *
@@ -12,6 +19,7 @@
  *   pnpm fetch-jv --dry-run             parse and report, write nothing (captures included)
  *   pnpm fetch-jv --fetched-at <iso>    pin the stamp (reproducible fixture builds)
  *   pnpm fetch-jv --force               run even outside the Aug 1 – Nov 28 season window
+ *   pnpm fetch-jv --level freshman      the freshman level instead (below), into data/<sport>/freshman.json
  *
  * The MaxPreps call is the varsity pipeline's own schedule-calculated read with the JV season id
  * (JV_SPORT_SEASON_ID) and the school's registry id, through the MaxPreps client's budget
@@ -81,7 +89,7 @@ import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
 import { normalizeGames } from '../lib/pipeline/normalize';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
-import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '../lib/season';
+import { FRESHMAN_SPORT_SEASON_ID, JV_SPORT_SEASON_ID, SEASON_YEAR, maxprepsLevelTeamUrl } from '../lib/season';
 import { HttpClient } from '../lib/sources/http';
 import { MaxPrepsClient, ScheduleResponseSchema, assertFeedHasTeam, maxprepsScheduleUrl, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS } from '../lib/sources/sblive';
@@ -94,7 +102,11 @@ import { parseTeamsidelinePage } from '../lib/sources/teamsideline';
 import { fallYearOf, teamsidelineGames } from '../lib/sources/teamsideline-games';
 import { teamsidelineLevel, teamsidelineLevelUrl, teamsidelinePageMismatch } from '../lib/sources/teamsideline-season';
 
+/** The level a run reads: the JV (the default) or the freshman team. */
+export type FetchLevel = 'jv' | 'freshman';
+
 interface Args {
+  level: FetchLevel;
   fixtures: string | null;
   capture: string | null;
   leagues: LeagueId[] | null;
@@ -107,10 +119,11 @@ interface Args {
 
 function parseArgs(argv: readonly string[]): Args {
   const out: Args = {
+    level: 'jv',
     fixtures: null,
     capture: null,
     leagues: null,
-    out: path.join(process.cwd(), DATA_DIR, 'jv.json'),
+    out: '',
     dryRun: false,
     fetchedAt: null,
     force: false,
@@ -132,8 +145,13 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else if (arg === '--force') out.force = true;
     else if (arg === '--no-sblive') out.sblive = false;
-    else throw new Error(`unknown flag: ${arg}`);
+    else if (arg === '--level') {
+      const level = next();
+      if (level !== 'jv' && level !== 'freshman') throw new Error(`--level must be jv or freshman, not ${level}`);
+      out.level = level;
+    } else throw new Error(`unknown flag: ${arg}`);
   }
+  if (!out.out) out.out = path.join(process.cwd(), DATA_DIR, out.level === 'freshman' ? 'freshman.json' : 'jv.json');
   if (out.fixtures && out.capture) throw new Error('--capture records live responses; it cannot be combined with --fixtures');
   return out;
 }
@@ -145,6 +163,25 @@ const NOTES = [
   'JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.',
   'A source with status carried-forward kept the previous file’s rows after a failed fetch; its own fetchedAt says when those rows were read.',
 ];
+
+const FRESHMAN_NOTES = [
+  `One entry per registry school, all ${LEAGUES_PROPER.length} leagues. games are MaxPreps’ freshman contests (the schedule feed read with the freshman season id), built exactly as a JV game is.`,
+  'MaxPreps is the only source of the freshman level: sblive is empty and si.com unavailable for every school.',
+  'Freshman games are kept apart from varsity and JV: no table, record, leader board, rating or postseason of either reads them, and the site keeps no freshman tables (owner decision, 2026-11-25).',
+  'A source with status carried-forward kept the previous file’s rows after a failed fetch; its own fetchedAt says when those rows were read.',
+];
+
+/** The MaxPreps season id a level is read with; null when this build does not cover the level. */
+function levelSeasonId(level: FetchLevel): string | null {
+  return level === 'freshman' ? FRESHMAN_SPORT_SEASON_ID : JV_SPORT_SEASON_ID;
+}
+
+/** MaxPreps' human-facing schedule page of a school's team at the level. */
+function levelScheduleUrl(team: Team, level: FetchLevel): string | null {
+  if (level === 'jv') return jvMaxprepsScheduleUrl(team);
+  const base = team.external.maxprepsTeamUrl;
+  return base ? `${maxprepsLevelTeamUrl(base, 'freshman')}schedule/` : null;
+}
 
 /** What a run may take from the previous file: its team rows (PreviousRows), games and si.com rows. */
 interface PreviousJv extends PreviousRows<JvTeam, JvFile> {
@@ -186,14 +223,14 @@ function salvageList<T>(
  * The previous file's text, salvaged (see the header): `readable: false` when the run must stop.
  * Its log names every row, game and si.com row not kept.
  */
-function readPrevious(text: string, label: string): PreviousJv | { readable: false; reason: string } {
+function readPrevious(text: string, label: string, seasonId: string): PreviousJv | { readable: false; reason: string } {
   const read = readPreviousFile(text, { season: SEASON_YEAR, row: JvTeamSchema, file: JvFileSchema });
   if (!read.readable) return { readable: false, reason: read.reason };
   const json = JSON.parse(text) as Record<string, unknown>;
-  // This season's year with another JV season id is another season's games, as readPreviousFile treats
+  // This season's year with another JV (or freshman) season id is another season's games, as readPreviousFile treats
   // another year: every row is ignored and named.
   const rows: PreviousRows<JvTeam, JvFile> =
-    read.otherSeason === null && json.sportSeasonId !== JV_SPORT_SEASON_ID
+    read.otherSeason === null && json.sportSeasonId !== seasonId
       ? {
           rows: new Map(),
           dropped: [
@@ -201,7 +238,7 @@ function readPrevious(text: string, label: string): PreviousJv | { readable: fal
             ...[...read.rows.keys()].map((slug) => ({
               slug,
               team: slug,
-              reason: `JV season id ${String(json.sportSeasonId)}, not ${JV_SPORT_SEASON_ID}`,
+              reason: `season id ${String(json.sportSeasonId)}, not ${seasonId}`,
             })),
           ],
           otherSeason: `${String(json.season)} (JV season id ${String(json.sportSeasonId)})`,
@@ -217,9 +254,9 @@ function readPrevious(text: string, label: string): PreviousJv | { readable: fal
 }
 
 /** A schedule body → its rows, with MaxPreps' routing guard: a non-empty feed must contain the school. */
-function parseSchedule(body: string, team: Team): ScheduleRow[] {
+function parseSchedule(body: string, team: Team, label: string): ScheduleRow[] {
   const rows = ScheduleResponseSchema.parse(JSON.parse(body) as unknown).data;
-  assertFeedHasTeam(rows, team.id, 'JV feed');
+  assertFeedHasTeam(rows, team.id, `${label} feed`);
   return rows;
 }
 
@@ -343,9 +380,20 @@ export async function main(argv: readonly string[]): Promise<number> {
     );
     return 0;
   }
+  const freshman = args.level === 'freshman';
+  const seasonId = levelSeasonId(args.level);
+  if (seasonId === null || (freshman && PRIMARY_SOURCE !== 'maxpreps')) {
+    console.log(`fetch-jv: this build covers no ${args.level} level (lib/sports/shape.ts freshmanSportSeasonId). Nothing written.`);
+    return 1;
+  }
   // A build whose primary source is the league's own site reads its second level from there (the VAL).
   if (PRIMARY_SOURCE === 'teamsideline') return fetchJvFromTeamsideline(args, fetchedAt);
-  const loaded = loadPreviousOrFail(args.out, readPrevious, 'Nothing written.', (p) => p.log);
+  /** The level in log lines and capture names: 'JV' / 'jv', 'freshman' / 'freshman'. */
+  const LABEL = freshman ? 'freshman' : 'JV';
+  const PREFIX = freshman ? 'freshman' : 'jv';
+  // si.com is read for the JV only.
+  const sbliveUrlOf = (slug: string) => (freshman ? null : jvSbliveGamesUrl(slug));
+  const loaded = loadPreviousOrFail(args.out, (text, label) => readPrevious(text, label, seasonId), 'Nothing written.', (p) => p.log);
   if (!loaded.ok) return 1;
   const previous = loaded.previous;
   const priorTeam: ReadonlyMap<string, JvTeam> = previous?.rows ?? new Map();
@@ -365,8 +413,8 @@ export async function main(argv: readonly string[]): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-jv: offline, from ${args.fixtures}`
-      : `fetch-jv: ${covered.length} MaxPreps JV feeds` +
-          (args.sblive ? ` + ${covered.filter((t) => jvSbliveGamesUrl(t.slug)).length} si.com JV pages` : ', si.com skipped') +
+      : `fetch-jv: ${covered.length} MaxPreps ${LABEL} feeds` +
+          (freshman ? '' : args.sblive ? ` + ${covered.filter((t) => jvSbliveGamesUrl(t.slug)).length} si.com JV pages` : ', si.com skipped') +
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
 
@@ -379,19 +427,19 @@ export async function main(argv: readonly string[]): Promise<number> {
       const prior = priorTeam.get(team.slug);
       const had = previous?.games.filter((g) => involves(g, team.slug)).length ?? 0;
       try {
-        const url = maxprepsScheduleUrl(team.id, JV_SPORT_SEASON_ID);
-        const body = args.fixtures ? read(`jv-sched-${team.slug}.json`) : (await maxpreps.text(url, 'application/json')).data;
-        if (!args.fixtures) save(`jv-sched-${team.slug}.json`, body);
-        const split = splitTbaRows(parseSchedule(body, team));
+        const url = maxprepsScheduleUrl(team.id, seasonId);
+        const body = args.fixtures ? read(`${PREFIX}-sched-${team.slug}.json`) : (await maxpreps.text(url, 'application/json')).data;
+        if (!args.fixtures) save(`${PREFIX}-sched-${team.slug}.json`, body);
+        const split = splitTbaRows(parseSchedule(body, team, LABEL));
         const live = split.rows.filter((r) => r.calculatedFields.contestState !== 1);
         for (const r of split.rows) if (r.calculatedFields.contestState === 1) deleted.add(r.contest.contestId);
         // The varsity rule: an empty answer for a school we hold games for is a blip, not a wipe.
-        if (live.length === 0 && had > 0) throw new Error(`JV feed returned no games but the previous file has ${had}`);
+        if (live.length === 0 && had > 0) throw new Error(`${LABEL} feed returned no games but the previous file has ${had}`);
         mpRows.push(...split.rows);
         mpState.set(team.slug, ok(live.length, fetchedAt));
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
-        console.warn(`WARN ${team.slug} MaxPreps JV: ${error}`);
+        console.warn(`WARN ${team.slug} MaxPreps ${LABEL}: ${error}`);
         mpState.set(team.slug, failed(prior?.maxpreps, error, had > 0));
       }
     }),
@@ -401,7 +449,7 @@ export async function main(argv: readonly string[]): Promise<number> {
   const copies: JvSbliveCopy[] = [];
   const sbState = new Map<string, JvSourceState>();
   for (const team of covered) {
-    const url = jvSbliveGamesUrl(team.slug);
+    const url = sbliveUrlOf(team.slug);
     const id = jvSbliveTeamId(team.slug);
     const prior = priorTeam.get(team.slug);
     if (!url || !id) {
@@ -428,7 +476,8 @@ export async function main(argv: readonly string[]): Promise<number> {
 
   // ---- games: this run's feeds, plus the previous games of every school whose feed was not read.
   // level 'jv': the sections' shootout rules are varsity rules (lib/pipeline/normalize.ts NormalizeOptions), so
-  // a level JV final stays a tie whatever MaxPreps flags, and is never read as a shootout win.
+  // a level JV final stays a tie whatever MaxPreps flags, and is never read as a shootout win. A freshman game is read
+  // the same way: 'jv' there means "not varsity".
   const norm = normalizeGames(mpRows, { fetchedAt, level: 'jv' });
   for (const w of norm.warnings) console.warn(`WARN ${w}`);
   const fresh = new Set(norm.games.map((g) => g.contestId));
@@ -453,14 +502,14 @@ export async function main(argv: readonly string[]): Promise<number> {
 
   const teams: JvTeam[] = TEAMS.map((team) => {
     const prior = priorTeam.get(team.slug);
-    const sbliveUrl = jvSbliveGamesUrl(team.slug);
+    const sbliveUrl = sbliveUrlOf(team.slug);
     if (!inScope(team, args.leagues)) {
       return (
         prior ?? {
           slug: team.slug,
           teamId: team.id,
           name: team.name,
-          maxprepsScheduleUrl: jvMaxprepsScheduleUrl(team),
+          maxprepsScheduleUrl: levelScheduleUrl(team, args.level),
           sbliveUrl,
           maxpreps: PENDING,
           sblive: sbliveUrl ? PENDING : UNAVAILABLE,
@@ -471,7 +520,7 @@ export async function main(argv: readonly string[]): Promise<number> {
       slug: team.slug,
       teamId: team.id,
       name: team.name,
-      maxprepsScheduleUrl: jvMaxprepsScheduleUrl(team),
+      maxprepsScheduleUrl: levelScheduleUrl(team, args.level),
       sbliveUrl,
       maxpreps: mpState.get(team.slug) ?? PENDING,
       sblive: sbState.get(team.slug) ?? (sbliveUrl ? PENDING : UNAVAILABLE),
@@ -481,8 +530,8 @@ export async function main(argv: readonly string[]): Promise<number> {
   const file: JvFile = {
     season: SEASON_YEAR,
     fetchedAt,
-    sportSeasonId: JV_SPORT_SEASON_ID,
-    source: { builtBy: 'scripts/fetch-jv.ts', notes: NOTES },
+    sportSeasonId: seasonId,
+    source: { builtBy: freshman ? 'scripts/fetch-jv.ts --level freshman' : 'scripts/fetch-jv.ts', notes: freshman ? FRESHMAN_NOTES : NOTES },
     teams,
     games,
     sblive: sbliveRows,
@@ -510,9 +559,11 @@ export async function main(argv: readonly string[]): Promise<number> {
   for (const l of byLeague) console.log(formatLeagueSummary(l));
   const c = file.counts;
   console.log(
-    `\n${c.games} MaxPreps JV games (${c.finals} final) for ${c.teamsWithGames} of ${c.teams} schools · ` +
-      `${c.sbliveRows} si.com JV finals · si.com filled ${merged.filled.length}, added ${merged.added.length}, ` +
-      `differs on ${merged.differs.length} · ${carried.length} games and ${carriedRows.length} si.com rows carried forward`,
+    `\n${c.games} MaxPreps ${LABEL} games (${c.finals} final) for ${c.teamsWithGames} of ${c.teams} schools · ` +
+      (freshman
+        ? `${carried.length} games carried forward`
+        : `${c.sbliveRows} si.com JV finals · si.com filled ${merged.filled.length}, added ${merged.added.length}, ` +
+          `differs on ${merged.differs.length} · ${carried.length} games and ${carriedRows.length} si.com rows carried forward`),
   );
   // A covered team that failed decides the exit code, and so does an uncovered one whose previous
   // row was dropped (it is pending now), as in fetch-rosters and fetch-player-stats.

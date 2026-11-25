@@ -31,6 +31,7 @@ const git = (cwd: string, ...args: string[]) => {
 
 const FILES = {
   jv: ['data/soccer/jv.json'],
+  freshman: ['data/soccer/freshman.json'],
   stats: ['data/soccer/player-stats.json'],
   rosters: ['data/soccer/rosters.json', 'data/soccer/jv-rosters.json', 'data/players.json'],
 };
@@ -111,10 +112,18 @@ describe('scripts/refresh-test.sh', () => {
     expect(r.outputs).toEqual(['restored=true', 'restored_jv=true', 'restored=true', 'restored_stats=true', 'restored=true', 'restored_rosters=true']);
   });
 
+  it('puts back this run’s freshman games alone when they are what the tests refuse', () => {
+    const r = run(['jv', 'freshman', 'stats'], ['data/soccer/freshman.json']);
+    expect(r.status, r.stdout).toBe(0);
+    expect(r.isNew('freshman')).toBe(false);
+    expect(r.isNew('jv') && r.isNew('stats')).toBe(true);
+    expect(r.outputs).toEqual(['restored=true', 'restored_freshman=true']);
+  });
+
   it('fails when the tests fail on the committed files too (a bad snapshot), and when nothing it could restore changed', () => {
     expect(run(['jv', 'rosters'], 'always').status).toBe(1);
     const none = run([], 'always');
     expect(none.status).toBe(1);
-    expect(none.stdout).toContain('::error::the soccer tests failed and none of the soccer stats, JV games or rosters changed in this run');
+    expect(none.stdout).toContain('::error::the soccer tests failed and none of the soccer stats, JV or freshman games or rosters changed in this run');
   });
 });

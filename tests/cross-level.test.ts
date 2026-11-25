@@ -1,12 +1,13 @@
 /**
  * Games between two levels (lib/cross-level.ts): MaxPreps' "Non Varsity Opponent" in a varsity schedule and
- * "Non JV Opponent" in a JV schedule are named in words, explained on the game page, never a series, and count in no
+ * "Non JV Opponent" in a JV schedule (and "Non Freshman Opponent" in a freshman one) are named in words, explained on the game page, never a series, and count in no
  * table or rating.
  */
 import { describe, expect, it } from 'vitest';
 
 import {
   CROSS_LEVEL_SUB,
+  NON_FRESHMAN_OPPONENT_ID,
   NON_JV_OPPONENT_ID,
   NON_VARSITY_OPPONENT_ID,
   crossLevelNote,
@@ -25,6 +26,7 @@ describe('the cross-level placeholders', () => {
   it('are recognised by MaxPreps id, never by name', () => {
     expect(crossLevelOpponentOf(NON_VARSITY_OPPONENT_ID)?.kind).toBe('non-varsity');
     expect(crossLevelOpponentOf(NON_JV_OPPONENT_ID)?.kind).toBe('non-jv');
+    expect(crossLevelOpponentOf(NON_FRESHMAN_OPPONENT_ID)?.kind).toBe('non-freshman');
     expect(crossLevelOpponentOf('b6e1f3f8-f345-4829-80a4-0653a9a36a1d')).toBeUndefined(); // Tournament Opponent
     expect(crossLevelOpponentOf(null)).toBeUndefined();
   });
@@ -41,6 +43,17 @@ describe('the cross-level placeholders', () => {
     expect(crossLevelNote(b, 'Cupertino')).toMatch(/^MaxPreps lists the opponent only as “Non JV Opponent”: Cupertino’s JV played/);
     expect(crossLevelNote(plain, 'Cupertino')).toBeNull();
     expect(CROSS_LEVEL_SUB).not.toBe('');
+  });
+
+  it('names a freshman schedule’s placeholder and says the game counts in the freshman record', () => {
+    const cross = game({ home: 'cupertino', away: 'los-gatos', league: false });
+    const placed = { ...cross, away: { ...cross.away, slug: null, teamId: NON_FRESHMAN_OPPONENT_ID, name: 'Non Freshman Opponent' } };
+    const [b] = withCrossLevelNames([placed]);
+    expect(b.away.name).toBe('Non-freshman team');
+    expect(crossLevelNote(b, 'Cupertino')).toBe(
+      'MaxPreps lists the opponent only as “Non Freshman Opponent”: Cupertino’s freshman team played a varsity, JV or ' +
+        'club side it does not name. The game counts in Cupertino’s freshman record, as on MaxPreps.',
+    );
   });
 });
 
