@@ -4,9 +4,10 @@
 #
 #   scripts/refresh-test.sh <sport> <test file>...
 #
-# The stats, the JV games and the rosters are each allowed to fail upstream, so one of them the tests refuse must not
-# cost the snapshot, nor the other two. The groups, each restored to the committed files as one:
+# The stats, the JV and freshman games and the rosters are each allowed to fail upstream, so one of them the tests refuse must not
+# cost the snapshot, nor the others. The groups, each restored to the committed files as one:
 #   jv       data/<sport>/jv.json
+#   freshman data/<sport>/freshman.json (soccer and basketball; a sport without the file never changes it)
 #   stats    data/<sport>/player-stats.json
 #   rosters  data/<sport>/rosters.json, data/<sport>/jv-rosters.json and data/players.json (rebuilt from them)
 # When the tests fail, each group this run changed is put back on its own and the tests run again; the first that
@@ -29,6 +30,7 @@ out="${GITHUB_OUTPUT:-/dev/null}"
 files_of() {
   case "$1" in
     jv) echo "data/$sport/jv.json" ;;
+    freshman) echo "data/$sport/freshman.json" ;;
     stats) echo "data/$sport/player-stats.json" ;;
     rosters) echo "data/$sport/rosters.json data/$sport/jv-rosters.json data/players.json" ;;
   esac
@@ -39,7 +41,7 @@ run() { pnpm exec vitest run "${tests[@]}"; }
 if run; then exit 0; fi
 
 changed=()
-for g in jv stats rosters; do
+for g in jv freshman stats rosters; do
   # The registry changes only with the rosters: whether the group changed is whether a roster file did.
   probe=$(files_of "$g")
   [ "$g" = rosters ] && probe="data/$sport/rosters.json data/$sport/jv-rosters.json"
@@ -47,7 +49,7 @@ for g in jv stats rosters; do
   git diff --quiet -- $probe || changed+=("$g")
 done
 if [ "${#changed[@]}" -eq 0 ]; then
-  echo "::error::the $sport tests failed and none of the $sport stats, JV games or rosters changed in this run"
+  echo "::error::the $sport tests failed and none of the $sport stats, JV or freshman games or rosters changed in this run"
   exit 1
 fi
 

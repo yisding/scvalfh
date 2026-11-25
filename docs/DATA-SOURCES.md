@@ -2990,6 +2990,29 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   uncounted; shown: El Camino (12 of 18), MCAL (36 of 45), EAL (13 of 16); not shown: De Anza (8 of
   16), Mt. Hamilton (0 of 4), PCAL (7 of 15, all from si.com); Santa Teresa has no JV league game.
 
+### 1.7a Freshman games — MaxPreps freshman feeds (`data/soccer/freshman.json`, `data/basketball/freshman.json`)
+
+Built by `pnpm fetch-jv --level freshman` (`scripts/fetch-jv.ts`), twice a day in season after the JV games
+(`update-data-soccer.yml`, `update-data-basketball.yml`, allowed to fail); added 2026-11-25 for girls soccer and boys
+basketball. The same `schedule-calculated/v1` call as the JV feed, with the school's registry id and the freshman
+season id **[V]** (read 2026-11-25 from Saint Francis' season list in its team-context answer and the `ssid` of its
+freshman schedule page): girls soccer "Girls Soccer Freshman Winter 26-27" `bd80f68e-f984-4c54-92c2-1845a8572f85`,
+boys basketball "Boys Basketball Freshman Winter 26-27" `fcf13999-aa10-47ab-a353-c5d0f888eb63`. The fall sports'
+(field hockey `4150d924-08c4-47d0-a177-e5287a6fd7ff`, girls volleyball `6d93cc95-77a0-485b-b4af-7f6a6555a86c`) are
+noted, not read, until their 2027 season.
+
+- MaxPreps only: si.com was not checked for freshman pages, and no school site or league document was found
+  scheduling the level. Kept apart from varsity and the JV, with **no freshman tables** (owner decision).
+- MaxPreps' human-facing page is the varsity team URL with `freshman/` before the season segment
+  (`/soccer/girls/freshman/winter/`, `/basketball/freshman/`), as `jv/` is for the JV (`maxprepsLevelTeamUrl`).
+- Placeholders: "Non Freshman Opponent" `505c1a99-e49f-4daa-8ec8-355baf311697` (a side MaxPreps does not name; the
+  game is listed, `lib/cross-level.ts`); "Freshman Opponent" `b51244ab-a965-47e5-addb-4f44f26c49ed` (an opponent not
+  set; the game is not listed, `lib/freshman/freshman.ts`).
+- 2026-11-25: 42 soccer games for 20 of 123 schools, one final (St. Ignatius 10-0 against "Non Freshman Opponent",
+  Nov 19); 453 basketball games for 75 of 133 schools, seven finals. Woodside's JV feed has Terra Nova at Woodside on
+  Dec 8 with the venue "Freshman Team", and the freshman feeds list the same pair that day as a freshman game: both are
+  kept as MaxPreps files them until a school says which levels played.
+
 ### 1.8 OUTSIDE TOURNAMENT — the Tournament of Champions (Southern Section, not CIF)
 
 Found 2026-10-29 while asking what MaxPreps' two contestType-4 Huntington Beach games were. The Los Angeles

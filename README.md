@@ -897,6 +897,41 @@ pnpm fetch-jv --capture <dir>                   # live, and save every response 
 pnpm fetch-jv --dry-run                         # parse and report, write nothing
 ```
 
+### Freshman games
+
+Added 2026-11-25 for girls soccer and boys basketball (owner decision): the freshman level is the third level, after
+varsity and the JV. Coaches enter freshman schedules on MaxPreps under a season of their own, so
+`pnpm fetch-jv --level freshman` reads each registry school's MaxPreps schedule feed with that season's id
+(`freshmanSportSeasonId` in `lib/sports/soccer.ts` and `lib/sports/basketball.ts`, read from Saint Francis' season list
+on MaxPreps) into `data/<sport>/freshman.json`, a file of the JV file's shape (`lib/jv/jv-schema.ts`). The same run
+rules hold: one call per school through the MaxPreps client's gate, a failed school keeps its previous games
+(`carried-forward`), a `--leagues` run keeps the other leagues' rows, and the file is rewritten only when its content
+changed. MaxPreps is the only source: si.com is `unavailable` for every school, and none of the JV file's other
+sources (school sites, league schedules) has the level. `update-data-soccer.yml` and `update-data-basketball.yml`
+run it after the JV fetch, allowed to fail.
+
+`lib/freshman/freshman.ts` is the read API. It keeps the level **apart from varsity and the JV**: nothing reads it
+for a standings table, a record, a leader board, a rating or a postseason picture of either level, and the site
+keeps **no freshman tables** (owner decision, 2026-11-25). On 2026-11-25 MaxPreps had 42 girls soccer freshman
+games for 20 of the 123 schools (the PAL, the WCAL, the WBAL and three SCVAL schools) and 453 boys basketball
+freshman games for 75 of the 133, in every league.
+
+- **"Non Freshman Opponent"** (`505c1a99-…`) is MaxPreps' placeholder in a freshman schedule for a varsity, JV or
+  club side it does not name, as "Non JV Opponent" is in a JV one (see "Games between two levels"); it is named
+  "Non-freshman team".
+- **"Freshman Opponent"** (`b51244ab-…`, city "Intl") stands for an opponent not set yet, as "Tournament Opponent"
+  does on varsity: a game against it is not listed (`FRESHMAN_PLACEHOLDER_IDS`; Westmoor's three basketball rows of
+  Dec 28-30 on 2026-11-25).
+- **Field hockey and girls volleyball** have no freshman level yet: their 2026 seasons were over when it was added,
+  and they get it from the 2027 season. Their freshman season ids are noted beside `freshmanSportSeasonId: null`, and
+  `--level freshman` refuses to run in those builds (and in the VAL's).
+
+```bash
+SCVAL_SPORT=soccer pnpm fetch-jv --level freshman                 # live: 123 MaxPreps freshman feeds → data/soccer/freshman.json
+SCVAL_SPORT=basketball pnpm fetch-jv --level freshman             # data/basketball/freshman.json
+SCVAL_SPORT=soccer pnpm fetch-jv --level freshman --fixtures tests/fixtures/freshman --leagues wcal   # offline
+```
+
 ### Clubs
 
 `data/field-hockey/clubs.json` holds the youth field hockey clubs around the 43 schools swept on 2026-10-03, plus any other club a
@@ -1545,6 +1580,7 @@ site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL
 SCVAL_SPORT=soccer pnpm fetch-data --no-vnn               # data/soccer/snapshot.json (VNN is field hockey's)
 SCVAL_SPORT=soccer pnpm fetch-rosters                      # data/soccer/rosters.json
 SCVAL_SPORT=soccer pnpm fetch-jv                          # data/soccer/jv.json (MaxPreps and si.com JV pages)
+SCVAL_SPORT=soccer pnpm fetch-jv --level freshman         # data/soccer/freshman.json (MaxPreps' freshman feeds; "Freshman games")
 SCVAL_SPORT=soccer pnpm fetch-player-stats                 # data/soccer/player-stats.json
 SCVAL_SPORT=soccer pnpm fetch-prior-season                 # data/soccer/prior-season.json (2025-26, seeds the ratings)
 SCVAL_SPORT=soccer pnpm build                              # or pnpm build:vinext / build:cloudflare
@@ -1618,6 +1654,7 @@ SCVAL_SPORT=basketball pnpm fetch-data --no-vnn                 # data/basketbal
 SCVAL_SPORT=basketball pnpm fetch-rosters                        # data/basketball/rosters.json
 SCVAL_SPORT=basketball pnpm fetch-rosters --level jv             # data/basketball/jv-rosters.json
 SCVAL_SPORT=basketball pnpm fetch-jv                             # data/basketball/jv.json
+SCVAL_SPORT=basketball pnpm fetch-jv --level freshman            # data/basketball/freshman.json ("Freshman games")
 SCVAL_SPORT=basketball pnpm fetch-player-stats                   # data/basketball/player-stats.json
 SCVAL_SPORT=basketball pnpm fetch-prior-season                   # data/basketball/prior-season.json (2025-26, seeds the ratings)
 SCVAL_SPORT=basketball pnpm build                                # or pnpm build:vinext / build:cloudflare
@@ -1668,8 +1705,9 @@ Like soccer, it has /history/2025-26 (SCVAL's 2025-26 final standings and all-le
 teams), and, as soccer has since 2026-11-21, /clubs, /clubs/[slug], /commits and /recruiting ("Girls soccer and boys
 basketball: recruiting"). What it leaves out, as soccer does: /club-calendar, the VNN calendars and the region toggle.
 Like soccer it reads si.com, under si.com's `basketball` segment (its boys basketball; `boys-basketball`
-is a 404), with every team's si.com ids in `lib/registry/basketball/`. MaxPreps also has a freshman season for some of these schools; the SCVAL
-fields two official boys teams, varsity and JV (By-Laws Article II), and the site covers those two.
+is a 404), with every team's si.com ids in `lib/registry/basketball/`. The SCVAL fields two official boys teams,
+varsity and JV (By-Laws Article II); many schools also field a freshman team, whose games MaxPreps lists under a
+season of its own, and the build reads those too, kept apart from both ("Freshman games").
 
 ### Girls volleyball
 

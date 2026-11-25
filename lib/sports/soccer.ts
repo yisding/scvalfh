@@ -119,6 +119,11 @@ export const SOCCER_GIRLS_2026 = {
   hubSportSeasonId: 'cf0a49ca-ee08-43c3-b26d-050cdcbd1b8e',
   /** [V] Los Altos' season list: "Girls Soccer JV Winter 26-27" */
   jvSportSeasonId: 'c586ce8b-c632-455a-8a4c-93f3da7648c6',
+  /**
+   * [V] Saint Francis' season list (team-context, "Girls Soccer Freshman Winter 26-27") and the `ssid` of its
+   * maxpreps.com freshman schedule page agree, read 2026-11-25.
+   */
+  freshmanSportSeasonId: 'bd80f68e-f984-4c54-92c2-1845a8572f85',
   /** MaxPreps has no 2027 CCS girls soccer tournament page yet. */
   ccsBracketPath: null,
 } as const satisfies MaxprepsSportSeason;

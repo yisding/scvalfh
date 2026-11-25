@@ -302,8 +302,9 @@ registry holds it, field hockey's PCAL schools included (README, "PCAL and PSAL 
 
 Not done yet: a refit of the rating constants on a finished basketball season; the new leagues' 2025-26 all-league
 teams; the CCS Basketball Bylaws'
-allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
-basketball build.
+allocation and MaxPreps' 2027 tournament page; the smoke and axe passes on the
+basketball build. MaxPreps' freshman season is read since 2026-11-25, in this build and the soccer one (README,
+"Freshman games").
 
 **Mascot tiles (2026-11-11).** The five schools the winter registries added (Gunn, Mountain View, MacDonald,
 Milpitas and Wilcox) have their tiles in `public/mascots/`, fetched with `SCVAL_SPORT=soccer pnpm fetch-mascots

@@ -66,6 +66,7 @@ describe('the update-data commit and the deploy gate', () => {
     expect([...committedFiles].sort()).toEqual([...gateFiles].sort());
     expect([...gateFiles].sort()).toEqual([
       'data/basketball/claims.json',
+      'data/basketball/freshman.json',
       'data/basketball/jv-rosters.json',
       'data/basketball/jv.json',
       'data/basketball/player-stats.json',
@@ -79,6 +80,7 @@ describe('the update-data commit and the deploy gate', () => {
       'data/field-hockey/snapshot.meta.json',
       'data/players.json',
       'data/soccer/claims.json',
+      'data/soccer/freshman.json',
       'data/soccer/jv-rosters.json',
       'data/soccer/jv.json',
       'data/soccer/player-stats.json',

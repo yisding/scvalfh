@@ -122,6 +122,8 @@ export const BASKETBALL_BOYS_2026 = {
   hubSportSeasonId: null,
   /** [V] Gunn's and Los Altos' season lists ("Boys Basketball JV Winter 26-27") and maxpreps.com/ca/basketball/jv/ agree. */
   jvSportSeasonId: 'd0f0932b-e598-4b10-ba5a-f790f3fff4c3',
+  /** [V] Saint Francis' season list (team-context, "Boys Basketball Freshman Winter 26-27"), read 2026-11-25. */
+  freshmanSportSeasonId: 'fcf13999-aa10-47ab-a353-c5d0f888eb63',
   /** MaxPreps has no 2027 CCS boys basketball tournament page yet. */
   ccsBracketPath: null,
 } as const satisfies MaxprepsSportSeason;

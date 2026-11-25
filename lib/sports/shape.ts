@@ -202,6 +202,11 @@ export interface MaxprepsSportSeason extends SportSeasonBase {
   readonly hubSportSeasonId: string | null;
   /** The JV season of the same sport and gender (scripts/fetch-jv.ts). */
   readonly jvSportSeasonId: string;
+  /**
+   * The freshman season of the same sport and gender (`scripts/fetch-jv.ts --level freshman`), or null where the site
+   * does not cover the freshman level (the fall sports, until their 2027 season: owner decision, 2026-11-25).
+   */
+  readonly freshmanSportSeasonId: string | null;
   /** MaxPreps' CCS tournament page, its path under maxpreps.com; null until MaxPreps creates it. */
   readonly ccsBracketPath: string | null;
 }

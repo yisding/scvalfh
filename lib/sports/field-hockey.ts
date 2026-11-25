@@ -97,6 +97,11 @@ export const FIELD_HOCKEY_GIRLS_2026 = {
   hubSportSeasonId: null,
   /** [V] `__NEXT_DATA__.query.ssid` of maxpreps.com/ca/field-hockey/jv/ (teamLevel 'JV', read 2026-10-05). */
   jvSportSeasonId: 'fae4fc22-6de6-47ae-972d-e290b0ec31ef',
+  /**
+   * Not covered yet: the fall sports get the freshman level from their 2027 season (owner decision, 2026-11-25).
+   * Saint Francis' season list has "Girls Field Hockey Freshman Fall 26-27" as 4150d924-08c4-47d0-a177-e5287a6fd7ff.
+   */
+  freshmanSportSeasonId: null,
   /** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4). */
   ccsBracketPath:
     '/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm',

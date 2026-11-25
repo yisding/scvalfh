@@ -1,9 +1,9 @@
 # The boys basketball site's data refresh (SCVAL_SPORT=basketball; docs/MULTI-SPORT.md): update-data.yml's job
 # for data/basketball/, narrowed to what the basketball build reads, as update-data-soccer.yml is for soccer.
 # It fetches the snapshot (MaxPreps, the bundled official SCVAL fixtures, the CCS calendar, cifsshome.org and si.com's
-# boys basketball scores; the VNN school calendars are field hockey's), then the player stats and the JV games,
+# boys basketball scores; the VNN school calendars are field hockey's), then the player stats, the JV games and the freshman games,
 # then the varsity and JV rosters (weekly, on the Monday morning run), tests them, and commits data/basketball/snapshot.json, its meta file,
-# data/basketball/player-stats.json, data/basketball/jv.json, data/basketball/rosters.json and data/basketball/jv-rosters.json only where the CONTENT changed (the same contentHash rule as update-data.yml).
+# data/basketball/player-stats.json, data/basketball/jv.json, data/basketball/freshman.json, data/basketball/rosters.json and data/basketball/jv-rosters.json only where the CONTENT changed (the same contentHash rule as update-data.yml).
 #
 # Schedule: after the other two refreshes (6:07 and 15:07 UTC: 10:07 PM and 7:07 AM Pacific during standard
 # time, when the season is played), in the basketball season's months. A league night's varsity game tips at
@@ -107,6 +107,20 @@ jobs:
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-jv "${args[@]}"
 
+      # Never fatal either. MaxPreps' freshman feeds (`pnpm fetch-jv --level freshman`, lib/freshman/freshman.ts): the
+      # freshman level, read from MaxPreps alone into data/basketball/freshman.json (added 2026-11-25).
+      - name: Fetch freshman games
+        id: freshman
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=(--level freshman)
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-jv "${args[@]}"
+
       # Never fatal. The varsity and JV roster pages (maxpreps.com/…/roster/ and …/jv/roster/): coaches post
       # them in the first weeks of the season and edit them rarely, and nothing else re-reads them, so without
       # this a roster posted after the site was set up would never appear. Each script leaves its file alone
@@ -148,12 +162,12 @@ jobs:
 
       # The basketball test files load every basketball data file through its validating loader (and hold the JV
       # schedule to one JV game per league fixture). When they fail, scripts/refresh-test.sh puts back the one file
-      # group they refuse (this run's JV games, stats or rosters with the registry) and keeps the others, so only a
+      # group they refuse (this run's JV games, freshman games, stats or rosters with the registry) and keeps the others, so only a
       # bad snapshot blocks the commit.
       # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
       - name: Test
         id: test
-        run: scripts/refresh-test.sh basketball tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts
+        run: scripts/refresh-test.sh basketball tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts tests/freshman.test.ts tests/game-aliases.test.ts
 
       # Never fatal. The curated files' records the new rosters no longer support (a departed player, a re-entered
       # roster, a corrected grade): the loaders leave them out of the build instead of failing it
@@ -196,12 +210,14 @@ jobs:
           fi
           if git diff --quiet -- data/basketball/player-stats.json; then STATS=false; else STATS=true; fi
           if git diff --quiet -- data/basketball/jv.json; then JV=false; else JV=true; fi
+          if git diff --quiet -- data/basketball/freshman.json; then FRESHMAN=false; else FRESHMAN=true; fi
           if git diff --quiet -- data/basketball/rosters.json data/basketball/jv-rosters.json; then ROSTERS=false; else ROSTERS=true; fi
           echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
           echo "stats=$STATS" >> "$GITHUB_OUTPUT"
           echo "jv=$JV" >> "$GITHUB_OUTPUT"
+          echo "freshman=$FRESHMAN" >> "$GITHUB_OUTPUT"
           echo "rosters=$ROSTERS" >> "$GITHUB_OUTPUT"
-          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ] && [ "$ROSTERS" != "true" ]; then
+          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ] && [ "$FRESHMAN" != "true" ] && [ "$ROSTERS" != "true" ]; then
             echo "nothing to commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -211,13 +227,14 @@ jobs:
             const meta = require("./data/basketball/snapshot.meta.json");
             const s = require("./data/basketball/player-stats.json").counts;
             const j = require("./data/basketball/jv.json").counts;
+            const f = require("./data/basketball/freshman.json").counts;
             const c = meta.counts;
-            process.stdout.write(`${c.games} games, ${c.finals} finals · ${s.players} players · JV ${j.games} games, ${j.finals} final`);
+            process.stdout.write(`${c.games} games, ${c.finals} finals · ${s.players} players · JV ${j.games} games, ${j.finals} final · freshman ${f.games} games, ${f.finals} final`);
           ')
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh basketball", nothing but
           # the files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
-          # player-stats.json, jv.json, rosters.json and jv-rosters.json, and data/players.json rebuilt from the rosters
+          # player-stats.json, jv.json, freshman.json, rosters.json and jv-rosters.json, and data/players.json rebuilt from the rosters
           # (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -232,6 +249,9 @@ jobs:
           fi
           if [ "$JV" = "true" ]; then
             git add data/basketball/jv.json
+          fi
+          if [ "$FRESHMAN" = "true" ]; then
+            git add data/basketball/freshman.json
           fi
           if [ "$ROSTERS" = "true" ]; then
             git add data/basketball/rosters.json data/basketball/jv-rosters.json

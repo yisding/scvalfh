@@ -1,0 +1,4628 @@
+{
+  "counts": {
+    "errors": 0,
+    "finals": 1,
+    "games": 42,
+    "sbliveRows": 0,
+    "teams": 123,
+    "teamsWithGames": 20
+  },
+  "fetchedAt": "2026-11-25T22:38:34.359Z",
+  "games": [
+    {
+      "away": {
+        "name": "Non Freshman Opponent",
+        "result": "L",
+        "score": 0,
+        "slug": null,
+        "teamId": "505c1a99-e49f-4daa-8ec8-355baf311697"
+      },
+      "contestId": "1d6c88f7-ad7e-41a0-b462-303a8655c57c",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-19",
+      "dateLocal": "2026-11-19T15:00:00",
+      "dateUtc": "2026-11-19T23:00:00Z",
+      "decider": "REG",
+      "forfeitBy": null,
+      "home": {
+        "city": "San Francisco",
+        "name": "St. Ignatius",
+        "result": "W",
+        "score": 10,
+        "slug": "st-ignatius",
+        "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-20T11:21:51",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "final",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/non-freshman-opponent-intl-vs-st-ignatius-college-preparatory-san-francisco-ca/freshman/11-19-2026/?c=1d6c88f7-ad7e-41a0-b462-303a8655c57c",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Fairmont Field"
+      }
+    },
+    {
+      "away": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "contestId": "98c827c4-2b49-44ed-a6fd-f2d0e0de5544",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-30",
+      "dateLocal": "2026-11-30T17:00:00",
+      "dateUtc": "2026-12-01T01:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Mateo",
+        "name": "Aragon",
+        "result": null,
+        "score": null,
+        "slug": "aragon",
+        "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-16T22:07:59",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/aragon-san-mateo-vs-woodside/freshman/11-30-2026/?c=98c827c4-2b49-44ed-a6fd-f2d0e0de5544",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "41caa5b6-dfc1-427a-95c9-760274ad95b1",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-01",
+      "dateLocal": "2026-12-01T16:00:00",
+      "dateUtc": "2026-12-02T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Lynbrook",
+        "result": null,
+        "score": null,
+        "slug": "lynbrook",
+        "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-05T11:19:20",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-lynbrook-san-jose/freshman/12-1-2026/?c=41caa5b6-dfc1-427a-95c9-760274ad95b1",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Sacred Heart Prep",
+        "result": null,
+        "score": null,
+        "slug": "sacred-heart-prep",
+        "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
+      },
+      "contestId": "5b648e30-d2c0-43ba-8787-449550249a56",
+      "contestTypes": {
+        "away": 2,
+        "home": 2
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-01",
+      "dateLocal": "2026-12-01T19:00:00",
+      "dateUtc": "2026-12-02T03:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:10:32",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-sacred-heart-prep-atherton/freshman/12-1-2026/?c=5b648e30-d2c0-43ba-8787-449550249a56",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs. SHP JV"
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "81954fe3-a830-4f5a-896b-121c91839ff3",
+      "contestTypes": {
+        "away": 2,
+        "home": 2
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-03",
+      "dateLocal": "2026-12-03T15:30:00",
+      "dateUtc": "2026-12-03T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Archbishop Mitty",
+        "result": null,
+        "score": null,
+        "slug": "mitty",
+        "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-22T22:50:25",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-mitty-san-jose-vs-carlmont-belmont/freshman/12-3-2026/?c=81954fe3-a830-4f5a-896b-121c91839ff3",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Sacred Heart Prep",
+        "result": null,
+        "score": null,
+        "slug": "sacred-heart-prep",
+        "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
+      },
+      "contestId": "b5d4827e-f4dc-4924-be6e-6f611e13040b",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-03",
+      "dateLocal": "2026-12-03T16:30:00",
+      "dateUtc": "2026-12-04T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:11:08",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-sacred-heart-prep-atherton/freshman/12-3-2026/?c=b5d4827e-f4dc-4924-be6e-6f611e13040b",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs. SHP JV"
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "contestId": "a740fb10-6598-41d7-a57e-da024044f9da",
+      "contestTypes": {
+        "away": 2,
+        "home": 2
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-05",
+      "dateLocal": "2026-12-05T08:30:00",
+      "dateUtc": "2026-12-05T16:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Santa Clara",
+        "name": "Santa Clara",
+        "result": null,
+        "score": null,
+        "slug": "santa-clara",
+        "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:11:33",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7091683?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-santa-clara/freshman/12-5-2026/?c=a740fb10-6598-41d7-a57e-da024044f9da",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Tournament game vs Santa Clara JV"
+      }
+    },
+    {
+      "away": {
+        "city": "South San Francisco",
+        "name": "South San Francisco",
+        "result": null,
+        "score": null,
+        "slug": "south-san-francisco",
+        "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+      },
+      "contestId": "904dedc0-2436-4165-859f-e0db050292b9",
+      "contestTypes": {
+        "away": 2,
+        "home": 2
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-05",
+      "dateLocal": "2026-12-05T10:15:00",
+      "dateUtc": "2026-12-05T18:15:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-16T23:35:10",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "neutral",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-south-san-francisco/freshman/12-5-2026/?c=904dedc0-2436-4165-859f-e0db050292b9",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Saint Francis",
+        "result": null,
+        "score": null,
+        "slug": "saint-francis",
+        "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
+      },
+      "contestId": "6c41b39d-b5aa-4f36-924b-72fcda2efc07",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-05",
+      "dateLocal": "2026-12-05T12:25:00",
+      "dateUtc": "2026-12-05T20:25:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Larkspur",
+        "name": "Redwood",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "12616b84-157c-48d3-b353-434576d9df8d"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-25T03:57:23",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/redwood-larkspur-vs-saint-francis-mountain-view/freshman/12-5-2026/?c=6c41b39d-b5aa-4f36-924b-72fcda2efc07",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Carondelet Complex"
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Saint Francis",
+        "result": null,
+        "score": null,
+        "slug": "saint-francis",
+        "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
+      },
+      "contestId": "fe31a069-6a54-4909-823d-fbb491fc7a91",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-05",
+      "dateLocal": "2026-12-05T16:45:00",
+      "dateUtc": "2026-12-06T00:45:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Livermore",
+        "name": "Livermore",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "0b05ee2d-9888-4150-91f9-2278a0b03fb9"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-25T03:38:11",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/livermore-vs-saint-francis-mountain-view/freshman/12-5-2026/?c=fe31a069-6a54-4909-823d-fbb491fc7a91",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Carondelet Complex"
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "70218f28-386b-49fc-b335-24fefafaf06c",
+      "contestTypes": {
+        "away": 2,
+        "home": 2
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-08",
+      "dateLocal": "2026-12-08T15:30:00",
+      "dateUtc": "2026-12-08T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Belmont",
+        "name": "Notre Dame Belmont",
+        "result": null,
+        "score": null,
+        "slug": "notre-dame-belmont",
+        "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-13T22:41:48",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-notre-dame-belmont/freshman/12-8-2026/?c=70218f28-386b-49fc-b335-24fefafaf06c",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "contestId": "594a102d-ae8e-4c48-a125-7d018e15a2c3",
+      "contestTypes": {
+        "away": 2,
+        "home": 2
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-08",
+      "dateLocal": "2026-12-08T16:00:00",
+      "dateUtc": "2026-12-09T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Archbishop Mitty",
+        "result": null,
+        "score": null,
+        "slug": "mitty",
+        "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-06T15:12:17",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-mitty-san-jose-vs-menlo-atherton/freshman/12-8-2026/?c=594a102d-ae8e-4c48-a125-7d018e15a2c3",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Tournament"
+      }
+    },
+    {
+      "away": {
+        "city": "Pacifica",
+        "name": "Terra Nova",
+        "result": null,
+        "score": null,
+        "slug": "terra-nova",
+        "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+      },
+      "contestId": "d62e9ad2-9f4b-4d94-8b3c-e2cd97db863f",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-08",
+      "dateLocal": "2026-12-08T18:30:00",
+      "dateUtc": "2026-12-09T02:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-16T22:09:38",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/terra-nova-pacifica-vs-woodside/freshman/12-8-2026/?c=d62e9ad2-9f4b-4d94-8b3c-e2cd97db863f",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "406840c6-3bc4-4a99-97c5-183fa5699232",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-10",
+      "dateLocal": "2026-12-10T17:30:00",
+      "dateUtc": "2026-12-11T01:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Saint Francis",
+        "result": null,
+        "score": null,
+        "slug": "saint-francis",
+        "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-13T22:42:13",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-saint-francis-mountain-view/freshman/12-10-2026/?c=406840c6-3bc4-4a99-97c5-183fa5699232",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "MacDonald",
+        "result": null,
+        "score": null,
+        "slug": "macdonald",
+        "teamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef"
+      },
+      "contestId": "9c79509f-0fd8-45d4-a907-23c9e4d50c21",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-10",
+      "dateLocal": "2026-12-10T19:00:00",
+      "dateUtc": "2026-12-11T03:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:11:58",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/macdonald-san-jose-vs-menlo-atherton/freshman/12-10-2026/?c=9c79509f-0fd8-45d4-a907-23c9e4d50c21",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs MacDonald JV"
+      }
+    },
+    {
+      "away": {
+        "city": "San Mateo",
+        "name": "Aragon",
+        "result": null,
+        "score": null,
+        "slug": "aragon",
+        "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9"
+      },
+      "contestId": "242dd5b5-62be-4019-96e9-129da51ecb4f",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-12",
+      "dateLocal": "2026-12-12T12:00:00",
+      "dateUtc": "2026-12-12T20:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-16T22:08:06",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/aragon-san-mateo-vs-woodside/freshman/12-12-2026/?c=242dd5b5-62be-4019-96e9-129da51ecb4f",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Archbishop Mitty",
+        "result": null,
+        "score": null,
+        "slug": "mitty",
+        "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+      },
+      "contestId": "b2bc971a-4cf2-4d0e-ac7a-e68ec2c8e7ff",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-19",
+      "dateLocal": "2026-12-19T11:00:00",
+      "dateUtc": "2026-12-19T19:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Ramon",
+        "name": "California",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "87282a7f-872a-4aef-bd98-9a5b8a6fd154"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T22:37:38",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-mitty-san-jose-vs-california-san-ramon/freshman/12-19-2026/?c=b2bc971a-4cf2-4d0e-ac7a-e68ec2c8e7ff",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "California HS - San Ramon"
+      }
+    },
+    {
+      "away": {
+        "name": "Non Freshman Opponent",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "505c1a99-e49f-4daa-8ec8-355baf311697"
+      },
+      "contestId": "bd0dc49b-7404-4a0d-a7c2-f168216f799c",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-05",
+      "dateLocal": "2027-01-05T16:30:00",
+      "dateUtc": "2027-01-06T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T03:45:46",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-ca-vs-non-freshman-opponent-intl/freshman/1-5-2027/?c=bd0dc49b-7404-4a0d-a7c2-f168216f799c",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Burlingame High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "contestId": "7d762788-410e-4a1f-b564-1415a0a9e8d4",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-06",
+      "dateLocal": "2027-01-06T15:15:00",
+      "dateUtc": "2027-01-06T23:15:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo School",
+        "result": null,
+        "score": null,
+        "slug": "menlo",
+        "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:12:16",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-menlo-school-atherton/freshman/1-6-2027/?c=7d762788-410e-4a1f-b564-1415a0a9e8d4",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs Menlo JV"
+      }
+    },
+    {
+      "away": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "contestId": "1d3288b6-d017-4444-b100-1b9307f896e3",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-06",
+      "dateLocal": "2027-01-06T16:30:00",
+      "dateUtc": "2027-01-07T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-22T15:50:05",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-woodside/freshman/1-6-2027/?c=1d3288b6-d017-4444-b100-1b9307f896e3",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gam4afbf9564d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "89f7ac01-09f8-4e3d-8b0b-11e96086a7cd",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T19:30:00",
+      "dateUtc": "2027-01-08T03:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-07T14:08:00",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-menlo-atherton/freshman/1-7-2027/?c=89f7ac01-09f8-4e3d-8b0b-11e96086a7cd",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Archbishop Mitty",
+        "result": null,
+        "score": null,
+        "slug": "mitty",
+        "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+      },
+      "contestId": "0cbd8c50-2450-4cc2-b0c2-83053f9781c1",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-09",
+      "dateLocal": "2027-01-09T11:00:00",
+      "dateUtc": "2027-01-09T19:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-08-27T09:58:09",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-mitty-san-jose-vs-menlo-atherton/freshman/1-9-2027/?c=0cbd8c50-2450-4cc2-b0c2-83053f9781c1",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "adf1ca50-594d-4f09-9369-5f15ea2ec7b9",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-09",
+      "dateLocal": "2027-01-09T13:00:00",
+      "dateUtc": "2027-01-09T21:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Ramon",
+        "name": "California",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "87282a7f-872a-4aef-bd98-9a5b8a6fd154"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T11:25:58",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-california-san-ramon/freshman/1-9-2027/?c=adf1ca50-594d-4f09-9369-5f15ea2ec7b9",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "California HS - San Ramon"
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "ee377410-6880-49ff-887b-9b1c6bc786e3",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-11",
+      "dateLocal": "2027-01-11T00:00:00",
+      "dateUtc": "2027-01-11T08:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Half Moon Bay",
+        "name": "Half Moon Bay",
+        "result": null,
+        "score": null,
+        "slug": "half-moon-bay",
+        "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": true,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T12:44:35",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-half-moon-bay/freshman/1-11-2027/?c=ee377410-6880-49ff-887b-9b1c6bc786e3",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs HMB JV"
+      }
+    },
+    {
+      "away": {
+        "city": "San Ramon",
+        "name": "California",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "87282a7f-872a-4aef-bd98-9a5b8a6fd154"
+      },
+      "contestId": "fd90bc4f-9def-44d4-9348-800a334d8e20",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T16:15:00",
+      "dateUtc": "2027-01-13T00:15:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Archbishop Mitty",
+        "result": null,
+        "score": null,
+        "slug": "mitty",
+        "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-09-18T13:33:44",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-mitty-san-jose-vs-california-san-ramon/freshman/1-12-2027/?c=fd90bc4f-9def-44d4-9348-800a334d8e20",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Half Moon Bay",
+        "name": "Half Moon Bay",
+        "result": null,
+        "score": null,
+        "slug": "half-moon-bay",
+        "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+      },
+      "contestId": "b3f6ccf0-b453-439e-b826-4040eddfed81",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T18:30:00",
+      "dateUtc": "2027-01-13T02:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-16T14:07:44",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-woodside/freshman/1-12-2027/?c=b3f6ccf0-b453-439e-b826-4040eddfed81",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "52561e09-7bcd-4fdc-97bf-248902deb885",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:30:00",
+      "dateUtc": "2027-01-15T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "name": "Non Freshman Opponent",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "505c1a99-e49f-4daa-8ec8-355baf311697"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-25T03:46:09",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-ca-vs-non-freshman-opponent-intl/freshman/1-14-2027/?c=52561e09-7bcd-4fdc-97bf-248902deb885",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Carlmont High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "bd1e0439-ad25-424d-a9e4-94388541a497",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:30:00",
+      "dateUtc": "2027-01-15T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T12:43:36",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-carlmont-belmont/freshman/1-14-2027/?c=bd1e0439-ad25-424d-a9e4-94388541a497",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gam9942cd3824?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "contestId": "9b745999-832f-45eb-8b32-12df887e9b90",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-15",
+      "dateLocal": "2027-01-15T16:30:00",
+      "dateUtc": "2027-01-16T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-12T15:28:04",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-woodside/freshman/1-15-2027/?c=9b745999-832f-45eb-8b32-12df887e9b90",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "8ec42009-7e29-45f7-a6cc-ced1f0e96c0d",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-16",
+      "dateLocal": "2027-01-16T16:00:00",
+      "dateUtc": "2027-01-17T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-13T22:44:37",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-woodside/freshman/1-16-2027/?c=8ec42009-7e29-45f7-a6cc-ced1f0e96c0d",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Ramon",
+        "name": "California",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "87282a7f-872a-4aef-bd98-9a5b8a6fd154"
+      },
+      "contestId": "3526d02f-fb0a-42e5-acbc-171309058cb7",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-18",
+      "dateLocal": "2027-01-18T13:00:00",
+      "dateUtc": "2027-01-18T21:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T02:04:05",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-california-san-ramon/freshman/1-18-2027/?c=3526d02f-fb0a-42e5-acbc-171309058cb7",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Notre Dame San Jose",
+        "result": null,
+        "score": null,
+        "slug": "notre-dame-san-jose",
+        "teamId": "e5d23742-6a32-47e1-b752-d16dfcf77119"
+      },
+      "contestId": "f5cde917-c8ed-43af-9d6f-162d0df62873",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-19",
+      "dateLocal": "2027-01-19T16:30:00",
+      "dateUtc": "2027-01-20T00:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:12:38",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-notre-dame-san-jose/freshman/1-19-2027/?c=f5cde917-c8ed-43af-9d6f-162d0df62873",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs NDSJ JV"
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "a27c981a-38d6-48fc-b383-0a96fca048d5",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T19:30:00",
+      "dateUtc": "2027-01-22T03:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-08-27T09:59:21",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-menlo-atherton/freshman/1-21-2027/?c=a27c981a-38d6-48fc-b383-0a96fca048d5",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "name": "Non Freshman Opponent",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "505c1a99-e49f-4daa-8ec8-355baf311697"
+      },
+      "contestId": "a89b8b22-6517-4e44-8593-1fb924eab5da",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-23",
+      "dateLocal": "2027-01-23T12:45:00",
+      "dateUtc": "2027-01-23T20:45:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Francisco",
+        "name": "Sacred Heart Cathedral",
+        "result": null,
+        "score": null,
+        "slug": "sacred-heart-cathedral",
+        "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-22T03:28:10",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/non-freshman-opponent-intl-vs-sacred-heart-cathedral-preparatory-san-francisco-ca/freshman/1-23-2027/?c=a89b8b22-6517-4e44-8593-1fb924eab5da",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Margaret Hayward Playground"
+      }
+    },
+    {
+      "away": {
+        "city": "San Ramon",
+        "name": "California",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "87282a7f-872a-4aef-bd98-9a5b8a6fd154"
+      },
+      "contestId": "668b48f7-202c-4776-97a2-0b7c72fc8613",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-23",
+      "dateLocal": "2027-01-23T14:00:00",
+      "dateUtc": "2027-01-23T22:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-08-03T09:27:03",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/california-san-ramon-vs-carlmont-belmont/freshman/1-23-2027/?c=668b48f7-202c-4776-97a2-0b7c72fc8613",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gam798e8c4e0f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "66eb8253-af05-4e06-9976-59475f04dd43",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-23",
+      "dateLocal": "2027-01-23T19:30:00",
+      "dateUtc": "2027-01-24T03:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-16T14:08:42",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-woodside/freshman/1-23-2027/?c=66eb8253-af05-4e06-9976-59475f04dd43",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Menlo School",
+        "result": null,
+        "score": null,
+        "slug": "menlo",
+        "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+      },
+      "contestId": "6a0c0e46-e7ba-4848-88b7-ff60a90ae509",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-25",
+      "dateLocal": "2027-01-25T16:00:00",
+      "dateUtc": "2027-01-26T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-24T22:12:48",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-menlo-school-atherton/freshman/1-25-2027/?c=6a0c0e46-e7ba-4848-88b7-ff60a90ae509",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "vs Menlo JV"
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "contestId": "53ac23c2-2a9c-493a-86b8-5625731ed77c",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T18:30:00",
+      "dateUtc": "2027-01-27T02:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-10-08T09:59:00",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-menlo-atherton/freshman/1-26-2027/?c=53ac23c2-2a9c-493a-86b8-5625731ed77c",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gamf46add0934?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "contestId": "dd85689e-885e-4dff-8663-e61025dc83ca",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T19:30:00",
+      "dateUtc": "2027-01-27T03:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-16T14:09:13",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-woodside/freshman/1-26-2027/?c=dd85689e-885e-4dff-8663-e61025dc83ca",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Belmont",
+        "name": "Carlmont",
+        "result": null,
+        "score": null,
+        "slug": "carlmont",
+        "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+      },
+      "contestId": "5eb61ce6-b356-4031-9a8b-631ff6430bbd",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-28",
+      "dateLocal": "2027-01-28T19:30:00",
+      "dateUtc": "2027-01-29T03:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Burlingame",
+        "name": "Burlingame",
+        "result": null,
+        "score": null,
+        "slug": "burlingame",
+        "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-19T12:44:04",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-carlmont-belmont/freshman/1-28-2027/?c=5eb61ce6-b356-4031-9a8b-631ff6430bbd",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Valley Christian",
+        "result": null,
+        "score": null,
+        "slug": "valley-christian",
+        "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
+      },
+      "contestId": "9225e60a-96c8-4a75-9576-52e71ebbe54e",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-06",
+      "dateLocal": "2027-02-06T11:15:00",
+      "dateUtc": "2027-02-06T19:15:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Francisco",
+        "name": "Sacred Heart Cathedral",
+        "result": null,
+        "score": null,
+        "slug": "sacred-heart-cathedral",
+        "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "wcal",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-22T03:20:52",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/sacred-heart-cathedral-preparatory-san-francisco-vs-valley-christian-san-jose/freshman/2-6-2027/?c=9225e60a-96c8-4a75-9576-52e71ebbe54e",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Margaret Hayward Playground"
+      }
+    },
+    {
+      "away": {
+        "city": "Atherton",
+        "name": "Menlo-Atherton",
+        "result": null,
+        "score": null,
+        "slug": "menlo-atherton",
+        "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+      },
+      "contestId": "a600b7b7-57c4-4670-80fa-2ae3321b0027",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-11",
+      "dateLocal": "2027-02-11T19:30:00",
+      "dateUtc": "2027-02-12T03:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Woodside",
+        "name": "Woodside",
+        "result": null,
+        "score": null,
+        "slug": "woodside",
+        "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "bay",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "maxprepsModifiedOn": "2026-11-12T15:28:23",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-atherton-vs-woodside/freshman/2-11-2027/?c=a600b7b7-57c4-4670-80fa-2ae3321b0027",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    }
+  ],
+  "sblive": [],
+  "season": "26-27",
+  "source": {
+    "builtBy": "scripts/fetch-jv.ts --level freshman",
+    "notes": [
+      "One entry per registry school, all 8 leagues. games are MaxPreps’ freshman contests (the schedule feed read with the freshman season id), built exactly as a JV game is.",
+      "MaxPreps is the only source of the freshman level: sblive is empty and si.com unavailable for every school.",
+      "Freshman games are kept apart from varsity and JV: no table, record, leader board, rating or postseason of either reads them, and the site keeps no freshman tables (owner decision, 2026-11-25).",
+      "A source with status carried-forward kept the previous file’s rows after a failed fetch; its own fetchedAt says when those rows were read."
+    ]
+  },
+  "sportSeasonId": "bd80f68e-f984-4c54-92c2-1845a8572f85",
+  "teams": [
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/soccer/girls/freshman/winter/schedule/",
+      "name": "Gunn",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "gunn",
+      "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/soccer/girls/freshman/winter/schedule/",
+      "name": "Homestead",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "homestead",
+      "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/soccer/girls/freshman/winter/schedule/",
+      "name": "Los Altos",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "los-altos",
+      "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/soccer/girls/freshman/winter/schedule/",
+      "name": "Los Gatos",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "los-gatos",
+      "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/mountain-view/mountain-view-spartans/soccer/girls/freshman/winter/schedule/",
+      "name": "Mountain View",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "mountain-view",
+      "teamId": "09beba1b-240a-45b8-aa6e-281decefa275"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/soccer/girls/freshman/winter/schedule/",
+      "name": "Palo Alto",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "palo-alto",
+      "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/soccer/girls/freshman/winter/schedule/",
+      "name": "Santa Clara",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "santa-clara",
+      "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/soccer/girls/freshman/winter/schedule/",
+      "name": "Cupertino",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "cupertino",
+      "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/soccer/girls/freshman/winter/schedule/",
+      "name": "Fremont",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "fremont",
+      "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/soccer/girls/freshman/winter/schedule/",
+      "name": "Lynbrook",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "lynbrook",
+      "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/soccer/girls/freshman/winter/schedule/",
+      "name": "MacDonald",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "macdonald",
+      "teamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/soccer/girls/freshman/winter/schedule/",
+      "name": "Milpitas",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "milpitas",
+      "teamId": "8ff5a211-5896-4289-9596-760a8179c34d"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/soccer/girls/freshman/winter/schedule/",
+      "name": "Monta Vista",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "monta-vista",
+      "teamId": "405614ad-a015-4270-b527-18e899c90824"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/saratoga/saratoga-falcons/soccer/girls/freshman/winter/schedule/",
+      "name": "Saratoga",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "saratoga",
+      "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/soccer/girls/freshman/winter/schedule/",
+      "name": "Wilcox",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "wilcox",
+      "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/soccer/girls/freshman/winter/schedule/",
+      "name": "Branham",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "branham",
+      "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/soccer/girls/freshman/winter/schedule/",
+      "name": "Gilroy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "gilroy",
+      "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/soccer/girls/freshman/winter/schedule/",
+      "name": "Leigh",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "leigh",
+      "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/soccer/girls/freshman/winter/schedule/",
+      "name": "Leland",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "leland",
+      "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/soccer/girls/freshman/winter/schedule/",
+      "name": "Piedmont Hills",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "piedmont-hills",
+      "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/soccer/girls/freshman/winter/schedule/",
+      "name": "Pioneer",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "pioneer",
+      "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/soccer/girls/freshman/winter/schedule/",
+      "name": "Westmont",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "westmont",
+      "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/willow-glen-rams/soccer/girls/freshman/winter/schedule/",
+      "name": "Willow Glen",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "willow-glen",
+      "teamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/soccer/girls/freshman/winter/schedule/",
+      "name": "Christopher",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "christopher",
+      "teamId": "773e862d-e186-44aa-b268-461b4064ce52"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/evergreen-valley-cougars/soccer/girls/freshman/winter/schedule/",
+      "name": "Evergreen Valley",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "evergreen-valley",
+      "teamId": "554a6e7c-06b6-473a-9461-9f155294d249"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/lincoln-lions/soccer/girls/freshman/winter/schedule/",
+      "name": "Lincoln",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "lincoln",
+      "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/morgan-hill/live-oak-acorns/soccer/girls/freshman/winter/schedule/",
+      "name": "Live Oak",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "live-oak",
+      "teamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/oak-grove-eagles/soccer/girls/freshman/winter/schedule/",
+      "name": "Oak Grove",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "oak-grove",
+      "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/santa-teresa-saints/soccer/girls/freshman/winter/schedule/",
+      "name": "Santa Teresa",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "santa-teresa",
+      "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/silver-creek-raiders/soccer/girls/freshman/winter/schedule/",
+      "name": "Silver Creek",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "silver-creek",
+      "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/soccer/girls/freshman/winter/schedule/",
+      "name": "Ann Sobrato",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "sobrato",
+      "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/hill-falcons/soccer/girls/freshman/winter/schedule/",
+      "name": "Andrew Hill",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "andrew-hill",
+      "teamId": "847b67d2-64a0-459a-b726-484e88392ba6"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/soccer/girls/freshman/winter/schedule/",
+      "name": "Del Mar",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "del-mar",
+      "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/gunderson-grizzlies/soccer/girls/freshman/winter/schedule/",
+      "name": "Gunderson",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "gunderson",
+      "teamId": "aa94942a-3659-42ea-8c1a-463de8693f1f"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/independence-76ers/soccer/girls/freshman/winter/schedule/",
+      "name": "Independence",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "independence",
+      "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/james-lick-comets/soccer/girls/freshman/winter/schedule/",
+      "name": "James Lick",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "james-lick",
+      "teamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/mt-pleasant-cardinals/soccer/girls/freshman/winter/schedule/",
+      "name": "Mt. Pleasant",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "mt-pleasant",
+      "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/overfelt-overfelt-royals/soccer/girls/freshman/winter/schedule/",
+      "name": "Overfelt",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "overfelt",
+      "teamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/soccer/girls/freshman/winter/schedule/",
+      "name": "Prospect",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "prospect",
+      "teamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/san-jose-bulldogs/soccer/girls/freshman/winter/schedule/",
+      "name": "San Jose",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "san-jose",
+      "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/yerba-buena-warriors/soccer/girls/freshman/winter/schedule/",
+      "name": "Yerba Buena",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "yerba-buena",
+      "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 5,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/soccer/girls/freshman/winter/schedule/",
+      "name": "Archbishop Mitty",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "mitty",
+      "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-francisco/archbishop-riordan-crusaders/soccer/girls/freshman/winter/schedule/",
+      "name": "Archbishop Riordan",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "riordan",
+      "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/soccer/girls/freshman/winter/schedule/",
+      "name": "Sacred Heart Cathedral",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "sacred-heart-cathedral",
+      "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 3,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/soccer/girls/freshman/winter/schedule/",
+      "name": "Saint Francis",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "saint-francis",
+      "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/soccer/girls/freshman/winter/schedule/",
+      "name": "St. Ignatius",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "st-ignatius",
+      "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/soccer/girls/freshman/winter/schedule/",
+      "name": "Valley Christian",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "valley-christian",
+      "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/palo-alto/castilleja-gators/soccer/girls/freshman/winter/schedule/",
+      "name": "Castilleja",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "castilleja",
+      "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/hillsborough/crystal-springs-uplands-gryphons/soccer/girls/freshman/winter/schedule/",
+      "name": "Crystal Springs Uplands",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "crystal-springs",
+      "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/soccer/girls/freshman/winter/schedule/",
+      "name": "The King’s Academy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "kings-academy",
+      "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/atherton/menlo-school-knights/soccer/girls/freshman/winter/schedule/",
+      "name": "Menlo School",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "menlo",
+      "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/belmont/notre-dame-tigers/soccer/girls/freshman/winter/schedule/",
+      "name": "Notre Dame Belmont",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "notre-dame-belmont",
+      "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/presentation-panthers/soccer/girls/freshman/winter/schedule/",
+      "name": "Presentation",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "presentation",
+      "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/soccer/girls/freshman/winter/schedule/",
+      "name": "Sacred Heart Prep",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "sacred-heart-prep",
+      "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/east-palo-alto/eastside-college-prep-panthers/soccer/girls/freshman/winter/schedule/",
+      "name": "Eastside College Prep",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "eastside",
+      "teamId": "aabdd1c5-8378-485d-91d3-75827048bf70"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/harker-eagles/soccer/girls/freshman/winter/schedule/",
+      "name": "Harker",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "harker",
+      "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/burlingame/mercy-bears/soccer/girls/freshman/winter/schedule/",
+      "name": "Mercy Burlingame",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "mercy-burlingame",
+      "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/notre-dame-regents/soccer/girls/freshman/winter/schedule/",
+      "name": "Notre Dame San Jose",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "notre-dame-san-jose",
+      "teamId": "e5d23742-6a32-47e1-b752-d16dfcf77119"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/los-altos-hills/pinewood-panthers/soccer/girls/freshman/winter/schedule/",
+      "name": "Pinewood",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "pinewood",
+      "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/soccer/girls/freshman/winter/schedule/",
+      "name": "Priory",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "priory",
+      "teamId": "b22f99e1-f106-4b39-8d64-35983d4da891"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-mateo/aragon-dons/soccer/girls/freshman/winter/schedule/",
+      "name": "Aragon",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "aragon",
+      "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 10,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/burlingame/burlingame-panthers/soccer/girls/freshman/winter/schedule/",
+      "name": "Burlingame",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "burlingame",
+      "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 12,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/belmont/carlmont-scots/soccer/girls/freshman/winter/schedule/",
+      "name": "Carlmont",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "carlmont",
+      "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-mateo/hillsdale-fighting-knights/soccer/girls/freshman/winter/schedule/",
+      "name": "Hillsdale",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "hillsdale",
+      "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 14,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/atherton/menlo-atherton-m-a-bears/soccer/girls/freshman/winter/schedule/",
+      "name": "Menlo-Atherton",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "menlo-atherton",
+      "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/redwood-city/sequoia-ravens/soccer/girls/freshman/winter/schedule/",
+      "name": "Sequoia",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "sequoia",
+      "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 10,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/woodside/woodside-wildcats/soccer/girls/freshman/winter/schedule/",
+      "name": "Woodside",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "woodside",
+      "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-bruno/capuchino-mustangs/soccer/girls/freshman/winter/schedule/",
+      "name": "Capuchino",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "capuchino",
+      "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/south-san-francisco/el-camino-colts/soccer/girls/freshman/winter/schedule/",
+      "name": "El Camino",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "el-camino-ssf",
+      "teamId": "f78ab2a3-b319-43a1-9bc4-29b19ec87189"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/half-moon-bay/half-moon-bay-cougars/soccer/girls/freshman/winter/schedule/",
+      "name": "Half Moon Bay",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "half-moon-bay",
+      "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/daly-city/jefferson-grizzlies/soccer/girls/freshman/winter/schedule/",
+      "name": "Jefferson",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "jefferson",
+      "teamId": "c88b0d9e-48e6-4dc5-86b0-274410c5823a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/millbrae/mills-vikings/soccer/girls/freshman/winter/schedule/",
+      "name": "Mills",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "mills",
+      "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-mateo/san-mateo-bearcats/soccer/girls/freshman/winter/schedule/",
+      "name": "San Mateo",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "san-mateo",
+      "teamId": "55853f70-2545-4bfe-a107-4142093e929a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/south-san-francisco/south-san-francisco-warriors/soccer/girls/freshman/winter/schedule/",
+      "name": "South San Francisco",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "south-san-francisco",
+      "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pacifica/terra-nova-tigers/soccer/girls/freshman/winter/schedule/",
+      "name": "Terra Nova",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "terra-nova",
+      "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/daly-city/westmoor-rams/soccer/girls/freshman/winter/schedule/",
+      "name": "Westmoor",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "westmoor",
+      "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/aptos/aptos-mariners/soccer/girls/freshman/winter/schedule/",
+      "name": "Aptos",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "aptos",
+      "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-cruz/harbor-pirates/soccer/girls/freshman/winter/schedule/",
+      "name": "Harbor",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "harbor",
+      "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/soccer/girls/freshman/winter/schedule/",
+      "name": "San Lorenzo Valley",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "san-lorenzo-valley",
+      "teamId": "1b3a82da-476f-4a32-9652-c238da7764c7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-cruz/santa-cruz-cardinals/soccer/girls/freshman/winter/schedule/",
+      "name": "Santa Cruz",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "santa-cruz",
+      "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/scotts-valley/scotts-valley-falcons/soccer/girls/freshman/winter/schedule/",
+      "name": "Scotts Valley",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "scotts-valley",
+      "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/soquel/soquel-knights/soccer/girls/freshman/winter/schedule/",
+      "name": "Soquel",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "soquel",
+      "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/everett-alvarez-eagles/soccer/girls/freshman/winter/schedule/",
+      "name": "Everett Alvarez",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "everett-alvarez",
+      "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/soccer/girls/freshman/winter/schedule/",
+      "name": "Hollister",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "hollister",
+      "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/monterey/monterey-toreadors/soccer/girls/freshman/winter/schedule/",
+      "name": "Monterey",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "monterey",
+      "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-cruz/pacific-collegiate-pumas/soccer/girls/freshman/winter/schedule/",
+      "name": "Pacific Collegiate",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "pacific-collegiate",
+      "teamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/rancho-san-juan-trailblazers/soccer/girls/freshman/winter/schedule/",
+      "name": "Rancho San Juan",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "rancho-san-juan",
+      "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/soccer/girls/freshman/winter/schedule/",
+      "name": "Salinas",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "salinas",
+      "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/watsonville-wildcatz/soccer/girls/freshman/winter/schedule/",
+      "name": "Watsonville",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "watsonville",
+      "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/soccer/girls/freshman/winter/schedule/",
+      "name": "Alisal",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "alisal",
+      "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/carmel/carmel-padres/soccer/girls/freshman/winter/schedule/",
+      "name": "Carmel",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "carmel",
+      "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/gonzales/gonzales-spartans/soccer/girls/freshman/winter/schedule/",
+      "name": "Gonzales",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "gonzales",
+      "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/soccer/girls/freshman/winter/schedule/",
+      "name": "Monte Vista Christian",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "monte-vista-christian",
+      "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/pajaro-valley-grizzlies/soccer/girls/freshman/winter/schedule/",
+      "name": "Pajaro Valley",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "pajaro-valley",
+      "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/soledad/soledad-aztecs/soccer/girls/freshman/winter/schedule/",
+      "name": "Soledad",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "soledad",
+      "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pebble-beach/stevenson-pirates/soccer/girls/freshman/winter/schedule/",
+      "name": "Stevenson",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "stevenson",
+      "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/greenfield/greenfield-bruins/soccer/girls/freshman/winter/schedule/",
+      "name": "Greenfield",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "greenfield",
+      "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/king-city/king-city-mustangs/soccer/girls/freshman/winter/schedule/",
+      "name": "King City",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "king-city",
+      "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/castroville/north-monterey-county-condors/soccer/girls/freshman/winter/schedule/",
+      "name": "North Monterey County",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "north-monterey-county",
+      "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/north-salinas-vikings/soccer/girls/freshman/winter/schedule/",
+      "name": "North Salinas",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "north-salinas",
+      "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/soccer/girls/freshman/winter/schedule/",
+      "name": "Palma",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "palma",
+      "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/soccer/girls/freshman/winter/schedule/",
+      "name": "Seaside",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "seaside",
+      "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-juan-bautista/anzar-hawks/soccer/girls/freshman/winter/schedule/",
+      "name": "Anzar",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "anzar",
+      "teamId": "340cc25b-8dce-4532-a929-4b8358283933"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/marina/marina-mariners/soccer/girls/freshman/winter/schedule/",
+      "name": "Marina",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "marina-mariners",
+      "teamId": "a474e593-af4b-4140-92d5-ec9221920834"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/la-selva-beach/monterey-bay-academy-cypress/soccer/girls/freshman/winter/schedule/",
+      "name": "Monterey Bay Academy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "monterey-bay-academy",
+      "teamId": "7fc8780b-014e-4870-a43f-e2f444a853bc"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pacific-grove/pacific-grove-breakers/soccer/girls/freshman/winter/schedule/",
+      "name": "Pacific Grove",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "pacific-grove",
+      "teamId": "5041038f-a821-4209-90af-196b6d756e48"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/monterey/santa-catalina-cougars/soccer/girls/freshman/winter/schedule/",
+      "name": "Santa Catalina",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "santa-catalina",
+      "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/st-francis-sharks/soccer/girls/freshman/winter/schedule/",
+      "name": "St. Francis",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "st-francis-watsonville",
+      "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/monterey/york-falcons/soccer/girls/freshman/winter/schedule/",
+      "name": "York",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "york",
+      "teamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/cristo-rey-san-jose-jesuit-na/soccer/girls/freshman/winter/schedule/",
+      "name": "Cristo Rey San Jose Jesuit",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "cristo-rey-san-jose",
+      "teamId": "49ac8af1-0277-4a5c-bb79-7da46365404e"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/redwood-city/design-tech-dragons/soccer/girls/freshman/winter/schedule/",
+      "name": "Design Tech",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "design-tech",
+      "teamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/kipp-san-jose-collegiate-wes/soccer/girls/freshman/winter/schedule/",
+      "name": "KIPP San Jose Collegiate",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "kipp-san-jose",
+      "teamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/latino-college-preparatory-academy-eagle-warriors/soccer/girls/freshman/winter/schedule/",
+      "name": "Latino College Preparatory Academy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "latino-college-prep",
+      "teamId": "ba2378a8-680c-4329-9eb0-a2b2b68583f7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pacifica/oceana-sharks/soccer/girls/freshman/winter/schedule/",
+      "name": "Oceana",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "oceana",
+      "teamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-mateo/the-nueva-school-mavericks/soccer/girls/freshman/winter/schedule/",
+      "name": "The Nueva School",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "nueva",
+      "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/soccer/girls/freshman/winter/schedule/",
+      "name": "Thomas More",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "thomas-more",
+      "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/ace-charter-cheetahs/soccer/girls/freshman/winter/schedule/",
+      "name": "ACE Charter",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "ace-charter",
+      "teamId": "2b6a30cf-2b1d-4cee-92b8-da73dd638fe8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/cindy-avitia-jaguars/soccer/girls/freshman/winter/schedule/",
+      "name": "Cindy Avitia",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "cindy-avitia",
+      "teamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/soccer/girls/freshman/winter/schedule/",
+      "name": "KIPP Esperanza",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "kipp-esperanza",
+      "teamId": "1f690420-95b8-4d69-8130-ba161d4ef703"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/kipp-navigate-college-prep-tigers/soccer/girls/freshman/winter/schedule/",
+      "name": "KIPP Navigate College Prep",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "kipp-navigate",
+      "teamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/redwood-city/summit-preparatory-huskies/soccer/girls/freshman/winter/schedule/",
+      "name": "Summit Preparatory",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "summit-prep",
+      "teamId": "fdc893f7-899d-4fef-87c7-225a20013de7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/daly-city/summit-shasta-black-bears/soccer/girls/freshman/winter/schedule/",
+      "name": "Summit Shasta",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "summit-shasta",
+      "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T22:38:34.359Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/summit-tahoma-tigers/soccer/girls/freshman/winter/schedule/",
+      "name": "Summit Tahoma",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "summit-tahoma",
+      "teamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3"
+    }
+  ]
+}
