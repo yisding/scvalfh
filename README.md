@@ -2022,13 +2022,20 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   with no grade, a roster row with no class year and a class year that disagrees are reported and left alone. A
   roster names no school, so a tie that rests on one alone is **medium** confidence; the club's location stands in
   for the hometown rule (b) asks for.
-- **Linking is by hand.** `pnpm compare-club-rosters` reads and reports only. For a match it lists, open the team
-  page, press Roster, and add the tie to `clubs.json` with a `league-roster` source (the team page's URL, the
-  team's name and the player's row as the quote, the class year, `sourceDate` the league season), status
-  `current`; then `SCVAL_SPORT=soccer pnpm build-players`. `clubSlugs` in the kept file maps a league club to its
-  `clubs.json` record and is kept by hand; a club with no entry is compared but never linked.
-  `tests/club-rosters.test.ts` fails if a `league-roster` source cites a team page the kept copy does not have, or
-  one whose roster no longer lists the player with that class year, so re-check those ties after a refetch.
+- **Linking is by hand.** `pnpm compare-club-rosters` reads and reports only; each match it lists names the roster
+  pages it rests on (two clubs' GA teams share a name, such as "GA 08/09"). A varsity row's tie goes in `clubs.json`'s
+  `affiliations`, a JV row's in `jvAffiliations`, each with a `league-roster` source, then `SCVAL_SPORT=soccer pnpm
+  build-players`. *An ECNL match:* open the team page, press Roster, and cite the team page's URL, with the team's
+  name and the player's row as the quote, the class year (`statedClassYear`), `sourceDate` the league season, status
+  `current`. *A Girls Academy match* ("on birth years"): cite the team's GotSport Rankings roster
+  (`rankings.gotsport.com/teams/<id>/roster`), which shows the rows with no button to press, with the page's team name
+  and the player's row ("GA 08/09 | Costa | Alessia | No Position Listed") as the quote; `statedClassYear` and
+  `sourceDate` null, since the page states neither a class year nor a date; and, for a tie resting on that roster
+  alone, status `unknown` and confidence `medium`. A GA roster cited on a tie other pages already make leaves its
+  status alone. `clubSlugs` in the kept file maps a league club to its `clubs.json` record and is kept by hand; a club
+  with no entry is compared but never linked. `tests/club-rosters.test.ts` fails if a `league-roster` source, varsity
+  or JV, cites a team page the kept copy does not have, or one whose roster no longer lists the player with that class
+  year (on a GA team, with a class year the team's birth years admit), so re-check those ties after a refetch.
 - **Linked on 2026-11-22**, over the 32 varsity and the JV rosters posted that day: **96 ties cite a roster**, at
   22 schools. 63 are new and rest on a roster alone; 32 are ties other pages had already made, which gain the
   roster and now read current for 2026-27 (Sally Burns's to Mustang Soccer in the East Bay among them); and
@@ -2062,13 +2069,13 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   class year, jersey or date. So a GA roster is not known to be one season's: it reads like everyone the team has
   carried (Silicon Valley SA's GA 08/09 has 64 rows; Almaden's names a tracked class-of-2029 player). Each team keeps
   its birth years instead (`birthYears`, from its name: "GA 08/09" is 2008/09), and its rows are compared in a tier of
-  their own: rule 2 reads "the row's class year is one the team's birth years admit" (California's September 1
-  cutoff: 08/09 admits the classes of 2026-2028, `birthYearClassYears`), and rules 3-5 hold within the tier, so an ECNL
-  row at another club neither blocks a GA match nor is blocked by one. A GA tie resting on a roster alone is medium
-  confidence and its status unknown (the page dates nothing). GotSport's club ids are keyed `gotsport-<id>` in
-  `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped. South Valley
-  Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the
-  schools. Their rows are compared but never linked.
+  their own: rule 2 reads "the row's class year is one the team's birth years admit" (California's September 1 cutoff:
+  08/09 admits the classes of 2026-2028, each listed year on its own, `birthYearsAdmit`), and rules 3-5 hold within
+  the tier, so an ECNL row at another club neither blocks a GA match nor is blocked by one. A GA tie resting on a
+  roster alone is medium confidence and its status unknown (the page dates nothing). GotSport's club ids are keyed
+  `gotsport-<id>` in `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are
+  mapped. South Valley Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are
+  based away from the schools. Their rows are compared but never linked.
 - **Linked on 2026-11-25.** *Girls Academy:* **29 ties cite a GA roster** (32 entries on 8 team pages, 14 schools):
   22 new, resting on a roster alone (Almaden FC 16 and Silicon Valley SA 13 in all), and 7 ties other pages had
   already made (Rylan Hickey's and Madison McDougall's to Almaden FC, Gianna Armanini's to Silicon Valley SA among
