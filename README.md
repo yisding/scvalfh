@@ -1948,7 +1948,7 @@ What the research did not reach, so that an absence here says little:
     (ECNL's member clubs were read on 2026-11-22 from the leagues' own team lists, "Girls soccer: club rosters").
     Clubs named on a player's page with no record, so the tie is not shown: El Camino FC, Alum Rock FC, Hawaii
     Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon Valley Soccer Club. The rosters of Girls Academy,
-    NorCal Premier's own leagues and Cal North were not read: only ECNL's two leagues are kept.
+    NorCal Premier's own leagues and Cal North were not read: only ECNL's three Northern California leagues are kept.
   - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
     San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
     feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
@@ -1975,31 +1975,36 @@ gives a marked row the corrected grade, until the conflict is removed (its `kept
 
 ### Girls soccer: club rosters
 
-`data/soccer/club-rosters.json` is a kept copy of the public team rosters of the two Northern California girls
-leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's NorCal division, the GU14 through GU18/19
-age groups. It is there so that a high school roster can be compared with the club rosters the day a school posts
-it, without reading the leagues' pages again. Read on 2026-11-22: **199 teams of 55 clubs, 3,255 players** (60
-ECNL teams of 12 clubs, 139 Regional League teams of 43).
+`data/soccer/club-rosters.json` is a kept copy of the public team rosters of the three Northern California girls
+leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's two conferences here, NorCal (NorCal
+Premier's) and Golden State (the second teams of the 12 ECNL Northern Cal clubs), the GU14 through GU18/19 age
+groups. It is there so that a high school roster can be compared with the club rosters the day a school posts it,
+without reading the leagues' pages again. Read on 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL
+teams of 12 clubs, 139 NorCal Regional League teams of 43, 57 Golden State teams of the 12 ECNL clubs). Golden State
+was added that day; the other two leagues were first read on 2026-11-22.
 
 ```bash
-pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 3 minutes)
+pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
 pnpm fetch-club-rosters --dry-run   # fetch and count, write nothing
 pnpm compare-club-rosters           # compare with the varsity and JV rosters; list the matches clubs.json does not cite
 pnpm compare-club-rosters --all     # every row that shares a name with a roster row, by outcome
 ```
 
-- **Where it is read.** Each league's own Schedules & Standings page (`app.athleteone.com/public/event/4267/…`
-  and `…/4307/…`; NorCal Premier's ECNL Regional League page links the second). The page is drawn by script and its
+- **Where it is read.** Each league's own Schedules & Standings page (`app.athleteone.com/public/event/4267/…`,
+  `…/4307/…` and `…/4300/…`; NorCal Premier's ECNL Regional League page links 4307; no public page links Golden
+  State's 4300, found by reading the event names of 4250-4300 through the public page, owner-approved). A club's
+  Golden State teams carry its ECNL club id, so `clubSlugs` covers both. The page is drawn by script and its
   data refuses any request that does not come from the page, so `scripts/fetch-club-rosters.mjs` drives the local
-  Chromium (`CHROME_BIN`, default `/usr/bin/chromium`) over the DevTools protocol and reads what the page itself
+  Chromium (`CHROME_BIN`, default `/usr/bin/chromium`; as root in an isolated container, `CHROME_NO_SANDBOX=1`)
+  over the DevTools protocol and reads what the page itself
   loads: a division's standings for its teams, then each team's page, whose Roster button lists the players. No
   dependency, one request at a time. It is not on the cron: run it by hand when the club season turns over or a
   roster is known to have changed.
 - **What is kept.** Per team: league, age group, name, club and public page. Per player: name, position, the class
   year the page's data carries (the Roster dialog does not print it) and the roster's label ("First Team Player",
   "Club Player Pool"). Not kept: staff, jersey numbers, account ids, a player a team hides from its public roster,
-  and a player too young to be in high school this season (833 left out). **The file is never rendered and nothing
-  in the site imports it**: it names players who are on no tracked roster.
+  and a player too young to be in high school this season (1,155 left out on 2026-11-24). **The file is never
+  rendered and nothing in the site imports it**: it names players who are on no tracked roster.
 - **The league-roster rule** (`lib/players/club-rosters.ts`, a narrower case of the clubs' linking rule). A roster
   row and a high school row are the same player when the folded names are equal; the high school row has a grade
   and the roster's class year is that grade's; no other tracked school has a row under the name, varsity or JV;
@@ -2022,11 +2027,16 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   club: De Anza Force 17, Los Gatos United 16, MVLA 15, Bay Area Surf 11, Santa Clara Sporting and Stanford
   Strikers 8 each, Burlingame 7, Palo Alto SC 6, Santa Cruz United 5, SF Elite, Mustang and Marin FC 1 each. A
   second script opened every cited team page in Chromium, pressed Roster and found each row as displayed.
-- **Not linked.** 30 varsity and 11 JV rows with no grade yet whose name is on a roster (they link when MaxPreps
-  posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of the name;
-  5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three players at
-  clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed the
-  rule, and `clubs.json` lists no JV ties in any case.
+- **Linked on 2026-11-24**, over the Golden State conference's 57 teams: **38 more ties cite a roster** (134 in
+  all, at 23 schools). 33 are new and rest on a roster alone (MVLA 23, Bay Area Surf 6, De Anza Force 4, at 11
+  schools); 5 are ties other pages had already made, which gain the roster and now read current for 2026-27. The
+  same second script found all 40 cited rows on the 12 team pages' Roster dialogs. 3 JV rows pass the rule and are
+  not listed, as before.
+- **Not linked on 2026-11-22.** 30 varsity and 11 JV rows with no grade yet whose name is on a roster (they link
+  when MaxPreps posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of
+  the name; 5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three
+  players at clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed
+  the rule, and `clubs.json` lists no JV ties in any case.
 
 ### Soccer and basketball: last season's commitments
 

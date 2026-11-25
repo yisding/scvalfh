@@ -37,7 +37,9 @@ import {
 } from '../../lib/players/clubs';
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '../../lib/players/clubs-schema';
 import { getRosters } from '../../lib/players/rosters';
+import { SPORT_ID } from '../../lib/sports/current';
 import type { RegionId, TeamSlug } from '../../lib/types';
+import { soccerClubTeamWords } from '../words/club-team-words';
 import { capitalized } from '../words/capitalized';
 import { plural } from '../words/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../words/source-hosts';
@@ -589,6 +591,18 @@ function rosterPageLabel(url: string, club: Club): string {
   return host;
 }
 
+/**
+ * The club team a row prints, if any. In soccer, one shape for every club ("Juventus ECNL G2010", "ECNL RL G2008/09",
+ * "Quicksilver Green GA"; components/words/club-team-words.ts), whatever the source wrote; in the other
+ * sports, the source's own words.
+ */
+export function clubTeamWords(a: Pick<ClubAffiliation, 'clubTeam'>): string | null {
+  if (a.clubTeam === null) return null;
+  if (SPORT_ID !== 'soccer' && SPORT_ID !== 'val-soccer') return a.clubTeam;
+  const names = getClubs().flatMap((c) => [c.name, ...(c.shortName !== null ? [c.shortName] : []), ...c.aliases]);
+  return soccerClubTeamWords(a.clubTeam, names);
+}
+
 function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
   const row = getAffiliatedPlayer(a);
   const seen = new Set<string>();
@@ -597,7 +611,7 @@ function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
     key: `${a.teamSlug}-${a.athleteId}`,
     name: row.fullName,
     school: { name: schoolName(a.teamSlug), href: `/teams/${a.teamSlug}#roster`, slug: a.teamSlug },
-    facts: [row.grade !== null ? gradeWord(row.grade) : null, a.clubTeam].filter((f): f is string => f !== null),
+    facts: [row.grade !== null ? gradeWord(row.grade) : null, clubTeamWords(a)].filter((f): f is string => f !== null),
     status: statusWords(a, club),
     statusKind: a.status,
     sources: numbered(sources.map((s) => ({ label: sourceLabel(s, club), url: s.url }))),
