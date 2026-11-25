@@ -1864,19 +1864,21 @@ on 2026-11-21:
   row and 305 of the JV rows, every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits
   address probe over every varsity and JV row.
 - **Clubs** (`clubs.json`; recounted on 2026-11-25, after the Girls Academy and NorCal Premier rosters, the refresh's
-  ECNL ties, the Mitty drift and Alum Rock FC of "Girls soccer: club rosters" below): **52 clubs** (South Bay 20,
-  Peninsula 15, San Francisco 10, Central Coast 5, East Bay 1, Marin 1) and **272 varsity ties for 226 of the 876
-  varsity rows, at 35 of the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left out
-  as roster drift while MaxPreps does not list her): 164 current, 88 listed (unknown) and 20 earlier; 38 players are
-  tied to more than one club; 126 high confidence, 146 medium (144 of them resting on a league roster alone: a class
-  year, or a GotSport team's birth years, and the club's location). The most ties: MVLA 55, De Anza Force 49, Almaden
-  FC 35, Bay Area Surf 31, Los Gatos United 23, Silicon Valley SA 14, Santa Clara Sporting 12, Burlingame and Stanford
-  Strikers 8 each, Palo Alto SC 7. 28 clubs have no tied player. The ties rest on 424 source entries on 228 URLs
-  (league rosters 232: ECNL's 173 and GotSport Rankings' 59, Girls Academy and NorCal Premier; NCSA 60, PrepSoccer 35,
-  SportsRecruits 35, MaxPreps career pages 26, Hudl 22, TopDrawerSoccer 10, SoccerWire 3, a college release 1). San
-  Francisco, the Peninsula and the South Bay were searched for every club (`SEARCHED_REGIONS`); Santa Cruz County was
-  too, but not the rest of the Central Coast, so /clubs does not claim it. **6 JV ties** (`jvAffiliations`, since
-  2026-11-25), shown marked JV.
+  ECNL ties, the Mitty drift, Alum Rock FC, the loosened league-roster rule and the roster team names of "Girls
+  soccer: club rosters" below): **52 clubs** (South Bay 20, Peninsula 15, San Francisco 10, Central Coast 5, East Bay
+  1, Marin 1) and **308 varsity ties for 260 of the 876 varsity rows, at 36 of the 46 schools with a roster** (one
+  player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while MaxPreps does not list her): 252
+  current, 37 listed (unknown) and 19 earlier; 40 players are tied to more than one club; 125 high confidence, 183
+  medium (181 of them resting on a league roster alone: a class year, or a GotSport team's birth years, and the club's
+  location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 37, Almaden FC 35, Los Gatos United 32, Santa
+  Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame 9, Palo Alto SC 7. 28 clubs have no
+  tied player. The ties rest on 487 source entries on 229 URLs (league rosters 296: ECNL's 234 and GotSport Rankings'
+  62, Girls Academy and NorCal Premier; NCSA 60, PrepSoccer 34, SportsRecruits 34, MaxPreps career pages 26, Hudl 22,
+  TopDrawerSoccer 10, SoccerWire 3, a college release 1, a news story 1). Where a tie cites a league roster, the team
+  it names is that roster's (clubs.json's notes). San Francisco, the Peninsula and the South Bay were searched for
+  every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does
+  not claim it. **24 JV ties** for 24 JV players at 9 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
+  Mountain View 5, Pacific Collegiate 4, Branham 3), shown marked JV.
 - **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
   hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
   Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos) to
