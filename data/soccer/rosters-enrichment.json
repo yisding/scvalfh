@@ -550,7 +550,8 @@
       "notes": [
         "Recruiting pages swept 2026-11-21 (README, \"Girls soccer and boys basketball: recruiting\"): 1 linked for 1 of the 18 players (1 claimed MaxPreps).",
         "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
-        "2026-11-25: the Hudl profiles of Madison Harrington (as Maddie) and Caliana Nelson (as Callie), found on Los Gatos' own Hudl girls soccer rosters (varsity team 80122, JV 629633) and linked on the owner's decision, as the rows have no grade to confirm a nickname by class year (README, 'Club rosters')."
+        "2026-11-25: the Hudl profiles of Madison Harrington (as Maddie) and Caliana Nelson (as Callie), found on Los Gatos' own Hudl girls soccer rosters (varsity team 80122, JV 629633) and linked on the owner's decision, as the rows have no grade to confirm a nickname by class year (README, 'Club rosters').",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 1 more linked for 1 player (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -618,6 +619,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "f9e1d3ca-a120-484c-a726-2902845f498b",
+          "playerId": "p13e00c0cc5",
+          "conflicts": [],
+          "fullName": "Addison Obrien",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "The page (Addison O'Brien, soccer, class of 2028) gives ZIP 95033, Los Gatos, and lists De Anza Force SC-Girls' 2010G ECNL team (#12), the club she is tied to, whose league roster also gives class of 2028. The roster row has no grade, so the class year is checked as a high school class this season and against the club roster (owner's decision, 2026-11-25). Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/addison_obrien2"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "los-gatos",
@@ -627,7 +650,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-21 (README, \"Girls soccer and boys basketball: recruiting\"): 24 linked for 21 of the 24 players (3 NCSA, 21 Hudl).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 1 more linked for 1 player (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -1106,6 +1130,12 @@
               "note": "On Mountain View High School's own girls soccer team on Hudl (Girls Varsity Soccer); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/28803105"
+            },
+            {
+              "classOf": 2028,
+              "note": "The page (soccer, class of 2028) gives ZIP 94041, Mountain View, the school's own city; class of 2028 agrees with the roster's grade 11. Missed by the 2026-11-21 probe. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/kayla_pierson2"
             }
           ],
           "sourceName": null
@@ -7808,7 +7838,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "everett-alvarez",
@@ -7835,7 +7865,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): no varsity roster to link to; one JV page, Kaia Gurdak's, is in data/soccer/jv-profiles.json."
       ],
       "players": [],
       "slug": "pacific-collegiate",
@@ -7844,7 +7874,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "rancho-san-juan",
@@ -7853,7 +7883,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "salinas",
@@ -7889,7 +7919,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "gonzales",
@@ -7916,9 +7946,296 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 13 linked for 13 of the 17 players (13 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "4ccab5f4-139a-4db6-8b43-f91fce0f5d2f",
+          "playerId": "pf791b38b74",
+          "conflicts": [],
+          "fullName": "Arlette Gomez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2025-2026; SHS Girls' JV Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24807428"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4b61dfe4-da2b-428a-82b5-9c81f46cbca8",
+          "playerId": "p17aa91c54f",
+          "conflicts": [],
+          "fullName": "Avery Fregoso",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2025-2026; SHS Girls' JV Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24781300"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a068f195-6f3b-461e-a386-011481451341",
+          "playerId": "p5dd92c67fe",
+          "conflicts": [],
+          "fullName": "Bella Torres",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2025-2026; SHS Girls' JV Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24781057"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "99197087-0b0e-4fb5-bf5b-60eac7b2d720",
+          "playerId": "p9c8de78073",
+          "conflicts": [],
+          "fullName": "Clarissa Valdez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24782891"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "972b29a7-c2b9-4ce2-88a2-c929fce479bf",
+          "playerId": "p314fec1c49",
+          "conflicts": [],
+          "fullName": "Faith Ceja",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28753319"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3f4f31c6-ca1c-4dad-9781-56344fd5519e",
+          "playerId": "p7f8c7cd9be",
+          "conflicts": [],
+          "fullName": "Isabella Valdez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2025-2026; SHS Girls' JV Soccer, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21312096"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a73ea520-1412-4aaf-9264-5412c1e2cca5",
+          "playerId": "p3b76fe481d",
+          "conflicts": [],
+          "fullName": "Isabelle Mora",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Girls' JV Soccer, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21328099"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d47208d0-573a-4712-8710-3a784f11925f",
+          "playerId": "p92b1ecc5df",
+          "conflicts": [],
+          "fullName": "Izabellah Mora",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Girls' JV Soccer, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28753111"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9f048eb3-9fd9-4ff6-a5c1-d56cb2cd24a2",
+          "playerId": "p32f7381468",
+          "conflicts": [],
+          "fullName": "Michelle Campos",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24783056"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "02794e7b-9cc7-4586-9bfd-9cce72045abc",
+          "playerId": "pc72e1c690a",
+          "conflicts": [],
+          "fullName": "Myah De Leon",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24782877"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "c55caafb-0b82-4c03-8f16-aedd64cf25d4",
+          "playerId": "pa302475732",
+          "conflicts": [],
+          "fullName": "Nichole Gonzalez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24837151"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a3c74b6d-1ce7-45b7-8c3e-856f045ad34a",
+          "playerId": "p17de3328cd",
+          "conflicts": [],
+          "fullName": "Xitlaly Hernandez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Womens - Soccer, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28753420"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "52b30839-2e0a-4af9-8289-020b8a1f08c8",
+          "playerId": "p0f12e86454",
+          "conflicts": [],
+          "fullName": "Yaretzi Trujillo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own girls soccer team on Hudl (SHS Girls' JV Soccer, 2025-2026; SHS Womens - Soccer, 2025-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28753071"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "soledad",
       "sources": []
     },
@@ -7952,7 +8269,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "north-monterey-county",
@@ -7970,7 +8287,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "palma",
@@ -8015,9 +8332,164 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 7 linked for 7 of the 29 players (7 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "1163ec81-9ffd-489b-a508-437be49bda59",
+          "playerId": "p4feae1e13a",
+          "conflicts": [],
+          "fullName": "Anna Freeman",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25242746"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "70104210-f8ac-4948-a938-ac0d9115e8d5",
+          "playerId": "pfd105ca029",
+          "conflicts": [],
+          "fullName": "Liliana Papandreopoulos",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25189976"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "79e10d8b-52c2-4b2b-a667-97d8f00643f7",
+          "playerId": "p5298d192d8",
+          "conflicts": [],
+          "fullName": "Mariella Norris",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25232450"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f420f587-f425-4c14-845b-d0875a0b4c4a",
+          "playerId": "pf75768d88d",
+          "conflicts": [],
+          "fullName": "Pepper James",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25189417"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b8e09a41-db0e-43d4-8120-e76bd17c0a44",
+          "playerId": "p9c0b85b1cc",
+          "conflicts": [],
+          "fullName": "Scarlett Ortiz",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2026); class of 2030. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33197696"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "86ba309c-d4f8-49e5-a6b7-8a266ad9a73e",
+          "playerId": "p04801f785c",
+          "conflicts": [],
+          "fullName": "Sienna Cooper",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21122644"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "35ce7200-d631-4e3b-93ad-86ac6bf183d3",
+          "playerId": "p74b62ddd58",
+          "conflicts": [],
+          "fullName": "Sophia Walling",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2026); class of 2029. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29730787"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "pacific-grove",
       "sources": []
     },
@@ -8033,9 +8505,33 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 1 linked for 1 of the 8 players (1 SportsRecruits)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "3caf48fa-d3fe-47cd-8059-8d99b85553ef",
+          "playerId": "pb88d43e2b1",
+          "conflicts": [],
+          "fullName": "Lea Rose Padilla",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "A volleyball page (Lea Padilla, class of 2028, Watsonville, CA 95076) that names Saint Francis High School, Watsonville. The roster row has no grade, so the class year is checked as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/lea_padilla",
+              "sport": "volleyball"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "st-francis-watsonville",
       "sources": []
     },
@@ -8051,9 +8547,32 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 1 linked for 1 of the 20 players (1 SportsRecruits)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "5fc0d9ff-2976-4d36-85c8-31b33cee84ea",
+          "playerId": "pe1d0a00e02",
+          "conflicts": [],
+          "fullName": "Giselle Hernandez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The page (soccer, class of 2027, San Jose, CA 95127) names Cristo Rey San Jose Jesuit High School; class of 2027 agrees with the roster's grade 12. Found by the 2026-11-25 SportsRecruits address probe of the PCAL and PSAL rows; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/giselle_hernandez6"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "cristo-rey-san-jose",
       "sources": []
     },
@@ -8069,7 +8588,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "kipp-san-jose",
@@ -8159,7 +8678,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "summit-shasta",

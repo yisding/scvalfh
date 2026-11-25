@@ -219,6 +219,18 @@
               "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
             }
           ]
+        },
+        {
+          "name": "Annabelle Kelly",
+          "playerId": "p8e780c32c4",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27824784",
+              "classOf": 2029,
+              "note": "As \"Annie Kelly\", #3, on Mountain View High School's own girls JV soccer team on Hudl (MVHS Girl's JV Soccer, 2025-2026, on its 2025 and 2026 rosters); class of 2029. The JV list gives Annabelle Kelly with no grade; no other Kelly is on Mountain View's lists, so the short name is taken as hers (owner's decision, 2026-11-25: a row with no grade may take a page on a high school class year with no grade to confirm it). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML."
+            }
+          ]
         }
       ]
     },
@@ -439,6 +451,41 @@
               "url": "https://www.hudl.com/profile/29634294",
               "classOf": null,
               "note": "On Half Moon Bay High School's own girls soccer team on Hudl (Girls Varsity/JV Soccer); states no class year. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "pacific-collegiate",
+      "players": [
+        {
+          "name": "Kaia Gurdak",
+          "playerId": "p72c39b67e9",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/kaia_gurdak2",
+              "classOf": 2027,
+              "note": "The page (soccer, class of 2027, Santa Cruz, CA) names Pacific Collegiate School and lists De Anza Force SC-Girls' 09G ECNL team; a second page of hers, kaia_gurdak, says the same with no integrated team, so this one is linked. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "milpitas",
+      "players": [
+        {
+          "name": "Daniela Gomez",
+          "playerId": "p5c52733d80",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/daniela_gomez3",
+              "classOf": 2030,
+              "note": "A softball page (class of 2030, ZIP 95035, Milpitas, the school's own city). The JV list gives no grade, so the class year is checked as a high school class this season (owner's decision, 2026-11-25); no other tracked school has a Daniela Gomez. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "sport": "softball"
             }
           ]
         }

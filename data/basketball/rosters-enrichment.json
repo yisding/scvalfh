@@ -6105,9 +6105,99 @@
     {
       "coaches": [],
       "notes": [
-        "No hand-checked addition for this roster yet: every row shown is MaxPreps' own."
+        "No hand-checked addition for this roster yet: every row shown is MaxPreps' own.",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 4 more linked for 4 players (4 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "2934ec7f-8f02-4ef0-95b8-046ea6d3be03",
+          "playerId": "p611ed02095",
+          "conflicts": [],
+          "fullName": "Juan Agustin Gonzalez Domingo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2025-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23157722"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9bc0f26e-4259-4e21-a99a-d9e856de23a3",
+          "playerId": "p27d5e9b436",
+          "conflicts": [],
+          "fullName": "Landon Rosa",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2025-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29334398"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "dd389241-b058-4101-86bf-20c2584987fd",
+          "playerId": "pdbd6e3f0d8",
+          "conflicts": [],
+          "fullName": "Mason Seto",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2023-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25305168"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "da96fc7a-8279-4935-a8d8-4e059193bf31",
+          "playerId": "pabb93abbf2",
+          "conflicts": [],
+          "fullName": "Troy Yap",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2025-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25929827"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "silver-creek",
       "sources": []
     },
@@ -13611,7 +13701,8 @@
       "notes": [
         "Recruiting pages swept 2026-11-21 (the boys basketball recruiting round): 18 linked for 11 of the 15 players (2 NCSA, 10 Hudl, 6 claimed MaxPreps).",
         "1 row carries a grade conflict: a page that names the school states a class one year ahead of the grade MaxPreps' 2026-27 roster shows, which is last season's. The roster keeps MaxPreps' grade.",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 1 more linked for 1 player (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -13720,6 +13811,13 @@
               "note": null,
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/woodside/woodside-wildcats/athletes/hunter-taylor/?careerid=g4b39j5664eg0"
+            },
+            {
+              "classOf": 2027,
+              "note": "A baseball page (class of 2027, ZIP 94063, Redwood City, which Woodside High School serves; club Hit Club Baseball). The roster row has no grade, so the class year is checked as a high school class this season (owner's decision, 2026-11-25); no other tracked school has a Hunter Taylor. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/hunter_taylor6",
+              "sport": "baseball"
             }
           ],
           "sourceName": null
@@ -16066,9 +16164,262 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 11 linked for 11 of the 15 players (11 Hudl); 1 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "a292b018-b942-4fc3-97d1-5b610bf9c586",
+          "playerId": "p715961eba3",
+          "conflicts": [],
+          "fullName": "Adrian Nolasco",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28957839"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8d74897e-c446-453f-9c44-d6f7f2bccf3d",
+          "playerId": "pe5622b3fe6",
+          "conflicts": [],
+          "fullName": "Benjamin Salome",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28942370"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "27b19d2a-4889-47e9-b640-27c53d0fb165",
+          "playerId": "pc96ef978e2",
+          "conflicts": [],
+          "fullName": "Bradley Kistler",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29656310"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4b164316-1c07-445b-802a-a6bccb704ccc",
+          "playerId": "pfb5ecfdc5a",
+          "conflicts": [],
+          "fullName": "Bronson Jenkins",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26750344"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5964c2c1-f29f-407a-a7a5-9a27c454b93e",
+          "playerId": "pc3e10df6e7",
+          "conflicts": [],
+          "fullName": "Cadence Smith",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26700453"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "61dbfb57-3720-47af-a410-8d3c5dd88f4e",
+          "playerId": "p11dd1f5672",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/28942427",
+              "note": "The player's own Hudl profile, on Hollister High School's boys basketball team (HHS  Boys Varsity Basketball, 2025-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Donovan Diaz",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28942427"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3f379a69-a892-4954-9707-7a319fbec6de",
+          "playerId": "p453e053252",
+          "conflicts": [],
+          "fullName": "Elias Tafolla",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28942359"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a1c549bd-b10b-440f-848d-f15b8d296991",
+          "playerId": "p586ef265cd",
+          "conflicts": [],
+          "fullName": "Evan Perryman",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2024-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/19855679"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "be4b51d9-c852-46ef-9b2a-c9084649b868",
+          "playerId": "p9fbd901cf6",
+          "conflicts": [],
+          "fullName": "Kody Dickens",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2024-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/19636356"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "0fa4f3b6-837b-4d98-ae1c-48fff6b7d470",
+          "playerId": "p7773bbb1f2",
+          "conflicts": [],
+          "fullName": "Reece Kaplansky",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26703579"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f5fefdd2-cd88-4932-85c7-4749664b968a",
+          "playerId": "p6deed1297f",
+          "conflicts": [],
+          "fullName": "Rollins Bastien",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Hollister High School's own boys basketball team on Hudl (HHS  Boys Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27336062"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "hollister",
       "sources": []
     },
@@ -16084,25 +16435,387 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 7 linked for 7 of the 10 players (7 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "bd875ea9-9c1c-417b-a4f9-63f5e070960a",
+          "playerId": "p5e7776fdad",
+          "conflicts": [],
+          "fullName": "Anderson Chavez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28755012"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9f8cb1d7-fe4e-4dee-871c-122bbd511f0d",
+          "playerId": "p1d6e917432",
+          "conflicts": [],
+          "fullName": "Andrew Nimri",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21067030"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f8ce4d5d-07a2-45a1-b0e2-62a833d46621",
+          "playerId": "p4f3022dbc3",
+          "conflicts": [],
+          "fullName": "Isaiah Parvin",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28664344"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9457e91a-9e5f-4af1-9dfd-8822e6e6054c",
+          "playerId": "p0def943a0b",
+          "conflicts": [],
+          "fullName": "Jax Dalhamer",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "As \"jaxon dalhamer\", On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/22844279"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "faa19555-456d-44f2-8c24-2590aeb1fe41",
+          "playerId": "pd289342864",
+          "conflicts": [],
+          "fullName": "Manzil Poudel",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21086268"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "2ae9336f-61cf-4a6c-9ba3-830b2a3da43f",
+          "playerId": "p7f524e2ebc",
+          "conflicts": [],
+          "fullName": "Victor Chavez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29001288"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "56bed172-a976-47ed-ad7c-a0f94d8c9b6c",
+          "playerId": "pc86e13e667",
+          "conflicts": [],
+          "fullName": "Wyatt Coe",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own boys basketball team on Hudl (PGHS Boys Varsity Basketball, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21076614"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "pacific-grove",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 8 linked for 8 of the 10 players (8 Hudl); 3 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "df077dc2-b875-4171-9154-84c52d3fe19f",
+          "playerId": "p784dc77c9b",
+          "conflicts": [],
+          "fullName": "Jacob Diaz",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2025-2026; PHS Boys Junior Varisty, 2024-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). The same player has a second Hudl account (21235809, Palma's freshman team, class of 2027, #21); this one carries the varsity team. Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20016257"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ddde8bcf-d47b-4550-8f74-55b72ee1105f",
+          "playerId": "p73e6f264c5",
+          "conflicts": [],
+          "fullName": "Patrick Driscoll",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2025-2026; PHS Boys Junior Varisty, 2024-2026; PHS Boys Freshman Basketball, 2023-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21224239"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b8940e12-4087-47e5-a620-8ed76c6731f9",
+          "playerId": "p704fb3acb3",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/29006495",
+              "note": "The player's own Hudl profile, on Palma High School's boys basketball team (PHS Palma Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Ashton Marshall",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29006495"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9eae3552-96d7-4aca-adad-70a8dd42dfb5",
+          "playerId": "p0feba507a9",
+          "conflicts": [],
+          "fullName": "Braylen King",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/30709275"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e0c0dc20-d165-45df-ab31-ea499213e0c8",
+          "playerId": "pa8f24fd188",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/20011018",
+              "note": "The player's own Hudl profile, on Palma High School's boys basketball team (PHS Palma Basketball, 2023-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Chase Amaral",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2023-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20011018"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7728c016-de14-48f6-823d-101cbf5ca933",
+          "playerId": "p9da4205ade",
+          "conflicts": [],
+          "fullName": "Michael Richert",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27570914"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8fe13dde-5e42-498b-b694-1f4187c6d56c",
+          "playerId": "pc77b9b99c9",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/20010487",
+              "note": "The player's own Hudl profile, on Palma High School's boys basketball team (PHS Palma Basketball, 2025-2026; PHS Boys Freshman Basketball, 2023-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Santiago Vides",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2025-2026; PHS Boys Freshman Basketball, 2023-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20010487"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "182822c4-da4c-44a4-ac68-bde3127d3d54",
+          "playerId": "pd80b4250ca",
+          "conflicts": [],
+          "fullName": "Tai Suich",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2023-2026); states no class year. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21130049"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "palma",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "salinas",
@@ -16120,9 +16833,208 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 9 linked for 9 of the 14 players (9 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "414293f0-8e1b-442f-89ed-7a45eda279f4",
+          "playerId": "p7082b25122",
+          "conflicts": [],
+          "fullName": "Aithan Maravillo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2025-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26718752"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "66dcd195-de6c-44b4-af2b-20f4eba6eaf9",
+          "playerId": "pdb8b051463",
+          "conflicts": [],
+          "fullName": "Alfredo Torres-Alfaro",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/22685076"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5a44ac28-a8c0-4e3a-9dd7-881a3b03cb8e",
+          "playerId": "ped5f727ed3",
+          "conflicts": [],
+          "fullName": "John Barrett",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/19967535"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7a78124f-7086-4f13-abc7-1cc86b93fad2",
+          "playerId": "pcd0f4d7b3f",
+          "conflicts": [],
+          "fullName": "Jose Jacinto",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2024-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23160877"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5f4dfa78-4b8f-436a-9233-f76e041ca8c5",
+          "playerId": "p74865d4de2",
+          "conflicts": [],
+          "fullName": "Josemiguel Romero-Alvarez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29860325"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "51753727-76ba-4f87-aac7-76eb08db5dfe",
+          "playerId": "p97d120602e",
+          "conflicts": [],
+          "fullName": "Julien McKissick",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29299123"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "532d60d7-abbf-45dc-94f2-a97fe1ccb353",
+          "playerId": "p990d0b1ff6",
+          "conflicts": [],
+          "fullName": "Leonardo Zavala",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "As \"Leo Zavala\", On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2025-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29860492"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e8329eaa-c0de-47d0-aa3d-b8913a49e7b4",
+          "playerId": "p6f7169010d",
+          "conflicts": [],
+          "fullName": "Luisjose Rubrica",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29264264"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "07aaa62e-3d9f-4bf1-8f49-751c7b1cba1c",
+          "playerId": "p3b2f5e1466",
+          "conflicts": [],
+          "fullName": "Nicholas Hernandez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "As \"Nick Hernandez\", On Alisal High School's own boys basketball team on Hudl (AHS Boys' Varsity Basketball, 2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/22620783"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "alisal",
       "sources": []
     },
@@ -16138,25 +17050,329 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 13 linked for 12 of the 17 players (12 Hudl, 1 SportsRecruits)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "2065e62a-5150-4d05-94d8-f3f13bbe81be",
+          "playerId": "peb65e725d6",
+          "conflicts": [],
+          "fullName": "Dean Darnell",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2024-2026; MVC Boys Middle School Basketball, 2022); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18703480"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5b555a12-c4cf-431b-9615-92bd81d65e22",
+          "playerId": "p179bff7bc9",
+          "conflicts": [],
+          "fullName": "Emilian Tenwinkel",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24054394"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "bae847ad-e275-442f-a1f7-fc2806ddcacb",
+          "playerId": "p6d1e3edd67",
+          "conflicts": [],
+          "fullName": "Gabriel White",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2025-2026; MVC Boys Middle School Basketball, 2023-2025); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21469018"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "c8ba6d6a-3d95-4787-bb52-85b2fcb94562",
+          "playerId": "pe75219384f",
+          "conflicts": [],
+          "fullName": "James Tipton",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2024-2026; MVC Boys JV Basketball, 2024-2025; MVC Boys Middle School Basketball, 2022-2025); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18703479"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ddff57a7-ac3f-4a92-b410-dd5edc3a70ed",
+          "playerId": "p04a8876ed5",
+          "conflicts": [],
+          "fullName": "Jerry Arceo Jr.",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2024-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24793924"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e10aa091-e0a0-4b6d-9e92-7218e591faf0",
+          "playerId": "pce48a80e1f",
+          "conflicts": [],
+          "fullName": "Liam Moller",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2025-2026; MVC Boys JV Basketball, 2025); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28415585"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fcc227c3-4edb-44fd-99d1-a589b7721363",
+          "playerId": "pd66a595e3f",
+          "conflicts": [],
+          "fullName": "Luke White",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2025-2026; MVC Boys Middle School Basketball, 2022-2025); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18703473"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f6384403-2e5f-494d-8f22-b2317983073a",
+          "playerId": "pfd957ab075",
+          "conflicts": [],
+          "fullName": "Matteo Vidal",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2023-2026; MVC Boys Middle School Basketball, 2022); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18703472"
+            },
+            {
+              "classOf": 2027,
+              "note": "The page (basketball, class of 2027, Gilroy, CA 95020) lists Monte Vista Christian Boys Basketball (Watsonville), Varsity; class of 2027 agrees with the roster's grade 12. Club: Team Elite 3SSB. Found by the 2026-11-25 SportsRecruits address probe of the PCAL and PSAL rows; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/matteo_vidal"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1ba94896-6c04-42b4-91e3-1492a40d2b0b",
+          "playerId": "p28a94742e9",
+          "conflicts": [],
+          "fullName": "Niel Rader",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2024-2026; MVC Boys JV Basketball, 2024-2025; MVC Boys Middle School Basketball, 2022-2025); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18703484"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "799317b4-4016-494e-a2b8-fc1ca8f689ba",
+          "playerId": "p10423a00e1",
+          "conflicts": [],
+          "fullName": "Noah Komrosky",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2025-2026; MVC Boys JV Basketball, 2023); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21385988"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5b696aa3-eee6-42ca-92fa-3967f8b6937f",
+          "playerId": "p1715d46ccc",
+          "conflicts": [],
+          "fullName": "Santino Matteucci",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2024-2026; MVC Boys JV Basketball, 2024-2025; MVC Boys Middle School Basketball, 2022); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18703482"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f1c0f230-0b5f-4e8c-87c7-1bced11cecb2",
+          "playerId": "p445048024a",
+          "conflicts": [],
+          "fullName": "Seth Estorga",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Monte Vista Christian High School's own boys basketball team on Hudl (MVC Boys' Varsity Basketball, 2023-2026; MVC Boys JV Basketball, 2024-2025; MVC Boys Middle School Basketball, 2022-2025); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18199408"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "monte-vista-christian",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 1 linked for 1 of the 1 players (1 Hudl); 1 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "e42e7645-b31c-44ed-bba5-329b5cb92558",
+          "playerId": "padc7363324",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/21173413",
+              "note": "The player's own Hudl profile, on North Salinas High School's boys basketball team (NSHS Boys' Varsity Basketball, 2024-2026; NSHS Boys' Freshman Basketball, 2023-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Jayden Guevara",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On North Salinas High School's own boys basketball team on Hudl (NSHS Boys' Varsity Basketball, 2024-2026; NSHS Boys' Freshman Basketball, 2023-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21173413"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "north-salinas",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "rancho-san-juan",
@@ -16165,27 +17381,636 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 11 linked for 11 of the 14 players (11 Hudl); 9 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "6a32ec99-89e4-4f8a-8f25-42b6ea2eb28d",
+          "playerId": "p546ac9db62",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/28838001",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2026; SHS Boys' JV Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Adyn Gomez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2026; SHS Boys' JV Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28838001"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1d64700a-7df6-4e71-a3b4-5b3d9fe5d744",
+          "playerId": "p6c6d9453b9",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/28814075",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Ayden Urquidez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28814075"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ec69ec31-a789-4b1e-af52-6dd3b0cd65e6",
+          "playerId": "p600a5ba80c",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "other": "10",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/23521902",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys' JV Basketball, 2025-2026; SHS Boys Varsity Basketball, 2025-2026), states class of 2029; MaxPreps' 2026-27 roster shows grade 9, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Brandon Medrano",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys' JV Basketball, 2025-2026; SHS Boys Varsity Basketball, 2025-2026); the page states class of 2029, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23521902"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7cae7e06-14cb-4c25-8534-1f04c60af06e",
+          "playerId": "p316594f858",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/22758849",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2024-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Calvin Deshazo Jr.",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2024-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/22758849"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9f939dde-855e-4c5c-b928-474f981ed4ef",
+          "playerId": "p1fab464439",
+          "conflicts": [],
+          "fullName": "Jaden Pereira",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys' JV Basketball, 2025-2026); states no class year. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28837012"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5a1d1a7a-ab5b-4708-bfd3-0e94b21840ef",
+          "playerId": "p4fcdbe12b8",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/24886194",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2024-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Jeronimo Morales",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2024-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24886194"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5574a0c0-5505-4701-8102-2ad1409d19ba",
+          "playerId": "p611d0bf804",
+          "conflicts": [],
+          "fullName": "Jose Estrada",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2024-2026; SHS Boys' JV Basketball, 2023-2024); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21284312"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6e5a748e-e04e-4a93-b866-f24b410d8185",
+          "playerId": "p99bb874ed9",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/18191492",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2024-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Marcos Landa",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2024-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/18191492"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e091d18a-b598-4175-8112-b8acffc72b31",
+          "playerId": "p075e22dedd",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/20164217",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2023-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Pedro Morales Jr.",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2023-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20164217"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b474c0bb-7acd-42a9-8983-75b8c8366327",
+          "playerId": "p51f5d5f423",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "other": "10",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/28836998",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys' JV Basketball, 2025-2026; SHS Boys Varsity Basketball, 2025-2026), states class of 2029; MaxPreps' 2026-27 roster shows grade 9, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Tristan Garcia",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys' JV Basketball, 2025-2026; SHS Boys Varsity Basketball, 2025-2026); the page states class of 2029, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28836998"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ea8aa2b3-9f52-4bcc-8dfa-4e983ab3540a",
+          "playerId": "p25da8f56f9",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/22675393",
+              "note": "The player's own Hudl profile, on Soledad High School's boys basketball team (SHS Boys Varsity Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Zachariah Hunzie",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Soledad High School's own boys basketball team on Hudl (SHS Boys Varsity Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/22675393"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "soledad",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 10 linked for 10 of the 12 players (10 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "a4c3030d-6023-4055-a549-83bd3cebf1d9",
+          "playerId": "pc45e467e59",
+          "conflicts": [],
+          "fullName": "Angel Serrano-Ruiz",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2025-2026; SF Boys JV basketball, 2023-2024; SF Boys Freshmen Basketball, 2023-2024); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24741825"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "545e8918-b29c-4b95-a2c0-39106f2415fd",
+          "playerId": "p249d61b44c",
+          "conflicts": [],
+          "fullName": "Benjamin Rose",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys JV basketball, 2025-2026; SF Boys Varsity Basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27168093"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "055a4f46-93cb-4a1c-93b1-4a272168001c",
+          "playerId": "p51aac69509",
+          "conflicts": [],
+          "fullName": "Christopher Bocanegra",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2025-2026; SF Boys JV basketball, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25185989"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "056b7443-55ab-40b5-ad77-1411e155572f",
+          "playerId": "p819ad9bbe0",
+          "conflicts": [],
+          "fullName": "Edward Torres",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2025-2026; SF Boys Freshmen Basketball, 2023-2024; SF Boys JV basketball, 2023-2024); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24957110"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "cedf8c77-3759-4d78-b111-f689e3299fed",
+          "playerId": "p0bff7e429e",
+          "conflicts": [],
+          "fullName": "Francis John Iguban",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2026; SF Boys JV basketball, 2025-2026; SF Boys Freshmen Basketball, 2023-2024); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23625294"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "15aac5b9-608b-4f58-87eb-307422ad781e",
+          "playerId": "p9776746d90",
+          "conflicts": [],
+          "fullName": "Isaiah Villalobos",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2024-2026; SF Boys JV basketball, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24926856"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fbed201d-85aa-43fb-9554-154595190a70",
+          "playerId": "p633733ed47",
+          "conflicts": [],
+          "fullName": "Jayvon Burns",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29052949"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a0bde748-c141-400f-978a-65815c27c99d",
+          "playerId": "p48caa5b633",
+          "conflicts": [],
+          "fullName": "Johnny Jordan",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2025-2026; SF Boys Freshmen Basketball, 2023-2024); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25186213"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4d00d6a9-0601-414d-b533-2336335156f8",
+          "playerId": "pe0c8e0b201",
+          "conflicts": [],
+          "fullName": "Santiago Zermeno",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2026; SF Boys JV basketball, 2025-2026); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27168105"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "af5cbd4f-7256-4111-8c48-e9db052b52cb",
+          "playerId": "p3c42106e13",
+          "conflicts": [],
+          "fullName": "Tahj Ibrahim",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On St. Francis High School (Watsonville)'s own boys basketball team on Hudl (SF Boys Varsity Basketball, 2025-2026; SF Boys JV basketball, 2023-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/19949209"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "st-francis-watsonville",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 2 linked for 2 of the 8 players (2 Hudl); 1 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "49102061-17a1-4252-93af-3ae4dd37e85e",
+          "playerId": "pe36a911536",
+          "conflicts": [],
+          "fullName": "Alonso Pena",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "On Watsonville High School's own boys basketball team on Hudl (WHS Boys' Varsity Basketball, 2023-2026); states no class year. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21369200"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "403f1b62-8d27-4c1f-944e-0e65037505dd",
+          "playerId": "pf6a022ac8b",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/19518757",
+              "note": "The player's own Hudl profile, on Watsonville High School's boys basketball team (WHS Boys' Varsity Basketball, 2023-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Leeandro Serrano",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Watsonville High School's own boys basketball team on Hudl (WHS Boys' Varsity Basketball, 2023-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/19518757"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "watsonville",
       "sources": []
     },
@@ -16210,9 +18035,172 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 6 linked for 6 of the 9 players (6 Hudl); 3 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "a06d35dd-416b-40d6-93a5-92c4f7d0f94a",
+          "playerId": "p8e42e41dbc",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/25061056",
+              "note": "The player's own Hudl profile, on Greenfield High School's boys basketball team (GHS Boys Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Alexander Avila",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Greenfield High School's own boys basketball team on Hudl (GHS Boys Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25061056"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "bf467c2f-6868-4feb-b609-9aebb4d04100",
+          "playerId": "pc753ec4549",
+          "conflicts": [],
+          "fullName": "Jose Villa",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "On Greenfield High School's own boys basketball team on Hudl (GHS Boys Basketball, 2026); class of 2030, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/30717521"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1491bd6c-1573-445c-9a5c-6ccc6bb7b9e3",
+          "playerId": "pd18beaee31",
+          "conflicts": [],
+          "fullName": "Nathaniel Trujillo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Greenfield High School's own boys basketball team on Hudl (GHS Boys Basketball, 2024-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/24283815"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f76b2ff9-b29e-4971-bd10-3cfbc1620b6a",
+          "playerId": "pd76fec2af0",
+          "conflicts": [],
+          "fullName": "Sebastian Pizano",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Greenfield High School's own boys basketball team on Hudl (GHS Boys Basketball, 2025-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/22722719"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9978fb35-c2f2-4392-8951-3d6e3f913138",
+          "playerId": "pbb1e0fe405",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/29523695",
+              "note": "The player's own Hudl profile, on Greenfield High School's boys basketball team (GHS Boys Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Victor Martinez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Greenfield High School's own boys basketball team on Hudl (GHS Boys Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29523695"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b8a77a33-03dd-4a72-8ca9-c800abf35463",
+          "playerId": "p0f2b59df7f",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/16697567",
+              "note": "The player's own Hudl profile, on Greenfield High School's boys basketball team (GHS Boys Basketball, 2025-2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Xechariah Banuelos",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Greenfield High School's own boys basketball team on Hudl (GHS Boys Basketball, 2025-2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/16697567"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "greenfield",
       "sources": []
     },
@@ -16246,7 +18234,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "seaside",
@@ -16255,9 +18243,325 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 15 linked for 14 of the 14 players (14 Hudl, 1 SportsRecruits)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "4d202342-67eb-4fae-bfca-7529095191d0",
+          "playerId": "p098b1b75fc",
+          "conflicts": [],
+          "fullName": "Alex Mims",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2026; RLS Boys JV Basketball, 2025-2026; RLS Boys Freshman Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121877"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a4ba476a-1fca-467c-84c0-4b0f67626ca6",
+          "playerId": "paa0c569ad7",
+          "conflicts": [],
+          "fullName": "Arenzo Subowo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27747771"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "bbdbef11-2587-4a9a-a75e-2ac47a909b7f",
+          "playerId": "pb0d2134545",
+          "conflicts": [],
+          "fullName": "Barak De La Rosa",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2024-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121858"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "38d8e7c3-981a-4035-b2a1-e2444ca3bfc5",
+          "playerId": "p1a9df54667",
+          "conflicts": [],
+          "fullName": "Calvin Etcheverry",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121902"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "32808076-b544-4efc-a1f8-3939453f0b12",
+          "playerId": "p710f428991",
+          "conflicts": [],
+          "fullName": "Cody Thacher",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121900"
+            },
+            {
+              "classOf": 2027,
+              "note": "A swimming and diving page (class of 2027) that names Stevenson School as \"Stevenson Pirates\", Pebble Beach; class of 2027 agrees with the roster's grade 12. Found by the 2026-11-25 SportsRecruits address probe of the PCAL and PSAL rows; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/cody_thacher",
+              "sport": "swimming-and-diving"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3eb62e16-5fd9-40b6-9359-a7c31a964683",
+          "playerId": "p326f2efbff",
+          "conflicts": [],
+          "fullName": "Connor Aeschliman",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2026; RLS Boys Freshman Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121864"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "243284fe-1e0c-42f7-bc23-e09d50c2f85f",
+          "playerId": "pb5fd1ece65",
+          "conflicts": [],
+          "fullName": "Divij Anderson-Santibanez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/26710581"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d3d3d97e-9ea7-4d42-910c-6f98fd9794ec",
+          "playerId": "p96a4f97538",
+          "conflicts": [],
+          "fullName": "Jerry Ding",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33053564"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8e21c15d-331b-4d38-926d-fd968247daf2",
+          "playerId": "p0b215dd6d9",
+          "conflicts": [],
+          "fullName": "Lincoln Clymo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026; RLS Boys Freshman Basketball, 2024-2026; RLS Boys JV Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/16922332"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "cbde858b-17c9-4cfa-9422-6393353714bb",
+          "playerId": "pc4fb3f0a39",
+          "conflicts": [],
+          "fullName": "Micah Taylor",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2026; RLS Boys JV Basketball, 2025-2026; RLS Boys Freshman Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25103528"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "8a81a262-5172-4663-83b0-37cd35c4a501",
+          "playerId": "pe80751bf89",
+          "conflicts": [],
+          "fullName": "Sean Mathieson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026; RLS Boys JV Basketball, 2025-2026); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121901"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fc8b09d0-8478-47fe-a705-01e4b10f3b48",
+          "playerId": "pc2c4ffa48b",
+          "conflicts": [],
+          "fullName": "Tiger Li",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2026; RLS Boys JV Basketball, 2025-2026; RLS Boys Freshman Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23121855"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f22b4443-bf8c-45bc-8fb7-3d734d322e48",
+          "playerId": "pf244c033d7",
+          "conflicts": [],
+          "fullName": "Topher Moan",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/30474588"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d0cc5e2e-ad5b-4809-b0e6-0d396a93269b",
+          "playerId": "p8d27cadf5b",
+          "conflicts": [],
+          "fullName": "Weston Bailey",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Stevenson School's own boys basketball team on Hudl (RLS Boys Varsity Basketball, 2025-2026; RLS Boys JV Basketball, 2025-2026; RLS Boys Freshman Basketball, 2024-2026); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25103524"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "stevenson",
       "sources": []
     },
@@ -16291,7 +18595,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "york",
@@ -16309,7 +18613,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "chartwell",
@@ -16318,7 +18622,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "kirby",
@@ -16327,16 +18631,241 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 7 linked for 7 of the 8 players (7 Hudl); 7 rows carry a rosterBehind grade conflict."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "8a97d7f3-1c28-4593-a817-4f7767b15155",
+          "playerId": "p46a91955fc",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "other": "10",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/27631375",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2026), states class of 2029; MaxPreps' 2026-27 roster shows grade 9, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Charlie Mills",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2026); the page states class of 2029, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27631375"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "dd27e5ac-1ec8-4e8d-9166-97d86443b40c",
+          "playerId": "pfba96dac5f",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/27631343",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Ely Smith",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27631343"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5256de34-fc76-4d9f-a2c2-9c235609a42f",
+          "playerId": "p183b45e94f",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/33150403",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Hayden Perkins",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33150403"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5d356c8e-a077-4524-a762-fbe2b97198ae",
+          "playerId": "pddb2f5887c",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "other": "12",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/19591508",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2023-2026), states class of 2027; MaxPreps' 2026-27 roster shows grade 11, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Jacob Kim",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2023-2026); the page states class of 2027, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/19591508"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f54dd9c5-1148-4c53-859f-0a3d78521b8e",
+          "playerId": "pcd91ac27fd",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "other": "11",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/23132538",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2026), states class of 2028; MaxPreps' 2026-27 roster shows grade 10, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Reese Rikalo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2026); the page states class of 2028, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23132538"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d384c21f-aa87-4dce-abe6-e63b7e8b4be7",
+          "playerId": "p091f061bc0",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "other": "10",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/27631361",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2026), states class of 2029; MaxPreps' 2026-27 roster shows grade 9, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Seth Ramones",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2026); the page states class of 2029, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27631361"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "86ffba52-bb15-4094-bb0c-14b0178f6940",
+          "playerId": "p80ab21b78b",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "other": "10",
+              "kind": "hudl",
+              "source": "https://www.hudl.com/profile/27631404",
+              "note": "The player's own Hudl profile, on Trinity Christian High School (Monterey)'s boys basketball team (TCHS Boys Varsity Basketball, 2026), states class of 2029; MaxPreps' 2026-27 roster shows grade 9, last season's (read 2026-11-25).",
+              "rosterBehind": true
+            }
+          ],
+          "fullName": "Wyatt Kay",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Trinity Christian High School (Monterey)'s own boys basketball team on Hudl (TCHS Boys Varsity Basketball, 2026); the page states class of 2029, a grade above the one MaxPreps' 2026-27 roster still shows (last season's: see the row's grade conflict). Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27631404"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "trinity-christian",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "design-tech",
@@ -16345,7 +18874,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "oceana",
@@ -16354,7 +18883,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "summit-shasta",
@@ -16363,16 +18892,83 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 3 linked for 3 of the 13 players (3 Hudl)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "d56eac96-0d63-4b5b-baa4-46a8b40c4751",
+          "playerId": "p064b458aa1",
+          "conflicts": [],
+          "fullName": "Conrad Schaper",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Thomas More High School's own boys basketball team on Hudl (TMHS Boys Varsity Basketball, 2024-2025); class of 2028, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25060467"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4ddc9c19-f82f-49b2-85d0-855e1de7a769",
+          "playerId": "pc415dd8543",
+          "conflicts": [],
+          "fullName": "Jason Schaper",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Thomas More High School's own boys basketball team on Hudl (TMHS Boys Varsity Basketball, 2025); class of 2027, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28958675"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d15e05a7-da78-40c5-b950-e4f60771a31a",
+          "playerId": "pdbde44db7f",
+          "conflicts": [],
+          "fullName": "Marek Schaper",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Thomas More High School's own boys basketball team on Hudl (TMHS Boys Varsity Basketball, 2025); class of 2029, which agrees with the roster. Found by the 2026-11-25 Hudl team-roster sweep of the PCAL and PSAL teams; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28958199"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "thomas-more",
       "sources": []
     },
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "basis-silicon-valley",
@@ -16381,7 +18977,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "university-prep",
@@ -16390,9 +18986,32 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 1 linked for 1 of the 15 players (1 SportsRecruits)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "9d139750-59bd-437e-b44a-111c3f2dd932",
+          "playerId": "p3183dc9060",
+          "conflicts": [],
+          "fullName": "Matthew Nevarez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "The page (basketball, class of 2030) gives ZIP 95121, San Jose, the school's own city; class of 2030 agrees with the roster's grade 9, and no other tracked school has a Matthew Nevarez. Found by the 2026-11-25 SportsRecruits address probe of the PCAL and PSAL rows; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/matthew_nevarez2"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "cristo-rey-san-jose",
       "sources": []
     },
@@ -16408,7 +19027,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "nueva",
@@ -16426,7 +19045,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "north-valley-baptist",
@@ -16435,7 +19054,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "kehillah",
@@ -16444,7 +19063,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "kipp-esperanza",
@@ -16471,7 +19090,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "pescadero",
@@ -16507,7 +19126,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "summit-tahoma",
@@ -16525,7 +19144,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "mid-peninsula",

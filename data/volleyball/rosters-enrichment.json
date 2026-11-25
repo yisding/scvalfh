@@ -5916,7 +5916,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-13 and 2026-11-14 (README, \"Girls volleyball: recruiting\"): 17 linked for 13 of the 15 players (2 NCSA, 2 SportsRecruits, 8 Hudl, 5 claimed MaxPreps).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 1 more linked for 1 player (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -6159,6 +6160,12 @@
               "note": null,
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/san-jose/willow-glen-rams/athletes/bella-flynn/?careerid=iuhkrvqv7rlue"
+            },
+            {
+              "classOf": 2027,
+              "note": "The page (volleyball, class of 2027) gives no school or hometown and lists City Beach Volleyball (Fremont), the club she is tied to; class of 2027 is her Hudl page's too. The roster row has no grade (owner's decision, 2026-11-25: a club tie stands in for the hometown on such a row). Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/bella_flynn2"
             }
           ],
           "sourceName": null
