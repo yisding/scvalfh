@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 86,
     "nameOnly": 568,
-    "observations": 14842,
+    "observations": 14854,
     "players": 7034,
     "review": 64,
     "stintConflicts": 161,
@@ -70949,6 +70949,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "32",
+              "name": "O. Chan",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -89112,6 +89117,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "3",
+              "name": "M. Mendoza",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -102204,6 +102214,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "33",
+              "name": "J. Zepeda",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "src": "profile",
@@ -109327,6 +109342,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "R. Bangera",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -140576,6 +140596,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "12",
+              "name": "A. Lee",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "maxpreps",
               "src": "profile",
@@ -150031,6 +150056,11 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "5",
+              "name": "E. Wong",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2030,
@@ -161965,6 +161995,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "N. Bangera",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2029,
@@ -234441,6 +234476,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "11",
+              "name": "R. Chen",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "src": "profile",
@@ -296548,6 +296588,11 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "13",
+              "name": "N. Zhu",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2030,
@@ -384591,6 +384636,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "22",
+              "name": "J. Patel",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2029,
               "kind": "maxpreps",
               "src": "profile",
@@ -387119,6 +387169,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "30",
+              "name": "D. Villeda",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "ncsa",
               "src": "profile",
@@ -387819,6 +387874,11 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "22",
+              "name": "J. Olmos",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [

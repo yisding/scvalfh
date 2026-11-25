@@ -1948,8 +1948,8 @@ What the research did not reach, so that an absence here says little:
     (ECNL's member clubs were read on 2026-11-22 from the leagues' own team lists, "Girls soccer: club rosters").
     Clubs named on a player's page with no record, so the tie is not shown: El Camino FC, Alum Rock FC, Hawaii
     Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon Valley Soccer Club. The rosters of NorCal Premier's own
-    leagues and Cal North were not read, and Girls Academy's could not be (2026-11-25; "Girls soccer: club
-    rosters"): only ECNL's three Northern California leagues are kept.
+    leagues and Cal North were not read. ECNL's three Northern California leagues and Girls Academy's Northwest
+    conference are kept ("Girls soccer: club rosters"); GA's Aspire tier is not.
   - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
     San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
     feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
@@ -1979,10 +1979,12 @@ gives a marked row the corrected grade, until the conflict is removed (its `kept
 `data/soccer/club-rosters.json` is a kept copy of the public team rosters of the three Northern California girls
 leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's two conferences here, NorCal (NorCal
 Premier's) and Golden State (the second teams of the 12 ECNL Northern Cal clubs), the GU14 through GU18/19 age
-groups. It is there so that a high school roster can be compared with the club rosters the day a school posts it,
-without reading the leagues' pages again. Read on 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL
-teams of 12 clubs, 139 NorCal Regional League teams of 43, 57 Golden State teams of the 12 ECNL clubs). Golden State
-was added that day; the other two leagues were first read on 2026-11-22.
+groups; and, kept by hand since 2026-11-25, the Girls Academy teams U14 through U19 of the eight clubs in GA's
+Northwest conference (league `ga`, below). It is there so that a high school roster can be compared with the club
+rosters the day a school posts it, without reading the leagues' pages again. ECNL's three leagues, read on
+2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL teams of 12 clubs, 139 NorCal Regional League teams of
+43, 57 Golden State teams of the 12 ECNL clubs); Golden State was added that day, the other two leagues first read on
+2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**. In all 294 teams, 4,861 players.
 
 ```bash
 pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
@@ -2037,24 +2039,48 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   when MaxPreps posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of
   the name; 5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three
   players at clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed
-  the rule, and `clubs.json` lists no JV ties in any case.
-- **Girls Academy: no public roster found (2026-11-25).** GA schedules on GotSport, not Athlete One, so
-  `fetch-club-rosters` cannot simply take another event id: the league is GotSport event 56497
-  (`system.gotsport.com/org_event/events/56497`), its Aspire tier 56498, both linked from
-  girlsacademyleague.com/events. The NorCal clubs play in the GA **Northwest** conference, U13 through U19: Almaden
-  FC, Silicon Valley SA, South Valley Surf, 1974 Newark FC, San Francisco Glens, Lamorinda SC, Sacramento United and
-  Clovis Crossfire. Aspire's NorCal division (Palo Alto SC, Lamorinda, Rocklin FC, Woodland SC) is U13-U15 only.
-  GotSport's club pages (`…/56497/clubs/<id>`) load as plain HTML and list a club's teams by age group, but no
-  players; its team and schedule pages (`…/schedules?team=<id>`) stop at a reCAPTCHA ("PLEASE VERIFY TO CONTINUE")
-  and were not read past it. GotSport ties GA roster access to its college coach registration, so the rosters are
-  probably not public in any case. Also checked, with no GA roster found: the 2025 Winter Showcase event guide
-  (PDF); the home pages of the eight Northwest clubs (Lamorinda's listed site answered 404); svsa.org's teams page,
-  Sacramento United's `/ga/` page and Almaden's `/roster` (its USL2 men's team). Pages deeper in the clubs' sites
-  (Clovis Crossfire's GA page, South Valley Surf's team sites) were not read. SportsRecruits team pages carry GA rosters for some clubs
-  elsewhere (public, name and class year), but none of the eight was found there. So GA ties still come only from
-  player pages under the clubs' linking rule ("2026 Almaden FC (GA)", "U19 GA SVSA" and others in `clubs.json`).
-  Newark 1974 FC, named on Dhiaan Plaha's (Santa Clara) NCSA page, still has no record: the page's club line is not
-  kept in the repo, and NCSA answered 403 to an automated read that day, so the tie was not written.
+  the rule, and `clubs.json` listed no JV ties then (it does since 2026-11-25, below).
+- **Girls Academy (league `ga`), read on 2026-11-25.** GA schedules on GotSport, not Athlete One (league event 56497,
+  Aspire 56498), and GotSport's own event pages (`system.gotsport.com`) stop at a reCAPTCHA, which was not got
+  round. Its public team rosters are on **GotSport Rankings** instead (`rankings.gotsport.com/teams/<id>/roster`, a
+  script-drawn page). The NorCal clubs play in GA's Northwest conference: Almaden FC, Silicon Valley SA, 1974 Newark
+  FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire (Aspire's NorCal
+  division is U13-U15 only, and not kept). Each club's GA teams U14 through U19 were found with the Rankings site's own
+  team search (Female, the age group, the club's name) and each roster read in a local Chromium as the page displays
+  it: **38 teams, 440 rows**. The owner sent the Almaden, Silicon Valley SA and Newark U19 and U17 pages, and the U19
+  rows the owner pasted are the rows read. Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out:
+  Silicon Valley SA's "2012G GA2" and South Valley Surf's "GU18/19", not named as GA league teams. Two pages list no
+  player. This copy is kept by hand: `fetch-club-rosters` does not read it, and carries the league and its teams over
+  when it rewrites the file. To refresh it, repeat the search and the reads, and rewrite the `ga` teams.
+- **What a GA roster gives, and the birth-year tier.** A name and a position ("No Position Listed" throughout); no
+  class year, jersey or date. So a GA roster is not known to be one season's: it reads like everyone the team has
+  carried (Silicon Valley SA's GA 08/09 has 64 rows; Almaden's names a tracked class-of-2029 player). Each team keeps
+  its birth years instead (`birthYears`, from its name: "GA 08/09" is 2008/09), and its rows are compared in a tier of
+  their own: rule 2 reads "the row's class year is one the team's birth years admit" (California's September 1
+  cutoff: 08/09 admits the classes of 2026-2028, `birthYearClassYears`), and rules 3-5 hold within the tier, so an ECNL
+  row at another club neither blocks a GA match nor is blocked by one. A GA tie resting on a roster alone is medium
+  confidence and its status unknown (the page dates nothing). GotSport's club ids are keyed `gotsport-<id>` in
+  `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped. South Valley
+  Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the
+  schools. Their rows are compared but never linked.
+- **Linked on 2026-11-25.** *Girls Academy:* **29 ties cite a GA roster** (32 entries on 8 team pages, 14 schools):
+  22 new, resting on a roster alone (Almaden FC 16 and Silicon Valley SA 13 in all), and 7 ties other pages had
+  already made (Rylan Hickey's and Madison McDougall's to Almaden FC, Gianna Armanini's to Silicon Valley SA among
+  them), which gain the roster and keep their status. San Francisco Glens' rows matched no tracked player. A separate
+  run opened the 8 cited pages in Chromium and found all 32 cited rows as displayed. Not linked: Tatum Hadfield (Valley
+  Christian), on Newark's GA 10/11 only; 2 JV rows with no grade on Almaden's GA 09/10. *ECNL:* the MaxPreps refresh
+  of 2026-11-24/25 brought 9 more varsity rows the kept ECNL rosters match, at Pioneer and Notre Dame San Jose: 6 new
+  ties and 3 that gain the roster and now read current for 2026-27 (15 entries on 13 team pages; a separate run
+  pressed Roster on the 13 pages and found all 15 rows). In all, **172 varsity ties cite a league roster** (143 ECNL,
+  29 GA, at 25 schools).
+- **JV ties, from 2026-11-25.** A JV row's ties go in `clubs.json`'s `jvAffiliations`, and join the school's MaxPreps
+  JV roster (`data/soccer/jv-rosters.json`): every soccer JV player is on that list rather than on a JV row of the
+  varsity roster, so the loader now joins a JV tie to a JV-list row whose player is not on the varsity roster
+  (`withJvListRows` in `lib/players/clubs.ts`). `compare-club-rosters` reads a JV row's ties from there.
+  **4 JV ties cite a roster**: Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to
+  De Anza Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27 (5 entries on 3 team
+  pages, each found again on its Roster dialog). Nothing renders a JV tie yet. The player pages were not searched for
+  JV rows; 14 JV rows with no grade whose name is on a roster link when MaxPreps posts the grade.
 
 ### Soccer and basketball: last season's commitments
 
