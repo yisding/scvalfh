@@ -2076,11 +2076,14 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
 - **JV ties, from 2026-11-25.** A JV row's ties go in `clubs.json`'s `jvAffiliations`, and join the school's MaxPreps
   JV roster (`data/soccer/jv-rosters.json`): every soccer JV player is on that list rather than on a JV row of the
   varsity roster, so the loader now joins a JV tie to a JV-list row whose player is not on the varsity roster
-  (`withJvListRows` in `lib/players/clubs.ts`). `compare-club-rosters` reads a JV row's ties from there.
-  **4 JV ties cite a roster**: Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to
-  De Anza Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27 (5 entries on 3 team
-  pages, each found again on its Roster dialog). Nothing renders a JV tie yet. The player pages were not searched for
-  JV rows; 14 JV rows with no grade whose name is on a roster link when MaxPreps posts the grade.
+  (`withJvListRows` in `lib/players/clubs.ts`). `compare-club-rosters` reads a JV row's ties from there. **4 JV ties
+  cite a roster**: Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to De Anza
+  Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27 (5 entries on 3 team pages,
+  each found again on its Roster dialog). JV ties are shown in every sport since 2026-11-25: a club line on the team
+  page's JV roster (found by name, as the JV profiles are), the club page's player list and counts ("JV" leads the
+  row's facts; the pages then say they name players from the "varsity rosters and JV lists"), and /recruiting. The
+  player pages were not searched for JV rows; 14 JV rows with no grade whose name is on a roster link when MaxPreps
+  posts the grade.
 
 ### Soccer and basketball: last season's commitments
 

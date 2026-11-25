@@ -44,8 +44,8 @@ export function ClubSources({ view }: ClubSourcesProps) {
     <div>
       <p className="sx-note mt-0 max-w-prose">
         {view.rosterPages.length > 0
-          ? `The club’s own rosters list many more players than this page does. Only players on the ${view.trackedTeams} varsity rosters this site tracks are named here; the club’s rosters are linked below instead.`
-          : `We found no public roster page naming this club’s players. Only players on the ${view.trackedTeams} varsity rosters this site tracks are named here.`}
+          ? `The club’s own rosters list many more players than this page does. Only players on the ${view.trackedTeams} ${view.rosters} this site tracks are named here; the club’s rosters are linked below instead.`
+          : `We found no public roster page naming this club’s players. Only players on the ${view.trackedTeams} ${view.rosters} this site tracks are named here.`}
       </p>
       <div className="sx-auto mt-4">
         {view.rosterPages.length > 0 ? (

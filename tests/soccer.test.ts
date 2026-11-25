@@ -269,6 +269,17 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
     const raw = JSON.parse(readFileSync('data/soccer/clubs.json', 'utf8')) as { jvAffiliations: unknown[] };
     expect(raw.jvAffiliations.length).toBeGreaterThan(0);
     expect(file.jvAffiliations).toHaveLength(raw.jvAffiliations.length);
+    // Shown: the JV roster's club line (found by name) and the club page, each JV player marked JV.
+    const line = (team: string, name: string) =>
+      m.clubView.jvPlayerClubGroups(team as never, name).flatMap((g) => g.clubs.map((c) => `${g.label}: ${c.name}`));
+    expect(line('branham', 'Samantha Erickson')).toEqual(['Club: Force']);
+    expect(line('willow-glen', 'Lelie Vatton Raclot')).toEqual(['Club: Bay Area Surf']);
+    expect(line('branham', 'Nobody Here')).toEqual([]);
+    const force = m.clubView.buildClubPageView('de-anza-force')!;
+    const jvRows = force.groups.flatMap((g) => g.rows).filter((r) => r.facts[0] === 'JV');
+    expect(jvRows.map((r) => r.name).sort()).toEqual(['Isabel Ramirez-Ortega', 'Samantha Erickson', 'Taylor Laughter']);
+    for (const r of jvRows) expect(r.school.href).toMatch(/#jv-roster$/);
+    expect(m.clubView.rostersWords()).toBe('varsity rosters and JV lists');
     // The areas searched for every club in the 2026-11-21 round (lib/players/clubs.ts): not the Central Coast.
     expect(m.clubs.SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay']);
     for (const r of m.clubs.SEARCHED_REGIONS) expect(m.clubsSchema.CLUB_REGIONS).toContain(r);

@@ -209,12 +209,18 @@ export function getClubSlugs(): string[] {
 }
 
 /**
- * The ties for players on JV rows, in file order. They are kept out of every other listing here
- * (the club pages, the club counts, the roster's club lines), which list varsity rows only;
- * getAffiliatedPlayer resolves their rows like any other tie's.
+ * The ties for players on JV rows, in file order. The listings above (getClubAffiliations,
+ * getTeamClubAffiliations, getPlayerClubs) hold varsity rows only; the pages list these beside them
+ * (components/clubs/club-view.ts: a club page's players and counts, the JV roster's club line), each
+ * marked JV. getAffiliatedPlayer resolves their rows like any other tie's.
  */
 export function getJvClubAffiliations(): readonly ClubAffiliation[] {
   return file.jvAffiliations;
+}
+
+/** The JV ties to one club, in file order; [] for an unknown slug or a club with none. */
+export function getClubJvAffiliations(slug: string): readonly ClubAffiliation[] {
+  return file.jvAffiliations.filter((a) => a.club === slug);
 }
 
 /** The affiliations tied to one club, in file order (the view sorts); [] for an unknown slug. */

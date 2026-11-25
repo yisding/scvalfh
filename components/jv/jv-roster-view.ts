@@ -3,8 +3,9 @@
  * school's own athletics site's and MaxPreps' JV roster page), in the varsity roster's
  * order and words, less the players on the varsity roster the page shows above it, with the JV
  * players' own recruiting pages (data/field-hockey/jv-profiles.json, lib/jv/jv-profiles.ts) linked as the varsity
- * roster links its players'. JV players stay apart from varsity otherwise: nothing here feeds the
- * varsity roster, the clubs or the commitments, which are built from the varsity rosters alone.
+ * roster links its players', and the youth clubs a public page ties them to (data/<sport>/clubs.json
+ * `jvAffiliations`, in the varsity roster's club-line words). JV players stay apart from varsity otherwise:
+ * nothing here feeds the varsity roster or the commitments, which are built from the varsity rosters alone.
  *
  * SERVER-ONLY: reads lib/jv/jv-rosters, which imports the data files.
  */
@@ -14,6 +15,7 @@ import { getJvPlayerProfiles, getJvProfilesFile } from '../../lib/jv/jv-profiles
 import { getJvRoster, type JvRosterPlayer } from '../../lib/jv/jv-rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import type { TeamSlug } from '../../lib/types';
+import { jvPlayerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 import { profileLinks, profilePlatformWords, type RosterProfileLink } from '../teams/roster-view';
 import { positionFromText, positionWords } from '../words/position-words';
 
@@ -26,6 +28,8 @@ export interface JvRosterRow {
   facts: string[];
   /** The player's own recruiting pages, in the varsity roster's order and words; [] for most. */
   profiles: RosterProfileLink[];
+  /** The clubs a public page ties the player to, grouped as the varsity roster's club line; [] for most. */
+  clubs: RosterClubGroup[];
 }
 
 export interface TeamJvRosterView {
@@ -92,6 +96,7 @@ export function buildTeamJvRosterView(slug: TeamSlug): TeamJvRosterView | null {
       captain: p.isCaptain,
       facts: [p.grade === null ? null : gradeWord(p.grade), position, p.height].filter((f): f is string => f !== null),
       profiles: profileLinks(linked.get(p) ?? []),
+      clubs: jvPlayerClubGroups(slug, p.name),
     };
   });
   return {

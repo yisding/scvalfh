@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import ClubPlayers from '../../../components/clubs/ClubPlayers';
 import ClubPrograms from '../../../components/clubs/ClubPrograms';
 import ClubSources from '../../../components/clubs/ClubSources';
-import { buildClubPageView } from '../../../components/clubs/club-view';
+import { buildClubPageView, rostersWords } from '../../../components/clubs/club-view';
 import { clubEventLines } from '../../../components/club-calendar/calendar-view';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
@@ -13,7 +13,7 @@ import ExternalLink from '../../../components/ui/ExternalLink';
 import { plural } from '../../../components/words/plural';
 import RecruitingTabs from '../../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../../../lib/players/clubs';
+import { clubDisplayName, getClub, getClubAffiliations, getClubJvAffiliations, getClubSlugs } from '../../../lib/players/clubs';
 import { getClubInstagram, instagramUrl } from '../../../lib/social/instagram';
 
 /**
@@ -55,10 +55,11 @@ export async function generateMetadata({ params }: PageProps<'/clubs/[slug]'>): 
   // No notFound() here: the page itself 404s, and a metadata pass must not cost an unknown slug
   // anything (the team page's pattern).
   if (!club) return { title: 'Club not found' };
-  const n = getClubAffiliations(slug).length;
+  const n = getClubAffiliations(slug).length + getClubJvAffiliations(slug).length;
+  const rosters = rostersWords();
   const tied = n
-    ? `${plural(n, 'player')} on this site’s varsity rosters ${n === 1 ? 'is tied to it, with a source' : 'are tied to it, each with a source'}.`
-    : 'No player on this site’s varsity rosters is tied to it by a public page we found.';
+    ? `${plural(n, 'player')} on this site’s ${rosters} ${n === 1 ? 'is tied to it, with a source' : 'are tied to it, each with a source'}.`
+    : `No player on this site’s ${rosters} is tied to it by a public page we found.`;
   const description = `${club.name}${club.city ? `, ${club.city}` : ''}. ${club.description} ${tied} Unofficial and incomplete.`;
   return {
     // The full name, never "<short name> club field hockey": "Lions club field hockey" reads as the
