@@ -179,18 +179,27 @@ describe('/recruiting’s JV rows', () => {
   const view = buildRecruitingView();
   const rows = view.regions.flatMap((r) => r.leagues.flatMap((l) => l.schools.flatMap((s) => s.rows.map((row) => ({ slug: s.slug, row })))));
 
-  it('list every JV player with a profile, after the school’s varsity rows, with "JV" leading the facts and profile links only', () => {
+  it('list every JV player with a profile or a club line, after the school’s varsity rows, with "JV" leading the facts and no commitment', () => {
     const jv = rows.filter((r) => r.row.jv);
-    expect(jv.length).toBe(entries.length);
-    expect(view.counts.jvWithProfile).toBe(entries.length);
+    // A JV row is listed for its profile links, or for its club line alone (data/<sport>/clubs.json jvAffiliations).
+    const withProfile = jv.filter((r) => r.row.profiles.length > 0);
+    expect(withProfile.length).toBe(entries.length);
+    expect(jv.filter((r) => r.row.profiles.length === 0).every((r) => r.row.clubs.length > 0)).toBe(true);
+    expect(view.counts.jvWithProfile).toBe(jv.length);
+    expect(view.counts.jvWithClub).toBe(jv.filter((r) => r.row.clubs.length > 0).length);
     for (const { slug, row } of jv) {
       expect(row.facts[0]).toBe('JV');
       expect(row.commitment).toBeNull();
-      expect(row.clubs).toEqual([]);
-      expect(row.profiles.length).toBeGreaterThan(0);
+      expect(row.profiles.length + row.clubs.length).toBeGreaterThan(0);
       const school = rows.filter((r) => r.slug === slug).map((r) => r.row.jv);
       expect(school.indexOf(true), slug).toBe(school.length - school.filter(Boolean).length);
     }
-    if (entries.length > 0) expect(view.lede).toMatch(/and every JV player with a recruiting profile, school by school\./);
+    if (jv.length > 0) {
+      expect(view.lede).toMatch(
+        view.counts.jvWithClub
+          ? /and every JV player with a recruiting profile or a youth club, school by school\./
+          : /and every JV player with a recruiting profile, school by school\./,
+      );
+    }
   });
 });

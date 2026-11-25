@@ -22,7 +22,10 @@
  *      grade anywhere has nothing to check)
  * and the file's `season` must be rosters.json's. Steps 1-3 are lib/players/roster-join.ts, shared with
  * lib/players/commits.ts, whose step 3 asks more because /commits shows a class year; a club page never does.
- * A JV affiliation (`jvAffiliations`) must pass 1 and 3 too, and must be a JV row instead.
+ * A JV affiliation (`jvAffiliations`) must pass 1 and 3 too, and must be a JV row instead: a merged row
+ * the overlay marks JV (field hockey's Los Gatos), or a row of the team's MaxPreps JV roster
+ * (data/<sport>/jv-rosters.json) whose player is not on the varsity roster (withJvListRows): soccer's JV
+ * players are all of this second kind.
  *
  * A roster refetch can break a tie that held when it was written: `pnpm fetch-rosters` drops a tied player's
  * row, respells the name or moves it to JV. That is roster drift (lib/players/roster-drift.ts), not a load
@@ -46,8 +49,11 @@ import {
   type ClubRegion,
   type ClubsFile,
 } from './clubs-schema';
+import { getJvRostersFile } from '../jv/jv-rosters';
+import { nameKey } from './name-compare';
 import { joinToRoster, playerKey } from './roster-join';
-import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import { getAllEnrichedRosters, getRosters, mergedJvListRow, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import type { Rosters } from './rosters-schema';
 import type { TeamSlug } from '../types';
 import { HAS_RECRUITING, bySport } from '../sports/current';
 import { isResearched } from '../schema-primitives';
@@ -82,6 +88,23 @@ export function loadClubs(
   return loadAndJoin(raw, teams, season).file;
 }
 
+/**
+ * The rows a JV tie may join: each team's merged rows, plus the rows of its MaxPreps JV roster whose
+ * player has no merged row (by athlete id or by name: a player on both lists is a varsity row, and her
+ * ties are varsity ties), each as a JV row.
+ */
+export function withJvListRows(teams: readonly MergedTeamRoster[], jv: Rosters = getJvRostersFile()): MergedTeamRoster[] {
+  const lists = new Map(jv.teams.map((t) => [t.slug, t.players]));
+  return teams.map((t) => {
+    const ids = new Set(t.players.map((p) => p.athleteId));
+    const names = new Set(t.players.map((p) => nameKey(p.fullName)));
+    const extra = (lists.get(t.slug) ?? [])
+      .filter((p) => p.athleteId !== null && !ids.has(p.athleteId) && !names.has(nameKey(p.fullName)))
+      .map(mergedJvListRow);
+    return extra.length === 0 ? t : { ...t, players: [...t.players, ...extra] };
+  });
+}
+
 /** loadClubs, plus the merged row each tied player (varsity or JV) joined to, by `playerKey`. */
 function loadAndJoin(
   raw: unknown,
@@ -94,7 +117,7 @@ function loadAndJoin(
   }
   // A tie the roster no longer supports is left out of the file this module serves (lib/players/roster-drift.ts).
   const varsity = joinToRoster(file.affiliations, teams, season, { label: 'clubs', noun: 'clubs', subject: (a) => a.club });
-  const jv = joinToRoster(file.jvAffiliations, teams, season, {
+  const jv = joinToRoster(file.jvAffiliations, withJvListRows(teams), season, {
     label: 'clubs',
     noun: 'jvAffiliations',
     subject: (a) => a.club,
@@ -186,12 +209,18 @@ export function getClubSlugs(): string[] {
 }
 
 /**
- * The ties for players on JV rows, in file order. They are kept out of every other listing here
- * (the club pages, the club counts, the roster's club lines), which list varsity rows only;
- * getAffiliatedPlayer resolves their rows like any other tie's.
+ * The ties for players on JV rows, in file order. The listings above (getClubAffiliations,
+ * getTeamClubAffiliations, getPlayerClubs) hold varsity rows only; the pages list these beside them
+ * (components/clubs/club-view.ts: a club page's players and counts, the JV roster's club line), each
+ * marked JV. getAffiliatedPlayer resolves their rows like any other tie's.
  */
 export function getJvClubAffiliations(): readonly ClubAffiliation[] {
   return file.jvAffiliations;
+}
+
+/** The JV ties to one club, in file order; [] for an unknown slug or a club with none. */
+export function getClubJvAffiliations(slug: string): readonly ClubAffiliation[] {
+  return file.jvAffiliations.filter((a) => a.club === slug);
 }
 
 /** The affiliations tied to one club, in file order (the view sorts); [] for an unknown slug. */

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import ClubList from '../../components/clubs/ClubList';
-import { buildClubsIndexView } from '../../components/clubs/club-view';
+import { buildClubsIndexView, trackedRostersWords } from '../../components/clubs/club-view';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
@@ -47,7 +47,7 @@ const PAGE_TITLE = 'Club teams';
  */
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `The youth ${SPORT.noun} clubs that players on the ${getRosters().teams.length} varsity rosters here play for, or played for, with a public source for every tie. Unofficial and incomplete.`,
+  description: `The youth ${SPORT.noun} clubs that players on the ${trackedRostersWords(getRosters().teams.length)} here play for, or played for, with a public source for every tie. Unofficial and incomplete.`,
   alternates: { canonical: '/clubs' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/clubs' },
 };

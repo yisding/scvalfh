@@ -123,9 +123,10 @@ export const CLUB_SOURCE_KINDS = [
   /** the club-teams block on a MaxPreps career page */
   'maxpreps-career',
   /**
-   * a team's public roster on its league's own schedule site (ECNL's team pages), read from the kept
-   * copy in data/soccer/club-rosters.json (lib/players/club-rosters.ts): it gives a class year and
-   * never a school
+   * a team's public roster on its league's own schedule site (ECNL's team pages) or on GotSport Rankings
+   * (Girls Academy's teams), read from the kept copy in data/soccer/club-rosters.json
+   * (lib/players/club-rosters.ts): it never gives a school; ECNL's give a class year, GotSport's only
+   * the team's birth years
    */
   'league-roster',
   'other',

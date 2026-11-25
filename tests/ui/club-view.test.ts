@@ -25,6 +25,8 @@ import AboutPage from '../../app/about/page';
 import ClubPage, { generateMetadata, generateStaticParams } from '../../app/clubs/[slug]/page';
 import ClubsPage, { metadata as clubsMetadata } from '../../app/clubs/page';
 import TeamPage from '../../app/teams/[slug]/page';
+import TeamJvRoster from '../../components/jv/TeamJvRoster';
+import { buildTeamJvRosterView } from '../../components/jv/jv-roster-view';
 import {
   REGION_WORDS,
   buildClubPageView,
@@ -40,6 +42,7 @@ import {
   getAffiliatedPlayer,
   getClub,
   getClubAffiliations,
+  getClubJvAffiliations,
   getClubSlugs,
   getClubs,
   getClubsFile,
@@ -223,7 +226,7 @@ describe('source labels: the kind and the host, never the path', () => {
         }
       }
     }
-    expect(checked).toBe(file.affiliations.reduce((n, a) => n + new Set(a.sources.map((s) => s.url)).size, 0));
+    expect(checked).toBe([...file.affiliations, ...file.jvAffiliations].reduce((n, a) => n + new Set(a.sources.map((s) => s.url)).size, 0));
   });
 });
 
@@ -259,18 +262,20 @@ describe('buildClubsIndexView (/clubs)', () => {
     expect(REGION_WORDS['north-state'].label).toBe('North State');
   });
 
-  it('counts each club’s tied players, current apart from the rest, and lists their schools', () => {
+  it('counts each club’s tied players, varsity and JV, current apart from the rest, and lists their schools', () => {
     for (const r of rows) {
-      const ties = getClubAffiliations(r.slug);
+      const ties = [...getClubAffiliations(r.slug), ...getClubJvAffiliations(r.slug)];
       expect(r.current + r.other, r.slug).toBe(ties.length);
       expect(r.current, r.slug).toBe(ties.filter((a) => a.status === 'current').length);
       expect(r.href, r.slug).toBe(`/clubs/${r.slug}`);
       expect(r.schools, r.slug).toEqual([...new Set(ties.map((a) => getTeamBySlug(a.teamSlug)!.name))].sort((a, b) => a.localeCompare(b)));
     }
     const line = (slug: string) => rows.find((r) => r.slug === slug)!.countLine;
-    expect(line('sf-hawks')).toBe('32 current players');
-    // 26 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16) and her tie with it.
-    expect(line('norcal-impact')).toBe('26 current players');
+    // 33 with Casey Moorehouse's JV tie (JV ties counted since 2026-11-25).
+    expect(line('sf-hawks')).toBe('33 current players');
+    // 26 varsity since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16) and her tie with it, and the two
+    // Los Gatos JV ties (Casey Moorehouse, Colette Von Klemperer).
+    expect(line('norcal-impact')).toBe('28 current players');
     expect(line('fly-fhc')).toBe('14 players: 5 current, 9 earlier or not known to be current');
     expect(line('infinity')).toBe('9 players: 2 current, 7 earlier or not known to be current');
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
@@ -303,12 +308,27 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([150, 48, 28, 15]);
+    // 150 varsity players and the 2 Los Gatos JV players (JV ties counted since 2026-11-25).
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([152, 48, 28, 15]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 150 players from 48 schools are tied to 15 of these 28 clubs, the most to SF Hawks (32) and HTC (30).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 152 players from 48 schools are tied to 15 of these 28 clubs, the most to SF Hawks (33) and HTC (30).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
+  });
+});
+
+describe('the JV roster’s club line', () => {
+  it('links a JV player’s clubs as the varsity roster does, found by name', () => {
+    const view = buildTeamJvRosterView('los-gatos')!;
+    const lines = view.rows
+      .filter((r) => r.clubs.length > 0)
+      .map((r) => `${r.name}: ${r.clubs.map((g) => `${g.label} ${g.clubs.map((c) => c.name).join(', ')}`).join('; ')}`)
+      .sort();
+    expect(lines).toEqual(['Casey Moorehouse: Clubs NorCal Impact, SF Hawks', 'Colette von Klemperer: Club NorCal Impact']);
+    const html = renderToStaticMarkup(createElement(TeamJvRoster, { view }));
+    expect(html).toContain('href="/clubs/norcal-impact"');
+    expect(textOf(html)).toContain('Casey Moorehouse’s clubs: NorCal Impact');
   });
 });
 
@@ -322,15 +342,19 @@ describe('buildClubPageView (/clubs/[slug])', () => {
       expect(view.groups.map((g) => g.id), slug).toEqual(
         [view.groups.some((g) => g.id === 'current') ? 'current' : null, view.groups.some((g) => g.id === 'other') ? 'other' : null].filter(Boolean),
       );
-      const ties = getClubAffiliations(slug);
+      const ties = [
+        ...getClubAffiliations(slug).map((a) => ({ a, key: `${a.teamSlug}-${a.athleteId}` })),
+        ...getClubJvAffiliations(slug).map((a) => ({ a, key: `jv-${a.teamSlug}-${a.athleteId}` })),
+      ];
       for (const g of view.groups) {
         expect(g.rows.every((r) => (g.id === 'current') === (r.statusKind === 'current')), `${slug} ${g.id}`).toBe(true);
         const keys = g.rows.map((r) => {
-          const p = getAffiliatedPlayer(ties.find((a) => `${a.teamSlug}-${a.athleteId}` === r.key)!);
-          return { last: p.lastName ?? p.fullName, full: p.fullName, school: r.school.name };
+          const p = getAffiliatedPlayer(ties.find((t) => t.key === r.key)!.a);
+          return { last: p.lastName ?? p.fullName, full: p.fullName, school: r.school.name, jv: r.key.startsWith('jv-') };
         });
         const sorted = [...keys].sort(
-          (x, y) => x.last.localeCompare(y.last) || x.full.localeCompare(y.full) || x.school.localeCompare(y.school),
+          (x, y) =>
+            x.last.localeCompare(y.last) || x.full.localeCompare(y.full) || x.school.localeCompare(y.school) || Number(x.jv) - Number(y.jv),
         );
         expect(keys, `${slug} ${g.id}`).toEqual(sorted);
       }
@@ -342,12 +366,15 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(si.slice(0, 4)).toEqual(['Clara Brunello', 'Samantha Brunsell', 'Gigi Colant', 'Scarlett Gammack']);
   });
 
-  it('names exactly the club’s tied players, each a non-JV row of that team, by the roster’s spelling', () => {
+  it('names exactly the club’s tied players, a varsity row of that team or a JV row marked JV, by the roster’s spelling', () => {
     for (const { slug, view } of views) {
       const rows = view.groups.flatMap((g) => g.rows);
       const ties = getClubAffiliations(slug);
-      expect(rows.map((r) => r.key).sort(), slug).toEqual(ties.map((a) => `${a.teamSlug}-${a.athleteId}`).sort());
-      expect(view.playerCount, slug).toBe(ties.length);
+      const jvTies = getClubJvAffiliations(slug);
+      expect(rows.map((r) => r.key).sort(), slug).toEqual(
+        [...ties.map((a) => `${a.teamSlug}-${a.athleteId}`), ...jvTies.map((a) => `jv-${a.teamSlug}-${a.athleteId}`)].sort(),
+      );
+      expect(view.playerCount, slug).toBe(ties.length + jvTies.length);
       for (const a of ties) {
         const row = rows.find((r) => r.key === `${a.teamSlug}-${a.athleteId}`)!;
         const merged = getEnrichedTeamRoster(a.teamSlug)!.players.find((p) => p.athleteId === a.athleteId)!;
@@ -355,8 +382,21 @@ describe('buildClubPageView (/clubs/[slug])', () => {
         expect(row.name, slug).toBe(merged.fullName);
         expect(row.school.href, slug).toBe(`/teams/${a.teamSlug}#roster`);
         expect(row.school.name, slug).toBe(getTeamBySlug(a.teamSlug)!.name);
+        expect(row.facts[0], slug).not.toBe('JV');
+      }
+      for (const a of jvTies) {
+        const row = rows.find((r) => r.key === `jv-${a.teamSlug}-${a.athleteId}`)!;
+        expect(getAffiliatedPlayer(a).level, `${slug} / ${a.fullName}`).toBe('jv');
+        expect(row.name, slug).toBe(getAffiliatedPlayer(a).fullName);
+        expect(row.school.href, slug).toBe(`/teams/${a.teamSlug}#jv-roster`);
+        expect(row.facts[0], slug).toBe('JV');
       }
     }
+    // Field hockey's JV ties, all at Los Gatos: listed on their clubs' pages, marked JV.
+    expect(viewOf('norcal-impact').groups.flatMap((g) => g.rows).filter((r) => r.facts[0] === 'JV').map((r) => r.name).sort()).toEqual([
+      'Casey Moorehouse',
+      'Colette Von Klemperer',
+    ]);
   });
 
   it('prints only the facts that exist, and links each source once under a distinct label', () => {
@@ -624,14 +664,14 @@ describe('the clubs routes, rendered', () => {
   it('gives a club with no tied player its empty state, and no player list', async () => {
     const html = await renderClub('pac-heights');
     const players = sectionOf(html, 'players');
-    expect(textOf(players)).toContain('No player on this site’s varsity rosters is tied to Pac Heights.');
+    expect(textOf(players)).toContain('No player on this site’s varsity rosters and JV lists is tied to Pac Heights.');
     expect(textOf(players)).toContain('that does not mean none plays for it. Checked Oct 3, 2026.');
     expect(players).not.toContain('<ul');
     expect(textOf(html)).toContain('We found no public roster page naming this club’s players.');
     expect(textOf(players)).toContain('No public page we found ties one of them to this club; that does not mean none plays for it. Checked Oct 3, 2026.');
     for (const slug of ['d-city', 'chico-hotshots']) expect(textOf(await renderClub(slug)), slug).toContain('We found no public roster page naming this club’s players.');
     const rose = textOf(sectionOf(await renderClub('roseville-fhc'), 'players'));
-    expect(rose).toContain('No player on this site’s varsity rosters is tied to Roseville FHC.');
+    expect(rose).toContain('No player on this site’s varsity rosters and JV lists is tied to Roseville FHC.');
     expect(rose).toContain('Checked Oct 4, 2026.');
     expect(textOf(await renderClub('sf-hawks'))).toContain('The club’s own rosters list many more players than this page does.');
   });
@@ -668,14 +708,14 @@ describe('the clubs routes, rendered', () => {
     for (const text of texts) for (const name of names) expect(text, name).not.toContain(name);
     const descriptionOf = async (slug: string) =>
       (await generateMetadata({ params: Promise.resolve({ slug }) } as never)).description;
-    expect(await descriptionOf('htc')).toContain('30 players on this site’s varsity rosters are tied to it, each with a source. Unofficial and incomplete.');
-    expect(await descriptionOf('golden-gate-rippers')).toContain('1 player on this site’s varsity rosters is tied to it, with a source. Unofficial and incomplete.');
-    expect(await descriptionOf('sf-hawks')).toContain('32 players on this site’s varsity rosters are tied to it, each with a source.');
-    expect(await descriptionOf('pac-heights')).toContain('No player on this site’s varsity rosters is tied to it by a public page we found.');
-    expect(await descriptionOf('d-city')).toContain('4 players on this site’s varsity rosters are tied to it, each with a source.');
-    expect(await descriptionOf('roseville-fhc')).toContain('No player on this site’s varsity rosters is tied to it by a public page we found.');
+    expect(await descriptionOf('htc')).toContain('30 players on this site’s varsity rosters and JV lists are tied to it, each with a source. Unofficial and incomplete.');
+    expect(await descriptionOf('golden-gate-rippers')).toContain('1 player on this site’s varsity rosters and JV lists is tied to it, with a source. Unofficial and incomplete.');
+    expect(await descriptionOf('sf-hawks')).toContain('33 players on this site’s varsity rosters and JV lists are tied to it, each with a source.');
+    expect(await descriptionOf('pac-heights')).toContain('No player on this site’s varsity rosters and JV lists is tied to it by a public page we found.');
+    expect(await descriptionOf('d-city')).toContain('4 players on this site’s varsity rosters and JV lists are tied to it, each with a source.');
+    expect(await descriptionOf('roseville-fhc')).toContain('No player on this site’s varsity rosters and JV lists is tied to it by a public page we found.');
     expect(await descriptionOf('chico-hotshots')).toBe(
-      'Chico Hotshots Field Hockey Club, Chico. Chico club that lists U12, U14, U16, U19 and adult teams for spring 2026, the latest season it has posted. 5 players on this site’s varsity rosters are tied to it, each with a source. Unofficial and incomplete.',
+      'Chico Hotshots Field Hockey Club, Chico. Chico club that lists U12, U14, U16, U19 and adult teams for spring 2026, the latest season it has posted. 5 players on this site’s varsity rosters and JV lists are tied to it, each with a source. Unofficial and incomplete.',
     );
     for (const slug of getClubSlugs()) expect(await descriptionOf(slug), slug).toMatch(/ Unofficial and incomplete\.$/);
   });

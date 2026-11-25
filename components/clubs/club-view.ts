@@ -4,9 +4,11 @@
  * every word a club page or a club line prints about a club tie is chosen here, in one module.
  *
  * What the pages promise, and this module enforces:
- *   - only rows on the tracked varsity rosters are named: a row is an affiliation, and every
- *     affiliation joined a non-JV row of data/field-hockey/rosters.json at load (lib/players/clubs.ts), under that
- *     row's own spelling. A club's own roster names many more players; it is linked, never copied;
+ *   - only rows on the tracked rosters are named: a row is an affiliation, and every affiliation
+ *     joined a varsity row of data/<sport>/rosters.json, or a JV row (`jvAffiliations`: the overlay's,
+ *     or the school's MaxPreps JV list), at load (lib/players/clubs.ts), under that row's own spelling.
+ *     A JV player is marked JV wherever she is listed. A club's own roster names many more players; it
+ *     is linked, never copied;
  *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
  *     the quote and the basis are for maintainers and can name people who are not players here, and
  *     a per-row confidence mark is not built (DESIGN §17.6);
@@ -26,8 +28,10 @@ import {
   getAffiliatedPlayer,
   getClub,
   getClubAffiliations,
+  getClubJvAffiliations,
   getClubs,
   getClubsFile,
+  getJvClubAffiliations,
   getPlayerClubs,
   type AffiliationSource,
   type AffiliationStatus,
@@ -36,6 +40,7 @@ import {
   type ClubRegion,
 } from '../../lib/players/clubs';
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '../../lib/players/clubs-schema';
+import { nameKey } from '../../lib/players/name-compare';
 import { getRosters } from '../../lib/players/rosters';
 import { SPORT_ID } from '../../lib/sports/current';
 import type { RegionId, TeamSlug } from '../../lib/types';
@@ -251,12 +256,48 @@ const GROUP_WORDS = {
 const GROUP_ORDER: readonly AffiliationStatus[] = ['current', 'unknown', 'past'];
 
 /**
+ * Whether this build lists JV players' club ties (data/<sport>/clubs.json `jvAffiliations`): when it
+ * does, the club pages say they name the JV lists' players too.
+ */
+export function listsJvTies(): boolean {
+  return getJvClubAffiliations().length > 0;
+}
+
+/** "varsity rosters", or "varsity rosters and JV lists" when JV ties are listed: what the club pages name players from. */
+export function rostersWords(): string {
+  return listsJvTies() ? 'varsity rosters and JV lists' : 'varsity rosters';
+}
+
+/** "82 varsity rosters", or "82 varsity rosters and their JV lists" when JV ties are listed. */
+export function trackedRostersWords(trackedTeams: number): string {
+  return listsJvTies() ? `${trackedTeams} varsity rosters and their JV lists` : `${trackedTeams} varsity rosters`;
+}
+
+/**
  * A roster row's club line, as groups in the order current, listed (unknown), earlier (past).
  * [] for a row without a MaxPreps athleteId or a player no source ties to a club — most rows.
  */
 export function playerClubGroups(teamSlug: TeamSlug, athleteId: string | null): RosterClubGroup[] {
   if (athleteId === null) return [];
-  const ties = getPlayerClubs(teamSlug, athleteId);
+  return clubGroups(getPlayerClubs(teamSlug, athleteId));
+}
+
+/**
+ * A JV roster row's club line (components/jv/jv-roster-view.ts), in playerClubGroups' groups and words. The JV list
+ * names a player as its source spells her, so her ties are found by name: the tie's spelling, or the
+ * row's other one. [] for a JV player no source ties to a club.
+ */
+export function jvPlayerClubGroups(teamSlug: TeamSlug, name: string): RosterClubGroup[] {
+  const key = nameKey(name);
+  const ties = getJvClubAffiliations().filter((a) => {
+    if (a.teamSlug !== teamSlug) return false;
+    const row = getAffiliatedPlayer(a);
+    return nameKey(a.fullName) === key || (row.sourceName !== null && nameKey(row.sourceName) === key);
+  });
+  return clubGroups(ties);
+}
+
+function clubGroups(ties: readonly ClubAffiliation[]): RosterClubGroup[] {
   return GROUP_ORDER.flatMap((status): RosterClubGroup[] => {
     const clubs = ties
       .filter((a) => a.status === status)
@@ -359,7 +400,7 @@ export function buildClubsIndexView(): ClubsIndexView {
   const trackedTeams = getRosters().teams.length;
 
   const rows: Array<{ club: Club; row: ClubIndexRow }> = clubs.map((club) => {
-    const ties = getClubAffiliations(club.slug);
+    const ties = [...getClubAffiliations(club.slug), ...getClubJvAffiliations(club.slug)];
     const current = ties.filter((a) => a.status === 'current').length;
     return {
       club,
@@ -397,8 +438,9 @@ export function buildClubsIndexView(): ClubsIndexView {
     (r) => r !== 'elsewhere' && !SEARCHED_REGIONS.includes(r) && clubs.some((c) => c.region === r),
   );
 
-  const playerCount = new Set(file.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`)).size;
-  const schoolCount = new Set(file.affiliations.map((a) => a.teamSlug)).size;
+  const tied = [...file.affiliations, ...file.jvAffiliations];
+  const playerCount = new Set(tied.map((a) => `${a.teamSlug} ${a.athleteId}`)).size;
+  const schoolCount = new Set(tied.map((a) => a.teamSlug)).size;
   const withPlayers = rows
     .map((r) => r.row)
     .filter((r) => r.current + r.other > 0)
@@ -443,7 +485,7 @@ function lede(
   clubCount: number,
   withPlayers: ClubIndexRow[],
 ): string {
-  const opening = `Which youth clubs players on this site’s ${trackedTeams} varsity rosters play for, or played for, according to public pages that name both.`;
+  const opening = `Which youth clubs players on this site’s ${trackedRostersWords(trackedTeams)} play for, or played for, according to public pages that name both.`;
   const count = (r: ClubIndexRow) => `${r.name} (${r.current + r.other})`;
   const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${players === 1 ? 'is' : 'are'} tied to`;
   if (clubCount === 0) return `${opening} No club is listed yet.`;
@@ -458,9 +500,9 @@ export interface ClubPlayerRow {
   key: string;
   /** The roster row's own spelling. */
   name: string;
-  /** The registry name, `/teams/<slug>#roster`, and the team's slug (its logo). */
+  /** The registry name, `/teams/<slug>#roster` (a JV player's: `#jv-roster`), and the team's slug (its logo). */
   school: { name: string; href: string; slug: string };
-  /** The grade (in words) and the club team, only those that exist. */
+  /** "JV" for a JV player, then the grade (in words) and the club team, only those that exist. */
   facts: string[];
   /** statusWords(): "Current, as of Jul 8, 2026", "Listed by NCSA, 2025". */
   status: string;
@@ -518,6 +560,8 @@ export interface ClubPageView {
   programsSource: ClubProgramsSource | null;
   /** The club's own roster pages: linked instead of naming players who are not tracked here. */
   rosterPages: ClubHostLink[];
+  /** What the page names players from: "varsity rosters", or "varsity rosters and JV lists" (rostersWords). */
+  rosters: string;
   /**
    * The other pages the club record was read from, by the record's short name for each ("Program
    * overview"). A roster page is linked once, under the rosters, not again here.
@@ -603,15 +647,15 @@ export function clubTeamWords(a: Pick<ClubAffiliation, 'clubTeam'>): string | nu
   return soccerClubTeamWords(a.clubTeam, names);
 }
 
-function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
+function playerRow(a: ClubAffiliation, club: Club, jv: boolean): ClubPlayerRow {
   const row = getAffiliatedPlayer(a);
   const seen = new Set<string>();
   const sources = a.sources.filter((s) => (seen.has(s.url) ? false : (seen.add(s.url), true)));
   return {
-    key: `${a.teamSlug}-${a.athleteId}`,
+    key: `${jv ? 'jv-' : ''}${a.teamSlug}-${a.athleteId}`,
     name: row.fullName,
-    school: { name: schoolName(a.teamSlug), href: `/teams/${a.teamSlug}#roster`, slug: a.teamSlug },
-    facts: [row.grade !== null ? gradeWord(row.grade) : null, clubTeamWords(a)].filter((f): f is string => f !== null),
+    school: { name: schoolName(a.teamSlug), href: `/teams/${a.teamSlug}#${jv ? 'jv-roster' : 'roster'}`, slug: a.teamSlug },
+    facts: [jv ? 'JV' : null, row.grade !== null ? gradeWord(row.grade) : null, clubTeamWords(a)].filter((f): f is string => f !== null),
     status: statusWords(a, club),
     statusKind: a.status,
     sources: numbered(sources.map((s) => ({ label: sourceLabel(s, club), url: s.url }))),
@@ -624,25 +668,29 @@ export function buildClubPageView(slug: string): ClubPageView | null {
   if (!club) return null;
   const name = clubDisplayName(club);
 
-  // By last name (the roster's own name order, lib/players/rosters.ts sortedPlayers' byName), then school.
-  const ties = [...getClubAffiliations(slug)]
-    .map((a) => ({ a, p: getAffiliatedPlayer(a), school: schoolName(a.teamSlug) }))
+  // Varsity and JV players together, a JV player marked JV. By last name (the roster's own name order,
+  // lib/players/rosters.ts sortedPlayers' byName), then school, then varsity before JV.
+  const ties = [
+    ...getClubAffiliations(slug).map((a) => ({ a, jv: false })),
+    ...getClubJvAffiliations(slug).map((a) => ({ a, jv: true })),
+  ]
+    .map((t) => ({ ...t, p: getAffiliatedPlayer(t.a), school: schoolName(t.a.teamSlug) }))
     .sort(
       (x, y) =>
         (x.p.lastName ?? x.p.fullName).localeCompare(y.p.lastName ?? y.p.fullName) ||
         x.p.fullName.localeCompare(y.p.fullName) ||
-        x.school.localeCompare(y.school),
-    )
-    .map(({ a }) => a);
-  const current = ties.filter((a) => a.status === 'current');
-  const other = ties.filter((a) => a.status !== 'current');
+        x.school.localeCompare(y.school) ||
+        Number(x.jv) - Number(y.jv),
+    );
+  const current = ties.filter((t) => t.a.status === 'current');
+  const other = ties.filter((t) => t.a.status !== 'current');
   const groups: ClubPlayerGroup[] = [];
-  if (current.length > 0) groups.push({ id: 'current', heading: 'Current', rows: current.map((a) => playerRow(a, club)) });
+  if (current.length > 0) groups.push({ id: 'current', heading: 'Current', rows: current.map((t) => playerRow(t.a, club, t.jv)) });
   if (other.length > 0) {
     groups.push({
       id: 'other',
-      heading: other.some((a) => a.status === 'unknown') ? 'Earlier, or not known to be current' : 'Earlier',
-      rows: other.map((a) => playerRow(a, club)),
+      heading: other.some((t) => t.a.status === 'unknown') ? 'Earlier, or not known to be current' : 'Earlier',
+      rows: other.map((t) => playerRow(t.a, club, t.jv)),
     });
   }
 
@@ -666,6 +714,7 @@ export function buildClubPageView(slug: string): ClubPageView | null {
     })),
     programsSource: shared,
     rosterPages: numbered(club.rosterPages.map((url) => ({ label: rosterPageLabel(url, club), url, host: hostOf(url) }))),
+    rosters: rostersWords(),
     sources: club.sources
       .filter((s) => !club.rosterPages.includes(s.url))
       .map((s) => ({ label: s.what, url: s.url, host: hostOf(s.url) })),

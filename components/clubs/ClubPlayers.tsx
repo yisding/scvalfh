@@ -6,8 +6,8 @@ import TeamMonogram from '../ui/TeamMonogram';
 import type { ClubPageView, ClubPlayerRow } from './club-view';
 
 /**
- * A club page's players (DESIGN §33): only players on the tracked varsity rosters, each with the
- * public pages that tie them to the club. Current ties first, then earlier or merely listed ones;
+ * A club page's players (DESIGN §33): only players on the tracked varsity rosters, and the JV lists'
+ * where JV ties are listed (each marked JV), each with the public pages that tie them to the club. Current ties first, then earlier or merely listed ones;
  * by last name within each (then school, for two players of one name). One line above the list says
  * recall is partial, as the empty line does: under a count, a bare list otherwise reads as every
  * tracked player the club has.
@@ -94,7 +94,7 @@ export function ClubPlayers({ view }: ClubPlayersProps) {
   if (view.groups.length === 0) {
     return (
       <p className="sx-empty max-w-prose">
-        No player on this site&rsquo;s varsity rosters is tied to {view.name}. No public page we found ties
+        No player on this site&rsquo;s {view.rosters} is tied to {view.name}. No public page we found ties
         one of them to this club; that does not mean none plays for it. Checked {view.checkedOn}.
       </p>
     );
@@ -103,7 +103,7 @@ export function ClubPlayers({ view }: ClubPlayersProps) {
   return (
     <div>
       <p className="sx-note mt-0 mb-2 max-w-prose">
-        Only players on the {view.trackedTeams} varsity rosters this site tracks, each with the public
+        Only players on the {view.trackedTeams} {view.rosters} this site tracks, each with the public
         pages that tie them to {view.name}. Recall is partial: a player not listed here may still play
         for {view.name}.
       </p>
