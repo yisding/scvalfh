@@ -278,6 +278,16 @@ export const AffiliationSourceSchema = z.object({
   statedClassYear: z.number().int().min(2020).max(2040).nullable(),
   /** The page's own date, as it gives it: free text ("2025-26", "2025 Fall Season"). */
   sourceDate: text.nullable(),
+  /**
+   * Set by hand, on a `league-roster` source only: the roster's class year is one off the class year
+   * the row's grade gives, and the tie was made anyway on the owner's decision (2026-11-25: a club's
+   * class year is often entered by the family, or the player plays up or down). lib/players/roster-join.ts
+   * then accepts that one year's difference for this source and no other.
+   */
+  classYearDiffers: z.literal(true).optional(),
+}).refine((s) => s.classYearDiffers === undefined || s.kind === 'league-roster', {
+  message: 'only a league-roster source may differ from the roster grade',
+  path: ['classYearDiffers'],
 });
 
 export const ClubAffiliationSchema = z.object({

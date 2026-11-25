@@ -549,7 +549,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-21 (README, \"Girls soccer and boys basketball: recruiting\"): 1 linked for 1 of the 18 players (1 claimed MaxPreps).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-25: the Hudl profiles of Madison Harrington (as Maddie) and Caliana Nelson (as Callie), found on Los Gatos' own Hudl girls soccer rosters (varsity team 80122, JV 629633) and linked on the owner's decision, as the rows have no grade to confirm a nickname by class year (README, 'Club rosters')."
       ],
       "players": [
         {
@@ -570,6 +571,50 @@
               "note": null,
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/kathryn-faries/?careerid=c1vfgbu49essc"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "c9095245-9a51-4a3e-abb2-01f25a238eb7",
+          "playerId": "p22f6759187",
+          "conflicts": [],
+          "fullName": "Madison Harrington",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "As \"Maddie Harrington\", #19, on Los Gatos High School's own girls soccer team on Hudl (Girls Varsity Soccer, 2024 - Present, on the team's 2026 and 2025 rosters); states no class year. The roster row has no grade, and MaxPreps gives her #7; linked on the owner's decision (2026-11-25: the nickname is hers and the jersey number on one of the two pages is out of date). The profile's two older entries are Los Gatos boys' football teams (2022, 2023). Read 2026-11-25 from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/17752889"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f5a9d961-207e-4483-8628-6d607989336f",
+          "playerId": "pe9c5a0d5f3",
+          "conflicts": [],
+          "fullName": "Caliana Nelson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "As \"Callie Nelson\", #32, on Los Gatos High School's own girls soccer team on Hudl (Girls JV Soccer, 2025 - Present; MaxPreps lists her #32 on the varsity roster); class of 2029, and the roster row has no grade. Its other team is the school's girls varsity flag football team. Linked on the owner's decision (2026-11-25: \"Callie\" is her nickname). Read 2026-11-25 from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27198760"
             }
           ],
           "sourceName": null
@@ -3173,7 +3218,7 @@
           "athleteId": "05a900b6-f1d1-4080-9852-0173521ece5e",
           "playerId": "pc2cb71dab5",
           "conflicts": [],
-          "fullName": "Kiana Van every",
+          "fullName": "Kiana Van Every",
           "grade": null,
           "height": null,
           "jersey": null,

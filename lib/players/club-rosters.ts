@@ -13,14 +13,19 @@
  * The league-roster rule (a narrower case of the clubs' linking rule, README "Clubs"): a roster row
  * and a high school row are the same player when
  *   1. the names are the same once folded (lib/players/name-compare.ts nameKey), first name then last;
- *   2. the high school row has a grade and the roster row's class year is that grade's;
+ *   2. the roster row's class year is the high school row's: the one its grade gives, else (a row with
+ *      no grade; loosened 2026-11-25) the one class year the player's own linked recruiting pages state,
+ *      else, on a team whose rows carry a class year, the roster's own, when every row under the name that
+ *      gives one gives the same year and it is a class in high school this season (`classYearFromRoster`);
  *   3. no other tracked school has a row under that name, varsity or JV;
  *   4. every roster row that passes 1 and 2 is at one club;
  *   5. the club has a record in clubs.json and is based where the tracked schools are (LOCAL_REGIONS).
- * A name alone never links: a row with no grade, a roster row with no class year and a class year
- * that disagrees are each reported and left alone. A match is medium confidence on its own (a class
- * year and the club's location, nothing naming the school); it adds a source to a tie other pages
- * already make.
+ * A name alone never links: a row with no grade whose name's roster rows give no class year (or two),
+ * a roster row with no class year and a class year that disagrees are each reported and left alone. A
+ * match is medium confidence on its own (a class year and the club's location, nothing naming the
+ * school); it adds a source to a tie other pages already make. A match on a row with no grade says
+ * where its class year came from (`classYearFrom`): MaxPreps posts no grade for whole schools (Los
+ * Gatos, 2026-11-25), and the rule took none of their players while it asked for one.
  *
  * Two tiers. A league team whose page gives each player's class year (ECNL's) is compared as above. A
  * Girls Academy team's GotSport roster gives no class year, only the team's birth years ("08/09"); its
@@ -171,6 +176,12 @@ export interface SchoolRow {
   fullName: string;
   /** The class year the row's grade gives; null for a row with no grade. */
   classYear: number | null;
+  /**
+   * The class years the player's own linked recruiting pages state (the roster overlay's and the JV
+   * list's `profiles[].classOf`). A row with no grade takes its class year from them when they agree;
+   * on any row, one that disagrees with the class year compared on rules the match out.
+   */
+  statedClassYears?: readonly number[];
 }
 
 /** One roster row under a high school row's name. */
@@ -192,7 +203,11 @@ export type CompareOutcome =
   | 'club-elsewhere'
   /** Another tracked school has a row under this name. */
   | 'name-at-two-schools'
-  /** The high school row has no grade: the name is all there is. */
+  /**
+   * The high school row has no grade and nothing else gives its class year: no linked page states one,
+   * and the roster rows under the name give none, two different ones, or one no high school player has
+   * this season. The name is all there is.
+   */
   | 'no-grade'
   /** No roster row under the name carries a class year. */
   | 'no-class-year'
@@ -214,14 +229,39 @@ export type TieState =
  */
 export type CompareTier = 'class-year' | 'birth-years';
 
+/** Where the class year a row was compared on came from: its grade, its own linked pages, or the roster (a row with no grade). */
+export type ClassYearFrom = 'grade' | 'profile' | 'roster';
+
 export interface CompareRow {
   row: SchoolRow;
   tier: CompareTier;
   outcome: CompareOutcome;
+  /** The class year compared on, and where it came from; null when there was none (no-grade, name-at-two-schools). */
+  classYear: number | null;
+  classYearFrom: ClassYearFrom | null;
   /** For a match (and the outcomes that fail only rule 4 or 5): the roster rows whose class year agrees. Otherwise every row under the name. */
   hits: RosterHit[];
   /** Set for a match only. */
   tie: TieState | null;
+}
+
+/** The class years in high school during a season: "26-27" is 2027 (seniors) through 2030 (freshmen). */
+export function seasonClassYears(season: string): { first: number; last: number } {
+  const m = /^(\d{2})-(\d{2})$/.exec(season);
+  if (!m) throw new Error(`lib/players/club-rosters.ts: cannot read season "${season}"`);
+  const first = 2000 + Number(m[2]);
+  return { first, last: first + 3 };
+}
+
+/**
+ * The class year a row with no grade takes from a team tier's roster rows (rule 2's last case): the one
+ * year every row under the name that gives a class year gives, when it is a class in high school this
+ * season; null when the rows give none or two. A year out of season is returned too, so the caller can
+ * report it as disagreeing (a class of 2026 on a 2026-27 high school roster).
+ */
+export function classYearFromRoster(hits: readonly RosterHit[]): number | null {
+  const years = new Set(hits.filter((h) => h.team.birthYears === undefined && h.player.gradYear !== null).map((h) => h.player.gradYear!));
+  return years.size === 1 ? [...years][0] : null;
 }
 
 /** "Delaney Kumer": the roster's two fields as one name. */
@@ -268,6 +308,7 @@ export function compareClubRosters(
   // ids; an unmapped hit is its own club, by its league key, so two unknown clubs still count as two.
   const clubOf = (h: RosterHit): string => (h.club !== null ? `slug:${h.club}` : `key:${clubKey(h.team)}`);
 
+  const season = seasonClassYears(file.season);
   const out: CompareRow[] = [];
   for (const row of rows) {
     const key = nameKey(row.fullName);
@@ -276,17 +317,32 @@ export function compareClubRosters(
     for (const tier of ['class-year', 'birth-years'] as const) {
       const all = named.filter((h) => (h.team.birthYears === undefined ? 'class-year' : 'birth-years') === tier);
       if (all.length === 0) continue;
-      const result = (outcome: CompareOutcome, hits: RosterHit[] = all, tie: TieState | null = null) => out.push({ row, tier, outcome, hits, tie });
+      let classYear: number | null = null;
+      let classYearFrom: ClassYearFrom | null = null;
+      const result = (outcome: CompareOutcome, hits: RosterHit[] = all, tie: TieState | null = null) =>
+        out.push({ row, tier, outcome, classYear, classYearFrom, hits, tie });
       if ((schoolsByName.get(key)?.size ?? 0) > 1) {
         result('name-at-two-schools');
         continue;
       }
-      const classYear = row.classYear;
+      const stated = [...new Set(row.statedClassYears ?? [])];
+      if (row.classYear !== null) [classYear, classYearFrom] = [row.classYear, 'grade'];
+      else if (stated.length === 1) [classYear, classYearFrom] = [stated[0], 'profile'];
+      else if (stated.length === 0 && tier === 'class-year') {
+        const fromRoster = classYearFromRoster(all);
+        if (fromRoster !== null) [classYear, classYearFrom] = [fromRoster, 'roster'];
+      }
       if (classYear === null) {
         result('no-grade');
         continue;
       }
-      const agreeing = all.filter((h) => agrees(h, classYear));
+      const year = classYear;
+      const inSeason = year >= season.first && year <= season.last;
+      if (stated.some((y) => y !== year) || (classYearFrom === 'roster' && !inSeason)) {
+        result('class-year-differs');
+        continue;
+      }
+      const agreeing = all.filter((h) => agrees(h, year));
       if (agreeing.length === 0) {
         result(all.every((h) => h.team.birthYears === undefined && h.player.gradYear === null) ? 'no-class-year' : 'class-year-differs');
         continue;

@@ -769,6 +769,19 @@ describe('a bad file is refused at load', () => {
     expect(msg).toContain('Junali Dutta');
   });
 
+  it('lets a league-roster source marked classYearDiffers be one year off the grade, and no more (owner decision, 2026-11-25)', () => {
+    const withSource = (offset: number, kind: 'league-roster' | 'event' = 'league-roster') => {
+      const f = structuredClone(raw);
+      const a = f.affiliations[at('Caitlyn Hughes')];
+      Object.assign(a.sources[0], { kind, statedClassYear: classOf(season, rowOf(a)!.grade!) + offset, classYearDiffers: true });
+      return loadError(f);
+    };
+    expect(withSource(1)).toBe('');
+    expect(withSource(-1)).toBe('');
+    expect(withSource(2)).toContain('league-roster source says class of');
+    expect(withSource(1, 'event')).toMatch(/only a league-roster source may differ from the roster grade/);
+  });
+
   it('lets any class year stand for a player with no grade anywhere', () => {
     const ok = structuredClone(raw);
     const a = ok.affiliations[at('Ella Rennie')];

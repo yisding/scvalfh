@@ -78,6 +78,81 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
     spelled: 'Sophie (Mai Lam) Vu',
     basis: "Sophie (Mai Lam) Vu (Saratoga): the site owner confirmed the capital 'Mai' (2026-11-16).",
   },
+  {
+    maxpreps: 'Van every',
+    spelled: 'Van Every',
+    basis: "Kiana Van Every (soccer): the site owner confirmed both words of the last name are capitalized (2026-11-25).",
+  },
+  {
+    maxpreps: 'Iris jin',
+    spelled: 'Iris Jin',
+    basis: "Iris Jin (Saratoga volleyball): SCVAL's 2025-26 all-league list types 'jin' without its capital, which MaxPreps' roster has; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'gigi Giraldiana',
+    spelled: 'Gigi Giraldiana',
+    basis: "Gigi Giraldiana (North Monterey County soccer): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'kimberly Mauricio',
+    spelled: 'Kimberly Mauricio',
+    basis: "Kimberly Mauricio (North Monterey County soccer): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'Audrey Pin (gamecho)',
+    spelled: 'Audrey Pin (Gamecho)',
+    basis: "Audrey Pin (Gamecho) (Pacific Grove soccer): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'kriday Ramkumar',
+    spelled: 'Kriday Ramkumar',
+    basis: "Kriday Ramkumar (MacDonald basketball JV): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'kekobad',
+    spelled: 'Kekobad',
+    basis: "Karl Kekobad (MacDonald basketball JV): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'De leon',
+    spelled: 'De Leon',
+    basis: "Lorenz D. De Leon (Rancho San Juan basketball): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'jen Li',
+    spelled: 'Jen Li',
+    basis: "Jen Li (Saratoga volleyball): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'Elizabeth (zibby) Baker',
+    spelled: 'Elizabeth (Zibby) Baker',
+    basis: "Elizabeth (Zibby) Baker (Point Loma field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'Louella (lulu) Guevara',
+    spelled: 'Louella (Lulu) Guevara',
+    basis: "Louella (Lulu) Guevara (Huntington Beach field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'Elizabeth "betty" Bush',
+    spelled: 'Elizabeth "Betty" Bush',
+    basis: 'Elizabeth "Betty" Bush (Westview field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner\'s request (2026-11-25).',
+  },
+  {
+    maxpreps: 'Camille (cj) Bulatao',
+    spelled: 'Camille (CJ) Bulatao',
+    basis: "Camille (CJ) Bulatao (Scripps Ranch field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'Eleanor (norah) Elder',
+    spelled: 'Eleanor (Norah) Elder',
+    basis: "Eleanor (Norah) Elder (Archie Williams field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
+  },
+  {
+    maxpreps: 'Amelia "mimi" Scatena',
+    spelled: 'Amelia "Mimi" Scatena',
+    basis: 'Amelia "Mimi" Scatena (Mission Bay field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner\'s request (2026-11-25).',
+  },
 ];
 
 const words = (name: string) => name.split(/\s+/).filter(Boolean);

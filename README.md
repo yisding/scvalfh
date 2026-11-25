@@ -2016,13 +2016,20 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   and a player too young to be in high school this season (1,155 left out on 2026-11-24). **The file is never
   rendered and nothing in the site imports it**: it names players who are on no tracked roster.
 - **The league-roster rule** (`lib/players/club-rosters.ts`, a narrower case of the clubs' linking rule). A roster
-  row and a high school row are the same player when the folded names are equal; the high school row has a grade
-  and the roster's class year is that grade's; no other tracked school has a row under the name, varsity or JV;
-  every roster row that agrees is at one club; and the club has a record in `clubs.json` and is based where the
-  schools are (San Francisco, the Peninsula, the South Bay, the Central Coast). A name alone never links: a row
-  with no grade, a roster row with no class year and a class year that disagrees are reported and left alone. A
-  roster names no school, so a tie that rests on one alone is **medium** confidence; the club's location stands in
-  for the hometown rule (b) asks for.
+  row and a high school row are the same player when the folded names are equal; the roster's class year is the high
+  school row's (below); no other tracked school has a row under the name, varsity or JV; every roster row that agrees
+  is at one club; and the club has a record in `clubs.json` and is based where the schools are (San Francisco, the
+  Peninsula, the South Bay, the Central Coast). The row's class year is its grade's; **since 2026-11-25 (owner
+  decision) a row with no grade is not left out**: it takes the class year its own linked recruiting pages state,
+  and, if none states one, the roster's own, when every roster row of the name that gives a class year gives the same
+  one and it is a class in high school this season (2027-2030 in 2026-27). A linked page's class year that disagrees,
+  on any row, rules the match out. MaxPreps posts no grade for whole schools (Los Gatos' 18 varsity rows), and the
+  rule had taken none of their players while it asked for one. A name alone still never links: a row whose name's
+  roster rows give no class year (or two different ones), a roster row with no class year on a graded row, and a
+  class year that disagrees are reported and left alone; a Girls Academy row with no grade needs a linked page's class
+  year, as the roster gives only birth years. A roster names no school, so a tie that rests on one alone is
+  **medium** confidence; the club's location stands in for the hometown rule (b) asks for. `compare-club-rosters`
+  says where a match's class year came from ("class year from the profile", "from the roster").
 - **Linking is by hand.** `pnpm compare-club-rosters` reads and reports only; each match it lists names the roster
   pages it rests on (two clubs' GA teams share a name, such as "GA 08/09"). A varsity row's tie goes in `clubs.json`'s
   `affiliations`, a JV row's in `jvAffiliations`, each with a `league-roster` source, then `SCVAL_SPORT=soccer pnpm
@@ -2031,9 +2038,10 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   `current`. *A Girls Academy match* ("on birth years"): cite the team's GotSport Rankings roster
   (`rankings.gotsport.com/teams/<id>/roster`), which shows the rows with no button to press, with the page's team name
   and the player's row ("GA 08/09 | Costa | Alessia | No Position Listed") as the quote; `statedClassYear` and
-  `sourceDate` null, since the page states neither a class year nor a date; and, for a tie resting on that roster
-  alone, status `unknown` and confidence `medium`. A GA roster cited on a tie other pages already make leaves its
-  status alone. `clubSlugs` in the kept file maps a league club to its `clubs.json` record and is kept by hand; a club
+  `sourceDate` null, since the page states neither a class year nor a date; confidence `medium` for a tie resting on
+  that roster alone. **Status: a tie that a club roster read this season lists is `current` for 2026-27**, an ECNL
+  or a GotSport roster (owner decision, 2026-11-25; until then a GotSport roster, which gives no date, left a tie
+  `unknown`, and 50 ties moved that day). `clubSlugs` in the kept file maps a league club to its `clubs.json` record and is kept by hand; a club
   with no entry is compared but never linked. `tests/club-rosters.test.ts` fails if a `league-roster` source, varsity
   or JV, cites a team page the kept copy does not have, or one whose roster no longer lists the player with that class
   year (on a GA team, with a class year the team's birth years admit), so re-check those ties after a refetch.
@@ -2078,7 +2086,7 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   GotSport (Almaden's N1 G2008/09 lists 37, Sunnyvale's U19G Red 18, Milpitas' Magic 8); GA's younger teams are thin
   for the same reason. Birth years come from the team name, else the event's age group, a single birth year in NorCal
   Premier (U16 is 2011), and the rows are compared in the birth-year tier. Linked: 6 new ties (Almaden FC 3, one of
-  them JV; Sunnyvale Alliance 2; FC Milpitas 1), medium with status unknown, and 2 ties other pages made gain the
+  them JV; Sunnyvale Alliance 2; FC Milpitas 1), medium with status unknown (current since the same day's owner decision, above), and 2 ties other pages made gain the
   roster; with them, 3 ECNL matches at the PCAL schools added the same day (Salinas 2, Palma 1, to Bay Area Surf). A
   separate run re-read all 17 cited rows. The larger clubs' teams were read next (below).
 - **NorCal Premier, the larger clubs, read on 2026-11-25** the same way: MVLA (and MVLA San Jose, an alias in its
@@ -2107,7 +2115,8 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   their own: rule 2 reads "the row's class year is one the team's birth years admit" (California's September 1 cutoff:
   08/09 admits the classes of 2026-2028, each listed year on its own, `birthYearsAdmit`), and rules 3-5 hold within
   the tier, so an ECNL row at another club neither blocks a GA match nor is blocked by one. A GA tie resting on a
-  roster alone is medium confidence and its status unknown (the page dates nothing). GotSport's club ids are keyed
+  roster alone is medium confidence; its status was unknown (the page dates nothing) until the owner decided on
+  2026-11-25 that a club roster read this season makes a tie current. GotSport's club ids are keyed
   `gotsport-<id>` in `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are
   mapped. South Valley Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are
   based away from the schools. Their rows are compared but never linked.
@@ -2130,8 +2139,8 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   each found again on its Roster dialog). JV ties are shown in every sport since 2026-11-25: a club line on the team
   page's JV roster (found by name, as the JV profiles are), the club page's player list and counts ("JV" leads the
   row's facts; the pages then say they name players from the "varsity rosters and JV lists"), and /recruiting. Of the
-  JV rows, only the 4 tied players' pages were searched (below); 14 JV rows with no grade whose name is on a roster
-  link when MaxPreps posts the grade.
+  JV rows, only the 4 tied players' pages were searched (below); the JV rows with no grade whose name is on a roster
+  linked on 2026-11-25 under the loosened rule (below).
 - **Profiles of the tied players, 2026-11-25.** The 57 players with a club tie and no linked recruiting page (53
   varsity, 4 JV; most resting on a league roster alone) were looked for again with §1.15's methods. SportsRecruits:
   323 addresses (the bare slug, hyphen and multi-word variants, suffixes 2 on), 36 live soccer pages read through the
@@ -2142,6 +2151,56 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   of 2022 on read; 4 of the players are on them (Lexie Scundi, Claire Higgins, Ella Badawi, Madilyn Murdock), all with
   private profiles, so none is linked. Not reached: NCSA (Cloudflare answers 403 to an automated read from this
   environment) and MaxPreps career pages (MaxPreps answers 403 here; the claimed flag was not read).
+- **Rows with no grade, and the JV players' Hudl club entries, 2026-11-25.** Noa Goldberg (Mountain View JV) was not
+  tied to De Anza Force although her Hudl profile lists the club's "Force (CA) ECNL G2011/12" team, with its game
+  recaps of October 2026: JV players' Hudl profiles (`jv-profiles.json`) had never been read for club entries, and
+  the league rosters list her with no class year. All 187 soccer Hudl profiles linked in the overlay and the JV file
+  were read again for club entries: every club entry on a varsity player's profile is tied already; two JV players'
+  are new, Noa Goldberg's and Mari Madalen Jan's (Mountain View, both on that De Anza Force team), now **high**
+  confidence ties citing the Hudl entry and the ECNL rosters. The league-roster rule was then loosened (above) for
+  rows with no grade, and every match it now makes is cited: **48 ties change**, 42 new (41 by the rule, medium,
+  current for 2026-27 on an ECNL roster; Charlotte Markovic's to Almaden FC on its GA 09/10 and N1 G2008/09 GotSport
+  rosters, both re-read in Chromium) and 6 that gain a roster and read current (Kinsley Ozawa, Los Gatos, to MVLA;
+  Emily Sugimura, Cupertino, to Los Gatos United, on two of its NorCal Premier Fall League rosters, re-read in
+  Chromium, her own NCSA page giving the class year; Claire Chen, Saratoga, to Bay Area Surf; Ava
+  Porter, Saratoga, to De Anza Force; Harper Satterlee, Half Moon Bay, to Los Gatos United; Mari Madalen Jan, above).
+  Where each new tie's class year came from: the roster's own, 36; the player's linked page, 5. **Los Gatos** gains 20 (13 varsity, 7 JV; 14 of its 18 varsity
+  players were then tied, 16 with the owner's two below), and Cupertino, Saratoga, Gunn, Leland, Pacific Collegiate (JV), Mountain View (JV),
+  Milpitas (JV), Independence and KIPP San Jose the rest. Second reader: `fetch-club-rosters` read all 256 ECNL teams
+  afresh the same day (identical to the kept copy's rows), and every cited ECNL row was found in it with the class
+  year, position and label quoted. Four rows with no grade whose ECNL rows give no class year are linked outside the
+  rule, on the owner's decision (the name, the one club and its location; medium, current): Riva Malhotra (Gunn),
+  Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, and Shea Murphy (Leland JV) to De Anza Force
+  (her name is also on Almaden FC's GA 09/10, which is not linked). Still not linked: 7 with no grade and no
+  linked page's class year on a GotSport roster (which gives birth years only), 20 whose class year disagrees with
+  the roster's, and 13 graded rows whose ECNL rows give no class year.
+- **Class years one off, 2026-11-25 (owner decision).** Of the 20 graded rows whose class year disagrees with every
+  ECNL row of the name, 11 are tied anyway: each league-roster source is marked `classYearDiffers`
+  (`lib/players/clubs-schema.ts`), which `lib/players/roster-join.ts` accepts for that source only and only one year
+  off the grade's class year (a club's class year is often entered by the family, or the player plays up or down).
+  3 ties other pages already made gain the roster and read current (Maya Coriell to De Anza Force, Valyn Rubina to
+  MVLA, Taylor Skovmand to Los Gatos United); 8 are new, medium: 5 whose own linked NCSA or Hudl page confirms the
+  grade's class year (Elise Shafie and Ciara Riciputi to MVLA, Isabella Huston to Los Gatos United, Roya Jamasbi to
+  Burlingame, Eliza Dennebaum to Stanford Strikers) and 3 with no other page and an uncommon name (Ariella Edens to
+  Santa Clara Sporting, Maya Onalfo to De Anza Force, Milla Chow to MVLA). Left: Grace Badawi (Menlo-Atherton also
+  has an Ella Badawi), Jocelyn Rocha and Sofia Nguyen (common names), Jiselle Perez and Marissa Garcia (two years
+  off; Garcia's own page ties her to Santa Cruz United), Sophia Hernandez and Emily Garcia (clubs with no record),
+  Sofia Gonzalez (common name; her Hudl page disagrees too) and Summit Shasta's Scarlett Martinez (the rows are
+  Mitty's player of that name). `compare-club-rosters` still lists the 11 as `class-year-differs`.
+- **Why Los Gatos had so few links, 2026-11-25.** MaxPreps posts no grade for any of the 18 Los Gatos varsity rows
+  (nor the JV list's), so the league-roster rule, which asked for a grade, took none of them although every varsity
+  name is on an ECNL roster; that is what the loosened rule fixes. Its recruiting pages are few for other reasons:
+  Hudl's Los Gatos girls soccer rosters (varsity team 80122, JV 629633, read through the public GraphQL endpoint)
+  are mostly last season's seniors and parents, and its current players appear under nicknames with no class year,
+  which the 2026-11-21 sweep took only when a grade confirmed the class year. Two of them are now linked on the
+  owner's decision (2026-11-25), as a nickname with no grade to check it by: "Maddie Harrington" (varsity team, #19;
+  MaxPreps' Madison Harrington wears #7, a number the owner reads as not yet updated; the profile's older entries are
+  boys' football, 2022-23) and "Callie Nelson" (JV team, class of 2029, #32; MaxPreps' Caliana Nelson is #32 on the
+  varsity roster). A SportsRecruits address probe of
+  every Los Gatos varsity and JV name (the bare slug and suffixes 2 to 11) found 20 live pages: namesakes in other
+  states and sports, and bare soccer pages with a class year only (none names the school or a hometown); Charlotte
+  Markovic's, linked already, is the one that names Los Gatos. NCSA and MaxPreps career pages answer 403 here and were
+  not read again.
 - **The Mitty drift, 2026-11-25.** MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or
   Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, nobody else added, dropped or
   respelled, so no id was reissued. Hudl's 2026 Mitty varsity roster still lists both. The owner decided: Brandt's

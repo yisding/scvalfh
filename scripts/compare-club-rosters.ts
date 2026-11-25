@@ -20,15 +20,21 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { validateData } from '../lib/data-file';
+import { getJvPlayerProfiles } from '../lib/jv/jv-profiles';
 import { getJvRostersFile } from '../lib/jv/jv-rosters';
 import { ClubRostersFileSchema, compareClubRosters, rosterName, type CompareRow, type SchoolRow } from '../lib/players/club-rosters';
 import { getClubsFile } from '../lib/players/clubs';
 import { nameKey } from '../lib/players/name-compare';
 import { classOf, effectiveClassOf, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
 import { DATA_DIR, SPORT_ID } from '../lib/sports/current';
+import type { TeamSlug } from '../lib/types';
 import { runCliIfMain } from './cli';
 
 const USAGE = 'Usage: pnpm compare-club-rosters [--all] [--json <path>]';
+
+/** The class years a player's own linked recruiting pages state (lib/players/club-rosters.ts SchoolRow). */
+const statedYears = (profiles: readonly { classOf: number | null }[]): number[] =>
+  profiles.flatMap((x) => (x.classOf === null ? [] : [x.classOf]));
 
 /** Every tracked high school row: the merged varsity rows, then the JV list's rows that are not also varsity rows. */
 function schoolRows(): SchoolRow[] {
@@ -39,13 +45,21 @@ function schoolRows(): SchoolRow[] {
     for (const p of team.players) {
       const level = p.level === 'jv' ? 'jv' : 'varsity';
       if (level === 'varsity') varsity.add(`${team.slug} ${nameKey(p.fullName)}`);
-      rows.push({ level, teamSlug: team.slug, athleteId: p.athleteId, fullName: p.fullName, classYear: effectiveClassOf(season, p) });
+      const stated = statedYears([...p.profiles, ...(level === 'jv' ? getJvPlayerProfiles(team.slug, p.fullName) : [])]);
+      rows.push({ level, teamSlug: team.slug, athleteId: p.athleteId, fullName: p.fullName, classYear: effectiveClassOf(season, p), statedClassYears: stated });
     }
   }
   for (const team of getJvRostersFile().teams) {
     for (const p of team.players) {
       if (varsity.has(`${team.slug} ${nameKey(p.fullName)}`)) continue;
-      rows.push({ level: 'jv', teamSlug: team.slug, athleteId: p.athleteId, fullName: p.fullName, classYear: p.grade === null ? null : classOf(season, p.grade) });
+      rows.push({
+        level: 'jv',
+        teamSlug: team.slug,
+        athleteId: p.athleteId,
+        fullName: p.fullName,
+        classYear: p.grade === null ? null : classOf(season, p.grade),
+        statedClassYears: statedYears(getJvPlayerProfiles(team.slug as TeamSlug, p.fullName)),
+      });
     }
   }
   return rows;
@@ -58,11 +72,13 @@ function line(r: CompareRow, urls = false): string {
   const hits = r.hits.map(
     (h) => `${h.team.teamName} (${rosterName(h.player)}, ${year(h)}, ${h.player.playerType ?? 'no label'}${urls ? `; ${h.team.url}` : ''})`,
   );
-  return `  ${r.row.level.padEnd(7)} ${r.row.teamSlug} / ${r.row.fullName} (${r.row.classYear ?? 'no grade'}): ${hits.join('; ')}`;
+  const graded = r.row.classYear ?? (r.classYearFrom === null ? 'no grade' : `no grade; ${r.classYear} from the ${r.classYearFrom}`);
+  return `  ${r.row.level.padEnd(7)} ${r.row.teamSlug} / ${r.row.fullName} (${graded}): ${hits.join('; ')}`;
 }
 
 /** The outcome as the report groups it: a match by how it stands in clubs.json, a birth-years row marked apart. */
-const kindOf = (r: CompareRow): string => `${r.tier === 'birth-years' ? 'birth-years ' : ''}${r.outcome === 'match' ? `match: ${r.tie}` : r.outcome}`;
+const kindOf = (r: CompareRow): string =>
+  `${r.tier === 'birth-years' ? 'birth-years ' : ''}${r.outcome === 'match' ? `match: ${r.tie}${r.classYearFrom === 'grade' ? '' : ` (class year from the ${r.classYearFrom})`}` : r.outcome}`;
 
 export function main(argv: readonly string[] = process.argv.slice(2)): number {
   const all = argv.includes('--all');
