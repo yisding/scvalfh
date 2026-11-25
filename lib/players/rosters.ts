@@ -371,6 +371,15 @@ function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlay
   return base;
 }
 
+/**
+ * A row of the team's MaxPreps JV roster (data/<sport>/jv-rosters.json), in the merged shape, as a JV
+ * row the overlay says nothing about: what a JV club tie joins when the player has no row here
+ * (lib/players/clubs.ts).
+ */
+export function mergedJvListRow(p: RosterPlayer): MergedPlayer {
+  return { ...mergePlayer(p, undefined), level: 'jv' };
+}
+
 /** The MaxPreps roster with every blank the enrichment file can fill, each value tagged. */
 export function getEnrichedTeamRoster(slug: TeamSlug): MergedTeamRoster | undefined {
   const team = BASE_BY_SLUG.get(slug);

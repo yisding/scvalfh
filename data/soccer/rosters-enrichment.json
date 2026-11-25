@@ -5196,7 +5196,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-21 (README, \"Girls soccer and boys basketball: recruiting\"): 43 linked for 21 of the 26 players (9 NCSA, 5 SportsRecruits, 19 Hudl, 10 claimed MaxPreps).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-25: MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, no other change. Hudl's 2026 Mitty varsity roster, read 2026-11-25, still lists both. Zuri Brandt's record (NCSA, SportsRecruits and Hudl profiles) is removed (owner decision; git history keeps it). Scarlett Martinez's is kept and drifts while MaxPreps does not list her."
       ],
       "players": [
         {
@@ -5463,40 +5464,6 @@
               "note": "On Archbishop Mitty High School's own girls soccer team on Hudl (Girls Varsity Soccer); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/25154237"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
-          "playerId": "p5ebfd3c972",
-          "conflicts": [],
-          "fullName": "Zuri Brandt",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2027,
-              "note": "NCSA Women's Soccer profile naming Archbishop Mitty High School (San Jose, CA); class of 2027 agrees with the roster. Found by the 2026-11-21 NCSA name lookup; two separate loads agree.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt"
-            },
-            {
-              "classOf": 2027,
-              "note": "The page names Archbishop Mitty High School and class of 2027, which agrees with the roster. Read from the page's own profile JSON (served without login) in three separate fetches that agree.",
-              "platform": "sportsrecruits",
-              "url": "https://my.sportsrecruits.com/athlete/zuri_brandt2"
-            },
-            {
-              "classOf": 2027,
-              "note": "On Archbishop Mitty High School's own girls soccer team on Hudl (Girls Varsity Soccer); class of 2027 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs.",
-              "platform": "hudl",
-              "url": "https://www.hudl.com/profile/21709735"
             }
           ],
           "sourceName": null
@@ -6416,9 +6383,33 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (WCAL and WBAL teams added 2026-11-14)."
+        "No roster is enriched by hand for the soccer build yet (WCAL and WBAL teams added 2026-11-14).",
+        "Recruiting pages, 2026-11-25: the players with a club tie and no linked page were looked for again (README, \"Girls soccer: club rosters\"): Sonia Garcia's SportsRecruits page names the school; no other page passed."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "ebba0e97-58f2-4ab1-93fa-e68d03b820ad",
+          "playerId": "pb1cae083fd",
+          "conflicts": [],
+          "fullName": "Sonia Garcia",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits soccer profile naming Notre Dame San Jose (San Jose, CA); class of 2028 agrees with the roster. Found by the 2026-11-25 address probe of the tied players without a profile; read from the page's own profile JSON (served without login) in three separate fetches that agree.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/sonia_garcia2"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "notre-dame-san-jose",
       "sources": []
     },

@@ -1,5 +1,5 @@
 {
- "builtBy": "pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league's own Schedules & Standings page in a local Chromium. clubSlugs is kept by hand.",
+ "builtBy": "pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league's own Schedules & Standings page in a local Chromium. The Girls Academy teams (league ga) are kept by hand and carried over; so is clubSlugs.",
  "fetchedAt": "2026-11-24T16:21:13.413Z",
  "season": "26-27",
  "notes": [
@@ -7,7 +7,8 @@
   "Read through each league's own Schedules & Standings page (app.athleteone.com) in a local Chromium: the division's standings for its teams, then each team's page, whose Roster button lists the players. The class year is in the data the team page loads and is not printed on the Roster dialog. The same data refuses a request that does not come from the page.",
   "Kept per player: name, position, class year and the roster's label (First Team Player, Club Player Pool, Discovery Player, Guest Player). Not kept: staff, jersey numbers, account ids, a player a team hides from its public roster (counted in `hidden`) and a player too young to be in high school this season, which is a class year after 2030 or, on a GU14 team, no class year (counted in `tooYoung`).",
   "clubSlugs maps a league club id to its record in clubs.json and is kept by hand: the 12 member clubs with a record in San Francisco, the Peninsula, the South Bay and Santa Cruz County, plus Mustang Soccer (East Bay) and Marin FC, each there because a player is tied to it. A club's Golden State teams carry the same club id as its ECNL teams, so the map covers them too. The other clubs of the three leagues are compared but never linked.",
-  "A player on two of a club's teams is listed on both. 3 Regional League teams showed no player on 2026-11-22 or 2026-11-24 (Santa Clara Sporting's G2011/12 and Valley Surf's G2010/11 and G2009/10)."
+  "A player on two of a club's teams is listed on both. 3 Regional League teams showed no player on 2026-11-22 or 2026-11-24 (Santa Clara Sporting's G2011/12 and Valley Surf's G2010/11 and G2009/10).",
+  "Girls Academy (league ga), read 2026-11-25: the GA teams U14 through U19 of the eight clubs in GA's Northwest conference (2026-27 league, GotSport event 56497): Almaden FC, Silicon Valley SA, 1974 Newark FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire, 38 teams, 440 rows. Each is the team's public roster on GotSport Rankings (rankings.gotsport.com/teams/<id>/roster; teamId is the Rankings id), found with that site's own team search (Female, the age group, the club's name) and read in a local Chromium as the page displays it; the owner sent the U19 and U17 pages of Almaden, Silicon Valley SA and Newark, and the U19 rows the owner pasted are the rows read. teamName, the age group and the club are the page's heading; birthYears are read from the team name ('GA 08/09' is [2008, 2009]; South Valley Surf's 'g2012 Girls Academy' is [2012]). Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out: Silicon Valley SA's '2012G GA2' and South Valley Surf's 'GU18/19', not named as GA league teams. Two pages listed no player (Newark's '1974 Newark FC 2012/2013 GA Clinton' and South Valley Surf's 'g2012 Girls Academy'). The page gives a name and a position (all 'No Position Listed', kept as null), no class year, no jersey and no date, so it is not known to be one season's roster; it reads like everyone the team has carried (Silicon Valley SA's GA 08/09 has 64 rows, Emma Velasquez twice, kept as listed, and Almaden's names a tracked class-of-2029 player). So these rows are compared on the team's birth years, not a class year (lib/players/club-rosters.ts); a U14 team (born 2012/13) is kept because its 2012 births can be freshmen. fetch-club-rosters carries the league and its teams over. GotSport club ids are keyed 'gotsport-<id>' in clubSlugs: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped; South Valley Surf has no clubs.json record, and Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the schools, so their rows are compared but never linked. GotSport's own event pages (system.gotsport.com) stop at a reCAPTCHA and were not read."
  ],
  "leagues": [
   {
@@ -27,6 +28,12 @@
    "name": "ECNL RL Girls Golden State 2026-27",
    "eventId": 4300,
    "url": "https://app.athleteone.com/public/event/4300/schedules-standings"
+  },
+  {
+   "id": "ga",
+   "name": "Girls Academy 2026-27, Northwest conference",
+   "eventId": 56497,
+   "url": "https://system.gotsport.com/org_event/events/56497"
   }
  ],
  "clubSlugs": {
@@ -43,14 +50,17 @@
   "3252": "sf-united-fc",
   "3985": "burlingame-soccer-club",
   "3986": "bay-area-surf",
-  "4660": "santa-cruz-united-fc"
+  "4660": "santa-cruz-united-fc",
+  "gotsport-13017": "almaden-fc",
+  "gotsport-9039": "silicon-valley-soccer-academy",
+  "gotsport-13052": "sf-glens-soccer-club"
  },
  "counts": {
-  "teams": 256,
-  "players": 4421,
+  "teams": 294,
+  "players": 4861,
   "hidden": 0,
   "tooYoung": 1155,
-  "emptyTeams": 3
+  "emptyTeams": 5
  },
  "teams": [
   {
@@ -34306,6 +34316,3729 @@
      "gradYear": null,
      "position": "Forward",
      "playerType": "First Team Player"
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 145734,
+   "teamName": "GA 08/09",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/145734/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rylee",
+     "lastName": "Alas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylin",
+     "lastName": "Altinel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Joslyn",
+     "lastName": "Barajas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jazleen",
+     "lastName": "Cerda",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Arliee",
+     "lastName": "Cervantes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Cole",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alessia",
+     "lastName": "Costa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Dini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Angelia",
+     "lastName": "Dominguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Gonzales",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalie",
+     "lastName": "Hammer",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kayla",
+     "lastName": "Hellman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rylan",
+     "lastName": "Hickey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Houston",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lillian",
+     "lastName": "Jones",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jenifer",
+     "lastName": "Lopez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mireya",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Mcdougall",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Mercado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emmi",
+     "lastName": "Pham",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaya",
+     "lastName": "Schaefer",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 285095,
+   "teamName": "GA 09/10",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/285095/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Rylee",
+     "lastName": "Alas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Avila",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Delilah",
+     "lastName": "Cortez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Julieta",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalie",
+     "lastName": "Hammer",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Houston",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Kang",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emerson",
+     "lastName": "Kosmynka",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalia",
+     "lastName": "Lopez Pulido",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Markovic",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Mcdougall",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Mulcaire",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Shea",
+     "lastName": "Murphy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Rios",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emilie",
+     "lastName": "Santiago-Merino",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Sarabia Cipres",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nao",
+     "lastName": "Sawaguchi",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ally",
+     "lastName": "Solano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Soleil",
+     "lastName": "Sotelo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Briella",
+     "lastName": "Teodoro",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jasmine",
+     "lastName": "Vemuri",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elah",
+     "lastName": "Vilchis-Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalia",
+     "lastName": "Warner",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kyla",
+     "lastName": "Williams",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 411449,
+   "teamName": "GA 10/11",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/411449/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Avila",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elyse",
+     "lastName": "Chu",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Cork",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Johanna",
+     "lastName": "Hernandez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Megan",
+     "lastName": "Le",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Lim",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Littlewood",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Mercado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ally",
+     "lastName": "Solano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 529662,
+   "teamName": "GA 11/12",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/529662/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Madison",
+     "lastName": "Aamold",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexis",
+     "lastName": "Bonham",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Braddock",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alina",
+     "lastName": "Buckelew",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Cork",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Johanna",
+     "lastName": "Hernandez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Megan",
+     "lastName": "Le",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Lim",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Shayne",
+     "lastName": "Semore",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Stella",
+     "lastName": "Yerena",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 622737,
+   "teamName": "GA 12/13",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/622737/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Shayne",
+     "lastName": "Semore",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eliana",
+     "lastName": "Yu",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 287147,
+   "teamName": "GA 08/09",
+   "clubId": 9039,
+   "clubName": "Silicon Valley SA",
+   "url": "https://rankings.gotsport.com/teams/287147/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Olivia",
+     "lastName": "Abady",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Angellinne",
+     "lastName": "Abellana",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Fernanda",
+     "lastName": "Aguilar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kiyo",
+     "lastName": "Aretun",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Armanini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amy",
+     "lastName": "Benitez-Melo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tessa",
+     "lastName": "Berney",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Campos Correa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lola",
+     "lastName": "Cervantes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaia",
+     "lastName": "Cullum",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sienna",
+     "lastName": "Darland",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Cheyenne",
+     "lastName": "Davidson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Une Huuse",
+     "lastName": "Farmen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Ferdin",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Evie",
+     "lastName": "Ferrini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eden",
+     "lastName": "Fry",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elihanna",
+     "lastName": "Gallegos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Michaela",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Savannah",
+     "lastName": "Garza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Julianna",
+     "lastName": "Gaspar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Atessa",
+     "lastName": "Gholamy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isela",
+     "lastName": "Gil",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Heo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia Camila",
+     "lastName": "Hernandez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bella",
+     "lastName": "January",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Jarolimek",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Leslie",
+     "lastName": "Jeronimo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Akimi",
+     "lastName": "Jespersen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Juarez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jazell",
+     "lastName": "Jweinat",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Shaqed",
+     "lastName": "Krupnik",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lila",
+     "lastName": "Latta",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Lindt",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nayalin",
+     "lastName": "Lobo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Yamilee",
+     "lastName": "Loza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Serena",
+     "lastName": "Martin",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mirai",
+     "lastName": "Matsuzawa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mabel",
+     "lastName": "McCarter",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Poppy",
+     "lastName": "Morrison",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Braidynn",
+     "lastName": "Mott",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Carley",
+     "lastName": "Mouw",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Palumbo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amelie",
+     "lastName": "Pan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elisia",
+     "lastName": "Parker",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Arianna",
+     "lastName": "Peguero",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rosalie",
+     "lastName": "Porter",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ella",
+     "lastName": "Quinlan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sarina",
+     "lastName": "Rabkin",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zoey",
+     "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Paige",
+     "lastName": "Rouspil",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Rudnick",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elena",
+     "lastName": "Saint Martin dit Martinon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sarah",
+     "lastName": "Schembri",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nava",
+     "lastName": "Schwarzbach",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Selya",
+     "lastName": "Sen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lujyne",
+     "lastName": "Shalaby",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hannah",
+     "lastName": "Sherman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Clara",
+     "lastName": "Toscani",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Leyah",
+     "lastName": "Urteaga",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emma",
+     "lastName": "Velasquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emma",
+     "lastName": "Velasquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ellison",
+     "lastName": "Williams",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Wolff",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Zamora",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 65053,
+   "teamName": "GA 09/10",
+   "clubId": 9039,
+   "clubName": "Silicon Valley SA",
+   "url": "https://rankings.gotsport.com/teams/65053/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Olivia",
+     "lastName": "Abady",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ella",
+     "lastName": "Bruno",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Erikka",
+     "lastName": "Flores",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Guimond",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Marin",
+     "lastName": "Hatfield",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bethany",
+     "lastName": "Joh",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Kenny",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Macall",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zoe",
+     "lastName": "Nesvacil",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Demi",
+     "lastName": "Ruiz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hannah",
+     "lastName": "Sherman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Averie",
+     "lastName": "Sui",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Iyana",
+     "lastName": "Thompson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zoey",
+     "lastName": "Toyozumi",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 401219,
+   "teamName": "GA 10/11",
+   "clubId": 9039,
+   "clubName": "Silicon Valley SA",
+   "url": "https://rankings.gotsport.com/teams/401219/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Gemma",
+     "lastName": "Del Ben",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Paulina",
+     "lastName": "Dubey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophie",
+     "lastName": "Green",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zoe",
+     "lastName": "Hanohano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Macall",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Genevieve",
+     "lastName": "Sak",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Raye",
+     "lastName": "Yokota",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tatiana",
+     "lastName": "Zamora",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 529685,
+   "teamName": "GA 11/12",
+   "clubId": 9039,
+   "clubName": "Silicon Valley SA",
+   "url": "https://rankings.gotsport.com/teams/529685/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Arete",
+     "lastName": "Danenberg",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kyla",
+     "lastName": "Do",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bianca",
+     "lastName": "Hlousek",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jocelyn",
+     "lastName": "Jackson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vivian",
+     "lastName": "Mihaljevic",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Vernacchio",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rena",
+     "lastName": "Wang",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 577342,
+   "teamName": "GA 12/13",
+   "clubId": 9039,
+   "clubName": "Silicon Valley SA",
+   "url": "https://rankings.gotsport.com/teams/577342/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Arete",
+     "lastName": "Danenberg",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jocelyn",
+     "lastName": "Jackson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 90140,
+   "teamName": "GA 08/09",
+   "clubId": 13073,
+   "clubName": "1974 Newark FC",
+   "url": "https://rankings.gotsport.com/teams/90140/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Lindsay",
+     "lastName": "Borck",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Liliana",
+     "lastName": "Cespedes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Clark",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kyra",
+     "lastName": "Gutierrez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lizbeth",
+     "lastName": "Leon Nieblas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Julianna",
+     "lastName": "Novaes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kayla",
+     "lastName": "Perez-Soriano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Anaya",
+     "lastName": "Randhawa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Rangel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ismah",
+     "lastName": "Raouf",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gisella",
+     "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nayeli",
+     "lastName": "Sanchez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ryleigh",
+     "lastName": "Silva",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabelle",
+     "lastName": "Torres",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Villarreal",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kalen",
+     "lastName": "Young",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Daniela",
+     "lastName": "Zarate",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 92588,
+   "teamName": "GA 09/10",
+   "clubId": 13073,
+   "clubName": "1974 Newark FC",
+   "url": "https://rankings.gotsport.com/teams/92588/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Aashna",
+     "lastName": "Arshad",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ayla",
+     "lastName": "Blanford",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Juliana",
+     "lastName": "Campos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Janessa",
+     "lastName": "Cervantez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Denham",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Diggs",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Hammond",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Abigail",
+     "lastName": "Hoang",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalia",
+     "lastName": "Lopez Pulido",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vivian",
+     "lastName": "Pell",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Rangel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Averie",
+     "lastName": "Sui",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kyla",
+     "lastName": "Williams",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 92681,
+   "teamName": "GA 10/11",
+   "clubId": 13073,
+   "clubName": "1974 Newark FC",
+   "url": "https://rankings.gotsport.com/teams/92681/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Aashna",
+     "lastName": "Arshad",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Juliana",
+     "lastName": "Campos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tatum",
+     "lastName": "Hadfield",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tsehai Amara",
+     "lastName": "Melendez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Joanna",
+     "lastName": "Navarro Flores",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vivian",
+     "lastName": "Pell",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Savannah",
+     "lastName": "Ponciano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lileeanna",
+     "lastName": "Tabora",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 106173,
+   "teamName": "GA 11/12",
+   "clubId": 13073,
+   "clubName": "1974 Newark FC",
+   "url": "https://rankings.gotsport.com/teams/106173/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Olivia",
+     "lastName": "Braddock",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kamila",
+     "lastName": "Lorica",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Daphne",
+     "lastName": "Ochoa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ariana",
+     "lastName": "Vasquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 815520,
+   "teamName": "1974 Newark FC 2012/2013 GA Clinton",
+   "clubId": 13073,
+   "clubName": "1974 Newark FC",
+   "url": "https://rankings.gotsport.com/teams/815520/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": []
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 642358,
+   "teamName": "08/09G GA",
+   "clubId": 13052,
+   "clubName": "San Francisco Glens Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/642358/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Tenley",
+     "lastName": "Aufderhaar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Angelina",
+     "lastName": "Babler-Kuebler",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mazzy",
+     "lastName": "Barker",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Simone",
+     "lastName": "Becker",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sara",
+     "lastName": "Byun",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Geneva",
+     "lastName": "Chan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gabriella",
+     "lastName": "Colant",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ofeibea",
+     "lastName": "Dah",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Gibson Sanchez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Talia",
+     "lastName": "Hurst-Hiller",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isla",
+     "lastName": "Johnson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bryce",
+     "lastName": "Killion",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Mahdavi",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Munoz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Paine",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zoe",
+     "lastName": "Parker",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalia",
+     "lastName": "Perry",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Sempere",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Spero",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kelilah",
+     "lastName": "Spirn",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kali",
+     "lastName": "Ventura",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 642359,
+   "teamName": "09/10G GA",
+   "clubId": 13052,
+   "clubName": "San Francisco Glens Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/642359/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Trinity",
+     "lastName": "Amaya",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eleanor",
+     "lastName": "Borek",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Allie",
+     "lastName": "Canny",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emily",
+     "lastName": "Caraher",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Annarelly",
+     "lastName": "Contreras",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Gibson Sanchez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Talia",
+     "lastName": "Hurst-Hiller",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nora",
+     "lastName": "Junttila",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Savanah",
+     "lastName": "Klemish",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Munoz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jasmine",
+     "lastName": "Otto",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Sempere",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexandra",
+     "lastName": "Synyanska",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Wilson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 642361,
+   "teamName": "10/11G GA",
+   "clubId": 13052,
+   "clubName": "San Francisco Glens Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/642361/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Makayla",
+     "lastName": "Fuges",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aya",
+     "lastName": "Moore",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 642362,
+   "teamName": "11/12G GA",
+   "clubId": 13052,
+   "clubName": "San Francisco Glens Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/642362/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Olive",
+     "lastName": "Soper",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emma",
+     "lastName": "Ta",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 642363,
+   "teamName": "12/13G GA",
+   "clubId": 13052,
+   "clubName": "San Francisco Glens Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/642363/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Zasia",
+     "lastName": "Norman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Olive",
+     "lastName": "Soper",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 241234,
+   "teamName": "GA 09/10G",
+   "clubId": 13232,
+   "clubName": "South Valley Surf SC",
+   "url": "https://rankings.gotsport.com/teams/241234/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Megan",
+     "lastName": "Cove",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Malia",
+     "lastName": "Cutrona",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Paige",
+     "lastName": "Dixon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aaliyah",
+     "lastName": "Garza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aubrielle",
+     "lastName": "Henry",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Iyla",
+     "lastName": "Mackey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giuliana",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Victoria",
+     "lastName": "Mendiola",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alanna",
+     "lastName": "Onsurez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaylee",
+     "lastName": "Ouellette",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jimena",
+     "lastName": "Perez Pinera",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Karleigh",
+     "lastName": "Quillen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tatianna",
+     "lastName": "Rivas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Ruiz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Roxie",
+     "lastName": "Salas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 241457,
+   "teamName": "GA 10/11G",
+   "clubId": 13232,
+   "clubName": "South Valley Surf SC",
+   "url": "https://rankings.gotsport.com/teams/241457/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Kendall",
+     "lastName": "Branquinho",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vivienne",
+     "lastName": "Horvat",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lyndsee",
+     "lastName": "Jennings",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabell",
+     "lastName": "Roberts",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Shelton",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Yesenia",
+     "lastName": "Soria",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ondine",
+     "lastName": "Townsend",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 524886,
+   "teamName": "g2012 Girls Academy",
+   "clubId": 13232,
+   "clubName": "South Valley Surf SC",
+   "url": "https://rankings.gotsport.com/teams/524886/roster",
+   "birthYears": [
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": []
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 463638,
+   "teamName": "GA 12/13G",
+   "clubId": 13232,
+   "clubName": "South Valley Surf SC",
+   "url": "https://rankings.gotsport.com/teams/463638/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Lainey",
+     "lastName": "Gentry",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rylee",
+     "lastName": "Wolford",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Clara",
+     "lastName": "Young",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 285350,
+   "teamName": "GA 09/10",
+   "clubId": 8460,
+   "clubName": "Lamorinda SC",
+   "url": "https://rankings.gotsport.com/teams/285350/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Soraya",
+     "lastName": "Ahuja",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Brooklynn",
+     "lastName": "Barnes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Annabelle",
+     "lastName": "Bueno",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Cole",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Leah",
+     "lastName": "Cooke",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Yasmine",
+     "lastName": "El-refai",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madeleine",
+     "lastName": "Engelund",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Delaney",
+     "lastName": "Fraser",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tessa",
+     "lastName": "Hire",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Dahlia",
+     "lastName": "Hutchins",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Judy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bediz",
+     "lastName": "Lostuvali",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Delaney",
+     "lastName": "Miskella",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "McKenna",
+     "lastName": "Motes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Makena",
+     "lastName": "Reeves",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Paige",
+     "lastName": "Rosa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 413813,
+   "teamName": "GA 10/11",
+   "clubId": 8460,
+   "clubName": "Lamorinda SC",
+   "url": "https://rankings.gotsport.com/teams/413813/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Soraya",
+     "lastName": "Ahuja",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Brooklynn",
+     "lastName": "Barnes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Leah",
+     "lastName": "Cooke",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maria",
+     "lastName": "Fernandez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Erikka",
+     "lastName": "Flores",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Dahlia",
+     "lastName": "Hutchins",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Heyab",
+     "lastName": "Ocbai",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ximena",
+     "lastName": "Quezada",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Angelina",
+     "lastName": "Ye",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 159679,
+   "teamName": "GA 11/12",
+   "clubId": 8460,
+   "clubName": "Lamorinda SC",
+   "url": "https://rankings.gotsport.com/teams/159679/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Natalie",
+     "lastName": "Bode",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sarah",
+     "lastName": "Castro",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camille",
+     "lastName": "Dugan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Dahlia",
+     "lastName": "Hutchins",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Allison",
+     "lastName": "Lee",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kamila",
+     "lastName": "Munoz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Heyab",
+     "lastName": "Ocbai",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ximena",
+     "lastName": "Quezada",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Molly",
+     "lastName": "Sullivan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 159677,
+   "teamName": "GA 12/13",
+   "clubId": 8460,
+   "clubName": "Lamorinda SC",
+   "url": "https://rankings.gotsport.com/teams/159677/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Natalie",
+     "lastName": "Bode",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Evelynn",
+     "lastName": "Crittenden",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Dugan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "frida",
+     "lastName": "michel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kassiana",
+     "lastName": "Wade",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 70279,
+   "teamName": "GA 08/09",
+   "clubId": 13008,
+   "clubName": "Sacramento United",
+   "url": "https://rankings.gotsport.com/teams/70279/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Larissa",
+     "lastName": "Aguilar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Soraya",
+     "lastName": "Angel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Laura",
+     "lastName": "Carlos Ortiz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kylie",
+     "lastName": "Chinakwe",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ella",
+     "lastName": "Domine",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Arianna",
+     "lastName": "Dorton",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Addison",
+     "lastName": "Hayduk",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexia",
+     "lastName": "Herrera",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Peyton",
+     "lastName": "Johnston",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Reyna",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Keira",
+     "lastName": "Moua",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Braelynn",
+     "lastName": "Murphy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emily",
+     "lastName": "Negrete-Quintero",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Makayla",
+     "lastName": "Pena Amaya",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Liliana",
+     "lastName": "Sandoval",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tatum",
+     "lastName": "Schrey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Silva",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mackenzie",
+     "lastName": "Steele",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Allison",
+     "lastName": "Vazquez Zimerman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaylee",
+     "lastName": "Voskes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Cilla",
+     "lastName": "Wikum",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Priscilla",
+     "lastName": "Zuniga",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 70286,
+   "teamName": "GA 09/10",
+   "clubId": 13008,
+   "clubName": "Sacramento United",
+   "url": "https://rankings.gotsport.com/teams/70286/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Lundyn",
+     "lastName": "Brooks",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elliana",
+     "lastName": "Ditmore",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Collette",
+     "lastName": "Fitzgerald",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Gabriele",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Siana",
+     "lastName": "Ingram",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Peyton",
+     "lastName": "Johnston",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Magali",
+     "lastName": "Kelly",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ellie",
+     "lastName": "Martin",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Braelynn",
+     "lastName": "Murphy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Ruelas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tatum",
+     "lastName": "Schrey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mackenzie",
+     "lastName": "Steele",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eva",
+     "lastName": "Warta",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Cilla",
+     "lastName": "Wikum",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mackenzie",
+     "lastName": "Young",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 70287,
+   "teamName": "GA 10/11",
+   "clubId": 13008,
+   "clubName": "Sacramento United",
+   "url": "https://rankings.gotsport.com/teams/70287/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Elliana",
+     "lastName": "Ditmore",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Julianne",
+     "lastName": "Gonsalves",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Keilani",
+     "lastName": "Nop",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tatum",
+     "lastName": "Schrey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mackenzie",
+     "lastName": "Steele",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 70293,
+   "teamName": "GA 11/12",
+   "clubId": 13008,
+   "clubName": "Sacramento United",
+   "url": "https://rankings.gotsport.com/teams/70293/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Ryan",
+     "lastName": "Groves",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Hall-Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Magali",
+     "lastName": "Kelly",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hayden",
+     "lastName": "Nolten Horne",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexis",
+     "lastName": "Olmstead",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lilyani",
+     "lastName": "Perez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "Sufuentes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Voong",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 70294,
+   "teamName": "GA 12/13",
+   "clubId": 13008,
+   "clubName": "Sacramento United",
+   "url": "https://rankings.gotsport.com/teams/70294/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Kayla",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ryan",
+     "lastName": "Groves",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lennon",
+     "lastName": "Hunter",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Marielly",
+     "lastName": "Nava",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lilyani",
+     "lastName": "Perez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Georgina",
+     "lastName": "Stathakopoulos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 63555,
+   "teamName": "GA 08/09",
+   "clubId": 9034,
+   "clubName": "Clovis Crossfire",
+   "url": "https://rankings.gotsport.com/teams/63555/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Taylor",
+     "lastName": "Downing",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Garza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nevaeh",
+     "lastName": "Gibson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kylie",
+     "lastName": "Gonzalez Villegas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rihanna",
+     "lastName": "Guerrero",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alana",
+     "lastName": "Gutierrez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Riley",
+     "lastName": "Hansen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emma",
+     "lastName": "Hardin",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sirena",
+     "lastName": "Heras",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hailey",
+     "lastName": "Hick",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hailey",
+     "lastName": "Higton",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jane",
+     "lastName": "Higton",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Hood",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Analise",
+     "lastName": "Latour",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaylani",
+     "lastName": "Lee",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mckarah",
+     "lastName": "Lopez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Priscilla",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ariselle",
+     "lastName": "Mendoza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Mostes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Adelle",
+     "lastName": "Moua",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Braseis",
+     "lastName": "Moua",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Taylor",
+     "lastName": "Negrete",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Pinedo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Autumn",
+     "lastName": "Posey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vivian",
+     "lastName": "Preis",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Reyna",
+     "lastName": "Reyes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zoey",
+     "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jenna",
+     "lastName": "Rose",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Riley",
+     "lastName": "Stricker",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elise",
+     "lastName": "Trevino",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Demi",
+     "lastName": "Villalobos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Goryn",
+     "lastName": "Wong",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Roslyn",
+     "lastName": "Yeager",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 63576,
+   "teamName": "GA 09/10",
+   "clubId": 9034,
+   "clubName": "Clovis Crossfire",
+   "url": "https://rankings.gotsport.com/teams/63576/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Alyssa",
+     "lastName": "Beltran",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jaelyn",
+     "lastName": "Bruce",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ni'ray",
+     "lastName": "Chatman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Clark",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Shannon",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Garza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alana",
+     "lastName": "Gutierrez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Hood",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mila",
+     "lastName": "Jimenez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vivian",
+     "lastName": "Lee",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bella",
+     "lastName": "Maldonado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Khloe",
+     "lastName": "Orosco",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Liliana",
+     "lastName": "Ramirez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Ruelas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jenavieve",
+     "lastName": "Sandoval",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Avery",
+     "lastName": "Schwartz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Makenna",
+     "lastName": "Stott",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elise",
+     "lastName": "Trevino",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 63579,
+   "teamName": "GA 10/11",
+   "clubId": 9034,
+   "clubName": "Clovis Crossfire",
+   "url": "https://rankings.gotsport.com/teams/63579/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Gabriella",
+     "lastName": "Andalon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madilyn",
+     "lastName": "Avila",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alainee",
+     "lastName": "Espinosa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Abrielle",
+     "lastName": "Franco",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Arlington",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Gonzalez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Stephanie",
+     "lastName": "Gonzalez Alvarez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mila",
+     "lastName": "Jimenez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Leonia",
+     "lastName": "Molyneux",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Morales",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 523822,
+   "teamName": "GA 11/12",
+   "clubId": 9034,
+   "clubName": "Clovis Crossfire",
+   "url": "https://rankings.gotsport.com/teams/523822/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Emmi",
+     "lastName": "Christl",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Davis",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Arlington",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Genevieve",
+     "lastName": "Gomez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Camila",
+     "lastName": "Gonzalez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Morales",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Presley",
+     "lastName": "Woods",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Abigail",
+     "lastName": "Yang",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 106383,
+   "teamName": "GA 12/13",
+   "clubId": 9034,
+   "clubName": "Clovis Crossfire",
+   "url": "https://rankings.gotsport.com/teams/106383/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Leonia",
+     "lastName": "Molyneux",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lailah",
+     "lastName": "Ramirez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ariana",
+     "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
     }
    ]
   }

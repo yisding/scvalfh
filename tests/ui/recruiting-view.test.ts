@@ -87,14 +87,16 @@ describe('buildRecruitingView', () => {
     }
   });
 
-  it('counts what the files hold: every commitment, and every player tied to a club on a varsity row', () => {
+  it('counts what the files hold: every commitment, and every player tied to a club, on a varsity row or a JV list', () => {
     const rows = schools.flatMap((s) => s.rows);
     expect(view.counts.players).toBe(rows.length);
     expect(view.counts.schools).toBe(schools.length);
     expect(view.counts.committed).toBe(getCommitsFile().commitments.length);
+    const file = getClubsFile();
     expect(view.counts.withClub).toBe(
-      new Set(getClubsFile().affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`)).size,
+      new Set([...file.affiliations, ...file.jvAffiliations].map((a) => `${a.teamSlug} ${a.athleteId}`)).size,
     );
+    expect(view.counts.jvWithClub).toBe(new Set(file.jvAffiliations.map((a) => `${a.teamSlug} ${a.athleteId}`)).size);
     expect(view.counts.withProfile).toBe(rows.filter((r) => r.profiles.length > 0).length);
   });
 

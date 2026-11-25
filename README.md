@@ -1859,32 +1859,34 @@ on 2026-11-21:
   lacrosse). Hudl's public rosters were read for every school's girls soccer teams, NCSA by name for every varsity
   row and 305 of the JV rows, every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits
   address probe over every varsity and JV row.
-- **Clubs** (`clubs.json`; recounted on 2026-11-22, after the league rosters of "Girls soccer: club rosters"
-  below): **51 clubs** (South Bay 19, Peninsula 15, San Francisco 10, Central Coast 5, East Bay 1, Marin 1) and
-  **192 ties for 157 of the 634 varsity rows, at 30 of the 32 schools**: 115 current, 55 listed (unknown) and 22
-  earlier; 30 players are tied to more than one club; 127 high confidence, 65 medium (63 of them resting on a league
-  roster alone: a class year and the club's location). The most ties: De Anza Force 40, MVLA 26, Bay Area Surf 22, Almaden
-  FC 21, Los Gatos United 19, Santa Clara Sporting 11, Burlingame and Stanford Strikers 8 each, Palo Alto SC 7.
-  28 clubs have no tied player. The ties rest on 309 source entries on 198 URLs (league rosters 110, NCSA 60,
-  PrepSoccer 38, SportsRecruits 35, MaxPreps career pages 27, Hudl 22, TopDrawerSoccer 12, SoccerWire 4, a college
-  release 1). San Francisco, the Peninsula and the South Bay were
-  searched for every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast,
-  so /clubs does not claim it. JV players' clubs are not listed.
-- **College commitments** (`commits.json`): **13 players at 6 schools, to 13 colleges**, 11 in soccer, 1 in field
-  hockey and 1 in softball; 9 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
-  Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos)
-  to Brandeis, Selya Sen (Los Altos) to Franklin & Marshall and Kat Smith (Los Altos) to Ithaca in field hockey,
-  from The Talon, Los Altos' student paper (Smith's is medium: the story says she left soccer in her junior year,
-  so the soccer row being hers wants confirming). Ayla Briski to Brown, Layla Tucakovic to USC, Vivian Baker to
-  Louisville and Zuri Brandt to Washington, all Mitty, from their SoccerWire and TopDrawerSoccer pages, which name
-  Archbishop Mitty (PrepSoccer agreeing for Tucakovic and Brandt, and Brandt's own SportsRecruits page). Juliana
-  Pandolfo (Menlo-Atherton) to Chicago in softball, from her own SportsRecruits page. Four are medium, resting on
-  the class year and a hometown with no school named: Kailani Bock (Leland) to UC San Diego and Isabella Cain (Los
-  Gatos, whose roster row has no grade) to Princeton, from TopDrawerSoccer's commitment lists; Ashleigh Bieser
-  (Carlmont) to Columbia (TopDrawerSoccer, SoccerWire and her own SportsRecruits page) and Delaney Kumer (Carlmont)
-  to UC Davis (TopDrawerSoccer and PrepSoccer). Park, Bock, Cain and Neschleba were last season's research ("Soccer
-  and basketball: last season's commitments" below). Every quote was checked against its page as served, by the
-  pass that found it and again at assembly.
+- **Clubs** (`clubs.json`; recounted on 2026-11-25, after the Girls Academy rosters, the refresh's ECNL ties and the
+  Mitty drift of "Girls soccer: club rosters" below): **51 clubs** (South Bay 19, Peninsula 15, San Francisco 10,
+  Central Coast 5, East Bay 1, Marin 1) and **250 varsity ties for 205 of the 678 varsity rows, at 31 of the 34
+  schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while MaxPreps
+  does not list her): 160 current, 70 listed (unknown) and 20 earlier; 37 players are tied to more than one club; 125
+  high confidence, 125 medium (123 of them resting on a league roster alone: a class year, or a GA team's birth years,
+  and the club's location). The most ties: MVLA 49, De Anza Force 45, Almaden FC 33, Bay Area Surf 28, Los Gatos
+  United 21, Silicon Valley SA 14, Santa Clara Sporting 12, Burlingame and Stanford Strikers 8 each, Palo Alto SC 7.
+  28 clubs have no tied player. The ties rest on 386 source entries on 216 URLs (league rosters 197: ECNL's 165 and
+  Girls Academy's 32; NCSA 57, PrepSoccer 35, SportsRecruits 35, MaxPreps career pages 26, Hudl 22, TopDrawerSoccer
+  10, SoccerWire 3, a college release 1). San Francisco, the Peninsula and the South Bay were searched for every club
+  (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does not claim it.
+  **4 JV ties** (`jvAffiliations`, since 2026-11-25), shown marked JV.
+- **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
+  hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
+  Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos) to
+  Brandeis, Selya Sen (Los Altos) to Franklin & Marshall and Kat Smith (Los Altos) to Ithaca in field hockey, from The
+  Talon, Los Altos' student paper (Smith's is medium: the story says she left soccer in her junior year, so the soccer
+  row being hers wants confirming). Ayla Briski to Brown, Layla Tucakovic to USC and Vivian Baker to Louisville, all
+  Mitty, from their SoccerWire and TopDrawerSoccer pages, which name Archbishop Mitty (PrepSoccer agreeing for
+  Tucakovic). Juliana Pandolfo (Menlo-Atherton) to Chicago in softball, from her own SportsRecruits page. Four are
+  medium, resting on the class year and a hometown with no school named: Kailani Bock (Leland) to UC San Diego and
+  Isabella Cain (Los Gatos, whose roster row has no grade) to Princeton, from TopDrawerSoccer's commitment lists;
+  Ashleigh Bieser (Carlmont) to Columbia (TopDrawerSoccer, SoccerWire and her own SportsRecruits page) and Delaney
+  Kumer (Carlmont) to UC Davis (TopDrawerSoccer and PrepSoccer). Park, Bock, Cain and Neschleba were last season's
+  research ("Soccer and basketball: last season's commitments" below). Every quote was checked against its page as
+  served, by the pass that found it and again at assembly. Zuri Brandt's (Mitty) commitment to Washington was removed
+  on 2026-11-25, when MaxPreps' Mitty roster stopped listing her ("Girls soccer: club rosters", below).
 
 **Boys basketball**
 
@@ -1948,8 +1950,8 @@ What the research did not reach, so that an absence here says little:
     (ECNL's member clubs were read on 2026-11-22 from the leagues' own team lists, "Girls soccer: club rosters").
     Clubs named on a player's page with no record, so the tie is not shown: El Camino FC, Alum Rock FC, Hawaii
     Rush, Newark 1974 FC, Reno Apex, AllStars FC and Silicon Valley Soccer Club. The rosters of NorCal Premier's own
-    leagues and Cal North were not read, and Girls Academy's could not be (2026-11-25; "Girls soccer: club
-    rosters"): only ECNL's three Northern California leagues are kept.
+    leagues and Cal North were not read. ECNL's three Northern California leagues and Girls Academy's Northwest
+    conference are kept ("Girls soccer: club rosters"); GA's Aspire tier is not.
   - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
     San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
     feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
@@ -1979,10 +1981,12 @@ gives a marked row the corrected grade, until the conflict is removed (its `kept
 `data/soccer/club-rosters.json` is a kept copy of the public team rosters of the three Northern California girls
 leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's two conferences here, NorCal (NorCal
 Premier's) and Golden State (the second teams of the 12 ECNL Northern Cal clubs), the GU14 through GU18/19 age
-groups. It is there so that a high school roster can be compared with the club rosters the day a school posts it,
-without reading the leagues' pages again. Read on 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL
-teams of 12 clubs, 139 NorCal Regional League teams of 43, 57 Golden State teams of the 12 ECNL clubs). Golden State
-was added that day; the other two leagues were first read on 2026-11-22.
+groups; and, kept by hand since 2026-11-25, the Girls Academy teams U14 through U19 of the eight clubs in GA's
+Northwest conference (league `ga`, below). It is there so that a high school roster can be compared with the club
+rosters the day a school posts it, without reading the leagues' pages again. ECNL's three leagues, read on
+2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL teams of 12 clubs, 139 NorCal Regional League teams of
+43, 57 Golden State teams of the 12 ECNL clubs); Golden State was added that day, the other two leagues first read on
+2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**. In all 294 teams, 4,861 players.
 
 ```bash
 pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
@@ -2037,24 +2041,68 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   when MaxPreps posts the grade, if it agrees); 11 varsity rows whose class year disagrees with every roster row of
   the name; 5 whose roster rows carry no class year; a Mitty player two clubs list at her class year; and three
   players at clubs outside the area with no other page (Marin FC, Pleasanton Rage, Mustang Soccer). No JV row passed
-  the rule, and `clubs.json` lists no JV ties in any case.
-- **Girls Academy: no public roster found (2026-11-25).** GA schedules on GotSport, not Athlete One, so
-  `fetch-club-rosters` cannot simply take another event id: the league is GotSport event 56497
-  (`system.gotsport.com/org_event/events/56497`), its Aspire tier 56498, both linked from
-  girlsacademyleague.com/events. The NorCal clubs play in the GA **Northwest** conference, U13 through U19: Almaden
-  FC, Silicon Valley SA, South Valley Surf, 1974 Newark FC, San Francisco Glens, Lamorinda SC, Sacramento United and
-  Clovis Crossfire. Aspire's NorCal division (Palo Alto SC, Lamorinda, Rocklin FC, Woodland SC) is U13-U15 only.
-  GotSport's club pages (`…/56497/clubs/<id>`) load as plain HTML and list a club's teams by age group, but no
-  players; its team and schedule pages (`…/schedules?team=<id>`) stop at a reCAPTCHA ("PLEASE VERIFY TO CONTINUE")
-  and were not read past it. GotSport ties GA roster access to its college coach registration, so the rosters are
-  probably not public in any case. Also checked, with no GA roster found: the 2025 Winter Showcase event guide
-  (PDF); the home pages of the eight Northwest clubs (Lamorinda's listed site answered 404); svsa.org's teams page,
-  Sacramento United's `/ga/` page and Almaden's `/roster` (its USL2 men's team). Pages deeper in the clubs' sites
-  (Clovis Crossfire's GA page, South Valley Surf's team sites) were not read. SportsRecruits team pages carry GA rosters for some clubs
-  elsewhere (public, name and class year), but none of the eight was found there. So GA ties still come only from
-  player pages under the clubs' linking rule ("2026 Almaden FC (GA)", "U19 GA SVSA" and others in `clubs.json`).
-  Newark 1974 FC, named on Dhiaan Plaha's (Santa Clara) NCSA page, still has no record: the page's club line is not
-  kept in the repo, and NCSA answered 403 to an automated read that day, so the tie was not written.
+  the rule, and `clubs.json` listed no JV ties then (it does since 2026-11-25, below).
+- **Girls Academy (league `ga`), read on 2026-11-25.** GA schedules on GotSport, not Athlete One (league event 56497,
+  Aspire 56498), and GotSport's own event pages (`system.gotsport.com`) stop at a reCAPTCHA, which was not got
+  round. Its public team rosters are on **GotSport Rankings** instead (`rankings.gotsport.com/teams/<id>/roster`, a
+  script-drawn page). The NorCal clubs play in GA's Northwest conference: Almaden FC, Silicon Valley SA, 1974 Newark
+  FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire (Aspire's NorCal
+  division is U13-U15 only, and not kept). Each club's GA teams U14 through U19 were found with the Rankings site's own
+  team search (Female, the age group, the club's name) and each roster read in a local Chromium as the page displays
+  it: **38 teams, 440 rows**. The owner sent the Almaden, Silicon Valley SA and Newark U19 and U17 pages, and the U19
+  rows the owner pasted are the rows read. Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out:
+  Silicon Valley SA's "2012G GA2" and South Valley Surf's "GU18/19", not named as GA league teams. Two pages list no
+  player. This copy is kept by hand: `fetch-club-rosters` does not read it, and carries the league and its teams over
+  when it rewrites the file. To refresh it, repeat the search and the reads, and rewrite the `ga` teams.
+- **What a GA roster gives, and the birth-year tier.** A name and a position ("No Position Listed" throughout); no
+  class year, jersey or date. So a GA roster is not known to be one season's: it reads like everyone the team has
+  carried (Silicon Valley SA's GA 08/09 has 64 rows; Almaden's names a tracked class-of-2029 player). Each team keeps
+  its birth years instead (`birthYears`, from its name: "GA 08/09" is 2008/09), and its rows are compared in a tier of
+  their own: rule 2 reads "the row's class year is one the team's birth years admit" (California's September 1
+  cutoff: 08/09 admits the classes of 2026-2028, `birthYearClassYears`), and rules 3-5 hold within the tier, so an ECNL
+  row at another club neither blocks a GA match nor is blocked by one. A GA tie resting on a roster alone is medium
+  confidence and its status unknown (the page dates nothing). GotSport's club ids are keyed `gotsport-<id>` in
+  `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped. South Valley
+  Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the
+  schools. Their rows are compared but never linked.
+- **Linked on 2026-11-25.** *Girls Academy:* **29 ties cite a GA roster** (32 entries on 8 team pages, 14 schools):
+  22 new, resting on a roster alone (Almaden FC 16 and Silicon Valley SA 13 in all), and 7 ties other pages had
+  already made (Rylan Hickey's and Madison McDougall's to Almaden FC, Gianna Armanini's to Silicon Valley SA among
+  them), which gain the roster and keep their status. San Francisco Glens' rows matched no tracked player. A separate
+  run opened the 8 cited pages in Chromium and found all 32 cited rows as displayed. Not linked: Tatum Hadfield (Valley
+  Christian), on Newark's GA 10/11 only; 2 JV rows with no grade on Almaden's GA 09/10. *ECNL:* the MaxPreps refresh
+  of 2026-11-24/25 brought 9 more varsity rows the kept ECNL rosters match, at Pioneer and Notre Dame San Jose: 6 new
+  ties and 3 that gain the roster and now read current for 2026-27 (15 entries on 13 team pages; a separate run
+  pressed Roster on the 13 pages and found all 15 rows). In all, **172 varsity ties cite a league roster** (143 ECNL,
+  29 GA, at 25 schools).
+- **JV ties, from 2026-11-25.** A JV row's ties go in `clubs.json`'s `jvAffiliations`, and join the school's MaxPreps
+  JV roster (`data/soccer/jv-rosters.json`): every soccer JV player is on that list rather than on a JV row of the
+  varsity roster, so the loader now joins a JV tie to a JV-list row whose player is not on the varsity roster
+  (`withJvListRows` in `lib/players/clubs.ts`). `compare-club-rosters` reads a JV row's ties from there. **4 JV ties
+  cite a roster**: Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to De Anza
+  Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27 (5 entries on 3 team pages,
+  each found again on its Roster dialog). JV ties are shown in every sport since 2026-11-25: a club line on the team
+  page's JV roster (found by name, as the JV profiles are), the club page's player list and counts ("JV" leads the
+  row's facts; the pages then say they name players from the "varsity rosters and JV lists"), and /recruiting. Of the
+  JV rows, only the 4 tied players' pages were searched (below); 14 JV rows with no grade whose name is on a roster
+  link when MaxPreps posts the grade.
+- **Profiles of the tied players, 2026-11-25.** The 57 players with a club tie and no linked recruiting page (53
+  varsity, 4 JV; most resting on a league roster alone) were looked for again with §1.15's methods. SportsRecruits:
+  323 addresses (the bare slug, hyphen and multi-word variants, suffixes 2 on), 36 live soccer pages read through the
+  page's own JSON call; one passes, Sonia Garcia's (Notre Dame San Jose, class of 2028), read three more times and
+  linked, and it lists De Anza Force, so her roster-only tie to the club is now high confidence. The rest state
+  another class year, no school and no hometown, or another sport (10 addresses redirect to the lacrosse and other
+  sport subdomains). Hudl: 19 of the 20 schools found (Notre Dame San Jose is not on Hudl), their girls soccer rosters
+  of 2022 on read; 4 of the players are on them (Lexie Scundi, Claire Higgins, Ella Badawi, Madilyn Murdock), all with
+  private profiles, so none is linked. Not reached: NCSA (Cloudflare answers 403 to an automated read from this
+  environment) and MaxPreps career pages (MaxPreps answers 403 here; the claimed flag was not read).
+- **The Mitty drift, 2026-11-25.** MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or
+  Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, nobody else added, dropped or
+  respelled, so no id was reissued. Hudl's 2026 Mitty varsity roster still lists both. The owner decided: Brandt's
+  records are removed (3 club ties, her commitment to Washington with Washington's college record, and her overlay
+  entry with its NCSA, SportsRecruits and Hudl profiles; git history keeps them), and Martinez's are kept (her tie to
+  De Anza Force and her overlay entry), left out as roster drift while MaxPreps does not list her and shown again if
+  it lists her again. `pnpm roster-drift` reports those 2 records; with `--base origin/main` none is this change's.
 
 ### Soccer and basketball: last season's commitments
 
