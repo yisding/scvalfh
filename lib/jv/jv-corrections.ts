@@ -189,7 +189,15 @@ const SOCCER_JV_CORRECTIONS: JvCorrections = {
 export const JV_CORRECTIONS: JvCorrections = bySport<JvCorrections>({
   'field-hockey': FIELD_HOCKEY_JV_CORRECTIONS,
   soccer: SOCCER_JV_CORRECTIONS,
-  basketball: { excludedContestIds: {}, opponentFixes: {} },
+  basketball: {
+    excludedContestIds: {
+      // Read 2026-11-25: MaxPreps' JV row for Hollister at St. Francis (Watsonville), Mon Nov 23 at 1:00 PM, is a 0-0
+      // "final" both schools' rows mark T, with no score entered. A basketball game cannot end level, so the row is no
+      // result; it is left out until a person checks the game (the varsity game that day is still score-pending).
+      '90000ba2-77d6-48bf-ac83-f4e91e7f1240': 'Hollister at St. Francis (Watsonville), Nov 23, 0-0 marked a tie: no score entered, and a basketball game cannot end level',
+    },
+    opponentFixes: {},
+  },
   volleyball: { excludedContestIds: {}, opponentFixes: {} },
   'val-soccer': { excludedContestIds: {}, opponentFixes: {} },
 });

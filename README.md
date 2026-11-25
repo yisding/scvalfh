@@ -13,23 +13,27 @@ note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site r
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
-**Girls soccer (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL, 2026-27).** The same code builds a second site, NorCal High
-School Girls Soccer, when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8), the
-BVAL's 26 (Mt. Hamilton 8, Santa Teresa 8, West Valley 10), the WCAL's 6, the WBAL's 13 (Foothill 7, Skyline 6), the
-PAL's 16 (Bay 7, Ocean 9) and the SCCAL's 6, 82 teams, winter 2026-27, from the data under `data/soccer/`. The WCAL and
-the WBAL were added on 2026-11-14 (see "WCAL and WBAL in the soccer build"), the PAL and the SCCAL on 2026-11-21 (see
-"PAL and SCCAL in the winter builds"). It has the recruiting pages too (/clubs, /commits, /recruiting), from research
+**Girls soccer (every CCS league: SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL, PCAL and PSAL, 2026-27).** The same code builds
+a second site, NorCal High School Girls Soccer, when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De
+Anza 7, El Camino 8), the BVAL's 26 (Mt. Hamilton 8, Santa Teresa 8, West Valley 10), the WCAL's 6, the WBAL's 13
+(Foothill 7, Skyline 6), the PAL's 16 (Bay 7, Ocean 9), the SCCAL's 6, the PCAL's 27 (Gabilan 7, Mission 7, Cypress 6,
+Santa Lucia 7) and the PSAL's 14 (Bay 7, Central 7), 123 teams, winter 2026-27, from the data under `data/soccer/`. The
+WCAL and the WBAL were added on 2026-11-14 (see "WCAL and WBAL in the soccer build"), the PAL and the SCCAL on
+2026-11-21 (see "PAL and SCCAL in the winter builds"), the PCAL and the PSAL on 2026-11-25 (see "PCAL and PSAL in the
+winter builds"). It has the recruiting pages too (/clubs, /commits, /recruiting), from research
 of 2026-11-21. See "Girls soccer" and "Girls soccer and boys basketball: recruiting" under "Local development" and
 docs/MULTI-SPORT.md.
 
-**Boys basketball (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL, 2026-27).** The same code builds a third site, NorCal High
-School Boys Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys basketball teams (De Anza 7, El
-Camino 8), the BVAL's 26 (Mt. Hamilton 7, Santa Teresa 6, Almaden Valley 6, West Valley 7), the WCAL's 8, the WBAL's
-8, the PAL's 16 (Bay 8, Ocean 8) and the SCCAL's 6, 79 teams, winter 2026-27, from the data under `data/basketball/`,
-with tables ordered on the league record and a JV schedule read from SCVAL's and BVAL's own documents. BVAL was added
-to both winter builds on 2026-11-13 so the ratings count SCVAL's many non-league games against BVAL schools (see
-"BVAL in the winter builds"); the WCAL, the WBAL, the PAL and the SCCAL on 2026-11-21 (see "PAL and SCCAL in the
-winter builds"). It has the recruiting pages too (/clubs, /commits, /recruiting), from research of 2026-11-21. See
+**Boys basketball (every CCS league: SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL, PCAL and PSAL, 2026-27).** The same code
+builds a third site, NorCal High School Boys Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys
+basketball teams (De Anza 7, El Camino 8), the BVAL's 26 (Mt. Hamilton 7, Santa Teresa 6, Almaden Valley 6, West
+Valley 7), the WCAL's 8, the WBAL's 8, the PAL's 16 (Bay 8, Ocean 8), the SCCAL's 6, the PCAL's 31 (Gabilan 7, Mission
+8, Cypress 8, Santa Lucia 8) and the PSAL's 23 (Bay 6, Coast 6, North 5, South 6), 133 teams, winter 2026-27, from the
+data under `data/basketball/`, with tables ordered on the league record and a JV schedule read from SCVAL's and BVAL's
+own documents. BVAL was added to both winter builds on 2026-11-13 so the ratings count SCVAL's many non-league games
+against BVAL schools (see "BVAL in the winter builds"); the WCAL, the WBAL, the PAL and the SCCAL on 2026-11-21 (see
+"PAL and SCCAL in the winter builds"); the PCAL and the PSAL on 2026-11-25 (see "PCAL and PSAL in the winter builds").
+It has the recruiting pages too (/clubs, /commits, /recruiting), from research of 2026-11-21. See
 "Boys basketball" and "Girls soccer and boys basketball: recruiting" under "Local development" and docs/MULTI-SPORT.md.
 
 **Girls volleyball (SCVAL, BVAL, WCAL and WBAL, 2026).** The same code builds a fourth site, NorCal High School Girls
@@ -1535,7 +1539,7 @@ and runs the same `scripts/smoke-server.sh` and axe passes against it. Uploading
 ### Girls soccer
 
 One sport per build (docs/MULTI-SPORT.md). `SCVAL_SPORT` picks it: unset (or `field-hockey`) builds this
-site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL) from `data/soccer/`. Every command takes it:
+site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL, PCAL and PSAL) from `data/soccer/`. Every command takes it:
 
 ```bash
 SCVAL_SPORT=soccer pnpm fetch-data --no-vnn               # data/soccer/snapshot.json (VNN is field hockey's)
@@ -1605,7 +1609,7 @@ yet: comparing the league's own table with the computed one (it is read but not 
 
 ### Boys basketball
 
-`SCVAL_SPORT=basketball` builds the boys basketball site (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL) from
+`SCVAL_SPORT=basketball` builds the boys basketball site (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL, PCAL and PSAL) from
 `data/basketball/`. Every command takes it:
 
 ```bash
@@ -2337,6 +2341,55 @@ between two members of one division inside its league play (`classification: 'me
 - **Snapshots written before a league was added** load through `addConfiguredLeagues`
   (`lib/snapshot/snapshot-migrate.ts`), which now also takes the CCS berth table afresh from config, so the first
   refresh after this change carries the previous snapshot instead of starting from nothing.
+
+### PCAL and PSAL in the winter builds
+
+Both winter builds cover the Pacific Coast Athletic League and the Private School Athletic League (owner request,
+2026-11-25), so each now holds every league of the CCS: the soccer registry 123 teams, the basketball registry 133.
+Both leagues are read by membership, as the PAL and the SCCAL are: a league game is a game between two members of one
+division inside its league play (`classification: 'membership'`), and each division's `official.scheduleUrl` names the
+league's own schedule, which is not copied.
+
+- **PCAL** (`lib/league-config/{soccer,basketball}/pcal.ts`, `lib/registry/{soccer,basketball}/pcal.ts`): Monterey
+  County, San Benito County and south Santa Cruz County schools (and Morgan Hill's Oakwood in basketball) in four
+  divisions, from the 2026-27 schedules on pcalathletics.org (one PDF a division, each marked Final), the PCAL Sport
+  Rules for soccer (Sep 2022) and basketball (Mar 2024) and the By-Laws (rev. May 2025). Girls soccer: Gabilan 7,
+  Mission 7, Cypress 6, Santa Lucia 7, double round robins Jan 4-5 to Feb 11-12; 3-1-0 points, no overtime (§1.6.3-4);
+  seven CCS berths (§1.9): the Gabilan's top four, the Mission's and the Cypress's champions, and the winner of the
+  Tue Feb 16 play-in, the Mission's #2 at the Santa Lucia's #1 (`postseasonFrom` Feb 16). Boys basketball: Gabilan 7,
+  Mission 8, Cypress 8, Santa Lucia 8 (a school's division can differ from its soccer one), ordered on the league
+  record; eight berths (§1.9): the Gabilan's top four, the Mission's top two, the Cypress and Santa Lucia champions.
+  Ties follow By-Laws §23.3 (head-to-head, then the record against the teams placed above and below, `record-vs-placed`;
+  CCS points and the coin flip are not computed). MaxPreps' PCAL tables follow an older alignment in most divisions
+  (`maxprepsMissing`, `maxprepsExtraRows`, `knownCause`). The field hockey registry's slugs are kept for the schools it
+  holds (Carmel, Greenfield, Hollister, Monterey, Salinas, Santa Catalina, Stevenson); Marina is `marina-mariners`
+  (field hockey's `marina` is Huntington Beach's), and Watsonville's St. Francis `st-francis-watsonville`. The WCAL's
+  Saint Francis no longer carries the "St. Francis" spellings: that name is Watsonville's now.
+- **PSAL** (`lib/league-config/{soccer,basketball}/psal.ts`, `lib/registry/{soccer,basketball}/psal.ts`): small
+  private and charter schools from Pacifica to San Jose, from the league's Google Sheets of 2026-27 schedules and its
+  Constitution, both linked from sites.google.com/almaheights.org/psal. Girls soccer: Bay 7 and Central 7, Jan 6 to
+  Feb 12; 3-1-0 points, no overtime (§1402-1403); two berths (§1409): the Bay champion, and the winner of a play-in
+  between the Bay's #2 (host) and the Central champion on the schedule's play-in days (`postseasonFrom` Feb 15). Boys
+  basketball: Bay 6 (Jan 14 to Feb 16), Coast 6, North 5 and South 6 (Jan 5 to Feb 11), ordered on the league record.
+  No PSAL document gives the basketball berth count, so each division's champion is marked (as the SCCAL's girls
+  soccer champion is). Ties are broken head-to-head (§406, §406.B); the play-in and the later steps are not computed.
+  Division ids are `psal-<division>`, since the PAL has a Bay. Oceana, the PAL's in 2025-26, is a PSAL team now, so
+  the PAL's 2025-26 transcriptions list it under `formerMembers` and its rows link its page.
+- **Registries**: a basketball seed for a school the soccer registry holds is its soccer seed on its basketball page
+  (`lib/registry/basketball/from-soccer.ts`). Names, mascots, cities, acronyms, colors and paths are each team's own
+  row of MaxPreps' schedule payloads (read 2026-11-25); Monterey Bay Academy and Cindy Avitia carry one color there, so
+  their badges have the neutral placeholder pair. Thomas More, which MaxPreps calls "More", has the league's name.
+  Addresses are MaxPreps' school fields (`data/<sport>/schools.json`; Rancho San Juan's from the CDE school directory).
+- **si.com**: every new team's si.com team id, games-page slug and school id, and its JV team's page
+  (`lib/jv/jv-teams.ts`), read 2026-11-25 from each team's own games page, found through si.com's team search by name
+  and city. si.com's PCAL and PSAL tables (`sblive.leagueSlugs`) are older alignments and serve the id harvest and the
+  league scoreboards only. The search adds Marina, St. Francis, Cristo Rey and The Nueva School (both sports) and
+  Oakwood and Trinity Christian (basketball) to the statewide namesakes (`STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`).
+- **Last season**: neither league publishes standings (pcalathletics.org lists division champions, through 2024-25;
+  the PSAL's site lists champions and all-league teams), so /history/2025-26 marks both unavailable, with what was
+  checked (`pcalNoStandings`, `psalNoStandings` in `scripts/build-history.ts`).
+- **Other sports**: `lib/schools/other-sports.ts` now reads every winter league, so a team page links the same school
+  on the other sites wherever it plays (a field hockey PCAL school links its soccer and basketball pages).
 
 ### WCAL and WBAL in the soccer build
 
@@ -3303,8 +3356,8 @@ links to the others (2026-11-16, owner's request):
   `Boys Basketball`, …), from `lib/sports/sites.ts` (`OTHER_SPORT_SITES`, `SPORT_SITE_ORIGINS`).
 - **A team page**, in the rail before Elsewhere: an "Other sports" block linking the same school's team page on
   each other site whose registry holds the school (`lib/schools/other-sports.ts`, which reads every sport's
-  registry and matches on the MaxPreps school id). A school no other site covers (PCAL, MCAL, the EAL, SoCal) gets
-  no block.
+  registry and matches on the MaxPreps school id). A school no other site covers (MCAL, the EAL, SoCal) gets no
+  block; a field hockey PCAL school links its soccer and basketball pages (since 2026-11-25).
 
 The origins are the production domains, not `SITE_URL`, so a preview or a local build links to the live sites.
 A new sport or a new domain is one entry in `SPORT_SITE_ORIGINS`. Both blocks name other programs on purpose, so

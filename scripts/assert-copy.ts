@@ -4,7 +4,8 @@
  *   pnpm build && pnpm assert:copy
  *
  * Over every `.next/server/app/**\/*.html` (visible markup AND the inline RSC payload):
- *  - no case-sensitive "Gabilan". The only allowed trace of the MaxPreps table name is the
+ *  - no case-sensitive "Gabilan" (field hockey, where it is only MaxPreps' name for the PCAL's one table; the winter
+ *    builds' PCAL has a Gabilan division of its own). The only allowed trace of the MaxPreps table name is the
  *    lowercase slug inside a MaxPreps URL (`…/pacific-coast--gabilan/…`), so every maxpreps.com URL
  *    is removed first and then no "gabilan" in any case may remain;
  *  - no /eliminat/i;
@@ -224,11 +225,18 @@ const PROPER_NOUNS: string[] = [
   ...[...new Set(commitsFile.commitments.filter((c) => c.sport !== SPORT.id).map((c) => SPORT_WORDS[c.sport]))],
 ];
 
+/** True in a build where Gabilan is a division of the league's own (the winter builds' PCAL). */
+const GABILAN_IS_A_DIVISION = ALL_DIVISIONS.some((d) => d.label === 'Gabilan');
+
 for (const file of files) {
   const html = readFileSync(path.join(APP, file), 'utf8');
-  forbid(file, html, /Gabilan/, 'contains "Gabilan"');
-  const withoutMaxprepsUrls = html.replace(/https?:(?:\/|\\\/){2}(?:www\.)?maxpreps\.com[^\s"'<>\\]*/g, '');
-  forbid(file, withoutMaxprepsUrls, /gabilan/i, '"gabilan" outside a MaxPreps URL');
+  // Field hockey's PCAL plays one division, and "Gabilan" is only MaxPreps' name for its table; in the winter builds the
+  // Gabilan is one of the PCAL's own four divisions (2026-11-25), so its name is copy there.
+  if (!GABILAN_IS_A_DIVISION) {
+    forbid(file, html, /Gabilan/, 'contains "Gabilan"');
+    const withoutMaxprepsUrls = html.replace(/https?:(?:\/|\\\/){2}(?:www\.)?maxpreps\.com[^\s"'<>\\]*/g, '');
+    forbid(file, withoutMaxprepsUrls, /gabilan/i, '"gabilan" outside a MaxPreps URL');
+  }
   forbid(file, html, /eliminat/i, 'contains "eliminat…"');
   forbid(
     file,

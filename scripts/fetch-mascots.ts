@@ -12,9 +12,11 @@
  *
  * The teams are this build's registry: a school only the soccer and basketball registries hold (Gunn, Mountain
  * View, MacDonald, Milpitas, Wilcox, the fourteen BVAL schools field hockey does not have, the fourteen WCAL
- * and WBAL schools only the soccer registry holds, the PAL's sixteen and the SCCAL's six, and the WCAL's Bellarmine
- * and Serra, only the basketball registry's) is fetched with
- * `SCVAL_SPORT=soccer pnpm fetch-mascots --only <slug>` (one `--only` per slug).
+ * and WBAL schools only the soccer registry holds, the PAL's sixteen and the SCCAL's six, the PCAL's and the PSAL's
+ * schools field hockey does not have, and the WCAL's Bellarmine and Serra and the PCAL's and PSAL's basketball-only
+ * schools, only the basketball registry's) is fetched with
+ * `SCVAL_SPORT=soccer pnpm fetch-mascots --only <slug>` (one `--only` per slug; `SCVAL_SPORT=basketball` for a
+ * basketball-only school).
  * One public/mascots/ serves every sport's build.
  *
  * Self-hosted, never hotlinked: the site makes no third-party image request. The files are
@@ -50,10 +52,14 @@ import sharp, { type Sharp } from 'sharp';
 
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
 import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
+import { PCAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/pcal';
+import { PSAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/psal';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
 import { WCAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
 import { PAL_SOCCER_SEEDS } from '../lib/registry/soccer/pal';
+import { PCAL_SOCCER_SEEDS } from '../lib/registry/soccer/pcal';
+import { PSAL_SOCCER_SEEDS } from '../lib/registry/soccer/psal';
 import { SCCAL_SOCCER_SEEDS } from '../lib/registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from '../lib/registry/soccer/wbal';
@@ -92,6 +98,15 @@ type MascotSource = { url: string; file?: undefined } | { file: string; url?: un
  * school's own site, as Monta Vista does.
  */
 const SOURCE_OVERRIDES: Readonly<Record<string, MascotSource & { why: string }>> = {
+  'pacific-grove': {
+    // The same gif with the version MaxPreps' own schedule rows give it (read 2026-11-25).
+    url: 'https://image.maxpreps.io/school-mascot/5/0/4/5041038f-a821-4209-90af-196b6d756e48.gif?version=635449103400000000',
+    why: "MaxPreps' unversioned address answers 403; the versioned one its schedule rows publish serves the logo",
+  },
+  'design-tech': {
+    url: `${SBLIVE}/school/31801-v3/image/design-tech-dragons-brand-refresh-brand-identity.png`,
+    why: "MaxPreps' mascot gif answers 403 at every address (read 2026-11-25); SBLive's school logo is the school's dragon",
+  },
   'monta-vista': {
     // The school's own site footer logo (1788×1371 PNG, the matador with "MV").
     url: 'https://mvhs.fuhsd.org/uploaded/themes/default_17/images/monta_vista_footer.png',
@@ -169,6 +184,7 @@ const WINTER_SLUGS: ReadonlySet<string> = new Set(
   [
     ...SCVAL_SOCCER_SEEDS, ...SCVAL_BASKETBALL_SEEDS, ...BVAL_SOCCER_SEEDS, ...BVAL_BASKETBALL_SEEDS,
     ...WCAL_SOCCER_SEEDS, ...WBAL_SOCCER_SEEDS, ...PAL_SOCCER_SEEDS, ...SCCAL_SOCCER_SEEDS, ...WCAL_BASKETBALL_SEEDS,
+    ...PCAL_SOCCER_SEEDS, ...PSAL_SOCCER_SEEDS, ...PCAL_BASKETBALL_SEEDS, ...PSAL_BASKETBALL_SEEDS,
   ].map((s) => s.slug),
 );
 

@@ -1,15 +1,33 @@
 {
-  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\". WCAL's six schools and the WBAL's thirteen were added on 2026-11-14, each from the schoolAddress, schoolCity and schoolZipCode fields of MaxPreps' team-context payload for its girls soccer team, read 2026-11-14, with \"37Th\" written \"37th\". The PAL's sixteen schools and the SCCAL's six were added on 2026-11-21 from MaxPreps' school fields (address, city, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-21.",
-  "capturedAt": "2026-11-21",
+  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\". WCAL's six schools and the WBAL's thirteen were added on 2026-11-14, each from the schoolAddress, schoolCity and schoolZipCode fields of MaxPreps' team-context payload for its girls soccer team, read 2026-11-14, with \"37Th\" written \"37th\". The PAL's sixteen schools and the SCCAL's six were added on 2026-11-21 from MaxPreps' school fields (address, city, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-21. The PCAL's and the PSAL's schools were added on 2026-11-25 from MaxPreps' school fields (address, city, zipCode) on each team's own row of its girls soccer schedule payload, read 2026-11-25; Rancho San Juan's row has no address, so its address is the California Department of Education's school directory entry (1100 Rogge Rd, Salinas 93906).",
+  "capturedAt": "2026-11-25",
   "notes": [
     "The address of each registry school's campus, keyed by team slug. It is where the school is, not necessarily the field a game is played on: a page that shows it as a game's address says it is the host school's."
   ],
   "schools": {
+    "ace-charter": {
+      "street": "1776 Educational Park Dr",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95133"
+    },
+    "alisal": {
+      "street": "777 Williams Rd",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93905"
+    },
     "andrew-hill": {
       "street": "3200 Senter Rd",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95111"
+    },
+    "anzar": {
+      "street": "2000 San Juan Highway",
+      "city": "San Juan Bautista",
+      "region": "CA",
+      "postalCode": "95045"
     },
     "aptos": {
       "street": "100 Mariner Wy",
@@ -47,6 +65,12 @@
       "region": "CA",
       "postalCode": "94002"
     },
+    "carmel": {
+      "street": "3600 Ocean Ave",
+      "city": "Carmel",
+      "region": "CA",
+      "postalCode": "93922"
+    },
     "castilleja": {
       "street": "1310 Bryant St",
       "city": "Palo Alto",
@@ -58,6 +82,18 @@
       "city": "Gilroy",
       "region": "CA",
       "postalCode": "95020"
+    },
+    "cindy-avitia": {
+      "street": "1881 Cunningham Avenue",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95122"
+    },
+    "cristo-rey-san-jose": {
+      "street": "1389 E Santa Clara St",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95116"
     },
     "crystal-springs": {
       "street": "400 Uplands Dr",
@@ -77,6 +113,12 @@
       "region": "CA",
       "postalCode": "95128"
     },
+    "design-tech": {
+      "street": "275 Oracle Pkwy",
+      "city": "Redwood City",
+      "region": "CA",
+      "postalCode": "94065"
+    },
     "eastside": {
       "street": "1041 Myrtle Street",
       "city": "East Palo Alto",
@@ -88,6 +130,12 @@
       "city": "South San Francisco",
       "region": "CA",
       "postalCode": "94080"
+    },
+    "everett-alvarez": {
+      "street": "1900 Independence Blvd",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93906"
     },
     "evergreen-valley": {
       "street": "3300 Quimby Rd",
@@ -106,6 +154,18 @@
       "city": "Gilroy",
       "region": "CA",
       "postalCode": "95020"
+    },
+    "gonzales": {
+      "street": "501 Fifth St",
+      "city": "Gonzales",
+      "region": "CA",
+      "postalCode": "93926"
+    },
+    "greenfield": {
+      "street": "225 El Camino Real",
+      "city": "Greenfield",
+      "region": "CA",
+      "postalCode": "93927"
     },
     "gunderson": {
       "street": "622 Gaundabert Ln",
@@ -143,6 +203,12 @@
       "region": "CA",
       "postalCode": "94403"
     },
+    "hollister": {
+      "street": "1220 Monterey St",
+      "city": "Hollister",
+      "region": "CA",
+      "postalCode": "95023"
+    },
     "homestead": {
       "street": "21370 Homestead Rd",
       "city": "Cupertino",
@@ -167,11 +233,41 @@
       "region": "CA",
       "postalCode": "94014"
     },
+    "king-city": {
+      "street": "720 Broadway",
+      "city": "King City",
+      "region": "CA",
+      "postalCode": "93930"
+    },
     "kings-academy": {
       "street": "562 Britton St",
       "city": "Sunnyvale",
       "region": "CA",
       "postalCode": "94085"
+    },
+    "kipp-esperanza": {
+      "street": "1039 Garden St.",
+      "city": "Palo Alto",
+      "region": "CA",
+      "postalCode": "94303"
+    },
+    "kipp-navigate": {
+      "street": "1750 S. White Rd.",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95127"
+    },
+    "kipp-san-jose": {
+      "street": "1790 Educational Park Drive",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95133"
+    },
+    "latino-college-prep": {
+      "street": "14271 Story Rd.",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95127"
     },
     "leigh": {
       "street": "5210 Leigh Ave",
@@ -221,6 +317,12 @@
       "region": "CA",
       "postalCode": "95134"
     },
+    "marina-mariners": {
+      "street": "298 Patton Parkway",
+      "city": "Marina",
+      "region": "CA",
+      "postalCode": "93933"
+    },
     "menlo": {
       "street": "50 Valparaiso Ave",
       "city": "Atherton",
@@ -263,6 +365,24 @@
       "region": "CA",
       "postalCode": "95014"
     },
+    "monte-vista-christian": {
+      "street": "2 School Wy",
+      "city": "Watsonville",
+      "region": "CA",
+      "postalCode": "95076"
+    },
+    "monterey": {
+      "street": "101 Herrmann Dr",
+      "city": "Monterey",
+      "region": "CA",
+      "postalCode": "93940"
+    },
+    "monterey-bay-academy": {
+      "street": "783 San Andreas Rd",
+      "city": "La Selva Beach",
+      "region": "CA",
+      "postalCode": "95076"
+    },
     "mountain-view": {
       "street": "3535 Truman Ave",
       "city": "Mountain View",
@@ -274,6 +394,18 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95127"
+    },
+    "north-monterey-county": {
+      "street": "13990 Castroville Blvd",
+      "city": "Castroville",
+      "region": "CA",
+      "postalCode": "95012"
+    },
+    "north-salinas": {
+      "street": "55 Kip Dr",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93906"
     },
     "notre-dame-belmont": {
       "street": "1540 Ralston Ave",
@@ -287,17 +419,53 @@
       "region": "CA",
       "postalCode": "95112"
     },
+    "nueva": {
+      "street": "131 East 28th Ave.",
+      "city": "San Mateo",
+      "region": "CA",
+      "postalCode": "94403"
+    },
     "oak-grove": {
       "street": "285 Blossom Hill Rd",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95123"
     },
+    "oceana": {
+      "street": "401 Paloma Ave",
+      "city": "Pacifica",
+      "region": "CA",
+      "postalCode": "94044"
+    },
     "overfelt": {
       "street": "1835 Cunningham Ave",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95122"
+    },
+    "pacific-collegiate": {
+      "street": "3004 Mission St.",
+      "city": "Santa Cruz",
+      "region": "CA",
+      "postalCode": "95060"
+    },
+    "pacific-grove": {
+      "street": "615 Sunset Dr",
+      "city": "Pacific Grove",
+      "region": "CA",
+      "postalCode": "93950"
+    },
+    "pajaro-valley": {
+      "street": "500 Harkins Slough Rd",
+      "city": "Watsonville",
+      "region": "CA",
+      "postalCode": "95076"
+    },
+    "palma": {
+      "street": "919 Iverson St",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93901"
     },
     "palo-alto": {
       "street": "50 Embarcadero Rd",
@@ -341,6 +509,12 @@
       "region": "CA",
       "postalCode": "95070"
     },
+    "rancho-san-juan": {
+      "street": "1100 Rogge Rd",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93906"
+    },
     "riordan": {
       "street": "175 Phelan Ave",
       "city": "San Francisco",
@@ -365,6 +539,12 @@
       "region": "CA",
       "postalCode": "94040"
     },
+    "salinas": {
+      "street": "726 S Main St",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93901"
+    },
     "san-jose": {
       "street": "275 N 24th St",
       "city": "San Jose",
@@ -382,6 +562,12 @@
       "city": "San Mateo",
       "region": "CA",
       "postalCode": "94401"
+    },
+    "santa-catalina": {
+      "street": "1500 Mark Thomas Drive",
+      "city": "Monterey",
+      "region": "CA",
+      "postalCode": "93940"
     },
     "santa-clara": {
       "street": "3000 Benton St",
@@ -413,6 +599,12 @@
       "region": "CA",
       "postalCode": "95066"
     },
+    "seaside": {
+      "street": "2200 Noche Buena",
+      "city": "Seaside",
+      "region": "CA",
+      "postalCode": "93955"
+    },
     "sequoia": {
       "street": "1201 Brewster Ave",
       "city": "Redwood City",
@@ -431,6 +623,12 @@
       "region": "CA",
       "postalCode": "95037"
     },
+    "soledad": {
+      "street": "425 Gabilan Dr",
+      "city": "Soledad",
+      "region": "CA",
+      "postalCode": "93960"
+    },
     "soquel": {
       "street": "401 Old San Jose Rd",
       "city": "Soquel",
@@ -443,11 +641,41 @@
       "region": "CA",
       "postalCode": "94080"
     },
+    "st-francis-watsonville": {
+      "street": "2400 East Lake Avenue",
+      "city": "Watsonville",
+      "region": "CA",
+      "postalCode": "95076"
+    },
     "st-ignatius": {
       "street": "2001 37th Ave",
       "city": "San Francisco",
       "region": "CA",
       "postalCode": "94116"
+    },
+    "stevenson": {
+      "street": "3152 Forest Lake Rd",
+      "city": "Pebble Beach",
+      "region": "CA",
+      "postalCode": "93953"
+    },
+    "summit-prep": {
+      "street": "890 Broadway St",
+      "city": "Redwood City",
+      "region": "CA",
+      "postalCode": "94063"
+    },
+    "summit-shasta": {
+      "street": "905 Campus Drive",
+      "city": "Daly City",
+      "region": "CA",
+      "postalCode": "94015"
+    },
+    "summit-tahoma": {
+      "street": "285 Blossom Hill Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95123"
     },
     "terra-nova": {
       "street": "1450 Terra Nova Blvd",
@@ -455,11 +683,23 @@
       "region": "CA",
       "postalCode": "94044"
     },
+    "thomas-more": {
+      "street": "1565 S White Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95127"
+    },
     "valley-christian": {
       "street": "100 Skyway Dr",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95111"
+    },
+    "watsonville": {
+      "street": "250 E Beach St",
+      "city": "Watsonville",
+      "region": "CA",
+      "postalCode": "95076"
     },
     "westmont": {
       "street": "4805 Westmont Ave",
@@ -496,6 +736,12 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95122"
+    },
+    "york": {
+      "street": "9501 York Rd",
+      "city": "Monterey",
+      "region": "CA",
+      "postalCode": "93940"
     }
   }
 }

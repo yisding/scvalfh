@@ -16,15 +16,14 @@
     "Each table prints Rank, School, Win, Loss and Tie: no points and no overall record, so every overallRecord is null. Rows keep the PDF's rank, which repeats for teams ranked level (3, 3, 5).",
     "Division membership is 2025-26's: Aragon, Burlingame, Carlmont, Hillsdale, Menlo-Atherton, Sequoia and Woodside in the Bay; Capuchino, El Camino, Half Moon Bay, Jefferson, Mills, Oceana, San Mateo, South San Francisco, Terra Nova and Westmoor in the Ocean.",
     "The JV Ocean table ranks Half Moon Bay (4-1-0) 1st beside Terra Nova (5-0-0); it is kept as printed.",
-    "Oceana played in the PAL's Ocean in 2025-26 and is in none of this build's leagues now (the CCS places it in the PSAL for 2026-27): its rows keep its name and have no slug (`leftBuild`).",
+    "Oceana played in the PAL's Ocean in 2025-26 and is in the PSAL for 2026-27, which this build has covered since 2026-11-25 (`formerMembers`): its rows link its team page.",
     "The JV Ocean table lists six teams; El Camino, Jefferson, Oceana and Westmoor are in none.",
     "Only standings are stored: the PAL's all-league teams are not transcribed."
   ],
-  "formerMembers": [],
-  "joinedSince": [],
-  "leftBuild": [
-    "OCEANA"
+  "formerMembers": [
+    "oceana"
   ],
+  "joinedSince": [],
   "schoolSpellings": {},
   "divisions": [
     {

@@ -85,8 +85,8 @@ describe('the soccer sport switch', () => {
 });
 
 describe('SCVAL girls soccer', () => {
-  it('covers SCVAL, BVAL, the WCAL, the WBAL, the PAL and the SCCAL, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal', 'sccal']);
+  it('covers every CCS league: SCVAL, BVAL, the WCAL, the WBAL, the PAL, the SCCAL, the PCAL and the PSAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal', 'sccal', 'pcal', 'psal']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -98,7 +98,7 @@ describe('SCVAL girls soccer', () => {
       'cupertino', 'fremont', 'lynbrook', 'macdonald', 'milpitas', 'monta-vista', 'saratoga', 'wilcox',
     ]);
     expect(m.teams.teamsInLeague('scval')).toHaveLength(15);
-    expect(m.teams.TEAMS).toHaveLength(82);
+    expect(m.teams.TEAMS).toHaveLength(123);
   });
 
   it('aligns BVAL’s 26 schools as its three girls division schedules do', () => {
@@ -181,6 +181,63 @@ describe('SCVAL girls soccer', () => {
     expect(sccal.postseason.kind === 'ccs-ladder' && sccal.postseason.autoBerths).toBe(1);
   });
 
+  it('aligns the PCAL’s 27 schools as its four girls division schedules do, with seven CCS berths and a play-in', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('gabilan')).toEqual([
+      'everett-alvarez', 'hollister', 'monterey', 'pacific-collegiate', 'rancho-san-juan', 'salinas', 'watsonville',
+    ]);
+    expect(slugs('mission')).toEqual(['alisal', 'carmel', 'gonzales', 'monte-vista-christian', 'pajaro-valley', 'soledad', 'stevenson']);
+    expect(slugs('cypress')).toEqual(['greenfield', 'king-city', 'north-monterey-county', 'north-salinas', 'palma', 'seaside']);
+    expect(slugs('santa-lucia')).toEqual([
+      'anzar', 'marina-mariners', 'monterey-bay-academy', 'pacific-grove', 'santa-catalina', 'st-francis-watsonville', 'york',
+    ]);
+    const pcal = m.leagues.getLeague('pcal');
+    expect(pcal.rules.points).toEqual({ win: 3, tie: 1, loss: 0 });
+    expect(pcal.rules.leagueOvertime).toBe('none');
+    expect(pcal.rules.classification).toBe('membership');
+    expect(pcal.rules.postseasonFrom).toBe('2027-02-16');
+    expect(pcal.divisions.map((d) => [d.id, d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      ['gabilan', 7, 12, { first: '2027-01-05', last: '2027-02-12' }],
+      ['mission', 7, 12, { first: '2027-01-05', last: '2027-02-12' }],
+      ['cypress', 6, 10, { first: '2027-01-04', last: '2027-02-11' }],
+      ['santa-lucia', 7, 12, { first: '2027-01-04', last: '2027-02-11' }],
+    ]);
+    if (pcal.postseason.kind !== 'ccs-ladder') throw new Error('PCAL: not a CCS ladder');
+    expect(pcal.postseason.autoBerths).toBe(7);
+    expect(pcal.postseason.ladder.filter((r) => r.status !== 'no-aq-route').map((r) => [r.divisions, r.places, r.status])).toEqual([
+      [['gabilan'], [1, 4], 'aq'], [['mission'], [1, 1], 'aq'], [['mission'], [2, 2], 'play-in'],
+      [['cypress'], [1, 1], 'aq'], [['santa-lucia'], [1, 1], 'play-in'],
+    ]);
+  });
+
+  it('aligns the PSAL’s 14 schools as its girls schedule does, with the Bay champion and a play-in for two berths', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('psal-bay')).toEqual([
+      'cristo-rey-san-jose', 'design-tech', 'kipp-san-jose', 'latino-college-prep', 'nueva', 'oceana', 'thomas-more',
+    ]);
+    expect(slugs('psal-central')).toEqual([
+      'ace-charter', 'cindy-avitia', 'kipp-esperanza', 'kipp-navigate', 'summit-prep', 'summit-shasta', 'summit-tahoma',
+    ]);
+    const psal = m.leagues.getLeague('psal');
+    expect(psal.rules.points).toEqual({ win: 3, tie: 1, loss: 0 });
+    expect(psal.rules.leagueOvertime).toBe('none');
+    expect(psal.divisions.map((d) => [d.id, d.label, d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      ['psal-bay', 'Bay', 7, 12, { first: '2027-01-06', last: '2027-02-12' }],
+      ['psal-central', 'Central', 7, 12, { first: '2027-01-06', last: '2027-02-12' }],
+    ]);
+    if (psal.postseason.kind !== 'ccs-ladder') throw new Error('PSAL: not a CCS ladder');
+    expect(psal.postseason.autoBerths).toBe(2);
+    expect(psal.postseason.ladder.filter((r) => r.status !== 'no-aq-route').map((r) => [r.divisions, r.places, r.status])).toEqual([
+      [['psal-bay'], [1, 1], 'aq'], [['psal-bay'], [2, 2], 'play-in'], [['psal-central'], [1, 1], 'play-in'],
+    ]);
+  });
+
+  it('tells Watsonville’s St. Francis from the WCAL’s Saint Francis', () => {
+    expect(m.teams.resolveTeam('St. Francis')?.slug).toBe('st-francis-watsonville');
+    expect(m.teams.resolveTeam('Saint Francis')?.slug).toBe('saint-francis');
+    expect(m.teams.resolveTeam('St. Francis (Mountain View)')?.slug).toBe('saint-francis');
+  });
+
   it('gives De Anza three automatic CCS berths and El Camino one (By-Laws Article V §2)', () => {
     const scval = m.leagues.getLeague('scval');
     expect(scval.postseason.kind).toBe('ccs-ladder');
@@ -193,7 +250,9 @@ describe('SCVAL girls soccer', () => {
 
   it('dates the CCS rounds from the CCS calendar, and leaves the field size and hosting null', () => {
     const { requireCcs, ccsRoundDays, ccsLastDay } = m.sections;
-    expect(requireCcs().autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 2, wbal: 4, pal: 4, sccal: 1, atLarge: null, total: null });
+    expect(requireCcs().autoQualifiers).toEqual({
+      scval: 4, bval: 6, wcal: 2, wbal: 4, pal: 4, sccal: 1, pcal: 7, psal: 2, atLarge: null, total: null,
+    });
     expect(requireCcs().keyDates).toMatchObject({
       seedingMeeting: '2027-02-18T15:00:00',
       quarterfinals: '2027-02-20',

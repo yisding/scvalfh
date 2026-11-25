@@ -50,9 +50,9 @@ const order = (rows: Row[]) => rows.map((r) => `${r.place} ${r.slug} ${r.leagueR
 describe('data/soccer/history-2025-26.json: the WCAL and the WBAL', () => {
   it('has both leagues available, from their own documents, beside SCVAL and BVAL', () => {
     // BVAL from its standings sheet (2026-11-16: tests/history-other-sports.test.ts).
-    // The PAL (added 2026-11-21) from its own PDFs too; the SCCAL publishes no standings.
+    // The PAL (added 2026-11-21) from its own PDFs too; the SCCAL, the PCAL and the PSAL publish no standings.
     expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal']);
-    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['sccal']);
+    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['sccal', 'pcal', 'psal']);
     const f = readFile('soccer');
     expect([f.leagues.wcal.provenance, f.leagues.wbal.provenance].map((p) => [p.source, p.publisher])).toEqual([
       ['league-documents', 'wcalsports.org'],
@@ -137,7 +137,7 @@ describe('data/soccer/history-2025-26.json: the WCAL and the WBAL', () => {
 });
 
 describe('data/soccer/history-2025-26.json: the PAL', () => {
-  it('has the PAL’s 2025-26 Bay and Ocean tables as its PDFs print them, Oceana unkeyed', () => {
+  it('has the PAL’s 2025-26 Bay and Ocean tables as its PDFs print them, Oceana (a PSAL team now) a former member', () => {
     expect(order(division('soccer', 'pal', 'bay').standings.varsity)).toEqual([
       '1 carlmont 7-2-3', '2 woodside 7-3-2', '3 menlo-atherton 5-4-3', '3 sequoia 5-4-3', '5 aragon 4-4-4',
       '6 burlingame 4-7-1', '7 hillsdale 1-7-4',
@@ -145,7 +145,7 @@ describe('data/soccer/history-2025-26.json: the PAL', () => {
     const ocean = division('soccer', 'pal', 'ocean').standings;
     expect(order(ocean.varsity)).toEqual([
       '1 terra-nova 9-0-0', '2 san-mateo 6-1-2', '2 south-san-francisco 6-1-2', '4 mills 5-4-0', '5 half-moon-bay 4-4-1',
-      '6 null 4-4-0', '7 capuchino 3-4-1', '8 el-camino-ssf 3-6-0', '9 jefferson 0-8-1', '9 westmoor 0-8-1',
+      '6 oceana 4-4-0', '7 capuchino 3-4-1', '8 el-camino-ssf 3-6-0', '9 jefferson 0-8-1', '9 westmoor 0-8-1',
     ]);
     expect(ocean.varsity[5].name).toBe('OCEANA');
     expect(ocean.jv).toHaveLength(6);
@@ -173,17 +173,17 @@ describe('scripts/lib/history-league-documents.ts', () => {
     ]);
   });
 
-  it('keeps a school no longer in the build unkeyed only when the transcription names it (leftBuild)', () => {
+  it('keys Oceana, a PSAL team since 2026-27, as a former member, and lets leftBuild name only a school out of the build', () => {
     const tr = m.documents.readLeagueTranscription('data/soccer', 'pal');
     expect(m.documents.buildLeagueDocumentsHistory('pal', tr, '2025-26').problems).toEqual([]);
-    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: [] }, '2025-26').problems).toEqual([
+    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, formerMembers: [] }, '2025-26').problems).toEqual([
       'pal: standings name "OCEANA" (ocean/varsity) resolves to no team of the league or its former members',
     ]);
-    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: ['OCEANA', 'MILLS'] }, '2025-26').problems).toEqual([
-      'pal: "MILLS" (leftBuild) is a team of this build',
+    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: ['OCEANA'] }, '2025-26').problems).toEqual([
+      'pal: "OCEANA" (leftBuild) is a team of this build',
     ]);
     // A listed name that no row prints (a typo, a stale entry) is an error too.
-    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: ['OCEANA', 'OCEANNA'] }, '2025-26').problems).toEqual([
+    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: ['OCEANNA'] }, '2025-26').problems).toEqual([
       'pal: "OCEANNA" (leftBuild) is in no standings table',
     ]);
   });

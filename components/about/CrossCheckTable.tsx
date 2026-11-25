@@ -3,6 +3,8 @@ import Link from 'next/link';
 import ExternalLink from '../ui/ExternalLink';
 import TeamMonogram from '../ui/TeamMonogram';
 
+import { SCORE_UNITS } from '../words/score-words';
+
 import type { CrossCheckGroup } from './about-view';
 
 /**
@@ -20,6 +22,15 @@ import type { CrossCheckGroup } from './about-view';
  * column repeated it and made the table wider than a 320px screen. A plain `.sx-table` (untinted
  * head over the ink rule, DESIGN §33), no box around it.
  */
+/**
+ * A row's field name in this sport's words: lib/standings/cross-check.ts names the scored columns 'league goals
+ * for' / 'league goals against', which a basketball or volleyball page prints with its own unit ('league points
+ * for'); field hockey's and soccer's read as they are.
+ */
+function fieldWords(field: string): string {
+  return field.replace(/\bgoals\b/, SCORE_UNITS);
+}
+
 export interface CrossCheckTableProps {
   groups: CrossCheckGroup[];
   /** Teams in scope (a league, or the whole site): "all <n> teams" in the agreement sentence. */
@@ -91,7 +102,7 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.field}>
-                    <td className="text-left whitespace-normal text-ink-2">{row.field}</td>
+                    <td className="text-left whitespace-normal text-ink-2">{fieldWords(row.field)}</td>
                     <td className="sx-num font-semibold">{row.ours}</td>
                     <td className="sx-num text-ink-2">{row.theirs}</td>
                   </tr>

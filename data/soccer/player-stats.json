@@ -1,18 +1,18 @@
 {
   "counts": {
-    "errors": 2,
+    "errors": 5,
     "goalkeepers": 0,
-    "players": 0,
-    "teams": 82,
-    "teamsWithStats": 0
+    "players": 13,
+    "teams": 123,
+    "teamsWithStats": 1
   },
-  "fetchedAt": "2026-11-25T05:40:17.392Z",
+  "fetchedAt": "2026-11-25T15:36:29.262Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
     "id": "maxpreps-api",
     "notes": [
-      "One entry per registry team, all 6 leagues (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+      "One entry per registry team, all 8 leagues (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL, PCAL, PSAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
       "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/field-hockey/rosters.json on the career id in each row's player link.",
       "Every number is what the coach entered on MaxPreps, for all of this season's varsity games, league and non-league alike. Coverage is the coach's choice: a team MaxPreps has no stats for is status none.",
       "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
@@ -1734,6 +1734,1292 @@
       "statsUrl": "https://www.maxpreps.com/ca/soquel/soquel-knights/soccer/girls/winter/stats/",
       "status": "none",
       "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
+      "name": "Everett Alvarez",
+      "players": [],
+      "slug": "everett-alvarez",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/everett-alvarez-eagles/soccer/girls/winter/stats/",
+      "status": "error",
+      "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+      "name": "Hollister",
+      "players": [],
+      "slug": "hollister",
+      "statsUrl": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+      "name": "Monterey",
+      "players": [],
+      "slug": "monterey",
+      "statsUrl": "https://www.maxpreps.com/ca/monterey/monterey-toreadors/soccer/girls/winter/stats/",
+      "status": "error",
+      "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
+      "name": "Pacific Collegiate",
+      "players": [],
+      "slug": "pacific-collegiate",
+      "statsUrl": "https://www.maxpreps.com/ca/santa-cruz/pacific-collegiate-pumas/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
+      "name": "Rancho San Juan",
+      "players": [],
+      "slug": "rancho-san-juan",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/rancho-san-juan-trailblazers/soccer/girls/winter/stats/",
+      "status": "error",
+      "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+      "name": "Salinas",
+      "players": [],
+      "slug": "salinas",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+      "name": "Watsonville",
+      "players": [],
+      "slug": "watsonville",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/watsonville-wildcatz/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a",
+      "name": "Alisal",
+      "players": [],
+      "slug": "alisal",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
+      "name": "Carmel",
+      "players": [],
+      "slug": "carmel",
+      "statsUrl": "https://www.maxpreps.com/ca/carmel/carmel-padres/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
+      "name": "Gonzales",
+      "players": [],
+      "slug": "gonzales",
+      "statsUrl": "https://www.maxpreps.com/ca/gonzales/gonzales-spartans/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
+      "name": "Monte Vista Christian",
+      "players": [],
+      "slug": "monte-vista-christian",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d",
+      "name": "Pajaro Valley",
+      "players": [],
+      "slug": "pajaro-valley",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/pajaro-valley-grizzlies/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971",
+      "name": "Soledad",
+      "players": [],
+      "slug": "soledad",
+      "statsUrl": "https://www.maxpreps.com/ca/soledad/soledad-aztecs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
+      "name": "Stevenson",
+      "players": [],
+      "slug": "stevenson",
+      "statsUrl": "https://www.maxpreps.com/ca/pebble-beach/stevenson-pirates/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
+      "name": "Greenfield",
+      "players": [],
+      "slug": "greenfield",
+      "statsUrl": "https://www.maxpreps.com/ca/greenfield/greenfield-bruins/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
+      "name": "King City",
+      "players": [],
+      "slug": "king-city",
+      "statsUrl": "https://www.maxpreps.com/ca/king-city/king-city-mustangs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
+      "name": "North Monterey County",
+      "players": [],
+      "slug": "north-monterey-county",
+      "statsUrl": "https://www.maxpreps.com/ca/castroville/north-monterey-county-condors/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
+      "name": "North Salinas",
+      "players": [],
+      "slug": "north-salinas",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/north-salinas-vikings/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "games": [
+        {
+          "contestId": "950c041a-12aa-4bad-8d7f-116f51ee3a9a",
+          "players": [
+            {
+              "field": {
+                "minutes": 40
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Emily Guerra"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "minutes": 80,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Amalia Phillips"
+            },
+            {
+              "field": {
+                "goals": 4,
+                "minutes": 60,
+                "points": 8
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Gigi Richert"
+            },
+            {
+              "field": {
+                "minutes": 80
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Nathaly Robles Parra"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "minutes": 60,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Alyssa Rodriguez-Castro"
+            },
+            {
+              "field": {
+                "goals": 3,
+                "minutes": 50,
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Natalie Valencia"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "minutes": 50,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Nicole Contreras"
+            },
+            {
+              "field": {
+                "minutes": 60
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Arianna Acevedo"
+            },
+            {
+              "field": {
+                "minutes": 30
+              },
+              "goalkeeping": null,
+              "jersey": "20",
+              "name": "Ariana Medina"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "minutes": 80,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Aiylee Blair"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "minutes": 65,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Isabella Vaca"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "minutes": 75,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Kathryn Dill"
+            },
+            {
+              "field": {
+                "minutes": 70
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Zoey Head"
+            }
+          ],
+          "rowKey": "4da814a6",
+          "tracked": {
+            "field": [
+              "minutes",
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "Field Stats: ignored unknown column CornerKicks",
+            "Field Stats / Field Stats (2): ignored unknown column PenaltyKicksMade",
+            "Field Stats / Field Stats (2): ignored unknown column PenaltyKicksAttempted",
+            "Field Stats / Field Stats (2): ignored unknown column YellowCards",
+            "Field Stats / Field Stats (2): ignored unknown column RedCards",
+            "ignored stats group \"Goaltending\""
+          ]
+        }
+      ],
+      "lastUpdated": "2026-11-24T18:55:06",
+      "maxprepsTeamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+      "name": "Palma",
+      "players": [
+        {
+          "athleteId": "1f1be062-5893-4d4b-8d23-b7867ae9ceaa",
+          "careerId": "seh6oe5k08m55",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/emily-guerra/?careerid=seh6oe5k08m55",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 40,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Emily Guerra",
+          "goalkeeping": null,
+          "jersey": "8",
+          "onRoster": true,
+          "shortName": "E. Guerra"
+        },
+        {
+          "athleteId": "7f01c441-0666-442a-91d0-f5ad048989a3",
+          "careerId": "3bqrr9b0coug0",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/amalia-phillips/?careerid=3bqrr9b0coug0",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": 80,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Amalia Phillips",
+          "goalkeeping": null,
+          "jersey": "15",
+          "onRoster": true,
+          "shortName": "A. Phillips"
+        },
+        {
+          "athleteId": "122701d7-5a7a-4195-accb-2ed91749161d",
+          "careerId": "nuq8ec0e9m366",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/gigi-richert/?careerid=nuq8ec0e9m366",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 4,
+            "minutes": 60,
+            "points": 8,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Gigi Richert",
+          "goalkeeping": null,
+          "jersey": "22",
+          "onRoster": true,
+          "shortName": "G. Richert"
+        },
+        {
+          "athleteId": "b662031e-79f0-496e-b799-9fbed388f3f5",
+          "careerId": "g5amu3mogisaa",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/nathaly-robles-parra/?careerid=g5amu3mogisaa",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 80,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Nathaly Robles Parra",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "N. Robles Parra"
+        },
+        {
+          "athleteId": "2cedc119-31fd-4838-b304-b99019d707d9",
+          "careerId": "m4kmd993f6544",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/alyssa-rodriguez-castro/?careerid=m4kmd993f6544",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 60,
+            "points": 1,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Alyssa Rodriguez-Castro",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "A. Rodriguez-Castro"
+        },
+        {
+          "athleteId": "782f7b84-2414-48f8-a7a6-c748922038c1",
+          "careerId": "fcf86ae506v99",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/natalie-valencia/?careerid=fcf86ae506v99",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 3,
+            "minutes": 50,
+            "points": 6,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Natalie Valencia",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": true,
+          "shortName": "N. Valencia"
+        },
+        {
+          "athleteId": "2fd3d237-4db3-40a5-a541-be19659ff7fd",
+          "careerId": "oljmpgnu16osc",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/nicole-contreras/?careerid=oljmpgnu16osc",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": 50,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Nicole Contreras",
+          "goalkeeping": null,
+          "jersey": "12",
+          "onRoster": true,
+          "shortName": "N. Contreras"
+        },
+        {
+          "athleteId": "0a74a707-39aa-4908-86b4-c2745d12f0d2",
+          "careerId": "rckektp5qc7dd",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/arianna-acevedo/?careerid=rckektp5qc7dd",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 60,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Arianna Acevedo",
+          "goalkeeping": null,
+          "jersey": "7",
+          "onRoster": true,
+          "shortName": "A. Acevedo"
+        },
+        {
+          "athleteId": "58293bfc-fc2b-4652-8328-720cc16fdeab",
+          "careerId": "ldqhoec2mmlj3",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/ariana-medina/?careerid=ldqhoec2mmlj3",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 30,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Ariana Medina",
+          "goalkeeping": null,
+          "jersey": "20",
+          "onRoster": true,
+          "shortName": "A. Medina"
+        },
+        {
+          "athleteId": "309e778d-4c4e-4007-b49c-fa25c881ea89",
+          "careerId": "s4mmtj5khfh88",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/aiylee-blair/?careerid=s4mmtj5khfh88",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 80,
+            "points": 1,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Aiylee Blair",
+          "goalkeeping": null,
+          "jersey": "6",
+          "onRoster": true,
+          "shortName": "A. Blair"
+        },
+        {
+          "athleteId": "e417761b-4c72-4508-bd4c-28678bd16712",
+          "careerId": "g96fj4sqq3iee",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/isabella-vaca/?careerid=g96fj4sqq3iee",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": 65,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Isabella Vaca",
+          "goalkeeping": null,
+          "jersey": "24",
+          "onRoster": true,
+          "shortName": "I. Vaca"
+        },
+        {
+          "athleteId": "9840d0eb-53a5-46ae-a6ca-f6a763896a53",
+          "careerId": "p5dpmvdp8vp55",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/kathryn-dill/?careerid=p5dpmvdp8vp55",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 75,
+            "points": 1,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Kathryn Dill",
+          "goalkeeping": null,
+          "jersey": "4",
+          "onRoster": true,
+          "shortName": "K. Dill"
+        },
+        {
+          "athleteId": "531a0346-a3c8-4ce8-a4e9-78cf5759ef90",
+          "careerId": "hd48g5l0vsuj3",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/athletes/zoey-head/?careerid=hd48g5l0vsuj3",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 0,
+            "minutes": 70,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null
+          },
+          "fullName": "Zoey Head",
+          "goalkeeping": null,
+          "jersey": "9",
+          "onRoster": true,
+          "shortName": "Z. Head"
+        }
+      ],
+      "slug": "palma",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/soccer/girls/winter/stats/",
+      "status": "ok",
+      "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+      "totals": {
+        "field": {
+          "assists": 3,
+          "gamesPlayed": 1,
+          "goals": 10,
+          "minutes": 800,
+          "points": 23
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "minutes",
+          "goals",
+          "assists",
+          "points"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": [
+        "Field Stats: ignored unknown column CornerKicks",
+        "Field Stats / Field Stats (2): ignored unknown column PenaltyKicksMade",
+        "Field Stats / Field Stats (2): ignored unknown column PenaltyKicksAttempted",
+        "Field Stats / Field Stats (2): ignored unknown column YellowCards",
+        "Field Stats / Field Stats (2): ignored unknown column RedCards",
+        "ignored stats group \"Goaltending\""
+      ]
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "c8520624-627b-4936-a892-fdc7ccdefea7",
+      "name": "Seaside",
+      "players": [],
+      "slug": "seaside",
+      "statsUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "340cc25b-8dce-4532-a929-4b8358283933",
+      "name": "Anzar",
+      "players": [],
+      "slug": "anzar",
+      "statsUrl": "https://www.maxpreps.com/ca/san-juan-bautista/anzar-hawks/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "340cc25b-8dce-4532-a929-4b8358283933",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "a474e593-af4b-4140-92d5-ec9221920834",
+      "name": "Marina",
+      "players": [],
+      "slug": "marina-mariners",
+      "statsUrl": "https://www.maxpreps.com/ca/marina/marina-mariners/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "a474e593-af4b-4140-92d5-ec9221920834",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "7fc8780b-014e-4870-a43f-e2f444a853bc",
+      "name": "Monterey Bay Academy",
+      "players": [],
+      "slug": "monterey-bay-academy",
+      "statsUrl": "https://www.maxpreps.com/ca/la-selva-beach/monterey-bay-academy-cypress/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "7fc8780b-014e-4870-a43f-e2f444a853bc",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "5041038f-a821-4209-90af-196b6d756e48",
+      "name": "Pacific Grove",
+      "players": [],
+      "slug": "pacific-grove",
+      "statsUrl": "https://www.maxpreps.com/ca/pacific-grove/pacific-grove-breakers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "5041038f-a821-4209-90af-196b6d756e48",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
+      "name": "Santa Catalina",
+      "players": [],
+      "slug": "santa-catalina",
+      "statsUrl": "https://www.maxpreps.com/ca/monterey/santa-catalina-cougars/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
+      "name": "St. Francis",
+      "players": [],
+      "slug": "st-francis-watsonville",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/st-francis-sharks/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
+      "name": "York",
+      "players": [],
+      "slug": "york",
+      "statsUrl": "https://www.maxpreps.com/ca/monterey/york-falcons/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "49ac8af1-0277-4a5c-bb79-7da46365404e",
+      "name": "Cristo Rey San Jose Jesuit",
+      "players": [],
+      "slug": "cristo-rey-san-jose",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/cristo-rey-san-jose-jesuit-na/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "49ac8af1-0277-4a5c-bb79-7da46365404e",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36",
+      "name": "Design Tech",
+      "players": [],
+      "slug": "design-tech",
+      "statsUrl": "https://www.maxpreps.com/ca/redwood-city/design-tech-dragons/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3",
+      "name": "KIPP San Jose Collegiate",
+      "players": [],
+      "slug": "kipp-san-jose",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/kipp-san-jose-collegiate-wes/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "ba2378a8-680c-4329-9eb0-a2b2b68583f7",
+      "name": "Latino College Preparatory Academy",
+      "players": [],
+      "slug": "latino-college-prep",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/latino-college-preparatory-academy-eagle-warriors/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "ba2378a8-680c-4329-9eb0-a2b2b68583f7",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789",
+      "name": "Oceana",
+      "players": [],
+      "slug": "oceana",
+      "statsUrl": "https://www.maxpreps.com/ca/pacifica/oceana-sharks/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+      "name": "The Nueva School",
+      "players": [],
+      "slug": "nueva",
+      "statsUrl": "https://www.maxpreps.com/ca/san-mateo/the-nueva-school-mavericks/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+      "name": "Thomas More",
+      "players": [],
+      "slug": "thomas-more",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "2b6a30cf-2b1d-4cee-92b8-da73dd638fe8",
+      "name": "ACE Charter",
+      "players": [],
+      "slug": "ace-charter",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/ace-charter-cheetahs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "2b6a30cf-2b1d-4cee-92b8-da73dd638fe8",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865",
+      "name": "Cindy Avitia",
+      "players": [],
+      "slug": "cindy-avitia",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/cindy-avitia-jaguars/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1f690420-95b8-4d69-8130-ba161d4ef703",
+      "name": "KIPP Esperanza",
+      "players": [],
+      "slug": "kipp-esperanza",
+      "statsUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1f690420-95b8-4d69-8130-ba161d4ef703",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5",
+      "name": "KIPP Navigate College Prep",
+      "players": [],
+      "slug": "kipp-navigate",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/kipp-navigate-college-prep-tigers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "fdc893f7-899d-4fef-87c7-225a20013de7",
+      "name": "Summit Preparatory",
+      "players": [],
+      "slug": "summit-prep",
+      "statsUrl": "https://www.maxpreps.com/ca/redwood-city/summit-preparatory-huskies/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "fdc893f7-899d-4fef-87c7-225a20013de7",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+      "name": "Summit Shasta",
+      "players": [],
+      "slug": "summit-shasta",
+      "statsUrl": "https://www.maxpreps.com/ca/daly-city/summit-shasta-black-bears/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:36:29.262Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3",
+      "name": "Summit Tahoma",
+      "players": [],
+      "slug": "summit-tahoma",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/summit-tahoma-tigers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3",
       "totals": {
         "field": {},
         "goalkeeping": {}

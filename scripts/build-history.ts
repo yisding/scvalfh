@@ -6,8 +6,8 @@
  * offline), BVAL from its 2025-26 standings sheet for the sport (scripts/lib/history-bval-sheet.ts;
  * `--bval-from tests/fixtures/<sport>/bval-history --retrieved-on 2026-11-16` offline), the WCAL and the WBAL from their
  * own documents in the soccer, basketball and volleyball builds, and the PAL from its own in the soccer and basketball
- * builds (scripts/lib/history-league-documents.ts); the SCCAL, in the soccer and basketball builds, publishes no
- * standings and is 'unavailable' (sccalNoStandings).
+ * builds (scripts/lib/history-league-documents.ts); the SCCAL, the PCAL and the PSAL, in the soccer and basketball builds,
+ * publish no standings and are 'unavailable' (sccalNoStandings, pcalNoStandings, psalNoStandings).
  *
  *   SCVAL  the two official scval.com end-of-season PDFs (standings, all-league)
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
@@ -169,6 +169,40 @@ function sccalNoStandings() {
   };
 }
 
+/**
+ * The PCAL and the PSAL, added to the soccer and basketball builds on 2026-11-25. Neither publishes final standings:
+ * pcalathletics.org's History pages list each season's division champions (the last is 2024-25), and the PSAL's site
+ * lists champions and links all-league sheets, naming MaxPreps as its official site for schedules and stats (both
+ * checked 2026-11-25). So each 2025-26 card says so.
+ */
+function pcalNoStandings() {
+  const sport = IS_BASKETBALL ? 'boys basketball' : 'girls soccer';
+  return {
+    status: 'unavailable' as const,
+    league: getLeague('pcal').name,
+    checkedOn: '2026-11-25',
+    reason: `We found no official 2025-26 final standings for PCAL ${sport}: pcalathletics.org’s History pages name each season’s division title holders, the last for 2024-25, and publish no standings. This site added PCAL ${sport} on November 25, 2026. We do not show standings or awards from third-party sources.`,
+    checked: [
+      'https://pcalathletics.org/history/ (the league’s History pages: division title holders by season, through 2024-25, and no standings)',
+      `https://pcalathletics.org/${IS_BASKETBALL ? 'boys-basketball' : 'girls-soccer'}/ (this season’s schedules only)`,
+    ],
+  };
+}
+
+function psalNoStandings() {
+  const sport = IS_BASKETBALL ? 'boys basketball' : 'girls soccer';
+  return {
+    status: 'unavailable' as const,
+    league: getLeague('psal').name,
+    checkedOn: '2026-11-25',
+    reason: `We found no official 2025-26 final standings for PSAL ${sport}: the league’s site keeps no standings and names MaxPreps as its official site for schedules and stats. This site added PSAL ${sport} on November 25, 2026. We do not show standings or awards from third-party sources.`,
+    checked: [
+      'https://sites.google.com/almaheights.org/psal (the league’s site: members, schedules, governance and honors, and no standings)',
+      'https://sites.google.com/almaheights.org/psal/schedules (this season’s schedules, which name MaxPreps as the league’s official site)',
+    ],
+  };
+}
+
 async function mainOtherSport(args: Args): Promise<number> {
   const transcription = JSON.parse(readFileSync(transcriptionPath(DATA_DIR), 'utf8')) as Transcription;
   let built: Awaited<ReturnType<typeof buildScvalDocumentsHistory>>;
@@ -192,7 +226,7 @@ async function mainOtherSport(args: Args): Promise<number> {
     ? { scval: entry, bval: bval.entry, wcal: documented('wcal'), wbal: documented('wbal') }
     : {
         scval: entry, bval: bval.entry, wcal: documented('wcal'), wbal: documented('wbal'),
-        pal: documented('pal'), sccal: sccalNoStandings(),
+        pal: documented('pal'), sccal: sccalNoStandings(), pcal: pcalNoStandings(), psal: psalNoStandings(),
       };
   const history = { season: transcription.season, sport: transcription.sport, leagues };
   const json = stableStringify(history);

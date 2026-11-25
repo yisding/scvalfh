@@ -611,7 +611,7 @@
                 "name": "OCEANA",
                 "overallRecord": null,
                 "place": 6,
-                "slug": null,
+                "slug": "oceana",
                 "t": 0,
                 "w": 4
               },
@@ -670,7 +670,7 @@
           "Each table prints Rank, School, Win, Loss and Tie: no points and no overall record, so every overallRecord is null. Rows keep the PDF's rank, which repeats for teams ranked level (3, 3, 5).",
           "Division membership is 2025-26's: Aragon, Burlingame, Carlmont, Hillsdale, Menlo-Atherton, Sequoia and Woodside in the Bay; Capuchino, El Camino, Half Moon Bay, Jefferson, Mills, Oceana, San Mateo, South San Francisco, Terra Nova and Westmoor in the Ocean.",
           "The JV Ocean table ranks Half Moon Bay (4-1-0) 1st beside Terra Nova (5-0-0); it is kept as printed.",
-          "Oceana played in the PAL's Ocean in 2025-26 and is in none of this build's leagues now (the CCS places it in the PSAL for 2026-27): its rows keep its name and have no slug (`leftBuild`).",
+          "Oceana played in the PAL's Ocean in 2025-26 and is in the PSAL for 2026-27, which this build has covered since 2026-11-25 (`formerMembers`): its rows link its team page.",
           "The JV Ocean table lists six teams; El Camino, Jefferson, Oceana and Westmoor are in none.",
           "Only standings are stored: the PAL's all-league teams are not transcribed."
         ],
@@ -683,6 +683,26 @@
         }
       },
       "status": "available"
+    },
+    "pcal": {
+      "checked": [
+        "https://pcalathletics.org/history/ (the league’s History pages: division title holders by season, through 2024-25, and no standings)",
+        "https://pcalathletics.org/girls-soccer/ (this season’s schedules only)"
+      ],
+      "checkedOn": "2026-11-25",
+      "league": "Pacific Coast Athletic League",
+      "reason": "We found no official 2025-26 final standings for PCAL girls soccer: pcalathletics.org’s History pages name each season’s division title holders, the last for 2024-25, and publish no standings. This site added PCAL girls soccer on November 25, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "psal": {
+      "checked": [
+        "https://sites.google.com/almaheights.org/psal (the league’s site: members, schedules, governance and honors, and no standings)",
+        "https://sites.google.com/almaheights.org/psal/schedules (this season’s schedules, which name MaxPreps as the league’s official site)"
+      ],
+      "checkedOn": "2026-11-25",
+      "league": "Private School Athletic League",
+      "reason": "We found no official 2025-26 final standings for PSAL girls soccer: the league’s site keeps no standings and names MaxPreps as its official site for schedules and stats. This site added PSAL girls soccer on November 25, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
     },
     "sccal": {
       "checked": [

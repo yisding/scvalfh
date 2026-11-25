@@ -1,18 +1,18 @@
 {
   "counts": {
-    "errors": 0,
+    "errors": 11,
     "goalkeepers": 0,
-    "players": 57,
-    "teams": 79,
-    "teamsWithStats": 7
+    "players": 121,
+    "teams": 133,
+    "teamsWithStats": 13
   },
-  "fetchedAt": "2026-11-25T06:31:49.371Z",
+  "fetchedAt": "2026-11-25T15:46:24.564Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
     "id": "maxpreps-api",
     "notes": [
-      "One entry per registry team, all 6 leagues (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+      "One entry per registry team, all 8 leagues (SCVAL, BVAL, WCAL, WBAL, PAL, SCCAL, PCAL, PSAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
       "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/field-hockey/rosters.json on the career id in each row's player link.",
       "Every number is what the coach entered on MaxPreps, for all of this season's varsity games, league and non-league alike. Coverage is the coach's choice: a team MaxPreps has no stats for is status none.",
       "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
@@ -4497,6 +4497,4691 @@
       "statsUrl": "https://www.maxpreps.com/ca/soquel/soquel-knights/basketball/stats/",
       "status": "none",
       "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
+      "name": "Carmel",
+      "players": [],
+      "slug": "carmel",
+      "statsUrl": "https://www.maxpreps.com/ca/carmel/carmel-padres/basketball/stats/",
+      "status": "error",
+      "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+      "name": "Hollister",
+      "players": [],
+      "slug": "hollister",
+      "statsUrl": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/basketball/stats/",
+      "status": "error",
+      "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+      "name": "Monterey",
+      "players": [],
+      "slug": "monterey",
+      "statsUrl": "https://www.maxpreps.com/ca/monterey/monterey-toreadors/basketball/stats/",
+      "status": "error",
+      "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "5041038f-a821-4209-90af-196b6d756e48",
+      "name": "Pacific Grove",
+      "players": [],
+      "slug": "pacific-grove",
+      "statsUrl": "https://www.maxpreps.com/ca/pacific-grove/pacific-grove-breakers/basketball/stats/",
+      "status": "error",
+      "teamId": "5041038f-a821-4209-90af-196b6d756e48",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+      "name": "Palma",
+      "players": [],
+      "slug": "palma",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/basketball/stats/",
+      "status": "error",
+      "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+      "name": "Salinas",
+      "players": [],
+      "slug": "salinas",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/basketball/stats/",
+      "status": "error",
+      "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047",
+      "name": "Oakwood",
+      "players": [],
+      "slug": "oakwood",
+      "statsUrl": "https://www.maxpreps.com/ca/morgan-hill/oakwood-hawks/basketball/stats/",
+      "status": "error",
+      "teamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "games": [
+        {
+          "contestId": "a8b6131e-7487-421a-845d-089c8b16866e",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "blocks": 0,
+                "defensiveRebounds": 6,
+                "fieldGoalAttempts": 13,
+                "fieldGoalsMade": 8,
+                "freeThrowAttempts": 1,
+                "freeThrowsMade": 0,
+                "minutes": 23,
+                "offensiveRebounds": 4,
+                "personalFouls": 3,
+                "points": 16,
+                "rebounds": 10,
+                "steals": 0,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "34",
+              "name": "Luisjose Rubrica"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 6,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 5,
+                "freeThrowsMade": 1,
+                "minutes": 19,
+                "offensiveRebounds": 2,
+                "personalFouls": 2,
+                "points": 3,
+                "rebounds": 8,
+                "steals": 0,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "32",
+              "name": "John Barrett"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 6,
+                "fieldGoalsMade": 4,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 12,
+                "offensiveRebounds": 2,
+                "personalFouls": 0,
+                "points": 8,
+                "rebounds": 4,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 3
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Juan De Dios Chaidez"
+            },
+            {
+              "field": {
+                "assists": 3,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "minutes": 7,
+                "offensiveRebounds": 2,
+                "personalFouls": 0,
+                "points": 4,
+                "rebounds": 4,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "threePointsMade": 1,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Nathan Yanez"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 4,
+                "fieldGoalAttempts": 3,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 16,
+                "offensiveRebounds": 1,
+                "personalFouls": 2,
+                "points": 2,
+                "rebounds": 5,
+                "steals": 5,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Josemiguel Romero-Alvarez"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 0,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 1,
+                "offensiveRebounds": 1,
+                "personalFouls": 0,
+                "rebounds": 1,
+                "steals": 0,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "35",
+              "name": "Julien McKissick"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 10,
+                "fieldGoalsMade": 3,
+                "freeThrowAttempts": 4,
+                "freeThrowsMade": 2,
+                "minutes": 20,
+                "offensiveRebounds": 1,
+                "personalFouls": 0,
+                "points": 8,
+                "rebounds": 3,
+                "steals": 1,
+                "threePointAttempts": 2,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Aithan Maravillo"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "blocks": 1,
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 0,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 6,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "steals": 2,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Nicholas Hernandez"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 3,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 11,
+                "offensiveRebounds": 1,
+                "personalFouls": 0,
+                "points": 2,
+                "rebounds": 1,
+                "steals": 1,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Leonardo Zavala"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 18,
+                "fieldGoalsMade": 9,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "minutes": 24,
+                "offensiveRebounds": 5,
+                "personalFouls": 3,
+                "points": 22,
+                "rebounds": 7,
+                "steals": 1,
+                "threePointAttempts": 7,
+                "threePointsMade": 3,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "21",
+              "name": "Jonathan Molina"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 4,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "points": 2,
+                "steals": 0,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alex Reyes"
+            },
+            {
+              "field": {
+                "assists": 4,
+                "blocks": 0,
+                "defensiveRebounds": 3,
+                "fieldGoalAttempts": 6,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 6,
+                "freeThrowsMade": 2,
+                "minutes": 19,
+                "offensiveRebounds": 1,
+                "personalFouls": 4,
+                "points": 4,
+                "rebounds": 4,
+                "steals": 6,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Jose Jacinto"
+            }
+          ],
+          "rowKey": "73e957e6",
+          "tracked": {
+            "field": [
+              "minutes",
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointsMade",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "assists",
+              "steals",
+              "blocks",
+              "turnovers",
+              "personalFouls"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-24T22:55:11",
+      "maxprepsTeamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a",
+      "name": "Alisal",
+      "players": [
+        {
+          "athleteId": "e8329eaa-c0de-47d0-aa3d-b8913a49e7b4",
+          "careerId": "hjsvhb7c5r8ee",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/luisjose-rubrica/?careerid=hjsvhb7c5r8ee",
+          "field": {
+            "assists": 2,
+            "blocks": 0,
+            "defensiveRebounds": 6,
+            "fieldGoalAttempts": 13,
+            "fieldGoalsMade": 8,
+            "freeThrowAttempts": 1,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 23,
+            "offensiveRebounds": 4,
+            "personalFouls": 3,
+            "points": 16,
+            "rebounds": 10,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Luisjose Rubrica",
+          "goalkeeping": null,
+          "jersey": "34",
+          "onRoster": true,
+          "shortName": "L. Rubrica"
+        },
+        {
+          "athleteId": "5a44ac28-a8c0-4e3a-9dd7-881a3b03cb8e",
+          "careerId": "sad6vvjn1l2ff",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/john-barrett/?careerid=sad6vvjn1l2ff",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 6,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 5,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": 19,
+            "offensiveRebounds": 2,
+            "personalFouls": 2,
+            "points": 3,
+            "rebounds": 8,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "John Barrett",
+          "goalkeeping": null,
+          "jersey": "32",
+          "onRoster": true,
+          "shortName": "J. Barrett"
+        },
+        {
+          "athleteId": "de51a113-c558-47c8-8896-fe9b0b8d7225",
+          "careerId": "62ldlp34bj555",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/juan-de-dios-chaidez/?careerid=62ldlp34bj555",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 6,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 12,
+            "offensiveRebounds": 2,
+            "personalFouls": 0,
+            "points": 8,
+            "rebounds": 4,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 3
+          },
+          "fullName": "Juan De Dios Chaidez",
+          "goalkeeping": null,
+          "jersey": "24",
+          "onRoster": true,
+          "shortName": "J. Chaidez"
+        },
+        {
+          "athleteId": "1cc65c89-2752-425c-931d-ea7d0d8263cc",
+          "careerId": "gehsam3sc1h44",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/nathan-yanez/?careerid=gehsam3sc1h44",
+          "field": {
+            "assists": 3,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": 7,
+            "offensiveRebounds": 2,
+            "personalFouls": 0,
+            "points": 4,
+            "rebounds": 4,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": 1,
+            "turnovers": 1
+          },
+          "fullName": "Nathan Yanez",
+          "goalkeeping": null,
+          "jersey": "2",
+          "onRoster": true,
+          "shortName": "N. Yanez"
+        },
+        {
+          "athleteId": "5f4dfa78-4b8f-436a-9233-f76e041ca8c5",
+          "careerId": "sckqrelo6ggee",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/josemiguel-romero-alvarez/?careerid=sckqrelo6ggee",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 4,
+            "fieldGoalAttempts": 3,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 16,
+            "offensiveRebounds": 1,
+            "personalFouls": 2,
+            "points": 2,
+            "rebounds": 5,
+            "steals": 5,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Josemiguel Romero-Alvarez",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "J. Romero-Alvarez"
+        },
+        {
+          "athleteId": "51753727-76ba-4f87-aac7-76eb08db5dfe",
+          "careerId": "vm064bs2131m6",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/julien-mckissick/?careerid=vm064bs2131m6",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 0,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 1,
+            "offensiveRebounds": 1,
+            "personalFouls": 0,
+            "points": 0,
+            "rebounds": 1,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Julien McKissick",
+          "goalkeeping": null,
+          "jersey": "35",
+          "onRoster": true,
+          "shortName": "J. McKissick"
+        },
+        {
+          "athleteId": "414293f0-8e1b-442f-89ed-7a45eda279f4",
+          "careerId": "nvkbag2ch2700",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/aithan-maravillo/?careerid=nvkbag2ch2700",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 10,
+            "fieldGoalsMade": 3,
+            "freeThrowAttempts": 4,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 1,
+            "minutes": 20,
+            "offensiveRebounds": 1,
+            "personalFouls": 0,
+            "points": 8,
+            "rebounds": 3,
+            "steals": 1,
+            "threePointAttempts": 2,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Aithan Maravillo",
+          "goalkeeping": null,
+          "jersey": "23",
+          "onRoster": true,
+          "shortName": "A. Maravillo"
+        },
+        {
+          "athleteId": "07aaa62e-3d9f-4bf1-8f49-751c7b1cba1c",
+          "careerId": "6jkthlq8qi3td",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/nicholas-hernandez/?careerid=6jkthlq8qi3td",
+          "field": {
+            "assists": 2,
+            "blocks": 1,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 0,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 6,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 0,
+            "rebounds": 0,
+            "steals": 2,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Nicholas Hernandez",
+          "goalkeeping": null,
+          "jersey": "4",
+          "onRoster": true,
+          "shortName": "N. Hernandez"
+        },
+        {
+          "athleteId": "532d60d7-abbf-45dc-94f2-a97fe1ccb353",
+          "careerId": "jm2gqr6b1b4ee",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/leonardo-zavala/?careerid=jm2gqr6b1b4ee",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 3,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 11,
+            "offensiveRebounds": 1,
+            "personalFouls": 0,
+            "points": 2,
+            "rebounds": 1,
+            "steals": 1,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Leonardo Zavala",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": true,
+          "shortName": "L. Zavala"
+        },
+        {
+          "athleteId": "852d261c-ab4e-46d6-86de-75dfdb96be81",
+          "careerId": "iop0mcgoc65sc",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/jonathan-molina/?careerid=iop0mcgoc65sc",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 18,
+            "fieldGoalsMade": 9,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": 24,
+            "offensiveRebounds": 5,
+            "personalFouls": 3,
+            "points": 22,
+            "rebounds": 7,
+            "steals": 1,
+            "threePointAttempts": 7,
+            "threePointsMade": 3,
+            "turnovers": 1
+          },
+          "fullName": "Jonathan Molina",
+          "goalkeeping": null,
+          "jersey": "21",
+          "onRoster": true,
+          "shortName": "J. Molina"
+        },
+        {
+          "athleteId": "f19fca5e-3995-4c3b-8414-a5fcc1c9ba7a",
+          "careerId": "5q72jl42t1fsc",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/alex-reyes/?careerid=5q72jl42t1fsc",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 4,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 2,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Alex Reyes",
+          "goalkeeping": null,
+          "jersey": "15",
+          "onRoster": true,
+          "shortName": "A. Reyes"
+        },
+        {
+          "athleteId": "7a78124f-7086-4f13-abc7-1cc86b93fad2",
+          "careerId": "d0c3uuhqojjqa",
+          "careerUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/athletes/jose-jacinto/?careerid=d0c3uuhqojjqa",
+          "field": {
+            "assists": 4,
+            "blocks": 0,
+            "defensiveRebounds": 3,
+            "fieldGoalAttempts": 6,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 6,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 1,
+            "minutes": 19,
+            "offensiveRebounds": 1,
+            "personalFouls": 4,
+            "points": 4,
+            "rebounds": 4,
+            "steals": 6,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Jose Jacinto",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": true,
+          "shortName": "J. Jacinto"
+        }
+      ],
+      "slug": "alisal",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/basketball/stats/",
+      "status": "ok",
+      "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a",
+      "totals": {
+        "field": {
+          "assists": 14,
+          "blocks": 1,
+          "defensiveRebounds": 27,
+          "fieldGoalAttempts": 65,
+          "fieldGoalsMade": 30,
+          "freeThrowAttempts": 20,
+          "freeThrowsMade": 7,
+          "gamesPlayed": 1,
+          "minutes": 162,
+          "offensiveRebounds": 20,
+          "personalFouls": 14,
+          "points": 71,
+          "rebounds": 47,
+          "steals": 16,
+          "threePointAttempts": 14,
+          "threePointsMade": 4,
+          "turnovers": 12
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "minutes",
+          "points",
+          "fieldGoalsMade",
+          "fieldGoalAttempts",
+          "threePointsMade",
+          "threePointAttempts",
+          "freeThrowsMade",
+          "freeThrowAttempts",
+          "offensiveRebounds",
+          "defensiveRebounds",
+          "rebounds",
+          "assists",
+          "steals",
+          "blocks",
+          "turnovers",
+          "personalFouls"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "a474e593-af4b-4140-92d5-ec9221920834",
+      "name": "Marina",
+      "players": [],
+      "slug": "marina-mariners",
+      "statsUrl": "https://www.maxpreps.com/ca/marina/marina-mariners/basketball/stats/",
+      "status": "error",
+      "teamId": "a474e593-af4b-4140-92d5-ec9221920834",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "games": [
+        {
+          "contestId": "59f01c86-7756-4f74-8026-3cf3a5fb5b5a",
+          "players": [
+            {
+              "field": {
+                "fieldGoalAttempts": 0,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "personalFouls": 0,
+                "points": 1,
+                "threePointAttempts": 0,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Yuancheng Cai"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 15,
+                "fieldGoalsMade": 8,
+                "freeThrowAttempts": 8,
+                "freeThrowsMade": 5,
+                "personalFouls": 3,
+                "points": 24,
+                "threePointAttempts": 3,
+                "threePointsMade": 3
+              },
+              "goalkeeping": null,
+              "jersey": "45",
+              "name": "Matteo Vidal"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 1,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 0,
+                "points": 0,
+                "threePointAttempts": 0,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "0",
+              "name": "Emilian Tenwinkel"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 6,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "personalFouls": 1,
+                "points": 2,
+                "threePointAttempts": 2,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "James Tipton"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "personalFouls": 4,
+                "points": 0,
+                "threePointAttempts": 4,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Santino Matteucci"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 5,
+                "fieldGoalsMade": 4,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 2,
+                "personalFouls": 3,
+                "points": 10,
+                "threePointAttempts": 1,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Luke White"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 9,
+                "fieldGoalsMade": 3,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "personalFouls": 2,
+                "points": 8,
+                "threePointAttempts": 4,
+                "threePointsMade": 2
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Jerry Arceo Jr."
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "personalFouls": 0,
+                "points": 3,
+                "threePointAttempts": 2,
+                "threePointsMade": 1
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Liam Moller"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "personalFouls": 0,
+                "points": 4,
+                "threePointAttempts": 0,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "25",
+              "name": "Samuel Rios"
+            }
+          ],
+          "rowKey": "fcc5dc7e",
+          "tracked": {
+            "field": [
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointsMade",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "personalFouls"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "a40e479f-e4b6-4568-aa65-5a52b8a01f2e",
+          "players": [
+            {
+              "field": {
+                "assists": 4,
+                "blocks": 0,
+                "defensiveRebounds": 5,
+                "fieldGoalAttempts": 1,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 20,
+                "offensiveRebounds": 1,
+                "personalFouls": 2,
+                "points": 0,
+                "rebounds": 6,
+                "steals": 2,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 3
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Yuancheng Cai"
+            },
+            {
+              "field": {
+                "assists": 4,
+                "blocks": 1,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 20,
+                "fieldGoalsMade": 10,
+                "freeThrowAttempts": 6,
+                "freeThrowsMade": 2,
+                "minutes": 25,
+                "offensiveRebounds": 2,
+                "personalFouls": 4,
+                "points": 25,
+                "rebounds": 4,
+                "steals": 1,
+                "threePointAttempts": 6,
+                "threePointsMade": 3,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "45",
+              "name": "Matteo Vidal"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 3,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 2,
+                "minutes": 18,
+                "offensiveRebounds": 2,
+                "personalFouls": 2,
+                "points": 2,
+                "rebounds": 5,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "0",
+              "name": "Emilian Tenwinkel"
+            },
+            {
+              "field": {
+                "assists": 4,
+                "blocks": 2,
+                "defensiveRebounds": 4,
+                "fieldGoalAttempts": 15,
+                "fieldGoalsMade": 3,
+                "freeThrowAttempts": 6,
+                "freeThrowsMade": 2,
+                "minutes": 30,
+                "offensiveRebounds": 7,
+                "personalFouls": 1,
+                "points": 8,
+                "rebounds": 11,
+                "steals": 4,
+                "threePointAttempts": 4,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "James Tipton"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "blocks": 0,
+                "defensiveRebounds": 3,
+                "fieldGoalAttempts": 10,
+                "fieldGoalsMade": 3,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 24,
+                "offensiveRebounds": 4,
+                "personalFouls": 0,
+                "points": 8,
+                "rebounds": 7,
+                "steals": 1,
+                "threePointAttempts": 9,
+                "threePointsMade": 2,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Santino Matteucci"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 4,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 4,
+                "freeThrowsMade": 2,
+                "minutes": 22,
+                "offensiveRebounds": 3,
+                "personalFouls": 3,
+                "points": 2,
+                "rebounds": 7,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Luke White"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 7,
+                "fieldGoalAttempts": 16,
+                "fieldGoalsMade": 8,
+                "freeThrowAttempts": 6,
+                "freeThrowsMade": 4,
+                "minutes": 28,
+                "offensiveRebounds": 2,
+                "personalFouls": 4,
+                "points": 23,
+                "rebounds": 9,
+                "steals": 1,
+                "threePointAttempts": 6,
+                "threePointsMade": 3,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Jerry Arceo Jr."
+            }
+          ],
+          "rowKey": "25eced90",
+          "tracked": {
+            "field": [
+              "minutes",
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointsMade",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "assists",
+              "steals",
+              "blocks",
+              "turnovers",
+              "personalFouls"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-24T23:43:07",
+      "maxprepsTeamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
+      "name": "Monte Vista Christian",
+      "players": [
+        {
+          "athleteId": "340ed5d7-bb03-427d-b042-3b9e0a363731",
+          "careerId": "3h4vvlinart00",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/yuancheng-cai/?careerid=3h4vvlinart00",
+          "field": {
+            "assists": 4,
+            "blocks": 0,
+            "defensiveRebounds": 5,
+            "fieldGoalAttempts": 1,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 2,
+            "minutes": 20,
+            "offensiveRebounds": 1,
+            "personalFouls": 2,
+            "points": 1,
+            "rebounds": 6,
+            "steals": 2,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 3
+          },
+          "fullName": "Yuancheng Cai",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "Y. Cai"
+        },
+        {
+          "athleteId": "f6384403-2e5f-494d-8f22-b2317983073a",
+          "careerId": "j4udacn6unkrb",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/matteo-vidal/?careerid=j4udacn6unkrb",
+          "field": {
+            "assists": 4,
+            "blocks": 1,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 35,
+            "fieldGoalsMade": 18,
+            "freeThrowAttempts": 14,
+            "freeThrowsMade": 7,
+            "gamesPlayed": 2,
+            "minutes": 25,
+            "offensiveRebounds": 2,
+            "personalFouls": 7,
+            "points": 49,
+            "rebounds": 4,
+            "steals": 1,
+            "threePointAttempts": 9,
+            "threePointsMade": 6,
+            "turnovers": 1
+          },
+          "fullName": "Matteo Vidal",
+          "goalkeeping": null,
+          "jersey": "45",
+          "onRoster": true,
+          "shortName": "M. Vidal"
+        },
+        {
+          "athleteId": "5b555a12-c4cf-431b-9615-92bd81d65e22",
+          "careerId": "v4rjjc5niuvg0",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/emilian-tenwinkel/?careerid=v4rjjc5niuvg0",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 3,
+            "fieldGoalAttempts": 3,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 4,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 2,
+            "minutes": 18,
+            "offensiveRebounds": 2,
+            "personalFouls": 2,
+            "points": 2,
+            "rebounds": 5,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Emilian Tenwinkel",
+          "goalkeeping": null,
+          "jersey": "0",
+          "onRoster": true,
+          "shortName": "E. Tenwinkel"
+        },
+        {
+          "athleteId": "c8ba6d6a-3d95-4787-bb52-85b2fcb94562",
+          "careerId": "ka09iehlbkpl5",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/james-tipton/?careerid=ka09iehlbkpl5",
+          "field": {
+            "assists": 4,
+            "blocks": 2,
+            "defensiveRebounds": 4,
+            "fieldGoalAttempts": 21,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 6,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 2,
+            "minutes": 30,
+            "offensiveRebounds": 7,
+            "personalFouls": 2,
+            "points": 10,
+            "rebounds": 11,
+            "steals": 4,
+            "threePointAttempts": 6,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "James Tipton",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": true,
+          "shortName": "J. Tipton"
+        },
+        {
+          "athleteId": "5b696aa3-eee6-42ca-92fa-3967f8b6937f",
+          "careerId": "6ve0jvaq7m200",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/santino-matteucci/?careerid=6ve0jvaq7m200",
+          "field": {
+            "assists": 2,
+            "blocks": 0,
+            "defensiveRebounds": 3,
+            "fieldGoalAttempts": 14,
+            "fieldGoalsMade": 3,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 2,
+            "minutes": 24,
+            "offensiveRebounds": 4,
+            "personalFouls": 4,
+            "points": 8,
+            "rebounds": 7,
+            "steals": 1,
+            "threePointAttempts": 13,
+            "threePointsMade": 2,
+            "turnovers": 1
+          },
+          "fullName": "Santino Matteucci",
+          "goalkeeping": null,
+          "jersey": "11",
+          "onRoster": true,
+          "shortName": "S. Matteucci"
+        },
+        {
+          "athleteId": "fcc227c3-4edb-44fd-99d1-a589b7721363",
+          "careerId": "fos8nc2nliml5",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/luke-white/?careerid=fos8nc2nliml5",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 4,
+            "fieldGoalAttempts": 7,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 6,
+            "freeThrowsMade": 4,
+            "gamesPlayed": 2,
+            "minutes": 22,
+            "offensiveRebounds": 3,
+            "personalFouls": 6,
+            "points": 12,
+            "rebounds": 7,
+            "steals": 0,
+            "threePointAttempts": 2,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Luke White",
+          "goalkeeping": null,
+          "jersey": "13",
+          "onRoster": true,
+          "shortName": "L. White"
+        },
+        {
+          "athleteId": "ddff57a7-ac3f-4a92-b410-dd5edc3a70ed",
+          "careerId": "69aq1bs8o1edd",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/jerry-arceo-jr/?careerid=69aq1bs8o1edd",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 7,
+            "fieldGoalAttempts": 25,
+            "fieldGoalsMade": 11,
+            "freeThrowAttempts": 6,
+            "freeThrowsMade": 4,
+            "gamesPlayed": 2,
+            "minutes": 28,
+            "offensiveRebounds": 2,
+            "personalFouls": 6,
+            "points": 31,
+            "rebounds": 9,
+            "steals": 1,
+            "threePointAttempts": 10,
+            "threePointsMade": 5,
+            "turnovers": 0
+          },
+          "fullName": "Jerry Arceo Jr.",
+          "goalkeeping": null,
+          "jersey": "12",
+          "onRoster": true,
+          "shortName": "J. Arceo Jr."
+        },
+        {
+          "athleteId": "e10aa091-e0a0-4b6d-9e92-7218e591faf0",
+          "careerId": "8hlcq8p68am44",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/liam-moller/?careerid=8hlcq8p68am44",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 0,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 3,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 2,
+            "threePointsMade": 1,
+            "turnovers": 0
+          },
+          "fullName": "Liam Moller",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "L. Moller"
+        },
+        {
+          "athleteId": "4a1e8c15-28f4-4867-aa9f-5300018e900e",
+          "careerId": "aj676vrt8e7qa",
+          "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/samuel-rios/?careerid=aj676vrt8e7qa",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 0,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 4,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Samuel Rios",
+          "goalkeeping": null,
+          "jersey": "25",
+          "onRoster": true,
+          "shortName": "S. Rios"
+        }
+      ],
+      "slug": "monte-vista-christian",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/basketball/stats/",
+      "status": "ok",
+      "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
+      "totals": {
+        "field": {
+          "assists": 16,
+          "blocks": 3,
+          "defensiveRebounds": 28,
+          "fieldGoalAttempts": 112,
+          "fieldGoalsMade": 43,
+          "freeThrowAttempts": 38,
+          "freeThrowsMade": 20,
+          "gamesPlayed": 2,
+          "minutes": 167,
+          "offensiveRebounds": 21,
+          "personalFouls": 29,
+          "points": 120,
+          "rebounds": 49,
+          "steals": 9,
+          "threePointAttempts": 43,
+          "threePointsMade": 14,
+          "turnovers": 9
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "minutes",
+          "points",
+          "fieldGoalsMade",
+          "fieldGoalAttempts",
+          "threePointsMade",
+          "threePointAttempts",
+          "freeThrowsMade",
+          "freeThrowAttempts",
+          "offensiveRebounds",
+          "defensiveRebounds",
+          "rebounds",
+          "assists",
+          "steals",
+          "blocks",
+          "turnovers",
+          "personalFouls"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
+      "name": "North Salinas",
+      "players": [],
+      "slug": "north-salinas",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/north-salinas-vikings/basketball/stats/",
+      "status": "none",
+      "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
+      "name": "Rancho San Juan",
+      "players": [],
+      "slug": "rancho-san-juan",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/rancho-san-juan-trailblazers/basketball/stats/",
+      "status": "error",
+      "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971",
+      "name": "Soledad",
+      "players": [],
+      "slug": "soledad",
+      "statsUrl": "https://www.maxpreps.com/ca/soledad/soledad-aztecs/basketball/stats/",
+      "status": "none",
+      "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
+      "name": "St. Francis",
+      "players": [],
+      "slug": "st-francis-watsonville",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/st-francis-sharks/basketball/stats/",
+      "status": "none",
+      "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+      "name": "Watsonville",
+      "players": [],
+      "slug": "watsonville",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/watsonville-wildcatz/basketball/stats/",
+      "status": "none",
+      "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
+      "name": "Everett Alvarez",
+      "players": [],
+      "slug": "everett-alvarez",
+      "statsUrl": "https://www.maxpreps.com/ca/salinas/everett-alvarez-eagles/basketball/stats/",
+      "status": "error",
+      "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
+      "name": "Gonzales",
+      "players": [],
+      "slug": "gonzales",
+      "statsUrl": "https://www.maxpreps.com/ca/gonzales/gonzales-spartans/basketball/stats/",
+      "status": "none",
+      "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
+      "name": "Greenfield",
+      "players": [],
+      "slug": "greenfield",
+      "statsUrl": "https://www.maxpreps.com/ca/greenfield/greenfield-bruins/basketball/stats/",
+      "status": "none",
+      "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": "HTTP 403",
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
+      "name": "King City",
+      "players": [],
+      "slug": "king-city",
+      "statsUrl": "https://www.maxpreps.com/ca/king-city/king-city-mustangs/basketball/stats/",
+      "status": "error",
+      "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
+      "name": "North Monterey County",
+      "players": [],
+      "slug": "north-monterey-county",
+      "statsUrl": "https://www.maxpreps.com/ca/castroville/north-monterey-county-condors/basketball/stats/",
+      "status": "none",
+      "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d",
+      "name": "Pajaro Valley",
+      "players": [],
+      "slug": "pajaro-valley",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/pajaro-valley-grizzlies/basketball/stats/",
+      "status": "none",
+      "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "games": [
+        {
+          "contestId": "1c501567-6046-42f5-982e-078acb1d973c",
+          "players": [
+            {
+              "field": {
+                "blocks": 3,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 3,
+                "fieldGoalsMade": 0,
+                "offensiveRebounds": 1,
+                "points": 0,
+                "rebounds": 3,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Caine Villanueva"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 1,
+                "points": 3,
+                "rebounds": 2,
+                "threePointAttempts": 3,
+                "threePointsMade": 1,
+                "turnovers": 6
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Christopher Mattei"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 0,
+                "offensiveRebounds": 3,
+                "rebounds": 5,
+                "steals": 2,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Anthony Espinola-Lopez"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 3,
+                "freeThrowsMade": 1,
+                "points": 3,
+                "steals": 3,
+                "turnovers": 3
+              },
+              "goalkeeping": null,
+              "jersey": "0",
+              "name": "Jayden Maldonado"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 6,
+                "freeThrowsMade": 2,
+                "points": 4,
+                "rebounds": 2,
+                "steals": 3,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Emmanuel Basaldu"
+            },
+            {
+              "field": {
+                "freeThrowAttempts": 4,
+                "freeThrowsMade": 3,
+                "points": 3,
+                "steals": 1,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Brayan Zavaleta-Aguilar"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 3,
+                "fieldGoalsMade": 1,
+                "points": 2,
+                "threePointAttempts": 2,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Bryan Arizmendi"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 3,
+                "fieldGoalAttempts": 5,
+                "fieldGoalsMade": 4,
+                "offensiveRebounds": 1,
+                "points": 8,
+                "rebounds": 4,
+                "steals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Jakarie Joseph"
+            },
+            {
+              "field": {
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 2,
+                "points": 2,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Noe Espinola-Lopez"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 4,
+                "freeThrowsMade": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Donovan Roth"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 5,
+                "fieldGoalsMade": 2,
+                "points": 5,
+                "threePointAttempts": 4,
+                "threePointsMade": 1
+              },
+              "goalkeeping": null,
+              "jersey": "30",
+              "name": "Steven Varela-Espinola"
+            },
+            {
+              "field": {
+                "steals": 1,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Trenton Borck"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "steals": 1,
+                "turnovers": 5
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Christian Ombeni"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "defensiveRebounds": 2,
+                "rebounds": 2,
+                "turnovers": 11
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Ben McColluch"
+            }
+          ],
+          "rowKey": "5c0ee55a",
+          "tracked": {
+            "field": [
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointsMade",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "assists",
+              "steals",
+              "blocks",
+              "turnovers"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-22T00:35:09",
+      "maxprepsTeamId": "c8520624-627b-4936-a892-fdc7ccdefea7",
+      "name": "Seaside",
+      "players": [
+        {
+          "athleteId": "cda946dd-cca6-4c61-af13-8f60a71276ab",
+          "careerId": "vgsqbdinuahk4",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/caine-villanueva/?careerid=vgsqbdinuahk4",
+          "field": {
+            "assists": 0,
+            "blocks": 3,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 3,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 1,
+            "personalFouls": null,
+            "points": 0,
+            "rebounds": 3,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Caine Villanueva",
+          "goalkeeping": null,
+          "jersey": "23",
+          "onRoster": true,
+          "shortName": "C. Villanueva"
+        },
+        {
+          "athleteId": "2cb5ae77-78ee-4b0a-8f17-99e2efa58ad1",
+          "careerId": "mvgulr2itpa33",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/christopher-mattei/?careerid=mvgulr2itpa33",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 3,
+            "rebounds": 2,
+            "steals": 0,
+            "threePointAttempts": 3,
+            "threePointsMade": 1,
+            "turnovers": 6
+          },
+          "fullName": "Christopher Mattei",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": true,
+          "shortName": "C. Mattei"
+        },
+        {
+          "athleteId": "b203eb1b-5ac0-44ae-bfaa-9ad70d50464c",
+          "careerId": "1btgle2r87hp9",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/anthony-espinola-lopez/?careerid=1btgle2r87hp9",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 3,
+            "personalFouls": null,
+            "points": 0,
+            "rebounds": 5,
+            "steals": 2,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Anthony Espinola-Lopez",
+          "goalkeeping": null,
+          "jersey": "12",
+          "onRoster": true,
+          "shortName": "A. Espinola-Lopez"
+        },
+        {
+          "athleteId": "879e71ba-0518-4363-898a-0bae477ff7b4",
+          "careerId": "r7264qsc4s644",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/jayden-maldonado/?careerid=r7264qsc4s644",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 3,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 3,
+            "rebounds": 0,
+            "steals": 3,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 3
+          },
+          "fullName": "Jayden Maldonado",
+          "goalkeeping": null,
+          "jersey": "0",
+          "onRoster": true,
+          "shortName": "J. Maldonado"
+        },
+        {
+          "athleteId": "74d2c4a5-9c21-4710-9b48-f9a77ea99593",
+          "careerId": "tkp74rdvh9edd",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/emmanuel-basaldu/?careerid=tkp74rdvh9edd",
+          "field": {
+            "assists": 2,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 6,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 4,
+            "rebounds": 2,
+            "steals": 3,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Emmanuel Basaldu",
+          "goalkeeping": null,
+          "jersey": "2",
+          "onRoster": true,
+          "shortName": "E. Basaldu"
+        },
+        {
+          "athleteId": "4f435b32-8d0c-4ddb-a612-e402ef6f0f84",
+          "careerId": "eo8338obbus77",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/brayan-zavaleta-aguilar/?careerid=eo8338obbus77",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 0,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 4,
+            "freeThrowsMade": 3,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 3,
+            "rebounds": 0,
+            "steals": 1,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Brayan Zavaleta-Aguilar",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "B. Zavaleta-Aguilar"
+        },
+        {
+          "athleteId": "f436c2c5-ba73-461f-886f-79fb2e0d63ab",
+          "careerId": "4n5inr88lo3o8",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/bryan-arizmendi/?careerid=4n5inr88lo3o8",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 3,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 2,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Bryan Arizmendi",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": true,
+          "shortName": "B. Arizmendi"
+        },
+        {
+          "athleteId": "775f750a-38a4-4692-8557-cc43c539f401",
+          "careerId": "1c396prm97099",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/jakarie-joseph/?careerid=1c396prm97099",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 3,
+            "fieldGoalAttempts": 5,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 1,
+            "personalFouls": null,
+            "points": 8,
+            "rebounds": 4,
+            "steals": 1,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Jakarie Joseph",
+          "goalkeeping": null,
+          "jersey": "22",
+          "onRoster": true,
+          "shortName": "J. Joseph"
+        },
+        {
+          "athleteId": "298da68c-4235-448a-a3f7-c8be30b22ee6",
+          "careerId": "m24c7tdatv0o8",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/noe-espinola-lopez/?careerid=m24c7tdatv0o8",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 0,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Noe Espinola-Lopez",
+          "goalkeeping": null,
+          "jersey": "13",
+          "onRoster": true,
+          "shortName": "N. Espinola-Lopez"
+        },
+        {
+          "athleteId": "c4821548-a3a0-4bda-89cb-de0cc54e4506",
+          "careerId": "6k442v2vds6aa",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/donovan-roth/?careerid=6k442v2vds6aa",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 4,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 3,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Donovan Roth",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "D. Roth"
+        },
+        {
+          "athleteId": "c36f9ac1-17f1-4355-bca3-44d595f4f27f",
+          "careerId": "0lddsnomnbu44",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/steven-varela-espinola/?careerid=0lddsnomnbu44",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 5,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 5,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 4,
+            "threePointsMade": 1,
+            "turnovers": 0
+          },
+          "fullName": "Steven Varela-Espinola",
+          "goalkeeping": null,
+          "jersey": "30",
+          "onRoster": true,
+          "shortName": "S. Varela-Espinola"
+        },
+        {
+          "athleteId": "78e151dc-2070-46fc-a2c2-45eccf3031a9",
+          "careerId": "1mkkfdi3mbsk4",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/trenton-borck/?careerid=1mkkfdi3mbsk4",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 0,
+            "rebounds": 0,
+            "steals": 1,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": 2
+          },
+          "fullName": "Trenton Borck",
+          "goalkeeping": null,
+          "jersey": "24",
+          "onRoster": true,
+          "shortName": "T. Borck"
+        },
+        {
+          "athleteId": "3bacf9d7-29fa-44d6-a175-952e498a1585",
+          "careerId": "3g0rf9bljkjee",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/christian-ombeni/?careerid=3g0rf9bljkjee",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 0,
+            "rebounds": 0,
+            "steals": 1,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": 5
+          },
+          "fullName": "Christian Ombeni",
+          "goalkeeping": null,
+          "jersey": "10",
+          "onRoster": true,
+          "shortName": "C. Ombeni"
+        },
+        {
+          "athleteId": "0c9422d1-da0f-4c14-b84b-c8150b8f0411",
+          "careerId": "hl6p5bhmua5ff",
+          "careerUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/athletes/ben-mccolluch/?careerid=hl6p5bhmua5ff",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 0,
+            "rebounds": 2,
+            "steals": 0,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": 11
+          },
+          "fullName": "Ben McColluch",
+          "goalkeeping": null,
+          "jersey": "11",
+          "onRoster": true,
+          "shortName": "B. McColluch"
+        }
+      ],
+      "slug": "seaside",
+      "statsUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/basketball/stats/",
+      "status": "ok",
+      "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7",
+      "totals": {
+        "field": {
+          "assists": 5,
+          "blocks": 3,
+          "defensiveRebounds": 13,
+          "fieldGoalAttempts": 30,
+          "fieldGoalsMade": 11,
+          "freeThrowAttempts": 19,
+          "freeThrowsMade": 9,
+          "gamesPlayed": 1,
+          "offensiveRebounds": 5,
+          "points": 33,
+          "rebounds": 18,
+          "steals": 12,
+          "threePointAttempts": 10,
+          "threePointsMade": 2,
+          "turnovers": 35
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "points",
+          "fieldGoalsMade",
+          "fieldGoalAttempts",
+          "threePointsMade",
+          "threePointAttempts",
+          "freeThrowsMade",
+          "freeThrowAttempts",
+          "offensiveRebounds",
+          "defensiveRebounds",
+          "rebounds",
+          "assists",
+          "steals",
+          "blocks",
+          "turnovers"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
+      "name": "Stevenson",
+      "players": [],
+      "slug": "stevenson",
+      "statsUrl": "https://www.maxpreps.com/ca/pebble-beach/stevenson-pirates/basketball/stats/",
+      "status": "none",
+      "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "340cc25b-8dce-4532-a929-4b8358283933",
+      "name": "Anzar",
+      "players": [],
+      "slug": "anzar",
+      "statsUrl": "https://www.maxpreps.com/ca/san-juan-bautista/anzar-hawks/basketball/stats/",
+      "status": "none",
+      "teamId": "340cc25b-8dce-4532-a929-4b8358283933",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "7fc8780b-014e-4870-a43f-e2f444a853bc",
+      "name": "Monterey Bay Academy",
+      "players": [],
+      "slug": "monterey-bay-academy",
+      "statsUrl": "https://www.maxpreps.com/ca/la-selva-beach/monterey-bay-academy-cypress/basketball/stats/",
+      "status": "none",
+      "teamId": "7fc8780b-014e-4870-a43f-e2f444a853bc",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
+      "name": "Pacific Collegiate",
+      "players": [],
+      "slug": "pacific-collegiate",
+      "statsUrl": "https://www.maxpreps.com/ca/santa-cruz/pacific-collegiate-pumas/basketball/stats/",
+      "status": "none",
+      "teamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
+      "name": "York",
+      "players": [],
+      "slug": "york",
+      "statsUrl": "https://www.maxpreps.com/ca/monterey/york-falcons/basketball/stats/",
+      "status": "none",
+      "teamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "2c2fa8ba-a22b-4979-bfa9-0321cae496cd",
+      "name": "Ceiba College Preparatory Academy",
+      "players": [],
+      "slug": "ceiba",
+      "statsUrl": "https://www.maxpreps.com/ca/watsonville/ceiba-college-preparatory-academy-spartans/basketball/stats/",
+      "status": "none",
+      "teamId": "2c2fa8ba-a22b-4979-bfa9-0321cae496cd",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "7183d93f-3632-41bb-8d10-f158f2eb0889",
+      "name": "Chartwell",
+      "players": [],
+      "slug": "chartwell",
+      "statsUrl": "https://www.maxpreps.com/ca/seaside/chartwell-bulldogs/basketball/stats/",
+      "status": "none",
+      "teamId": "7183d93f-3632-41bb-8d10-f158f2eb0889",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e0e64a76-72d8-451e-ac0f-5e8017b2c51c",
+      "name": "Kirby Prep",
+      "players": [],
+      "slug": "kirby",
+      "statsUrl": "https://www.maxpreps.com/ca/santa-cruz/kirby-prep-griffins/basketball/stats/",
+      "status": "none",
+      "teamId": "e0e64a76-72d8-451e-ac0f-5e8017b2c51c",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "bc77f6b7-1674-4bf9-b06e-812926f746ad",
+      "name": "Trinity Christian",
+      "players": [],
+      "slug": "trinity-christian",
+      "statsUrl": "https://www.maxpreps.com/ca/monterey/trinity-christian-warriors/basketball/stats/",
+      "status": "none",
+      "teamId": "bc77f6b7-1674-4bf9-b06e-812926f746ad",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36",
+      "name": "Design Tech",
+      "players": [],
+      "slug": "design-tech",
+      "statsUrl": "https://www.maxpreps.com/ca/redwood-city/design-tech-dragons/basketball/stats/",
+      "status": "none",
+      "teamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789",
+      "name": "Oceana",
+      "players": [],
+      "slug": "oceana",
+      "statsUrl": "https://www.maxpreps.com/ca/pacifica/oceana-sharks/basketball/stats/",
+      "status": "none",
+      "teamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+      "name": "Summit Shasta",
+      "players": [],
+      "slug": "summit-shasta",
+      "statsUrl": "https://www.maxpreps.com/ca/daly-city/summit-shasta-black-bears/basketball/stats/",
+      "status": "none",
+      "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "games": [
+        {
+          "contestId": "3445256e-23d5-4243-b1e3-c622e17152f5",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "blocks": 0,
+                "defensiveRebounds": 1,
+                "fieldGoalAttempts": 5,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 11,
+                "offensiveRebounds": 2,
+                "personalFouls": 1,
+                "points": 2,
+                "rebounds": 3,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Conrad Schaper"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 1,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 0,
+                "minutes": 14,
+                "offensiveRebounds": 4,
+                "personalFouls": 1,
+                "points": 4,
+                "rebounds": 5,
+                "steals": 0,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "44",
+              "name": "Piers DeTar"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 11,
+                "offensiveRebounds": 0,
+                "personalFouls": 1,
+                "points": 4,
+                "rebounds": 2,
+                "steals": 2,
+                "threePointAttempts": 1,
+                "threePointsMade": 0,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Declan Selway"
+            },
+            {
+              "field": {
+                "assists": 6,
+                "blocks": 0,
+                "defensiveRebounds": 3,
+                "fieldGoalAttempts": 10,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "minutes": 17,
+                "offensiveRebounds": 4,
+                "personalFouls": 1,
+                "points": 5,
+                "rebounds": 7,
+                "steals": 3,
+                "threePointAttempts": 5,
+                "threePointsMade": 0,
+                "turnovers": 4
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Mathias Tuttle"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "blocks": 0,
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 7,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 11,
+                "offensiveRebounds": 3,
+                "personalFouls": 1,
+                "points": 6,
+                "rebounds": 3,
+                "steals": 1,
+                "threePointAttempts": 5,
+                "threePointsMade": 2,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "0",
+              "name": "Marek Schaper"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 11,
+                "fieldGoalsMade": 4,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 20,
+                "offensiveRebounds": 1,
+                "personalFouls": 3,
+                "points": 9,
+                "rebounds": 3,
+                "steals": 6,
+                "threePointAttempts": 7,
+                "threePointsMade": 1,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "21",
+              "name": "Giuseppe Cortese"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "blocks": 0,
+                "defensiveRebounds": 1,
+                "fieldGoalAttempts": 9,
+                "fieldGoalsMade": 4,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 18,
+                "offensiveRebounds": 1,
+                "personalFouls": 2,
+                "points": 10,
+                "rebounds": 2,
+                "steals": 5,
+                "threePointAttempts": 4,
+                "threePointsMade": 2,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "30",
+              "name": "Owen Selway"
+            },
+            {
+              "field": {
+                "assists": 4,
+                "blocks": 1,
+                "defensiveRebounds": 3,
+                "fieldGoalAttempts": 9,
+                "fieldGoalsMade": 9,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "minutes": 13,
+                "offensiveRebounds": 2,
+                "personalFouls": 1,
+                "points": 19,
+                "rebounds": 5,
+                "steals": 5,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Jason Schaper"
+            },
+            {
+              "field": {
+                "assists": 3,
+                "blocks": 0,
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 7,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 11,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "points": 5,
+                "rebounds": 2,
+                "steals": 1,
+                "threePointAttempts": 4,
+                "threePointsMade": 1,
+                "turnovers": 0
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Vincenzo Selway"
+            },
+            {
+              "field": {
+                "assists": 3,
+                "blocks": 0,
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 7,
+                "fieldGoalsMade": 4,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "minutes": 11,
+                "offensiveRebounds": 6,
+                "personalFouls": 3,
+                "points": 9,
+                "rebounds": 6,
+                "steals": 6,
+                "threePointAttempts": 0,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "33",
+              "name": "Jacob Bumb"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "blocks": 1,
+                "defensiveRebounds": 1,
+                "fieldGoalAttempts": 5,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 18,
+                "offensiveRebounds": 3,
+                "personalFouls": 1,
+                "points": 4,
+                "rebounds": 4,
+                "steals": 0,
+                "threePointAttempts": 3,
+                "threePointsMade": 0,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "35",
+              "name": "Luke Harris"
+            }
+          ],
+          "rowKey": "9a94dd06",
+          "tracked": {
+            "field": [
+              "minutes",
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointsMade",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "assists",
+              "steals",
+              "blocks",
+              "turnovers",
+              "personalFouls"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-25T03:10:07",
+      "maxprepsTeamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+      "name": "Thomas More",
+      "players": [
+        {
+          "athleteId": "d56eac96-0d63-4b5b-baa4-46a8b40c4751",
+          "careerId": "vmrcneg5259n7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/conrad-schaper/?careerid=vmrcneg5259n7",
+          "field": {
+            "assists": 2,
+            "blocks": 0,
+            "defensiveRebounds": 1,
+            "fieldGoalAttempts": 5,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 11,
+            "offensiveRebounds": 2,
+            "personalFouls": 1,
+            "points": 2,
+            "rebounds": 3,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Conrad Schaper",
+          "goalkeeping": null,
+          "jersey": "2",
+          "onRoster": true,
+          "shortName": "C. Schaper"
+        },
+        {
+          "athleteId": "aa52fb16-1192-4502-9900-de7d57ca1aed",
+          "careerId": "d46orjs6qtkm6",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/piers-detar/?careerid=d46orjs6qtkm6",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 1,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 14,
+            "offensiveRebounds": 4,
+            "personalFouls": 1,
+            "points": 4,
+            "rebounds": 5,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Piers DeTar",
+          "goalkeeping": null,
+          "jersey": "44",
+          "onRoster": true,
+          "shortName": "P. DeTar"
+        },
+        {
+          "athleteId": "27e8b137-9da9-4d31-a8ae-3e30486bb333",
+          "careerId": "a9d4kbbh2jg33",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/declan-selway/?careerid=a9d4kbbh2jg33",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 11,
+            "offensiveRebounds": 0,
+            "personalFouls": 1,
+            "points": 4,
+            "rebounds": 2,
+            "steals": 2,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Declan Selway",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": true,
+          "shortName": "D. Selway"
+        },
+        {
+          "athleteId": "828b1582-e714-4dbf-9307-84b5de67b522",
+          "careerId": "806ptnpg4gp44",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/mathias-tuttle/?careerid=806ptnpg4gp44",
+          "field": {
+            "assists": 6,
+            "blocks": 0,
+            "defensiveRebounds": 3,
+            "fieldGoalAttempts": 10,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": 17,
+            "offensiveRebounds": 4,
+            "personalFouls": 1,
+            "points": 5,
+            "rebounds": 7,
+            "steals": 3,
+            "threePointAttempts": 5,
+            "threePointsMade": 0,
+            "turnovers": 4
+          },
+          "fullName": "Mathias Tuttle",
+          "goalkeeping": null,
+          "jersey": "15",
+          "onRoster": true,
+          "shortName": "M. Tuttle"
+        },
+        {
+          "athleteId": "d15e05a7-da78-40c5-b950-e4f60771a31a",
+          "careerId": "iml5s1aqr2kee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/marek-schaper/?careerid=iml5s1aqr2kee",
+          "field": {
+            "assists": 2,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 7,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 11,
+            "offensiveRebounds": 3,
+            "personalFouls": 1,
+            "points": 6,
+            "rebounds": 3,
+            "steals": 1,
+            "threePointAttempts": 5,
+            "threePointsMade": 2,
+            "turnovers": 0
+          },
+          "fullName": "Marek Schaper",
+          "goalkeeping": null,
+          "jersey": "0",
+          "onRoster": true,
+          "shortName": "M. Schaper"
+        },
+        {
+          "athleteId": "4b5728ac-d041-4382-a121-8df5d596129a",
+          "careerId": "678td6dpm6qh1",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/giuseppe-cortese/?careerid=678td6dpm6qh1",
+          "field": {
+            "assists": 0,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 11,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 20,
+            "offensiveRebounds": 1,
+            "personalFouls": 3,
+            "points": 9,
+            "rebounds": 3,
+            "steals": 6,
+            "threePointAttempts": 7,
+            "threePointsMade": 1,
+            "turnovers": 0
+          },
+          "fullName": "Giuseppe Cortese",
+          "goalkeeping": null,
+          "jersey": "21",
+          "onRoster": true,
+          "shortName": "G. Cortese"
+        },
+        {
+          "athleteId": "a60e02c9-4e70-41cd-8748-f1290c87e15a",
+          "careerId": "vcveiqrcsvuue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/owen-selway/?careerid=vcveiqrcsvuue",
+          "field": {
+            "assists": 1,
+            "blocks": 0,
+            "defensiveRebounds": 1,
+            "fieldGoalAttempts": 9,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 18,
+            "offensiveRebounds": 1,
+            "personalFouls": 2,
+            "points": 10,
+            "rebounds": 2,
+            "steals": 5,
+            "threePointAttempts": 4,
+            "threePointsMade": 2,
+            "turnovers": 0
+          },
+          "fullName": "Owen Selway",
+          "goalkeeping": null,
+          "jersey": "30",
+          "onRoster": true,
+          "shortName": "O. Selway"
+        },
+        {
+          "athleteId": "4ddc9c19-f82f-49b2-85d0-855e1de7a769",
+          "careerId": "r5iic9s959q66",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/jason-schaper/?careerid=r5iic9s959q66",
+          "field": {
+            "assists": 4,
+            "blocks": 1,
+            "defensiveRebounds": 3,
+            "fieldGoalAttempts": 9,
+            "fieldGoalsMade": 9,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": 13,
+            "offensiveRebounds": 2,
+            "personalFouls": 1,
+            "points": 19,
+            "rebounds": 5,
+            "steals": 5,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 2
+          },
+          "fullName": "Jason Schaper",
+          "goalkeeping": null,
+          "jersey": "4",
+          "onRoster": true,
+          "shortName": "J. Schaper"
+        },
+        {
+          "athleteId": "d7cd5079-593b-45bc-b809-2c85a8d38565",
+          "careerId": "l1nd5173259rb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/vincenzo-selway/?careerid=l1nd5173259rb",
+          "field": {
+            "assists": 3,
+            "blocks": 0,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 7,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 11,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 5,
+            "rebounds": 2,
+            "steals": 1,
+            "threePointAttempts": 4,
+            "threePointsMade": 1,
+            "turnovers": 0
+          },
+          "fullName": "Vincenzo Selway",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": true,
+          "shortName": "V. Selway"
+        },
+        {
+          "athleteId": "baec5de7-fc42-4f13-b1d2-c64627bea65c",
+          "careerId": "ku8ddrj0c1jj3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/jacob-bumb/?careerid=ku8ddrj0c1jj3",
+          "field": {
+            "assists": 3,
+            "blocks": 0,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 7,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": 11,
+            "offensiveRebounds": 6,
+            "personalFouls": 3,
+            "points": 9,
+            "rebounds": 6,
+            "steals": 6,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Jacob Bumb",
+          "goalkeeping": null,
+          "jersey": "33",
+          "onRoster": true,
+          "shortName": "J. Bumb"
+        },
+        {
+          "athleteId": "7fa53239-27dc-41af-ae4f-62a227330ed5",
+          "careerId": "aslcm2cbjt4cc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/athletes/luke-harris/?careerid=aslcm2cbjt4cc",
+          "field": {
+            "assists": 0,
+            "blocks": 1,
+            "defensiveRebounds": 1,
+            "fieldGoalAttempts": 5,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 18,
+            "offensiveRebounds": 3,
+            "personalFouls": 1,
+            "points": 4,
+            "rebounds": 4,
+            "steals": 0,
+            "threePointAttempts": 3,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Luke Harris",
+          "goalkeeping": null,
+          "jersey": "35",
+          "onRoster": true,
+          "shortName": "L. Harris"
+        }
+      ],
+      "slug": "thomas-more",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/basketball/stats/",
+      "status": "ok",
+      "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+      "totals": {
+        "field": {
+          "assists": 22,
+          "blocks": 2,
+          "defensiveRebounds": 16,
+          "fieldGoalAttempts": 78,
+          "fieldGoalsMade": 34,
+          "freeThrowAttempts": 8,
+          "freeThrowsMade": 3,
+          "gamesPlayed": 2,
+          "minutes": 155,
+          "offensiveRebounds": 26,
+          "personalFouls": 15,
+          "points": 77,
+          "rebounds": 42,
+          "steals": 29,
+          "threePointAttempts": 30,
+          "threePointsMade": 6,
+          "turnovers": 10
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "minutes",
+          "points",
+          "fieldGoalsMade",
+          "fieldGoalAttempts",
+          "threePointsMade",
+          "threePointAttempts",
+          "freeThrowsMade",
+          "freeThrowAttempts",
+          "offensiveRebounds",
+          "defensiveRebounds",
+          "rebounds",
+          "assists",
+          "steals",
+          "blocks",
+          "turnovers",
+          "personalFouls"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "6934218c-981b-42db-97e7-887e6ea8457d",
+      "name": "BASIS Independent Silicon Valley",
+      "players": [],
+      "slug": "basis-silicon-valley",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/basis-independent-silicon-valley-bobcats/basketball/stats/",
+      "status": "none",
+      "teamId": "6934218c-981b-42db-97e7-887e6ea8457d",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "games": [
+        {
+          "contestId": "4fdc0a18-8508-4f97-8385-ebddc0b4f3ae",
+          "players": [
+            {
+              "field": {
+                "assists": 6,
+                "defensiveRebounds": 5,
+                "fieldGoalAttempts": 8,
+                "fieldGoalsMade": 4,
+                "offensiveRebounds": 1,
+                "points": 11,
+                "rebounds": 6,
+                "steals": 2,
+                "threePointAttempts": 6,
+                "threePointsMade": 3,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Miles Hines"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 2,
+                "freeThrowAttempts": 4,
+                "freeThrowsMade": 3,
+                "points": 7,
+                "rebounds": 3,
+                "threePointAttempts": 1,
+                "threePointsMade": 0
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Daniel Quintero"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 2,
+                "points": 4,
+                "rebounds": 3,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "John Allen"
+            },
+            {
+              "field": {
+                "fieldGoalAttempts": 9,
+                "fieldGoalsMade": 6,
+                "points": 13,
+                "rebounds": 2,
+                "steals": 2,
+                "threePointAttempts": 3,
+                "threePointsMade": 1,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Caleb Wodaj"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "fieldGoalAttempts": 7,
+                "fieldGoalsMade": 4,
+                "points": 9,
+                "rebounds": 3,
+                "threePointAttempts": 3,
+                "threePointsMade": 1,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Samuel Lopez Perez"
+            },
+            {
+              "field": {
+                "assists": 6,
+                "fieldGoalAttempts": 8,
+                "fieldGoalsMade": 4,
+                "points": 8,
+                "rebounds": 8,
+                "steals": 6,
+                "threePointAttempts": 3,
+                "threePointsMade": 0,
+                "turnovers": 4
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Darsh Gottam"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "fieldGoalAttempts": 11,
+                "fieldGoalsMade": 2,
+                "points": 5,
+                "rebounds": 6,
+                "threePointAttempts": 9,
+                "threePointsMade": 1
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Abhimanyu Sharma"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 2,
+                "points": 4,
+                "rebounds": 3,
+                "steals": 2,
+                "turnovers": 1
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Malhar Desai"
+            },
+            {
+              "field": {
+                "assists": 5,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "points": 2,
+                "rebounds": 6
+              },
+              "goalkeeping": null,
+              "jersey": "20",
+              "name": "Benjamin Vu"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "fieldGoalAttempts": 1,
+                "fieldGoalsMade": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Aditya Mathur"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "fieldGoalAttempts": 1,
+                "fieldGoalsMade": 1,
+                "points": 2,
+                "rebounds": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Ammanuel Seyoum"
+            }
+          ],
+          "rowKey": "0e709970",
+          "tracked": {
+            "field": [
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointsMade",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "assists",
+              "steals",
+              "turnovers"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-25T00:04:06",
+      "maxprepsTeamId": "42f5c2a4-6e6d-4acf-af58-1e7516c28a34",
+      "name": "University Prep Academy",
+      "players": [
+        {
+          "athleteId": "d30a50e8-da69-4365-a9be-387c4e0b96f8",
+          "careerId": "9s2g76cl48bbb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/miles-hines/?careerid=9s2g76cl48bbb",
+          "field": {
+            "assists": 6,
+            "blocks": null,
+            "defensiveRebounds": 5,
+            "fieldGoalAttempts": 8,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 1,
+            "personalFouls": null,
+            "points": 11,
+            "rebounds": 6,
+            "steals": 2,
+            "threePointAttempts": 6,
+            "threePointsMade": 3,
+            "turnovers": 2
+          },
+          "fullName": "Miles Hines",
+          "goalkeeping": null,
+          "jersey": "4",
+          "onRoster": true,
+          "shortName": "M. Hines"
+        },
+        {
+          "athleteId": "3f9c1063-024f-4f64-96e6-b70ca5d91057",
+          "careerId": "ekied7gopqb00",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/daniel-quintero/?careerid=ekied7gopqb00",
+          "field": {
+            "assists": 1,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 4,
+            "freeThrowsMade": 3,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 7,
+            "rebounds": 3,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Daniel Quintero",
+          "goalkeeping": null,
+          "jersey": "23",
+          "onRoster": true,
+          "shortName": "D. Quintero"
+        },
+        {
+          "athleteId": "0559e0e6-7e0d-4842-9826-a99085f7b55c",
+          "careerId": "ts87mh045g955",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/john-allen/?careerid=ts87mh045g955",
+          "field": {
+            "assists": 1,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 4,
+            "rebounds": 3,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "John Allen",
+          "goalkeeping": null,
+          "jersey": "13",
+          "onRoster": true,
+          "shortName": "J. Allen"
+        },
+        {
+          "athleteId": "5f2a9b0f-d483-45d7-8214-f20792347879",
+          "careerId": "h9og5jdu941td",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/caleb-wodaj/?careerid=h9og5jdu941td",
+          "field": {
+            "assists": 0,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 9,
+            "fieldGoalsMade": 6,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 13,
+            "rebounds": 2,
+            "steals": 2,
+            "threePointAttempts": 3,
+            "threePointsMade": 1,
+            "turnovers": 1
+          },
+          "fullName": "Caleb Wodaj",
+          "goalkeeping": null,
+          "jersey": "11",
+          "onRoster": true,
+          "shortName": "C. Wodaj"
+        },
+        {
+          "athleteId": "9d85b809-daf9-4e3f-81fa-fe63d9dcc329",
+          "careerId": "pr3cgt6anlp99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/samuel-lopez-perez/?careerid=pr3cgt6anlp99",
+          "field": {
+            "assists": 1,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 7,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 9,
+            "rebounds": 3,
+            "steals": 0,
+            "threePointAttempts": 3,
+            "threePointsMade": 1,
+            "turnovers": 2
+          },
+          "fullName": "Samuel Lopez Perez",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "S. Lopez Perez"
+        },
+        {
+          "athleteId": "00df8d94-027d-4fdf-9d4c-a3867e8410a9",
+          "careerId": "8cgspkm143ak4",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/darsh-gottam/?careerid=8cgspkm143ak4",
+          "field": {
+            "assists": 6,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 8,
+            "fieldGoalsMade": 4,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 8,
+            "rebounds": 8,
+            "steals": 6,
+            "threePointAttempts": 3,
+            "threePointsMade": 0,
+            "turnovers": 4
+          },
+          "fullName": "Darsh Gottam",
+          "goalkeeping": null,
+          "jersey": "2",
+          "onRoster": true,
+          "shortName": "D. Gottam"
+        },
+        {
+          "athleteId": "a35d8ade-0caa-4816-9e6c-e1028a2065f5",
+          "careerId": "1fs51dpguooue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/abhimanyu-sharma/?careerid=1fs51dpguooue",
+          "field": {
+            "assists": 2,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 11,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 5,
+            "rebounds": 6,
+            "steals": 0,
+            "threePointAttempts": 9,
+            "threePointsMade": 1,
+            "turnovers": 0
+          },
+          "fullName": "Abhimanyu Sharma",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "A. Sharma"
+        },
+        {
+          "athleteId": "d97be785-e52d-4e9c-9c0b-f3c623dba93b",
+          "careerId": "opo5t9sd5a4g0",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/malhar-desai/?careerid=opo5t9sd5a4g0",
+          "field": {
+            "assists": 2,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 4,
+            "rebounds": 3,
+            "steals": 2,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 1
+          },
+          "fullName": "Malhar Desai",
+          "goalkeeping": null,
+          "jersey": "15",
+          "onRoster": true,
+          "shortName": "M. Desai"
+        },
+        {
+          "athleteId": "bbc1cd6f-4ff0-4b68-b128-f58e4bd5b1ca",
+          "careerId": "uoeek1vmqitqa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/benjamin-vu/?careerid=uoeek1vmqitqa",
+          "field": {
+            "assists": 5,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": 6,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Benjamin Vu",
+          "goalkeeping": null,
+          "jersey": "20",
+          "onRoster": true,
+          "shortName": "B. Vu"
+        },
+        {
+          "athleteId": "60929f22-1e92-4976-ba2d-e3758aebbd64",
+          "careerId": "1vuut68c1e2i2",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/aditya-mathur/?careerid=1vuut68c1e2i2",
+          "field": {
+            "assists": 1,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 1,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Aditya Mathur",
+          "goalkeeping": null,
+          "jersey": "22",
+          "onRoster": true,
+          "shortName": "A. Mathur"
+        },
+        {
+          "athleteId": "5c95c61c-6410-4a8a-9bf9-198098b2b2a1",
+          "careerId": "3rt2fck0cvij3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/athletes/ammanuel-seyoum/?careerid=3rt2fck0cvij3",
+          "field": {
+            "assists": 1,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 1,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": 0,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": 1,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": 0,
+            "turnovers": 0
+          },
+          "fullName": "Ammanuel Seyoum",
+          "goalkeeping": null,
+          "jersey": "10",
+          "onRoster": true,
+          "shortName": "A. Seyoum"
+        }
+      ],
+      "slug": "university-prep",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/university-prep-academy-golden-eagles/basketball/stats/",
+      "status": "ok",
+      "teamId": "42f5c2a4-6e6d-4acf-af58-1e7516c28a34",
+      "totals": {
+        "field": {
+          "assists": 26,
+          "defensiveRebounds": 5,
+          "fieldGoalAttempts": 57,
+          "fieldGoalsMade": 29,
+          "freeThrowAttempts": 4,
+          "freeThrowsMade": 3,
+          "gamesPlayed": 1,
+          "offensiveRebounds": 1,
+          "points": 67,
+          "rebounds": 41,
+          "steals": 12,
+          "threePointAttempts": 25,
+          "threePointsMade": 6,
+          "turnovers": 11
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "points",
+          "fieldGoalsMade",
+          "fieldGoalAttempts",
+          "threePointsMade",
+          "threePointAttempts",
+          "freeThrowsMade",
+          "freeThrowAttempts",
+          "offensiveRebounds",
+          "defensiveRebounds",
+          "rebounds",
+          "assists",
+          "steals",
+          "turnovers"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "49ac8af1-0277-4a5c-bb79-7da46365404e",
+      "name": "Cristo Rey San Jose Jesuit",
+      "players": [],
+      "slug": "cristo-rey-san-jose",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/cristo-rey-san-jose-jesuit-na/basketball/stats/",
+      "status": "none",
+      "teamId": "49ac8af1-0277-4a5c-bb79-7da46365404e",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3",
+      "name": "KIPP San Jose Collegiate",
+      "players": [],
+      "slug": "kipp-san-jose",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/kipp-san-jose-collegiate-wes/basketball/stats/",
+      "status": "none",
+      "teamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+      "name": "The Nueva School",
+      "players": [],
+      "slug": "nueva",
+      "statsUrl": "https://www.maxpreps.com/ca/san-mateo/the-nueva-school-mavericks/basketball/stats/",
+      "status": "none",
+      "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "91b64650-3cb0-4ddc-ab18-5bf203734def",
+      "name": "Mountain View Academy",
+      "players": [],
+      "slug": "mountain-view-academy",
+      "statsUrl": "https://www.maxpreps.com/ca/mountain-view/mountain-view-academy-mustangs/basketball/stats/",
+      "status": "none",
+      "teamId": "91b64650-3cb0-4ddc-ab18-5bf203734def",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "5a1f56a0-bb6d-40b1-9965-fb377989ed00",
+      "name": "North Valley Baptist",
+      "players": [],
+      "slug": "north-valley-baptist",
+      "statsUrl": "https://www.maxpreps.com/ca/santa-clara/north-valley-baptist-bulldogs/basketball/stats/",
+      "status": "none",
+      "teamId": "5a1f56a0-bb6d-40b1-9965-fb377989ed00",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "84555b97-0698-4957-af80-97c1c60762fe",
+      "name": "The Kehillah School",
+      "players": [],
+      "slug": "kehillah",
+      "statsUrl": "https://www.maxpreps.com/ca/palo-alto/the-kehillah-school-rams/basketball/stats/",
+      "status": "none",
+      "teamId": "84555b97-0698-4957-af80-97c1c60762fe",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "games": [
+        {
+          "contestId": "3445256e-23d5-4243-b1e3-c622e17152f5",
+          "players": [
+            {
+              "field": {
+                "defensiveRebounds": 1,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 13,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "points": 0,
+                "rebounds": 1,
+                "steals": 1,
+                "threePointAttempts": 2,
+                "turnovers": 4
+              },
+              "goalkeeping": null,
+              "jersey": "54",
+              "name": "Felix Trujillo"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 0,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 25,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "points": 2,
+                "rebounds": 0,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "turnovers": 7
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Gabe Cambron"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 2,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 21,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "points": 0,
+                "rebounds": 2,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "turnovers": 2
+              },
+              "goalkeeping": null,
+              "jersey": "44",
+              "name": "Salomon Perez"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 1,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 15,
+                "offensiveRebounds": 0,
+                "personalFouls": 1,
+                "points": 0,
+                "rebounds": 2,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "turnovers": 3
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Jordan Farias"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 4,
+                "fieldGoalAttempts": 4,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 10,
+                "freeThrowsMade": 5,
+                "minutes": 24,
+                "offensiveRebounds": 1,
+                "personalFouls": 1,
+                "points": 5,
+                "rebounds": 5,
+                "steals": 0,
+                "threePointAttempts": 0,
+                "turnovers": 14
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Anthony Bustos"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 1,
+                "fieldGoalAttempts": 1,
+                "fieldGoalsMade": 0,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 16,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
+                "points": 0,
+                "rebounds": 1,
+                "steals": 0,
+                "threePointAttempts": 1,
+                "turnovers": 3
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Merrick Duggan"
+            },
+            {
+              "field": {
+                "defensiveRebounds": 2,
+                "fieldGoalAttempts": 8,
+                "fieldGoalsMade": 1,
+                "freeThrowAttempts": 0,
+                "freeThrowsMade": 0,
+                "minutes": 22,
+                "offensiveRebounds": 0,
+                "personalFouls": 4,
+                "points": 2,
+                "rebounds": 2,
+                "steals": 2,
+                "threePointAttempts": 1,
+                "turnovers": 4
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Malakai Ofakineiafu"
+            }
+          ],
+          "rowKey": "4a88beb0",
+          "tracked": {
+            "field": [
+              "minutes",
+              "points",
+              "fieldGoalsMade",
+              "fieldGoalAttempts",
+              "threePointAttempts",
+              "freeThrowsMade",
+              "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "steals",
+              "turnovers",
+              "personalFouls"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-25T03:10:06",
+      "maxprepsTeamId": "1f690420-95b8-4d69-8130-ba161d4ef703",
+      "name": "KIPP Esperanza",
+      "players": [
+        {
+          "athleteId": "4de806d7-78e4-4f4a-8c77-2c2d76deb4e5",
+          "careerId": "tfl8j2vvsqe55",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/felix-trujillo/?careerid=tfl8j2vvsqe55",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 1,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 13,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 0,
+            "rebounds": 1,
+            "steals": 1,
+            "threePointAttempts": 2,
+            "threePointsMade": null,
+            "turnovers": 4
+          },
+          "fullName": "Felix Trujillo",
+          "goalkeeping": null,
+          "jersey": "54",
+          "onRoster": true,
+          "shortName": "F. Trujillo"
+        },
+        {
+          "athleteId": "00d51d5f-b78d-44c4-b0b3-e2d0d034a8b7",
+          "careerId": "tq0b3orqqg6vf",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/gabe-cambron/?careerid=tq0b3orqqg6vf",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 0,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 25,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 2,
+            "rebounds": 0,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": null,
+            "turnovers": 7
+          },
+          "fullName": "Gabe Cambron",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "G. Cambron"
+        },
+        {
+          "athleteId": "9287008b-9994-49a3-aae8-33d6ac464c20",
+          "careerId": "17se54bs91911",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/salomon-perez/?careerid=17se54bs91911",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 2,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 21,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 0,
+            "rebounds": 2,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": null,
+            "turnovers": 2
+          },
+          "fullName": "Salomon Perez",
+          "goalkeeping": null,
+          "jersey": "44",
+          "onRoster": true,
+          "shortName": "S. Perez"
+        },
+        {
+          "athleteId": "56acf046-f013-45f3-b6d0-6a3fad45a0ec",
+          "careerId": "1s931f5b28vp9",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/jordan-farias/?careerid=1s931f5b28vp9",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 1,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 15,
+            "offensiveRebounds": 0,
+            "personalFouls": 1,
+            "points": 0,
+            "rebounds": 2,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": null,
+            "turnovers": 3
+          },
+          "fullName": "Jordan Farias",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "J. Farias"
+        },
+        {
+          "athleteId": "24b207c2-f2bd-475f-a81c-4a56ed826deb",
+          "careerId": "4m8pfghb2o9k4",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/anthony-bustos/?careerid=4m8pfghb2o9k4",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 4,
+            "fieldGoalAttempts": 4,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 10,
+            "freeThrowsMade": 5,
+            "gamesPlayed": 1,
+            "minutes": 24,
+            "offensiveRebounds": 1,
+            "personalFouls": 1,
+            "points": 5,
+            "rebounds": 5,
+            "steals": 0,
+            "threePointAttempts": 0,
+            "threePointsMade": null,
+            "turnovers": 14
+          },
+          "fullName": "Anthony Bustos",
+          "goalkeeping": null,
+          "jersey": "15",
+          "onRoster": true,
+          "shortName": "A. Bustos"
+        },
+        {
+          "athleteId": "7d9c5ec5-c127-4734-9953-6d0dc2ca40a8",
+          "careerId": "qf1dte5atl044",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/merrick-duggan/?careerid=qf1dte5atl044",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 1,
+            "fieldGoalAttempts": 1,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 16,
+            "offensiveRebounds": 0,
+            "personalFouls": 0,
+            "points": 0,
+            "rebounds": 1,
+            "steals": 0,
+            "threePointAttempts": 1,
+            "threePointsMade": null,
+            "turnovers": 3
+          },
+          "fullName": "Merrick Duggan",
+          "goalkeeping": null,
+          "jersey": "8",
+          "onRoster": true,
+          "shortName": "M. Duggan"
+        },
+        {
+          "athleteId": "f6a022de-05dd-4c6c-b83d-a9095a884479",
+          "careerId": "3ts7ht0b6k822",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/athletes/malakai-ofakineiafu/?careerid=3ts7ht0b6k822",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": 2,
+            "fieldGoalAttempts": 8,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": 22,
+            "offensiveRebounds": 0,
+            "personalFouls": 4,
+            "points": 2,
+            "rebounds": 2,
+            "steals": 2,
+            "threePointAttempts": 1,
+            "threePointsMade": null,
+            "turnovers": 4
+          },
+          "fullName": "Malakai Ofakineiafu",
+          "goalkeeping": null,
+          "jersey": "23",
+          "onRoster": true,
+          "shortName": "M. Ofakineiafu"
+        }
+      ],
+      "slug": "kipp-esperanza",
+      "statsUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/basketball/stats/",
+      "status": "ok",
+      "teamId": "1f690420-95b8-4d69-8130-ba161d4ef703",
+      "totals": {
+        "field": {
+          "defensiveRebounds": 12,
+          "fieldGoalAttempts": 20,
+          "fieldGoalsMade": 2,
+          "freeThrowAttempts": 10,
+          "freeThrowsMade": 5,
+          "gamesPlayed": 2,
+          "minutes": 136,
+          "offensiveRebounds": 1,
+          "personalFouls": 6,
+          "points": 9,
+          "rebounds": 13,
+          "steals": 3,
+          "threePointAttempts": 7,
+          "turnovers": 37
+        },
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "minutes",
+          "points",
+          "fieldGoalsMade",
+          "fieldGoalAttempts",
+          "threePointAttempts",
+          "freeThrowsMade",
+          "freeThrowAttempts",
+          "offensiveRebounds",
+          "defensiveRebounds",
+          "rebounds",
+          "steals",
+          "turnovers",
+          "personalFouls"
+        ],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "fdc893f7-899d-4fef-87c7-225a20013de7",
+      "name": "Summit Preparatory",
+      "players": [],
+      "slug": "summit-prep",
+      "statsUrl": "https://www.maxpreps.com/ca/redwood-city/summit-preparatory-huskies/basketball/stats/",
+      "status": "none",
+      "teamId": "fdc893f7-899d-4fef-87c7-225a20013de7",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "66384f4b-72d0-4348-aefa-e9c9d0362ccf",
+      "name": "Pacific Bay Christian",
+      "players": [],
+      "slug": "pacific-bay-christian",
+      "statsUrl": "https://www.maxpreps.com/ca/pacifica/pacific-bay-christian-eagles/basketball/stats/",
+      "status": "none",
+      "teamId": "66384f4b-72d0-4348-aefa-e9c9d0362ccf",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "7480e790-84cc-48ce-bf55-4126dac053f1",
+      "name": "Pescadero",
+      "players": [],
+      "slug": "pescadero",
+      "statsUrl": "https://www.maxpreps.com/ca/pescadero/pescadero-vikings/basketball/stats/",
+      "status": "none",
+      "teamId": "7480e790-84cc-48ce-bf55-4126dac053f1",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "923d1847-1ccb-4125-9e0c-2a1b3cb0ce51",
+      "name": "San Francisco Christian",
+      "players": [],
+      "slug": "sf-christian",
+      "statsUrl": "https://www.maxpreps.com/ca/san-francisco/san-francisco-christian-trojans/basketball/stats/",
+      "status": "none",
+      "teamId": "923d1847-1ccb-4125-9e0c-2a1b3cb0ce51",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865",
+      "name": "Cindy Avitia",
+      "players": [],
+      "slug": "cindy-avitia",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/cindy-avitia-jaguars/basketball/stats/",
+      "status": "none",
+      "teamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5",
+      "name": "KIPP Navigate College Prep",
+      "players": [],
+      "slug": "kipp-navigate",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/kipp-navigate-college-prep-tigers/basketball/stats/",
+      "status": "none",
+      "teamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3",
+      "name": "Summit Tahoma",
+      "players": [],
+      "slug": "summit-tahoma",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/summit-tahoma-tigers/basketball/stats/",
+      "status": "none",
+      "teamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "95ced4cf-1cce-4eea-aacf-dd046216df07",
+      "name": "East Palo Alto Academy",
+      "players": [],
+      "slug": "east-palo-alto-academy",
+      "statsUrl": "https://www.maxpreps.com/ca/east-palo-alto/east-palo-alto-academy-bulldogs/basketball/stats/",
+      "status": "none",
+      "teamId": "95ced4cf-1cce-4eea-aacf-dd046216df07",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "2c817f3b-7c83-4413-8b33-bb4b702dac18",
+      "name": "Mid-Peninsula",
+      "players": [],
+      "slug": "mid-peninsula",
+      "statsUrl": "https://www.maxpreps.com/ca/menlo-park/mid-peninsula-dragons/basketball/stats/",
+      "status": "none",
+      "teamId": "2c817f3b-7c83-4413-8b33-bb4b702dac18",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "6c1116b7-c57c-42cd-8510-57529b2fac23",
+      "name": "Stratford Prep",
+      "players": [],
+      "slug": "stratford",
+      "statsUrl": "https://www.maxpreps.com/ca/campbell/stratford-prep-lions/basketball/stats/",
+      "status": "none",
+      "teamId": "6c1116b7-c57c-42cd-8510-57529b2fac23",
       "totals": {
         "field": {},
         "goalkeeping": {}

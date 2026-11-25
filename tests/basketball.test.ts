@@ -110,8 +110,8 @@ describe('the basketball sport switch', () => {
 });
 
 describe('SCVAL boys basketball', () => {
-  it('covers SCVAL, BVAL, the WCAL, the WBAL, the PAL and the SCCAL, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal', 'sccal']);
+  it('covers every CCS league: SCVAL, BVAL, the WCAL, the WBAL, the PAL, the SCCAL, the PCAL and the PSAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal', 'sccal', 'pcal', 'psal']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -123,7 +123,7 @@ describe('SCVAL boys basketball', () => {
       'cupertino', 'fremont', 'los-altos', 'macdonald', 'monta-vista', 'santa-clara', 'saratoga', 'wilcox',
     ]);
     expect(m.teams.teamsInLeague('scval')).toHaveLength(15);
-    expect(m.teams.TEAMS).toHaveLength(79);
+    expect(m.teams.TEAMS).toHaveLength(133);
     for (const team of m.teams.TEAMS) expect(team.external.maxprepsTeamUrl).toMatch(/\/basketball\/$/);
   });
 
@@ -198,6 +198,57 @@ describe('SCVAL boys basketball', () => {
     expect(m.classify.postseasonTag(tournamentGame)).toMatchObject({ kind: 'league-postseason', leagueId: 'sccal' });
   });
 
+  it('aligns the PCAL’s 31 schools as its four boys division schedules do, with eight CCS berths', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('gabilan')).toEqual(['carmel', 'hollister', 'monterey', 'oakwood', 'pacific-grove', 'palma', 'salinas']);
+    expect(slugs('mission')).toEqual([
+      'alisal', 'marina-mariners', 'monte-vista-christian', 'north-salinas', 'rancho-san-juan', 'soledad', 'st-francis-watsonville', 'watsonville',
+    ]);
+    expect(slugs('cypress')).toEqual([
+      'everett-alvarez', 'gonzales', 'greenfield', 'king-city', 'north-monterey-county', 'pajaro-valley', 'seaside', 'stevenson',
+    ]);
+    expect(slugs('santa-lucia')).toEqual([
+      'anzar', 'ceiba', 'chartwell', 'kirby', 'monterey-bay-academy', 'pacific-collegiate', 'trinity-christian', 'york',
+    ]);
+    const pcal = m.leagues.getLeague('pcal');
+    expect(pcal.rules.orderBy).toBe('win-pct');
+    expect(pcal.rules.leagueOvertime).toBe('until-decided');
+    expect(pcal.divisions.map((d) => [d.id, d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      ['gabilan', 7, 12, { first: '2027-01-04', last: '2027-02-11' }],
+      ['mission', 8, 14, { first: '2027-01-05', last: '2027-02-12' }],
+      ['cypress', 8, 14, { first: '2027-01-05', last: '2027-02-12' }],
+      ['santa-lucia', 8, 14, { first: '2027-01-04', last: '2027-02-11' }],
+    ]);
+    if (pcal.postseason.kind !== 'ccs-ladder') throw new Error('PCAL: not a CCS ladder');
+    expect(pcal.postseason.autoBerths).toBe(8);
+    expect(pcal.postseason.ladder.filter((r) => r.status === 'aq').map((r) => [r.divisions, r.places])).toEqual([
+      [['gabilan'], [1, 4]], [['mission'], [1, 2]], [['cypress', 'santa-lucia'], [1, 1]],
+    ]);
+  });
+
+  it('aligns the PSAL’s 23 schools as its four boys division schedules do, each champion marked', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('psal-bay')).toEqual(['basis-silicon-valley', 'design-tech', 'oceana', 'summit-shasta', 'thomas-more', 'university-prep']);
+    expect(slugs('psal-coast')).toEqual([
+      'cristo-rey-san-jose', 'kehillah', 'kipp-san-jose', 'mountain-view-academy', 'north-valley-baptist', 'nueva',
+    ]);
+    expect(slugs('psal-north')).toEqual(['kipp-esperanza', 'pacific-bay-christian', 'pescadero', 'sf-christian', 'summit-prep']);
+    expect(slugs('psal-south')).toEqual([
+      'cindy-avitia', 'east-palo-alto-academy', 'kipp-navigate', 'mid-peninsula', 'stratford', 'summit-tahoma',
+    ]);
+    const psal = m.leagues.getLeague('psal');
+    expect(psal.divisions.map((d) => [d.id, d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      ['psal-bay', 6, 10, { first: '2027-01-14', last: '2027-02-16' }],
+      ['psal-coast', 6, 10, { first: '2027-01-05', last: '2027-02-11' }],
+      ['psal-north', 5, 8, { first: '2027-01-05', last: '2027-02-11' }],
+      ['psal-south', 6, 10, { first: '2027-01-05', last: '2027-02-11' }],
+    ]);
+    if (psal.postseason.kind !== 'ccs-ladder') throw new Error('PSAL: not a CCS ladder');
+    expect(psal.postseason.autoBerths).toBe(4);
+    // The Bay plays its last league games on Tue Feb 16, so the league's postseason opens the day after.
+    expect(psal.rules.postseasonFrom).toBe('2027-02-17');
+  });
+
   it('gives each school the soccer registry also holds its soccer seed, on its MaxPreps basketball page', () => {
     // The paths are each team's teamCanonicalUrl on its league's MaxPreps boys basketball standings (2026-11-21).
     const path = (slug: string) => m.teams.getTeamBySlug(slug)?.external.maxprepsTeamUrl?.replace('https://www.maxpreps.com', '');
@@ -243,7 +294,9 @@ describe('SCVAL boys basketball', () => {
 
   it('dates the CCS rounds from the CCS calendar: a first round before the quarterfinals, the Open final a day early', () => {
     const { requireCcs, ccsFirstDay, ccsLastDay, ccsRoundDays } = m.sections;
-    expect(requireCcs().autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 2, pal: 4, sccal: 2, atLarge: null, total: null });
+    expect(requireCcs().autoQualifiers).toEqual({
+      scval: 4, bval: 6, wcal: 1, wbal: 2, pal: 4, sccal: 2, pcal: 8, psal: 4, atLarge: null, total: null,
+    });
     expect(requireCcs().keyDates).toMatchObject({
       entriesDue: '2027-02-17T10:00:00',
       seedingMeeting: '2027-02-17T12:00:00',
