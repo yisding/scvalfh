@@ -71,6 +71,8 @@ describe('NAME_SPELLINGS', () => {
     ['K. Van every', 'K. Van Every'],
     ['gigi Giraldiana', 'Gigi Giraldiana'],
     ['Iris jin', 'Iris Jin'],
+    ['Ann Katrin SaynWittgenstein', 'Ann-Katrin Sayn-Wittgenstein'],
+    ['A. SaynWittgenstein', 'A. Sayn-Wittgenstein'],
     ['Lorenz D. De leon', 'Lorenz D. De Leon'],
     ['Camille (cj) Bulatao', 'Camille (CJ) Bulatao'],
     ['Amelia "mimi" Scatena', 'Amelia "Mimi" Scatena'],
@@ -94,6 +96,12 @@ describe('NAME_SPELLINGS', () => {
   });
 
   it('respells the first name of a roster row whose full name matches', () => {
+    // An entry whose two sides differ in word count respells a part only when the part is the whole run.
+    expect(recaseNameParts({ firstName: 'Ann Katrin', lastName: 'SaynWittgenstein', fullName: 'Ann Katrin SaynWittgenstein' })).toEqual({
+      firstName: 'Ann-Katrin',
+      lastName: 'Sayn-Wittgenstein',
+      fullName: 'Ann-Katrin Sayn-Wittgenstein',
+    });
     expect(recaseNameParts({ firstName: 'Gretta', lastName: 'Jungjohann', fullName: 'Gretta Jungjohann' })).toEqual({
       firstName: 'Greta',
       lastName: 'Jungjohann',
