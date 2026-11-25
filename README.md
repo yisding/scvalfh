@@ -1865,17 +1865,17 @@ on 2026-11-21:
   address probe over every varsity and JV row.
 - **Clubs** (`clubs.json`; recounted on 2026-11-25, after the Girls Academy and NorCal Premier rosters, the refresh's
   ECNL ties and the Mitty drift of "Girls soccer: club rosters" below): **51 clubs** (South Bay 19, Peninsula 15, San
-  Francisco 10, Central Coast 5, East Bay 1, Marin 1) and **258 varsity ties for 213 of the 876 varsity rows, at 34 of
+  Francisco 10, Central Coast 5, East Bay 1, Marin 1) and **270 varsity ties for 224 of the 876 varsity rows, at 34 of
   the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while
-  MaxPreps does not list her): 163 current, 75 listed (unknown) and 20 earlier; 37 players are tied to more than one
-  club; 125 high confidence, 133 medium (131 of them resting on a league roster alone: a class year, or a GotSport
-  team's birth years, and the club's location). The most ties: MVLA 49, De Anza Force 45, Almaden FC 35, Bay Area Surf
-  31, Los Gatos United 21, Silicon Valley SA 14, Santa Clara Sporting 12, Burlingame and Stanford Strikers 8 each,
-  Palo Alto SC 7. 28 clubs have no tied player. The ties rest on 402 source entries on 222 URLs (league rosters 213:
-  ECNL's 173 and GotSport Rankings' 40, Girls Academy and NorCal Premier; NCSA 57, PrepSoccer 35, SportsRecruits 35,
+  MaxPreps does not list her): 163 current, 87 listed (unknown) and 20 earlier; 38 players are tied to more than one
+  club; 125 high confidence, 145 medium (143 of them resting on a league roster alone: a class year, or a GotSport
+  team's birth years, and the club's location). The most ties: MVLA 55, De Anza Force 49, Almaden FC 35, Bay Area Surf
+  31, Los Gatos United 23, Silicon Valley SA 14, Santa Clara Sporting 12, Burlingame and Stanford Strikers 8 each,
+  Palo Alto SC 7. 28 clubs have no tied player. The ties rest on 419 source entries on 226 URLs (league rosters 230:
+  ECNL's 173 and GotSport Rankings' 57, Girls Academy and NorCal Premier; NCSA 57, PrepSoccer 35, SportsRecruits 35,
   MaxPreps career pages 26, Hudl 22, TopDrawerSoccer 10, SoccerWire 3, a college release 1). San Francisco, the
   Peninsula and the South Bay were searched for every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not
-  the rest of the Central Coast, so /clubs does not claim it. **5 JV ties** (`jvAffiliations`, since 2026-11-25),
+  the rest of the Central Coast, so /clubs does not claim it. **6 JV ties** (`jvAffiliations`, since 2026-11-25),
   shown marked JV.
 - **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
   hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
@@ -1991,7 +1991,7 @@ Northwest conference (league `ga`, below). It is there so that a high school ros
 rosters the day a school posts it, without reading the leagues' pages again. ECNL's three leagues, read on
 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL teams of 12 clubs, 139 NorCal Regional League teams of
 43, 57 Golden State teams of the 12 ECNL clubs); Golden State was added that day, the other two leagues first read on
-2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for five clubs: **17 teams, 89 rows** (below). In all 311 teams, 4,950 players.
+2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for fourteen clubs: **45 teams, 184 rows** (below). In all 339 teams, 5,045 players.
 
 ```bash
 pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
@@ -2080,8 +2080,19 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   Premier (U16 is 2011), and the rows are compared in the birth-year tier. Linked: 6 new ties (Almaden FC 3, one of
   them JV; Sunnyvale Alliance 2; FC Milpitas 1), medium with status unknown, and 2 ties other pages made gain the
   roster; with them, 3 ECNL matches at the PCAL schools added the same day (Salinas 2, Palma 1, to Bay Area Surf). A
-  separate run re-read all 17 cited rows. Not read: the other clubs' NorCal Premier teams (MVLA's, De Anza Force's,
-  Bay Area Surf's and the rest).
+  separate run re-read all 17 cited rows. The larger clubs' teams were read next (below).
+- **NorCal Premier, the larger clubs, read on 2026-11-25** the same way: MVLA (and MVLA San Jose, an alias in its
+  record; MVLA East, an affiliated club in Turlock, is not mapped), De Anza Force ("Force" on GotSport: "De Anza
+  Force" finds nothing on Rankings and "Force" alone fills the result cap with other clubs, so its teams were found by
+  their own names), Los Gatos United, Burlingame, Palo Alto SC, Santa Cruz United, SF Elite and Stanford Strikers. 37
+  event teams: 3 not kept (two already kept under GA and ECNL RL, one single-year U14), 6 not found on Rankings (Palo
+  Alto SC 2, Los Gatos United 1, Burlingame 1, Santa Cruz United 2); Santa Clara Sporting has no girls U14-U19 team in
+  either event. **28 teams, 95 rows**, again mostly 0 to 5 per team (MVLA's N1 G2008/09 20, Los Gatos United's
+  U17/U18G Comp I 18, Palo Alto SC's 08/09G Blue 16, Force's G2009/10 Elite 11). Linked: 13 new ties (MVLA 6, De Anza
+  Force 4, Los Gatos United 2, Palo Alto SC 1, JV), medium with status unknown, and 5 ties other pages made gain the
+  roster; all 18 cited rows re-read. Not linked: 3 players a GA or NorCal roster alone had tied are now on a second
+  club's roster too (Zoe Nesvacil, Kenna Smead, Raye Yokota: `several-clubs`). Rankings rosters are undated, so a
+  player who changed clubs shows on both; their existing ties are kept as written, for a person to re-check.
 - **What a GA roster gives, and the birth-year tier.** A name and a position ("No Position Listed" throughout); no
   class year, jersey or date. So a GA roster is not known to be one season's: it reads like everyone the team has
   carried (Silicon Valley SA's GA 08/09 has 64 rows; Almaden's names a tracked class-of-2029 player). Each team keeps

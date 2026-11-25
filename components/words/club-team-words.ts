@@ -45,8 +45,8 @@ const LEAGUES: ReadonlyArray<readonly [RegExp, string]> = [
  */
 const BIRTH_YEARS = /(?<![\w/'])(?:G|')?((?:19|20)?\d{2})(?:\/((?:19|20)?\d{2}))?G?(?![\w/])/gi;
 
-/** What else marks a team's age and is not printed: an age group (U17, U15G), and "Girls"/"G" standing alone. */
-const AGE_WORDS = /\bU-?\d{2}G?\b|\b\d{2}U\b|\bGirls\b|\bG\b/gi;
+/** What else marks a team's age and is not printed: an age group (U17, U15G) or a pair of them (U17/U18G), and "Girls"/"G" standing alone. */
+const AGE_WORDS = /\bU-?\d{2}G?(?:\/U-?\d{2}G?)?\b|\b\d{2}U\b|\bGirls\b|\bG\b/gi;
 
 const fullYear = (y: string) => (y.length === 4 ? Number(y) : 2000 + Number(y));
 
