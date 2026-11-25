@@ -2183,9 +2183,10 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   grade's class year (Elise Shafie and Ciara Riciputi to MVLA, Isabella Huston to Los Gatos United, Roya Jamasbi to
   Burlingame, Eliza Dennebaum to Stanford Strikers) and 3 with no other page and an uncommon name (Ariella Edens to
   Santa Clara Sporting, Maya Onalfo to De Anza Force, Milla Chow to MVLA). A twelfth, on the owner's asking for a
-  judgment: Grace Badawi (Menlo-Atherton) to Stanford Strikers, whose G2009/10 team also lists her sister Ella, the
-  school's senior, tied to the club already; the club is beside the school, and her grade's class of 2029 fits a
-  2009/10 birth-year team where the roster's 2030 does not. Left: Jocelyn Rocha (Overfelt) and Sofia Nguyen
+  judgment: Grace Badawi (Menlo-Atherton) to Stanford Strikers, whose G2009/10 team also lists an Ella Badawi:
+  Menlo-Atherton's senior has that name and is tied to the club already (no page says the two are related); the
+  club is beside the school, and her grade's class of 2029 fits a 2009/10 birth-year team where the roster's 2030
+  does not. Left: Jocelyn Rocha (Overfelt) and Sofia Nguyen
   (Menlo-Atherton), common names one year off with nothing else behind them (a SportsRecruits probe found only
   another Sofia Nguyen, in Fountain Valley), Jiselle Perez and Marissa Garcia (two years
   off; Garcia's own page ties her to Santa Cruz United), Sophia Hernandez and Emily Garcia (clubs with no record),
