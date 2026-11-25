@@ -10,7 +10,7 @@
     "Second reader at assembly (2026-11-21): a separate script re-fetched every tie's every source and checked the quote on the page as served (Hudl and SportsRecruits through the data the page itself loads; pages the pass read rendered, in headless Chromium). Every source confirmed. MaxPreps' club entries are cited on the career page's Bio tab, where the pass read them, and quoted as the page's own run of fields. A PrepSoccer program page is quoted as its class heading and the player's row. 2 ties found on a player's JV-list row are left out because the same player's varsity row has a grade whose class year the page contradicts.",
     "League rosters, 2026-11-22 (README, \"Club rosters\"): the public team rosters of ECNL Girls Northern Cal and the ECNL Regional League's NorCal girls division, GU14 through GU18/19 (199 teams of 55 clubs; kept in club-rosters.json), compared with every varsity and JV row by pnpm compare-club-rosters. The league-roster rule (lib/players/club-rosters.ts): the folded names are equal, the row has a grade and the roster's class year is that grade's, no other tracked school has the name, every agreeing roster row is at one club, and the club has a record here and is based in San Francisco, on the Peninsula, in the South Bay or on the Central Coast. A roster names no school, so a tie resting on one alone is medium confidence. 96 ties cite a roster (source kind league-roster, 110 entries on 32 team pages, each quoted as the team's name and the player's row on the page's Roster dialog; the class year is in the data the page loads): 63 new ties rest on a roster alone; 32 ties other pages already made gained it and are now current for 2026-27, Sally Burns's to Mustang Soccer (East Bay) among them; and Delaney Kumer's to Marin FC is new, resting on TopDrawerSoccer's UC Davis list (class year, hometown San Carlos, the club) with the roster, with a record for Marin FC written from its own site. Second reader: a separate script opened all 32 team pages (and 2 more) in Chromium, pressed Roster and found every cited row as displayed. Not linked: 30 varsity and 11 JV rows with no grade whose name is on a roster; 11 varsity rows whose class year disagrees with every roster row of the name and 5 rows (1 JV) whose roster rows carry none; Vivian Baker (Mitty), listed at that class year by two clubs; Taylor Williams (Branham, Marin FC), Tanisha Rameshkumar (Valley Christian, Pleasanton Rage, a club with no record) and a JV player at Evergreen Valley (Mustang Soccer), each at a club outside the area with no other page. No JV row passed the rule.",
     "League rosters, 2026-11-24: the ECNL Regional League's Golden State conference (the 12 ECNL Northern Cal clubs' second teams, Athlete One event 4300; 57 teams added to club-rosters.json) read and compared the same way, under the same rule, now over three leagues. 38 more ties cite a roster, all at Golden State teams: 33 new ties at 11 schools resting on a roster alone (MVLA 23, Bay Area Surf 6, De Anza Force 4), medium confidence; and 5 ties other pages already made, which gain the roster and are now current for 2026-27 (Dylan Harrison, Los Altos, and Sora Cerniglia, Mitty, to MVLA; Melanie Adler, Wilcox, and Isabella Larsen, Sobrato, to Bay Area Surf; Emerinne Denina, Monta Vista, to De Anza Force). 40 entries on 12 team pages. Second reader: a separate script opened the 12 pages in Chromium, pressed Roster and found all 40 cited rows as displayed, with the label the copy gives. In all, 134 ties cite a roster (150 entries on 44 team pages, 23 schools). Not linked: 3 JV rows that pass the rule (Branham 2, Willow Glen 1), as no JV tie is listed.",
-    "No record, so no tie shown, although a player's page names the club: El Camino FC (sobrato / Lauren Crowell, maxpreps); alum rock fc (overfelt / Violeta Murillo, maxpreps); Hawaii Rush Soccer (Girls) (valley-christian / Alessia Costa, sportsrecruits); Newark 1974 FC (santa-clara / Dhiaan Plaha, ncsa); Reno Apex (cupertino / Emily Sugimura, ncsa); AllStars FC (sobrato / Isabella Larsen, ncsa); Alum Rock Futbol Club (overfelt / Violeta Murillo, ncsa); Silicon Valley Soccer Club (carlmont / Gianna Armanini, ncsa). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). Nor is \"Surf\" on one Mitty player's NCSA page mapped (Santa Cruz Mid-County also goes by Surf); her Bay Area Surf tie rests on other pages and is listed. TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
+    "No record, so no tie shown, although a player's page names the club: El Camino FC (sobrato / Lauren Crowell, maxpreps); Hawaii Rush Soccer (Girls) (valley-christian / Alessia Costa, sportsrecruits); Newark 1974 FC (santa-clara / Dhiaan Plaha, ncsa); Reno Apex (cupertino / Emily Sugimura, ncsa); AllStars FC (sobrato / Isabella Larsen, ncsa); Silicon Valley Soccer Club (carlmont / Gianna Armanini, ncsa). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). Nor is \"Surf\" on one Mitty player's NCSA page mapped (Santa Cruz Mid-County also goes by Surf); her Bay Area Surf tie rests on other pages and is listed. TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
     "JV ties (jvAffiliations), since 2026-11-25: a JV row's ties are listed apart from the varsity rows' and join the school's MaxPreps JV roster (data/soccer/jv-rosters.json; lib/players/clubs.ts withJvListRows). A player on both the JV and the varsity list has her ties on the varsity row. They came from the league rosters only (the league-roster rule, as for varsity rows) until two Hudl entries on 2026-11-25 (below); first 4 ties at 3 schools, Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to De Anza Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27; a separate run pressed Roster on the 3 cited pages and found all 5 cited rows. Of the JV rows, only the 4 tied players were looked for on SportsRecruits and Hudl (2026-11-25, nothing found); PrepSoccer, TopDrawerSoccer, NCSA and MaxPreps career pages were not searched for JV rows and the JV rows with no grade whose name is on a roster linked on 2026-11-25 under the loosened rule (below). Shown since 2026-11-25: the JV roster's club line, the club pages (marked JV) and /recruiting.",
     "League rosters, 2026-11-25: Girls Academy's Northwest conference, 38 GA teams U14-U19 of eight clubs, each team's public roster on GotSport Rankings (README, 'Club rosters'; kept in club-rosters.json as league ga). The page gives no class year, so a GA row is compared on the team's birth years (California's September 1 cutoff: 'GA 08/09' admits the classes of 2026-2028), in a tier of its own (lib/players/club-rosters.ts): an ECNL row at another club neither blocks a GA match nor is blocked by one. 29 varsity rows match: 22 new ties resting on a GA roster alone, medium confidence and status unknown (the page has no date), and 7 ties other pages already made, which gain the roster and keep their status. By club: Almaden FC 16, Silicon Valley SA 13, San Francisco Glens 0. Each source quotes the page's own team name and the player's row; a player on two of a club's GA teams cites both. Second reader: a separate run opened every cited team page in Chromium and found each cited row as displayed. Not linked: Tatum Hadfield (Valley Christian), on 1974 Newark FC's GA 10/11 only (no record; East Bay); 2 JV rows with no grade (Los Gatos, Leland) on Almaden's GA 09/10. South Valley Surf, Lamorinda, Sacramento United and Clovis Crossfire rows matched no tracked row.",
     "League rosters, 2026-11-25 (ECNL): the MaxPreps refresh of 2026-11-24/25 brought rows the three ECNL leagues' kept rosters (read 2026-11-22 and 2026-11-24) match under the same rule: 9 varsity rows, at Pioneer (6) and Notre Dame San Jose (3). 6 new ties resting on a roster alone, medium, current for 2026-27 (Mariana Mejia to MVLA; Addison Amooi to Los Gatos United; Luna Hernandez to Santa Clara Sporting; Sonia Garcia and Mattie Chukwudebe to De Anza Force; Alessandra Barba to Los Gatos United); and 3 ties other pages already made, which gain the roster and now read current for 2026-27 (Isabella Guillebeaux and Addison Subala to De Anza Force, Valerie Contreras to Bay Area Surf). 15 entries on 13 team pages. Second reader: a separate run opened the 13 pages in Chromium, pressed Roster and found all 15 cited rows as displayed, with the position and label the copy gives. The 4 JV rows that pass the rule (Branham 2, Pioneer 1, Willow Glen 1) are listed in jvAffiliations (below).",
@@ -18,7 +18,7 @@
     "League rosters, 2026-11-25 (NorCal Premier): the girls U14-U19 teams in NorCal Premier's two 2026-27 leagues on GotSport, the NorCal N1 League (event 54043) and the Fall League (54541), of Almaden FC and the NorCal Premier-only clubs Sunnyvale Alliance, FC Milpitas (Milpitas YSL on GotSport), Peninsula Youth Soccer and ALBION SC Silicon Valley (its San Mateo club), each team's public roster on GotSport Rankings (README, 'Club rosters'; kept in club-rosters.json as leagues n1 and norcal-fall). Compared on birth years like Girls Academy's. 8 rows match: 6 new ties resting on a roster alone (5 varsity, 1 JV; Almaden FC 3, Sunnyvale Alliance 2, FC Milpitas 1), medium, status unknown, and 2 ties other pages already made, which gain the roster and keep their status (Mahi Nanda, Evergreen Valley, to Almaden FC; Tuhina Samaddar, Wilcox, to Sunnyvale Alliance). With them, 3 ECNL matches at the PCAL schools added on 2026-11-25 (Fynlee Devine and Kayden Aguilera, Salinas, and Amalia Phillips, Palma, to Bay Area Surf), medium, current for 2026-27. Second reader: a separate run opened all 6 Rankings pages and pressed Roster on the 5 Athlete One pages, and found all 17 cited rows as displayed.",
     "League rosters, 2026-11-25 (NorCal Premier, the larger clubs): the girls U14-U19 teams of MVLA (with MVLA San Jose, an alias in its record; MVLA East, an affiliated club in Turlock, is not mapped), De Anza Force ('Force' on GotSport), Los Gatos United, Burlingame, Palo Alto SC, Santa Cruz United, SF Elite and Stanford Strikers in NorCal Premier's N1 League (event 54043) and Fall League (54541), read as for the first five clubs. 37 event teams; 3 not kept (Palo Alto SC's SVSA GA 2009/10 and Bay Area Surf's ECNL RL G2011/12, both already kept under their own leagues, and Bay Area Surf's single-year N1 U14G); 6 not found on GotSport Rankings (Palo Alto SC's PASC N1 G2010/11 and 12/13G Blue 2, Los Gatos United's U17/U18G Black, Burlingame's 2008/09G Premier, Santa Cruz United's 11/12 and 09/10 Girls Navy); Santa Clara Sporting has no girls U14-U19 team in either event. 28 teams kept, 95 rows. 18 rows match: 13 new ties resting on a roster alone (12 varsity, 1 JV; MVLA 6, De Anza Force 4, Los Gatos United 2, Palo Alto SC 1, the JV one), medium, status unknown, and 5 ties other pages already made, which gain the roster and keep their status (Ava Belton (los-altos) to mvla-soccer-club; Madeline Huang (mountain-view) to mvla-soccer-club; Sienna Alvarez (mitty) to los-gatos-united-soccer-club; Yianna Bakelis (mitty) to de-anza-force; Jessica Geborski (valley-christian) to mvla-soccer-club). A separate run re-read all 18 cited rows. Not linked: 3 rows a GA or NorCal roster alone had tied, now on a second club's roster too (several-clubs): Zoe Nesvacil (Santa Clara; Silicon Valley SA GA 09/10 and Force G2009/10 Elite), Kenna Smead (Pioneer; Almaden FC U15G Quicksilver Black and Los Gatos United 2012/11G Comp I and II) and Raye Yokota (San Mateo; Silicon Valley SA GA 10/11 and Palo Alto SC's PASC N1 G2011/12). Their existing ties are kept as written; a person should re-check them.",
     "Rows with no grade, and the JV players' Hudl club entries, 2026-11-25 (README, 'Club rosters'). Every soccer Hudl profile linked in rosters-enrichment.json and jv-profiles.json (187) was read again for its team list's club entries: every varsity player's is tied already; two JV players' are new, Noa Goldberg's and Mari Madalen Jan's (Mountain View) to De Anza Force's 'Force (CA) ECNL G2011/12', high confidence, citing the Hudl entry and the ECNL rosters (which give Noa Goldberg no class year). JV profiles had not been read for clubs before. The league-roster rule was loosened the same day (owner decision): a row with no grade takes the class year its own linked recruiting pages state, else the roster's own, when every roster row of the name that gives a class year gives the same one and it is a class in high school in 2026-27; a linked page's class year that disagrees rules a match out. MaxPreps posts no grade for whole schools (Los Gatos), whose players the rule had taken none of. 42 new ties (41 by the rule, medium; class year from the roster 36, from the player's linked page 5) and 6 ties that gain a roster and read current for 2026-27 (Kinsley Ozawa, Emily Sugimura, Claire Chen, Ava Porter, Harper Satterlee, Mari Madalen Jan). Los Gatos gains 20 (13 varsity, 7 JV). Second reader: fetch-club-rosters read all 256 ECNL teams afresh the same day, identical to the kept copy, and every cited ECNL row was found in it as quoted; the GotSport rows cited (Charlotte Markovic's to Almaden FC on GA 09/10 and N1 G2008/09, Emily Sugimura's to Los Gatos United on two NorCal Premier Fall League teams) were re-read in Chromium.",
-    "Owner decisions, 2026-11-25. (1) Status: a tie a club roster read this season lists is current for 2026-27, the GotSport Rankings rosters (Girls Academy, NorCal Premier) included, although those pages give no date; 49 ties that rested on one moved from unknown to current. (2) Four rows with no grade whose ECNL roster rows give no class year are linked outside the rule, on the name, the one club and its location: Riva Malhotra (Gunn) and Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, Shea Murphy (Leland JV) to De Anza Force; medium, current for 2026-27.",
+    "Owner decisions, 2026-11-25. (1) Status: a tie a club roster read this season lists is current for 2026-27, the GotSport Rankings rosters (Girls Academy, NorCal Premier) included, although those pages give no date; 50 ties that rested on one moved from unknown to current. (2) Four rows with no grade whose ECNL roster rows give no class year are linked outside the rule, on the name, the one club and its location: Riva Malhotra (Gunn) and Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, Shea Murphy (Leland JV) to De Anza Force; medium, current for 2026-27.",
     "Owner decision, 2026-11-25: 11 rows whose ECNL roster class year is one off the grade's are tied anyway, each league-roster source marked classYearDiffers (lib/players/clubs-schema.ts; lib/players/roster-join.ts accepts that one year's difference for such a source only). 3 ties other pages already made gain the roster and read current (Maya Coriell to De Anza Force, Valyn Rubina to MVLA, Taylor Skovmand to Los Gatos United); 8 are new, medium: 5 whose own linked page confirms the grade's class year (Elise Shafie and Ciara Riciputi to MVLA, Isabella Huston to Los Gatos United, Roya Jamasbi to Burlingame, Eliza Dennebaum to Stanford Strikers) and 3 with no other page and an uncommon name (Ariella Edens to Santa Clara Sporting, Maya Onalfo to De Anza Force, Milla Chow to MVLA). Not tied: Grace Badawi (Menlo-Atherton also has an Ella Badawi), Jocelyn Rocha and Sofia Nguyen (common names), and the rows two years off, at a club with no record, or another player of the name."
   ],
   "clubs": [
@@ -895,6 +895,55 @@
         }
       ],
       "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "alum-rock-fc",
+      "name": "Alum Rock FC",
+      "shortName": null,
+      "aliases": [
+        "Alum Rock Futbol Club",
+        "Alum Rock Youth Soccer League",
+        "ARYSL"
+      ],
+      "website": "https://alumrockfc.org/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Alum Rock FC is the competitive program of the Alum Rock Youth Soccer League (since 1971), a nonprofit San Jose club with recreational and competitive teams; its girls competitive list runs from 2015/16G to a 2008/09G team, the Stingrays, in NorCal Premier's N1 League.",
+      "founded": 1971,
+      "programs": [
+        {
+          "name": "Girls competitive teams",
+          "detail": "Girls Teams page lists AR 2015/2016G SJ Inter, AR 2014/2015G Cheetahs, AR 2013/2014G Lions and AR 2008/2009G Stingrays",
+          "source": "https://alumrockfc.org/girls-teams"
+        },
+        {
+          "name": "NorCal N1 League 2026-27: N1 G2008/09 Stingrays",
+          "detail": "Alum Rock Futbol Club's club page in the N1 League event lists 'FC N1 G2008/09 Stingrays (CA)', Female U19",
+          "source": "https://system.gotsport.com/org_event/events/54043/clubs/18476"
+        },
+        {
+          "name": "Recreational and competitive pathways",
+          "detail": "\"Our club provides both recreational and competitive pathways\"; players selected to Cal North ODP and NorCal PDP",
+          "source": "https://alumrockfc.org/program-overview-1"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://alumrockfc.org/about",
+          "what": "\"Since 1971, Alum Rock Youth Soccer League (ARYSL) has provided quality soccer programs ... From our Recreational Program to our Competitive Alum Rock FC teams\""
+        },
+        {
+          "url": "https://alumrockfc.org/program-overview-1",
+          "what": "\"Alum Rock Futbol Club (Alum Rock FC), is a community-driven, nonprofit soccer organization ... throughout the San Jose area\""
+        },
+        {
+          "url": "https://system.gotsport.com/org_event/events/54541/clubs/18476",
+          "what": "NorCal Premier Fall League 2026-27 club page: Alum Rock Futbol Club's teams (girls U11 to U13 there)"
+        }
+      ],
+      "checkedOn": "2026-11-25"
     },
     {
       "slug": "allstars-sc",
@@ -5466,6 +5515,74 @@
         }
       ],
       "basis": "Her own SportsRecruits soccer profile (The page names Independence High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21."
+    },
+    {
+      "teamSlug": "overfelt",
+      "athleteId": "146dfcfe-457c-4f1c-8147-e5b40abbf041",
+      "playerId": "p8d29b9aca0",
+      "fullName": "Violeta Murillo",
+      "club": "alum-rock-fc",
+      "clubTeam": "Alum Rock FC N1 G2008/09 Stingrays (CA)",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/william-c-overfelt-high-school/violeta-murillo2",
+          "kind": "ncsa",
+          "quote": "2026 Alum Rock Futbol Club (N1)",
+          "statedSchool": "William C. Overfelt High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/william-c-overfelt-high-school/violeta-murillo2",
+          "kind": "ncsa",
+          "quote": "2026 Alum Rock Futbol Club (Gold)",
+          "statedSchool": "William C. Overfelt High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/william-c-overfelt-high-school/violeta-murillo2",
+          "kind": "ncsa",
+          "quote": "2025 Alum Rock Futbol Club (Gold)",
+          "statedSchool": "William C. Overfelt High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/176017/roster",
+          "kind": "league-roster",
+          "quote": "Alum Rock FC N1 G2008/09 Stingrays (CA) | Murillo | Violeta | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' lines are quoted. Status from the newest line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed, 2026-11-25. The parenthetical is the league or tier the page gives, not a team label. The club's roster on GotSport Rankings (NorCal N1 League: Alum Rock FC N1 G2008/09 Stingrays (CA) (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on the team page as displayed in Chromium, 2026-11-25. Her MaxPreps page also names 'alum rock fc' (2026-11-21 sweep); it is not quoted, as MaxPreps refuses this session's reads."
+    },
+    {
+      "teamSlug": "overfelt",
+      "athleteId": "eabfda93-a63c-4f20-895b-1f650e425629",
+      "playerId": "p50eceef83d",
+      "fullName": "Nevaeh Corona",
+      "club": "alum-rock-fc",
+      "clubTeam": "Alum Rock FC N1 G2008/09 Stingrays (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/176017/roster",
+          "kind": "league-roster",
+          "quote": "Alum Rock FC N1 G2008/09 Stingrays (CA) | Corona | Nevaeh | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The club's roster on GotSport Rankings (NorCal N1 League: Alum Rock FC N1 G2008/09 Stingrays (CA) (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on the team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "prospect",

@@ -45,6 +45,7 @@ describe('soccerClubTeamWords', () => {
       'AFC U17 GA': 'GA',
       'AFC U18 GA': 'GA',
       'Almaden FC 2011 Girls Academy': 'GA G2011',
+      'Alum Rock FC N1 G2008/09 Stingrays (CA)': 'Stingrays N1 G2008/09',
       'Bay Area Surf - ECNL G2011/12': 'ECNL G2011/12',
       'Bay Area Surf - ECNL RL G2008/09': 'ECNL RL G2008/09',
       'Bay Area Surf - ECNL RL G2009/10': 'ECNL RL G2009/10',
