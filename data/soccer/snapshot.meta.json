@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "aac6f71547894666e75d4fc84684ec63086d889e89921e7de5c6a17f25b9e0dd",
+  "contentHash": "be10c70d61aa218f41fa4f6157772022195f0dfb45d3c80fca3a9530a50c33f9",
   "counts": {
     "byLeague": {
       "bval": {
@@ -40,34 +40,34 @@
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 2,
+        "finals": 3,
         "games": 102,
         "leagueGames": 34,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
-        "finals": 0,
+        "finals": 1,
         "games": 51,
         "leagueGames": 18,
         "teams": 6
       }
     },
-    "finals": 8,
+    "finals": 9,
     "games": 678,
     "leagueGames": 445,
     "mismatches": 4,
-    "pending": 6,
+    "pending": 5,
     "teams": 82
   },
   "crossCheck": {
-    "agreements": 2,
+    "agreements": 4,
     "backfilled": 2,
-    "compared": 62,
+    "compared": 63,
     "conflicts": 0,
-    "sbliveOnlyScored": 5
+    "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-25T05:37:34.046Z",
+  "fetchedAt": "2026-11-25T14:37:46.666Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 105,
     "official": 5,
-    "sblive": 38
+    "sblive": 37
   },
   "sources": [
     {
@@ -783,11 +783,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3887-pal-bay scoreboard 2026-11-24",
-      "rowCount": 2,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3888-pal-ocean scoreboard 2026-11-19",
       "rowCount": 1,
       "status": "ok"
@@ -800,11 +795,6 @@
     {
       "label": "sblive 3888-pal-ocean scoreboard 2026-11-23",
       "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3888-pal-ocean scoreboard 2026-11-24",
-      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -883,6 +873,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-25",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
       "label": "sblive evergreen-valley games",
       "rowCount": 23,
       "status": "ok"
@@ -919,7 +914,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 331,
+      "rowCount": 334,
       "status": "ok"
     },
     {
@@ -938,8 +933,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-24",
-  "warnings": 40,
+  "today": "2026-11-25",
+  "warnings": 38,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
