@@ -550,7 +550,8 @@
       "notes": [
         "Recruiting pages swept 2026-11-21 (README, \"Girls soccer and boys basketball: recruiting\"): 1 linked for 1 of the 18 players (1 claimed MaxPreps).",
         "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
-        "2026-11-25: the Hudl profiles of Madison Harrington (as Maddie) and Caliana Nelson (as Callie), found on Los Gatos' own Hudl girls soccer rosters (varsity team 80122, JV 629633) and linked on the owner's decision, as the rows have no grade to confirm a nickname by class year (README, 'Club rosters')."
+        "2026-11-25: the Hudl profiles of Madison Harrington (as Maddie) and Caliana Nelson (as Callie), found on Los Gatos' own Hudl girls soccer rosters (varsity team 80122, JV 629633) and linked on the owner's decision, as the rows have no grade to confirm a nickname by class year (README, 'Club rosters').",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 1 more linked for 1 player (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -649,7 +650,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-21 (README, \"Girls soccer and boys basketball: recruiting\"): 24 linked for 21 of the 24 players (3 NCSA, 21 Hudl).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-25, rows with no grade (README, \"Girls soccer and boys basketball: recruiting\"): 1 more linked for 1 player (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -7836,7 +7838,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "everett-alvarez",
@@ -7863,7 +7865,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): no varsity roster to link to; one JV page, Kaia Gurdak's, is in data/soccer/jv-profiles.json."
       ],
       "players": [],
       "slug": "pacific-collegiate",
@@ -7872,7 +7874,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "rancho-san-juan",
@@ -7881,7 +7883,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "salinas",
@@ -7917,7 +7919,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "gonzales",
@@ -7944,7 +7946,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 13 linked for 13 of the 17 players (13 Hudl)."
       ],
       "players": [
         {
@@ -8267,7 +8269,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "north-monterey-county",
@@ -8285,7 +8287,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "palma",
@@ -8330,7 +8332,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 7 linked for 7 of the 29 players (7 Hudl)."
       ],
       "players": [
         {
@@ -8503,7 +8505,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 1 linked for 1 of the 8 players (1 SportsRecruits)."
       ],
       "players": [
         {
@@ -8545,9 +8547,32 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): 1 linked for 1 of the 20 players (1 SportsRecruits)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "5fc0d9ff-2976-4d36-85c8-31b33cee84ea",
+          "playerId": "pe1d0a00e02",
+          "conflicts": [],
+          "fullName": "Giselle Hernandez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The page (soccer, class of 2027, San Jose, CA 95127) names Cristo Rey San Jose Jesuit High School; class of 2027 agrees with the roster's grade 12. Found by the 2026-11-25 SportsRecruits address probe of the PCAL and PSAL rows; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/giselle_hernandez6"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "cristo-rey-san-jose",
       "sources": []
     },
@@ -8563,7 +8588,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "kipp-san-jose",
@@ -8653,7 +8678,7 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
+        "Recruiting pages swept 2026-11-25 (README, \"Girls soccer and boys basketball: recruiting\", the PCAL and PSAL sweep: Hudl's team rosters and a SportsRecruits address probe; NCSA and MaxPreps' claimed flag could not be read): none linked."
       ],
       "players": [],
       "slug": "summit-shasta",

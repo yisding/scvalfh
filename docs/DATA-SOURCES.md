@@ -3588,6 +3588,39 @@ assembler per sport built the files from them with a second read, and they are k
   failure. What was dropped at assembly is in each file's notes (second pages for a player, two soccer pages whose
   class disagrees, ties to clubs with no record).
 
+- **Rows with no grade, 2026-11-25** (owner's decision that day: a row with no grade may take a page whose class year
+  is any high school class this season, the school, a hometown in its own area or the club the player is tied to
+  standing in for the grade; README "Girls soccer and boys basketball: recruiting"). The rows: 907 varsity and JV
+  rows with no grade in soccer, basketball and volleyball. *Hudl:* each school found through the public GraphQL
+  endpoint's `fanSearch` (a school in the right city whose name holds the roster's school name; a city alone matched
+  KIPP San Jose Collegiate to San Jose High School, caught and refused), its teams in the sport through
+  `teamHeadersForSchool`, the seasons of 2023 on through `teamHeader{seasons}`, and each season's `roster`; one request
+  a second. 279 name matches (the same surname, and the same first name or one sharing its first three letters or a
+  known short form), 47 not yet linked and public; each read from `hudl.com/profile/<id>` (`window.__hudlEmbed`) and
+  kept when its own team list has the school's team in the sport, its class year is a high school class this season
+  and agrees with any graded varsity row of the same player, and the player has no Hudl page linked already: 15.
+  *SportsRecruits:* an address probe as 2026-11-22's (bare slug, suffixes 2 on while any of the last three answered,
+  to 30; hyphen and multi-word variants; a page is live when its HTML carries `data-user-id`): 845 address stems,
+  about 0.8 s apart from each of two workers, 466 live pages, each opened in headless Chromium and the
+  `athlete-profile:basics` response the page itself loads kept (class year, city, state, ZIP, the high school, club
+  and team entries with their organizations). 209 state a high school class; 7 kept, each read a second time in a
+  separate run, agreeing. Refused: a hometown outside the school's area (most were Southern California and Central
+  Valley namesakes), a state with no city, a class year that disagrees with a graded varsity row (Maya Onalfo,
+  Milpitas: the page and her club roster say 2029, her grade 2028), a second page for a player linked already.
+- **The PCAL and PSAL teams, 2026-11-25.** Added that day and never swept: 41 soccer and 54 basketball teams, 17 and
+  39 of them with a roster (698 varsity and JV rows). The same two passes over every row, graded or not, under the
+  2026-11-21 rules (rule (b) asking for the roster's class year plus a hometown in the school's own area) and the
+  rows-with-no-grade rule above. *Hudl:* 459 name matches at the 13 schools Hudl lists teams for, 134 public and not
+  linked, read; 111 kept, one page per player (the longest run on the school's team where a player has two or three
+  accounts). 25 basketball rows (grades 9 to 11) take a `rosterBehind` grade conflict citing the page, under the
+  2026-11-21 rule: the page is on the school's team and states the class exactly a year before MaxPreps' grade.
+  Refused: 8 grade-12 rows whose page says 2026 (Soledad 3, Watsonville 5), two pages years off (a Watsonville
+  senior's says 2030, a Thomas More freshman's 2025), a second account, and Sergun Serttunc (Pacific Grove; the page says "Sergen", on a stale grade too). *SportsRecruits:* 624 address
+  stems not probed already, 444 live pages read as above; 4 kept, each read twice. *Not read:* NCSA (Cloudflare's
+  403 to an automated read) and MaxPreps' career and roster pages (MaxPreps serves its 403 page here), so there is
+  no NCSA or claimed-MaxPreps profile for these teams; SportsRecruits addresses that redirect (307) to another
+  sport's subdomain were skipped.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

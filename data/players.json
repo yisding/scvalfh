@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15790,
+    "observations": 15794,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -83520,6 +83520,12 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/matthew_nevarez2"
             }
           ],
           "positions": [
@@ -194186,6 +194192,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23121900"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/cody_thacher"
             }
           ],
           "positions": [],
@@ -375974,6 +375986,12 @@
                 "MF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/giselle_hernandez6"
             }
           ],
           "positions": [
@@ -419826,6 +419844,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/18703472"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/matteo_vidal"
             }
           ],
           "positions": [

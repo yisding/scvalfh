@@ -1948,6 +1948,34 @@ Clara (a Hudl profile) and Sobrato (an NCSA profile). Every page let in this way
 When MaxPreps corrects a row's grade to the one its conflict cites, the conflict is settled: the loader drops it, so the
 roster refresh that brings the corrected grade needs no hand edit.
 
+**Rows with no grade, and the PCAL and PSAL teams (2026-11-25).** The 2026-11-21 round linked a page to a row with no
+grade only when the page named the school: rule (b) asks for the roster's class year, and such a row has none, so
+Los Gatos (whose MaxPreps roster gives no grade at all) and other schools got almost nothing from it. The owner
+decided on 2026-11-25 that a row with no grade may take a page on a class year with no grade to confirm it, as long
+as the year is a high school class this season (2027 to 2030; `tests/ungraded-profiles.test.ts`) and the page
+still names the school, gives a hometown in the school's own area, or lists the club the player is tied to (a page
+with a name and a class year alone is not enough: most are namesakes elsewhere). The same day the PCAL and PSAL
+teams, added on 2026-11-25 and never swept, were swept whole. **137 pages linked** (DATA-SOURCES §1.15, last two
+entries):
+
+- Rows with no grade in soccer, basketball and volleyball, varsity and JV (907 rows): **15 Hudl pages** (Pacific
+  Grove girls soccer 7, Silver Creek 4, Palma 2 and Watsonville 1 in boys basketball, and Mountain View JV's
+  Annabelle Kelly, as "Annie Kelly") and **7 SportsRecruits pages** (Addison O'Brien at Los Gatos, on her De Anza
+  Force 2010G ECNL team with a Los Gatos ZIP; Lea Padilla at St. Francis, Watsonville; Bella Flynn at Willow Glen
+  in volleyball; Hunter Taylor at Woodside; Kaia Gurdak at Pacific Collegiate and Daniela Gomez at Milpitas, JV;
+  and Kayla Pierson at Mountain View, a graded row the 2026-11-21 probe missed).
+- The PCAL and PSAL teams (698 varsity and JV rows): **111 Hudl pages** (Stevenson 14, Soledad 13 in girls soccer
+  and 11 in boys basketball, Monte Vista Christian 12, Hollister 11, St. Francis 10, Alisal 9, Pacific Grove 7,
+  Trinity Christian 7, Greenfield 6, Palma 6, Thomas More 3, North Salinas 1, Watsonville 1) and **4
+  SportsRecruits pages** (Cristo Rey San Jose 2, Monte Vista Christian 1, Stevenson 1). 25 basketball rows, at
+  Soledad 9, Trinity Christian 7, Palma 3, Greenfield 3, Hollister, North Salinas and Watsonville, carry a
+  `rosterBehind` grade conflict under the rule above: the player's own page on the school's team states the class
+  a year earlier than MaxPreps' grade. Ten basketball schools are not on Hudl under their name (BASIS, Chartwell,
+  Cristo Rey, Kehillah, KIPP Esperanza, Kirby, Mid-Peninsula, North Valley Baptist, Pescadero, Summit Shasta).
+- Not read: NCSA (Cloudflare answers 403 here) and MaxPreps' claimed flag (MaxPreps serves its 403 page here), so
+  the PCAL and PSAL teams have no NCSA or claimed-MaxPreps profile. A SportsRecruits address that redirects to
+  another sport's subdomain was skipped.
+
 What the research did not reach, so that an absence here says little:
 
 - **Soccer.**
@@ -1965,7 +1993,8 @@ What the research did not reach, so that an absence here says little:
   - Commitments: no name-by-name web search of any row; no student paper was found for 20 of the 32 schools; the
     San Mateo Daily Journal, Los Altos Town Crier and Half Moon Bay Review were not read; 96 college sites gave no
     feed; SportsRecruits' commits feed was not run; MVLA's and SF Elite's commitment widgets are drawn by script.
-  - The 160 rows with no grade match only on a page that names the school.
+  - Rows with no grade: since 2026-11-25 a page with a high school class year and a hometown or club tie links one
+    (above); NCSA was not read for them.
 - **Basketball.**
   - MaxPreps: Burlingame's 10 career pages lead to MaxPreps' "Inactive Careers" notice.
   - Hudl: Westmoor is not on Hudl; Homestead, Cupertino and El Camino have no boys team there, and Monta Vista, Mt.

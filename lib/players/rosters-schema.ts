@@ -307,6 +307,9 @@ export const EnrichedHeightSchema = z
  * for it) names this player and a sport, and either this school, or a class year that agrees with
  * the roster grade together with a hometown in the school's half of California. A stated graduation
  * year must agree with the grade the roster shows: lib/players/rosters.ts checks that at load time.
+ * A row with no grade (since 2026-11-25, owner's decision) takes a page whose class year is any high
+ * school class this season, with the school, a hometown in its own area, or the club the player is tied
+ * to standing in for the grade; tests/ungraded-profiles.test.ts holds the class-year part.
  *
  * Field hockey profiles came first and carry no `sport`; since 2026-10-12 a profile in any other
  * sport is linked too (a lacrosse or softball profile is often the one a player keeps up), and
