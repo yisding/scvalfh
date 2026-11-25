@@ -1,19 +1,19 @@
 {
   "cifssCrossCheck": {
-    "agreements": 4,
+    "agreements": 6,
     "cifssOnlyScored": 0,
-    "compared": 4,
+    "compared": 6,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "083ee7951fdeba3b94ea971d750c1b1d70854f1adc8b38d196c61192e818ac8e",
+  "contentHash": "cc3f64b77d27b96ba11c3527c7b0289813870df2b28edca3db11d51aaf9e9a9f",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 10,
-        "games": 289,
+        "finals": 13,
+        "games": 290,
         "leagueGames": 131,
         "teams": 26
       },
@@ -33,7 +33,7 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 3,
+        "finals": 5,
         "games": 196,
         "leagueGames": 96,
         "teams": 15
@@ -53,21 +53,21 @@
         "teams": 8
       }
     },
-    "finals": 19,
-    "games": 889,
+    "finals": 22,
+    "games": 890,
     "leagueGames": 457,
     "mismatches": 0,
-    "pending": 19,
+    "pending": 16,
     "teams": 79
   },
   "crossCheck": {
-    "agreements": 19,
+    "agreements": 21,
     "backfilled": 0,
-    "compared": 124,
+    "compared": 125,
     "conflicts": 0,
-    "sbliveOnlyScored": 8
+    "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-11-25T06:24:21.286Z",
+  "fetchedAt": "2026-11-25T15:15:45.624Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 102,
     "official": 6,
-    "sblive": 43
+    "sblive": 44
   },
   "sources": [
     {
@@ -359,7 +359,7 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -718,11 +718,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2128-bval-west-valley scoreboard 2026-11-19",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 2128-bval-west-valley scoreboard 2026-11-23",
       "rowCount": 5,
       "status": "ok"
@@ -778,6 +773,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2282-scval-de-anza scoreboard 2026-11-25",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2283-scval-el-camino scoreboard 2026-11-19",
       "rowCount": 2,
       "status": "ok"
@@ -793,6 +793,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2283-scval-el-camino scoreboard 2026-11-25",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2284-sccal scoreboard 2026-11-23",
       "rowCount": 1,
       "status": "ok"
@@ -803,12 +808,17 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2284-sccal scoreboard 2026-11-25",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2326-wbal scoreboard 2026-11-23",
       "rowCount": 2,
       "status": "ok"
     },
     {
-      "label": "sblive 2327-wcal scoreboard 2026-11-19",
+      "label": "sblive 2326-wbal scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
@@ -823,11 +833,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-19",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-23",
       "rowCount": 2,
       "status": "ok"
@@ -835,11 +840,6 @@
     {
       "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-24",
       "rowCount": 2,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-19",
-      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -888,6 +888,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-25",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
       "label": "sblive el-camino-ssf games",
       "rowCount": 20,
       "status": "ok"
@@ -919,12 +924,12 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 73,
+      "rowCount": 76,
       "status": "ok"
     },
     {
@@ -934,7 +939,7 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 80,
+      "rowCount": 82,
       "status": "ok"
     },
     {
@@ -944,7 +949,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 159,
+      "rowCount": 176,
       "status": "ok"
     },
     {
@@ -958,8 +963,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-24",
-  "warnings": 19,
+  "today": "2026-11-25",
+  "warnings": 20,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",

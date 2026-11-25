@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-25T06:24:21.286Z",
+  "fetchedAt": "2026-11-25T15:15:45.624Z",
   "fixtures": [
     {
       "claims": {
@@ -1757,7 +1757,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T05:32:57",
+              "maxprepsModifiedOn": "2026-11-25T07:05:58",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2057,26 +2057,7 @@
             }
           },
           "ref": "10f5c752-4d41-43d5-b760-2097dd15228e"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "10f5c752-4d41-43d5-b760-2097dd15228e",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports Aptos 0, Pacific Grove 0; MaxPreps has not published a score, so this game stays unreported. One side is not one of our teams.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:10f5c752-4d41-43d5-b760-2097dd15228e"
-          }
-        ]
+        }
       },
       "id": "2026-11-24-name:pacificgrove-at-aptos",
       "published": [
@@ -2092,8 +2073,8 @@
             "away": {
               "city": "San Jose",
               "name": "University Prep Academy",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 67,
               "slug": null,
               "teamId": "42f5c2a4-6e6d-4acf-af58-1e7516c28a34"
             },
@@ -2106,13 +2087,13 @@
             "dateKey": "2026-11-24",
             "dateLocal": "2026-11-24T19:00:00",
             "dateUtc": "2026-11-25T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "James Lick",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 22,
               "slug": "james-lick",
               "teamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237"
             },
@@ -2125,13 +2106,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T10:37:15",
+              "maxprepsModifiedOn": "2026-11-25T07:25:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/james-lick-san-jose-vs-university-prep-academy-san-jose/11-24-2026/?c=4fdc0a18-8508-4f97-8385-ebddc0b4f3ae",
@@ -2142,26 +2123,7 @@
             }
           },
           "ref": "4fdc0a18-8508-4f97-8385-ebddc0b4f3ae"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "4fdc0a18-8508-4f97-8385-ebddc0b4f3ae",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports James Lick 0, University Prep Academy 0; MaxPreps has not published a score, so this game stays unreported. One side is not one of our teams.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:4fdc0a18-8508-4f97-8385-ebddc0b4f3ae"
-          }
-        ]
+        }
       },
       "id": "2026-11-24-name:universityprepacademy-at-james-lick",
       "published": [
@@ -2243,8 +2205,8 @@
             "away": {
               "city": "San Jose",
               "name": "Piedmont Hills",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 58,
               "slug": "piedmont-hills",
               "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1"
             },
@@ -2257,13 +2219,13 @@
             "dateKey": "2026-11-24",
             "dateLocal": "2026-11-24T15:30:00",
             "dateUtc": "2026-11-24T23:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "MacDonald",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 18,
               "slug": "macdonald",
               "teamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef"
             },
@@ -2276,13 +2238,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:12:18",
+              "maxprepsModifiedOn": "2026-11-25T11:33:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": "https://gofan.co/event/7083049?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/macdonald-san-jose-vs-piedmont-hills-san-jose/11-24-2026/?c=00571397-b698-4005-9ace-0e83e2ebe78f",
@@ -2293,26 +2255,7 @@
             }
           },
           "ref": "00571397-b698-4005-9ace-0e83e2ebe78f"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "00571397-b698-4005-9ace-0e83e2ebe78f",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports MacDonald 0, Piedmont Hills 0; MaxPreps has not published a score, so this game stays unreported. Resolved by name only.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:00571397-b698-4005-9ace-0e83e2ebe78f"
-          }
-        ]
+        }
       },
       "id": "2026-11-24-piedmont-hills-at-macdonald",
       "published": [
@@ -2361,7 +2304,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T04:19:57",
+              "maxprepsModifiedOn": "2026-11-25T07:46:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2392,6 +2335,77 @@
         "2026-11-24-santa-teresa-at-cupertino~2"
       ],
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Santa Teresa",
+              "result": "L",
+              "score": 51,
+              "slug": "santa-teresa",
+              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+            },
+            "contestId": "70230df5-3f54-4158-95bc-769df9d15537",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-24",
+            "dateLocal": "2026-11-24T19:00:00",
+            "dateUtc": "2026-11-25T03:00:00Z",
+            "decider": "REG",
+            "forfeitBy": null,
+            "home": {
+              "city": "Cupertino",
+              "name": "Cupertino",
+              "result": "W",
+              "score": 52,
+              "slug": "cupertino",
+              "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-25T11:33:31",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "final",
+            "urls": {
+              "goFan": "https://gofan.co/event/7082554?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-santa-teresa-san-jose/11-24-2026/?c=70230df5-3f54-4158-95bc-769df9d15537",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam6bee00ba51?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "70230df5-3f54-4158-95bc-769df9d15537"
+        }
+      },
+      "id": "2026-11-24-santa-teresa-at-cupertino",
+      "published": [
+        {
+          "builtAt": "2026-11-24T15:14:56.931Z",
+          "contestId": "official:2026-11-24-santa-teresa-at-cupertino",
+          "seenAt": "2026-11-24T15:14:56.931Z"
+        },
+        {
+          "contestId": "70230df5-3f54-4158-95bc-769df9d15537"
+        }
+      ]
+    },
+    {
+      "claims": {
         "editor": {
           "fixture": {
             "away": "santa-teresa",
@@ -2414,94 +2428,9 @@
             "sources": {}
           },
           "ref": "2026-11-24-santa-teresa-at-cupertino"
-        },
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Jose",
-              "name": "Santa Teresa",
-              "result": null,
-              "score": null,
-              "slug": "santa-teresa",
-              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
-            },
-            "contestId": "70230df5-3f54-4158-95bc-769df9d15537",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-24",
-            "dateLocal": "2026-11-24T19:00:00",
-            "dateUtc": "2026-11-25T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Cupertino",
-              "name": "Cupertino",
-              "result": null,
-              "score": null,
-              "slug": "cupertino",
-              "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T19:44:11",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/7082554?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-santa-teresa-san-jose/11-24-2026/?c=70230df5-3f54-4158-95bc-769df9d15537",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam6bee00ba51?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "70230df5-3f54-4158-95bc-769df9d15537"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "70230df5-3f54-4158-95bc-769df9d15537",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports Cupertino 0, Santa Teresa 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:70230df5-3f54-4158-95bc-769df9d15537"
-          }
-        ]
-      },
-      "id": "2026-11-24-santa-teresa-at-cupertino",
-      "published": [
-        {
-          "builtAt": "2026-11-24T15:14:56.931Z",
-          "contestId": "official:2026-11-24-santa-teresa-at-cupertino",
-          "seenAt": "2026-11-24T15:14:56.931Z"
-        },
-        {
-          "contestId": "70230df5-3f54-4158-95bc-769df9d15537"
         }
-      ]
+      },
+      "id": "2026-11-24-santa-teresa-at-cupertino~3"
     },
     {
       "claims": {
@@ -2543,7 +2472,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T05:53:22",
+              "maxprepsModifiedOn": "2026-11-25T08:32:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2556,7 +2485,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/william-c-overfelt-high-school-san-jose-ca/gama59731336c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "Overfelt (William C.) High School"
             }
           },
           "ref": "26a47b10-590f-4790-b5c6-92252bd05d00"
@@ -3533,7 +3462,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T01:00:52",
+              "maxprepsModifiedOn": "2026-11-25T08:32:35",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3665,7 +3594,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:14:53",
+              "maxprepsModifiedOn": "2026-11-25T08:31:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3678,7 +3607,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/independence-high-school-san-jose-ca/gam1836500ff6?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Independence High School-San Jose"
             }
           },
           "ref": "ad2c24e3-e131-4df8-905f-8ccd3c8163ef"
@@ -8044,6 +7973,72 @@
       "published": [
         {
           "contestId": "b0aaae9e-1713-4eac-98d9-27aa7b361d30"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Salinas",
+              "name": "Salinas",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+            },
+            "contestId": "3724608a-70b7-4372-847c-0cdfe568336e",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-03",
+            "dateLocal": "2026-12-03T19:00:00",
+            "dateUtc": "2026-12-04T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-24T22:56:29",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gilroy-vs-salinas/12-3-2026/?c=3724608a-70b7-4372-847c-0cdfe568336e",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "3724608a-70b7-4372-847c-0cdfe568336e"
+        }
+      },
+      "id": "2026-12-03-name:salinas-at-gilroy",
+      "published": [
+        {
+          "contestId": "3724608a-70b7-4372-847c-0cdfe568336e"
         }
       ]
     },
@@ -17987,7 +17982,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T04:59:48",
+              "maxprepsModifiedOn": "2026-11-25T08:31:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -58609,7 +58604,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T18:15:43",
+              "maxprepsModifiedOn": "2026-11-25T08:33:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
