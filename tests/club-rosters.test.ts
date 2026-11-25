@@ -151,10 +151,37 @@ describe('compareClubRosters (the league-roster rule)', () => {
     expect(outcome([team(1, 10, [['Zoë', "O'Brien", 2028]])], [row('Zoe OBrien', 2028), row('Somebody Else', 2028)])).toEqual(['Zoe OBrien: match (new)']);
   });
 
-  it('never links on a name alone: no grade, no class year, or a class year that disagrees', () => {
+  it('never links on a name alone: no class year anywhere, or a class year that disagrees', () => {
     const teams = [team(1, 10, [['Ann', 'Lee', 2028], ['Bea', 'Roe', null]])];
-    expect(outcome(teams, [row('Ann Lee', null), row('Bea Roe', 2028)])).toEqual(['Ann Lee: no-grade', 'Bea Roe: no-class-year']);
+    expect(outcome(teams, [row('Bea Roe', null)])).toEqual(['Bea Roe: no-grade']);
+    expect(outcome(teams, [row('Bea Roe', 2028)])).toEqual(['Bea Roe: no-class-year']);
     expect(outcome(teams, [row('Ann Lee', 2029)])).toEqual(['Ann Lee: class-year-differs']);
+  });
+
+  it('takes a row with no grade at the class year its own pages state, else the roster\'s (loosened 2026-11-25)', () => {
+    const compare = (teams: ClubRostersFile['teams'], rows: SchoolRow[]) =>
+      compareClubRosters(rosters(teams), rows, tied).map((r) => `${r.row.fullName}: ${r.outcome} ${r.classYear ?? '-'} ${r.classYearFrom ?? '-'}`);
+    const teams = [team(1, 10, [['Ann', 'Lee', 2028], ['Bea', 'Roe', null], ['Cat', 'Fox', 2026]])];
+    // The roster's class year, when no linked page states one.
+    expect(compare(teams, [row('Ann Lee', null)])).toEqual(['Ann Lee: match 2028 roster']);
+    // A linked page's class year comes first, and must agree with the roster's.
+    expect(compare(teams, [{ ...row('Ann Lee', null), statedClassYears: [2028] }])).toEqual(['Ann Lee: match 2028 profile']);
+    expect(compare(teams, [{ ...row('Ann Lee', null), statedClassYears: [2029] }])).toEqual(['Ann Lee: class-year-differs 2029 profile']);
+    // So does the grade: a page that disagrees with it rules the match out.
+    expect(compare(teams, [{ ...row('Ann Lee', 2028), statedClassYears: [2029] }])).toEqual(['Ann Lee: class-year-differs 2028 grade']);
+    // The roster gives no class year: the name is all there is.
+    expect(compare(teams, [row('Bea Roe', null)])).toEqual(['Bea Roe: no-grade - -']);
+    // A class no high school player has in 2026-27 (the file's season) disagrees.
+    expect(compare(teams, [row('Cat Fox', null)])).toEqual(['Cat Fox: class-year-differs 2026 roster']);
+    // Two class years under the name: neither is taken.
+    const two = [team(1, 10, [['Ann', 'Lee', 2028]]), team(1, 11, [['Ann', 'Lee', 2029]])];
+    expect(compare(two, [row('Ann Lee', null)])).toEqual(['Ann Lee: no-grade - -']);
+    // Rules 3-5 still hold.
+    expect(compare([team(2, 20, [['Ann', 'Lee', 2028]])], [row('Ann Lee', null)])).toEqual(['Ann Lee: club-elsewhere 2028 roster']);
+    expect(compare(teams, [row('Ann Lee', null), row('Ann Lee', null, 'los-altos')])).toEqual([
+      'Ann Lee: name-at-two-schools - -',
+      'Ann Lee: name-at-two-schools - -',
+    ]);
   });
 
   it('leaves a name two tracked schools carry, or two clubs list at that class year', () => {

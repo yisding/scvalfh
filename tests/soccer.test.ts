@@ -334,9 +334,21 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
     expect(line('branham', 'Samantha Erickson')).toEqual(['Club: Force']);
     expect(line('willow-glen', 'Lelie Vatton Raclot')).toEqual(['Club: Bay Area Surf']);
     expect(line('branham', 'Nobody Here')).toEqual([]);
+    // Her own Hudl profile lists the club's team (2026-11-25); the league rosters give her no class year.
+    expect(line('mountain-view', 'Noa Goldberg')).toEqual(['Club: Force']);
     const force = m.clubView.buildClubPageView('de-anza-force')!;
     const jvRows = force.groups.flatMap((g) => g.rows).filter((r) => r.facts[0] === 'JV');
-    expect(jvRows.map((r) => r.name).sort()).toEqual(['Isabel Ramirez-Ortega', 'Samantha Erickson', 'Taylor Laughter']);
+    expect(jvRows.map((r) => r.name).sort()).toEqual([
+      'Caroline Zhang',
+      'Isabel Ramirez-Ortega',
+      'Kaia Gurdak',
+      'Mari Madalen Jan',
+      'Noa Goldberg',
+      'Samantha Bonar',
+      'Samantha Erickson',
+      'Taylor Laughter',
+      'Yuli Arbel',
+    ]);
     for (const r of jvRows) expect(r.school.href).toMatch(/#jv-roster$/);
     expect(m.clubView.rostersWords()).toBe('varsity rosters and JV lists');
     // The areas searched for every club in the 2026-11-21 round (lib/players/clubs.ts): not the Central Coast.

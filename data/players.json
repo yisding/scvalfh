@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15630,
+    "observations": 15632,
     "players": 7666,
     "review": 64,
     "stintConflicts": 161,
@@ -58930,6 +58930,11 @@
               "jersey": "7",
               "name": "Madison Harrington",
               "src": "maxpreps-roster"
+            },
+            {
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/17752889"
             }
           ],
           "positions": [],
@@ -386364,6 +386369,12 @@
               "jersey": "32",
               "name": "Caliana Nelson",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27198760"
             }
           ],
           "positions": [],
