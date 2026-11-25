@@ -7,27 +7,27 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "3fe97e034c085465aa22fd6cdf671c395c560bf7614b348d654112e13c74b0ae",
+  "contentHash": "083ee7951fdeba3b94ea971d750c1b1d70854f1adc8b38d196c61192e818ac8e",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 7,
-        "games": 282,
-        "leagueGames": 127,
+        "finals": 10,
+        "games": 289,
+        "leagueGames": 131,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
-        "finals": 3,
-        "games": 224,
+        "finals": 5,
+        "games": 223,
         "leagueGames": 110,
         "teams": 16
       },
       "sccal": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 77,
+        "finals": 2,
+        "games": 76,
         "leagueGames": 25,
         "teams": 6
       },
@@ -40,34 +40,34 @@
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 119,
+        "finals": 2,
+        "games": 118,
         "leagueGames": 39,
         "teams": 8
       },
       "wcal": {
         "backfilled": 0,
-        "finals": 1,
+        "finals": 2,
         "games": 113,
         "leagueGames": 56,
         "teams": 8
       }
     },
-    "finals": 12,
-    "games": 885,
-    "leagueGames": 453,
+    "finals": 19,
+    "games": 889,
+    "leagueGames": 457,
     "mismatches": 0,
-    "pending": 17,
+    "pending": 19,
     "teams": 79
   },
   "crossCheck": {
-    "agreements": 12,
+    "agreements": 19,
     "backfilled": 0,
-    "compared": 140,
+    "compared": 124,
     "conflicts": 0,
-    "sbliveOnlyScored": 2
+    "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-11-24T15:14:56.931Z",
+  "fetchedAt": "2026-11-25T06:24:21.286Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -124,12 +124,12 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 19,
+  "officialFixturesUnmatched": 15,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 102,
     "official": 6,
-    "sblive": 44
+    "sblive": 43
   },
   "sources": [
     {
@@ -169,7 +169,7 @@
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -194,7 +194,7 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 17,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -314,7 +314,7 @@
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -349,7 +349,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -364,7 +364,7 @@
     },
     {
       "label": "lincoln schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -389,7 +389,7 @@
     },
     {
       "label": "andrew-hill schedule",
-      "rowCount": 16,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -404,12 +404,12 @@
     },
     {
       "label": "james-lick schedule",
-      "rowCount": 19,
+      "rowCount": 21,
       "status": "ok"
     },
     {
       "label": "mt-pleasant schedule",
-      "rowCount": 16,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -419,7 +419,7 @@
     },
     {
       "label": "yerba-buena schedule",
-      "rowCount": 30,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -549,7 +549,7 @@
     },
     {
       "label": "pinewood schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -599,7 +599,7 @@
     },
     {
       "label": "half-moon-bay schedule",
-      "rowCount": 19,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -614,7 +614,7 @@
     },
     {
       "label": "sequoia schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -634,7 +634,7 @@
     },
     {
       "label": "jefferson schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -694,7 +694,7 @@
     },
     {
       "label": "scotts-valley schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -734,7 +734,7 @@
     },
     {
       "label": "sblive 2263-pal-bay scoreboard 2026-11-21",
-      "rowCount": 3,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -749,7 +749,7 @@
     },
     {
       "label": "sblive 2264-pal-ocean scoreboard 2026-11-21",
-      "rowCount": 2,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -814,7 +814,7 @@
     },
     {
       "label": "sblive 2327-wcal scoreboard 2026-11-21",
-      "rowCount": 3,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -888,11 +888,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive crystal-springs games",
-      "rowCount": 22,
-      "status": "ok"
-    },
-    {
       "label": "sblive el-camino-ssf games",
       "rowCount": 20,
       "status": "ok"
@@ -908,11 +903,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive menlo-atherton games",
-      "rowCount": 23,
-      "status": "ok"
-    },
-    {
       "label": "sblive palo-alto games",
       "rowCount": 22,
       "status": "ok"
@@ -923,8 +913,13 @@
       "status": "ok"
     },
     {
+      "label": "sblive valley-christian games",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -944,12 +939,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 1063,
+      "rowCount": 1066,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 155,
+      "rowCount": 159,
       "status": "ok"
     },
     {
