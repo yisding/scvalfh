@@ -35,14 +35,14 @@
   ],
   "builtBy": "scripts/build-players.ts",
   "counts": {
-    "classOfConflicts": 257,
+    "classOfConflicts": 307,
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15647,
+    "observations": 15783,
     "players": 7666,
     "review": 64,
-    "stintConflicts": 161,
+    "stintConflicts": 186,
     "stints": 9574,
     "withCareer": 7098
   },
@@ -7610,6 +7610,12 @@
               "jersey": "12",
               "name": "J. Arceo Jr.",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24793924"
             }
           ],
           "positions": [
@@ -9820,6 +9826,12 @@
               "jersey": "2",
               "name": "C. Schaper",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25060467"
             }
           ],
           "positions": [
@@ -11730,7 +11742,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/20164217"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/20164217"
+        }
+      ],
       "formerIds": [],
       "id": "p075e22dedd",
       "identifiers": [
@@ -11747,7 +11780,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/20164217"
+            }
+          ],
           "grade": 11,
           "height": null,
           "jersey": "2",
@@ -11763,6 +11805,19 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/20164217"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/20164217"
             }
           ],
           "positions": [
@@ -14190,7 +14245,28 @@
     {
       "aliases": [],
       "classOf": 2030,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631361"
+        },
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631361"
+        }
+      ],
       "formerIds": [],
       "id": "p091f061bc0",
       "identifiers": [
@@ -14207,7 +14283,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "kind": "hudl",
+              "other": "10",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631361"
+            }
+          ],
           "grade": 9,
           "height": "6'0\"",
           "jersey": "2",
@@ -14224,6 +14309,19 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 10,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631361"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27631361"
             }
           ],
           "positions": [
@@ -15110,6 +15208,12 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121877"
             }
           ],
           "positions": [
@@ -17068,6 +17172,12 @@
               "jersey": "0",
               "name": "Lincoln Clymo",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/16922332"
             }
           ],
           "positions": [],
@@ -18747,6 +18857,12 @@
               "jersey": "4",
               "name": "Francis John Iguban",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23625294"
             }
           ],
           "positions": [],
@@ -22519,6 +22635,12 @@
               "jersey": "5",
               "name": "Jax Dalhamer",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22844279"
             }
           ],
           "positions": [],
@@ -24547,6 +24669,12 @@
               "jersey": "4",
               "name": "Yaretzi Trujillo",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28753071"
             }
           ],
           "positions": [],
@@ -24660,7 +24788,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "greenfield",
+          "url": "https://www.hudl.com/profile/16697567"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "greenfield",
+          "url": "https://www.hudl.com/profile/16697567"
+        }
+      ],
       "formerIds": [],
       "id": "p0f2b59df7f",
       "identifiers": [
@@ -24677,7 +24826,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/16697567"
+            }
+          ],
           "grade": 10,
           "height": "6'0\"",
           "jersey": "34",
@@ -24695,6 +24853,19 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/16697567"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/16697567"
             }
           ],
           "positions": [
@@ -26184,6 +26355,12 @@
               "jersey": "23",
               "name": "Braylen King",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/30709275"
             }
           ],
           "positions": [],
@@ -26808,6 +26985,12 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21385988"
             }
           ],
           "positions": [
@@ -29229,7 +29412,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "hollister",
+          "url": "https://www.hudl.com/profile/28942427"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "hollister",
+          "url": "https://www.hudl.com/profile/28942427"
+        }
+      ],
       "formerIds": [],
       "id": "p11dd1f5672",
       "identifiers": [
@@ -29246,7 +29450,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28942427"
+            }
+          ],
           "grade": 11,
           "height": "5'10\"",
           "jersey": "5",
@@ -29263,6 +29476,19 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28942427"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28942427"
             }
           ],
           "positions": [
@@ -38314,6 +38540,12 @@
               "jersey": "11",
               "name": "S. Matteucci",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18703482"
             }
           ],
           "positions": [
@@ -39173,6 +39405,12 @@
               "jersey": "0",
               "name": "E. Tenwinkel",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24054394"
             }
           ],
           "positions": [
@@ -39308,6 +39546,12 @@
               "jersey": "0",
               "name": "Avery Fregoso",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24781300"
             }
           ],
           "positions": [],
@@ -39513,6 +39757,12 @@
               "jersey": "11",
               "name": "Xitlaly Hernandez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28753420"
             }
           ],
           "positions": [],
@@ -40239,7 +40489,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/33150403"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/33150403"
+        }
+      ],
       "formerIds": [],
       "id": "p183b45e94f",
       "identifiers": [
@@ -40256,7 +40527,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/33150403"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "15",
@@ -40272,6 +40552,19 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/33150403"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/33150403"
             }
           ],
           "positions": [
@@ -44728,6 +45021,12 @@
               "jersey": "14",
               "name": "Calvin Etcheverry",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121902"
             }
           ],
           "positions": [],
@@ -49507,6 +49806,12 @@
               "jersey": "1",
               "name": "Andrew Nimri",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21067030"
             }
           ],
           "positions": [],
@@ -52831,6 +53136,11 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28837012"
             }
           ],
           "positions": [
@@ -61767,6 +62077,12 @@
               "jersey": "23",
               "name": "Benjamin Rose",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27168093"
             }
           ],
           "positions": [],
@@ -64072,7 +64388,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/22675393"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/22675393"
+        }
+      ],
       "formerIds": [],
       "id": "p25da8f56f9",
       "identifiers": [
@@ -64089,7 +64426,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/22675393"
+            }
+          ],
           "grade": 10,
           "height": "6'0\"",
           "jersey": "22",
@@ -64106,6 +64452,19 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/22675393"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22675393"
             }
           ],
           "positions": [
@@ -69236,6 +69595,12 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18703484"
             }
           ],
           "positions": [
@@ -82878,6 +83243,12 @@
               "jersey": "9",
               "name": "Faith Ceja",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28753319"
             }
           ],
           "positions": [],
@@ -82975,7 +83346,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/22758849"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/22758849"
+        }
+      ],
       "formerIds": [],
       "id": "p316594f858",
       "identifiers": [
@@ -82992,7 +83384,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/22758849"
+            }
+          ],
           "grade": 10,
           "height": "6'2\"",
           "jersey": "32",
@@ -83010,6 +83411,19 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/22758849"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22758849"
             }
           ],
           "positions": [
@@ -85071,6 +85485,12 @@
               "jersey": "10",
               "name": "Connor Aeschliman",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121864"
             }
           ],
           "positions": [],
@@ -85793,6 +86213,12 @@
               "jersey": "12",
               "name": "Michelle Campos",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24783056"
             }
           ],
           "positions": [],
@@ -99367,6 +99793,12 @@
               "jersey": "4",
               "name": "N. Hernandez",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22620783"
             }
           ],
           "positions": [
@@ -100375,6 +100807,12 @@
               "jersey": "14",
               "name": "Isabelle Mora",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21328099"
             }
           ],
           "positions": [],
@@ -102283,6 +102721,12 @@
               "jersey": "10",
               "name": "Tahj Ibrahim",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19949209"
             }
           ],
           "positions": [],
@@ -116448,6 +116892,12 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18199408"
             }
           ],
           "positions": [
@@ -118655,6 +119105,12 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28942359"
             }
           ],
           "positions": [
@@ -121236,7 +121692,28 @@
     {
       "aliases": [],
       "classOf": 2030,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631375"
+        },
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631375"
+        }
+      ],
       "formerIds": [],
       "id": "p46a91955fc",
       "identifiers": [
@@ -121253,7 +121730,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "kind": "hudl",
+              "other": "10",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631375"
+            }
+          ],
           "grade": 9,
           "height": "6'0\"",
           "jersey": "13",
@@ -121270,6 +121756,19 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 10,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631375"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27631375"
             }
           ],
           "positions": [
@@ -124803,6 +125302,12 @@
               "jersey": "12",
               "name": "Johnny Jordan",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25186213"
             }
           ],
           "positions": [],
@@ -135583,6 +136088,12 @@
               "jersey": "24",
               "name": "Isaiah Parvin",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28664344"
             }
           ],
           "positions": [],
@@ -136773,7 +137284,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/24886194"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/24886194"
+        }
+      ],
       "formerIds": [],
       "id": "p4fcdbe12b8",
       "identifiers": [
@@ -136790,7 +137322,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/24886194"
+            }
+          ],
           "grade": 10,
           "height": "6'1\"",
           "jersey": "24",
@@ -136804,6 +137345,19 @@
               "jersey": "24",
               "name": "Jeronimo Morales",
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/24886194"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24886194"
             }
           ],
           "positions": [],
@@ -140228,6 +140782,12 @@
               "jersey": "1",
               "name": "Christopher Bocanegra",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25185989"
             }
           ],
           "positions": [],
@@ -140695,7 +141255,28 @@
     {
       "aliases": [],
       "classOf": 2030,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/28836998"
+        },
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/28836998"
+        }
+      ],
       "formerIds": [],
       "id": "p51f5d5f423",
       "identifiers": [
@@ -140712,7 +141293,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "kind": "hudl",
+              "other": "10",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28836998"
+            }
+          ],
           "grade": 9,
           "height": null,
           "jersey": "10",
@@ -140725,6 +141315,19 @@
               "jersey": "10",
               "name": "Tristan Garcia",
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 10,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28836998"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28836998"
             }
           ],
           "positions": [],
@@ -144525,7 +145128,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/28838001"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/28838001"
+        }
+      ],
       "formerIds": [],
       "id": "p546ac9db62",
       "identifiers": [
@@ -144542,7 +145166,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28838001"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "1",
@@ -144555,6 +145188,19 @@
               "jersey": "1",
               "name": "Adyn Gomez",
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28838001"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28838001"
             }
           ],
           "positions": [],
@@ -151134,6 +151780,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19855679"
             }
           ],
           "positions": [
@@ -160673,6 +161325,12 @@
               "jersey": "2",
               "name": "Bella Torres",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24781057"
             }
           ],
           "positions": [],
@@ -161574,6 +162232,12 @@
               "jersey": "14",
               "name": "Anderson Chavez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28755012"
             }
           ],
           "positions": [],
@@ -164374,7 +165038,28 @@
     {
       "aliases": [],
       "classOf": 2030,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/23521902"
+        },
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/23521902"
+        }
+      ],
       "formerIds": [],
       "id": "p600a5ba80c",
       "identifiers": [
@@ -164391,7 +165076,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "kind": "hudl",
+              "other": "10",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/23521902"
+            }
+          ],
           "grade": 9,
           "height": null,
           "jersey": "20",
@@ -164408,6 +165102,19 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 10,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/23521902"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23521902"
             }
           ],
           "positions": [
@@ -166098,6 +166805,12 @@
               "jersey": "11",
               "name": "Jose Estrada",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21284312"
             }
           ],
           "positions": [],
@@ -170257,6 +170970,12 @@
               "jersey": "5",
               "name": "Jayvon Burns",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29052949"
             }
           ],
           "positions": [],
@@ -185838,7 +186557,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/28814075"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/28814075"
+        }
+      ],
       "formerIds": [],
       "id": "p6c6d9453b9",
       "identifiers": [
@@ -185855,7 +186595,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28814075"
+            }
+          ],
           "grade": 10,
           "height": "5'6\"",
           "jersey": "21",
@@ -185872,6 +186621,19 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/28814075"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28814075"
             }
           ],
           "positions": [
@@ -187287,6 +188049,12 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21469018"
             }
           ],
           "positions": [
@@ -188729,6 +189497,12 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27336062"
             }
           ],
           "positions": [
@@ -190879,6 +191653,12 @@
               "jersey": "34",
               "name": "L. Rubrica",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29264264"
             }
           ],
           "positions": [
@@ -192152,7 +192932,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "palma",
+          "url": "https://www.hudl.com/profile/29006495"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "palma",
+          "url": "https://www.hudl.com/profile/29006495"
+        }
+      ],
       "formerIds": [],
       "id": "p704fb3acb3",
       "identifiers": [
@@ -192169,7 +192970,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/29006495"
+            }
+          ],
           "grade": 10,
           "height": "6'5\"",
           "jersey": "33",
@@ -192187,6 +192997,19 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/29006495"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29006495"
             }
           ],
           "positions": [
@@ -192329,6 +193152,12 @@
               "jersey": "23",
               "name": "A. Maravillo",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/26718752"
             }
           ],
           "positions": [
@@ -193338,6 +194167,12 @@
               "jersey": "32",
               "name": "Cody Thacher",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121900"
             }
           ],
           "positions": [],
@@ -193672,6 +194507,12 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28957839"
             }
           ],
           "positions": [
@@ -198890,6 +199731,12 @@
               "jersey": "5",
               "name": "J. Romero-Alvarez",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29860325"
             }
           ],
           "positions": [
@@ -203340,6 +204187,12 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/26703579"
             }
           ],
           "positions": [
@@ -215745,6 +216598,12 @@
               "jersey": "11",
               "name": "Victor Chavez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29001288"
             }
           ],
           "positions": [],
@@ -216096,6 +216955,12 @@
               "jersey": "21",
               "name": "Isabella Valdez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21312096"
             }
           ],
           "positions": [],
@@ -218577,7 +219442,28 @@
     {
       "aliases": [],
       "classOf": 2030,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631404"
+        },
+        {
+          "classOf": 2029,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631404"
+        }
+      ],
       "formerIds": [],
       "id": "p80ab21b78b",
       "identifiers": [
@@ -218594,7 +219480,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "9",
+              "kind": "hudl",
+              "other": "10",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631404"
+            }
+          ],
           "grade": 9,
           "height": null,
           "jersey": "12",
@@ -218610,6 +219505,19 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 10,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631404"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27631404"
             }
           ],
           "positions": [
@@ -219963,6 +220871,12 @@
               "jersey": "2",
               "name": "Edward Torres",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24957110"
             }
           ],
           "positions": [],
@@ -239895,6 +240809,12 @@
               "jersey": "21",
               "name": "Weston Bailey",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25103524"
             }
           ],
           "positions": [],
@@ -242046,7 +242966,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "greenfield",
+          "url": "https://www.hudl.com/profile/25061056"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "greenfield",
+          "url": "https://www.hudl.com/profile/25061056"
+        }
+      ],
       "formerIds": [],
       "id": "p8e42e41dbc",
       "identifiers": [
@@ -242063,7 +243004,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/25061056"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "21",
@@ -242079,6 +243029,19 @@
                 "PG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/25061056"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25061056"
             }
           ],
           "positions": [
@@ -250255,6 +251218,12 @@
               "jersey": "5",
               "name": "Izabellah Mora",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28753111"
             }
           ],
           "positions": [],
@@ -256373,6 +257342,12 @@
               "jersey": "15",
               "name": "Jerry Ding",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/33053564"
             }
           ],
           "positions": [],
@@ -257155,6 +258130,12 @@
               "jersey": "3",
               "name": "Isaiah Villalobos",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24926856"
             }
           ],
           "positions": [],
@@ -257860,6 +258841,12 @@
               "jersey": "35",
               "name": "J. McKissick",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29299123"
             }
           ],
           "positions": [
@@ -259923,6 +260910,12 @@
               "jersey": "3",
               "name": "L. Zavala",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29860492"
             }
           ],
           "positions": [
@@ -260740,7 +261733,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/18191492"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "soledad",
+          "url": "https://www.hudl.com/profile/18191492"
+        }
+      ],
       "formerIds": [],
       "id": "p99bb874ed9",
       "identifiers": [
@@ -260757,7 +261771,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/18191492"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "23",
@@ -260773,6 +261796,19 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/18191492"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18191492"
             }
           ],
           "positions": [
@@ -264958,6 +265994,12 @@
               "jersey": "17",
               "name": "Clarissa Valdez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24782891"
             }
           ],
           "positions": [],
@@ -266568,6 +267610,12 @@
               "jersey": "3",
               "name": "Michael Richert",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27570914"
             }
           ],
           "positions": [],
@@ -269732,6 +270780,12 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19636356"
             }
           ],
           "positions": [
@@ -275360,6 +276414,12 @@
               "jersey": "7",
               "name": "Nichole Gonzalez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24837151"
             }
           ],
           "positions": [],
@@ -284544,7 +285604,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "palma",
+          "url": "https://www.hudl.com/profile/20011018"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "palma",
+          "url": "https://www.hudl.com/profile/20011018"
+        }
+      ],
       "formerIds": [],
       "id": "pa8f24fd188",
       "identifiers": [
@@ -284561,7 +285642,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/20011018"
+            }
+          ],
           "grade": 11,
           "height": "5'6\"",
           "jersey": "5",
@@ -284575,6 +285665,19 @@
               "jersey": "5",
               "name": "Chase Amaral",
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/20011018"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/20011018"
             }
           ],
           "positions": [],
@@ -286459,6 +287562,12 @@
               "jersey": "11",
               "name": "Arenzo Subowo",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27747771"
             }
           ],
           "positions": [],
@@ -293155,7 +294264,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "north-salinas",
+          "url": "https://www.hudl.com/profile/21173413"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "north-salinas",
+          "url": "https://www.hudl.com/profile/21173413"
+        }
+      ],
       "formerIds": [],
       "id": "padc7363324",
       "identifiers": [
@@ -293172,7 +294302,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/21173413"
+            }
+          ],
           "grade": 11,
           "height": null,
           "jersey": "11",
@@ -293188,6 +294327,19 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/21173413"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21173413"
             }
           ],
           "positions": [
@@ -298048,6 +299200,12 @@
               "jersey": "2",
               "name": "Barak De La Rosa",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121858"
             }
           ],
           "positions": [],
@@ -305702,6 +306860,12 @@
               "jersey": "12",
               "name": "Divij Anderson-Santibanez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/26710581"
             }
           ],
           "positions": [],
@@ -313518,7 +314682,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "greenfield",
+          "url": "https://www.hudl.com/profile/29523695"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "greenfield",
+          "url": "https://www.hudl.com/profile/29523695"
+        }
+      ],
       "formerIds": [],
       "id": "pbb1e0fe405",
       "identifiers": [
@@ -313535,7 +314720,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/29523695"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "53",
@@ -313551,6 +314745,19 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/29523695"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29523695"
             }
           ],
           "positions": [
@@ -325895,6 +327102,12 @@
               "jersey": "13",
               "name": "Tiger Li",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121855"
             }
           ],
           "positions": [],
@@ -328040,6 +329253,12 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/26700453"
             }
           ],
           "positions": [
@@ -328538,6 +329757,12 @@
               "jersey": "4",
               "name": "J. Schaper",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28958675"
             }
           ],
           "positions": [
@@ -329284,6 +330509,12 @@
               "jersey": "11",
               "name": "Angel Serrano-Ruiz",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24741825"
             }
           ],
           "positions": [],
@@ -330274,6 +331505,12 @@
               "jersey": "22",
               "name": "Micah Taylor",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25103528"
             }
           ],
           "positions": [],
@@ -333045,6 +334282,12 @@
               "jersey": "18",
               "name": "Myah De Leon",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24782877"
             }
           ],
           "positions": [],
@@ -333229,6 +334472,12 @@
               "jersey": "20",
               "name": "Jose Villa",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/30717521"
             }
           ],
           "positions": [],
@@ -333500,7 +334749,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "palma",
+          "url": "https://www.hudl.com/profile/20010487"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "palma",
+          "url": "https://www.hudl.com/profile/20010487"
+        }
+      ],
       "formerIds": [],
       "id": "pc77b9b99c9",
       "identifiers": [
@@ -333517,7 +334787,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/20010487"
+            }
+          ],
           "grade": 11,
           "height": null,
           "jersey": "13",
@@ -333530,6 +334809,19 @@
               "jersey": "13",
               "name": "Santiago Vides",
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/20010487"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/20010487"
             }
           ],
           "positions": [],
@@ -334763,6 +336055,12 @@
               "jersey": "4",
               "name": "Wyatt Coe",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21076614"
             }
           ],
           "positions": [],
@@ -336320,6 +337618,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29656310"
             }
           ],
           "positions": [
@@ -341949,6 +343253,12 @@
               "jersey": "1",
               "name": "J. Jacinto",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23160877"
             }
           ],
           "positions": [
@@ -342990,7 +344300,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/23132538"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/23132538"
+        }
+      ],
       "formerIds": [],
       "id": "pcd91ac27fd",
       "identifiers": [
@@ -343007,7 +344338,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/23132538"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "10",
@@ -343023,6 +344363,19 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/23132538"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23132538"
             }
           ],
           "positions": [
@@ -343983,6 +345336,12 @@
               "jersey": "14",
               "name": "L. Moller",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28415585"
             }
           ],
           "positions": [
@@ -348749,6 +350108,12 @@
               "jersey": "10",
               "name": "Nathaniel Trujillo",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24283815"
             }
           ],
           "positions": [],
@@ -350677,6 +352042,12 @@
               "jersey": "3",
               "name": "Manzil Poudel",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21086268"
             }
           ],
           "positions": [],
@@ -357327,6 +358698,12 @@
               "jersey": "13",
               "name": "L. White",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18703473"
             }
           ],
           "positions": [
@@ -358550,6 +359927,12 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22722719"
             }
           ],
           "positions": [
@@ -359294,6 +360677,11 @@
               "jersey": "1",
               "name": "Tai Suich",
               "src": "maxpreps-roster"
+            },
+            {
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21130049"
             }
           ],
           "positions": [],
@@ -365853,6 +367241,12 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22685076"
             }
           ],
           "positions": [
@@ -366406,6 +367800,12 @@
               "jersey": "0",
               "name": "M. Schaper",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28958199"
             }
           ],
           "positions": [
@@ -368809,7 +370209,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/19591508"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/19591508"
+        }
+      ],
       "formerIds": [],
       "id": "pddb2f5887c",
       "identifiers": [
@@ -368826,7 +370247,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/19591508"
+            }
+          ],
           "grade": 11,
           "height": null,
           "jersey": "23",
@@ -368843,6 +370273,19 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/19591508"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19591508"
             }
           ],
           "positions": [
@@ -373387,6 +374830,12 @@
               "jersey": "22",
               "name": "Santiago Zermeno",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27168105"
             }
           ],
           "positions": [],
@@ -379297,6 +380746,12 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28942370"
             }
           ],
           "positions": [
@@ -382443,6 +383898,12 @@
               "jersey": "3",
               "name": "J. Tipton",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18703479"
             }
           ],
           "positions": [
@@ -383778,6 +385239,12 @@
               "jersey": "4",
               "name": "Sean Mathieson",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23121901"
             }
           ],
           "positions": [],
@@ -389194,6 +390661,12 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18703480"
             }
           ],
           "positions": [
@@ -392252,6 +393725,12 @@
               "jersey": "32",
               "name": "J. Barrett",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19967535"
             }
           ],
           "positions": [
@@ -399752,6 +401231,12 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/30474588"
             }
           ],
           "positions": [
@@ -406467,7 +407952,28 @@
     {
       "aliases": [],
       "classOf": 2028,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "watsonville",
+          "url": "https://www.hudl.com/profile/19518757"
+        },
+        {
+          "classOf": 2027,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "watsonville",
+          "url": "https://www.hudl.com/profile/19518757"
+        }
+      ],
       "formerIds": [],
       "id": "pf6a022ac8b",
       "identifiers": [
@@ -406484,7 +407990,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "hudl",
+              "other": "12",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/19518757"
+            }
+          ],
           "grade": 11,
           "height": null,
           "jersey": "3",
@@ -406501,6 +408016,19 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 12,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/19518757"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19518757"
             }
           ],
           "positions": [
@@ -408320,6 +409848,12 @@
               "grade": 11,
               "name": "Arlette Gomez",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24807428"
             }
           ],
           "positions": [],
@@ -414652,6 +416186,12 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/26750344"
             }
           ],
           "positions": [
@@ -415469,7 +417009,28 @@
     {
       "aliases": [],
       "classOf": 2029,
-      "classOfConflicts": [],
+      "classOfConflicts": [
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "enrichment",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631343"
+        },
+        {
+          "classOf": 2028,
+          "kind": "hudl",
+          "level": "varsity",
+          "season": "26-27",
+          "sport": "basketball",
+          "src": "profile",
+          "team": "trinity-christian",
+          "url": "https://www.hudl.com/profile/27631343"
+        }
+      ],
       "formerIds": [],
       "id": "pfba96dac5f",
       "identifiers": [
@@ -415486,7 +417047,16 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "10",
+              "kind": "hudl",
+              "other": "11",
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631343"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "11",
@@ -415499,6 +417069,19 @@
               "jersey": "11",
               "name": "Ely Smith",
               "src": "maxpreps-roster"
+            },
+            {
+              "grade": 11,
+              "kind": "hudl",
+              "rejected": true,
+              "src": "enrichment",
+              "url": "https://www.hudl.com/profile/27631343"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27631343"
             }
           ],
           "positions": [],
@@ -418193,6 +419776,12 @@
               "jersey": "45",
               "name": "M. Vidal",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/18703472"
             }
           ],
           "positions": [
