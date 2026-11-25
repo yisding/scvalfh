@@ -222,7 +222,10 @@ async function sampleDynamicRoutes() {
   // A si.com-only game's page (its source line is its own): /about#backfills links each one, at its slug.
   const about = await fetch(`${BASE}/about`).then((r) => r.text());
   const backfilled = /href="(\/game\/[^"#?]+)"/.exec(about.slice(Math.max(0, about.indexOf('id="backfills"'))))?.[1];
-  return [first('/game/'), first('/jv/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub]
+  // The freshman pages exist only in a build with the level (girls soccer, boys basketball): the hub, a league's
+  // calendar and a game, each from the sitemap, none in any other build.
+  const freshman = [locs.find((p) => p === '/freshman'), first('/freshman/game/'), locs.find((p) => /^\/freshman\/[^/]+$/.test(p))];
+  return [first('/game/'), first('/jv/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub, ...freshman]
     .filter((p, i, all) => p && !ROUTES.includes(p) && all.indexOf(p) === i);
 }
 

@@ -3,6 +3,8 @@ import { Fragment } from 'react';
 
 import JvDayGames from '../jv/JvDayGames';
 import { buildDayJvView } from '../jv/jv-view';
+import { FreshmanDayGames } from '../freshman/FreshmanGames';
+import { buildDayFreshmanView } from '../freshman/freshman-view';
 import LastUpdated from '../layout/LastUpdated';
 import PageHeader from '../layout/PageHeader';
 import { BUILD_INSTANT } from '../layout/build-instant';
@@ -31,7 +33,7 @@ import DateBar from './DayNav';
 import GameList from './GameList';
 import LiveBoard from './LiveBoard';
 import { MyTeamLine, type MyTeamLines } from './MyTeamLine';
-import { SECOND_LEVEL } from '../words/level-words';
+import { FRESHMAN_LEVEL, SECOND_LEVEL } from '../words/level-words';
 import ScoreRail from './ScoreRail';
 import ScoresRegionBlock, { DayGroups, MovedNote, dayWords } from './ScoresRegionBlock';
 import { dayGroups, dayRegions, gamesOfLeague } from './day-summary';
@@ -186,6 +188,10 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
       .filter((league) => league.region === region.id)
       .map((league) => ({ league, view: buildDayJvView(date, region.id, league.id) })),
   })).filter((block) => block.view.rows.length > 0);
+  // The day's freshman games, after the JV's (lib/freshman/freshman.ts: girls soccer and boys basketball, whose leagues
+  // are all NorCal), with one slice per league as the JV block has.
+  const freshmanDay = buildDayFreshmanView(date);
+  const freshmanLeagues = leagues.map((league) => ({ league, view: buildDayFreshmanView(date, league.id) }));
 
   /** A day's games with a side in the region (a NorCal vs SoCal game is in both). */
   const sideGames = (d: string, region: RegionId): readonly Game[] =>
@@ -369,6 +375,30 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
               ))}
             </section>
           ))}
+
+          {/* Freshman after JV (`#freshman`): the same schools' third teams, apart from every varsity and JV count, the
+              list once for every league and once per league as the JV block's. Omitted on a day with none. */}
+          {freshmanDay.rows.length > 0 ? (
+            <section id="freshman" aria-labelledby="freshman-heading" className="sx-section">
+              <SectionHeader
+                id="freshman-heading"
+                kicker={`${FRESHMAN_LEVEL.longTitle} games`}
+                action={{ href: '/freshman', label: 'All freshman games' }}
+              />
+              <div data-scope="none">
+                <FreshmanDayGames rows={freshmanDay.rows} />
+              </div>
+              {freshmanLeagues.map(({ league, view }) => (
+                <div key={league.id} data-scope={league.id}>
+                  {view.rows.length > 0 ? (
+                    <FreshmanDayGames rows={view.rows} />
+                  ) : (
+                    <p className="sx-empty">{`No ${league.shortName} ${FRESHMAN_LEVEL.long} games on this day.`}</p>
+                  )}
+                </div>
+              ))}
+            </section>
+          ) : null}
 
           {/* Today: the latest results and the next games are one obvious step away even for a
               reader who does not use the date bar. */}

@@ -916,6 +916,23 @@ keeps **no freshman tables** (owner decision, 2026-11-25). On 2026-11-25 MaxPrep
 games for 20 of the 123 schools (the PAL, the WCAL, the WBAL and three SCVAL schools) and 453 boys basketball
 freshman games for 75 of the 133, in every league.
 
+The pages (`components/freshman/`, built on the JV lists' rows and kept as plain as the level's data):
+
+- **`/freshman`, the hub** (`app/freshman/page.tsx`): what the level is and where it comes from (`#about`), then one
+  section per league with a listed freshman game: its latest results and next games (the JV hub's windows: the last
+  and the coming seven days, at most twelve rows each), a link to its whole freshman season, and its schools with
+  freshman games, each with its freshman record. Linked from `/jv` and from team pages, **not from the top
+  navigation** (owner decision).
+- **`/freshman/<league>`**: every freshman game of the league by date, as `/jv/<league>` is for the JV; a date with
+  a varsity game links its day page.
+- **`/freshman/game/<slug>`**: one game's page, the JV game page cut to what the level has (no varsity twin, no
+  table): the scoreboard with each freshman team's record over its listed finals, the date, the notes, the season
+  series and the Details rail. It takes the root OG card.
+- **A team page's "Freshman games"** (`#freshman`, after the JV games), only for a school with a listed freshman game,
+  and **a day page's freshman block** (`#freshman`, after the JV blocks), with a slice per league for the league tabs.
+- No row carries a league or non-league chip, since there are no freshman tables. A build without the level renders
+  none of these (the hub is a 404, the two families have no params).
+
 - **"Non Freshman Opponent"** (`505c1a99-…`) is MaxPreps' placeholder in a freshman schedule for a varsity, JV or
   club side it does not name, as "Non JV Opponent" is in a JV one (see "Games between two levels"); it is named
   "Non-freshman team".

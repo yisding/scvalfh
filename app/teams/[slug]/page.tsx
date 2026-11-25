@@ -11,6 +11,7 @@ import TeamGameLog from '../../../components/teams/TeamGameLog';
 import TeamIdentity from '../../../components/teams/TeamIdentity';
 import TeamJvGames from '../../../components/jv/TeamJvGames';
 import TeamJvRoster from '../../../components/jv/TeamJvRoster';
+import { TeamFreshmanGames } from '../../../components/freshman/FreshmanGames';
 import TeamNextGame from '../../../components/teams/TeamNextGame';
 import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
 import TeamOtherSports from '../../../components/teams/TeamOtherSports';
@@ -42,7 +43,7 @@ import { getLastLeagueResultDate, getStandings, getTeamSlugs, getTeams } from '.
 import { byDateThenId, recordString } from '../../../lib/format';
 import { getLeague, regionOf } from '../../../lib/leagues';
 import { HAS_RECRUITING, SPORT, SPORT_AUDIENCE, LISTS_PLAYERS } from '../../../lib/sports/current';
-import { SECOND_LEVEL } from '../../../components/words/level-words';
+import { FRESHMAN_LEVEL, SECOND_LEVEL } from '../../../components/words/level-words';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §33).
@@ -128,7 +129,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const { team, leagueLog, nonLeagueLog, officialFixtures } = view;
   // Last season's row, the roster, JV and player-stats views (components/teams/team-page-view.ts).
   const parts = buildTeamPageParts(view);
-  const { roster, jv, jvStanding, jvRoster, playerStats, rosterCount } = parts;
+  const { roster, jv, jvStanding, jvRoster, freshman, playerStats, rosterCount } = parts;
 
   // ONE schedule: every game of the team's, oldest first.
   const schedule = [...leagueLog, ...nonLeagueLog].sort(byDateThenId);
@@ -277,6 +278,20 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             action={jvStanding ? { href: jvStanding.href, label: `${SECOND_LEVEL.short} standings` } : undefined}
           />
           <TeamJvGames view={jv} />
+        </section>
+      ) : null}
+
+      {/* The freshman games (girls soccer and boys basketball), after the JV's: the school's third team, apart from
+          both. Only a school with a listed freshman game has the section. */}
+      {freshman ? (
+        <section id="freshman" className="sx-section sx-target" aria-labelledby="freshman-heading">
+          <SectionHeader
+            id="freshman-heading"
+            kicker={`${FRESHMAN_LEVEL.longTitle} games`}
+            meta={freshman.record ?? undefined}
+            action={{ href: '/freshman', label: 'All freshman games' }}
+          />
+          <TeamFreshmanGames view={freshman} slug={team.slug} />
         </section>
       ) : null}
 
