@@ -7,19 +7,19 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "9871700799bfa913382ee46c0756c74e839cbe7b3152e67cfad470ba2b819745",
+  "contentHash": "aac6f71547894666e75d4fc84684ec63086d889e89921e7de5c6a17f25b9e0dd",
   "counts": {
     "byLeague": {
       "bval": {
-        "backfilled": 3,
+        "backfilled": 2,
         "finals": 4,
-        "games": 253,
-        "leagueGames": 178,
+        "games": 254,
+        "leagueGames": 179,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
-        "finals": 3,
+        "finals": 4,
         "games": 152,
         "leagueGames": 96,
         "teams": 16
@@ -35,14 +35,14 @@
         "backfilled": 1,
         "finals": 1,
         "games": 159,
-        "leagueGames": 88,
+        "leagueGames": 89,
         "teams": 15
       },
       "wbal": {
-        "backfilled": 1,
+        "backfilled": 0,
         "finals": 2,
-        "games": 97,
-        "leagueGames": 30,
+        "games": 102,
+        "leagueGames": 34,
         "teams": 13
       },
       "wcal": {
@@ -53,21 +53,21 @@
         "teams": 6
       }
     },
-    "finals": 7,
-    "games": 672,
-    "leagueGames": 439,
-    "mismatches": 6,
-    "pending": 5,
+    "finals": 8,
+    "games": 678,
+    "leagueGames": 445,
+    "mismatches": 4,
+    "pending": 6,
     "teams": 82
   },
   "crossCheck": {
     "agreements": 2,
-    "backfilled": 3,
-    "compared": 61,
+    "backfilled": 2,
+    "compared": 62,
     "conflicts": 0,
-    "sbliveOnlyScored": 4
+    "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-11-24T14:38:07.037Z",
+  "fetchedAt": "2026-11-25T05:37:34.046Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -124,7 +124,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 34,
+  "officialFixturesUnmatched": 32,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 105,
@@ -194,12 +194,12 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "fremont schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -309,7 +309,7 @@
     },
     {
       "label": "pioneer schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -334,7 +334,7 @@
     },
     {
       "label": "lincoln schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -379,7 +379,7 @@
     },
     {
       "label": "independence schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -394,7 +394,7 @@
     },
     {
       "label": "overfelt schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -504,7 +504,7 @@
     },
     {
       "label": "castilleja schedule",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -514,17 +514,17 @@
     },
     {
       "label": "kings-academy schedule",
-      "rowCount": 9,
+      "rowCount": 11,
       "status": "ok"
     },
     {
       "label": "menlo schedule",
-      "rowCount": 8,
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -559,12 +559,12 @@
     },
     {
       "label": "pinewood schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "priory schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
@@ -614,7 +614,7 @@
     },
     {
       "label": "sequoia schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -694,7 +694,7 @@
     },
     {
       "label": "santa-cruz schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -705,6 +705,11 @@
     {
       "label": "soquel schedule",
       "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-18",
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -723,6 +728,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-19",
       "rowCount": 1,
       "status": "ok"
@@ -734,6 +744,11 @@
     },
     {
       "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-23",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-18",
       "rowCount": 1,
       "status": "ok"
     },
@@ -793,11 +808,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3911-sccal scoreboard 2026-11-24",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3912-scval-de-anza scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
@@ -808,22 +818,12 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3912-scval-de-anza scoreboard 2026-11-24",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3913-scval-el-camino scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
     },
     {
       "label": "sblive 3913-scval-el-camino scoreboard 2026-11-20",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3913-scval-el-camino scoreboard 2026-11-24",
       "rowCount": 0,
       "status": "ok"
     },
@@ -884,7 +884,7 @@
     },
     {
       "label": "sblive evergreen-valley games",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -904,7 +904,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 32,
+      "rowCount": 33,
       "status": "ok"
     },
     {
@@ -919,7 +919,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 329,
+      "rowCount": 331,
       "status": "ok"
     },
     {
@@ -939,7 +939,7 @@
     }
   ],
   "today": "2026-11-24",
-  "warnings": 37,
+  "warnings": 40,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
