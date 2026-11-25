@@ -16,7 +16,8 @@
     "League rosters, 2026-11-25 (ECNL): the MaxPreps refresh of 2026-11-24/25 brought rows the three ECNL leagues' kept rosters (read 2026-11-22 and 2026-11-24) match under the same rule: 9 varsity rows, at Pioneer (6) and Notre Dame San Jose (3). 6 new ties resting on a roster alone, medium, current for 2026-27 (Mariana Mejia to MVLA; Addison Amooi to Los Gatos United; Luna Hernandez to Santa Clara Sporting; Sonia Garcia and Mattie Chukwudebe to De Anza Force; Alessandra Barba to Los Gatos United); and 3 ties other pages already made, which gain the roster and now read current for 2026-27 (Isabella Guillebeaux and Addison Subala to De Anza Force, Valerie Contreras to Bay Area Surf). 15 entries on 13 team pages. Second reader: a separate run opened the 13 pages in Chromium, pressed Roster and found all 15 cited rows as displayed, with the position and label the copy gives. The 4 JV rows that pass the rule (Branham 2, Pioneer 1, Willow Glen 1) are listed in jvAffiliations (below).",
     "Mitty, 2026-11-25. MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, no other change. Hudl's 2026 Mitty varsity roster, read 2026-11-25, still lists both. The owner decided: Zuri Brandt's 3 ties (De Anza Force, MVLA, San Francisco Elite) are removed, as she is a senior and may have left the team (git history keeps them); Scarlett Martinez's tie to De Anza Force is kept, though it is left out as roster drift while MaxPreps does not list her, and shows again if MaxPreps lists her again.",
     "League rosters, 2026-11-25 (NorCal Premier): the girls U14-U19 teams in NorCal Premier's two 2026-27 leagues on GotSport, the NorCal N1 League (event 54043) and the Fall League (54541), of Almaden FC and the NorCal Premier-only clubs Sunnyvale Alliance, FC Milpitas (Milpitas YSL on GotSport), Peninsula Youth Soccer and ALBION SC Silicon Valley (its San Mateo club), each team's public roster on GotSport Rankings (README, 'Club rosters'; kept in club-rosters.json as leagues n1 and norcal-fall). Compared on birth years like Girls Academy's. 8 rows match: 6 new ties resting on a roster alone (5 varsity, 1 JV; Almaden FC 3, Sunnyvale Alliance 2, FC Milpitas 1), medium, status unknown, and 2 ties other pages already made, which gain the roster and keep their status (Mahi Nanda, Evergreen Valley, to Almaden FC; Tuhina Samaddar, Wilcox, to Sunnyvale Alliance). With them, 3 ECNL matches at the PCAL schools added on 2026-11-25 (Fynlee Devine and Kayden Aguilera, Salinas, and Amalia Phillips, Palma, to Bay Area Surf), medium, current for 2026-27. Second reader: a separate run opened all 6 Rankings pages and pressed Roster on the 5 Athlete One pages, and found all 17 cited rows as displayed.",
-    "Rows with no grade, and the JV players' Hudl club entries, 2026-11-25 (README, 'Club rosters'). Every soccer Hudl profile linked in rosters-enrichment.json and jv-profiles.json (187) was read again for its team list's club entries: every varsity player's is tied already; two JV players' are new, Noa Goldberg's and Mari Madalen Jan's (Mountain View) to De Anza Force's 'Force (CA) ECNL G2011/12', high confidence, citing the Hudl entry and the ECNL rosters (which give Noa Goldberg no class year). JV profiles had not been read for clubs before. The league-roster rule was loosened the same day (owner decision): a row with no grade takes the class year its own linked recruiting pages state, else the roster's own, when every roster row of the name that gives a class year gives the same one and it is a class in high school in 2026-27; a linked page's class year that disagrees rules a match out. MaxPreps posts no grade for whole schools (Los Gatos), whose players the rule had taken none of. 42 new ties (41 by the rule, medium; class year from the roster 36, from the player's linked page 5) and 5 ties that gain a roster and read current for 2026-27 (Kinsley Ozawa, Claire Chen, Ava Porter, Harper Satterlee, Mari Madalen Jan). Los Gatos gains 20 (13 varsity, 7 JV). Second reader: fetch-club-rosters read all 256 ECNL teams afresh the same day, identical to the kept copy, and every cited ECNL row was found in it as quoted; Charlotte Markovic's (Los Gatos JV) tie to Almaden FC rests on its GA 09/10 and N1 G2008/09 GotSport rosters, both re-read in Chromium, and her SportsRecruits page's class year; status unknown."
+    "Rows with no grade, and the JV players' Hudl club entries, 2026-11-25 (README, 'Club rosters'). Every soccer Hudl profile linked in rosters-enrichment.json and jv-profiles.json (187) was read again for its team list's club entries: every varsity player's is tied already; two JV players' are new, Noa Goldberg's and Mari Madalen Jan's (Mountain View) to De Anza Force's 'Force (CA) ECNL G2011/12', high confidence, citing the Hudl entry and the ECNL rosters (which give Noa Goldberg no class year). JV profiles had not been read for clubs before. The league-roster rule was loosened the same day (owner decision): a row with no grade takes the class year its own linked recruiting pages state, else the roster's own, when every roster row of the name that gives a class year gives the same one and it is a class in high school in 2026-27; a linked page's class year that disagrees rules a match out. MaxPreps posts no grade for whole schools (Los Gatos), whose players the rule had taken none of. 42 new ties (41 by the rule, medium; class year from the roster 36, from the player's linked page 5) and 5 ties that gain a roster and read current for 2026-27 (Kinsley Ozawa, Claire Chen, Ava Porter, Harper Satterlee, Mari Madalen Jan). Los Gatos gains 20 (13 varsity, 7 JV). Second reader: fetch-club-rosters read all 256 ECNL teams afresh the same day, identical to the kept copy, and every cited ECNL row was found in it as quoted; Charlotte Markovic's (Los Gatos JV) tie to Almaden FC rests on its GA 09/10 and N1 G2008/09 GotSport rosters, both re-read in Chromium, and her SportsRecruits page's class year; status unknown.",
+    "Owner decisions, 2026-11-25. (1) Status: a tie a club roster read this season lists is current for 2026-27, the GotSport Rankings rosters (Girls Academy, NorCal Premier) included, although those pages give no date; 36 ties that rested on one moved from unknown to current. (2) Four rows with no grade whose ECNL roster rows give no class year are linked outside the rule, on the name, the one club and its location: Riva Malhotra (Gunn) and Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, Shea Murphy (Leland JV) to De Anza Force; medium, current for 2026-27."
   ],
   "clubs": [
     {
@@ -2582,8 +2583,8 @@
       "fullName": "Annalise Clayton",
       "club": "almaden-fc",
       "clubTeam": "U16G Quicksilver Black",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -2595,7 +2596,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: U16G Quicksilver Black (born 2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: U16G Quicksilver Black (born 2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "pioneer",
@@ -2678,8 +2679,8 @@
       "fullName": "Charlotte Markovic",
       "club": "almaden-fc",
       "clubTeam": "GA 09/10",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -2699,7 +2700,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's rosters on GotSport Rankings (Girls Academy 2026-27, Northwest conference: GA 09/10 (born 2009/2010); NorCal N1 League 2026-27: N1 G2008/09 Quicksilver Green (CA) (born 2008/2009)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028, which the player's own linked recruiting page states (the JV roster row has no grade; rule 2 as loosened on 2026-11-25), is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The pages name no school and give no class year, jersey or date, so they date nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's rosters on GotSport Rankings (Girls Academy 2026-27, Northwest conference: GA 09/10 (born 2009/2010); NorCal N1 League 2026-27: N1 G2008/09 Quicksilver Green (CA) (born 2008/2009)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028, which the player's own linked recruiting page states (the JV roster row has no grade; rule 2 as loosened on 2026-11-25), is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The pages name no school and give no class year, jersey or date, so they date nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "los-gatos",
@@ -3070,6 +3071,36 @@
         }
       ],
       "basis": "The player's Hudl profile (on the school's own girls JV soccer team, so it names the school and the sport; class of 2030) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page. The club's game recap highlights on the profile (Oct 10 and Oct 31, 2026, the latest posted Nov 3, 2026) are of this team. Read from the data in the server's HTML (window.__hudlEmbed), 2026-11-25, in two separate fetches that agree. The JV roster row has no grade. The league's own 2026-27 rosters (ECNL Girls Northern Cal 2026-27: Force (CA) ECNL G2011/12; ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2011/12, Force (CA) ECNL RL G2008/09) list a player of this name, with no class year: read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data, 2026-11-25; the tie is current on that roster."
+    },
+    {
+      "teamSlug": "leland",
+      "athleteId": "8f07823d-87fb-4b82-854b-77ce6aa77418",
+      "playerId": "p2dde339d83",
+      "fullName": "Shea Murphy",
+      "club": "de-anza-force",
+      "clubTeam": "Force (CA) ECNL RL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/94954/40776",
+          "kind": "league-roster",
+          "quote": "Force (CA) ECNL RL G2010/11 | Murphy, Shea | Midfielder | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/136979/40778",
+          "kind": "league-roster",
+          "quote": "Force (CA) ECNL RL G2008/09 | Murphy, Shea | Midfielder | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "Linked on the owner's decision (2026-11-25), outside the league-roster rule (lib/players/club-rosters.ts), which leaves the row as 'no-grade': the league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2010/11, Force (CA) ECNL RL G2008/09) list a player of this name with no class year, and the JV roster row has no grade, so no class year was compared. No other tracked school has the name, varsity or JV; every ECNL roster row of the name is at this club; the club is based in the South Bay. No page names the school. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25."
     }
   ],
   "affiliations": [
@@ -4052,8 +4083,8 @@
       "fullName": "Tuhina Samaddar",
       "club": "sunnyvale-alliance-soccer-club",
       "clubTeam": "NorCal Gold Level",
-      "status": "unknown",
-      "asOf": "2024",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -4073,7 +4104,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The club's roster on GotSport Rankings (NorCal Premier Fall League: Sunnyvale U19G Red 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Sunnyvale. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The club's roster on GotSport Rankings (NorCal Premier Fall League: Sunnyvale U19G Red 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Sunnyvale. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "branham",
@@ -4588,8 +4619,8 @@
       "fullName": "Rylan Hickey",
       "club": "almaden-fc",
       "clubTeam": "GA",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -4609,7 +4640,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "leland",
@@ -4850,8 +4881,8 @@
       "fullName": "Kayla Hellman",
       "club": "almaden-fc",
       "clubTeam": "AFC U13 GA",
-      "status": "unknown",
-      "asOf": "2025",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -4879,7 +4910,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 3 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Her own SportsRecruits soccer profile (The page names Pioneer High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from hudl, sportsrecruits; status from the hudl entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 3 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Her own SportsRecruits soccer profile (The page names Pioneer High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from hudl, sportsrecruits; status from the hudl entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "pioneer",
@@ -5046,8 +5077,8 @@
       "fullName": "Kenna Smead",
       "club": "almaden-fc",
       "clubTeam": "U15G Quicksilver Black",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -5059,7 +5090,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: U15G Quicksilver Black (born 2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: U15G Quicksilver Black (born 2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "willow-glen",
@@ -5246,8 +5277,8 @@
       "fullName": "Mahi Nanda",
       "club": "almaden-fc",
       "clubTeam": "AFC U18 GA",
-      "status": "unknown",
-      "asOf": "2024",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5267,7 +5298,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 2 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Every source re-read at assembly on 2026-11-21. The club's roster on GotSport Rankings (NorCal N1 League: N1 G2008/09 Quicksilver Green (CA) (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 2 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Every source re-read at assembly on 2026-11-21. The club's roster on GotSport Rankings (NorCal N1 League: N1 G2008/09 Quicksilver Green (CA) (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "silver-creek",
@@ -5446,8 +5477,8 @@
       "fullName": "Mireya Martinez",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -5459,7 +5490,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "prospect",
@@ -5468,8 +5499,8 @@
       "fullName": "Natalie Hammer",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -5489,7 +5520,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "prospect",
@@ -5498,8 +5529,8 @@
       "fullName": "Amery Wang",
       "club": "sunnyvale-alliance-soccer-club",
       "clubTeam": "Sunnyvale U19G Red 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -5511,7 +5542,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: Sunnyvale U19G Red 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Sunnyvale. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: Sunnyvale U19G Red 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Sunnyvale. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "mitty",
@@ -6108,8 +6139,8 @@
       "fullName": "Madison McDougall",
       "club": "almaden-fc",
       "clubTeam": "Quicksilver green",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -6137,7 +6168,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names Valley Christian High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "Her own SportsRecruits soccer profile (The page names Valley Christian High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "valley-christian",
@@ -6440,8 +6471,8 @@
       "fullName": "Kiyo Aretun",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "SVSA Girls Academy II",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -6461,7 +6492,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names Carlmont High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "Her own SportsRecruits soccer profile (The page names Carlmont High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "carlmont",
@@ -6522,8 +6553,8 @@
       "fullName": "Lila Latta",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "09 GA",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -6543,7 +6574,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names Carlmont High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "Her own SportsRecruits soccer profile (The page names Carlmont High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "carlmont",
@@ -7420,8 +7451,8 @@
       "fullName": "Aylin Altinel",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -7433,7 +7464,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "willow-glen",
@@ -7574,8 +7605,8 @@
       "fullName": "Layla Barrientos",
       "club": "almaden-fc",
       "clubTeam": "N1 G2010/11 Quicksilver Green (CA)",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -7595,7 +7626,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's rosters on GotSport Rankings (NorCal N1 League: N1 G2010/11 Quicksilver Green (CA) (born 2010/2011) and NorCal Premier Fall League: U16G Quicksilver Black (born 2011)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's rosters on GotSport Rankings (NorCal N1 League: N1 G2010/11 Quicksilver Green (CA) (born 2010/2011) and NorCal Premier Fall League: U16G Quicksilver Black (born 2011)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "silver-creek",
@@ -7678,8 +7709,8 @@
       "fullName": "Joslyn Barajas",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -7691,7 +7722,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "andrew-hill",
@@ -8164,8 +8195,8 @@
       "fullName": "Paige Rouspil",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8177,7 +8208,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "carlmont",
@@ -8186,8 +8217,8 @@
       "fullName": "Shaqed Krupnik",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8199,7 +8230,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "carlmont",
@@ -8208,8 +8239,8 @@
       "fullName": "Zoey Toyozumi",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 09/10",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8221,7 +8252,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "menlo-atherton",
@@ -8422,8 +8453,8 @@
       "fullName": "Atessa Gholamy",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8435,7 +8466,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "capuchino",
@@ -8548,8 +8579,8 @@
       "fullName": "Bianca Hlousek",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 11/12",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8561,7 +8592,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 11/12 (born 2011/2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 11/12 (born 2011/2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "san-mateo",
@@ -8570,8 +8601,8 @@
       "fullName": "Raye Yokota",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 10/11",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8583,7 +8614,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "soquel",
@@ -8820,8 +8851,8 @@
       "fullName": "Audrey Littlewood",
       "club": "almaden-fc",
       "clubTeam": "GA 10/11",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8833,7 +8864,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "los-altos",
@@ -8842,8 +8873,8 @@
       "fullName": "Marin Hatfield",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 09/10",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8855,7 +8886,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "los-altos",
@@ -8864,8 +8895,8 @@
       "fullName": "Selya Sen",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -8877,7 +8908,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "mountain-view",
@@ -9128,8 +9159,8 @@
       "fullName": "Zoe Nesvacil",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 09/10",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9141,7 +9172,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "milpitas",
@@ -9172,8 +9203,8 @@
       "fullName": "Allison Tu",
       "club": "fc-milpitas",
       "clubTeam": "FC Milpitas Pumas 10/11G",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9185,7 +9216,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: FC Milpitas Pumas 10/11G (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Milpitas. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: FC Milpitas Pumas 10/11G (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Milpitas. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "monta-vista",
@@ -9282,8 +9313,8 @@
       "fullName": "Megan Le",
       "club": "almaden-fc",
       "clubTeam": "GA 10/11",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9303,7 +9334,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011) and GA 11/12 (born 2011/2012)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011) and GA 11/12 (born 2011/2012)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "willow-glen",
@@ -9378,8 +9409,8 @@
       "fullName": "Alina Buckelew",
       "club": "almaden-fc",
       "clubTeam": "GA 11/12",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9391,7 +9422,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 11/12 (born 2011/2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 11/12 (born 2011/2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "sobrato",
@@ -9540,8 +9571,8 @@
       "fullName": "Isabella Gonzales",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9553,7 +9584,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "mitty",
@@ -9562,8 +9593,8 @@
       "fullName": "Angelia Dominguez",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9575,7 +9606,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "mitty",
@@ -9584,8 +9615,8 @@
       "fullName": "Iyana Thompson",
       "club": "silicon-valley-soccer-academy",
       "clubTeam": "GA 09/10",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9597,7 +9628,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Silicon Valley SA: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Palo Alto). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "valley-christian",
@@ -9672,8 +9703,8 @@
       "fullName": "Alessia Costa",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9685,7 +9716,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -9694,8 +9725,8 @@
       "fullName": "Elyse Chu",
       "club": "almaden-fc",
       "clubTeam": "GA 10/11",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9707,7 +9738,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -9716,8 +9747,8 @@
       "fullName": "Jasmine Vemuri",
       "club": "almaden-fc",
       "clubTeam": "GA 09/10",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9729,7 +9760,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -9934,8 +9965,8 @@
       "fullName": "Kiana Rebollar",
       "club": "sunnyvale-alliance-soccer-club",
       "clubTeam": "Sunnyvale U19G Red 08/09",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -9947,7 +9978,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: Sunnyvale U19G Red 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Sunnyvale. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown."
+      "basis": "The club's roster on GotSport Rankings (NorCal Premier Fall League: Sunnyvale U19G Red 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in Sunnyvale. The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
     },
     {
       "teamSlug": "gunn",
@@ -10562,6 +10593,112 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: Santa Clara Sporting ECNL RL G2009/10, Santa Clara Sporting ECNL RL G2008/09) lists a player of this name with class year 2029, and the roster row has no grade, so the class year is the roster's own (rule 2 as loosened on 2026-11-25: every roster row of the name that gives a class year gives this one, a class in high school in 2026-27, and no linked page states another). No page names the school: the match rests on the name, the class year and the club's location (Santa Clara). The name is on one tracked school's rosters, varsity or JV, and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data in a fresh read of every team, 2026-11-25."
+    },
+    {
+      "teamSlug": "gunn",
+      "athleteId": "08d6bc6c-af0d-4f13-82fa-2b82dd998bc8",
+      "playerId": "pf549342776",
+      "fullName": "Riva Malhotra",
+      "club": "bay-area-surf",
+      "clubTeam": "Bay Area Surf ECNL RL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/102889/40776",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf ECNL RL G2010/11 | Malhotra, Riva | Midfielder | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/95767/40778",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf - ECNL RL G2008/09 | Malhotra, Riva | Midfielder | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "Linked on the owner's decision (2026-11-25), outside the league-roster rule (lib/players/club-rosters.ts), which leaves the row as 'no-grade': the league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2010/11, Bay Area Surf - ECNL RL G2008/09) list a player of this name with no class year, and the roster row has no grade, so no class year was compared. No other tracked school has the name, varsity or JV; every ECNL roster row of the name is at this club; the club is based in San Jose. No page names the school. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "d8131893-2603-4828-bbc3-a16a5a7df3bc",
+      "playerId": "pc4432dd62b",
+      "fullName": "Elizabeth Leitch",
+      "club": "bay-area-surf",
+      "clubTeam": "Bay Area Surf ECNL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4267/schedules-standings/team/74987/40578",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf ECNL G2010/11 | Leitch, Elizabeth | Midfielder | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/102889/40776",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf ECNL RL G2010/11 | Leitch, Elizabeth | Midfielder | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/95767/40778",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf - ECNL RL G2008/09 | Leitch, Elizabeth | Midfielder | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "Linked on the owner's decision (2026-11-25), outside the league-roster rule (lib/players/club-rosters.ts), which leaves the row as 'no-grade': the league's own 2026-27 rosters (ECNL Girls Northern Cal 2026-27: Bay Area Surf ECNL G2010/11; ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2010/11, Bay Area Surf - ECNL RL G2008/09) list a player of this name with no class year, and the roster row has no grade, so no class year was compared. No other tracked school has the name, varsity or JV; every ECNL roster row of the name is at this club; the club is based in San Jose. No page names the school. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "6d7459d5-53ea-4f2d-b258-b94c66042bd0",
+      "playerId": "paf86da9a32",
+      "fullName": "Rylann Duebelbeis",
+      "club": "bay-area-surf",
+      "clubTeam": "Bay Area Surf ECNL RL G2011/12",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4267/schedules-standings/team/95449/40577",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf - ECNL G2011/12 | Duebelbeis, Rylann | Defender | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/96271/40775",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf ECNL RL G2011/12 | Duebelbeis, Rylann | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/102889/40776",
+          "kind": "league-roster",
+          "quote": "Bay Area Surf ECNL RL G2010/11 | Duebelbeis, Rylann | Defender | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "Linked on the owner's decision (2026-11-25), outside the league-roster rule (lib/players/club-rosters.ts), which leaves the row as 'no-grade': the league's own 2026-27 rosters (ECNL Girls Northern Cal 2026-27: Bay Area Surf - ECNL G2011/12; ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2011/12, Bay Area Surf ECNL RL G2010/11) list a player of this name with no class year, and the roster row has no grade, so no class year was compared. No other tracked school has the name, varsity or JV; every ECNL roster row of the name is at this club; the club is based in San Jose. No page names the school. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25."
     }
   ]
 }

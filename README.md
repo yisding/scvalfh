@@ -2038,9 +2038,10 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   `current`. *A Girls Academy match* ("on birth years"): cite the team's GotSport Rankings roster
   (`rankings.gotsport.com/teams/<id>/roster`), which shows the rows with no button to press, with the page's team name
   and the player's row ("GA 08/09 | Costa | Alessia | No Position Listed") as the quote; `statedClassYear` and
-  `sourceDate` null, since the page states neither a class year nor a date; and, for a tie resting on that roster
-  alone, status `unknown` and confidence `medium`. A GA roster cited on a tie other pages already make leaves its
-  status alone. `clubSlugs` in the kept file maps a league club to its `clubs.json` record and is kept by hand; a club
+  `sourceDate` null, since the page states neither a class year nor a date; confidence `medium` for a tie resting on
+  that roster alone. **Status: a tie that a club roster read this season lists is `current` for 2026-27**, an ECNL
+  or a GotSport roster (owner decision, 2026-11-25; until then a GotSport roster, which gives no date, left a tie
+  `unknown`, and 36 ties moved that day). `clubSlugs` in the kept file maps a league club to its `clubs.json` record and is kept by hand; a club
   with no entry is compared but never linked. `tests/club-rosters.test.ts` fails if a `league-roster` source, varsity
   or JV, cites a team page the kept copy does not have, or one whose roster no longer lists the player with that class
   year (on a GA team, with a class year the team's birth years admit), so re-check those ties after a refetch.
@@ -2085,7 +2086,7 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   GotSport (Almaden's N1 G2008/09 lists 37, Sunnyvale's U19G Red 18, Milpitas' Magic 8); GA's younger teams are thin
   for the same reason. Birth years come from the team name, else the event's age group, a single birth year in NorCal
   Premier (U16 is 2011), and the rows are compared in the birth-year tier. Linked: 6 new ties (Almaden FC 3, one of
-  them JV; Sunnyvale Alliance 2; FC Milpitas 1), medium with status unknown, and 2 ties other pages made gain the
+  them JV; Sunnyvale Alliance 2; FC Milpitas 1), medium with status unknown (current since the same day's owner decision, above), and 2 ties other pages made gain the
   roster; with them, 3 ECNL matches at the PCAL schools added the same day (Salinas 2, Palma 1, to Bay Area Surf). A
   separate run re-read all 17 cited rows. Not read: the other clubs' NorCal Premier teams (MVLA's, De Anza Force's,
   Bay Area Surf's and the rest).
@@ -2096,7 +2097,8 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   their own: rule 2 reads "the row's class year is one the team's birth years admit" (California's September 1 cutoff:
   08/09 admits the classes of 2026-2028, each listed year on its own, `birthYearsAdmit`), and rules 3-5 hold within
   the tier, so an ECNL row at another club neither blocks a GA match nor is blocked by one. A GA tie resting on a
-  roster alone is medium confidence and its status unknown (the page dates nothing). GotSport's club ids are keyed
+  roster alone is medium confidence; its status was unknown (the page dates nothing) until the owner decided on
+  2026-11-25 that a club roster read this season makes a tie current. GotSport's club ids are keyed
   `gotsport-<id>` in `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are
   mapped. South Valley Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are
   based away from the schools. Their rows are compared but never linked.
@@ -2140,15 +2142,17 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   confidence ties citing the Hudl entry and the ECNL rosters. The league-roster rule was then loosened (above) for
   rows with no grade, and every match it now makes is cited: **47 ties change**, 42 new (41 by the rule, medium,
   current for 2026-27 on an ECNL roster; Charlotte Markovic's to Almaden FC on its GA 09/10 and N1 G2008/09 GotSport
-  rosters, both re-read in Chromium, status unknown) and 5
+  rosters, both re-read in Chromium) and 5
   that gain a roster and read current (Kinsley Ozawa, Los Gatos, to MVLA; Claire Chen, Saratoga, to Bay Area Surf; Ava
   Porter, Saratoga, to De Anza Force; Harper Satterlee, Half Moon Bay, to Los Gatos United; Mari Madalen Jan, above).
   Where each new tie's class year came from: the roster's own, 36; the player's linked page, 5. **Los Gatos** gains 20 (13 varsity, 7 JV; 14 of its 18 varsity
-  players are now tied), and Cupertino, Saratoga, Gunn, Leland, Pacific Collegiate (JV), Mountain View (JV),
+  players were then tied, 16 with the owner's two below), and Cupertino, Saratoga, Gunn, Leland, Pacific Collegiate (JV), Mountain View (JV),
   Milpitas (JV), Independence and KIPP San Jose the rest. Second reader: `fetch-club-rosters` read all 256 ECNL teams
   afresh the same day (identical to the kept copy's rows), and every cited ECNL row was found in it with the class
-  year, position and label quoted. Still not linked: 4 rows with no grade whose ECNL rows give no class year (Riva
-  Malhotra, Gunn; Elizabeth Leitch and Rylann Duebelbeis, Los Gatos; Shea Murphy, Leland JV), 7 with no grade and no
+  year, position and label quoted. Four rows with no grade whose ECNL rows give no class year are linked outside the
+  rule, on the owner's decision (the name, the one club and its location; medium, current): Riva Malhotra (Gunn),
+  Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, and Shea Murphy (Leland JV) to De Anza Force
+  (her name is also on Almaden FC's GA 09/10, which is not linked). Still not linked: 7 with no grade and no
   linked page's class year on a GotSport roster (which gives birth years only), 20 whose class year disagrees with
   the roster's, and 13 graded rows whose ECNL rows give no class year.
 - **Why Los Gatos had so few links, 2026-11-25.** MaxPreps posts no grade for any of the 18 Los Gatos varsity rows

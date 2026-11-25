@@ -346,6 +346,7 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
       'Noa Goldberg',
       'Samantha Bonar',
       'Samantha Erickson',
+      'Shea Murphy',
       'Taylor Laughter',
       'Yuli Arbel',
     ]);
