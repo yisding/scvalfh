@@ -1,6 +1,6 @@
 # Freshman captures (girls soccer, WCAL, 2026-11-25)
 
-What `SCVAL_SPORT=soccer pnpm fetch-jv --level freshman --capture` saved for the six WCAL schools on
+What `SCVAL_SPORT=soccer pnpm fetch-jv --level freshman --capture <dir>` saved for the six WCAL schools on
 2026-11-25, the input of `tests/freshman.test.ts` (`pnpm fetch-jv --level freshman --fixtures
 tests/fixtures/freshman --leagues wcal`):
 
