@@ -1,5 +1,5 @@
 {
- "builtBy": "pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league's own Schedules & Standings page in a local Chromium. The Girls Academy teams (league ga) are kept by hand and carried over; so is clubSlugs.",
+ "builtBy": "pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league's own Schedules & Standings page in a local Chromium. The Girls Academy and NorCal Premier teams (leagues ga, n1, norcal-fall) are kept by hand and carried over; so is clubSlugs.",
  "fetchedAt": "2026-11-24T16:21:13.413Z",
  "season": "26-27",
  "notes": [
@@ -8,7 +8,8 @@
   "Kept per player: name, position, class year and the roster's label (First Team Player, Club Player Pool, Discovery Player, Guest Player). Not kept: staff, jersey numbers, account ids, a player a team hides from its public roster (counted in `hidden`) and a player too young to be in high school this season, which is a class year after 2030 or, on a GU14 team, no class year (counted in `tooYoung`).",
   "clubSlugs maps a league club id to its record in clubs.json and is kept by hand: the 12 member clubs with a record in San Francisco, the Peninsula, the South Bay and Santa Cruz County, plus Mustang Soccer (East Bay) and Marin FC, each there because a player is tied to it. A club's Golden State teams carry the same club id as its ECNL teams, so the map covers them too. The other clubs of the three leagues are compared but never linked.",
   "A player on two of a club's teams is listed on both. 3 Regional League teams showed no player on 2026-11-22 or 2026-11-24 (Santa Clara Sporting's G2011/12 and Valley Surf's G2010/11 and G2009/10).",
-  "Girls Academy (league ga), read 2026-11-25: the GA teams U14 through U19 of the eight clubs in GA's Northwest conference (2026-27 league, GotSport event 56497): Almaden FC, Silicon Valley SA, 1974 Newark FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire, 38 teams, 440 rows. Each is the team's public roster on GotSport Rankings (rankings.gotsport.com/teams/<id>/roster; teamId is the Rankings id), found with that site's own team search (Female, the age group, the club's name) and read in a local Chromium as the page displays it; the owner sent the U19 and U17 pages of Almaden, Silicon Valley SA and Newark, and the U19 rows the owner pasted are the rows read. teamName, the age group and the club are the page's heading; birthYears are read from the team name ('GA 08/09' is [2008, 2009]; South Valley Surf's 'g2012 Girls Academy' is [2012]). Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out: Silicon Valley SA's '2012G GA2' and South Valley Surf's 'GU18/19', not named as GA league teams. Two pages listed no player (Newark's '1974 Newark FC 2012/2013 GA Clinton' and South Valley Surf's 'g2012 Girls Academy'). The page gives a name and a position (all 'No Position Listed', kept as null), no class year, no jersey and no date, so it is not known to be one season's roster; it reads like everyone the team has carried (Silicon Valley SA's GA 08/09 has 64 rows, Emma Velasquez twice, kept as listed, and Almaden's names a tracked class-of-2029 player). So these rows are compared on the team's birth years, not a class year (lib/players/club-rosters.ts); a U14 team (born 2012/13) is kept because its 2012 births can be freshmen. fetch-club-rosters carries the league and its teams over. GotSport club ids are keyed 'gotsport-<id>' in clubSlugs: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped; South Valley Surf has no clubs.json record, and Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the schools, so their rows are compared but never linked. GotSport's own event pages (system.gotsport.com) stop at a reCAPTCHA and were not read."
+  "Girls Academy (league ga), read 2026-11-25: the GA teams U14 through U19 of the eight clubs in GA's Northwest conference (2026-27 league, GotSport event 56497): Almaden FC, Silicon Valley SA, 1974 Newark FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire, 38 teams, 440 rows. Each is the team's public roster on GotSport Rankings (rankings.gotsport.com/teams/<id>/roster; teamId is the Rankings id), found with that site's own team search (Female, the age group, the club's name) and read in a local Chromium as the page displays it; the owner sent the U19 and U17 pages of Almaden, Silicon Valley SA and Newark, and the U19 rows the owner pasted are the rows read. teamName, the age group and the club are the page's heading; birthYears are read from the team name ('GA 08/09' is [2008, 2009]; South Valley Surf's 'g2012 Girls Academy' is [2012]). Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out: Silicon Valley SA's '2012G GA2' and South Valley Surf's 'GU18/19', not named as GA league teams. Two pages listed no player (Newark's '1974 Newark FC 2012/2013 GA Clinton' and South Valley Surf's 'g2012 Girls Academy'). The page gives a name and a position (all 'No Position Listed', kept as null), no class year, no jersey and no date, so it is not known to be one season's roster; it reads like everyone the team has carried (Silicon Valley SA's GA 08/09 has 64 rows, Emma Velasquez twice, kept as listed, and Almaden's names a tracked class-of-2029 player). So these rows are compared on the team's birth years, not a class year (lib/players/club-rosters.ts); a U14 team (born 2012/13) is kept because its 2012 births can be freshmen. fetch-club-rosters carries the league and its teams over. GotSport club ids are keyed 'gotsport-<id>' in clubSlugs: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped; South Valley Surf has no clubs.json record, and Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the schools, so their rows are compared but never linked. GotSport's own event pages (system.gotsport.com) stop at a reCAPTCHA and were not read.",
+  "NorCal Premier (leagues n1 and norcal-fall), read 2026-11-25: NorCal Premier's 2026-27 leagues are on GotSport (linked from norcalpremier.com's N1 Schedules & Standings page): the NorCal N1 League (event 54043, which replaced NPL and State Premier) and the Fall League U8-U19 (54541). Their event pages stop at a reCAPTCHA, but each event's club pages do not: they gave the club ids and the girls U14-U19 teams of Almaden FC (13017) and of the clubs.json clubs with no kept roster, Sunnyvale Alliance (11057), Milpitas YSL (10940; FC Milpitas), Peninsula Youth Soccer (8216) and ALBION SC Silicon Valley San Mateo (13012): 26 teams. Each was found on GotSport Rankings with its own team search and read as for Girls Academy. 22 matched a Rankings team of the same name; 4 of Albion's (SM N1 GU15 and GU16 Academy, SM GU14 and GU16 Premier) have only differently named Rankings teams (SM G12/G11 Academy, SM G13/G11 Premier), all with no player listed, and are not kept. 5 single-year U14 teams (born 2013, the class of 2031 or later: Almaden's Quicksilver Black and White, Albion's SM GU14 Academy, Peninsula's Hurricanes Blue and White) cannot hold a high school player and are not kept, so Albion has no team here and no clubSlugs entry. 17 teams, 89 rows. The Rankings rosters of these teams are far from full: most list 0 to 5 players (Almaden's N1 G2008/09 lists 37, Sunnyvale's U19G Red 18, Milpitas' Magic 8), as only players linked to the team on GotSport are shown. birthYears are the team name's ('N1 G2010/11', '10/11G'), else the event's age group, a single birth year in NorCal Premier (U16 is 2011). Not read: the other clubs' NorCal Premier teams (MVLA's, De Anza Force's, Bay Area Surf's and the rest)."
  ],
  "leagues": [
   {
@@ -34,6 +35,18 @@
    "name": "Girls Academy 2026-27, Northwest conference",
    "eventId": 56497,
    "url": "https://system.gotsport.com/org_event/events/56497"
+  },
+  {
+   "id": "n1",
+   "name": "NorCal N1 League 2026-27",
+   "eventId": 54043,
+   "url": "https://system.gotsport.com/org_event/events/54043"
+  },
+  {
+   "id": "norcal-fall",
+   "name": "NorCal Premier Fall League 2026-27 (U8-U19)",
+   "eventId": 54541,
+   "url": "https://system.gotsport.com/org_event/events/54541"
   }
  ],
  "clubSlugs": {
@@ -53,14 +66,17 @@
   "4660": "santa-cruz-united-fc",
   "gotsport-13017": "almaden-fc",
   "gotsport-9039": "silicon-valley-soccer-academy",
-  "gotsport-13052": "sf-glens-soccer-club"
+  "gotsport-13052": "sf-glens-soccer-club",
+  "gotsport-8216": "peninsula-youth-soccer-club",
+  "gotsport-11057": "sunnyvale-alliance-soccer-club",
+  "gotsport-10940": "fc-milpitas"
  },
  "counts": {
-  "teams": 294,
-  "players": 4861,
+  "teams": 311,
+  "players": 4950,
   "hidden": 0,
   "tooYoung": 1155,
-  "emptyTeams": 5
+  "emptyTeams": 7
  },
  "teams": [
   {
@@ -38036,6 +38052,913 @@
     {
      "firstName": "Ariana",
      "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U14",
+   "teamId": 103516,
+   "teamName": "N1 G2012/13 Quicksilver Green (CA)",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/103516/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Alina",
+     "lastName": "Buckelew",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Megan",
+     "lastName": "Le",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Lim",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Shayne",
+     "lastName": "Semore",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eliana",
+     "lastName": "Yu",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U15",
+   "teamId": 103515,
+   "teamName": "N1 G2011/12 Quicksilver Green (CA)",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/103515/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Megan",
+     "lastName": "Le",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U16",
+   "teamId": 103510,
+   "teamName": "N1 G2010/11 Quicksilver Green (CA)",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/103510/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Layla",
+     "lastName": "Barrientos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Mercado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Arianna",
+     "lastName": "Romo Bucio",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U19",
+   "teamId": 74940,
+   "teamName": "N1 G2008/09 Quicksilver Green (CA)",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/74940/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylin",
+     "lastName": "Altinel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Layla",
+     "lastName": "Barrientos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maggie",
+     "lastName": "Cao",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Morgan",
+     "lastName": "Carr",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nitya",
+     "lastName": "Chaparala",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Cole",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Delilah",
+     "lastName": "Cortez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emily",
+     "lastName": "Craig",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Dini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vanessa",
+     "lastName": "Dunn",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zara",
+     "lastName": "Ewalt",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Gonzales",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sydney",
+     "lastName": "Gosalvez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Andrea",
+     "lastName": "Gutierrez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalie",
+     "lastName": "Hammer",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Morgan",
+     "lastName": "Hattery",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Brynn",
+     "lastName": "Heberly",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kayla",
+     "lastName": "Hellman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rylan",
+     "lastName": "Hickey",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elizabeth",
+     "lastName": "Jackson",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lillian",
+     "lastName": "Jones",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Markovic",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mireya",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Mcdougall",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Punkhuri",
+     "lastName": "Mehrotra",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Mercado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Mulcaire",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Quinn",
+     "lastName": "Murphy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Shea",
+     "lastName": "Murphy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mahi",
+     "lastName": "Nanda",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Marianthi",
+     "lastName": "Panayotopoulos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emmi",
+     "lastName": "Pham",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexandra",
+     "lastName": "Tuohy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jasmine",
+     "lastName": "Vemuri",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aria",
+     "lastName": "Venugopal",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sofia",
+     "lastName": "Ward",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U15",
+   "teamId": 60695,
+   "teamName": "N1 G2011/12 Thunder Blue (CA)",
+   "clubId": 8216,
+   "clubName": "Peninsula Youth Soccer",
+   "url": "https://rankings.gotsport.com/teams/60695/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": []
+  },
+  {
+   "league": "n1",
+   "division": "U15",
+   "teamId": 77584,
+   "teamName": "N1 G2011/12 (CA)",
+   "clubId": 11057,
+   "clubName": "Sunnyvale Alliance SC",
+   "url": "https://rankings.gotsport.com/teams/77584/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Malena",
+     "lastName": "Lyssand",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U15",
+   "teamId": 103513,
+   "teamName": "U15G Quicksilver Black",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/103513/roster",
+   "birthYears": [
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Elody",
+     "lastName": "Arteaga-Castaneda",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Rai",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kenna",
+     "lastName": "Smead",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sage",
+     "lastName": "Smead",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U16",
+   "teamId": 74950,
+   "teamName": "U16G Quicksilver Black",
+   "clubId": 13017,
+   "clubName": "Almaden FC",
+   "url": "https://rankings.gotsport.com/teams/74950/roster",
+   "birthYears": [
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Layla",
+     "lastName": "Barrientos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Annalise",
+     "lastName": "Clayton",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U14",
+   "teamId": 334648,
+   "teamName": "FC Milpitas Tigers 12/13G",
+   "clubId": 10940,
+   "clubName": "Milpitas YSL",
+   "url": "https://rankings.gotsport.com/teams/334648/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Kylie",
+     "lastName": "Carino",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Liliana",
+     "lastName": "McMurray",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U15",
+   "teamId": 453430,
+   "teamName": "FC Milpitas Jaguars 11/12G",
+   "clubId": 10940,
+   "clubName": "Milpitas YSL",
+   "url": "https://rankings.gotsport.com/teams/453430/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Kylie",
+     "lastName": "Carino",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Liliana",
+     "lastName": "McMurray",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U16",
+   "teamId": 111406,
+   "teamName": "FC Milpitas Pumas 10/11G",
+   "clubId": 10940,
+   "clubName": "Milpitas YSL",
+   "url": "https://rankings.gotsport.com/teams/111406/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Siena",
+     "lastName": "Fiorelli",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Allison",
+     "lastName": "Tu",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U19",
+   "teamId": 630202,
+   "teamName": "FC Milpitas Magic 07/08G",
+   "clubId": 10940,
+   "clubName": "Milpitas YSL",
+   "url": "https://rankings.gotsport.com/teams/630202/roster",
+   "birthYears": [
+    2007,
+    2008
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Ilham",
+     "lastName": "Abdulalim",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "De Leon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Siena",
+     "lastName": "Fiorelli",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sally",
+     "lastName": "Henriquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Zhixuan",
+     "lastName": "Liu",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rumaisah",
+     "lastName": "Noori",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Niki",
+     "lastName": "Norzei",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Yanru",
+     "lastName": "Zhao",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U16",
+   "teamId": 60696,
+   "teamName": "Fusion Blue",
+   "clubId": 8216,
+   "clubName": "Peninsula Youth Soccer",
+   "url": "https://rankings.gotsport.com/teams/60696/roster",
+   "birthYears": [
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Italia",
+     "lastName": "Torrano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U14",
+   "teamId": 94956,
+   "teamName": "Sunnyvale U14G Red 12/13",
+   "clubId": 11057,
+   "clubName": "Sunnyvale Alliance SC",
+   "url": "https://rankings.gotsport.com/teams/94956/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Malena",
+     "lastName": "Lyssand",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U15",
+   "teamId": 216380,
+   "teamName": "Sunnyvale U15G White 11/12",
+   "clubId": 11057,
+   "clubName": "Sunnyvale Alliance SC",
+   "url": "https://rankings.gotsport.com/teams/216380/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": []
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U16",
+   "teamId": 77572,
+   "teamName": "Sunnyvale U16G Red 10/11",
+   "clubId": 11057,
+   "clubName": "Sunnyvale Alliance SC",
+   "url": "https://rankings.gotsport.com/teams/77572/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Juliann",
+     "lastName": "Jaison",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Melany",
+     "lastName": "Vasquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U19",
+   "teamId": 77554,
+   "teamName": "Sunnyvale U19G Red 08/09",
+   "clubId": 11057,
+   "clubName": "Sunnyvale Alliance SC",
+   "url": "https://rankings.gotsport.com/teams/77554/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Brenda",
+     "lastName": "Avendano-Gaytan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Barajas Leon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Saisha",
+     "lastName": "Bidarkar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jennifer",
+     "lastName": "Cristobal Castaneda",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Cara",
+     "lastName": "Ellerby",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sandy",
+     "lastName": "Fuentes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Juliann",
+     "lastName": "Jaison",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kyi Latt",
+     "lastName": "Khin",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kirsten",
+     "lastName": "Libunao",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tanisha",
+     "lastName": "Lopez Mendoza",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Breanna",
+     "lastName": "Plancarte Medina",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Ramirez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kiana",
+     "lastName": "Rebollar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tuhina",
+     "lastName": "Samaddar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Melany",
+     "lastName": "Vasquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Azulceleste",
+     "lastName": "Villanueva Lozano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amery",
+     "lastName": "Wang",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Young",
      "gradYear": null,
      "position": null,
      "playerType": null

@@ -53,6 +53,7 @@ describe('soccerClubTeamWords', () => {
       'Bay Area Surf ECNL G2008/09': 'ECNL G2008/09',
       'Bay Area Surf ECNL G2009/10': 'ECNL G2009/10',
       'Bay Area Surf ECNL RL G2010/11': 'ECNL RL G2010/11',
+      'Bay Area Surf ECNL G2010/11': 'ECNL G2010/11',
       'Bay Area Surf ECNL RL G2011/12': 'ECNL RL G2011/12',
       Blue: 'Blue',
       'Burlingame SC - ECNL RL G2011/12': 'ECNL RL G2011/12',
@@ -77,6 +78,7 @@ describe('soccerClubTeamWords', () => {
       'Force (CA) ECNL G2011/12': 'ECNL G2011/12',
       'Force (CA) ECNL RL G2009/10': 'ECNL RL G2009/10',
       'Force (CA) ECNL RL G2010/11': 'ECNL RL G2010/11',
+      'FC Milpitas Pumas 10/11G': 'Pumas G2010/11',
       'Force (CA) ECNL RL G2011/12': 'ECNL RL G2011/12',
       'Force (CA) ECNL RL G2012/13': 'ECNL RL G2012/13',
       'Force ECNL RL': 'ECNL RL',
@@ -127,9 +129,13 @@ describe('soccerClubTeamWords', () => {
       Silver: 'Silver',
       'Stanford Strikers ECNL RL G2008/09': 'ECNL RL G2008/09',
       'Stanford Strikers ECNL RL G2009/10': 'ECNL RL G2009/10',
+      'N1 G2010/11 Quicksilver Green (CA)': 'Quicksilver Green N1 G2010/11',
       'State Premier': 'State Premier',
+      'Sunnyvale U19G Red 08/09': 'Red G2008/09',
       'SVSA Girls Academy II': 'GA II',
       Thunder: 'Thunder',
+      'U15G Quicksilver Black': 'Quicksilver Black',
+      'U16G Quicksilver Black': 'Quicksilver Black',
       'U19 GA SVSA (Silicon Valley Soccer Academy)': 'GA',
     });
   });
@@ -154,7 +160,7 @@ describe('soccerClubTeamWords', () => {
   it('writes a birth year as G and the year, a pair earlier first, whatever shape the source used', () => {
     for (const raw of ['2009', '2009G', 'G2009', '09G', '09g', '09', 'G09', "'09", 'Girls 09']) expect(words(`ECNL ${raw}`)).toBe('ECNL G2009');
     for (const raw of ['G2008/09', '2008/09', '2008/09G', '08/09', '2009/08', '09/08']) expect(words(`ECNL RL ${raw}`)).toBe('ECNL RL G2008/09');
-    for (const raw of ['U17', 'U-16', '16u']) expect(words(`ECNL RL ${raw}`)).toBe('ECNL RL'); // an age group is not a birth year
+    for (const raw of ['U17', 'U-16', '16u', 'U15G']) expect(words(`ECNL RL ${raw}`)).toBe('ECNL RL'); // an age group is not a birth year
   });
 
   it('names the National 1 League N1, however the source writes it', () => {
