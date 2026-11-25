@@ -333,8 +333,8 @@
           "source": "https://www.santaclarasporting.com/girls-program"
         },
         {
-          "name": "Girls Academy affiliation",
-          "detail": "About page: \"proudly affiliated with the Santa Clara Youth Soccer League, ECNL, and the Girls Academy\" (girls-program page does not mention Girls Academy)",
+          "name": "Girls Academy (until 2025-26)",
+          "detail": "About page: \"proudly affiliated with the Santa Clara Youth Soccer League, ECNL, and the Girls Academy\"; NorCal Premier (May 11, 2026): the girls teams move \"from the Girls Academy\" to the ECNL Regional League for 2026-27",
           "source": "https://www.santaclarasporting.com/about"
         }
       ],
@@ -361,6 +361,10 @@
         {
           "url": "https://santaclarasporting.byga.net/tryouts/l020raqqqu/signup",
           "what": "\"Founded in 1971 ... ECNL, ECNL RL, N1, and NorCal Premier\""
+        },
+        {
+          "url": "https://norcalpremier.com/santa-clara-sporting-promoted-to-ecnl-regional-league-girls-norcal-for-26-27-season/",
+          "what": "NorCal Premier, May 11, 2026: \"Santa Clara Sporting Club Promoted to ECNL Regional League Girls – NorCal for 26/27 Season\"; \"Santa Clara Sporting enters the fold coming from the Girls Academy\""
         }
       ],
       "checkedOn": "2026-11-21"
@@ -3694,7 +3698,7 @@
       "fullName": "Emily Sugimura",
       "club": "almaden-fc",
       "clubTeam": "National 1",
-      "status": "current",
+      "status": "past",
       "asOf": "2026",
       "confidence": "high",
       "sources": [
@@ -3707,7 +3711,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. Status past since 2026-11-25, as Kailani Bock's Santa Clara Sporting tie (owner's decision that day): every Almaden FC team in the kept 2026-27 rosters (GA, N1, NorCal Premier Fall) was read and none lists her, while two Los Gatos United NorCal Premier Fall 2026-27 rosters do; the NCSA line's \"2026\" is read as the 2025-26 season."
     },
     {
       "teamSlug": "cupertino",
@@ -4561,7 +4565,7 @@
       "fullName": "Kailani Bock",
       "club": "santa-clara-sporting-club",
       "clubTeam": "Girls Academy",
-      "status": "current",
+      "status": "past",
       "asOf": "2026",
       "confidence": "high",
       "sources": [
@@ -4574,7 +4578,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. Status past since 2026-11-25 (owner's decision): Santa Clara Sporting's girls left Girls Academy for the ECNL Regional League (NorCal) for 2026-27 (NorCal Premier, May 11, 2026: \"Santa Clara Sporting enters the fold coming from the Girls Academy\"), so the NCSA line's \"2026 ... (Girls Academy)\" is the 2025-26 season; no Santa Clara Sporting team in the kept 2026-27 ECNL RL rosters lists her (its G2009/10 team, 84313, read that day, does not), and MVLA's ECNL G2008/09 lists her as a First Team Player."
     },
     {
       "teamSlug": "leland",

@@ -1867,8 +1867,11 @@ on 2026-11-21:
   ECNL ties, the Mitty drift, Alum Rock FC, the loosened league-roster rule and the roster team names of "Girls
   soccer: club rosters" below): **52 clubs** (South Bay 20, Peninsula 15, San Francisco 10, Central Coast 5, East Bay
   1, Marin 1) and **308 varsity ties for 260 of the 876 varsity rows, at 36 of the 46 schools with a roster** (one
-  player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while MaxPreps does not list her): 252
-  current, 37 listed (unknown) and 19 earlier; 40 players are tied to more than one club; 125 high confidence, 183
+  player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while MaxPreps does not list her): 250
+  current, 37 listed (unknown) and 21 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
+  FC tie are earlier since 2026-11-25: Santa Clara Sporting's girls left Girls Academy for the ECNL Regional League
+  for 2026-27, NorCal Premier's announcement of May 11, 2026, and neither player is on her old club's 2026-27
+  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 183
   medium (181 of them resting on a league roster alone: a class year, or a GotSport team's birth years, and the club's
   location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 37, Almaden FC 35, Los Gatos United 32, Santa
   Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame 9, Palo Alto SC 7. 28 clubs have no
