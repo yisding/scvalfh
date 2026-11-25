@@ -54,7 +54,6 @@ describe('soccerClubTeamWords', () => {
       'Bay Area Surf ECNL G2009/10': 'ECNL G2009/10',
       'Bay Area Surf ECNL G2010/11': 'ECNL G2010/11',
       'Bay Area Surf ECNL RL G2010/11': 'ECNL RL G2010/11',
-      'Bay Area Surf ECNL G2010/11': 'ECNL G2010/11',
       'Bay Area Surf ECNL RL G2011/12': 'ECNL RL G2011/12',
       Blue: 'Blue',
       'Burlingame SC - ECNL RL G2011/12': 'ECNL RL G2011/12',
