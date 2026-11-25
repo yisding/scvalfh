@@ -14,7 +14,7 @@
  *   - the birth years when the source gives them, in the leagues' own form whatever shape the source
  *     used (G2008/09, 2009/10G, 09G, 10g, G10, '07, "Girls 09"): G and the year, G2009, or two years,
  *     the earlier first, G2008/09; two teams' years are joined with "and". An age group (U17, U-16,
- *     16u) is not a birth year (it moves with the season) and is left out, as is a birth year the
+ *     16u, U15G) is not a birth year (it moves with the season) and is left out, as is a birth year the
  *     source does not give: nothing is worked out from the player's grade;
  *   - no club name (the page is the club's; a row can also name a partner club, "SVSA"), no "(CA)";
  *   - what is left is the team's own name ("Juventus", "Quicksilver Green", "Gold"), with each
@@ -45,8 +45,8 @@ const LEAGUES: ReadonlyArray<readonly [RegExp, string]> = [
  */
 const BIRTH_YEARS = /(?<![\w/'])(?:G|')?((?:19|20)?\d{2})(?:\/((?:19|20)?\d{2}))?G?(?![\w/])/gi;
 
-/** What else marks a team's age and is not printed: an age group, and "Girls"/"G" standing alone. */
-const AGE_WORDS = /\bU-?\d{2}\b|\b\d{2}U\b|\bGirls\b|\bG\b/gi;
+/** What else marks a team's age and is not printed: an age group (U17, U15G), and "Girls"/"G" standing alone. */
+const AGE_WORDS = /\bU-?\d{2}G?\b|\b\d{2}U\b|\bGirls\b|\bG\b/gi;
 
 const fullYear = (y: string) => (y.length === 4 ? Number(y) : 2000 + Number(y));
 

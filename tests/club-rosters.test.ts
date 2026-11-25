@@ -50,8 +50,8 @@ function soccerClassYears(): Map<string, number[]> {
 }
 
 describe('data/soccer/club-rosters.json', () => {
-  it('holds the three ECNL leagues and Girls Academy, and only players who can be in high school this season', () => {
-    expect(file.leagues.map((l) => l.id)).toEqual(['ecnl', 'ecnl-rl', 'ecnl-rl-golden-state', 'ga']);
+  it('holds the three ECNL leagues, Girls Academy and NorCal Premier\'s two, and only players who can be in high school this season', () => {
+    expect(file.leagues.map((l) => l.id)).toEqual(['ecnl', 'ecnl-rl', 'ecnl-rl-golden-state', 'ga', 'n1', 'norcal-fall']);
     expect(file.season).toBe(clubs.season);
     const last = 2000 + Number(file.season.slice(3)) + 3; // this season's freshmen
     for (const t of file.teams) {
@@ -60,15 +60,15 @@ describe('data/soccer/club-rosters.json', () => {
     }
   });
 
-  it('compares a Girls Academy team on its birth years: a GotSport roster, no class year', () => {
-    const ga = file.teams.filter((t) => t.league === 'ga');
-    expect(ga.length).toBeGreaterThan(0);
-    for (const t of ga) {
+  it('compares a GotSport team (Girls Academy, NorCal Premier) on its birth years: a Rankings roster, no class year', () => {
+    const gotsport = new Set(['ga', 'n1', 'norcal-fall']);
+    for (const id of gotsport) expect(file.teams.some((t) => t.league === id), id).toBe(true);
+    for (const t of file.teams.filter((x) => gotsport.has(x.league))) {
       expect(t.url, t.teamName).toMatch(/^https:\/\/rankings\.gotsport\.com\/teams\/\d+\/roster$/);
       expect(t.birthYears, t.teamName).toBeDefined();
       expect(t.players.every((p) => p.gradYear === null)).toBe(true);
     }
-    for (const t of file.teams.filter((x) => x.league !== 'ga')) expect(t.birthYears).toBeUndefined();
+    for (const t of file.teams.filter((x) => !gotsport.has(x.league))) expect(t.birthYears).toBeUndefined();
   });
 
   it('keeps nothing but a name, a class year, a position and the roster label for a player', () => {
