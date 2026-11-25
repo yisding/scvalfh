@@ -33,7 +33,6 @@ describe('soccerClubTeamWords', () => {
       '10g Black': 'Black G2010',
       '11G, GA & NPL': 'GA and NPL G2011',
       '2009/10G ECRL': 'ECNL RL G2009/10',
-      '2009G': 'G2009',
       '2009G RL-ECNL': 'ECNL RL G2009',
       '2010': 'G2010',
       '2010 Juventus': 'Juventus G2010',

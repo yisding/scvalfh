@@ -4,9 +4,10 @@
   "season": "26-27",
   "notes": [
     "Players on the tracked girls varsity soccer rosters a public page says have committed to, or signed with, a college team, in soccer or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names her high school or gives the roster's class year with a hometown in the school's own area (a row with no grade needs the school, with one exception below); offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
-    "13 commitments: 11 soccer, 1 field hockey, 1 softball; 1 signed. Allison Park's (Illinois) is signed: the college's own signing release names her with her high school. Isabella Cain's row on Los Gatos' roster has no grade: her sources (TopDrawerSoccer) give class of 2028 and Los Gatos as her hometown but name no school, so her commitment is medium confidence. Kat Smith's is a field hockey commitment (Ithaca), on her soccer roster row.",
+    "12 commitments: 10 soccer, 1 field hockey, 1 softball; 1 signed. Allison Park's (Illinois) is signed: the college's own signing release names her with her high school. Isabella Cain's row on Los Gatos' roster has no grade: her sources (TopDrawerSoccer) give class of 2028 and Los Gatos as her hometown but name no school, so her commitment is medium confidence. Kat Smith's is a field hockey commitment (Ithaca), on her soccer roster row.",
     "Read: TopDrawerSoccer's California girls commitment search for 2027 (225) and 2028 (128) and its player profiles, SoccerWire's commitment tracker (2027 and 2028), PrepSoccer's California list and 1,704 posts since 2025-11-01, 1,043 college athletics sites' news feeds (NCAA Division I, II and III women's soccer members and 19 NAIA; 6,237 stories opened, 3,236 dated 2026-11-11 or later), 12 student papers and 8 local papers, the clubs' commitment pages (MVLA, De Anza Force, SVSA, Bay Area Surf, Valley Surf, Los Gatos United), and the players' own SportsRecruits pages (\"Committed to …\", dated by the entry on the profile). Every quote was read twice by the pass and re-read at assembly by a separate script on 2026-11-21.",
-    "Recall is partial: no name-by-name search of every senior, junior or ungraded row; no student paper was found for 20 of the schools; the San Mateo Daily Journal, the Los Altos Town Crier and the Half Moon Bay Review were not read; 96 college sites gave no feed; community-college sites were not retried; MVLA's and SF Elite's commitment widgets are drawn by script. Leads left out because no page meets the rule: four players named with a college but no school, hometown or agreeing class year (a Mercy Burlingame, a Soquel and two Valley Christian players)."
+    "Recall is partial: no name-by-name search of every senior, junior or ungraded row; no student paper was found for 20 of the schools; the San Mateo Daily Journal, the Los Altos Town Crier and the Half Moon Bay Review were not read; 96 college sites gave no feed; community-college sites were not retried; MVLA's and SF Elite's commitment widgets are drawn by script. Leads left out because no page meets the rule: four players named with a college but no school, hometown or agreeing class year (a Mercy Burlingame, a Soquel and two Valley Christian players).",
+    "Removed 2026-11-25: Zuri Brandt's (Mitty) commitment to Washington, and Washington's college record with it. MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, no other change. Hudl's 2026 Mitty varsity roster, read 2026-11-25, still lists both. The site shows only players on the MaxPreps rosters, so the record had been left out as roster drift; the owner decided to drop it (git history keeps it)."
   ],
   "colleges": [
     {
@@ -97,28 +98,6 @@
         {
           "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
           "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): Princeton University, The Ivy League."
-        }
-      ],
-      "checkedOn": "2026-11-21"
-    },
-    {
-      "slug": "washington",
-      "name": "University of Washington",
-      "shortName": "Washington",
-      "city": "Seattle",
-      "state": "WA",
-      "programs": [
-        {
-          "sport": "soccer",
-          "division": "ncaa-d1",
-          "conference": "Big Ten Conference",
-          "url": "https://gohuskies.com/sports/womens-soccer"
-        }
-      ],
-      "sources": [
-        {
-          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
-          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027), read rendered in headless Chromium on 2026-11-21 (plain requests get HTTP 403): University of Washington, Big Ten Conference."
         }
       ],
       "checkedOn": "2026-11-21"
@@ -626,60 +605,6 @@
         }
       ],
       "basis": "Rule (a): her SoccerWire page and TopDrawerSoccer profile (\"High School: Archbishop Mitty\") name Archbishop Mitty (San Jose), class 2028 (roster grade 11), committed to Louisville; Louisville's list on TopDrawerSoccer agrees (hometown Saratoga). Class of 2028 cannot sign until November 2027. Every source re-read at assembly on 2026-11-21."
-    },
-    {
-      "teamSlug": "mitty",
-      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
-      "playerId": "p5ebfd3c972",
-      "fullName": "Zuri Brandt",
-      "college": "washington",
-      "sport": "soccer",
-      "status": "committed",
-      "asOf": "2025-10-06",
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://www.soccerwire.com/player/zuri-brandt/",
-          "kind": "other",
-          "quote": "Committed: Washington Women Youth club: De Anza Force Youth league: ECNL Girls Zuri Brandt high school: Archbishop Mitty graduation: 2027",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.topdrawersoccer.com/club-player-profile/zuri-brandt/pid-164492",
-          "kind": "other",
-          "quote": "Zuri Brandt Forward - Class of 2027 - Washington",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepsoccer.com/2026/02/penalty-shootout-win-sends-archbishop-mitty-to-the-semifinals/",
-          "kind": "news",
-          "quote": "2027 - Archbishop Mitty - Forward - De Anza Force ECNL - Washington commit",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": "2026-02-23"
-        },
-        {
-          "url": "https://prepsoccer.com/player/zuri-brandt/",
-          "kind": "other",
-          "quote": "Washington (WA) Committed",
-          "statedSchool": null,
-          "statedClassYear": null,
-          "sourceDate": null
-        },
-        {
-          "url": "https://my.sportsrecruits.com/athlete/zuri_brandt2",
-          "kind": "sportsrecruits",
-          "quote": "Committed to University of Washington",
-          "statedSchool": "Archbishop Mitty High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        }
-      ],
-      "basis": "Rule (a): her SoccerWire page and TopDrawerSoccer profile (\"High School: Archbishop Mitty\") each name Archbishop Mitty (San Jose) with class 2027 (roster grade 12) and a Washington commitment; PrepSoccer's Mitty playoff story (2026-02-23, read rendered) lists her as a 2027 Archbishop Mitty forward and Washington commit. asOf is that story's date (no commitment date is stated). No Washington signing release in its women's soccer feed on 2026-11-21. SportsRecruits pass: Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2027, which agrees with the roster.) shows \"Committed to University of Washington\" in its server-rendered meta description; the profile JSON dates the entry 2025-10-06; read in three separate fetches that agree. asOf is the earliest date a source gives (2025-10-06). Every source re-read at assembly on 2026-11-21."
     },
     {
       "teamSlug": "carlmont",

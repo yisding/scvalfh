@@ -1859,32 +1859,34 @@ on 2026-11-21:
   lacrosse). Hudl's public rosters were read for every school's girls soccer teams, NCSA by name for every varsity
   row and 305 of the JV rows, every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits
   address probe over every varsity and JV row.
-- **Clubs** (`clubs.json`; recounted on 2026-11-22, after the league rosters of "Girls soccer: club rosters"
-  below): **51 clubs** (South Bay 19, Peninsula 15, San Francisco 10, Central Coast 5, East Bay 1, Marin 1) and
-  **192 ties for 157 of the 634 varsity rows, at 30 of the 32 schools**: 115 current, 55 listed (unknown) and 22
-  earlier; 30 players are tied to more than one club; 127 high confidence, 65 medium (63 of them resting on a league
-  roster alone: a class year and the club's location). The most ties: De Anza Force 40, MVLA 26, Bay Area Surf 22, Almaden
-  FC 21, Los Gatos United 19, Santa Clara Sporting 11, Burlingame and Stanford Strikers 8 each, Palo Alto SC 7.
-  28 clubs have no tied player. The ties rest on 309 source entries on 198 URLs (league rosters 110, NCSA 60,
-  PrepSoccer 38, SportsRecruits 35, MaxPreps career pages 27, Hudl 22, TopDrawerSoccer 12, SoccerWire 4, a college
-  release 1). San Francisco, the Peninsula and the South Bay were
-  searched for every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast,
-  so /clubs does not claim it. JV players' clubs are not listed.
-- **College commitments** (`commits.json`): **13 players at 6 schools, to 13 colleges**, 11 in soccer, 1 in field
-  hockey and 1 in softball; 9 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
-  Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos)
-  to Brandeis, Selya Sen (Los Altos) to Franklin & Marshall and Kat Smith (Los Altos) to Ithaca in field hockey,
-  from The Talon, Los Altos' student paper (Smith's is medium: the story says she left soccer in her junior year,
-  so the soccer row being hers wants confirming). Ayla Briski to Brown, Layla Tucakovic to USC, Vivian Baker to
-  Louisville and Zuri Brandt to Washington, all Mitty, from their SoccerWire and TopDrawerSoccer pages, which name
-  Archbishop Mitty (PrepSoccer agreeing for Tucakovic and Brandt, and Brandt's own SportsRecruits page). Juliana
-  Pandolfo (Menlo-Atherton) to Chicago in softball, from her own SportsRecruits page. Four are medium, resting on
-  the class year and a hometown with no school named: Kailani Bock (Leland) to UC San Diego and Isabella Cain (Los
-  Gatos, whose roster row has no grade) to Princeton, from TopDrawerSoccer's commitment lists; Ashleigh Bieser
-  (Carlmont) to Columbia (TopDrawerSoccer, SoccerWire and her own SportsRecruits page) and Delaney Kumer (Carlmont)
-  to UC Davis (TopDrawerSoccer and PrepSoccer). Park, Bock, Cain and Neschleba were last season's research ("Soccer
-  and basketball: last season's commitments" below). Every quote was checked against its page as served, by the
-  pass that found it and again at assembly.
+- **Clubs** (`clubs.json`; recounted on 2026-11-25, after the Girls Academy rosters, the refresh's ECNL ties and the
+  Mitty drift of "Girls soccer: club rosters" below): **51 clubs** (South Bay 19, Peninsula 15, San Francisco 10,
+  Central Coast 5, East Bay 1, Marin 1) and **250 varsity ties for 205 of the 678 varsity rows, at 31 of the 34
+  schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while MaxPreps
+  does not list her): 160 current, 70 listed (unknown) and 20 earlier; 37 players are tied to more than one club; 125
+  high confidence, 125 medium (123 of them resting on a league roster alone: a class year, or a GA team's birth years,
+  and the club's location). The most ties: MVLA 49, De Anza Force 45, Almaden FC 33, Bay Area Surf 28, Los Gatos
+  United 21, Silicon Valley SA 14, Santa Clara Sporting 12, Burlingame and Stanford Strikers 8 each, Palo Alto SC 7.
+  28 clubs have no tied player. The ties rest on 386 source entries on 216 URLs (league rosters 197: ECNL's 165 and
+  Girls Academy's 32; NCSA 57, PrepSoccer 35, SportsRecruits 35, MaxPreps career pages 26, Hudl 22, TopDrawerSoccer
+  10, SoccerWire 3, a college release 1). San Francisco, the Peninsula and the South Bay were searched for every club
+  (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does not claim it.
+  **4 JV ties** (`jvAffiliations`, since 2026-11-25), shown marked JV.
+- **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
+  hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
+  Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos) to
+  Brandeis, Selya Sen (Los Altos) to Franklin & Marshall and Kat Smith (Los Altos) to Ithaca in field hockey, from The
+  Talon, Los Altos' student paper (Smith's is medium: the story says she left soccer in her junior year, so the soccer
+  row being hers wants confirming). Ayla Briski to Brown, Layla Tucakovic to USC and Vivian Baker to Louisville, all
+  Mitty, from their SoccerWire and TopDrawerSoccer pages, which name Archbishop Mitty (PrepSoccer agreeing for
+  Tucakovic). Juliana Pandolfo (Menlo-Atherton) to Chicago in softball, from her own SportsRecruits page. Four are
+  medium, resting on the class year and a hometown with no school named: Kailani Bock (Leland) to UC San Diego and
+  Isabella Cain (Los Gatos, whose roster row has no grade) to Princeton, from TopDrawerSoccer's commitment lists;
+  Ashleigh Bieser (Carlmont) to Columbia (TopDrawerSoccer, SoccerWire and her own SportsRecruits page) and Delaney
+  Kumer (Carlmont) to UC Davis (TopDrawerSoccer and PrepSoccer). Park, Bock, Cain and Neschleba were last season's
+  research ("Soccer and basketball: last season's commitments" below). Every quote was checked against its page as
+  served, by the pass that found it and again at assembly. Zuri Brandt's (Mitty) commitment to Washington was removed
+  on 2026-11-25, when MaxPreps' Mitty roster stopped listing her ("Girls soccer: club rosters", below).
 
 **Boys basketball**
 
@@ -2094,6 +2096,13 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   of 2022 on read; 4 of the players are on them (Lexie Scundi, Claire Higgins, Ella Badawi, Madilyn Murdock), all with
   private profiles, so none is linked. Not reached: NCSA (Cloudflare answers 403 to an automated read from this
   environment) and MaxPreps career pages (MaxPreps answers 403 here; the claimed flag was not read).
+- **The Mitty drift, 2026-11-25.** MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or
+  Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, nobody else added, dropped or
+  respelled, so no id was reissued. Hudl's 2026 Mitty varsity roster still lists both. The owner decided: Brandt's
+  records are removed (3 club ties, her commitment to Washington with Washington's college record, and her overlay
+  entry with its NCSA, SportsRecruits and Hudl profiles; git history keeps them), and Martinez's are kept (her tie to
+  De Anza Force and her overlay entry), left out as roster drift while MaxPreps does not list her and shown again if
+  it lists her again. `pnpm roster-drift` reports those 2 records; with `--base origin/main` none is this change's.
 
 ### Soccer and basketball: last season's commitments
 

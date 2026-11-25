@@ -13,7 +13,8 @@
     "No record, so no tie shown, although a player's page names the club: El Camino FC (sobrato / Lauren Crowell, maxpreps); alum rock fc (overfelt / Violeta Murillo, maxpreps); Hawaii Rush Soccer (Girls) (valley-christian / Alessia Costa, sportsrecruits); Newark 1974 FC (santa-clara / Dhiaan Plaha, ncsa); Reno Apex (cupertino / Emily Sugimura, ncsa); AllStars FC (sobrato / Isabella Larsen, ncsa); Alum Rock Futbol Club (overfelt / Violeta Murillo, ncsa); Silicon Valley Soccer Club (carlmont / Gianna Armanini, ncsa). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). Nor is \"Surf\" on one Mitty player's NCSA page mapped (Santa Cruz Mid-County also goes by Surf); her Bay Area Surf tie rests on other pages and is listed. TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
     "JV ties (jvAffiliations), since 2026-11-25: a JV row's ties are listed apart from the varsity rows' and join the school's MaxPreps JV roster (data/soccer/jv-rosters.json; lib/players/clubs.ts withJvListRows). A player on both the JV and the varsity list has her ties on the varsity row. So far they come from the league rosters only (the league-roster rule, as for varsity rows): 4 ties at 3 schools, Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to De Anza Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27; a separate run pressed Roster on the 3 cited pages and found all 5 cited rows. Of the JV rows, only the 4 tied players were looked for on SportsRecruits and Hudl (2026-11-25, nothing found); PrepSoccer, TopDrawerSoccer, NCSA and MaxPreps career pages were not searched for JV rows, and 14 JV rows with no grade whose name is on a roster wait for MaxPreps to post the grade. Shown since 2026-11-25: the JV roster's club line, the club pages (marked JV) and /recruiting.",
     "League rosters, 2026-11-25: Girls Academy's Northwest conference, 38 GA teams U14-U19 of eight clubs, each team's public roster on GotSport Rankings (README, 'Club rosters'; kept in club-rosters.json as league ga). The page gives no class year, so a GA row is compared on the team's birth years (California's September 1 cutoff: 'GA 08/09' admits the classes of 2026-2028), in a tier of its own (lib/players/club-rosters.ts): an ECNL row at another club neither blocks a GA match nor is blocked by one. 29 varsity rows match: 22 new ties resting on a GA roster alone, medium confidence and status unknown (the page has no date), and 7 ties other pages already made, which gain the roster and keep their status. By club: Almaden FC 16, Silicon Valley SA 13, San Francisco Glens 0. Each source quotes the page's own team name and the player's row; a player on two of a club's GA teams cites both. Second reader: a separate run opened every cited team page in Chromium and found each cited row as displayed. Not linked: Tatum Hadfield (Valley Christian), on 1974 Newark FC's GA 10/11 only (no record; East Bay); 2 JV rows with no grade (Los Gatos, Leland) on Almaden's GA 09/10. South Valley Surf, Lamorinda, Sacramento United and Clovis Crossfire rows matched no tracked row.",
-    "League rosters, 2026-11-25 (ECNL): the MaxPreps refresh of 2026-11-24/25 brought rows the three ECNL leagues' kept rosters (read 2026-11-22 and 2026-11-24) match under the same rule: 9 varsity rows, at Pioneer (6) and Notre Dame San Jose (3). 6 new ties resting on a roster alone, medium, current for 2026-27 (Mariana Mejia to MVLA; Addison Amooi to Los Gatos United; Luna Hernandez to Santa Clara Sporting; Sonia Garcia and Mattie Chukwudebe to De Anza Force; Alessandra Barba to Los Gatos United); and 3 ties other pages already made, which gain the roster and now read current for 2026-27 (Isabella Guillebeaux and Addison Subala to De Anza Force, Valerie Contreras to Bay Area Surf). 15 entries on 13 team pages. Second reader: a separate run opened the 13 pages in Chromium, pressed Roster and found all 15 cited rows as displayed, with the position and label the copy gives. The 4 JV rows that pass the rule (Branham 2, Pioneer 1, Willow Glen 1) are listed in jvAffiliations (below)."
+    "League rosters, 2026-11-25 (ECNL): the MaxPreps refresh of 2026-11-24/25 brought rows the three ECNL leagues' kept rosters (read 2026-11-22 and 2026-11-24) match under the same rule: 9 varsity rows, at Pioneer (6) and Notre Dame San Jose (3). 6 new ties resting on a roster alone, medium, current for 2026-27 (Mariana Mejia to MVLA; Addison Amooi to Los Gatos United; Luna Hernandez to Santa Clara Sporting; Sonia Garcia and Mattie Chukwudebe to De Anza Force; Alessandra Barba to Los Gatos United); and 3 ties other pages already made, which gain the roster and now read current for 2026-27 (Isabella Guillebeaux and Addison Subala to De Anza Force, Valerie Contreras to Bay Area Surf). 15 entries on 13 team pages. Second reader: a separate run opened the 13 pages in Chromium, pressed Roster and found all 15 cited rows as displayed, with the position and label the copy gives. The 4 JV rows that pass the rule (Branham 2, Pioneer 1, Willow Glen 1) are listed in jvAffiliations (below).",
+    "Mitty, 2026-11-25. MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, no other change. Hudl's 2026 Mitty varsity roster, read 2026-11-25, still lists both. The owner decided: Zuri Brandt's 3 ties (De Anza Force, MVLA, San Francisco Elite) are removed, as she is a senior and may have left the team (git history keeps them); Scarlett Martinez's tie to De Anza Force is kept, though it is left out as roster drift while MaxPreps does not list her, and shows again if MaxPreps lists her again."
   ],
   "clubs": [
     {
@@ -5504,136 +5505,6 @@
           "quote": "2028 De Anza Force (ECNL)",
           "statedSchool": "Archbishop Mitty High School",
           "statedClassYear": 2028,
-          "sourceDate": null
-        }
-      ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
-    },
-    {
-      "teamSlug": "mitty",
-      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
-      "playerId": "p5ebfd3c972",
-      "fullName": "Zuri Brandt",
-      "club": "de-anza-force",
-      "clubTeam": "2009G",
-      "status": "unknown",
-      "asOf": "2025-12-11",
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/zuri-brandt/bio/?careerid=2ttiidhhncr22",
-          "kind": "maxpreps-career",
-          "quote": "\"organizationTeamName\":\"2009G\",\"clubOrganizationName\":\"De Anza Force Soccer Club\",\"clubOrganizationCity\":\"Cupertino\",\"clubOrganizationStateCode\":\"CA\",\"sport\":\"Soccer\",\"ageGroup\":\"U17\",\"yearJoined\":2025,\"createdOn\":\"2025-12-11T14:36:14\",\"modifiedOn\":\"2025-12-11T22:37:30\",\"season\":\"Spring,Fall\"",
-          "statedSchool": "Archbishop Mitty (San Jose, CA)",
-          "statedClassYear": 2027,
-          "sourceDate": "2025-12-11"
-        },
-        {
-          "url": "https://prepsoccer.com/player/zuri-brandt/",
-          "kind": "other",
-          "quote": "Brandt is a 5'9\" Forward in the 2027 class. Brandt attends Archbishop Mitty in California and plays club soccer for De Anza Force. Brandt's Player Profile was created on March 10, 2023.",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": "2025-05-07"
-        },
-        {
-          "url": "https://prepsoccer.com/program/de-anza-force/",
-          "kind": "other",
-          "quote": "Class of 2027 ... Zuri Brandt 5'9\" F Archbishop Mitty",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.topdrawersoccer.com/club-player-profile/zuri-brandt/pid-164492",
-          "kind": "other",
-          "quote": "Class of 2027 ... Club: De Anza Force SC Team Name: De Anza Force SC (ECNL) ... High School: Archbishop Mitty Region: Northern California & Hawaii",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt",
-          "kind": "ncsa",
-          "quote": "2025 De Anza Force (ECNL)",
-          "statedSchool": "Archbishop Mitty High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.soccerwire.com/player/zuri-brandt/",
-          "kind": "other",
-          "quote": "Committed: Washington Women Youth club: De Anza Force Youth league: ECNL Girls Zuri Brandt high school: Archbishop Mitty graduation: 2027",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.topdrawersoccer.com/club-player-profile/zuri-brandt/pid-164492",
-          "kind": "other",
-          "quote": "Club: De Anza Force SC Team Name: De Anza Force SC (ECNL)",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepsoccer.com/2026/02/penalty-shootout-win-sends-archbishop-mitty-to-the-semifinals/",
-          "kind": "news",
-          "quote": "2027 - Archbishop Mitty - Forward - De Anza Force ECNL - Washington commit",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2027,
-          "sourceDate": "2026-02-23"
-        },
-        {
-          "url": "https://my.sportsrecruits.com/athlete/zuri_brandt2",
-          "kind": "sportsrecruits",
-          "quote": "09G ECNL, De Anza Force SC-Girls",
-          "statedSchool": "Archbishop Mitty High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        }
-      ],
-      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Archbishop Mitty (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The page is not claimed, though the block is filled in. PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"De Anza Force\" (linked to https://prepsoccer.com/program/de-anza-force/) and her school \"Archbishop Mitty\", linked to the team page titled \"Archbishop Mitty High School Soccer | San Jose, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2023-03-10, modified 2025-05-07. PrepSoccer's program page for the club lists her under Class of 2027 with high school Archbishop Mitty (same site; agrees). TopDrawerSoccer club player profile (found by its girls club-player search on the full name) names her, the club \"De Anza Force SC\" (team \"De Anza Force SC (ECNL)\"), high school \"Archbishop Mitty\" (a name no other school in the BRIEF's namesake list shares; region Northern California & Hawaii) and class of 2027, which equals the roster. Undated. Status unknown: no source is dated 2026 (latest date 2025-05-07). Two independent sites agree. The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. SoccerWire and TopDrawerSoccer (both naming Archbishop Mitty, class 2027) and PrepSoccer's 2026-02-23 story agree on De Anza Force ECNL. Undated pages and a 2025-26-season story, so status unknown. Her own SportsRecruits soccer profile (The page names Archbishop Mitty High School and class of 2027, which agrees with the roster.) lists the club (San Jose) in its CLUB/TEAMS block, a roster the club itself keeps on SportsRecruits. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from maxpreps, clubs, ncsa, commits, sportsrecruits; status from the maxpreps entry. Every source re-read at assembly on 2026-11-21."
-    },
-    {
-      "teamSlug": "mitty",
-      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
-      "playerId": "p5ebfd3c972",
-      "fullName": "Zuri Brandt",
-      "club": "mvla-soccer-club",
-      "clubTeam": "ECNL-RL",
-      "status": "past",
-      "asOf": "2024",
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt",
-          "kind": "ncsa",
-          "quote": "2024 MVLA (ECNL-RL)",
-          "statedSchool": "Archbishop Mitty High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        }
-      ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
-    },
-    {
-      "teamSlug": "mitty",
-      "athleteId": "688982e1-3c00-4382-8831-c17c1b8d641a",
-      "playerId": "p5ebfd3c972",
-      "fullName": "Zuri Brandt",
-      "club": "san-francisco-elite-academy",
-      "clubTeam": "GA",
-      "status": "past",
-      "asOf": "2024",
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt",
-          "kind": "ncsa",
-          "quote": "2024 San Francisco Elite (GA)",
-          "statedSchool": "Archbishop Mitty High School",
-          "statedClassYear": 2027,
           "sourceDate": null
         }
       ],
