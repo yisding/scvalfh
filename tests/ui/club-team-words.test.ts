@@ -197,6 +197,24 @@ describe('soccerClubTeamWords', () => {
     expect(off).toEqual([]);
   });
 
+  it('prints the team the league marks her First Team Player on, when one cited roster does', () => {
+    // ECNL's rosters label each row (the quote ends with it); GotSport's carry no label, so they never decide.
+    const off: string[] = [];
+    for (const a of TIES) {
+      const first = [
+        ...new Set(
+          a.sources
+            .filter((s) => s.kind === LEAGUE_ROSTER_KIND && /\|\s*First Team Player\s*$/.test(s.quote))
+            .map((s) => ROSTER_BY_URL.get(s.url)?.teamName),
+        ),
+      ];
+      if (first.length !== 1 || first[0] === undefined) continue;
+      const printed = a.clubTeam !== null ? words(a.clubTeam) : null;
+      if (printed !== words(first[0])) off.push(`${a.fullName} (${a.club}): ${a.clubTeam}, First Team on ${first[0]}`);
+    }
+    expect(off).toEqual([]);
+  });
+
   it("never prints a current tie's team in an ECNL league its club has no team in", () => {
     // ECNL's three Northern California leagues were read whole, so a club's ECNL and ECNL RL teams are all known.
     const ecnlLeagues = new Map<string, Set<string>>();
