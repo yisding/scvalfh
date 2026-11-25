@@ -618,6 +618,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "f9e1d3ca-a120-484c-a726-2902845f498b",
+          "playerId": "p13e00c0cc5",
+          "conflicts": [],
+          "fullName": "Addison Obrien",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "The page (Addison O'Brien, soccer, class of 2028) gives ZIP 95033, Los Gatos, and lists De Anza Force SC-Girls' 2010G ECNL team (#12), the club she is tied to, whose league roster also gives class of 2028. The roster row has no grade, so the class year is checked as a high school class this season and against the club roster (owner's decision, 2026-11-25). Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/addison_obrien2"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "los-gatos",
@@ -1106,6 +1128,12 @@
               "note": "On Mountain View High School's own girls soccer team on Hudl (Girls Varsity Soccer); class of 2028 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/28803105"
+            },
+            {
+              "classOf": 2028,
+              "note": "The page (soccer, class of 2028) gives ZIP 94041, Mountain View, the school's own city; class of 2028 agrees with the roster's grade 11. Missed by the 2026-11-21 probe. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/kayla_pierson2"
             }
           ],
           "sourceName": null
@@ -8477,7 +8505,31 @@
       "notes": [
         "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "3caf48fa-d3fe-47cd-8059-8d99b85553ef",
+          "playerId": "pb88d43e2b1",
+          "conflicts": [],
+          "fullName": "Lea Rose Padilla",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "A volleyball page (Lea Padilla, class of 2028, Watsonville, CA 95076) that names Saint Francis High School, Watsonville. The roster row has no grade, so the class year is checked as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/lea_padilla",
+              "sport": "volleyball"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "st-francis-watsonville",
       "sources": []
     },

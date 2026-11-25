@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15783,
+    "observations": 15790,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -33530,7 +33530,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p13e00c0cc5",
@@ -33559,6 +33559,12 @@
               "athleteId": "f9e1d3ca-a120-484c-a726-2902845f498b",
               "name": "Addison Obrien",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/addison_obrien2"
             }
           ],
           "positions": [],
@@ -158566,7 +158572,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p5c52733d80",
@@ -158595,6 +158601,13 @@
               "athleteId": "b8d6a8db-9020-4ab7-a432-bf325a9cd4da",
               "name": "Daniela Gomez",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "sportsrecruits",
+              "name": "Daniela Gomez",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/daniela_gomez3"
             }
           ],
           "positions": [],
@@ -196605,7 +196618,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p72c39b67e9",
@@ -196634,6 +196647,13 @@
               "athleteId": "482baeec-cd9f-4286-ad55-c60a9c7b0029",
               "name": "Kaia Gurdak",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "name": "Kaia Gurdak",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/kaia_gurdak2"
             }
           ],
           "positions": [],
@@ -230240,6 +230260,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/28803105"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/kayla_pierson2"
             }
           ],
           "positions": [
@@ -307571,6 +307597,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/woodside/woodside-wildcats/athletes/hunter-taylor/?careerid=g4b39j5664eg0"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/hunter_taylor6"
             }
           ],
           "positions": [],
@@ -309999,7 +310031,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "pb88d43e2b1",
@@ -310028,6 +310060,12 @@
               "athleteId": "3caf48fa-d3fe-47cd-8059-8d99b85553ef",
               "name": "Lea Rose Padilla",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/lea_padilla"
             }
           ],
           "positions": [],
@@ -388692,6 +388730,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-jose/willow-glen-rams/athletes/bella-flynn/?careerid=iuhkrvqv7rlue"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/bella_flynn2"
             }
           ],
           "positions": [],

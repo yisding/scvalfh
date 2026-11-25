@@ -455,6 +455,41 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "pacific-collegiate",
+      "players": [
+        {
+          "name": "Kaia Gurdak",
+          "playerId": "p72c39b67e9",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/kaia_gurdak2",
+              "classOf": 2027,
+              "note": "The page (soccer, class of 2027, Santa Cruz, CA) names Pacific Collegiate School and lists De Anza Force SC-Girls' 09G ECNL team; a second page of hers, kaia_gurdak, says the same with no integrated team, so this one is linked. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "milpitas",
+      "players": [
+        {
+          "name": "Daniela Gomez",
+          "playerId": "p5c52733d80",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/daniela_gomez3",
+              "classOf": 2030,
+              "note": "A softball page (class of 2030, ZIP 95035, Milpitas, the school's own city). The JV list gives no grade, so the class year is checked as a high school class this season (owner's decision, 2026-11-25); no other tracked school has a Daniela Gomez. Found by the 2026-11-25 SportsRecruits address probe of the rows with no grade; read through the page's own profile call in a browser, twice, agreeing.",
+              "sport": "softball"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
