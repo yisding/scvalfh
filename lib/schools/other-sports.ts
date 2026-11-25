@@ -19,8 +19,18 @@ import { PCAL_SEEDS } from '../registry/pcal';
 import { SCVAL_SEEDS } from '../registry/scval';
 import { SUNSET_SEEDS } from '../registry/sunset';
 import { BVAL_BASKETBALL_SEEDS } from '../registry/basketball/bval';
+import { PAL_BASKETBALL_SEEDS } from '../registry/basketball/pal';
+import { PCAL_BASKETBALL_SEEDS } from '../registry/basketball/pcal';
+import { PSAL_BASKETBALL_SEEDS } from '../registry/basketball/psal';
+import { SCCAL_BASKETBALL_SEEDS } from '../registry/basketball/sccal';
 import { SCVAL_BASKETBALL_SEEDS } from '../registry/basketball/scval';
+import { WBAL_BASKETBALL_SEEDS } from '../registry/basketball/wbal';
+import { WCAL_BASKETBALL_SEEDS } from '../registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from '../registry/soccer/bval';
+import { PAL_SOCCER_SEEDS } from '../registry/soccer/pal';
+import { PCAL_SOCCER_SEEDS } from '../registry/soccer/pcal';
+import { PSAL_SOCCER_SEEDS } from '../registry/soccer/psal';
+import { SCCAL_SOCCER_SEEDS } from '../registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from '../registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from '../registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from '../registry/soccer/wcal';
@@ -48,8 +58,16 @@ export const SEEDS_BY_SPORT: Readonly<Record<SportId, readonly Seed[]>> = {
     ...METRO_SEEDS,
     ...INDEPENDENTS_SEEDS,
   ],
-  soccer: [...SCVAL_SOCCER_SEEDS, ...BVAL_SOCCER_SEEDS, ...WCAL_SOCCER_SEEDS, ...WBAL_SOCCER_SEEDS],
-  basketball: [...SCVAL_BASKETBALL_SEEDS, ...BVAL_BASKETBALL_SEEDS],
+  // Every league of each winter build (the PAL, the SCCAL, the PCAL and the PSAL since 2026-11-25 here, and the
+  // WCAL and the WBAL in basketball), so a field hockey PCAL school links its soccer and basketball pages.
+  soccer: [
+    ...SCVAL_SOCCER_SEEDS, ...BVAL_SOCCER_SEEDS, ...WCAL_SOCCER_SEEDS, ...WBAL_SOCCER_SEEDS, ...PAL_SOCCER_SEEDS,
+    ...SCCAL_SOCCER_SEEDS, ...PCAL_SOCCER_SEEDS, ...PSAL_SOCCER_SEEDS,
+  ],
+  basketball: [
+    ...SCVAL_BASKETBALL_SEEDS, ...BVAL_BASKETBALL_SEEDS, ...WCAL_BASKETBALL_SEEDS, ...WBAL_BASKETBALL_SEEDS,
+    ...PAL_BASKETBALL_SEEDS, ...SCCAL_BASKETBALL_SEEDS, ...PCAL_BASKETBALL_SEEDS, ...PSAL_BASKETBALL_SEEDS,
+  ],
   volleyball: [...SCVAL_VOLLEYBALL_SEEDS, ...BVAL_VOLLEYBALL_SEEDS, ...WCAL_VOLLEYBALL_SEEDS, ...WBAL_VOLLEYBALL_SEEDS],
   // Middle schools: ids of our own (`val-<slug>`), so no high school site's team is ever taken for one of them.
   'val-soccer': VAL_SOCCER_SEEDS,

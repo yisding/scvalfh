@@ -408,6 +408,13 @@ export function sbliveIdFromWebPath(webPath: string | null | undefined): string 
  *   - both sports: El Camino (ours is South San Francisco's; Sacramento and Oceanside) and Jefferson (ours is Daly
  *     City's; Los Angeles);
  *   - boys basketball only: Serra (ours is San Mateo's Junípero Serra, which si.com names "Serra"; Gardena's).
+ * The same search for the PCAL's and the PSAL's names, 2026-11-25:
+ *   - both sports: Marina (ours is Marina's, Monterey County; Huntington Beach), St. Francis (ours is Watsonville's;
+ *     Sacramento and La Cañada), Cristo Rey (ours is San Jose's, which si.com names "Cristo Rey"; Sacramento, and in
+ *     basketball San Diego) and The Nueva School (si.com lists it twice in San Mateo: ours is the entry with the school
+ *     id and the JV team);
+ *   - boys basketball only: Oakwood (ours is Morgan Hill's; North Hollywood) and Trinity Christian (ours is Monterey's;
+ *     Garden Grove).
  *
  * A side with one of these names resolves ONLY by a si.com id, never by name.
  */
@@ -419,10 +426,12 @@ const STATEWIDE_AMBIGUOUS_NAMES: readonly string[] = bySport<readonly string[]>(
   soccer: [
     'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
     'Santa Clara', 'Mercy', 'Notre Dame', 'El Camino', 'Jefferson',
+    'Marina', 'St. Francis', 'Cristo Rey', 'The Nueva School',
   ],
   basketball: [
     'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
     'Santa Clara', 'El Camino', 'Jefferson', 'Serra',
+    'Marina', 'St. Francis', 'Cristo Rey', 'The Nueva School', 'Oakwood', 'Trinity Christian',
   ],
   // The volleyball build reads no si.com page.
   volleyball: [],

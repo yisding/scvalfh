@@ -1,13 +1,13 @@
 {
   "counts": {
-    "errors": 0,
+    "errors": 8,
     "finals": 7,
-    "games": 488,
-    "sbliveRows": 3,
-    "teams": 82,
-    "teamsWithGames": 74
+    "games": 534,
+    "sbliveRows": 5,
+    "teams": 123,
+    "teamsWithGames": 96
   },
-  "fetchedAt": "2026-11-25T14:40:41.082Z",
+  "fetchedAt": "2026-11-25T15:35:44.836Z",
   "games": [
     {
       "away": {
@@ -60,6 +60,60 @@
       },
       "venue": {
         "text": "Piedmont Hills HS"
+      }
+    },
+    {
+      "away": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "contestId": "48dd8080-b45f-41ae-a81c-3ea36cb647ba",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-18",
+      "dateLocal": "2026-11-18T16:00:00",
+      "dateUtc": "2026-11-19T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Hollister",
+        "name": "Hollister",
+        "result": null,
+        "score": null,
+        "slug": "hollister",
+        "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:26:00",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "score-pending",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-hollister/jv/11-18-2026/?c=48dd8080-b45f-41ae-a81c-3ea36cb647ba",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Hollister High School"
       }
     },
     {
@@ -219,6 +273,60 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hayward-vs-san-jose/jv/11-19-2026/?c=6a7582ba-f1bc-47a6-b0fc-20b78e7f3d8f",
         "nfhsStream": "https://www.nfhsnetwork.com/events/hayward-high-school-hayward-ca/gam8dd45aba2b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "Rancho San Juan",
+        "result": null,
+        "score": null,
+        "slug": "rancho-san-juan",
+        "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
+      },
+      "contestId": "4ead764c-acee-415f-812d-6c479f963af4",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-20",
+      "dateLocal": "2026-11-20T16:00:00",
+      "dateUtc": "2026-11-21T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "North Salinas",
+        "result": null,
+        "score": null,
+        "slug": "north-salinas",
+        "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-10-30T12:02:06",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "neutral",
+      "status": "score-pending",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/north-salinas-vs-rancho-san-juan-salinas/jv/11-20-2026/?c=4ead764c-acee-415f-812d-6c479f963af4",
+        "nfhsStream": null
       },
       "venue": {
         "text": null
@@ -712,6 +820,60 @@
     },
     {
       "away": {
+        "city": "Watsonville",
+        "name": "Watsonville",
+        "result": null,
+        "score": null,
+        "slug": "watsonville",
+        "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
+      },
+      "contestId": "f16d8f45-0550-4eef-ac8d-ce335b635bcb",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-28",
+      "dateLocal": "2026-11-28T10:00:00",
+      "dateUtc": "2026-11-28T18:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "North Salinas",
+        "result": null,
+        "score": null,
+        "slug": "north-salinas",
+        "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-23T11:43:29",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/north-salinas-vs-watsonville/jv/11-28-2026/?c=f16d8f45-0550-4eef-ac8d-ce335b635bcb",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "North Salinas High School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Presentation",
         "result": null,
@@ -789,7 +951,7 @@
         "name": "Rancho San Juan",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "rancho-san-juan",
         "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
       },
       "isDateTba": false,
@@ -801,7 +963,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-12T22:52:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -813,6 +975,60 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/rancho-san-juan-salinas-vs-wilcox-santa-clara/jv/11-30-2026/?c=9bfcb701-e87a-4cf9-aa31-c070770e0d10",
         "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "contestId": "a45483e7-52bc-4d19-b95c-6a07efe6194e",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-30",
+      "dateLocal": "2026-11-30T16:00:00",
+      "dateUtc": "2026-12-01T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Castroville",
+        "name": "North Monterey County",
+        "result": null,
+        "score": null,
+        "slug": "north-monterey-county",
+        "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-24T11:17:48",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-north-monterey-county-castroville/jv/11-30-2026/?c=a45483e7-52bc-4d19-b95c-6a07efe6194e",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/north-monterey-county-high-school-castroville-ca/gam59005d9aca?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
       },
       "venue": {
         "text": null
@@ -982,6 +1198,60 @@
     },
     {
       "away": {
+        "city": "Greenfield",
+        "name": "Greenfield",
+        "result": null,
+        "score": null,
+        "slug": "greenfield",
+        "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+      },
+      "contestId": "3553ce00-8658-4773-a4cd-35c45d99350e",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-01",
+      "dateLocal": "2026-12-01T15:30:00",
+      "dateUtc": "2026-12-01T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-25T11:49:06",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/greenfield-vs-stevenson-pebble-beach/jv/12-1-2026/?c=3553ce00-8658-4773-a4cd-35c45d99350e",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Stevenson School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Evergreen Valley",
         "result": null,
@@ -1086,6 +1356,60 @@
       },
       "venue": {
         "text": "Leigh High School"
+      }
+    },
+    {
+      "away": {
+        "city": "King City",
+        "name": "King City",
+        "result": null,
+        "score": null,
+        "slug": "king-city",
+        "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8"
+      },
+      "contestId": "3c57eb50-acdd-47fd-a919-3c69ab41fdac",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-01",
+      "dateLocal": "2026-12-01T16:00:00",
+      "dateUtc": "2026-12-02T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-16T12:26:12",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079990?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/king-city-vs-soledad/jv/12-1-2026/?c=3c57eb50-acdd-47fd-a919-3c69ab41fdac",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam6e21380e7b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -1329,7 +1653,7 @@
         "name": "North Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "north-salinas",
         "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
       },
       "isDateTba": false,
@@ -1341,7 +1665,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-11T08:53:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1469,10 +1793,10 @@
     {
       "away": {
         "city": "San Jose",
-        "name": "More",
+        "name": "Thomas More",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "thomas-more",
         "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b"
       },
       "contestId": "e12448e2-162a-4169-ba72-e04f2105936d",
@@ -1503,7 +1827,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-10-26T22:07:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1742,7 +2066,7 @@
         "name": "Watsonville",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "watsonville",
         "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
       },
       "contestId": "396b5d8a-9f6e-4ca3-a43f-a774c48ac2b1",
@@ -1773,7 +2097,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-20T03:23:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2300,7 +2624,7 @@
         "name": "Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "salinas",
         "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
       },
       "isDateTba": false,
@@ -2312,7 +2636,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-10-18T08:00:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2493,6 +2817,60 @@
     },
     {
       "away": {
+        "city": "Gonzales",
+        "name": "Gonzales",
+        "result": null,
+        "score": null,
+        "slug": "gonzales",
+        "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2"
+      },
+      "contestId": "631a5835-698b-493b-8202-c125079aad54",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-03",
+      "dateLocal": "2026-12-03T16:00:00",
+      "dateUtc": "2026-12-04T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Seaside",
+        "name": "Seaside",
+        "result": null,
+        "score": null,
+        "slug": "seaside",
+        "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T03:38:17",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gonzales-vs-seaside/jv/12-3-2026/?c=631a5835-698b-493b-8202-c125079aad54",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/seaside-high-school-seaside-ca/gamdc4dba7b46?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Seaside High School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Mt. Pleasant",
         "result": null,
@@ -2597,6 +2975,60 @@
       },
       "venue": {
         "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "North Salinas",
+        "result": null,
+        "score": null,
+        "slug": "north-salinas",
+        "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+      },
+      "contestId": "f6a3dbfb-15e9-4e51-8226-e84a8a839140",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-03",
+      "dateLocal": "2026-12-03T16:00:00",
+      "dateUtc": "2026-12-04T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-25T11:56:04",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079991?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/north-salinas-vs-soledad/jv/12-3-2026/?c=f6a3dbfb-15e9-4e51-8226-e84a8a839140",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam678fa4182d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Soledad High School"
       }
     },
     {
@@ -2871,6 +3303,60 @@
     },
     {
       "away": {
+        "city": "Salinas",
+        "name": "Palma",
+        "result": null,
+        "score": null,
+        "slug": "palma",
+        "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645"
+      },
+      "contestId": "1e688374-ca71-49de-93ac-c6b0072a3cb2",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-04",
+      "dateLocal": "2026-12-04T15:30:00",
+      "dateUtc": "2026-12-04T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-21T03:37:32",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-palma-salinas/jv/12-4-2026/?c=1e688374-ca71-49de-93ac-c6b0072a3cb2",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Carmel High School"
+      }
+    },
+    {
+      "away": {
         "city": "Gilroy",
         "name": "Gilroy",
         "result": null,
@@ -2894,7 +3380,7 @@
         "name": "Alisal",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "alisal",
         "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
       },
       "isDateTba": false,
@@ -2906,7 +3392,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-24T09:50:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2979,11 +3465,65 @@
     },
     {
       "away": {
+        "city": "Seaside",
+        "name": "Seaside",
+        "result": null,
+        "score": null,
+        "slug": "seaside",
+        "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+      },
+      "contestId": "afa8ebe8-77fc-49e1-8d69-7e92fd70b7df",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-04",
+      "dateLocal": "2026-12-04T16:00:00",
+      "dateUtc": "2026-12-05T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Monterey",
+        "name": "Santa Catalina",
+        "result": null,
+        "score": null,
+        "slug": "santa-catalina",
+        "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-25T03:39:25",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-catalina-monterey-vs-seaside/jv/12-4-2026/?c=afa8ebe8-77fc-49e1-8d69-7e92fd70b7df",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Santa Catalina High School"
+      }
+    },
+    {
+      "away": {
         "city": "Castroville",
         "name": "North Monterey County",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "north-monterey-county",
         "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
       },
       "contestId": "e9d14995-a843-457b-a30b-e4431c7eef04",
@@ -3014,7 +3554,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-16T14:34:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3469,7 +4009,7 @@
         "name": "Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "salinas",
         "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
       },
       "contestId": "6eaac894-cecc-464d-b831-d02ca2b51ca7",
@@ -3500,7 +4040,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-10-01T12:16:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3593,10 +4133,10 @@
       "forfeitBy": null,
       "home": {
         "city": "San Jose",
-        "name": "More",
+        "name": "Thomas More",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "thomas-more",
         "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b"
       },
       "isDateTba": false,
@@ -3608,7 +4148,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-10-19T22:28:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3681,11 +4221,119 @@
     },
     {
       "away": {
+        "city": "Seaside",
+        "name": "Seaside",
+        "result": null,
+        "score": null,
+        "slug": "seaside",
+        "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+      },
+      "contestId": "e63a4bb4-24de-4a5f-9ada-5fab8c1e110f",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-07",
+      "dateLocal": "2026-12-07T15:30:00",
+      "dateUtc": "2026-12-07T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-21T03:37:38",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-seaside/jv/12-7-2026/?c=e63a4bb4-24de-4a5f-9ada-5fab8c1e110f",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Carmel High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Castroville",
+        "name": "North Monterey County",
+        "result": null,
+        "score": null,
+        "slug": "north-monterey-county",
+        "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+      },
+      "contestId": "46656252-5412-4b02-ba3d-a71622889130",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-07",
+      "dateLocal": "2026-12-07T16:00:00",
+      "dateUtc": "2026-12-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Everett Alvarez",
+        "result": null,
+        "score": null,
+        "slug": "everett-alvarez",
+        "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-16T12:26:05",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7059231?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/everett-alvarez-salinas-vs-north-monterey-county-castroville/jv/12-7-2026/?c=46656252-5412-4b02-ba3d-a71622889130",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/everett-alvarez-high-school-salinas-ca/gam8721a80ead?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "Salinas",
         "name": "North Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "north-salinas",
         "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
       },
       "contestId": "4caf5fcf-dcc1-4e02-8aa0-b6faa735f354",
@@ -3716,7 +4364,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-18T04:28:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3847,7 +4495,7 @@
         "name": "Stevenson",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "stevenson",
         "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
       },
       "contestId": "c9ce5cd6-4784-4d7c-8cd6-33cb05f4d804",
@@ -3878,7 +4526,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-19T03:25:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4225,7 +4873,7 @@
         "name": "Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "salinas",
         "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
       },
       "contestId": "a8c380d0-5bfa-4c94-924c-9b54317e11bd",
@@ -4256,7 +4904,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-23T11:40:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4379,6 +5027,60 @@
       },
       "venue": {
         "text": "Los Gatos High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "Rancho San Juan",
+        "result": null,
+        "score": null,
+        "slug": "rancho-san-juan",
+        "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
+      },
+      "contestId": "d39b14f1-6de2-4015-ac24-5fd6880d5e42",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-08",
+      "dateLocal": "2026-12-08T16:00:00",
+      "dateUtc": "2026-12-09T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T17:49:06",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079992?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/rancho-san-juan-salinas-vs-soledad/jv/12-8-2026/?c=d39b14f1-6de2-4015-ac24-5fd6880d5e42",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam71a357fee0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -4762,10 +5464,10 @@
     {
       "away": {
         "city": "San Jose",
-        "name": "More",
+        "name": "Thomas More",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "thomas-more",
         "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b"
       },
       "contestId": "993fc9b1-1349-4185-bb71-b41b482adc85",
@@ -4796,7 +5498,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-16T01:23:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5302,7 +6004,7 @@
         "name": "Carmel",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "carmel",
         "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
       },
       "contestId": "9b40a3e8-2a22-4074-969b-6e5158bcbb07",
@@ -5333,7 +6035,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-20T03:38:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5536,7 +6238,7 @@
         "name": "Stevenson",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "stevenson",
         "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
       },
       "isDateTba": false,
@@ -5548,7 +6250,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-18T03:47:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5733,7 +6435,7 @@
         "name": "Monte Vista Christian",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "monte-vista-christian",
         "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
       },
       "contestId": "4cf7c922-14c0-47bd-b2dc-bcd3547b3858",
@@ -5764,7 +6466,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-19T03:46:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5891,11 +6593,65 @@
     },
     {
       "away": {
+        "city": "Salinas",
+        "name": "Alisal",
+        "result": null,
+        "score": null,
+        "slug": "alisal",
+        "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+      },
+      "contestId": "c40428c9-6c7a-47c5-994b-77dc64cf9590",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-10",
+      "dateLocal": "2026-12-10T16:00:00",
+      "dateUtc": "2026-12-11T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:46:36",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-salinas/jv/12-10-2026/?c=c40428c9-6c7a-47c5-994b-77dc64cf9590",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gam1b1375749a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
+      }
+    },
+    {
+      "away": {
         "city": "Monterey",
         "name": "Monterey",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "monterey",
         "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
       },
       "contestId": "d067d7e6-d72e-4a2d-a388-b24ae2c12b01",
@@ -5926,7 +6682,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-20T03:40:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5941,6 +6697,59 @@
       },
       "venue": {
         "text": "Aptos High School"
+      }
+    },
+    {
+      "away": {
+        "name": "Non JV Opponent",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "d1bd084e-1f5b-4e7c-8f99-6c63e0e9e855"
+      },
+      "contestId": "ef8bb9c4-4cf6-4fa4-b025-ca5355c2992a",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-10",
+      "dateLocal": "2026-12-10T16:00:00",
+      "dateUtc": "2026-12-11T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "King City",
+        "name": "King City",
+        "result": null,
+        "score": null,
+        "slug": "king-city",
+        "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-23T03:41:54",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/king-city-ca-vs-non-jv-opponent-intl/jv/12-10-2026/?c=ef8bb9c4-4cf6-4fa4-b025-ca5355c2992a",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "King City HS"
       }
     },
     {
@@ -6562,7 +7371,7 @@
         "name": "Alisal",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "alisal",
         "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
       },
       "isDateTba": false,
@@ -6574,7 +7383,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-24T09:50:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6586,6 +7395,60 @@
         "goFan": "https://gofan.co/event/7106553?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-notre-dame-belmont/jv/12-11-2026/?c=7db0f1bc-efed-4d43-b6ac-e0cfeb9fce64",
         "nfhsStream": "https://www.nfhsnetwork.com/events/alisal-high-school-salinas-ca/gamaed9018ac2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Watsonville",
+        "name": "Pajaro Valley",
+        "result": null,
+        "score": null,
+        "slug": "pajaro-valley",
+        "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d"
+      },
+      "contestId": "3c048fed-1bbf-481d-8239-92b5c95f9739",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-11",
+      "dateLocal": "2026-12-11T17:00:00",
+      "dateUtc": "2026-12-12T01:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Watsonville",
+        "name": "Watsonville",
+        "result": null,
+        "score": null,
+        "slug": "watsonville",
+        "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T08:47:15",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7067333?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/pajaro-valley-watsonville-vs-watsonville/jv/12-11-2026/?c=3c048fed-1bbf-481d-8239-92b5c95f9739",
+        "nfhsStream": null
       },
       "venue": {
         "text": null
@@ -6724,7 +7587,7 @@
         "name": "Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "salinas",
         "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
       },
       "isDateTba": false,
@@ -6736,7 +7599,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-18T11:35:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6813,7 +7676,7 @@
         "name": "Rancho San Juan",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "rancho-san-juan",
         "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
       },
       "contestId": "9b956615-8ff2-4727-afc2-457c9ac1d850",
@@ -6844,7 +7707,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-10-27T10:32:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6994,7 +7857,7 @@
         "name": "Stevenson",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "stevenson",
         "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
       },
       "isDateTba": false,
@@ -7006,7 +7869,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-18T04:28:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7021,6 +7884,60 @@
       },
       "venue": {
         "text": "Stevenson School"
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "Everett Alvarez",
+        "result": null,
+        "score": null,
+        "slug": "everett-alvarez",
+        "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0"
+      },
+      "contestId": "0d089199-8900-428d-85fd-69d6699bfa2d",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-14",
+      "dateLocal": "2026-12-14T16:00:00",
+      "dateUtc": "2026-12-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "North Salinas",
+        "result": null,
+        "score": null,
+        "slug": "north-salinas",
+        "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-19T03:47:48",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/everett-alvarez-salinas-vs-north-salinas/jv/12-14-2026/?c=0d089199-8900-428d-85fd-69d6699bfa2d",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "North Salinas High School"
       }
     },
     {
@@ -7245,7 +8162,7 @@
         "name": "Pajaro Valley",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "pajaro-valley",
         "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d"
       },
       "contestId": "23929d0b-773c-494f-8bcb-6ab870da0338",
@@ -7276,7 +8193,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-20T03:27:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7291,6 +8208,60 @@
       },
       "venue": {
         "text": "Santa Cruz HS"
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "North Salinas",
+        "result": null,
+        "score": null,
+        "slug": "north-salinas",
+        "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+      },
+      "contestId": "2af35bf7-d5a6-4251-98c6-86e227dbbc59",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-15",
+      "dateLocal": "2026-12-15T16:00:00",
+      "dateUtc": "2026-12-16T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Alisal",
+        "result": null,
+        "score": null,
+        "slug": "alisal",
+        "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-24T09:50:12",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7106554?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-north-salinas/jv/12-15-2026/?c=2af35bf7-d5a6-4251-98c6-86e227dbbc59",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/alisal-high-school-salinas-ca/gamaf119b49b2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -7727,6 +8698,60 @@
     },
     {
       "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "9ad04bd0-ccaa-47c1-b5f1-98bc6f47ea80",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-16",
+      "dateLocal": "2026-12-16T16:00:00",
+      "dateUtc": "2026-12-17T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Greenfield",
+        "name": "Greenfield",
+        "result": null,
+        "score": null,
+        "slug": "greenfield",
+        "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:46:27",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/greenfield-vs-soledad/jv/12-16-2026/?c=9ad04bd0-ccaa-47c1-b5f1-98bc6f47ea80",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Notre Dame San Jose",
         "result": null,
@@ -7858,7 +8883,7 @@
         "name": "Salinas",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "salinas",
         "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
       },
       "isDateTba": false,
@@ -7870,7 +8895,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-10-09T21:11:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7885,6 +8910,60 @@
       },
       "venue": {
         "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Seaside",
+        "name": "Seaside",
+        "result": null,
+        "score": null,
+        "slug": "seaside",
+        "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+      },
+      "contestId": "4f4fdc15-f78a-48fe-93be-51eca12786d8",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-17",
+      "dateLocal": "2026-12-17T16:00:00",
+      "dateUtc": "2026-12-18T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T17:47:49",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/seaside-vs-soledad/jv/12-17-2026/?c=4f4fdc15-f78a-48fe-93be-51eca12786d8",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Soledad High School"
       }
     },
     {
@@ -8163,7 +9242,7 @@
         "name": "Palma",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "palma",
         "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645"
       },
       "contestId": "00b797cd-c58e-4da4-b863-b343c08f05a0",
@@ -8194,7 +9273,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-20T03:44:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8536,6 +9615,60 @@
     },
     {
       "away": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "contestId": "66a4bdee-f5ca-4c83-923d-3c98dfc711cd",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-19",
+      "dateLocal": "2026-12-19T12:45:00",
+      "dateUtc": "2026-12-19T20:45:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T12:11:21",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-salinas/jv/12-19-2026/?c=66a4bdee-f5ca-4c83-923d-3c98dfc711cd",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gam00163f3532?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Branham",
         "result": null,
@@ -8856,6 +9989,60 @@
       },
       "venue": {
         "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "032001f6-99fc-445e-b3c3-526a5ea785c0",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-05",
+      "dateLocal": "2027-01-05T15:30:00",
+      "dateUtc": "2027-01-05T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T17:48:51",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/soledad-vs-stevenson-pebble-beach/jv/1-5-2027/?c=032001f6-99fc-445e-b3c3-526a5ea785c0",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Stevenson School"
       }
     },
     {
@@ -9831,6 +11018,60 @@
     },
     {
       "away": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "contestId": "029c4027-5539-4e65-a27b-99598a139727",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T16:00:00",
+      "dateUtc": "2027-01-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:47:39",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/salinas-vs-stevenson-pebble-beach/jv/1-7-2027/?c=029c4027-5539-4e65-a27b-99598a139727",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gam0708a7e3f5?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Willow Glen",
         "result": null,
@@ -9881,6 +11122,60 @@
       },
       "venue": {
         "text": "Leigh High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "contestId": "acf5cd6f-c75c-41bc-bdff-9146641a9502",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T16:00:00",
+      "dateUtc": "2027-01-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T17:48:56",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079994?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-soledad/jv/1-7-2027/?c=acf5cd6f-c75c-41bc-bdff-9146641a9502",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gamc36c542696?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -9943,7 +11238,7 @@
         "name": "North Monterey County",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "north-monterey-county",
         "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
       },
       "contestId": "71a9ba19-cce7-4570-88ad-fe22dabba95d",
@@ -9974,7 +11269,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-20T03:23:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10641,6 +11936,60 @@
     },
     {
       "away": {
+        "city": "Monterey",
+        "name": "Santa Catalina",
+        "result": null,
+        "score": null,
+        "slug": "santa-catalina",
+        "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+      },
+      "contestId": "d31bc631-888b-4f26-9e4f-32ae86d19475",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-08",
+      "dateLocal": "2027-01-08T15:30:00",
+      "dateUtc": "2027-01-08T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T03:59:47",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-catalina-monterey-vs-stevenson-pebble-beach/jv/1-8-2027/?c=d31bc631-888b-4f26-9e4f-32ae86d19475",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Stevenson School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "Archbishop Mitty",
         "result": null,
@@ -11012,6 +12361,114 @@
         "goFan": "https://gofan.co/event/7097763?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/aragon-san-mateo-vs-carlmont-belmont/jv/1-9-2027/?c=c75db7ce-bc34-480d-a94d-1a535831e7b4",
         "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "Alisal",
+        "result": null,
+        "score": null,
+        "slug": "alisal",
+        "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+      },
+      "contestId": "912be30a-0406-4d2c-8bdb-a2944aaba9b1",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-11",
+      "dateLocal": "2027-01-11T15:30:00",
+      "dateUtc": "2027-01-11T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T03:24:23",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-stevenson-pebble-beach/jv/1-11-2027/?c=912be30a-0406-4d2c-8bdb-a2944aaba9b1",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Stevenson School"
+      }
+    },
+    {
+      "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "e597fe26-413f-47f1-a124-bfe2791ff806",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-11",
+      "dateLocal": "2027-01-11T16:00:00",
+      "dateUtc": "2027-01-12T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Gonzales",
+        "name": "Gonzales",
+        "result": null,
+        "score": null,
+        "slug": "gonzales",
+        "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:48:45",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gonzales-vs-soledad/jv/1-11-2027/?c=e597fe26-413f-47f1-a124-bfe2791ff806",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/gonzales-high-school-gonzales-ca/gam9b4d025ceb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
       },
       "venue": {
         "text": null
@@ -12261,6 +13718,60 @@
     },
     {
       "away": {
+        "city": "Watsonville",
+        "name": "Monte Vista Christian",
+        "result": null,
+        "score": null,
+        "slug": "monte-vista-christian",
+        "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
+      },
+      "contestId": "8c757a26-19ff-4c6c-a8f4-2a2f415c9208",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-13",
+      "dateLocal": "2027-01-13T16:00:00",
+      "dateUtc": "2027-01-14T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:49:45",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/monte-vista-christian-watsonville-vs-soledad/jv/1-13-2027/?c=8c757a26-19ff-4c6c-a8f4-2a2f415c9208",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "Los Gatos",
         "name": "Los Gatos",
         "result": null,
@@ -12311,6 +13822,60 @@
       },
       "venue": {
         "text": "Palo Alto High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Monterey",
+        "name": "Monterey",
+        "result": null,
+        "score": null,
+        "slug": "monterey",
+        "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
+      },
+      "contestId": "e9bad102-207c-4885-b73b-ec5192838d34",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-13",
+      "dateLocal": "2027-01-13T16:00:00",
+      "dateUtc": "2027-01-14T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "gabilan",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:07:25",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/monterey-vs-salinas/jv/1-13-2027/?c=e9bad102-207c-4885-b73b-ec5192838d34",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gam33bc7cfc88?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
       }
     },
     {
@@ -14097,6 +15662,60 @@
     },
     {
       "away": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "contestId": "1c19e190-6322-4ad9-8c24-3726b79b3eb6",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-19",
+      "dateLocal": "2027-01-19T15:30:00",
+      "dateUtc": "2027-01-19T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:11:54",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-stevenson-pebble-beach/jv/1-19-2027/?c=1c19e190-6322-4ad9-8c24-3726b79b3eb6",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Stevenson School"
+      }
+    },
+    {
+      "away": {
         "city": "San Jose",
         "name": "MacDonald",
         "result": null,
@@ -14144,6 +15763,60 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/fremont-sunnyvale-vs-macdonald-san-jose/jv/1-19-2027/?c=2fd25f54-6162-4202-be49-b47047953af9",
         "nfhsStream": "https://www.nfhsnetwork.com/events/fremont-high-school-sunnyvale-ca/gam30feda4beb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "6afa55b2-7a3b-4c0c-8c5c-ee981fc37df0",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-19",
+      "dateLocal": "2027-01-19T16:00:00",
+      "dateUtc": "2027-01-20T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Alisal",
+        "result": null,
+        "score": null,
+        "slug": "alisal",
+        "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:50:13",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7106565?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-soledad/jv/1-19-2027/?c=6afa55b2-7a3b-4c0c-8c5c-ee981fc37df0",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/alisal-high-school-salinas-ca/gama96bd909a6?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
       },
       "venue": {
         "text": null
@@ -15497,6 +17170,60 @@
       },
       "venue": {
         "text": "Leigh High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Monterey",
+        "name": "Santa Catalina",
+        "result": null,
+        "score": null,
+        "slug": "santa-catalina",
+        "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+      },
+      "contestId": "0b48c085-733e-4f91-82be-a90d8ec66ea5",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T16:00:00",
+      "dateUtc": "2027-01-22T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-21T11:42:03",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-catalina-monterey-vs-soledad/jv/1-21-2027/?c=0b48c085-733e-4f91-82be-a90d8ec66ea5",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam37b4a5b75b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Soledad High School"
       }
     },
     {
@@ -17984,6 +19711,60 @@
     },
     {
       "away": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "contestId": "2a681024-e601-4bf5-99b0-bdcd22c9d30a",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-27",
+      "dateLocal": "2027-01-27T16:00:00",
+      "dateUtc": "2027-01-28T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:51:57",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079995?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/soledad-vs-stevenson-pebble-beach/jv/1-27-2027/?c=2a681024-e601-4bf5-99b0-bdcd22c9d30a",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam0210a74ef4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "Cupertino",
         "name": "Homestead",
         "result": null,
@@ -18088,6 +19869,60 @@
       },
       "venue": {
         "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Salinas",
+        "name": "Everett Alvarez",
+        "result": null,
+        "score": null,
+        "slug": "everett-alvarez",
+        "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0"
+      },
+      "contestId": "e2b667ab-4ed6-4851-802b-28a8e685f066",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-27",
+      "dateLocal": "2027-01-27T16:00:00",
+      "dateUtc": "2027-01-28T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "gabilan",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T03:26:53",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/everett-alvarez-salinas-vs-salinas/jv/1-27-2027/?c=e2b667ab-4ed6-4851-802b-28a8e685f066",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gamf10e5ccb71?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
       }
     },
     {
@@ -19118,6 +20953,114 @@
     },
     {
       "away": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "contestId": "a9b8a955-d913-4c20-a022-1b8319fb6520",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-29",
+      "dateLocal": "2027-01-29T15:30:00",
+      "dateUtc": "2027-01-29T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Monterey",
+        "name": "Santa Catalina",
+        "result": null,
+        "score": null,
+        "slug": "santa-catalina",
+        "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T03:22:43",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-catalina-monterey-vs-stevenson-pebble-beach/jv/1-29-2027/?c=a9b8a955-d913-4c20-a022-1b8319fb6520",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Santa Catalina High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "3a0ad83d-2665-452d-8c81-d08cc0457046",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-29",
+      "dateLocal": "2027-01-29T16:00:00",
+      "dateUtc": "2027-01-30T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Carmel",
+        "name": "Carmel",
+        "result": null,
+        "score": null,
+        "slug": "carmel",
+        "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:52:28",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carmel-vs-soledad/jv/1-29-2027/?c=3a0ad83d-2665-452d-8c81-d08cc0457046",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "Palo Alto",
         "name": "Gunn",
         "result": null,
@@ -19392,7 +21335,7 @@
         "name": "North Monterey County",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "north-monterey-county",
         "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
       },
       "contestId": "b7f2f175-4ba1-4678-b823-41f77fca5a1f",
@@ -19423,7 +21366,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-25T14:40:41.082Z",
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
         "maxprepsModifiedOn": "2026-11-21T01:49:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20245,6 +22188,60 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/macdonald-san-jose-vs-milpitas/jv/2-2-2027/?c=79f59c33-0eef-48a6-aada-3aee14ae21f6",
         "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Gonzales",
+        "name": "Gonzales",
+        "result": null,
+        "score": null,
+        "slug": "gonzales",
+        "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2"
+      },
+      "contestId": "c318ad63-54af-4d31-96ee-9a160cd0fff3",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-02",
+      "dateLocal": "2027-02-02T16:00:00",
+      "dateUtc": "2027-02-03T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:52:53",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079996?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gonzales-vs-soledad/jv/2-2-2027/?c=c318ad63-54af-4d31-96ee-9a160cd0fff3",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam5470b3f8c2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
       },
       "venue": {
         "text": null
@@ -21169,6 +23166,60 @@
     },
     {
       "away": {
+        "city": "Pacific Grove",
+        "name": "Pacific Grove",
+        "result": null,
+        "score": null,
+        "slug": "pacific-grove",
+        "teamId": "5041038f-a821-4209-90af-196b6d756e48"
+      },
+      "contestId": "38607616-74e3-4e62-8d1d-ee992d37f0cf",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-04",
+      "dateLocal": "2027-02-04T15:30:00",
+      "dateUtc": "2027-02-04T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T15:57:17",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/pacific-grove-vs-stevenson-pebble-beach/jv/2-4-2027/?c=38607616-74e3-4e62-8d1d-ee992d37f0cf",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "Santa Cruz",
         "name": "Harbor",
         "result": null,
@@ -21219,6 +23270,60 @@
       },
       "venue": {
         "text": "San Lorenzo Valley High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "46970eb9-3a2c-436b-bf48-d4c887f006d4",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-04",
+      "dateLocal": "2027-02-04T16:00:00",
+      "dateUtc": "2027-02-05T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Watsonville",
+        "name": "Monte Vista Christian",
+        "result": null,
+        "score": null,
+        "slug": "monte-vista-christian",
+        "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:53:27",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/monte-vista-christian-watsonville-vs-soledad/jv/2-4-2027/?c=46970eb9-3a2c-436b-bf48-d4c887f006d4",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -22572,6 +24677,60 @@
     },
     {
       "away": {
+        "city": "King City",
+        "name": "King City",
+        "result": null,
+        "score": null,
+        "slug": "king-city",
+        "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8"
+      },
+      "contestId": "1560a4cd-e131-4872-bd10-5e796388524b",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-06",
+      "dateLocal": "2027-02-06T11:00:00",
+      "dateUtc": "2027-02-06T19:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Monterey",
+        "name": "Santa Catalina",
+        "result": null,
+        "score": null,
+        "slug": "santa-catalina",
+        "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T03:23:33",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/king-city-vs-santa-catalina-monterey/jv/2-6-2027/?c=1560a4cd-e131-4872-bd10-5e796388524b",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Santa Catalina High School"
+      }
+    },
+    {
+      "away": {
         "city": "San Francisco",
         "name": "St. Ignatius",
         "result": null,
@@ -22838,6 +24997,114 @@
       },
       "venue": {
         "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Pacific Grove",
+        "name": "Pacific Grove",
+        "result": null,
+        "score": null,
+        "slug": "pacific-grove",
+        "teamId": "5041038f-a821-4209-90af-196b6d756e48"
+      },
+      "contestId": "2c9482b6-34f1-4fb3-845d-a658c2017a96",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-08",
+      "dateLocal": "2027-02-08T15:30:00",
+      "dateUtc": "2027-02-08T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T15:58:43",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/pacific-grove-vs-stevenson-pebble-beach/jv/2-8-2027/?c=2c9482b6-34f1-4fb3-845d-a658c2017a96",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "FR/SOPH Team"
+      }
+    },
+    {
+      "away": {
+        "city": "Watsonville",
+        "name": "Watsonville",
+        "result": null,
+        "score": null,
+        "slug": "watsonville",
+        "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
+      },
+      "contestId": "be1dcbea-47f8-4e4c-8eb3-3a5db07f3de0",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-08",
+      "dateLocal": "2027-02-08T16:00:00",
+      "dateUtc": "2027-02-09T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "gabilan",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:47:52",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/salinas-vs-watsonville/jv/2-8-2027/?c=be1dcbea-47f8-4e4c-8eb3-3a5db07f3de0",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gamb28c6f48ae?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
       }
     },
     {
@@ -23976,6 +26243,60 @@
     },
     {
       "away": {
+        "city": "Salinas",
+        "name": "Alisal",
+        "result": null,
+        "score": null,
+        "slug": "alisal",
+        "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+      },
+      "contestId": "024961ab-0632-4e78-9721-6f7e601098cc",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-10",
+      "dateLocal": "2027-02-10T16:00:00",
+      "dateUtc": "2027-02-11T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:54:03",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/7079997?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/alisal-salinas-vs-soledad/jv/2-10-2027/?c=024961ab-0632-4e78-9721-6f7e601098cc",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/soledad-high-school-soledad-ca/gam4ab20c74e5?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "Palo Alto",
         "name": "Gunn",
         "result": null,
@@ -24026,6 +26347,60 @@
       },
       "venue": {
         "text": "Los Gatos High School"
+      }
+    },
+    {
+      "away": {
+        "city": "Hollister",
+        "name": "Hollister",
+        "result": null,
+        "score": null,
+        "slug": "hollister",
+        "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b"
+      },
+      "contestId": "94049e09-b8a8-424d-980d-f3b9f12ee6e4",
+      "contestTypes": {
+        "away": 0,
+        "home": 0
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-10",
+      "dateLocal": "2027-02-10T16:00:00",
+      "dateUtc": "2027-02-11T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Salinas",
+        "name": "Salinas",
+        "result": null,
+        "score": null,
+        "slug": "salinas",
+        "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "gabilan",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:14:12",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hollister-vs-salinas/jv/2-10-2027/?c=94049e09-b8a8-424d-980d-f3b9f12ee6e4",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/salinas-high-school-salinas-ca-2/gam0849a98528?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": "Salinas High School"
       }
     },
     {
@@ -25213,6 +27588,114 @@
       },
       "venue": {
         "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Soledad",
+        "name": "Soledad",
+        "result": null,
+        "score": null,
+        "slug": "soledad",
+        "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+      },
+      "contestId": "e8bca37e-680b-404c-8ca7-023056f9e59a",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-12",
+      "dateLocal": "2027-02-12T15:00:00",
+      "dateUtc": "2027-02-12T23:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Monterey",
+        "name": "Santa Catalina",
+        "result": null,
+        "score": null,
+        "slug": "santa-catalina",
+        "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-20T09:54:52",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-catalina-monterey-vs-soledad/jv/2-12-2027/?c=e8bca37e-680b-404c-8ca7-023056f9e59a",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Gonzales",
+        "name": "Gonzales",
+        "result": null,
+        "score": null,
+        "slug": "gonzales",
+        "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2"
+      },
+      "contestId": "e1cddff3-0d05-44cd-a291-e1832918dc53",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2027-02-12",
+      "dateLocal": "2027-02-12T15:30:00",
+      "dateUtc": "2027-02-12T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Pebble Beach",
+        "name": "Stevenson",
+        "result": null,
+        "score": null,
+        "slug": "stevenson",
+        "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "mission",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "maxprepsModifiedOn": "2026-11-18T04:04:34",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gonzales-vs-stevenson-pebble-beach/jv/2-12-2027/?c=e1cddff3-0d05-44cd-a291-e1832918dc53",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": "Stevenson School"
       }
     },
     {
@@ -26406,6 +28889,33 @@
     },
     {
       "copiesDisagree": false,
+      "dateIso": "2026-11-20T16:00:00.000-08:00",
+      "dateKey": "2026-11-20",
+      "pages": [
+        "north-salinas",
+        "rancho-san-juan"
+      ],
+      "sbliveGameId": "6829686",
+      "sides": [
+        {
+          "isHome": true,
+          "name": "North Salinas",
+          "sbliveTeamId": "367753",
+          "score": 0,
+          "slug": "north-salinas"
+        },
+        {
+          "isHome": false,
+          "name": "Rancho San Juan",
+          "sbliveTeamId": "489309",
+          "score": 9,
+          "slug": "rancho-san-juan"
+        }
+      ],
+      "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/6829686-rancho-san-juan-vs-north-salinas"
+    },
+    {
+      "copiesDisagree": false,
       "dateIso": "2026-11-23T17:00:00.000-08:00",
       "dateKey": "2026-11-23",
       "pages": [
@@ -26430,13 +28940,40 @@
         }
       ],
       "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/6829711-notre-dame-vs-santa-teresa"
+    },
+    {
+      "copiesDisagree": false,
+      "dateIso": "2026-11-24T16:00:00.000-08:00",
+      "dateKey": "2026-11-24",
+      "pages": [
+        "alisal",
+        "rancho-san-juan"
+      ],
+      "sbliveGameId": "7032712",
+      "sides": [
+        {
+          "isHome": false,
+          "name": "Alisal",
+          "sbliveTeamId": "367745",
+          "score": 4,
+          "slug": "alisal"
+        },
+        {
+          "isHome": true,
+          "name": "Rancho San Juan",
+          "sbliveTeamId": "489309",
+          "score": 0,
+          "slug": "rancho-san-juan"
+        }
+      ],
+      "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/7032712-alisal-vs-rancho-san-juan"
     }
   ],
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-jv.ts",
     "notes": [
-      "One entry per registry school, all 6 leagues and the . games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.",
+      "One entry per registry school, all 8 leagues and the . games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.",
       "The site shows lib/jv/jv-merge.ts over these two lists: MaxPreps first; si.com fills a score MaxPreps lacks, adds a game MaxPreps does not list, and is noted beside a MaxPreps score it disagrees with.",
       "A si.com JV side is one of ours only by its si.com JV team id (lib/jv/jv-teams.ts), never by name.",
       "JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.",
@@ -28002,6 +30539,785 @@
       "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/368153-soquel-knights-jv/games",
       "slug": "soquel",
       "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a"
+    },
+    {
+      "maxpreps": {
+        "error": "HTTP 403",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/everett-alvarez-eagles/soccer/girls/jv/winter/schedule/",
+      "name": "Everett Alvarez",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367750-everett-alvarez-eagles-jv/games",
+      "slug": "everett-alvarez",
+      "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0"
+    },
+    {
+      "maxpreps": {
+        "error": "HTTP 403",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/soccer/girls/jv/winter/schedule/",
+      "name": "Hollister",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367763-hollister-haybalers-jv/games",
+      "slug": "hollister",
+      "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/monterey/monterey-toreadors/soccer/girls/jv/winter/schedule/",
+      "name": "Monterey",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/366547-monterey-toreadores-jv/games",
+      "slug": "monterey",
+      "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/santa-cruz/pacific-collegiate-pumas/soccer/girls/jv/winter/schedule/",
+      "name": "Pacific Collegiate",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/400937-pacific-collegiate-pumas-jv/games",
+      "slug": "pacific-collegiate",
+      "teamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 4,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/rancho-san-juan-trailblazers/soccer/girls/jv/winter/schedule/",
+      "name": "Rancho San Juan",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/489309-rancho-san-juan-trailblazers-jv/games",
+      "slug": "rancho-san-juan",
+      "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 12,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/soccer/girls/jv/winter/schedule/",
+      "name": "Salinas",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367757-salinas-cowboys-jv/games",
+      "slug": "salinas",
+      "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 4,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/watsonville-wildcatz/soccer/girls/jv/winter/schedule/",
+      "name": "Watsonville",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367023-watsonville-wildcatz-jv/games",
+      "slug": "watsonville",
+      "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 7,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/alisal-trojans/soccer/girls/jv/winter/schedule/",
+      "name": "Alisal",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367745-alisal-trojans-jv/games",
+      "slug": "alisal",
+      "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 9,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/carmel/carmel-padres/soccer/girls/jv/winter/schedule/",
+      "name": "Carmel",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/363490-carmel-padres-jv/games",
+      "slug": "carmel",
+      "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 4,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/gonzales/gonzales-spartans/soccer/girls/jv/winter/schedule/",
+      "name": "Gonzales",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/364917-gonzales-spartans-jv/games",
+      "slug": "gonzales",
+      "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 3,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/soccer/girls/jv/winter/schedule/",
+      "name": "Monte Vista Christian",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/354667-monte-vista-christian-mustangs-jv/games",
+      "slug": "monte-vista-christian",
+      "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/pajaro-valley-grizzlies/soccer/girls/jv/winter/schedule/",
+      "name": "Pajaro Valley",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367018-pajaro-valley-grizzlies-jv/games",
+      "slug": "pajaro-valley",
+      "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 17,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/soledad/soledad-aztecs/soccer/girls/jv/winter/schedule/",
+      "name": "Soledad",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/368430-soledad-aztecs-jv/games",
+      "slug": "soledad",
+      "teamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 14,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pebble-beach/stevenson-pirates/soccer/girls/jv/winter/schedule/",
+      "name": "Stevenson",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/354628-stevenson-pirates-jv/games",
+      "slug": "stevenson",
+      "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/greenfield/greenfield-bruins/soccer/girls/jv/winter/schedule/",
+      "name": "Greenfield",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/365571-greenfield-bruins-jv/games",
+      "slug": "greenfield",
+      "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 3,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/king-city/king-city-mustangs/soccer/girls/jv/winter/schedule/",
+      "name": "King City",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/365575-king-city-mustangs-jv/games",
+      "slug": "king-city",
+      "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 5,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/castroville/north-monterey-county-condors/soccer/girls/jv/winter/schedule/",
+      "name": "North Monterey County",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/366829-north-monterey-county-condors-jv/games",
+      "slug": "north-monterey-county",
+      "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 7,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/north-salinas-vikings/soccer/girls/jv/winter/schedule/",
+      "name": "North Salinas",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/367753-north-salinas-vikings-jv/games",
+      "slug": "north-salinas",
+      "teamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/soccer/girls/jv/winter/schedule/",
+      "name": "Palma",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/623673-palma-jv/games",
+      "slug": "palma",
+      "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 4,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/seaside/seaside-spartans/soccer/girls/jv/winter/schedule/",
+      "name": "Seaside",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/366550-seaside-spartans-jv/games",
+      "slug": "seaside",
+      "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-juan-bautista/anzar-hawks/soccer/girls/jv/winter/schedule/",
+      "name": "Anzar",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/363044-anzar-hawks-jv/games",
+      "slug": "anzar",
+      "teamId": "340cc25b-8dce-4532-a929-4b8358283933"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/marina/marina-mariners/soccer/girls/jv/winter/schedule/",
+      "name": "Marina",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/366545-marina-mariners-jv/games",
+      "slug": "marina-mariners",
+      "teamId": "a474e593-af4b-4140-92d5-ec9221920834"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/la-selva-beach/monterey-bay-academy-cypress/soccer/girls/jv/winter/schedule/",
+      "name": "Monterey Bay Academy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "monterey-bay-academy",
+      "teamId": "7fc8780b-014e-4870-a43f-e2f444a853bc"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 2,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pacific-grove/pacific-grove-breakers/soccer/girls/jv/winter/schedule/",
+      "name": "Pacific Grove",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/487179-pacific-grove-breakers-jv/games",
+      "slug": "pacific-grove",
+      "teamId": "5041038f-a821-4209-90af-196b6d756e48"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 6,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/monterey/santa-catalina-cougars/soccer/girls/jv/winter/schedule/",
+      "name": "Santa Catalina",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/360065-santa-catalina-cougars-jv/games",
+      "slug": "santa-catalina",
+      "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/watsonville/st-francis-sharks/soccer/girls/jv/winter/schedule/",
+      "name": "St. Francis",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/360122-st-francis-sharks-jv/games",
+      "slug": "st-francis-watsonville",
+      "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/monterey/york-falcons/soccer/girls/jv/winter/schedule/",
+      "name": "York",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/354621-york-falcons-jv/games",
+      "slug": "york",
+      "teamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/cristo-rey-san-jose-jesuit-na/soccer/girls/jv/winter/schedule/",
+      "name": "Cristo Rey San Jose Jesuit",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/624179-cristo-rey-jv/games",
+      "slug": "cristo-rey-san-jose",
+      "teamId": "49ac8af1-0277-4a5c-bb79-7da46365404e"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/redwood-city/design-tech-dragons/soccer/girls/jv/winter/schedule/",
+      "name": "Design Tech",
+      "sblive": {
+        "error": "no data-react-props for \"teams/Games\"",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/515949-design-tech-dragons-jv/games",
+      "slug": "design-tech",
+      "teamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/kipp-san-jose-collegiate-wes/soccer/girls/jv/winter/schedule/",
+      "name": "KIPP San Jose Collegiate",
+      "sblive": {
+        "error": "no data-react-props for \"teams/Games\"",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/625003-kipp-san-jose-collegiate-jv/games",
+      "slug": "kipp-san-jose",
+      "teamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/latino-college-preparatory-academy-eagle-warriors/soccer/girls/jv/winter/schedule/",
+      "name": "Latino College Preparatory Academy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/485998-latino-college-preparatory-academy-golden-eagles-jv/games",
+      "slug": "latino-college-prep",
+      "teamId": "ba2378a8-680c-4329-9eb0-a2b2b68583f7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/pacifica/oceana-sharks/soccer/girls/jv/winter/schedule/",
+      "name": "Oceana",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/506676-oceana-sharks-jv/games",
+      "slug": "oceana",
+      "teamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-mateo/the-nueva-school-mavericks/soccer/girls/jv/winter/schedule/",
+      "name": "The Nueva School",
+      "sblive": {
+        "error": "no data-react-props for \"teams/Games\"",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/610888-the-nueva-school-jv/games",
+      "slug": "nueva",
+      "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 3,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/more-knights/soccer/girls/jv/winter/schedule/",
+      "name": "Thomas More",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/504727-more-knights-jv/games",
+      "slug": "thomas-more",
+      "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/ace-charter-cheetahs/soccer/girls/jv/winter/schedule/",
+      "name": "ACE Charter",
+      "sblive": {
+        "error": "no data-react-props for \"teams/Games\"",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/488578-ace-charter-cheetahs-jv/games",
+      "slug": "ace-charter",
+      "teamId": "2b6a30cf-2b1d-4cee-92b8-da73dd638fe8"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/cindy-avitia-jaguars/soccer/girls/jv/winter/schedule/",
+      "name": "Cindy Avitia",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/623918-alpha-cindy-avitia-jv/games",
+      "slug": "cindy-avitia",
+      "teamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/palo-alto/kipp-esperanza-phoenix/soccer/girls/jv/winter/schedule/",
+      "name": "KIPP Esperanza",
+      "sblive": {
+        "error": "no data-react-props for \"teams/Games\"",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/581859-kipp-esperanza-jv/games",
+      "slug": "kipp-esperanza",
+      "teamId": "1f690420-95b8-4d69-8130-ba161d4ef703"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/kipp-navigate-college-prep-tigers/soccer/girls/jv/winter/schedule/",
+      "name": "KIPP Navigate College Prep",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "kipp-navigate",
+      "teamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/redwood-city/summit-preparatory-huskies/soccer/girls/jv/winter/schedule/",
+      "name": "Summit Preparatory",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "summit-prep",
+      "teamId": "fdc893f7-899d-4fef-87c7-225a20013de7"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/daly-city/summit-shasta-black-bears/soccer/girls/jv/winter/schedule/",
+      "name": "Summit Shasta",
+      "sblive": {
+        "error": "no data-react-props for \"teams/Games\"",
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "error"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/teams/401125-summit-shasta-black-bears-jv/games",
+      "slug": "summit-shasta",
+      "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-11-25T15:35:44.836Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/san-jose/summit-tahoma-tigers/soccer/girls/jv/winter/schedule/",
+      "name": "Summit Tahoma",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "summit-tahoma",
+      "teamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3"
     }
   ]
 }

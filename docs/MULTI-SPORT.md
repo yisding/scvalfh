@@ -293,6 +293,13 @@ is read by membership. /history/2025-26 marks the new leagues unavailable until 
 The PAL's 2025-26 standings (both sports) and the WCAL's and the WBAL's boys basketball standings were transcribed on
 2026-11-21 (README, "PAL, WCAL and WBAL last season in the winter builds").
 
+**PCAL and PSAL in both winter builds: every CCS league (2026-11-25).** The owner asked for the Pacific Coast Athletic
+League and the Private School Athletic League on both winter sites, so each covers every league of the CCS.
+`lib/league-config/{soccer,basketball}/{pcal,psal}.ts` and their registries add 41 soccer teams (123) and 54 basketball
+teams (133), each league read by membership from its own 2026-27 schedules. Neither league publishes standings, so
+/history/2025-26 marks both unavailable; a team page on any site now links the same school on every site whose
+registry holds it, field hockey's PCAL schools included (README, "PCAL and PSAL in the winter builds").
+
 Not done yet: a refit of the rating constants on a finished basketball season; the new leagues' 2025-26 all-league
 teams; the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the

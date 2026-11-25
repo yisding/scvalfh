@@ -35,9 +35,9 @@ const table = (league: string, division: string, level: 'varsity' | 'jv') =>
   leagues()[league].divisions.find((d) => d.division === division)!.standings[level].map((r) => `${r.place} ${r.slug} ${r.leagueRecord}`);
 
 describe('data/basketball/history-2025-26.json: the WCAL, the WBAL and the PAL', () => {
-  it('has the three leagues from their own documents, and the SCCAL unavailable', () => {
+  it('has the three leagues from their own documents, and the SCCAL, the PCAL and the PSAL unavailable', () => {
     expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal']);
-    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['sccal']);
+    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['sccal', 'pcal', 'psal']);
     for (const id of ['wcal', 'wbal', 'pal']) {
       const tr = m.documents.readLeagueTranscription('data/basketball', id);
       expect(m.documents.buildLeagueDocumentsHistory(id, tr, '2025-26').problems, id).toEqual([]);
@@ -61,14 +61,14 @@ describe('data/basketball/history-2025-26.json: the WCAL, the WBAL and the PAL',
     expect(table('wbal', 'wbal', 'jv').slice(-2)).toEqual(['5 crystal-springs 1-5', '5 harker 1-5']);
   });
 
-  it('has the PAL’s 2025-26 divisions, not this season’s, with Oceana unkeyed', () => {
+  it('has the PAL’s 2025-26 divisions, not this season’s, with Oceana (a PSAL team now) a former member', () => {
     expect(table('pal', 'bay', 'varsity')).toEqual([
       '1 menlo-atherton 12-0', '2 carlmont 8-4', '2 half-moon-bay 8-4', '4 burlingame 7-5', '5 sequoia 5-7',
       '6 jefferson 1-11', '6 terra-nova 1-11',
     ]);
     expect(table('pal', 'ocean', 'varsity')).toEqual([
       '1 aragon 11-1', '2 hillsdale 10-2', '3 woodside 9-3', '4 el-camino-ssf 8-4', '5 mills 7-5', '6 capuchino 4-8',
-      '6 san-mateo 4-8', '6 south-san-francisco 4-8', '9 westmoor 3-9', '10 null 0-12',
+      '6 san-mateo 4-8', '6 south-san-francisco 4-8', '9 westmoor 3-9', '10 oceana 0-12',
     ]);
     expect(table('pal', 'ocean', 'jv')).toHaveLength(10);
   });

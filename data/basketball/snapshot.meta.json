@@ -1,19 +1,19 @@
 {
   "cifssCrossCheck": {
-    "agreements": 4,
+    "agreements": 7,
     "cifssOnlyScored": 0,
-    "compared": 4,
+    "compared": 7,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "083ee7951fdeba3b94ea971d750c1b1d70854f1adc8b38d196c61192e818ac8e",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
+  "contentHash": "4963a94631b0f5a293a5c3e81d21a1edd03084c554a9041c3cfb2950d21f811f",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 10,
-        "games": 289,
+        "finals": 13,
+        "games": 290,
         "leagueGames": 131,
         "teams": 26
       },
@@ -24,6 +24,20 @@
         "leagueGames": 110,
         "teams": 16
       },
+      "pcal": {
+        "backfilled": 0,
+        "finals": 10,
+        "games": 267,
+        "leagueGames": 123,
+        "teams": 31
+      },
+      "psal": {
+        "backfilled": 0,
+        "finals": 7,
+        "games": 266,
+        "leagueGames": 103,
+        "teams": 23
+      },
       "sccal": {
         "backfilled": 0,
         "finals": 2,
@@ -33,7 +47,7 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 3,
+        "finals": 5,
         "games": 196,
         "leagueGames": 96,
         "teams": 15
@@ -53,21 +67,21 @@
         "teams": 8
       }
     },
-    "finals": 19,
-    "games": 889,
-    "leagueGames": 457,
-    "mismatches": 0,
-    "pending": 19,
-    "teams": 79
+    "finals": 32,
+    "games": 1294,
+    "leagueGames": 683,
+    "mismatches": 4,
+    "pending": 17,
+    "teams": 133
   },
   "crossCheck": {
-    "agreements": 19,
+    "agreements": 22,
     "backfilled": 0,
-    "compared": 124,
+    "compared": 167,
     "conflicts": 0,
-    "sbliveOnlyScored": 8
+    "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-11-25T06:24:21.286Z",
+  "fetchedAt": "2026-11-25T15:36:37.911Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -75,8 +89,15 @@
       "finalsDelta": 0,
       "id": "scval",
       "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
+      "reasons": [
+        "MaxPreps did not answer for Homestead's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
+        "MaxPreps did not answer for Los Gatos's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
+        "MaxPreps did not answer for Milpitas's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
+        "MaxPreps did not answer for Fremont's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
+        "MaxPreps did not answer for MacDonald's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
+        "MaxPreps did not answer for Saratoga's schedule this run; its games are carried from Tue Nov 24, 10:24 PM."
+      ],
+      "state": "partial"
     },
     {
       "backfilled": 0,
@@ -84,8 +105,11 @@
       "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
+      "reasons": [
+        "MaxPreps did not answer for Evergreen Valley's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
+        "MaxPreps did not answer for Santa Teresa's schedule this run; its games are carried from Tue Nov 24, 10:24 PM."
+      ],
+      "state": "partial"
     },
     {
       "backfilled": 0,
@@ -122,30 +146,48 @@
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "pcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "psal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 15,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 102,
+    "maxpreps": 172,
     "official": 6,
-    "sblive": 43
+    "sblive": 46
   },
   "sources": [
     {
       "label": "season bootstrap",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "de-anza league metadata",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "el-camino league metadata",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "de-anza reported standings",
@@ -164,13 +206,13 @@
     },
     {
       "label": "homestead schedule",
-      "rowCount": 27,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": 30,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "lynbrook schedule",
@@ -179,8 +221,8 @@
     },
     {
       "label": "milpitas schedule",
-      "rowCount": 28,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "mountain-view schedule",
@@ -199,8 +241,8 @@
     },
     {
       "label": "fremont schedule",
-      "rowCount": 24,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "los-altos schedule",
@@ -209,8 +251,8 @@
     },
     {
       "label": "macdonald schedule",
-      "rowCount": 24,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "monta-vista schedule",
@@ -224,8 +266,8 @@
     },
     {
       "label": "saratoga schedule",
-      "rowCount": 26,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "wilcox schedule",
@@ -255,7 +297,7 @@
     {
       "label": "mt-hamilton league metadata",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "santa-teresa league metadata",
@@ -299,8 +341,8 @@
     },
     {
       "label": "evergreen-valley schedule",
-      "rowCount": 26,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "leigh schedule",
@@ -314,8 +356,8 @@
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 21,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "westmont schedule",
@@ -359,7 +401,7 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -703,8 +745,353 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2125-bval-mt-hamilton scoreboard 2026-11-19",
-      "rowCount": 1,
+      "label": "gabilan league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "mission league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "cypress league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "santa-lucia league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "gabilan reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "mission reported standings",
+      "rowCount": 11,
+      "status": "ok"
+    },
+    {
+      "label": "cypress reported standings",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "santa-lucia reported standings",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "carmel schedule",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "hollister schedule",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "monterey schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "pacific-grove schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "palma schedule",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "salinas schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
+      "label": "oakwood schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "alisal schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "marina-mariners schedule",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "monte-vista-christian schedule",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "north-salinas schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "rancho-san-juan schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "soledad schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "st-francis-watsonville schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "watsonville schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "everett-alvarez schedule",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "gonzales schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "greenfield schedule",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "king-city schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "north-monterey-county schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "pajaro-valley schedule",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "seaside schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "stevenson schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "anzar schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "monterey-bay-academy schedule",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "pacific-collegiate schedule",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "york schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "ceiba schedule",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "chartwell schedule",
+      "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "kirby schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "trinity-christian schedule",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "psal-bay league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "psal-coast league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "psal-north league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "psal-south league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "psal-bay reported standings",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "psal-coast reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "psal-north reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "psal-south reported standings",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "design-tech schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "oceana schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "summit-shasta schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "thomas-more schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "basis-silicon-valley schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "university-prep schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "cristo-rey-san-jose schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "kipp-san-jose schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "nueva schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "mountain-view-academy schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "north-valley-baptist schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "kehillah schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "kipp-esperanza schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "summit-prep schedule",
+      "rowCount": 11,
+      "status": "ok"
+    },
+    {
+      "label": "pacific-bay-christian schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "pescadero schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "sf-christian schedule",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "cindy-avitia schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "kipp-navigate schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "summit-tahoma schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "east-palo-alto-academy schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "mid-peninsula schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "stratford schedule",
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -718,42 +1105,52 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2128-bval-west-valley scoreboard 2026-11-19",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2128-bval-west-valley scoreboard 2026-11-23",
-      "rowCount": 5,
-      "status": "ok"
-    },
-    {
       "label": "sblive 2128-bval-west-valley scoreboard 2026-11-24",
       "rowCount": 2,
       "status": "ok"
     },
     {
-      "label": "sblive 2263-pal-bay scoreboard 2026-11-21",
+      "label": "sblive 2259-pcal-cypress scoreboard 2026-11-24",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2259-pcal-cypress scoreboard 2026-11-25",
       "rowCount": 0,
       "status": "ok"
     },
     {
-      "label": "sblive 2263-pal-bay scoreboard 2026-11-23",
+      "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-24",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
     {
-      "label": "sblive 2263-pal-bay scoreboard 2026-11-24",
+      "label": "sblive 2261-pcal-mission scoreboard 2026-11-24",
       "rowCount": 3,
       "status": "ok"
     },
     {
-      "label": "sblive 2264-pal-ocean scoreboard 2026-11-21",
+      "label": "sblive 2261-pcal-mission scoreboard 2026-11-25",
       "rowCount": 0,
       "status": "ok"
     },
     {
-      "label": "sblive 2264-pal-ocean scoreboard 2026-11-23",
+      "label": "sblive 2262-pcal-santa-lucia scoreboard 2026-11-24",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2262-pcal-santa-lucia scoreboard 2026-11-25",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2263-pal-bay scoreboard 2026-11-24",
       "rowCount": 3,
       "status": "ok"
     },
@@ -763,8 +1160,13 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2282-scval-de-anza scoreboard 2026-11-19",
+      "label": "sblive 2272-psal-north scoreboard 2026-11-24",
       "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2273-psal-south scoreboard 2026-11-24",
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -778,8 +1180,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2283-scval-el-camino scoreboard 2026-11-19",
-      "rowCount": 2,
+      "label": "sblive 2282-scval-de-anza scoreboard 2026-11-25",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -793,7 +1195,7 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2284-sccal scoreboard 2026-11-23",
+      "label": "sblive 2283-scval-el-camino scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
@@ -803,18 +1205,13 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2326-wbal scoreboard 2026-11-23",
-      "rowCount": 2,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2327-wcal scoreboard 2026-11-19",
+      "label": "sblive 2284-sccal scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
     {
-      "label": "sblive 2327-wcal scoreboard 2026-11-21",
-      "rowCount": 0,
+      "label": "sblive 2326-wbal scoreboard 2026-11-25",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -823,8 +1220,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-19",
-      "rowCount": 0,
+      "label": "sblive 30792-psal-bay scoreboard 2026-11-24",
+      "rowCount": 3,
       "status": "ok"
     },
     {
@@ -835,11 +1232,6 @@
     {
       "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-24",
       "rowCount": 2,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-19",
-      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -888,8 +1280,23 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-25",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
       "label": "sblive el-camino-ssf games",
       "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive harbor games",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "sblive hollister games",
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -903,13 +1310,13 @@
       "status": "ok"
     },
     {
-      "label": "sblive palo-alto games",
-      "rowCount": 22,
+      "label": "sblive palma games",
+      "rowCount": 29,
       "status": "ok"
     },
     {
-      "label": "sblive prospect games",
-      "rowCount": 14,
+      "label": "sblive palo-alto games",
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -919,12 +1326,12 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 73,
+      "rowCount": 76,
       "status": "ok"
     },
     {
@@ -934,7 +1341,7 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 80,
+      "rowCount": 82,
       "status": "ok"
     },
     {
@@ -944,7 +1351,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 159,
+      "rowCount": 176,
       "status": "ok"
     },
     {
@@ -958,8 +1365,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-24",
-  "warnings": 19,
+  "today": "2026-11-25",
+  "warnings": 33,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",

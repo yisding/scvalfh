@@ -214,10 +214,10 @@ describe('parsePlayerStats on a basketball sheet', () => {
 
 describe('scripts/fetch-player-stats.ts on the basketball captures', () => {
   it('writes a valid file: Palo Alto read, every other team with no stats', () => {
-    expect(run.output).toMatch(/16 player stat lines on 1 of 79 teams · 1 box scores \(1 read this run\) · 0 team\(s\) failed/);
+    expect(run.output).toMatch(/16 player stat lines on 1 of 133 teams · 1 box scores \(1 read this run\) · 0 team\(s\) failed/);
     expect(run.output).not.toMatch(/goalkeepers/);
-    expect(built.counts).toMatchObject({ teams: 79, teamsWithStats: 1, players: 16, goalkeepers: 0, errors: 0 });
-    expect(built.teams.filter((t) => t.slug !== 'palo-alto').map((t) => t.status)).toEqual(Array(78).fill('none'));
+    expect(built.counts).toMatchObject({ teams: 133, teamsWithStats: 1, players: 16, goalkeepers: 0, errors: 0 });
+    expect(built.teams.filter((t) => t.slug !== 'palo-alto').map((t) => t.status)).toEqual(Array(132).fill('none'));
     const team = paloAlto();
     expect(team.status).toBe('ok');
     expect(team.players).toHaveLength(16);

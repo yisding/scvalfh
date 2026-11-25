@@ -38,20 +38,27 @@ describe('a school’s other sports', () => {
     }
   });
 
-  it('gives an SCVAL school all three, a PCAL or SoCal school none, and a soccer-only school no basketball link', () => {
+  it('gives an SCVAL school all three, a PCAL school its winter sports, a SoCal school none, and a girls’ school no basketball link', () => {
     const lynbrook = TEAMS.find((t) => t.slug === 'lynbrook')!;
     expect(otherSportTeams(lynbrook.id)).toEqual([
       { sport: 'soccer', title: 'Girls Soccer', href: 'https://soccer.ncfh.net/teams/lynbrook' },
       { sport: 'basketball', title: 'Boys Basketball', href: 'https://basketball.ncfh.net/teams/lynbrook' },
       { sport: 'volleyball', title: 'Girls Volleyball', href: 'https://volleyball.ncfh.net/teams/lynbrook' },
     ]);
-    for (const t of TEAMS.filter((t) => t.league !== 'scval' && t.league !== 'bval')) {
+    // The PCAL is in both winter builds since 2026-11-25: Carmel plays both, Santa Catalina (a girls’ school) soccer only.
+    const carmel = TEAMS.find((t) => t.slug === 'carmel')!;
+    expect(otherSportTeams(carmel.id).map((o) => o.href)).toEqual([
+      'https://soccer.ncfh.net/teams/carmel', 'https://basketball.ncfh.net/teams/carmel',
+    ]);
+    const catalina = TEAMS.find((t) => t.slug === 'santa-catalina')!;
+    expect(otherSportTeams(catalina.id).map((o) => o.sport)).toEqual(['soccer']);
+    for (const t of TEAMS.filter((t) => !['scval', 'bval', 'pcal'].includes(t.league))) {
       expect(otherSportTeams(t.id), t.slug).toEqual([]);
     }
-    // A WCAL school is in soccer and volleyball, never basketball.
-    const wcal = SEEDS_BY_SPORT.soccer.find((s) => s.league === 'wcal')!;
-    expect(SEEDS_BY_SPORT.basketball.some((s) => s.id === wcal.id)).toBe(false);
-    expect(otherSportTeams(wcal.id).map((o) => o.sport)).toEqual(['soccer', 'volleyball']);
+    // A girls’ school of the WBAL is in soccer and volleyball, never basketball.
+    const presentation = SEEDS_BY_SPORT.soccer.find((s) => s.slug === 'presentation')!;
+    expect(SEEDS_BY_SPORT.basketball.some((s) => s.id === presentation.id)).toBe(false);
+    expect(otherSportTeams(presentation.id).map((o) => o.sport)).toEqual(['soccer', 'volleyball']);
   });
 
   it('is the same school under the same slug in every registry', () => {

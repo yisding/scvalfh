@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 1,
+    "agreements": 2,
     "cifssOnlyScored": 0,
-    "compared": 1,
+    "compared": 2,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "be10c70d61aa218f41fa4f6157772022195f0dfb45d3c80fca3a9530a50c33f9",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
+  "contentHash": "50fa6fb209d2d70d073ae7cc23457996d2042bc11c7841d496fa2e2ecb9f5157",
   "counts": {
     "byLeague": {
       "bval": {
@@ -23,6 +23,20 @@
         "games": 152,
         "leagueGames": 96,
         "teams": 16
+      },
+      "pcal": {
+        "backfilled": 0,
+        "finals": 4,
+        "games": 200,
+        "leagueGames": 96,
+        "teams": 27
+      },
+      "psal": {
+        "backfilled": 0,
+        "finals": 0,
+        "games": 110,
+        "leagueGames": 74,
+        "teams": 14
       },
       "sccal": {
         "backfilled": 0,
@@ -53,21 +67,21 @@
         "teams": 6
       }
     },
-    "finals": 9,
-    "games": 678,
-    "leagueGames": 445,
+    "finals": 13,
+    "games": 923,
+    "leagueGames": 615,
     "mismatches": 4,
-    "pending": 5,
-    "teams": 82
+    "pending": 7,
+    "teams": 123
   },
   "crossCheck": {
-    "agreements": 4,
+    "agreements": 6,
     "backfilled": 2,
-    "compared": 63,
+    "compared": 78,
     "conflicts": 0,
-    "sbliveOnlyScored": 6
+    "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-11-25T14:37:46.666Z",
+  "fetchedAt": "2026-11-25T15:32:04.743Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -75,8 +89,11 @@
       "finalsDelta": 0,
       "id": "scval",
       "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
+      "reasons": [
+        "MaxPreps did not answer for Los Altos's schedule this run; its games are carried from Wed Nov 25, 6:37 AM.",
+        "MaxPreps did not answer for Los Gatos's schedule this run; its games are carried from Wed Nov 25, 6:37 AM."
+      ],
+      "state": "partial"
     },
     {
       "backfilled": 0,
@@ -122,25 +139,43 @@
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "pcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "psal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 32,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 105,
+    "maxpreps": 158,
     "official": 5,
-    "sblive": 37
+    "sblive": 42
   },
   "sources": [
     {
       "label": "season bootstrap",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "de-anza league metadata",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "el-camino league metadata",
@@ -169,13 +204,13 @@
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 24,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": 23,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "mountain-view schedule",
@@ -708,8 +743,268 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-18",
-      "rowCount": 0,
+      "label": "gabilan league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "mission league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "cypress league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "santa-lucia league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "gabilan reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "mission reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "cypress reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "santa-lucia reported standings",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "everett-alvarez schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "hollister schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "monterey schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "pacific-collegiate schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "rancho-san-juan schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "salinas schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "watsonville schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "alisal schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "carmel schedule",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
+      "label": "gonzales schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "monte-vista-christian schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "pajaro-valley schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "soledad schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "stevenson schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "greenfield schedule",
+      "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "king-city schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "north-monterey-county schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "north-salinas schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "palma schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "seaside schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "anzar schedule",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "marina-mariners schedule",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "monterey-bay-academy schedule",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "pacific-grove schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "santa-catalina schedule",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "st-francis-watsonville schedule",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "york schedule",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "psal-bay league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "psal-central league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "psal-bay reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "psal-central reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "cristo-rey-san-jose schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "design-tech schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "kipp-san-jose schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "latino-college-prep schedule",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "oceana schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "nueva schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "thomas-more schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "ace-charter schedule",
+      "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "cindy-avitia schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "kipp-esperanza schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "kipp-navigate schedule",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
+      "label": "summit-prep schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "summit-shasta schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "summit-tahoma schedule",
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -724,11 +1019,6 @@
     },
     {
       "label": "sblive 3758-bval-hamilton scoreboard 2026-11-23",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
     },
@@ -748,16 +1038,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-18",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-19",
-      "rowCount": 4,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3760-bval-west-valley scoreboard 2026-11-20",
       "rowCount": 0,
       "status": "ok"
@@ -765,11 +1045,6 @@
     {
       "label": "sblive 3760-bval-west-valley scoreboard 2026-11-23",
       "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3887-pal-bay scoreboard 2026-11-19",
-      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -783,11 +1058,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3888-pal-ocean scoreboard 2026-11-19",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3888-pal-ocean scoreboard 2026-11-20",
       "rowCount": 0,
       "status": "ok"
@@ -798,17 +1068,57 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3912-scval-de-anza scoreboard 2026-11-18",
+      "label": "sblive 3892-pcal-arroyo scoreboard 2026-11-20",
       "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3892-pcal-arroyo scoreboard 2026-11-24",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3893-pcal-cypress scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3893-pcal-cypress scoreboard 2026-11-24",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3894-pcal-gabilan scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3894-pcal-gabilan scoreboard 2026-11-24",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3895-pcal-mission scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3895-pcal-mission scoreboard 2026-11-24",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3896-pcal-santa-lucia scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3896-pcal-santa-lucia scoreboard 2026-11-24",
+      "rowCount": 2,
       "status": "ok"
     },
     {
       "label": "sblive 3912-scval-de-anza scoreboard 2026-11-20",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3913-scval-el-camino scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
     },
@@ -848,6 +1158,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-12",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
       "label": "sblive scoreboard 2026-11-18",
       "rowCount": 24,
       "status": "ok"
@@ -875,6 +1190,16 @@
     {
       "label": "sblive scoreboard 2026-11-25",
       "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "sblive ace-charter games",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "sblive carmel games",
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -934,9 +1259,9 @@
     }
   ],
   "today": "2026-11-25",
-  "warnings": 38,
+  "warnings": 42,
   "window": {
-    "firstGame": "2026-11-18T17:30:00",
+    "firstGame": "2026-11-12T00:00:00",
     "lastGame": "2027-02-17T18:30:00",
     "lastLeagueGame": "2027-02-17T18:30:00"
   }

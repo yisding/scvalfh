@@ -27,12 +27,16 @@ import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import { BVAL_BASKETBALL_SEEDS } from './registry/basketball/bval';
 import { PAL_BASKETBALL_SEEDS } from './registry/basketball/pal';
+import { PCAL_BASKETBALL_SEEDS } from './registry/basketball/pcal';
+import { PSAL_BASKETBALL_SEEDS } from './registry/basketball/psal';
 import { SCCAL_BASKETBALL_SEEDS } from './registry/basketball/sccal';
 import { SCVAL_BASKETBALL_SEEDS } from './registry/basketball/scval';
 import { WBAL_BASKETBALL_SEEDS } from './registry/basketball/wbal';
 import { WCAL_BASKETBALL_SEEDS } from './registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from './registry/soccer/bval';
 import { PAL_SOCCER_SEEDS } from './registry/soccer/pal';
+import { PCAL_SOCCER_SEEDS } from './registry/soccer/pcal';
+import { PSAL_SOCCER_SEEDS } from './registry/soccer/psal';
 import { SCCAL_SOCCER_SEEDS } from './registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from './registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from './registry/soccer/wbal';
@@ -130,11 +134,11 @@ const SEEDS_BY_LEAGUE = bySport<Readonly<Record<LeagueId, readonly Seed[]>>>({
   },
   soccer: {
     scval: SCVAL_SOCCER_SEEDS, bval: BVAL_SOCCER_SEEDS, wcal: WCAL_SOCCER_SEEDS, wbal: WBAL_SOCCER_SEEDS,
-    pal: PAL_SOCCER_SEEDS, sccal: SCCAL_SOCCER_SEEDS,
+    pal: PAL_SOCCER_SEEDS, sccal: SCCAL_SOCCER_SEEDS, pcal: PCAL_SOCCER_SEEDS, psal: PSAL_SOCCER_SEEDS,
   },
   basketball: {
     scval: SCVAL_BASKETBALL_SEEDS, bval: BVAL_BASKETBALL_SEEDS, wcal: WCAL_BASKETBALL_SEEDS, wbal: WBAL_BASKETBALL_SEEDS,
-    pal: PAL_BASKETBALL_SEEDS, sccal: SCCAL_BASKETBALL_SEEDS,
+    pal: PAL_BASKETBALL_SEEDS, sccal: SCCAL_BASKETBALL_SEEDS, pcal: PCAL_BASKETBALL_SEEDS, psal: PSAL_BASKETBALL_SEEDS,
   },
   volleyball: { scval: SCVAL_VOLLEYBALL_SEEDS, bval: BVAL_VOLLEYBALL_SEEDS, wcal: WCAL_VOLLEYBALL_SEEDS, wbal: WBAL_VOLLEYBALL_SEEDS },
   'val-soccer': { val: VAL_SOCCER_SEEDS },
@@ -332,10 +336,16 @@ const WITH_WCAL_WBAL_COLLISIONS = ['CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'N
 // Cruz to SCHS and Woodside and Westmoor to WHS. The basketball registry has the soccer registry's set less NDHS (it
 // holds neither Notre Dame); Mercy Burlingame's place in MHS is taken there by Mills.
 const WITH_PAL_SCCAL_COLLISIONS = ['AHS', 'BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'SHS', 'WHS'];
+// The PCAL's and the PSAL's schools (2026-11-25) bring OHS (Overfelt, Oceana; basketball also Oakwood), SFHS (Saint
+// Francis, St. Francis of Watsonville) and STHS (Santa Teresa, Summit Tahoma), and add Alisal and Anzar to AHS, Carmel to
+// CHS, Gonzales and Greenfield to GHS, Hollister to HHS, Monterey, Marina and Thomas More to MHS, Palma to PHS,
+// Salinas, Soledad, Stevenson and Seaside to SHS and Watsonville to WHS; in soccer Santa Catalina to SCHS; in basketball
+// Chartwell to CHS, Pescadero to PHS, and MPHS (Mt. Pleasant, Mid-Peninsula).
+const WITH_PCAL_PSAL_COLLISIONS = [...WITH_PAL_SCCAL_COLLISIONS, 'OHS', 'SFHS', 'STHS'].sort();
 const EXPECTED_ACRONYM_COLLISIONS = bySport<readonly string[]>({
   'field-hockey': ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS'],
-  soccer: WITH_PAL_SCCAL_COLLISIONS,
-  basketball: WITH_PAL_SCCAL_COLLISIONS.filter((a) => a !== 'NDHS'),
+  soccer: WITH_PCAL_PSAL_COLLISIONS,
+  basketball: [...WITH_PCAL_PSAL_COLLISIONS.filter((a) => a !== 'NDHS'), 'MPHS'].sort(),
   volleyball: WITH_WCAL_WBAL_COLLISIONS,
   // The VAL's Columbia, Crittenden and Cupertino Middle Schools are all CMS.
   'val-soccer': ['CMS'],
@@ -343,10 +353,11 @@ const EXPECTED_ACRONYM_COLLISIONS = bySport<readonly string[]>({
 
 /**
  * The registry's size: field hockey's 102 teams; volleyball's 60 (SCVAL's 15, BVAL's 26, the WCAL's 6 and the WBAL's
- * 13); soccer's 82 (those 60, the PAL's 16 and the SCCAL's 6); basketball's 79 (SCVAL's 15, BVAL's 26, the WCAL's 8,
- * the WBAL's 8, the PAL's 16 and the SCCAL's 6); the VAL's 11 middle schools.
+ * 13); soccer's 123 (those 60, the PAL's 16, the SCCAL's 6, the PCAL's 27 and the PSAL's 14); basketball's 133 (SCVAL's
+ * 15, BVAL's 26, the WCAL's 8, the WBAL's 8, the PAL's 16, the SCCAL's 6, the PCAL's 31 and the PSAL's 23); the VAL's
+ * 11 middle schools.
  */
-const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 82, basketball: 79, volleyball: 60, 'val-soccer': 11 });
+const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 123, basketball: 133, volleyball: 60, 'val-soccer': 11 });
 
 function assertRegistry(): void {
   const fail = (m: string): never => {

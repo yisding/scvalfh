@@ -10,10 +10,14 @@ import { describe, expect, it } from 'vitest';
 
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
 import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
+import { PCAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/pcal';
+import { PSAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/psal';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
 import { WCAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
 import { PAL_SOCCER_SEEDS } from '../lib/registry/soccer/pal';
+import { PCAL_SOCCER_SEEDS } from '../lib/registry/soccer/pcal';
+import { PSAL_SOCCER_SEEDS } from '../lib/registry/soccer/psal';
 import { SCCAL_SOCCER_SEEDS } from '../lib/registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from '../lib/registry/soccer/wbal';
@@ -41,6 +45,10 @@ const STEMS = [
     ...PAL_SOCCER_SEEDS.map((s) => s.slug),
     ...SCCAL_SOCCER_SEEDS.map((s) => s.slug),
     ...WCAL_BASKETBALL_SEEDS.map((s) => s.slug),
+    ...PCAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...PSAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...PCAL_BASKETBALL_SEEDS.map((s) => s.slug),
+    ...PSAL_BASKETBALL_SEEDS.map((s) => s.slug),
     ...SCVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
     ...BVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
     // The VAL's middle schools: tiles of their initials (scripts/build-initials-tiles.ts), no source giving a logo.

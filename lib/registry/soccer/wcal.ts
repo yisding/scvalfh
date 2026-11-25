@@ -114,9 +114,10 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     sbliveTeamId: '359171',
     sbliveSlug: '359171-saint-francis-lancers',
     sbliveSchoolId: '2822',
+    // No "St. Francis" spelling (2026-11-25): it is the PCAL's St. Francis of Watsonville (lib/registry/soccer/pcal.ts).
     aliases: [
-      'Saint Francis', 'ST. FRANCIS', 'St. Francis', 'St Francis',
-      'Saint Francis Lancers', 'Saint Francis High School', 'Saint Francis (Mountain View)',
+      'Saint Francis', 'SAINT FRANCIS', 'Saint Francis Lancers', 'Saint Francis High School', 'Saint Francis (Mountain View)',
+      'St. Francis (Mountain View)',
     ],
   },
   {

@@ -859,7 +859,7 @@
                 "name": "OCEANA",
                 "overallRecord": null,
                 "place": 10,
-                "slug": null,
+                "slug": "oceana",
                 "t": 0,
                 "w": 0
               }
@@ -961,7 +961,7 @@
                 "name": "OCEANA",
                 "overallRecord": null,
                 "place": 10,
-                "slug": null,
+                "slug": "oceana",
                 "t": 0,
                 "w": 0
               }
@@ -979,7 +979,7 @@
           "The varsity tables are the PDF linked as \"Basketball - Boys VAR\" from pal.smcoe.org/standings (\"2026 BOYS VARSITY BAY BASKETBALL STANDINGS\" and \"… OCEAN …\"); the JV tables are the one linked as \"Basketball - Boys JV\" (https://drive.google.com/file/d/11SLkmEObL7BEzu2UjY1JEr4aOG0EEqGq/view).",
           "Each table prints Rank, School, Win and Loss: no overall record, so every overallRecord is null. Rows keep the PDF's rank, which repeats for teams ranked level (2, 2, 4).",
           "Division membership is 2025-26's: Burlingame, Carlmont, Half Moon Bay, Jefferson, Menlo-Atherton, Sequoia and Terra Nova in the Bay; Aragon, Capuchino, El Camino, Hillsdale, Mills, Oceana, San Mateo, South San Francisco, Westmoor and Woodside in the Ocean. In 2026-27 Aragon, Hillsdale and Woodside play in the Bay, and Jefferson and Terra Nova in the Ocean.",
-          "Oceana played in the PAL's Ocean in 2025-26 and is in none of this build's leagues now (the CCS places it in the PSAL for 2026-27): its rows keep its name and have no slug (`leftBuild`).",
+          "Oceana played in the PAL's Ocean in 2025-26 and is in the PSAL for 2026-27, which this build has covered since 2026-11-25 (`formerMembers`): its rows link its team page.",
           "The JV Ocean table prints Capuchino at 6-5, eleven games where every other team played twelve; it is kept as printed.",
           "Only standings are stored: the PAL's all-league teams are not transcribed."
         ],
@@ -992,6 +992,26 @@
         }
       },
       "status": "available"
+    },
+    "pcal": {
+      "checked": [
+        "https://pcalathletics.org/history/ (the league’s History pages: division title holders by season, through 2024-25, and no standings)",
+        "https://pcalathletics.org/boys-basketball/ (this season’s schedules only)"
+      ],
+      "checkedOn": "2026-11-25",
+      "league": "Pacific Coast Athletic League",
+      "reason": "We found no official 2025-26 final standings for PCAL boys basketball: pcalathletics.org’s History pages name each season’s division title holders, the last for 2024-25, and publish no standings. This site added PCAL boys basketball on November 25, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "psal": {
+      "checked": [
+        "https://sites.google.com/almaheights.org/psal (the league’s site: members, schedules, governance and honors, and no standings)",
+        "https://sites.google.com/almaheights.org/psal/schedules (this season’s schedules, which name MaxPreps as the league’s official site)"
+      ],
+      "checkedOn": "2026-11-25",
+      "league": "Private School Athletic League",
+      "reason": "We found no official 2025-26 final standings for PSAL boys basketball: the league’s site keeps no standings and names MaxPreps as its official site for schedules and stats. This site added PSAL boys basketball on November 25, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
     },
     "sccal": {
       "checked": [
