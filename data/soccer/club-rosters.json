@@ -10,7 +10,8 @@
   "A player on two of a club's teams is listed on both. 3 Regional League teams showed no player on 2026-11-22 or 2026-11-24 (Santa Clara Sporting's G2011/12 and Valley Surf's G2010/11 and G2009/10).",
   "Girls Academy (league ga), read 2026-11-25: the GA teams U14 through U19 of the eight clubs in GA's Northwest conference (2026-27 league, GotSport event 56497): Almaden FC, Silicon Valley SA, 1974 Newark FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire, 38 teams, 440 rows. Each is the team's public roster on GotSport Rankings (rankings.gotsport.com/teams/<id>/roster; teamId is the Rankings id), found with that site's own team search (Female, the age group, the club's name) and read in a local Chromium as the page displays it; the owner sent the U19 and U17 pages of Almaden, Silicon Valley SA and Newark, and the U19 rows the owner pasted are the rows read. teamName, the age group and the club are the page's heading; birthYears are read from the team name ('GA 08/09' is [2008, 2009]; South Valley Surf's 'g2012 Girls Academy' is [2012]). Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out: Silicon Valley SA's '2012G GA2' and South Valley Surf's 'GU18/19', not named as GA league teams. Two pages listed no player (Newark's '1974 Newark FC 2012/2013 GA Clinton' and South Valley Surf's 'g2012 Girls Academy'). The page gives a name and a position (all 'No Position Listed', kept as null), no class year, no jersey and no date, so it is not known to be one season's roster; it reads like everyone the team has carried (Silicon Valley SA's GA 08/09 has 64 rows, Emma Velasquez twice, kept as listed, and Almaden's names a tracked class-of-2029 player). So these rows are compared on the team's birth years, not a class year (lib/players/club-rosters.ts); a U14 team (born 2012/13) is kept because its 2012 births can be freshmen. fetch-club-rosters carries the league and its teams over. GotSport club ids are keyed 'gotsport-<id>' in clubSlugs: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped; South Valley Surf has no clubs.json record, and Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the schools, so their rows are compared but never linked. GotSport's own event pages (system.gotsport.com) stop at a reCAPTCHA and were not read.",
   "NorCal Premier (leagues n1 and norcal-fall), read 2026-11-25: NorCal Premier's 2026-27 leagues are on GotSport (linked from norcalpremier.com's N1 Schedules & Standings page): the NorCal N1 League (event 54043, which replaced NPL and State Premier) and the Fall League U8-U19 (54541). Their event pages stop at a reCAPTCHA, but each event's club pages do not: they gave the club ids and the girls U14-U19 teams of Almaden FC (13017) and of the clubs.json clubs with no kept roster, Sunnyvale Alliance (11057), Milpitas YSL (10940; FC Milpitas), Peninsula Youth Soccer (8216) and ALBION SC Silicon Valley San Mateo (13012): 26 teams. Each was found on GotSport Rankings with its own team search and read as for Girls Academy. 22 matched a Rankings team of the same name; 4 of Albion's (SM N1 GU15 and GU16 Academy, SM GU14 and GU16 Premier) have only differently named Rankings teams (SM G12/G11 Academy, SM G13/G11 Premier), all with no player listed, and are not kept. 5 single-year U14 teams (born 2013, the class of 2031 or later: Almaden's Quicksilver Black and White, Albion's SM GU14 Academy, Peninsula's Hurricanes Blue and White) cannot hold a high school player and are not kept, so Albion has no team here and no clubSlugs entry. 17 teams, 89 rows. The Rankings rosters of these teams are far from full: most list 0 to 5 players (Almaden's N1 G2008/09 lists 37, Sunnyvale's U19G Red 18, Milpitas' Magic 8), as only players linked to the team on GotSport are shown. birthYears are the team name's ('N1 G2010/11', '10/11G'), else the event's age group, a single birth year in NorCal Premier (U16 is 2011). Not read: the other clubs' NorCal Premier teams (MVLA's, De Anza Force's, Bay Area Surf's and the rest).",
-  "NorCal Premier, the larger clubs, read 2026-11-25: the girls U14-U19 teams in the N1 League and Fall League of MVLA (11058) and MVLA San Jose (10948; both mapped to mvla-soccer-club, 'MVLA San Jose' being an alias in its record; MVLA East, 12993, is an affiliated club in Turlock and is not mapped), Force (462; De Anza Force), Los Gatos United (10937), Burlingame (11048), Palo Alto SC (8215), San Francisco Elite (9040), Santa Cruz United (13066) and Stanford Strikers (8384): 37 event teams. Not kept: Palo Alto SC's 'SVSA GA 2009/10' and Bay Area Surf's 'ECNL RL - G2011/12' (kept under ga and ecnl-rl-golden-state already) and Bay Area Surf's single-year 'N1 U14G'. Not found on GotSport Rankings by the club's or the team's name: PASC N1 G2010/11 (CA), Palo Alto SC 12/13G Blue 2, Los Gatos United U17/U18G Black, Burlingame 2008/09G Premier, Santa Cruz United 11/12 and 09/10 Girls Navy (same-named teams found belong to other clubs). Santa Clara Sporting (8444) has no girls U14-U19 team in either event. 'De Anza Force' finds nothing on Rankings and 'Force' alone fills the result cap with other clubs: Force's teams were found by their own names. 28 teams kept, 95 rows; as before, most list 0 to 5 players (MVLA's N1 G2008/09 Gunners Green 20, Los Gatos United's U17/U18G Comp I 18, Palo Alto SC's 08/09G Blue 16, Force's G2009/10 Elite 11). 'U17/U18G' is read as born 2009/10; '2012/11G' as 2011/12."
+  "NorCal Premier, the larger clubs, read 2026-11-25: the girls U14-U19 teams in the N1 League and Fall League of MVLA (11058) and MVLA San Jose (10948; both mapped to mvla-soccer-club, 'MVLA San Jose' being an alias in its record; MVLA East, 12993, is an affiliated club in Turlock and is not mapped), Force (462; De Anza Force), Los Gatos United (10937), Burlingame (11048), Palo Alto SC (8215), San Francisco Elite (9040), Santa Cruz United (13066) and Stanford Strikers (8384): 37 event teams. Not kept: Palo Alto SC's 'SVSA GA 2009/10' and Bay Area Surf's 'ECNL RL - G2011/12' (kept under ga and ecnl-rl-golden-state already) and Bay Area Surf's single-year 'N1 U14G'. Not found on GotSport Rankings by the club's or the team's name: PASC N1 G2010/11 (CA), Palo Alto SC 12/13G Blue 2, Los Gatos United U17/U18G Black, Burlingame 2008/09G Premier, Santa Cruz United 11/12 and 09/10 Girls Navy (same-named teams found belong to other clubs). Santa Clara Sporting (8444) has no girls U14-U19 team in either event. 'De Anza Force' finds nothing on Rankings and 'Force' alone fills the result cap with other clubs: Force's teams were found by their own names. 28 teams kept, 95 rows; as before, most list 0 to 5 players (MVLA's N1 G2008/09 Gunners Green 20, Los Gatos United's U17/U18G Comp I 18, Palo Alto SC's 08/09G Blue 16, Force's G2009/10 Elite 11). 'U17/U18G' is read as born 2009/10; '2012/11G' as 2011/12.",
+  "Alum Rock FC, read 2026-11-25: Alum Rock Futbol Club (GotSport club 18476, mapped to alum-rock-fc) has one girls U14-U19 team in NorCal Premier's two events, the N1 League's 'FC N1 G2008/09 Stingrays (CA)' (U19); its Fall League girls teams are U11 to U13 (born 2013 and later). The club's own girls team list (alumrockfc.org/girls-teams) agrees: 2015/16, 2014/15, 2013/14 and 2008/09 Stingrays. The Rankings team of that name (176017, 'Alum Rock FC N1 G2008/09 Stingrays (CA)', Female U18) was found with the site's team search and read as for Girls Academy: 14 rows. No Alum Rock girls team turned up on Rankings at U14 to U17."
  ],
  "leagues": [
   {
@@ -79,11 +80,12 @@
   "gotsport-8215": "palo-alto-soccer-club",
   "gotsport-9040": "san-francisco-elite-academy",
   "gotsport-13066": "santa-cruz-united-fc",
-  "gotsport-8384": "stanford-strikers-fc"
+  "gotsport-8384": "stanford-strikers-fc",
+  "gotsport-18476": "alum-rock-fc"
  },
  "counts": {
-  "teams": 339,
-  "players": 5045,
+  "teams": 340,
+  "players": 5059,
   "hidden": 0,
   "tooYoung": 1155,
   "emptyTeams": 14
@@ -39448,6 +39450,121 @@
     {
      "firstName": "Ava",
      "lastName": "Chanthyasack",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U19",
+   "teamId": 176017,
+   "teamName": "Alum Rock FC N1 G2008/09 Stingrays (CA)",
+   "clubId": 18476,
+   "clubName": "Alum Rock Futbol Club",
+   "url": "https://rankings.gotsport.com/teams/176017/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Mariam",
+     "lastName": "Alkurjy",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amana",
+     "lastName": "Hussain",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Violeta",
+     "lastName": "Murillo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Christina",
+     "lastName": "Ramos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Hernandez Juarez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Anaika",
+     "lastName": "Mann",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Issla",
+     "lastName": "Salvador Manuel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Itzel",
+     "lastName": "Gonzalez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Daniela",
+     "lastName": "Gonzalez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emberly",
+     "lastName": "Rendon Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alison",
+     "lastName": "Escobar Bailon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Nevaeh",
+     "lastName": "Corona",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Azalea",
+     "lastName": "Sibaja Cruz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lily",
+     "lastName": "Sibaja Cruz",
      "gradYear": null,
      "position": null,
      "playerType": null
