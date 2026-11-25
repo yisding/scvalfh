@@ -51,10 +51,13 @@ function schoolRows(): SchoolRow[] {
   return rows;
 }
 
-function line(r: CompareRow): string {
+/** One compared row: its hits by team name, and, with `urls`, each team's page (two clubs' GA teams share a name). */
+function line(r: CompareRow, urls = false): string {
   const year = (h: CompareRow['hits'][number]) =>
     h.team.birthYears ? `born ${h.team.birthYears.join('/')}` : (h.player.gradYear ?? 'no class year');
-  const hits = r.hits.map((h) => `${h.team.teamName} (${rosterName(h.player)}, ${year(h)}, ${h.player.playerType ?? 'no label'})`);
+  const hits = r.hits.map(
+    (h) => `${h.team.teamName} (${rosterName(h.player)}, ${year(h)}, ${h.player.playerType ?? 'no label'}${urls ? `; ${h.team.url}` : ''})`,
+  );
   return `  ${r.row.level.padEnd(7)} ${r.row.teamSlug} / ${r.row.fullName} (${r.row.classYear ?? 'no grade'}): ${hits.join('; ')}`;
 }
 
@@ -78,14 +81,16 @@ export function main(argv: readonly string[] = process.argv.slice(2)): number {
   const compared = compareClubRosters(file, rows, getClubsFile());
 
   console.log(`club rosters read ${file.fetchedAt}: ${file.counts.teams} teams, ${file.counts.players} players`);
-  console.log(`high school rows: ${rows.filter((r) => r.level === 'varsity').length} varsity, ${rows.filter((r) => r.level === 'jv').length} JV; ${compared.length} share a name with a roster row`);
+  // A row can have a result in each tier (an ECNL and a GA roster): counted once here, once per tier below.
+  const named = new Set(compared.map((r) => r.row)).size;
+  console.log(`high school rows: ${rows.filter((r) => r.level === 'varsity').length} varsity, ${rows.filter((r) => r.level === 'jv').length} JV; ${named} share a name with a roster row`);
   const count = (level: string, what: string) => compared.filter((r) => r.row.level === level && kindOf(r) === what).length;
   const kinds = [...new Set(compared.map(kindOf))].sort();
   for (const k of kinds) console.log(`  ${k.padEnd(40)} varsity ${String(count('varsity', k)).padStart(3)}   JV ${String(count('jv', k)).padStart(3)}`);
 
   const open = compared.filter((r) => r.outcome === 'match' && r.tie !== 'linked');
   console.log(`\nMatches clubs.json does not cite yet (${open.length}; a varsity row's tie goes in affiliations, a JV row's in jvAffiliations):`);
-  for (const r of open) console.log(`${line(r)} [${r.tie}${r.tier === 'birth-years' ? ', on birth years' : ''}]`);
+  for (const r of open) console.log(`${line(r, true)} [${r.tie}${r.tier === 'birth-years' ? ', on birth years' : ''}]`);
   if (all) {
     for (const k of kinds) {
       console.log(`\n${k}:`);

@@ -25,7 +25,7 @@
  * Two tiers. A league team whose page gives each player's class year (ECNL's) is compared as above. A
  * Girls Academy team's GotSport roster gives no class year, only the team's birth years ("08/09"); its
  * rows are compared on their own, rule 2 reading "the row's class year is one those birth years can
- * be in" (birthYearClassYears: California's September 1 cutoff puts a 2008 birth in the class of 2026
+ * be in" (birthYearsAdmit: California's September 1 cutoff puts a 2008 birth in the class of 2026
  * or 2027). Rules 3-5 hold within each tier, so a GA row neither blocks nor is blocked by an ECNL row
  * at another club: a player's ties are per club, each with its own status.
  */
@@ -151,6 +151,15 @@ export function birthYearClassYears(birthYears: readonly number[]): { first: num
   return { first: Math.min(...birthYears) + 18, last: Math.max(...birthYears) + 19 };
 }
 
+/**
+ * Whether a class year is one of a team's birth years can be in: some listed year is the class year
+ * less 18 or less 19 (the September 1 cutoff). Each year is checked on its own, so a team listed
+ * [2008, 2011] admits 2026, 2027, 2029 and 2030 and not 2028, which no listed year gives.
+ */
+export function birthYearsAdmit(birthYears: readonly number[], classYear: number): boolean {
+  return birthYears.some((y) => classYear - y === 18 || classYear - y === 19);
+}
+
 // ---------------------------------------------------------------- the comparison
 
 /** A high school roster row, as the comparison needs it. */
@@ -243,18 +252,21 @@ export function compareClubRosters(
     schoolsByName.set(key, (schoolsByName.get(key) ?? new Set()).add(r.teamSlug));
   }
   const regionOf = new Map(clubs.clubs.map((c) => [c.slug, c.region]));
-  const tieOf = (r: SchoolRow, club: string): TieState => {
+  // 'linked' only when the tie cites one of the rosters this match rests on: a tie citing a club's ECNL
+  // roster does not make its GA match linked, nor the other way round.
+  const tieOf = (r: SchoolRow, club: string, agreeing: readonly RosterHit[]): TieState => {
     if (r.athleteId === null) return 'new';
     const ties = r.level === 'jv' ? (clubs.jvAffiliations ?? []) : clubs.affiliations;
     const tie = ties.find((a) => a.teamSlug === r.teamSlug && a.athleteId === r.athleteId && a.club === club);
     if (!tie) return 'new';
-    return tie.sources.some((s) => s.kind === LEAGUE_ROSTER_KIND) ? 'linked' : 'tie-without-roster';
+    const pages = new Set(agreeing.map((h) => h.team.url));
+    return tie.sources.some((s) => s.kind === LEAGUE_ROSTER_KIND && pages.has(s.url)) ? 'linked' : 'tie-without-roster';
   };
-  const agrees = (h: RosterHit, classYear: number): boolean => {
-    if (h.team.birthYears === undefined) return h.player.gradYear === classYear;
-    const { first, last } = birthYearClassYears(h.team.birthYears);
-    return classYear >= first && classYear <= last;
-  };
+  const agrees = (h: RosterHit, classYear: number): boolean =>
+    h.team.birthYears === undefined ? h.player.gradYear === classYear : birthYearsAdmit(h.team.birthYears, classYear);
+  // Rule 4 counts clubs as clubs.json does: hits mapped to one record are one club whatever their league
+  // ids; an unmapped hit is its own club, by its league key, so two unknown clubs still count as two.
+  const clubOf = (h: RosterHit): string => (h.club !== null ? `slug:${h.club}` : `key:${clubKey(h.team)}`);
 
   const out: CompareRow[] = [];
   for (const row of rows) {
@@ -279,7 +291,7 @@ export function compareClubRosters(
         result(all.every((h) => h.team.birthYears === undefined && h.player.gradYear === null) ? 'no-class-year' : 'class-year-differs');
         continue;
       }
-      if (new Set(agreeing.map((h) => clubKey(h.team))).size > 1) {
+      if (new Set(agreeing.map(clubOf)).size > 1) {
         result('several-clubs', agreeing);
         continue;
       }
@@ -287,7 +299,7 @@ export function compareClubRosters(
       const region = club === null ? undefined : regionOf.get(club);
       if (club === null || region === undefined) result('no-club-record', agreeing);
       else if (!LOCAL_REGIONS.includes(region)) result('club-elsewhere', agreeing);
-      else result('match', agreeing, tieOf(row, club));
+      else result('match', agreeing, tieOf(row, club, agreeing));
     }
   }
   return out;

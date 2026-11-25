@@ -13,6 +13,7 @@ import {
   ClubRostersFileSchema,
   LEAGUE_ROSTER_KIND,
   birthYearClassYears,
+  birthYearsAdmit,
   clubKey,
   compareClubRosters,
   rosterName,
@@ -25,6 +26,28 @@ import { nameKey } from '../lib/players/name-compare';
 const json = (rel: string): unknown => JSON.parse(readFileSync(rel, 'utf8'));
 const file = ClubRostersFileSchema.parse(json('data/soccer/club-rosters.json'));
 const clubs = json('data/soccer/clubs.json') as ClubsFile;
+
+/** The class year a soccer row's grade gives this season, and the one a `rosterBehind` conflict corrects it to, by team and athlete. */
+function soccerClassYears(): Map<string, number[]> {
+  type Row = { athleteId: string | null; grade: number | null };
+  const end = 2000 + Number(file.season.slice(3));
+  const out = new Map<string, number[]>();
+  const add = (slug: string, id: string | null, grade: number | null) => {
+    if (id === null || grade === null) return;
+    const key = `${slug} ${id}`;
+    out.set(key, [...(out.get(key) ?? []), end + 12 - grade]);
+  };
+  for (const f of ['data/soccer/rosters.json', 'data/soccer/jv-rosters.json']) {
+    for (const t of (json(f) as { teams: Array<{ slug: string; players: Row[] }> }).teams) for (const p of t.players) add(t.slug, p.athleteId, p.grade);
+  }
+  const overlay = json('data/soccer/rosters-enrichment.json') as {
+    teams: Array<{ slug: string; players: Array<{ athleteId: string; conflicts: Array<{ field: string; rosterBehind?: boolean; other: unknown }> }> }>;
+  };
+  for (const t of overlay.teams) {
+    for (const p of t.players) for (const c of p.conflicts) if (c.field === 'grade' && c.rosterBehind) add(t.slug, p.athleteId, Number(c.other));
+  }
+  return out;
+}
 
 describe('data/soccer/club-rosters.json', () => {
   it('holds the three ECNL leagues and Girls Academy, and only players who can be in high school this season', () => {
@@ -62,10 +85,14 @@ describe('data/soccer/club-rosters.json', () => {
     }
   });
 
-  it('backs every league-roster source in clubs.json: the team page is in the copy and lists the player with that class year (or, on a GA team, one its birth years admit)', () => {
+  it('backs every league-roster source in clubs.json, varsity and JV: the team page is in the copy and lists the player with that class year (or, on a GA team, one its birth years admit)', () => {
     const teamByUrl = new Map(file.teams.map((t) => [t.url, t]));
-    const cited = clubs.affiliations.flatMap((a) => a.sources.filter((s) => s.kind === LEAGUE_ROSTER_KIND).map((s) => ({ a, s })));
+    const classYears = soccerClassYears();
+    const cited = [...clubs.affiliations, ...(clubs.jvAffiliations ?? [])].flatMap((a) =>
+      a.sources.filter((s) => s.kind === LEAGUE_ROSTER_KIND).map((s) => ({ a, s })),
+    );
     expect(cited.length).toBeGreaterThan(0);
+    expect(cited.some(({ a }) => (clubs.jvAffiliations ?? []).includes(a))).toBe(true);
     for (const { a, s } of cited) {
       const label = `${a.teamSlug} / ${a.fullName} (${a.club})`;
       const team = teamByUrl.get(s.url);
@@ -79,6 +106,11 @@ describe('data/soccer/club-rosters.json', () => {
         expect(s.statedClassYear, label).toBeNull();
         expect(s.quote.startsWith(`${team!.teamName} | `), label).toBe(true);
         expect(a.confidence === 'medium' || a.sources.some((x) => x.kind !== LEAGUE_ROSTER_KIND), label).toBe(true);
+        // A row MaxPreps no longer lists is roster drift (left out, kept on purpose): it has no grade to check.
+        const years = classYears.get(`${a.teamSlug} ${a.athleteId}`);
+        if (years !== undefined) {
+          expect(years.some((y) => birthYearsAdmit(team!.birthYears!, y)), `${label}: ${team!.teamName} (born ${team!.birthYears!.join('/')}) admits no class of ${years.join(' or ')}`).toBe(true);
+        }
       }
     }
   });
@@ -159,9 +191,28 @@ describe('compareClubRosters (the league-roster rule)', () => {
   const gaOutcome = (teams: ClubRostersFile['teams'], rows: SchoolRow[]) =>
     compareClubRosters(withGa(teams), rows, tied).map((r) => `${r.row.fullName}: ${r.tier} ${r.outcome}${r.tie ? ` (${r.tie})` : ''}`);
 
-  it('reads a birth-year team as the classes the September 1 cutoff admits', () => {
+  it('reads a birth-year team as the classes the September 1 cutoff admits, each listed year on its own', () => {
     expect(birthYearClassYears([2008, 2009])).toEqual({ first: 2026, last: 2028 });
     expect(birthYearClassYears([2012])).toEqual({ first: 2030, last: 2031 });
+    expect([2025, 2026, 2027, 2028, 2029].filter((c) => birthYearsAdmit([2008, 2009], c))).toEqual([2026, 2027, 2028]);
+    // Not consecutive: 2008 gives 2026-2027 and 2011 gives 2029-2030; no listed year gives 2028.
+    expect([2026, 2027, 2028, 2029, 2030].filter((c) => birthYearsAdmit([2008, 2011], c))).toEqual([2026, 2027, 2029, 2030]);
+    expect(gaOutcome([gaTeam(7, 70, [2008, 2011], [['Ann', 'Lee']])], [row('Ann Lee', 2028)])).toEqual(['Ann Lee: birth-years class-year-differs']);
+  });
+
+  it('counts two league clubs mapped to one clubs.json record as one club, and two unmapped clubs as two', () => {
+    const withMap = (map: Record<string, string>) => ({ ...withGa([]), clubSlugs: { ...withGa([]).clubSlugs, ...map } });
+    const teams = [gaTeam(7, 70, [2008, 2009], [['Ann', 'Lee']]), gaTeam(8, 80, [2008, 2009], [['Ann', 'Lee']])];
+    const run = (map: Record<string, string>) => {
+      const f = withMap(map);
+      return compareClubRosters({ ...f, teams, counts: { ...f.counts, teams: teams.length, players: 2 } }, [row('Ann Lee', 2027)], tied).map((r) => r.outcome);
+    };
+    expect(run({ 'gotsport-8': 'near' })).toEqual(['match']); // gotsport-7 is 'near' too
+    const unmapped = withGa([]).clubSlugs;
+    expect(Object.keys(unmapped)).not.toContain('gotsport-9');
+    const two = [gaTeam(9, 90, [2008, 2009], [['Ann', 'Lee']]), gaTeam(10, 100, [2008, 2009], [['Ann', 'Lee']])];
+    const f = withGa([]);
+    expect(compareClubRosters({ ...f, teams: two, counts: { ...f.counts, teams: 2, players: 2 } }, [row('Ann Lee', 2027)], tied).map((r) => r.outcome)).toEqual(['several-clubs']);
   });
 
   it('matches a GA row whose class year the team\'s birth years admit, and no other', () => {
@@ -192,11 +243,15 @@ describe('compareClubRosters (the league-roster rule)', () => {
   it('says how a match stands in clubs.json', () => {
     const teams = [team(1, 10, [['Ann', 'Lee', 2028]])];
     const r = row('Ann Lee', 2028);
-    const tie = (kind: string) => ({
+    const tie = (kind: string, url = teams[0].url) => ({
       ...tied,
-      affiliations: [{ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club: 'near', sources: [{ ...clubs.affiliations[0].sources[0], kind }] }] as ClubsFile['affiliations'],
+      affiliations: [{ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club: 'near', sources: [{ ...clubs.affiliations[0].sources[0], kind, url }] }] as ClubsFile['affiliations'],
     });
     expect(outcome(teams, [r], tie('ncsa'))).toEqual(['Ann Lee: match (tie-without-roster)']);
     expect(outcome(teams, [r], tie(LEAGUE_ROSTER_KIND))).toEqual(['Ann Lee: match (linked)']);
+    // A league roster the match does not rest on (another team's page) does not link it.
+    expect(outcome(teams, [r], tie(LEAGUE_ROSTER_KIND, 'https://app.athleteone.com/public/event/1/schedules-standings/team/99/1'))).toEqual([
+      'Ann Lee: match (tie-without-roster)',
+    ]);
   });
 });
