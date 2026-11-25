@@ -20,7 +20,16 @@ const NAMES = clubs.clubs.flatMap((c) => [c.name, ...(c.shortName !== null ? [c.
 const words = (clubTeam: string) => soccerClubTeamWords(clubTeam, NAMES);
 const rosters = JSON.parse(readFileSync('data/soccer/club-rosters.json', 'utf8')) as ClubRostersFile;
 const ROSTER_BY_URL = new Map(rosters.teams.map((t) => [t.url, t]));
-const TIES = [...clubs.affiliations, ...clubs.jvAffiliations];
+// The ties a club page prints: a tie whose roster row MaxPreps no longer lists is left out as roster drift
+// (lib/players/roster-drift.ts), and its record is kept as it was, so the rules below do not read it.
+const ROSTER_ROWS = new Set(
+  ['data/soccer/rosters.json', 'data/soccer/jv-rosters.json'].flatMap((f) =>
+    (JSON.parse(readFileSync(f, 'utf8')) as { teams: Array<{ slug: string; players?: Array<{ athleteId: string }> }> }).teams.flatMap((t) =>
+      (t.players ?? []).map((p) => `${t.slug} ${p.athleteId}`),
+    ),
+  ),
+);
+const TIES = [...clubs.affiliations, ...clubs.jvAffiliations].filter((a) => ROSTER_ROWS.has(`${a.teamSlug} ${a.athleteId}`));
 
 describe('soccerClubTeamWords', () => {
   it('prints every club team in data/soccer/clubs.json in one shape', () => {
