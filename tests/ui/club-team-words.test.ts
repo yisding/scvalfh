@@ -131,6 +131,7 @@ describe('soccerClubTeamWords', () => {
       Silver: 'Silver',
       'Stanford Strikers ECNL RL G2008/09': 'ECNL RL G2008/09',
       'Stanford Strikers ECNL RL G2009/10': 'ECNL RL G2009/10',
+      'Stanford Strikers ECNL RL G2010/11': 'ECNL RL G2010/11',
       'N1 G2010/11 Quicksilver Green (CA)': 'Quicksilver Green N1 G2010/11',
       'State Premier': 'State Premier',
       'Sunnyvale U19G Red 08/09': 'Red G2008/09',

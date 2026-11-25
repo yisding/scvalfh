@@ -17,7 +17,8 @@
     "Mitty, 2026-11-25. MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, no other change. Hudl's 2026 Mitty varsity roster, read 2026-11-25, still lists both. The owner decided: Zuri Brandt's 3 ties (De Anza Force, MVLA, San Francisco Elite) are removed, as she is a senior and may have left the team (git history keeps them); Scarlett Martinez's tie to De Anza Force is kept, though it is left out as roster drift while MaxPreps does not list her, and shows again if MaxPreps lists her again.",
     "League rosters, 2026-11-25 (NorCal Premier): the girls U14-U19 teams in NorCal Premier's two 2026-27 leagues on GotSport, the NorCal N1 League (event 54043) and the Fall League (54541), of Almaden FC and the NorCal Premier-only clubs Sunnyvale Alliance, FC Milpitas (Milpitas YSL on GotSport), Peninsula Youth Soccer and ALBION SC Silicon Valley (its San Mateo club), each team's public roster on GotSport Rankings (README, 'Club rosters'; kept in club-rosters.json as leagues n1 and norcal-fall). Compared on birth years like Girls Academy's. 8 rows match: 6 new ties resting on a roster alone (5 varsity, 1 JV; Almaden FC 3, Sunnyvale Alliance 2, FC Milpitas 1), medium, status unknown, and 2 ties other pages already made, which gain the roster and keep their status (Mahi Nanda, Evergreen Valley, to Almaden FC; Tuhina Samaddar, Wilcox, to Sunnyvale Alliance). With them, 3 ECNL matches at the PCAL schools added on 2026-11-25 (Fynlee Devine and Kayden Aguilera, Salinas, and Amalia Phillips, Palma, to Bay Area Surf), medium, current for 2026-27. Second reader: a separate run opened all 6 Rankings pages and pressed Roster on the 5 Athlete One pages, and found all 17 cited rows as displayed.",
     "Rows with no grade, and the JV players' Hudl club entries, 2026-11-25 (README, 'Club rosters'). Every soccer Hudl profile linked in rosters-enrichment.json and jv-profiles.json (187) was read again for its team list's club entries: every varsity player's is tied already; two JV players' are new, Noa Goldberg's and Mari Madalen Jan's (Mountain View) to De Anza Force's 'Force (CA) ECNL G2011/12', high confidence, citing the Hudl entry and the ECNL rosters (which give Noa Goldberg no class year). JV profiles had not been read for clubs before. The league-roster rule was loosened the same day (owner decision): a row with no grade takes the class year its own linked recruiting pages state, else the roster's own, when every roster row of the name that gives a class year gives the same one and it is a class in high school in 2026-27; a linked page's class year that disagrees rules a match out. MaxPreps posts no grade for whole schools (Los Gatos), whose players the rule had taken none of. 42 new ties (41 by the rule, medium; class year from the roster 36, from the player's linked page 5) and 5 ties that gain a roster and read current for 2026-27 (Kinsley Ozawa, Claire Chen, Ava Porter, Harper Satterlee, Mari Madalen Jan). Los Gatos gains 20 (13 varsity, 7 JV). Second reader: fetch-club-rosters read all 256 ECNL teams afresh the same day, identical to the kept copy, and every cited ECNL row was found in it as quoted; Charlotte Markovic's (Los Gatos JV) tie to Almaden FC rests on its GA 09/10 and N1 G2008/09 GotSport rosters, both re-read in Chromium, and her SportsRecruits page's class year; status unknown.",
-    "Owner decisions, 2026-11-25. (1) Status: a tie a club roster read this season lists is current for 2026-27, the GotSport Rankings rosters (Girls Academy, NorCal Premier) included, although those pages give no date; 36 ties that rested on one moved from unknown to current. (2) Four rows with no grade whose ECNL roster rows give no class year are linked outside the rule, on the name, the one club and its location: Riva Malhotra (Gunn) and Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, Shea Murphy (Leland JV) to De Anza Force; medium, current for 2026-27."
+    "Owner decisions, 2026-11-25. (1) Status: a tie a club roster read this season lists is current for 2026-27, the GotSport Rankings rosters (Girls Academy, NorCal Premier) included, although those pages give no date; 36 ties that rested on one moved from unknown to current. (2) Four rows with no grade whose ECNL roster rows give no class year are linked outside the rule, on the name, the one club and its location: Riva Malhotra (Gunn) and Elizabeth Leitch and Rylann Duebelbeis (Los Gatos) to Bay Area Surf, Shea Murphy (Leland JV) to De Anza Force; medium, current for 2026-27.",
+    "Owner decision, 2026-11-25: 11 rows whose ECNL roster class year is one off the grade's are tied anyway, each league-roster source marked classYearDiffers (lib/players/clubs-schema.ts; lib/players/roster-join.ts accepts that one year's difference for such a source only). 3 ties other pages already made gain the roster and read current (Maya Coriell to De Anza Force, Valyn Rubina to MVLA, Taylor Skovmand to Los Gatos United); 8 are new, medium: 5 whose own linked page confirms the grade's class year (Elise Shafie and Ciara Riciputi to MVLA, Isabella Huston to Los Gatos United, Roya Jamasbi to Burlingame, Eliza Dennebaum to Stanford Strikers) and 3 with no other page and an uncommon name (Ariella Edens to Santa Clara Sporting, Maya Onalfo to De Anza Force, Milla Chow to MVLA). Not tied: Grace Badawi (Menlo-Atherton also has an Ella Badawi), Jocelyn Rocha and Sofia Nguyen (common names), and the rows two years off, at a club with no record, or another player of the name."
   ],
   "clubs": [
     {
@@ -3686,7 +3687,7 @@
       "club": "de-anza-force",
       "clubTeam": "ECNL-RL",
       "status": "current",
-      "asOf": "2026",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -3696,9 +3697,18 @@
           "statedSchool": "Milpitas High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/103326/40777",
+          "kind": "league-roster",
+          "quote": "Force (CA) ECNL RL G2009/10 | CORIELL, Maya | Goal Keeper | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2009/10) list a player of this name with class year 2027, one year off the class of 2028 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in the South Bay. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster."
     },
     {
       "teamSlug": "milpitas",
@@ -5455,8 +5465,8 @@
       "fullName": "Valyn Rubina",
       "club": "mvla-soccer-club",
       "clubTeam": "ECNL RL",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5466,9 +5476,18 @@
           "statedSchool": "Prospect High School",
           "statedClassYear": 2030,
           "sourceDate": null
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/103537/40775",
+          "kind": "league-roster",
+          "quote": "MVLA ECNL RL G2011/12 | Rubina, Valyn | Forward | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21. The league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: MVLA ECNL RL G2011/12) list a player of this name with class year 2029, one year off the class of 2030 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Los Altos. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster."
     },
     {
       "teamSlug": "prospect",
@@ -6230,7 +6249,7 @@
       "club": "los-gatos-united-soccer-club",
       "clubTeam": "ECNL RL",
       "status": "current",
-      "asOf": "2026",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -6248,9 +6267,18 @@
           "statedSchool": "Valley Christian High School - San Jose",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/131749/41212",
+          "kind": "league-roster",
+          "quote": "Los Gatos United Soccer Club ECNL RL G2009/10 | Skovmand, Taylor | Goal Keeper | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The league's own 2026-27 rosters (ECNL RL Girls NorCal 2026-27: Los Gatos United Soccer Club ECNL RL G2009/10) list a player of this name with class year 2027, one year off the class of 2028 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Los Gatos. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster."
     },
     {
       "teamSlug": "mercy-burlingame",
@@ -10699,6 +10727,208 @@
         }
       ],
       "basis": "Linked on the owner's decision (2026-11-25), outside the league-roster rule (lib/players/club-rosters.ts), which leaves the row as 'no-grade': the league's own 2026-27 rosters (ECNL Girls Northern Cal 2026-27: Bay Area Surf - ECNL G2011/12; ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2011/12, Bay Area Surf ECNL RL G2010/11) list a player of this name with no class year, and the roster row has no grade, so no class year was compared. No other tracked school has the name, varsity or JV; every ECNL roster row of the name is at this club; the club is based in San Jose. No page names the school. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25."
+    },
+    {
+      "teamSlug": "homestead",
+      "athleteId": "6484a831-38bd-4f91-84f3-815622109376",
+      "playerId": "pc185f9d7eb",
+      "fullName": "Elise Shafie",
+      "club": "mvla-soccer-club",
+      "clubTeam": "MVLA ECNL RL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/82271/40776",
+          "kind": "league-roster",
+          "quote": "MVLA ECNL RL G2010/11 | Shafie, Elise | Midfielder | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: MVLA ECNL RL G2010/11) list a player of this name with class year 2029, one year off the class of 2030 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Los Altos. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. The player's own linked recruiting page states the class of 2030, the grade's. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "mountain-view",
+      "athleteId": "12c75489-4241-486b-9409-ff5251efc9a1",
+      "playerId": "pad16ae5243",
+      "fullName": "Ciara Riciputi",
+      "club": "mvla-soccer-club",
+      "clubTeam": "MVLA ECNL RL G2008/09",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/39345/40778",
+          "kind": "league-roster",
+          "quote": "MVLA ECNL RL G2008/09 | Riciputi, Ciara | Mid/Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2026,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: MVLA ECNL RL G2008/09) list a player of this name with class year 2026, one year off the class of 2027 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Los Altos. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. The player's own linked recruiting page states the class of 2027, the grade's. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "santa-clara",
+      "athleteId": "37f24ed4-cade-4c59-a2d3-d9dae6a97f80",
+      "playerId": "p9252ffa441",
+      "fullName": "Ariella Edens",
+      "club": "santa-clara-sporting-club",
+      "clubTeam": "Santa Clara Sporting ECNL RL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108402/41211",
+          "kind": "league-roster",
+          "quote": "Santa Clara Sporting ECNL RL G2010/11 | Edens, Ariella | Midfielder | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls NorCal 2026-27: Santa Clara Sporting ECNL RL G2010/11) list a player of this name with class year 2029, one year off the class of 2030 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Santa Clara. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. No other page states her class year. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "milpitas",
+      "athleteId": "39765607-09de-4204-a167-ffaa07219fe2",
+      "playerId": "p74d58ef75a",
+      "fullName": "Maya Onalfo",
+      "club": "de-anza-force",
+      "clubTeam": "Force (CA) ECNL RL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/94954/40776",
+          "kind": "league-roster",
+          "quote": "Force (CA) ECNL RL G2010/11 | Onalfo, Maya | Goal Keeper | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/103326/40777",
+          "kind": "league-roster",
+          "quote": "Force (CA) ECNL RL G2009/10 | Onalfo, Maya | Goal Keeper | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2010/11, Force (CA) ECNL RL G2009/10) list a player of this name with class year 2029, one year off the class of 2028 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in the South Bay. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. No other page states her class year. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "monta-vista",
+      "athleteId": "232516f8-4bd9-4bd8-b766-febb1a7515ea",
+      "playerId": "p1de05eade1",
+      "fullName": "Milla Chow",
+      "club": "mvla-soccer-club",
+      "clubTeam": "MVLA ECNL RL G2011/12",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4300/schedules-standings/team/103537/40775",
+          "kind": "league-roster",
+          "quote": "MVLA ECNL RL G2011/12 | Chow, Milla | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: MVLA ECNL RL G2011/12) list a player of this name with class year 2029, one year off the class of 2030 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Los Altos. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. No other page states her class year. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "branham",
+      "athleteId": "8ccad4e3-ba06-4d0e-a0d5-b2a449032f3b",
+      "playerId": "pa1f1cd6b44",
+      "fullName": "Isabella Huston",
+      "club": "los-gatos-united-soccer-club",
+      "clubTeam": "Los Gatos United Soccer Club ECNL RL G2008/09",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/131750/41213",
+          "kind": "league-roster",
+          "quote": "Los Gatos United Soccer Club ECNL RL G2008/09 | Huston, Isabella | Goal Keeper | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2026,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls NorCal 2026-27: Los Gatos United Soccer Club ECNL RL G2008/09) list a player of this name with class year 2026, one year off the class of 2027 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Los Gatos. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. The player's own linked recruiting page states the class of 2027, the grade's. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "carlmont",
+      "athleteId": "9f4dba0f-d406-43d5-bff2-a0ee46b0e518",
+      "playerId": "p1fe79bdf1f",
+      "fullName": "Roya Jamasbi",
+      "club": "burlingame-soccer-club",
+      "clubTeam": "Burlingame SC ECNL RL G2008/09",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108490/41213",
+          "kind": "league-roster",
+          "quote": "Burlingame SC ECNL RL G2008/09 | Jamasbi, Roya | Fwd/Midfielder | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2026,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls NorCal 2026-27: Burlingame SC ECNL RL G2008/09) list a player of this name with class year 2026, one year off the class of 2027 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Burlingame. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. The player's own linked recruiting page states the class of 2027, the grade's. No page names the school. Medium."
+    },
+    {
+      "teamSlug": "carlmont",
+      "athleteId": "1671fb7f-aa57-49f1-8c1f-6299201bf7d7",
+      "playerId": "pb2221e13fb",
+      "fullName": "Eliza Dennebaum",
+      "club": "stanford-strikers-fc",
+      "clubTeam": "Stanford Strikers ECNL RL G2010/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/111496/41211",
+          "kind": "league-roster",
+          "quote": "Stanford Strikers ECNL RL G2010/11 | Dennebaum, Eliza | Mid/Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/83808/41212",
+          "kind": "league-roster",
+          "quote": "Stanford Strikers ECNL RL G2009/10 | Dennebaum, Eliza | Mid/Defender | Club Player Pool",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        }
+      ],
+      "basis": "League roster, outside the league-roster rule (lib/players/club-rosters.ts), which reports the row as 'class-year-differs'. The league's own 2026-27 rosters (ECNL RL Girls NorCal 2026-27: Stanford Strikers ECNL RL G2010/11, Stanford Strikers ECNL RL G2009/10) list a player of this name with class year 2030, one year off the class of 2029 the roster grade gives; linked on the owner's decision (2026-11-25: a club's class year is often entered by the family, or the player plays up or down), the source marked classYearDiffers. The name is on one tracked school's rosters, every roster row of the name is at this club, and the club is based in Menlo Park. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25; the tie is current on that roster. The player's own linked recruiting page states the class of 2029, the grade's. No page names the school. Medium."
     }
   ]
 }

@@ -5,7 +5,8 @@
  * Every record must join to a row of its team under the row's own fullName, the row must be at the
  * level the caller asks for (varsity, unless `level: 'jv'`), and, when the row has a grade, every class year a source states must be that grade's
  * (or, where the overlay records that MaxPreps' roster shows last season's grade — a `rosterBehind`
- * conflict — the corrected grade's: lib/players/rosters.ts classYearAgrees).
+ * conflict — the corrected grade's: lib/players/rosters.ts classYearAgrees). A club source marked
+ * `classYearDiffers` may be one year off that class year (lib/players/clubs-schema.ts).
  *
  * Each of those rules reads the roster row, which every roster refresh rewrites, so a record that fails one
  * is roster drift (lib/players/roster-drift.ts), not a load failure: it is left out of the join, and of the
@@ -29,7 +30,8 @@ export interface RosterJoinRecord {
   teamSlug: string;
   athleteId: string;
   fullName: string;
-  sources: readonly { kind: string; statedClassYear: number | null }[];
+  /** `classYearDiffers`: a source whose class year may be one off the grade's (lib/players/clubs-schema.ts). */
+  sources: readonly { kind: string; statedClassYear: number | null; classYearDiffers?: true }[];
 }
 
 export interface RosterJoinOptions<R> {
@@ -88,7 +90,10 @@ function mismatch(
   if (level === 'varsity' && row.level === 'jv') return `a JV row: ${noun} list varsity rows only`;
   if (level === 'jv' && row.level !== 'jv') return `not a JV row: ${noun} list JV rows only`;
   for (const s of r.sources) {
-    if (s.statedClassYear !== null && !classYearAgrees(season, row, s.statedClassYear)) {
+    if (s.statedClassYear === null) continue;
+    // A source marked by hand as one year off the grade's class year (owner decision, 2026-11-25).
+    if (s.classYearDiffers && (classYearAgrees(season, row, s.statedClassYear + 1) || classYearAgrees(season, row, s.statedClassYear - 1))) continue;
+    if (!classYearAgrees(season, row, s.statedClassYear)) {
       return `${s.kind} source says class of ${s.statedClassYear}, the roster shows grade ${row.grade}`;
     }
   }

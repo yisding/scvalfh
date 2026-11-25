@@ -2155,6 +2155,19 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   (her name is also on Almaden FC's GA 09/10, which is not linked). Still not linked: 7 with no grade and no
   linked page's class year on a GotSport roster (which gives birth years only), 20 whose class year disagrees with
   the roster's, and 13 graded rows whose ECNL rows give no class year.
+- **Class years one off, 2026-11-25 (owner decision).** Of the 20 graded rows whose class year disagrees with every
+  ECNL row of the name, 11 are tied anyway: each league-roster source is marked `classYearDiffers`
+  (`lib/players/clubs-schema.ts`), which `lib/players/roster-join.ts` accepts for that source only and only one year
+  off the grade's class year (a club's class year is often entered by the family, or the player plays up or down).
+  3 ties other pages already made gain the roster and read current (Maya Coriell to De Anza Force, Valyn Rubina to
+  MVLA, Taylor Skovmand to Los Gatos United); 8 are new, medium: 5 whose own linked NCSA or Hudl page confirms the
+  grade's class year (Elise Shafie and Ciara Riciputi to MVLA, Isabella Huston to Los Gatos United, Roya Jamasbi to
+  Burlingame, Eliza Dennebaum to Stanford Strikers) and 3 with no other page and an uncommon name (Ariella Edens to
+  Santa Clara Sporting, Maya Onalfo to De Anza Force, Milla Chow to MVLA). Left: Grace Badawi (Menlo-Atherton also
+  has an Ella Badawi), Jocelyn Rocha and Sofia Nguyen (common names), Jiselle Perez and Marissa Garcia (two years
+  off; Garcia's own page ties her to Santa Cruz United), Sophia Hernandez and Emily Garcia (clubs with no record),
+  Sofia Gonzalez (common name; her Hudl page disagrees too) and Summit Shasta's Scarlett Martinez (the rows are
+  Mitty's player of that name). `compare-club-rosters` still lists the 11 as `class-year-differs`.
 - **Why Los Gatos had so few links, 2026-11-25.** MaxPreps posts no grade for any of the 18 Los Gatos varsity rows
   (nor the JV list's), so the league-roster rule, which asked for a grade, took none of them although every varsity
   name is on an ECNL roster; that is what the loosened rule fixes. Its recruiting pages are few for other reasons:
