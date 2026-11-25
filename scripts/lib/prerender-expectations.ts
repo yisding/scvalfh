@@ -69,6 +69,8 @@ export const SKIPPED_ROUTES: readonly string[] = [
   ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),
   ...(IS_FIELD_HOCKEY ? [] : ['/draft/awards']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
+  // The freshman level (girls soccer and boys basketball): any other build renders the hub as a 404 and has no params.
+  ...(hasFreshmanLevel() ? [] : ['/freshman', '/freshman/:league', '/freshman/game/:id']),
 ];
 
 /** The params each dynamic family must prerender, exactly. */
