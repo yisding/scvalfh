@@ -56,9 +56,10 @@ function isUncased(name: string): boolean {
  * Spellings a person has confirmed that MaxPreps gets wrong, applied after the recasing so a refetch
  * keeps them. Each is a run of whole words as MaxPreps writes them and as the family does, matched in
  * any case (a school that types the roster in capitals sends "OLIVIA VAN DE BRAAK", and the recasing
- * leaves a two-letter word such as "DE" as it is). The two sides have the same number of words, word for
- * word, so a roster row's first and last names are respelled along with its full name. Curated, never
- * guessed: an entry says who confirmed it.
+ * leaves a two-letter word such as "DE" as it is). Where the two sides have the same number of words, a
+ * roster row's first and last names are respelled word for word along with its full name; where they do
+ * not (two words joined by a hyphen: "Ann Katrin" → "Ann-Katrin"), a first or last name is respelled only
+ * when it is the whole run. Curated, never guessed: an entry says who confirmed it.
  */
 export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis: string }[] = [
   {
@@ -82,6 +83,16 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
     maxpreps: 'Van every',
     spelled: 'Van Every',
     basis: "Kiana Van Every (soccer): the site owner confirmed both words of the last name are capitalized (2026-11-25).",
+  },
+  {
+    maxpreps: 'SaynWittgenstein',
+    spelled: 'Sayn-Wittgenstein',
+    basis: "Ann Katrin Sayn-Wittgenstein (Los Gatos field hockey, 2025-26): the site owner confirmed the hyphen MaxPreps' stat sheet drops (2026-11-25).",
+  },
+  {
+    maxpreps: 'Ann Katrin',
+    spelled: 'Ann-Katrin',
+    basis: "Ann-Katrin Sayn-Wittgenstein (Los Gatos field hockey, 2025-26): the site owner confirmed the hyphen in her first name too (2026-11-25). No other player in the repository is named Ann Katrin.",
   },
   {
     maxpreps: 'Iris jin',
@@ -164,10 +175,9 @@ const wholeWords = (text: string, flags: string) =>
 const SPELLINGS = NAME_SPELLINGS.map(({ maxpreps, spelled }) => {
   const from = words(maxpreps);
   const to = words(spelled);
-  if (from.length !== to.length) {
-    throw new Error(`lib/sources/person-name.ts: "${maxpreps}" and "${spelled}" differ in their number of words`);
-  }
-  return { re: wholeWords(maxpreps, 'giu'), spelled, pairs: from.map((w, i) => [w, to[i]] as const) };
+  // Word for word where the counts agree; otherwise a part is respelled only when it is the whole run.
+  const pairs = from.length === to.length ? from.map((w, i) => [w, to[i]] as const) : [];
+  return { re: wholeWords(maxpreps, 'giu'), whole: new RegExp(`^${escape(maxpreps)}$`, 'iu'), spelled, pairs };
 });
 
 function respell(name: string): string {
@@ -183,7 +193,7 @@ function respellPart(part: string, fullName: string): string {
     re.lastIndex = 0;
     return re.test(fullName);
   }).reduce(
-    (n, { pairs }) => pairs.reduce((m, [from, to]) => m.replace(wholeWords(from, 'giu'), to), n),
+    (n, { whole, spelled, pairs }) => (whole.test(n) ? spelled : pairs.reduce((m, [from, to]) => m.replace(wholeWords(from, 'giu'), to), n)),
     part,
   );
 }
