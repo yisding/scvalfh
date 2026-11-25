@@ -15,7 +15,9 @@ import { getFetchedAt } from '../../lib/data';
 import { listWords } from '../../lib/format';
 import { LEAGUES, LEAGUES_PROPER, regionOf } from '../../lib/leagues';
 import { GENDER_NAME, HAS_MAXPREPS, SPORT } from '../../lib/sports/current';
-import { MAIN_LEVEL, SECOND_LEVEL } from '../../components/words/level-words';
+import { FRESHMAN_LEVEL, MAIN_LEVEL, SECOND_LEVEL } from '../../components/words/level-words';
+import { hasFreshmanLevel } from '../../lib/freshman/freshman';
+import Link from 'next/link';
 
 /**
  * `/jv` — "Where does our JV stand, how did it do, and when does it play?" The JV hub: every league's JV
@@ -57,6 +59,16 @@ export default function JvStandingsPage() {
         league={{ mode: 'anchor', label: 'Leagues', leagues: leagueChips(), hrefs: leagueHrefs(null) }}
         stamp={<LastUpdated at={getFetchedAt()} now={BUILD_INSTANT} variant="time" />}
       />
+      {/* The freshman level's hub (girls soccer and boys basketball): linked from here, not from the top navigation. */}
+      {hasFreshmanLevel() ? (
+        <ul className="sx-linkrow">
+          <li>
+            <Link href="/freshman" prefetch={false} className="sx-action">
+              {FRESHMAN_LEVEL.longTitle} games
+            </Link>
+          </li>
+        </ul>
+      ) : null}
       {LEAGUES.map((league, index) => (
         <section
           key={league.id}

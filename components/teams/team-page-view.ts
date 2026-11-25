@@ -14,6 +14,7 @@ import type { DivisionId, Game, LeagueId } from '../../lib/types';
 import { teamJvStanding } from '../jv/jv-standings-view';
 import { buildTeamJvRosterView, type TeamJvRosterView } from '../jv/jv-roster-view';
 import { buildTeamJvView, type TeamJvView } from '../jv/jv-view';
+import { buildTeamFreshmanView, type TeamFreshmanView } from '../freshman/freshman-view';
 import { buildPlayerStatsView, type PlayerStatsView } from './player-stats-view';
 import { buildRosterView, type RosterView } from './roster-view';
 import type { TeamPageView } from './team-view';
@@ -87,6 +88,8 @@ export interface TeamPageParts {
   jvStanding: { line: string | null; href: string } | null;
   /** The school's JV roster, or null when no source lists its JV players (the section is left out). */
   jvRoster: TeamJvRosterView | null;
+  /** The school's freshman games, or null in a build without the level or with none listed (the section is left out). */
+  freshman: TeamFreshmanView | null;
   playerStats: PlayerStatsView | null;
   /** The roster's players, 0 for an errored roster. */
   rosterCount: number;
@@ -123,6 +126,8 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   // Its JV place, when its division's JV table is shown (lib/jv/jv-standings.ts), and that table's anchor.
   const jvStanding = teamJvStanding(team.slug);
   const jvRoster = buildTeamJvRosterView(team.slug);
+  // Its freshman games (MaxPreps' freshman feeds, lib/freshman/), listed apart from varsity and JV.
+  const freshman = buildTeamFreshmanView(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   // A team whose every league game is still to come (Metro South Bay before Oct 7, Newport Harbor before
@@ -160,6 +165,7 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
     jv,
     jvStanding,
     jvRoster,
+    freshman,
     playerStats,
     rosterCount,
     firstLeagueGame,

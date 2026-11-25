@@ -27,6 +27,12 @@ export const SECOND_LEVEL: LevelWords = LEVELS_ARE_GRADES
   ? { short: '6th/7th', long: '6th/7th grade', longTitle: '6th/7th grade' }
   : { short: 'JV', long: 'junior varsity', longTitle: 'Junior varsity' };
 
+/**
+ * The third level: a high school's freshman team (girls soccer and boys basketball, the /freshman pages; lib/freshman/).
+ * The copy names it "freshman" (owner decision, 2026-11-25), never "frosh".
+ */
+export const FRESHMAN_LEVEL: LevelWords = { short: 'Freshman', long: 'freshman', longTitle: 'Freshman' };
+
 /** The main level: the one the site's tables, schedule and playoffs are about ('varsity', or the VAL's '7th/8th'). */
 export const MAIN_LEVEL: LevelWords = LEVELS_ARE_GRADES
   ? { short: '7th/8th', long: '7th/8th grade', longTitle: '7th/8th grade' }

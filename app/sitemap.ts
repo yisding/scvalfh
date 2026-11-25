@@ -26,6 +26,7 @@ import {
 import { gameHref } from '../lib/game-id';
 import { getHistoryLastChecked } from '../lib/history/history';
 import { getJvFetchedAt, getJvGames, getJvGamesOn, jvGameHref } from '../lib/jv/jv';
+import { freshmanGameHref, getFreshmanFetchedAt, getFreshmanGames } from '../lib/freshman/freshman';
 import { getJvProfilesFile } from '../lib/jv/jv-profiles';
 import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
 
@@ -71,6 +72,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       .at(-1)!,
   );
   const url = (path: string) => `${SITE_URL}${path}`;
+  const freshmanFetchedAt = getFreshmanFetchedAt();
+  const freshmanStamp = freshmanFetchedAt === null ? null : new Date(freshmanFetchedAt);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: url('/'), lastModified, changeFrequency: 'daily', priority: 1 },
@@ -94,6 +97,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily' as const,
       priority: 0.4,
     })),
+    // The freshman hub and each league's freshman calendar (girls soccer and boys basketball), stamped with the
+    // freshman file's own date: nothing else feeds them.
+    ...(freshmanStamp
+      ? [
+          { url: url('/freshman'), lastModified: freshmanStamp, changeFrequency: 'daily' as const, priority: 0.4 },
+          ...LEAGUE_IDS.map((league) => ({
+            url: url(`/freshman/${league}`),
+            lastModified: freshmanStamp,
+            changeFrequency: 'daily' as const,
+            priority: 0.3,
+          })),
+        ]
+      : []),
     { url: url('/history/2025-26'), lastModified: new Date(getHistoryLastChecked()), changeFrequency: 'yearly', priority: 0.3 },
     { url: url('/about'), lastModified, changeFrequency: 'monthly', priority: 0.3 },
     ...(HAS_RECRUITING
@@ -178,6 +194,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.3,
   }));
 
+  // Each freshman game's page (app/freshman/game/[id]), stamped with the freshman file's date.
+  const freshmanGameRoutes: MetadataRoute.Sitemap = freshmanStamp
+    ? getFreshmanGames().map((game) => ({
+        url: url(freshmanGameHref(game) as string),
+        lastModified: freshmanStamp,
+        changeFrequency: 'weekly',
+        priority: 0.2,
+      }))
+    : [];
+
   return [
     ...staticRoutes,
     ...leagueRoutes,
@@ -187,5 +213,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...dateRoutes,
     ...gameRoutes,
     ...jvGameRoutes,
+    ...freshmanGameRoutes,
   ];
 }

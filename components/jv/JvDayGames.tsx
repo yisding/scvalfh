@@ -55,8 +55,19 @@ function kindWords(display: GameDisplay, chips: boolean): string | null {
   return display.postseasonTag ?? (display.isNonLeague ? 'Non-league' : display.leagueTag);
 }
 
-/** The rows alone, without the footnote: the /jv lists print one footnote under several days' rows. */
-export function JvGameList({ rows, showDate = false }: { rows: readonly JvRowView[]; showDate?: boolean }) {
+/**
+ * The rows alone, without the footnote: the /jv lists print one footnote under several days' rows. `levelLabel` is
+ * what each row's link says it is before the game's sentence (the JV's 'JV'; the freshman lists pass 'Freshman').
+ */
+export function JvGameList({
+  rows,
+  showDate = false,
+  levelLabel = SECOND_LEVEL.short,
+}: {
+  rows: readonly JvRowView[];
+  showDate?: boolean;
+  levelLabel?: string;
+}) {
   return (
     <div className="sx-gamelist">
       <ul className={WIDE_SCORES ? 'sx-games sx-games-wide' : 'sx-games'}>
@@ -80,7 +91,7 @@ export function JvGameList({ rows, showDate = false }: { rows: readonly JvRowVie
                   href={href}
                   prefetch={false}
                   className="sx-game-link"
-                  aria-label={`${SECOND_LEVEL.short}: ${display.sentence}${fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}`}
+                  aria-label={`${levelLabel}: ${display.sentence}${fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}`}
                 />
                 <GameStatus game={game} display={display} showDate={showDate} />
                 <span className="contents" aria-hidden="true">

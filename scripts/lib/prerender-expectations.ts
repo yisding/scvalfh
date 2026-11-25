@@ -19,6 +19,7 @@ import { getClubSlugs } from '../../lib/players/clubs';
 import { gameSlug } from '../../lib/game-slug';
 import { gameAliasTable } from '../../lib/game-urls';
 import { getJvGameSlugs } from '../../lib/jv/jv';
+import { getFreshmanGameSlugs, hasFreshmanLevel } from '../../lib/freshman/freshman';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
 import { HAS_CLUB_CALENDAR, HAS_RECRUITING, IS_FIELD_HOCKEY } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
@@ -39,6 +40,7 @@ const ALL_FIXED_PAGES = [
   'commits',
   'recruiting',
   'jv',
+  'freshman',
   'draft/awards',
 ] as const;
 
@@ -51,7 +53,8 @@ export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
   (p) =>
     (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)) &&
     (HAS_CLUB_CALENDAR || p !== 'club-calendar') &&
-    (IS_FIELD_HOCKEY || p !== 'draft/awards'),
+    (IS_FIELD_HOCKEY || p !== 'draft/awards') &&
+    (hasFreshmanLevel() || p !== 'freshman'),
 );
 
 /**
@@ -66,6 +69,8 @@ export const SKIPPED_ROUTES: readonly string[] = [
   ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),
   ...(IS_FIELD_HOCKEY ? [] : ['/draft/awards']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
+  // The freshman level (girls soccer and boys basketball): any other build renders the hub as a 404 and has no params.
+  ...(hasFreshmanLevel() ? [] : ['/freshman', '/freshman/:league', '/freshman/game/:id']),
 ];
 
 /** The params each dynamic family must prerender, exactly. */
@@ -86,6 +91,10 @@ export interface ExpectedFamilies {
   clubSlugs: readonly string[];
   /** Every listed JV game's slug (lib/jv/jv.ts): the /jv/game/[id] family. */
   jvGameParams: readonly string[];
+  /** The /freshman/[league] family: every league in a build with the freshman level, none in any other. */
+  freshmanLeagueIds: readonly string[];
+  /** Every listed freshman game's slug (lib/freshman/freshman.ts): the /freshman/game/[id] family. */
+  freshmanGameParams: readonly string[];
 }
 
 /** The items of `a` not in `b`. */
@@ -149,6 +158,8 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     slugs,
     clubSlugs: getClubSlugs(),
     jvGameParams: getJvGameSlugs(),
+    freshmanLeagueIds: hasFreshmanLevel() ? [...LEAGUE_IDS] : [],
+    freshmanGameParams: getFreshmanGameSlugs(),
   };
 }
 
@@ -211,6 +222,10 @@ export function makeFamilyChecker(
     family('jv', expected.leagueIds, { og: false });
     // One page per listed JV game (app/jv/game/[id]), each with its OG card.
     family('jv/game', expected.jvGameParams, { og: true });
+    // The freshman level (girls soccer and boys basketball): one calendar per league and one page per listed game,
+    // each taking the root OG card; none at all in a build without the level.
+    family('freshman', expected.freshmanLeagueIds, { og: false });
+    family('freshman/game', expected.freshmanGameParams, { og: false });
     family('history', ['2025-26'], { og: false });
     // One page per club of data/field-hockey/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.

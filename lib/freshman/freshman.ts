@@ -118,6 +118,11 @@ export function getFreshmanGamesOn(dateKey: string): Game[] {
   return games.filter((g) => g.dateKey === dateKey);
 }
 
+/** A freshman game's URL segment (`/freshman/game/<slug>`); undefined only for a contest that is not a listed game. */
+export function getFreshmanGameSlug(contestId: ContestId): string | undefined {
+  return SLUG_BY_ID.get(contestId);
+}
+
 /** `/freshman/game/<slug>`: the one way a freshman game's page is linked. Undefined only for a game not listed. */
 export function freshmanGameHref(game: Pick<Game, 'contestId'>): string | undefined {
   const slug = SLUG_BY_ID.get(game.contestId);
