@@ -19,6 +19,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { divisionsOf, getLeague } from '../../lib/leagues';
+import { recaseName } from '../../lib/sources/person-name';
 import { HttpClient } from '../../lib/sources/http';
 import { hasPdftotext, parseStandingsPdfText, pdfToText } from '../../lib/sources/scval-pdf';
 import { SPORT_SEASON } from '../../lib/sports/current';
@@ -144,7 +145,8 @@ export async function buildScvalDocumentsHistory(opts: {
     if (!slug) problems.push(`all-league school "${school}" (${where}) resolves to no registry team`);
     if (grade === null && !unreadable) problems.push(`all-league year "${year}" of ${name} (${where}) is not a grade`);
     if (grade !== null && unreadable) problems.push(`all-league year "${year}" of ${name} (${where}) is listed as unreadable and is a grade`);
-    return { player: name, school, slug, position: position.trim() || null, year: grade };
+    // The name as printed, with the rosters' recasing and confirmed spellings (lib/sources/person-name.ts).
+    return { player: recaseName(name), school, slug, position: position.trim() || null, year: grade };
   };
 
   const awardsOf = (division: string, level: 'varsity' | 'jv') => {

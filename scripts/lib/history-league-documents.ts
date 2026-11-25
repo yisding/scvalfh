@@ -19,6 +19,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { divisionsOf, getLeague } from '../../lib/leagues';
+import { recaseName } from '../../lib/sources/person-name';
 import { SPORT } from '../../lib/sports/current';
 import { TEAMS, resolveTeam, teamsInLeague } from '../../lib/teams';
 import type { LeagueId } from '../../lib/types';
@@ -153,7 +154,8 @@ export function buildLeagueDocumentsHistory(
     const grade = year.trim() === '' ? null : gradeOf(year);
     if (!slug) say(`all-league school "${school}" (${where}) resolves to no team of the league or its former members`);
     if (year.trim() !== '' && grade === null) say(`all-league year "${year}" of ${name} (${where}) is not a grade`);
-    return { player: name, school, slug, position: position.trim() || null, year: grade };
+    // The name as printed, with the rosters' recasing and confirmed spellings (lib/sources/person-name.ts).
+    return { player: recaseName(name), school, slug, position: position.trim() || null, year: grade };
   };
 
   const awards = (a: TranscribedAwards | null, division: string, level: 'varsity' | 'jv') => {

@@ -2322,7 +2322,7 @@
         {
           "url": "https://nfhca.org/2025-high-school-watchlist/",
           "kind": "event",
-          "quote": "Olivia | Van De Braak | St Ignatius College Preparatory | San Francisco Hawks | Sophomore | 16 | M",
+          "quote": "Olivia | Van de Braak | St Ignatius College Preparatory | San Francisco Hawks | Sophomore | 16 | M",
           "statedSchool": "St Ignatius College Preparatory",
           "statedClassYear": 2028,
           "sourceDate": "2025-08-28"
@@ -2346,7 +2346,7 @@
         {
           "url": "https://maxfh.longstreth.com/national-player-invitational-2028/",
           "kind": "event",
-          "quote": "Olivia Van De Braak CA St Ignatius College Prep San Francisco Youth FHC",
+          "quote": "Olivia Van de Braak CA St Ignatius College Prep San Francisco Youth FHC",
           "statedSchool": "St Ignatius College Prep",
           "statedClassYear": 2028,
           "sourceDate": "2025-05-20"
@@ -2452,7 +2452,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The NFHCA 2026 watchlist (published 2026-08-27) names Scarlett Gammack with St. Ignatius College Preparatory and San Francisco Hawks, class First-Year (2030, agrees with grade 9). The club's own current-players page lists her under Class of 2030, and the club history says the San Francisco Youth Field Hockey Club became the San Francisco Hawks, so the club is the sf-hawks club. Her linked SportsRecruits page shows 2030 and St. Ignatius but no club, so I did not cite it. A second SportsRecruits profile of hers (scarlett_gammack, not the linked scarlett_gammack2) shows class 2030, San Francisco, Forward, says she joined the SF Hawks, and says she will join the St. Ignatius Wildcats coached by Michelle Van De Braak. The club's Current Players list shows her under Class of 2030 as a Forward, and the St. Ignatius team page lists her as 2030 #9 (roster jersey 9, position F). The school mention is future tense because the bio was written before she started 9th grade, and the club page has no date or school. The profile and club page give no team, so clubTeam is null."
+      "basis": "The NFHCA 2026 watchlist (published 2026-08-27) names Scarlett Gammack with St. Ignatius College Preparatory and San Francisco Hawks, class First-Year (2030, agrees with grade 9). The club's own current-players page lists her under Class of 2030, and the club history says the San Francisco Youth Field Hockey Club became the San Francisco Hawks, so the club is the sf-hawks club. Her linked SportsRecruits page shows 2030 and St. Ignatius but no club, so I did not cite it. A second SportsRecruits profile of hers (scarlett_gammack, not the linked scarlett_gammack2) shows class 2030, San Francisco, Forward, says she joined the SF Hawks, and says she will join the St. Ignatius Wildcats coached by Michelle Van de Braak. The club's Current Players list shows her under Class of 2030 as a Forward, and the St. Ignatius team page lists her as 2030 #9 (roster jersey 9, position F). The school mention is future tense because the bio was written before she started 9th grade, and the club page has no date or school. The profile and club page give no team, so clubTeam is null."
     },
     {
       "teamSlug": "st-ignatius",
@@ -6588,7 +6588,7 @@
       "teamSlug": "mission-bay",
       "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
       "playerId": "pec5e344dc5",
-      "fullName": "Amelia \"mimi\" Scatena",
+      "fullName": "Amelia \"Mimi\" Scatena",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -7778,7 +7778,7 @@
       "teamSlug": "mission-bay",
       "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
       "playerId": "pec5e344dc5",
-      "fullName": "Amelia \"mimi\" Scatena",
+      "fullName": "Amelia \"Mimi\" Scatena",
       "club": "coastal-clash",
       "clubTeam": "Elite U16",
       "status": "past",

@@ -10112,7 +10112,7 @@
           "athleteId": "6045280f-2421-4c5a-9d76-e1e1eea4e8e7",
           "playerId": "pc771bac132",
           "conflicts": [],
-          "fullName": "Eleanor (norah) Elder",
+          "fullName": "Eleanor (Norah) Elder",
           "grade": {
             "confidence": "medium",
             "derived": true,
@@ -15109,7 +15109,7 @@
           "athleteId": "e06ded2f-2014-486c-a751-149b8e8c7514",
           "playerId": "p452f1d2565",
           "conflicts": [],
-          "fullName": "Louella (lulu) Guevara",
+          "fullName": "Louella (Lulu) Guevara",
           "grade": {
             "confidence": "medium",
             "derived": false,
@@ -17155,7 +17155,7 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-10-06 by the rule in docs/DATA-SOURCES.md: 4 linked for 2 of 19 players (2 NCSA, 2 SportsRecruits). Each page was re-read by two independent verifiers, one checking it against the rule and one trying to refute it, and kept only when both kept it.",
-        "Amelia \"mimi\" Scatena (SportsRecruits page titled Mimi Scatena, NCSA) and Rosalie Orozco (SportsRecruits, NCSA); both name Mission Bay High School. MaxPreps rows are ungraded; class 2028 accepted.",
+        "Amelia \"Mimi\" Scatena (SportsRecruits page titled Mimi Scatena, NCSA) and Rosalie Orozco (SportsRecruits, NCSA); both name Mission Bay High School. MaxPreps rows are ungraded; class 2028 accepted.",
         "Not linked: Vivienne Harper's SportsRecruits page (class 2032, no school). Hudl's Mission Bay field hockey rosters (2018-2022) hold earlier players only and no current roster member matched; Hudl profiles found for Lillian Polonsky (basketball) and Vivienne Harper (soccer) are not field hockey.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
@@ -17198,7 +17198,7 @@
           "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
           "playerId": "pec5e344dc5",
           "conflicts": [],
-          "fullName": "Amelia \"mimi\" Scatena",
+          "fullName": "Amelia \"Mimi\" Scatena",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -17733,7 +17733,7 @@
           "athleteId": "cc6818e9-6275-4150-93c8-fe2d022cbef6",
           "playerId": "p942b385ea7",
           "conflicts": [],
-          "fullName": "Camille (cj) Bulatao",
+          "fullName": "Camille (CJ) Bulatao",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -18878,7 +18878,7 @@
           "athleteId": "1d653f29-006b-4aa1-9415-7c50fc16041f",
           "playerId": "p43339c3eaf",
           "conflicts": [],
-          "fullName": "Elizabeth (zibby) Baker",
+          "fullName": "Elizabeth (Zibby) Baker",
           "grade": {
             "confidence": "medium",
             "derived": true,

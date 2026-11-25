@@ -67,6 +67,14 @@ describe('NAME_SPELLINGS', () => {
     ['Gretta Jungjohann', 'Greta Jungjohann'],
     ['GRETTA JUNGJOHANN', 'Greta Jungjohann'],
     ['Sophie (mai Lam) Vu', 'Sophie (Mai Lam) Vu'],
+    ['Kiana Van every', 'Kiana Van Every'],
+    ['K. Van every', 'K. Van Every'],
+    ['gigi Giraldiana', 'Gigi Giraldiana'],
+    ['Iris jin', 'Iris Jin'],
+    ['Lorenz D. De leon', 'Lorenz D. De Leon'],
+    ['Camille (cj) Bulatao', 'Camille (CJ) Bulatao'],
+    ['Amelia "mimi" Scatena', 'Amelia "Mimi" Scatena'],
+    ['K. kekobad', 'K. Kekobad'],
   ])('%s → %s', (name, spelled) => {
     expect(recaseName(name)).toBe(spelled);
   });
