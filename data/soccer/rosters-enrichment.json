@@ -6416,9 +6416,33 @@
     {
       "coaches": [],
       "notes": [
-        "No roster is enriched by hand for the soccer build yet (WCAL and WBAL teams added 2026-11-14)."
+        "No roster is enriched by hand for the soccer build yet (WCAL and WBAL teams added 2026-11-14).",
+        "Recruiting pages, 2026-11-25: the players with a club tie and no linked page were looked for again (README, \"Girls soccer: club rosters\"): Sonia Garcia's SportsRecruits page names the school; no other page passed."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "ebba0e97-58f2-4ab1-93fa-e68d03b820ad",
+          "playerId": "pb1cae083fd",
+          "conflicts": [],
+          "fullName": "Sonia Garcia",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits soccer profile naming Notre Dame San Jose (San Jose, CA); class of 2028 agrees with the roster. Found by the 2026-11-25 address probe of the tied players without a profile; read from the page's own profile JSON (served without login) in three separate fetches that agree.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/sonia_garcia2"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "notre-dame-san-jose",
       "sources": []
     },

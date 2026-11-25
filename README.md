@@ -2081,9 +2081,19 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27 (5 entries on 3 team pages,
   each found again on its Roster dialog). JV ties are shown in every sport since 2026-11-25: a club line on the team
   page's JV roster (found by name, as the JV profiles are), the club page's player list and counts ("JV" leads the
-  row's facts; the pages then say they name players from the "varsity rosters and JV lists"), and /recruiting. The
-  player pages were not searched for JV rows; 14 JV rows with no grade whose name is on a roster link when MaxPreps
-  posts the grade.
+  row's facts; the pages then say they name players from the "varsity rosters and JV lists"), and /recruiting. Of the
+  JV rows, only the 4 tied players' pages were searched (below); 14 JV rows with no grade whose name is on a roster
+  link when MaxPreps posts the grade.
+- **Profiles of the tied players, 2026-11-25.** The 57 players with a club tie and no linked recruiting page (53
+  varsity, 4 JV; most resting on a league roster alone) were looked for again with §1.15's methods. SportsRecruits:
+  323 addresses (the bare slug, hyphen and multi-word variants, suffixes 2 on), 36 live soccer pages read through the
+  page's own JSON call; one passes, Sonia Garcia's (Notre Dame San Jose, class of 2028), read three more times and
+  linked, and it lists De Anza Force, so her roster-only tie to the club is now high confidence. The rest state
+  another class year, no school and no hometown, or another sport (10 addresses redirect to the lacrosse and other
+  sport subdomains). Hudl: 19 of the 20 schools found (Notre Dame San Jose is not on Hudl), their girls soccer rosters
+  of 2022 on read; 4 of the players are on them (Lexie Scundi, Claire Higgins, Ella Badawi, Madilyn Murdock), all with
+  private profiles, so none is linked. Not reached: NCSA (Cloudflare answers 403 to an automated read from this
+  environment) and MaxPreps career pages (MaxPreps answers 403 here; the claimed flag was not read).
 
 ### Soccer and basketball: last season's commitments
 
