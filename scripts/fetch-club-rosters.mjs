@@ -31,7 +31,9 @@
  * players who are on no tracked roster (README, "Club rosters").
  *
  * `clubSlugs` (the leagues' club id → the club's slug in data/soccer/clubs.json) is hand-kept in the
- * file and carried over on every run; a club with no entry is compared but never linked.
+ * file and carried over on every run; a club with no entry is compared but never linked. So are the
+ * leagues this script does not read and their teams: Girls Academy's GotSport rosters, copied into the
+ * file by hand (README, "Club rosters").
  */
 
 import { spawn } from 'node:child_process';
@@ -250,10 +252,16 @@ async function main() {
       leagues.push(got.league);
       teams.push(...got.teams);
     }
+    // The hand-kept leagues (Girls Academy's), carried over as they are.
+    const read = new Set(LEAGUES.map((l) => l.id));
+    const handKept = (previous?.teams ?? []).filter((t) => !read.has(t.league));
+    leagues.push(...(previous?.leagues ?? []).filter((l) => !read.has(l.id)));
+    teams.push(...handKept);
+    if (handKept.length > 0) console.log(`kept ${handKept.length} hand-kept teams (${[...new Set(handKept.map((t) => t.league))].join(', ')})`);
     const fetchedAt = new Date().toISOString();
     const file = {
       builtBy:
-        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. clubSlugs is kept by hand.',
+        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. The Girls Academy teams (league ga) are kept by hand and carried over; so is clubSlugs.',
       fetchedAt,
       season: SEASON,
       notes: previous?.notes ?? [],

@@ -1,8 +1,10 @@
 #!/usr/bin/env tsx
 /**
- * Compare the kept copy of the ECNL and ECNL Regional League team rosters (data/soccer/club-rosters.json,
- * `pnpm fetch-club-rosters`) with the high school rosters, varsity and JV, and say which players the
- * league-roster rule matches (lib/players/club-rosters.ts) and how each stands in data/soccer/clubs.json.
+ * Compare the kept copy of the ECNL and ECNL Regional League team rosters, and of the Girls Academy
+ * rosters kept by hand (data/soccer/club-rosters.json, `pnpm fetch-club-rosters`), with the high school
+ * rosters, varsity and JV, and say which players the league-roster rule matches
+ * (lib/players/club-rosters.ts) and how each stands in data/soccer/clubs.json. A Girls Academy roster
+ * gives no class year: its rows are compared on the team's birth years, listed apart ("birth-years").
  *
  *   pnpm compare-club-rosters                  the counts, and every match clubs.json does not cite yet
  *   pnpm compare-club-rosters --all            every row a roster shares a name with, whatever the outcome
@@ -50,9 +52,14 @@ function schoolRows(): SchoolRow[] {
 }
 
 function line(r: CompareRow): string {
-  const hits = r.hits.map((h) => `${h.team.teamName} (${rosterName(h.player)}, ${h.player.gradYear ?? 'no class year'}, ${h.player.playerType ?? 'no label'})`);
+  const year = (h: CompareRow['hits'][number]) =>
+    h.team.birthYears ? `born ${h.team.birthYears.join('/')}` : (h.player.gradYear ?? 'no class year');
+  const hits = r.hits.map((h) => `${h.team.teamName} (${rosterName(h.player)}, ${year(h)}, ${h.player.playerType ?? 'no label'})`);
   return `  ${r.row.level.padEnd(7)} ${r.row.teamSlug} / ${r.row.fullName} (${r.row.classYear ?? 'no grade'}): ${hits.join('; ')}`;
 }
+
+/** The outcome as the report groups it: a match by how it stands in clubs.json, a birth-years row marked apart. */
+const kindOf = (r: CompareRow): string => `${r.tier === 'birth-years' ? 'birth-years ' : ''}${r.outcome === 'match' ? `match: ${r.tie}` : r.outcome}`;
 
 export function main(argv: readonly string[] = process.argv.slice(2)): number {
   const all = argv.includes('--all');
@@ -72,17 +79,17 @@ export function main(argv: readonly string[] = process.argv.slice(2)): number {
 
   console.log(`club rosters read ${file.fetchedAt}: ${file.counts.teams} teams, ${file.counts.players} players`);
   console.log(`high school rows: ${rows.filter((r) => r.level === 'varsity').length} varsity, ${rows.filter((r) => r.level === 'jv').length} JV; ${compared.length} share a name with a roster row`);
-  const count = (level: string, what: string) => compared.filter((r) => r.row.level === level && (r.outcome === 'match' ? `match: ${r.tie}` : r.outcome) === what).length;
-  const kinds = [...new Set(compared.map((r) => (r.outcome === 'match' ? `match: ${r.tie}` : r.outcome)))].sort();
-  for (const k of kinds) console.log(`  ${k.padEnd(28)} varsity ${String(count('varsity', k)).padStart(3)}   JV ${String(count('jv', k)).padStart(3)}`);
+  const count = (level: string, what: string) => compared.filter((r) => r.row.level === level && kindOf(r) === what).length;
+  const kinds = [...new Set(compared.map(kindOf))].sort();
+  for (const k of kinds) console.log(`  ${k.padEnd(40)} varsity ${String(count('varsity', k)).padStart(3)}   JV ${String(count('jv', k)).padStart(3)}`);
 
   const open = compared.filter((r) => r.outcome === 'match' && r.tie !== 'linked');
-  console.log(`\nMatches clubs.json does not cite yet (${open.length}; a JV match is never cited, the file lists varsity ties only):`);
-  for (const r of open) console.log(`${line(r)} [${r.tie}]`);
+  console.log(`\nMatches clubs.json does not cite yet (${open.length}; a varsity row's tie goes in affiliations, a JV row's in jvAffiliations):`);
+  for (const r of open) console.log(`${line(r)} [${r.tie}${r.tier === 'birth-years' ? ', on birth years' : ''}]`);
   if (all) {
     for (const k of kinds) {
       console.log(`\n${k}:`);
-      for (const r of compared) if ((r.outcome === 'match' ? `match: ${r.tie}` : r.outcome) === k) console.log(line(r));
+      for (const r of compared) if (kindOf(r) === k) console.log(line(r));
     }
   }
   if (jsonPath) writeFileSync(jsonPath, `${JSON.stringify(compared, null, 1)}\n`);

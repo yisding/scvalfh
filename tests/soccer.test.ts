@@ -258,13 +258,17 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
     expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs/:slug');
   });
 
-  it('loads the clubs through the validating loader: every tie joins a varsity row of a club in the file', () => {
+  it('loads the clubs through the validating loader: every tie joins its row (varsity, or the JV list) of a club in the file', () => {
     const file = m.clubs.getClubsFile();
     expect(file.season).toBe(m.rosters.getRosters().season);
     for (const a of [...file.affiliations, ...file.jvAffiliations]) {
       expect(m.clubs.getClub(a.club), a.club).toBeDefined();
       expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
     }
+    // A JV tie joins the school's MaxPreps JV roster (lib/players/clubs.ts withJvListRows): none is left out as drift.
+    const raw = JSON.parse(readFileSync('data/soccer/clubs.json', 'utf8')) as { jvAffiliations: unknown[] };
+    expect(raw.jvAffiliations.length).toBeGreaterThan(0);
+    expect(file.jvAffiliations).toHaveLength(raw.jvAffiliations.length);
     // The areas searched for every club in the 2026-11-21 round (lib/players/clubs.ts): not the Central Coast.
     expect(m.clubs.SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay']);
     for (const r of m.clubs.SEARCHED_REGIONS) expect(m.clubsSchema.CLUB_REGIONS).toContain(r);
