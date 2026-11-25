@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15632,
+    "observations": 15647,
     "players": 7666,
     "review": 64,
     "stintConflicts": 161,
@@ -7205,7 +7205,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p04801f785c",
@@ -7234,6 +7234,12 @@
               "athleteId": "86ba309c-d4f8-49e5-a6b7-8a266ad9a73e",
               "name": "Sienna Cooper",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21122644"
             }
           ],
           "positions": [],
@@ -67882,7 +67888,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p27d5e9b436",
@@ -67912,6 +67918,12 @@
               "jersey": "22",
               "name": "Landon Rosa",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29334398"
             }
           ],
           "positions": [],
@@ -137002,7 +137014,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p4feae1e13a",
@@ -137031,6 +137043,12 @@
               "athleteId": "1163ec81-9ffd-489b-a508-437be49bda59",
               "name": "Anna Freeman",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25242746"
             }
           ],
           "positions": [],
@@ -141709,7 +141727,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p5298d192d8",
@@ -141738,6 +141756,12 @@
               "athleteId": "79e10d8b-52c2-4b2b-a667-97d8f00643f7",
               "name": "Mariella Norris",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25232450"
             }
           ],
           "positions": [],
@@ -166085,7 +166109,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p611ed02095",
@@ -166115,6 +166139,12 @@
               "jersey": "25",
               "name": "Juan Agustin Gonzalez Domingo",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23157722"
             }
           ],
           "positions": [],
@@ -197972,7 +198002,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p73e6f264c5",
@@ -198002,6 +198032,12 @@
               "jersey": "24",
               "name": "Patrick Driscoll",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21224239"
             }
           ],
           "positions": [],
@@ -199305,7 +199341,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p74b62ddd58",
@@ -199334,6 +199370,12 @@
               "athleteId": "35ce7200-d631-4e3b-93ad-86ac6bf183d3",
               "name": "Sophia Walling",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29730787"
             }
           ],
           "positions": [],
@@ -204514,7 +204556,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p784dc77c9b",
@@ -204544,6 +204586,12 @@
               "jersey": "21",
               "name": "Jacob Diaz",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/20016257"
             }
           ],
           "positions": [],
@@ -242350,7 +242398,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p8e780c32c4",
@@ -242379,6 +242427,13 @@
               "athleteId": "973e08cc-2b76-4f44-8ce0-22faeacdb6c0",
               "name": "Annabelle Kelly",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "name": "Annabelle Kelly",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/27824784"
             }
           ],
           "positions": [],
@@ -264156,7 +264211,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p9c0b85b1cc",
@@ -264185,6 +264240,12 @@
               "athleteId": "b8e09a41-db0e-43d4-8120-e76bd17c0a44",
               "name": "Scarlett Ortiz",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/33197696"
             }
           ],
           "positions": [],
@@ -289683,7 +289744,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "pabb93abbf2",
@@ -289713,6 +289774,12 @@
               "jersey": "11",
               "name": "Troy Yap",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25929827"
             }
           ],
           "positions": [],
@@ -366184,7 +366251,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "pdbd6e3f0d8",
@@ -366214,6 +366281,12 @@
               "jersey": "15",
               "name": "Mason Seto",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25305168"
             }
           ],
           "positions": [],
@@ -376826,6 +376899,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/21369200"
             }
           ],
           "positions": [
@@ -407831,7 +407909,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "pf75768d88d",
@@ -407860,6 +407938,12 @@
               "athleteId": "f420f587-f425-4c14-845b-d0875a0b4c4a",
               "name": "Pepper James",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25189417"
             }
           ],
           "positions": [],
@@ -417042,7 +417126,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "pfd105ca029",
@@ -417071,6 +417155,12 @@
               "athleteId": "70104210-f8ac-4948-a938-ac0d9115e8d5",
               "name": "Liliana Papandreopoulos",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/25189976"
             }
           ],
           "positions": [],

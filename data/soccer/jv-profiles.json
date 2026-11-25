@@ -219,6 +219,18 @@
               "note": "On Mountain View High School's own girls soccer team on Hudl (Girl's JV Soccer); class of 2029 agrees with the roster. Found by the 2026-11-21 Hudl team-roster sweep and read twice in separate runs."
             }
           ]
+        },
+        {
+          "name": "Annabelle Kelly",
+          "playerId": "p8e780c32c4",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27824784",
+              "classOf": 2029,
+              "note": "As \"Annie Kelly\", #3, on Mountain View High School's own girls JV soccer team on Hudl (MVHS Girl's JV Soccer, 2025-2026, on its 2025 and 2026 rosters); class of 2029. The JV list gives Annabelle Kelly with no grade; no other Kelly is on Mountain View's lists, so the short name is taken as hers (owner's decision, 2026-11-25: a row with no grade may take a page on a high school class year with no grade to confirm it). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML."
+            }
+          ]
         }
       ]
     },

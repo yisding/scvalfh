@@ -6107,7 +6107,96 @@
       "notes": [
         "No hand-checked addition for this roster yet: every row shown is MaxPreps' own."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "2934ec7f-8f02-4ef0-95b8-046ea6d3be03",
+          "playerId": "p611ed02095",
+          "conflicts": [],
+          "fullName": "Juan Agustin Gonzalez Domingo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2025-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23157722"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9bc0f26e-4259-4e21-a99a-d9e856de23a3",
+          "playerId": "p27d5e9b436",
+          "conflicts": [],
+          "fullName": "Landon Rosa",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2025-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29334398"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "dd389241-b058-4101-86bf-20c2584987fd",
+          "playerId": "pdbd6e3f0d8",
+          "conflicts": [],
+          "fullName": "Mason Seto",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2023-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25305168"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "da96fc7a-8279-4935-a8d8-4e059193bf31",
+          "playerId": "pabb93abbf2",
+          "conflicts": [],
+          "fullName": "Troy Yap",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Silver Creek High School's own boys basketball team on Hudl (SCHS Boys Basketball, 2025-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25929827"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "silver-creek",
       "sources": []
     },
@@ -16095,7 +16184,52 @@
       "notes": [
         "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "df077dc2-b875-4171-9154-84c52d3fe19f",
+          "playerId": "p784dc77c9b",
+          "conflicts": [],
+          "fullName": "Jacob Diaz",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2025-2026; PHS Boys Junior Varisty, 2024-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). The same player has a second Hudl account (21235809, Palma's freshman team, class of 2027, #21); this one carries the varsity team. Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/20016257"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ddde8bcf-d47b-4550-8f74-55b72ee1105f",
+          "playerId": "p73e6f264c5",
+          "conflicts": [],
+          "fullName": "Patrick Driscoll",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Palma High School's own boys basketball team on Hudl (PHS Palma Basketball, 2025-2026; PHS Boys Junior Varisty, 2024-2026; PHS Boys Freshman Basketball, 2023-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21224239"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "palma",
       "sources": []
     },
@@ -16185,7 +16319,30 @@
       "notes": [
         "No roster is enriched by hand for the basketball build yet (PCAL and PSAL teams added 2026-11-25)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "49102061-17a1-4252-93af-3ae4dd37e85e",
+          "playerId": "pe36a911536",
+          "conflicts": [],
+          "fullName": "Alonso Pena",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "On Watsonville High School's own boys basketball team on Hudl (WHS Boys' Varsity Basketball, 2023-2026); states no class year. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21369200"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "watsonville",
       "sources": []
     },

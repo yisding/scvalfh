@@ -8017,7 +8017,162 @@
       "notes": [
         "No roster is enriched by hand for the soccer build yet (PCAL and PSAL teams added 2026-11-25)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "1163ec81-9ffd-489b-a508-437be49bda59",
+          "playerId": "p4feae1e13a",
+          "conflicts": [],
+          "fullName": "Anna Freeman",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25242746"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "70104210-f8ac-4948-a938-ac0d9115e8d5",
+          "playerId": "pfd105ca029",
+          "conflicts": [],
+          "fullName": "Liliana Papandreopoulos",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25189976"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "79e10d8b-52c2-4b2b-a667-97d8f00643f7",
+          "playerId": "p5298d192d8",
+          "conflicts": [],
+          "fullName": "Mariella Norris",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25232450"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f420f587-f425-4c14-845b-d0875a0b4c4a",
+          "playerId": "pf75768d88d",
+          "conflicts": [],
+          "fullName": "Pepper James",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2024-2026); class of 2028. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25189417"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b8e09a41-db0e-43d4-8120-e76bd17c0a44",
+          "playerId": "p9c0b85b1cc",
+          "conflicts": [],
+          "fullName": "Scarlett Ortiz",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2026); class of 2030. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/33197696"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "86ba309c-d4f8-49e5-a6b7-8a266ad9a73e",
+          "playerId": "p04801f785c",
+          "conflicts": [],
+          "fullName": "Sienna Cooper",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2026); class of 2027. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/21122644"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "35ce7200-d631-4e3b-93ad-86ac6bf183d3",
+          "playerId": "p74b62ddd58",
+          "conflicts": [],
+          "fullName": "Sophia Walling",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "On Pacific Grove High School's own girls soccer team on Hudl (PGHS Girls Varsity Soccer, 2026); class of 2029. The roster row has no grade, so the class year is checked only as a high school class this season (owner's decision, 2026-11-25). Found by the 2026-11-25 Hudl team-roster sweep of the rows with no grade; read from the data in the server's HTML.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29730787"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "pacific-grove",
       "sources": []
     },
