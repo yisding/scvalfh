@@ -3087,7 +3087,9 @@ empty state says what was and was not found (§8).
   shape for every club whatever the source wrote: the team's own name, then its league, then the
   birth years when the source gives them, as "Juventus ECNL G2010", "ECNL RL G2008/09", "Quicksilver
   Green GA", with no club name or age group (U17);
-  `components/words/club-team-words.ts`); the status (§17.3);
+  `components/words/club-team-words.ts`; and where a tie cites a league roster, the team is one of
+  that roster's, the one the league marks the player First Team on, not an older profile's "ECNL":
+  data/soccer/clubs.json's notes, since 2026-11-25); the status (§17.3);
   and the source links. The list's lede says recall is partial, as the empty state does. In "Teams
   and programs", the page most programs were read from (when two or more were) is linked once, under
   the list ("Listed on the club’s site: Programs overview", or "Programs without a link of their own
