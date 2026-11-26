@@ -221,8 +221,6 @@ export interface ClubLink {
   slug: string;
   /** The display name: "SF Hawks". */
   name: string;
-  /** The full name: "San Francisco Youth Field Hockey Club" (the display name when no short name is set). */
-  fullName: string;
   /** `/clubs/<slug>` */
   href: string;
 }
@@ -233,7 +231,7 @@ export interface ClubSourceLink {
 }
 
 function clubLink(club: Club): ClubLink {
-  return { slug: club.slug, name: clubDisplayName(club), fullName: club.name, href: `/clubs/${club.slug}` };
+  return { slug: club.slug, name: clubDisplayName(club), href: `/clubs/${club.slug}` };
 }
 
 // ---------------------------------------------------------------- the team roster's club line
@@ -245,7 +243,13 @@ export interface RosterClubGroup {
   /** The same words for the link's accessible name ("Storey Lewis’s club: SF Hawks"). */
   srLabel: 'club' | 'clubs' | 'listed club' | 'listed clubs' | 'earlier club' | 'earlier clubs';
   /** Latest `asOf` first (a range's or season's end year; undated last), then display name. */
-  clubs: ClubLink[];
+  clubs: RosterClubLink[];
+}
+
+/** A club on a roster row, with the player's team at the club when a source names it. */
+export interface RosterClubLink extends ClubLink {
+  /** The club team, worded as the club page words it (`clubTeamWords`): "ECNL G2008/09"; null when no source names one. */
+  team: string | null;
 }
 
 const GROUP_WORDS = {
@@ -309,7 +313,7 @@ function clubGroups(ties: readonly ClubAffiliation[]): RosterClubGroup[] {
           endYear(y.a.asOf) - endYear(x.a.asOf) ||
           clubDisplayName(x.club).localeCompare(clubDisplayName(y.club)),
       )
-      .map(({ club }) => clubLink(club));
+      .map(({ a, club }): RosterClubLink => ({ ...clubLink(club), team: clubTeamWords(a) }));
     if (clubs.length === 0) return [];
     const w = GROUP_WORDS[status];
     const many = clubs.length > 1;

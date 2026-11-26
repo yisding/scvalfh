@@ -12,9 +12,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
+import { clubTeamWords } from '../../components/clubs/club-view';
 import TeamRoster from '../../components/teams/TeamRoster';
 import { buildRosterView, conflictLine, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
-import { getClub, getPlayerClubs } from '../../lib/players/clubs';
+import { getPlayerClubs } from '../../lib/players/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import { classOf, getEnrichedTeamRoster, getRosters, type RosterConflict } from '../../lib/players/rosters';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
@@ -311,7 +312,8 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
           expect(g.srLabel, `${slug} / ${row.name}`).toBe(g.label.toLowerCase());
           for (const c of g.clubs) {
             expect(c.href).toBe(`/clubs/${c.slug}`);
-            expect(c.fullName).toBe(getClub(c.slug)!.name);
+            const tie = ties.find((a) => a.club === c.slug && a.status === g.status)!;
+            expect(c.team, `${slug} / ${row.name} / ${c.slug}`).toBe(clubTeamWords(tie));
           }
         }
         if (row.clubs.length > 0) tied += 1;
@@ -595,9 +597,15 @@ describe('TeamRoster: club lines', () => {
     expect(/<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(html)![0]).not.toContain('target=');
   });
 
-  it('shows the club’s full name on hover', () => {
+  it('shows the player’s club team on hover, and no tooltip when no source names one', () => {
     const html = renderToStaticMarkup(createElement(TeamRoster, { view: si }));
-    expect(/<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(html)![0]).toContain('title="San Francisco Youth Field Hockey Club"');
+    const clubLinkOf = (name: string) => {
+      const row = new RegExp(`<li[^>]*>(?:(?!</li>)[\\s\\S])*?${name}(?:(?!</li>)[\\s\\S])*</li>`).exec(html)![0];
+      return /<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(row)![0];
+    };
+    expect(clubLinkOf('Storey Lewis')).toContain('title="U19 Hawks Blue"');
+    expect(clubLinkOf('Stella Kwok')).toContain('title="U16 Hawks Blue"');
+    expect(clubLinkOf('Dylan Powell')).not.toContain('title=');
   });
 
   it('prints no footnote about club lines, and says "listed club" only on the line of a player who has one', () => {
