@@ -1920,18 +1920,18 @@ on 2026-11-21:
   address probe over every varsity and JV row.
 - **Clubs** (`clubs.json`; recounted on 2026-11-26, after the Girls Academy and NorCal Premier rosters, the refresh's
   ECNL ties, the Mitty drift, Alum Rock FC, the loosened league-roster rule, the roster team names and the rule's
-  two extensions of 2026-11-26 in "Girls soccer: club rosters" below): **52 clubs** (South Bay 20, Peninsula 15, San
-  Francisco 10, Central Coast 5, East Bay 1, Marin 1) and **318 varsity ties for 270 of the 876 varsity rows, at 36 of
-  the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while
-  MaxPreps does not list her): 261 current, 36 listed (unknown) and 21 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
+  two extensions of 2026-11-26 and El Camino FC Salinas in "Girls soccer: club rosters" below): **53 clubs** (South
+  Bay 20, Peninsula 15, San Francisco 10, Central Coast 6, East Bay 1, Marin 1) and **324 varsity ties for 276 of the
+  876 varsity rows, at 38 of the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left
+  out as roster drift while MaxPreps does not list her): 266 current, 36 listed (unknown) and 22 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
   FC tie are earlier since 2026-11-25: Santa Clara Sporting's girls left Girls Academy for the ECNL Regional League
   for 2026-27, NorCal Premier's announcement of May 11, 2026, and neither player is on her old club's 2026-27
-  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 193
-  medium (191 of them resting on a league roster alone: a class year, or a team's birth years, and the club's
+  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 199
+  medium (196 of them resting on a league roster alone: a class year, or a team's birth years, and the club's
   location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 44, Almaden FC 35, Los Gatos United 32, Santa
   Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame and Palo Alto SC 9 each. 28 clubs have no
-  tied player. The ties rest on 498 source entries on 229 URLs (league rosters 307: ECNL's 245 and GotSport Rankings'
-  62, Girls Academy and NorCal Premier; NCSA 60, PrepSoccer 34, SportsRecruits 34, MaxPreps career pages 26, Hudl 22,
+  tied player. The ties rest on 504 source entries on 231 URLs (league rosters 312: ECNL's 250 and GotSport Rankings'
+  62, Girls Academy and NorCal Premier; NCSA 60, PrepSoccer 34, SportsRecruits 34, MaxPreps career pages 27, Hudl 22,
   TopDrawerSoccer 10, SoccerWire 3, a college release 1, a news story 1). Where a tie cites a league roster, the team
   it names is that roster's (clubs.json's notes). San Francisco, the Peninsula and the South Bay were searched for
   every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does
@@ -2303,11 +2303,23 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   her Santa Cruz United row, with none, is on a 2008/09 team). Symphony Ceballos (Terra Nova JV, class
   of 2030) is on two Burlingame teams born 2008/09 and 2009/10, which do not admit her class, and is not linked.
   **Still not linked**, as before: Zoe Nesvacil, Kenna Smead and Raye Yokota (GotSport rosters at two clubs, for a
-  person to re-check); El Camino FC Salinas' rows (5 graded players at Salinas, Gonzales, Soledad, Palma and Notre Dame
-  San Jose, and Emily Garcia, one year off): the club has no record, Monterey County was not searched for clubs, and
-  its own site could not be reached from this environment to write one; the other clubs with no record (Pleasanton
-  Rage, Reno APEX, 1974 Newark FC, South Valley Chivas) or based away from the schools (Marin FC, Mustang Soccer); the
+  person to re-check); El Camino FC Salinas' rows, which had no record (linked the same day, below); the other clubs
+  with no record (Pleasanton Rage, Reno APEX, 1974 Newark FC, South Valley Chivas) or based away from the schools (Marin FC, Mustang Soccer); the
   class years that disagree; the rows with no grade on a GotSport roster; and Kaylee Hernandez, a name at two schools.
+- **El Camino FC Salinas, 2026-11-26.** The ECNL Regional League's NorCal conference has two El Camino FC Salinas
+  teams (Athlete One club 4063, G2009/10 and G2012/13), and its G2009/10 roster matched five varsity rows at a club
+  with no record. It now has one (`el-camino-fc-salinas`, Salinas, Central Coast: El Camino Futbol Club, founded in
+  2017, over 30 boys and girls teams U7-U18 in the ECNL, NorCal NPL and NorCal Premier leagues), written from the
+  club's own site (ecfcsalinas.com, the owner's pointer), the first club record in Monterey County (the county was
+  not swept for clubs, so /clubs still claims only San Francisco, the Peninsula and the South Bay), and club 4063 is
+  in `clubSlugs`. **5 new ties**, medium, current for 2026-27, each row re-read from the team page's own data: Lucia
+  Mariscal (Salinas), Izabella Mandujano (Gonzales), Myah De Leon (Soledad), Kathryn Dill (Palma) and Annalyse
+  Bottazzo (Notre Dame San Jose). Not tied: Emily Garcia (Rancho San Juan; the roster's class year is one off and the
+  name is common) and Kaylee Hernandez (a name at two schools). El Camino's two ECNL RL teams are its only teams in the
+  three ECNL leagues, and both were re-read in full from the league's page data the same day (5 and 26 high-school-age
+  players, exactly as kept). Lauren Crowell (Sobrato), whose MaxPreps career page lists "U16 El Camino FC", is on
+  neither nor on any kept roster, so she is tied as **earlier** (medium; U16 is her 2024-25 age group), on the
+  owner's reading of the page: MaxPreps refuses automated reads from this environment.
 - **Why Los Gatos had so few links, 2026-11-25.** MaxPreps posts no grade for any of the 18 Los Gatos varsity rows
   (nor the JV list's), so the league-roster rule, which asked for a grade, took none of them although every varsity
   name is on an ECNL roster; that is what the loosened rule fixes. Its recruiting pages are few for other reasons:
