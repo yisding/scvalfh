@@ -471,9 +471,11 @@ player's other row), one profile accepted only while a row had no grade was unli
 who joined their varsity rosters took their recruiting pages with them (the file's last note lists each). The
 76 rows MaxPreps added at the swept leagues have not been swept for clubs or commitments. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
-per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
-Academy's first-name-and-initial list); a team without it says "we have not checked other public
-sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
+per team (`otherRosters`: `none`, `partial` with what the source lists and a link, as for Marin
+Academy's first-name-and-initial list, or `listed`: a source's whole current varsity list, transcribed as
+written, which the team page shows under its own note and link in place of the empty MaxPreps list, as for
+Marina's athletics site and Newport Harbor's team site since 2026-11-26); a team without it says "we have not
+checked other public sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
 with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
 other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same
 way, under the player's `conflicts`. Since 2026-11-21 a grade conflict may be marked `rosterBehind`: the cited page
@@ -3435,7 +3437,9 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   position MaxPreps lists only for the 2025-26 roster is deliberately not filled, since positions
   change between seasons. Fourteen teams have no players on MaxPreps, so there is nothing to join to:
   Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Corning, and in Southern California
-  Chaparral, Fountain Valley, Marina, Newport Harbor, Fallbrook, San Pasqual, Bonita Vista and El Capitan. Marin Academy had none either until its 18
+  Chaparral, Fountain Valley, Marina, Newport Harbor, Fallbrook, San Pasqual, Bonita Vista and El Capitan (since
+  2026-11-26 Marina's and Newport Harbor's pages show their own sites' 20-name varsity lists instead, joined to
+  nothing: `otherRosters` `listed`). Marin Academy had none either until its 18
   appeared on 2026-10-07; they agree with the school's own list (first names, last initials and class
   years) and were swept on 2026-10-07 (no profile, club or commitment found for any of them). Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).

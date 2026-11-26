@@ -442,8 +442,12 @@ describe('TeamRoster', () => {
     const socal = new Set(TEAMS.filter((t) => ['sunset', 'city', 'north-county', 'metro'].includes(t.league)).map((t) => t.slug));
     const empty = views.filter((v) => v.view.status === 'empty').map((v) => [v.slug, v.view.otherRosters.status]);
     // Southern California: no school-site sweep has been done (DESIGN-socal §3), so an empty SoCal roster
-    // always says other sources were not checked.
-    for (const [slug, status] of empty.filter(([slug]) => socal.has(slug))) expect(status, slug).toBe('not-checked');
+    // says other sources were not checked, except Marina and Newport Harbor, whose own sites list their 2026
+    // varsity (found 2026-11-26).
+    const LISTED = new Set(['marina', 'newport-harbor']);
+    for (const [slug, status] of empty.filter(([slug]) => socal.has(slug))) {
+      expect(status, slug).toBe(LISTED.has(slug) ? 'listed' : 'not-checked');
+    }
     // Sobrato was here until 2026-11-13, when MaxPreps first listed its players, and so was Corning (below).
     expect(empty.filter(([slug]) => !socal.has(slug))).toEqual([
       ['del-mar', 'none'],
@@ -476,6 +480,32 @@ describe('TeamRoster', () => {
     );
     expect(unchecked).toContain('We have not checked other public sources for this team.');
     expect(unchecked).not.toContain('No other public source we checked');
+  });
+
+  it('shows a listed roster in place of the empty MaxPreps list, naming and linking its source', () => {
+    for (const slug of ['marina', 'newport-harbor']) {
+      const view = views.find((v) => v.slug === slug)!.view;
+      const other = getEnrichedTeamRoster(slug)!.otherRosters;
+      if (other.status !== 'listed') throw new Error(`${slug}: expected listed`);
+      expect(view.rows, slug).toEqual([]);
+      expect(view.listedRows.map((r) => r.name), slug).toEqual(other.players.map((p) => `${p.firstName} ${p.lastName}`));
+      const html = renderToStaticMarkup(createElement(TeamRoster, { view })).replace(/<!-- -->/g, '');
+      expect(html, slug).toContain(`MaxPreps lists no players for ${view.teamName}.`);
+      expect(html, slug).toContain(other.summary);
+      expect(html, slug).toContain(`href="${other.source.replace(/&/g, '&amp;')}"`);
+      for (const r of view.listedRows) expect(html, `${slug} ${r.name}`).toContain(r.name);
+      expect(html, slug).not.toContain('No other public source we checked');
+    }
+    // The source's "GK" reads in the site's words; a player it gives no position has none.
+    const nh = views.find((v) => v.slug === 'newport-harbor')!.view;
+    expect(nh.listedRows.filter((r) => r.position).map((r) => [r.name, r.position])).toEqual([
+      ['Katelyn Clark', 'Goalkeeper'],
+      ['Paris Rodriguez', 'Goalkeeper'],
+    ]);
+    // Every other team has no listed rows, and a team with MaxPreps rows never shows one.
+    for (const { slug, view } of views.filter((v) => !['marina', 'newport-harbor'].includes(v.slug))) {
+      expect(view.listedRows, slug).toEqual([]);
+    }
   });
 
   it('shows the coaches and their sources for a team with no list', () => {

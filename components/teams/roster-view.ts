@@ -42,7 +42,7 @@ import {
 import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '../commits/commit-view';
-import { positionWords } from '../words/position-words';
+import { positionFromText, positionWords } from '../words/position-words';
 import { playerAnchors } from './player-anchors';
 
 /**
@@ -299,6 +299,12 @@ export interface RosterView {
    * the one case that may claim no other source has a roster.
    */
   otherRosters: OtherRosters;
+  /**
+   * For a team MaxPreps lists nobody for whose otherRosters is `listed`: that source's players, in its
+   * order, each with the position it gives in the site's words. Empty otherwise, and empty as soon as
+   * MaxPreps lists anyone, so MaxPreps' rows always win.
+   */
+  listedRows: Array<{ key: string; name: string; position: string | null }>;
 }
 
 /** A conflict's value in the list's own words, lower-cased for the middle of a sentence. */
@@ -605,5 +611,13 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     asOf: team.fetchedAt ? shortDate(toLocalTimestamp(team.fetchedAt)) : null,
     elsewhereSources: elsewhereSources(players),
     otherRosters: team.otherRosters,
+    listedRows:
+      team.otherRosters.status === 'listed' && varsity.length === 0
+        ? team.otherRosters.players.map((p, i) => ({
+            key: `${p.firstName}-${p.lastName}-${i}`,
+            name: `${p.firstName} ${p.lastName}`,
+            position: positionFromText(p.position),
+          }))
+        : [],
   };
 }

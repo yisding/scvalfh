@@ -55,7 +55,7 @@ import {
 } from './rosters-schema';
 import { isPlaceholderRow } from './placeholder-name';
 import { reportDrift } from './roster-drift';
-import { dateKey, httpsUrl } from '../schema-primitives';
+import { dateKey, httpUrl, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
 
 /** Names this module in a failed override read. */
@@ -92,14 +92,45 @@ export type {
  *   partial      a source lists current players, but not in a form that can be joined to MaxPreps
  *                rows (Marin Academy: first name, last initial and class year); `summary` says what
  *                it lists and `source` links it
+ *   listed       a source publishes the team's whole current varsity list with full names (Marina's
+ *                athletics site, Newport Harbor's team site, 2026-11-26), transcribed as written in
+ *                `players`, in the source's order. The page shows it in place of the empty MaxPreps
+ *                list; it joins nothing (no athleteId, so no club, commitment or profile line), and once
+ *                MaxPreps lists anyone for the team, MaxPreps' rows are shown and this is not
  *   not-checked  nobody looked; the default for a team whose entry does not say
  * It sits beside lib/players/rosters-schema.ts' team record (whose schema ignores unknown keys) and is
  * validated here, at load.
  */
+const ListedPlayerSchema = z
+  .object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    /** The source's own position text ("GK"), or null where it gives none: shown through positionFromText. */
+    position: z.string().min(1).nullable(),
+  })
+  .strict();
+export type ListedPlayer = z.infer<typeof ListedPlayerSchema>;
+
 export const OtherRostersSchema = z.discriminatedUnion('status', [
   z.object({ status: z.literal('none'), checkedOn: dateKey, note: z.string().min(1) }).strict(),
   z
     .object({ status: z.literal('partial'), checkedOn: dateKey, source: httpsUrl, summary: z.string().min(1) })
+    .strict(),
+  z
+    .object({
+      status: z.literal('listed'),
+      checkedOn: dateKey,
+      /** The page the list was read from (http where the site serves no https). */
+      source: httpUrl,
+      summary: z.string().min(1),
+      players: z
+        .array(ListedPlayerSchema)
+        .min(1)
+        .refine(
+          (ps) => new Set(ps.map((p) => `${p.firstName} ${p.lastName}`)).size === ps.length,
+          'a listed name appears twice',
+        ),
+    })
     .strict(),
   z.object({ status: z.literal('not-checked') }).strict(),
 ]);

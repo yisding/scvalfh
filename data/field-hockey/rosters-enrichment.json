@@ -15144,8 +15144,117 @@
       "notes": [
         "Recruiting pages swept 2026-10-06 by the rule in docs/DATA-SOURCES.md: MaxPreps lists no players for this team, so there is no row to link a page to.",
         "MaxPreps lists no varsity players, so there is nobody to link. Hudl has a Marina High School (Huntington Beach) Girls Varsity Field Hockey team (644367, 2021 season) with an empty roster; FieldLevel's Marina team page lists one athlete (HS 2025) and 3 alumni.",
+        "2026-11-26, a search for a current roster outside MaxPreps (MaxPreps answered 403 that day): the school’s athletics site (marinavikingsathletics.org, its Varsity roster with the year selector on 2026-27) lists 20 players by first and last name, no number, grade or position, read twice the same; its 2025-26 view is empty and its 2026-27 JV view lists one other player. Hudl’s team 644367 still has only its empty 2021 season. Recorded as otherRosters `listed`, shown on the team page while MaxPreps lists nobody.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-11-26",
+        "players": [
+          {
+            "firstName": "Ravyn",
+            "lastName": "Arazi",
+            "position": null
+          },
+          {
+            "firstName": "Leyna",
+            "lastName": "Bui Le",
+            "position": null
+          },
+          {
+            "firstName": "Sharaya",
+            "lastName": "Dunsford",
+            "position": null
+          },
+          {
+            "firstName": "Ellene",
+            "lastName": "Elgindi",
+            "position": null
+          },
+          {
+            "firstName": "Nina",
+            "lastName": "Endl",
+            "position": null
+          },
+          {
+            "firstName": "Grace",
+            "lastName": "Fernandez",
+            "position": null
+          },
+          {
+            "firstName": "Madian",
+            "lastName": "Fernandez",
+            "position": null
+          },
+          {
+            "firstName": "Jonier",
+            "lastName": "Gebraeel",
+            "position": null
+          },
+          {
+            "firstName": "Claira",
+            "lastName": "Ko",
+            "position": null
+          },
+          {
+            "firstName": "Lillian",
+            "lastName": "LE",
+            "position": null
+          },
+          {
+            "firstName": "Hannah",
+            "lastName": "Ly",
+            "position": null
+          },
+          {
+            "firstName": "Alina",
+            "lastName": "Martin",
+            "position": null
+          },
+          {
+            "firstName": "Kaila",
+            "lastName": "Martin",
+            "position": null
+          },
+          {
+            "firstName": "Lily",
+            "lastName": "McEwen",
+            "position": null
+          },
+          {
+            "firstName": "Reagan",
+            "lastName": "McEwen",
+            "position": null
+          },
+          {
+            "firstName": "Tanith",
+            "lastName": "Quesada",
+            "position": null
+          },
+          {
+            "firstName": "Aurelia",
+            "lastName": "Sawyer",
+            "position": null
+          },
+          {
+            "firstName": "Anna",
+            "lastName": "Schwab",
+            "position": null
+          },
+          {
+            "firstName": "Kailyn",
+            "lastName": "Scott-Schubert",
+            "position": null
+          },
+          {
+            "firstName": "Bailey",
+            "lastName": "Uriarte",
+            "position": null
+          }
+        ],
+        "source": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster",
+        "status": "listed",
+        "summary": "The school’s athletics site lists these 20 players on its 2026-27 varsity field hockey roster, by name only."
+      },
       "players": [],
       "slug": "marina",
       "sources": []
@@ -15155,8 +15264,117 @@
       "notes": [
         "Recruiting pages swept 2026-10-06 by the rule in docs/DATA-SOURCES.md: MaxPreps lists no players for this team, so there is no row to link a page to.",
         "MaxPreps lists no varsity players, so there is nobody to link. Hudl has Newport Harbor Womens Varsity FieldHockey (team 756723) rosters of 19 (2025) and 22 (2024); not matched to anyone because the packet has no players.",
+        "2026-11-26, a search for a current roster outside MaxPreps (MaxPreps still lists nobody): the team’s site (newportharborfieldhockey.com, linked from the school’s athletics page; http only) heads its roster page \"2026 Varsity Team\", names coaches Amanda Boyer and Judy Schaefer, and lists 20 players as \"Last, First\", two marked GK, read twice the same. The page was last modified 2026-08-01 and gives the Aug 10-14 practice schedule, so it is the preseason list. 12 of the 20 are on Hudl’s 2025 roster (team 756723, no 2026 season). Recorded as otherRosters `listed`, shown on the team page while MaxPreps lists nobody.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
+      "otherRosters": {
+        "checkedOn": "2026-11-26",
+        "players": [
+          {
+            "firstName": "Autumn",
+            "lastName": "Bablot",
+            "position": null
+          },
+          {
+            "firstName": "Hayden",
+            "lastName": "Beauchamp",
+            "position": null
+          },
+          {
+            "firstName": "Jillian",
+            "lastName": "Becker",
+            "position": null
+          },
+          {
+            "firstName": "Katelyn",
+            "lastName": "Clark",
+            "position": "GK"
+          },
+          {
+            "firstName": "Sofia",
+            "lastName": "Davidson",
+            "position": null
+          },
+          {
+            "firstName": "Hailey",
+            "lastName": "Ficht",
+            "position": null
+          },
+          {
+            "firstName": "Katie",
+            "lastName": "Green",
+            "position": null
+          },
+          {
+            "firstName": "Teagan",
+            "lastName": "Joob",
+            "position": null
+          },
+          {
+            "firstName": "Kiernan",
+            "lastName": "Kappler",
+            "position": null
+          },
+          {
+            "firstName": "Melia",
+            "lastName": "Kearns",
+            "position": null
+          },
+          {
+            "firstName": "Emery",
+            "lastName": "MacBeth",
+            "position": null
+          },
+          {
+            "firstName": "Harper",
+            "lastName": "Morris",
+            "position": null
+          },
+          {
+            "firstName": "Ellie",
+            "lastName": "Oranghi",
+            "position": null
+          },
+          {
+            "firstName": "Sophia",
+            "lastName": "Peca",
+            "position": null
+          },
+          {
+            "firstName": "Paris",
+            "lastName": "Rodriguez",
+            "position": "GK"
+          },
+          {
+            "firstName": "Alondra",
+            "lastName": "Salinas",
+            "position": null
+          },
+          {
+            "firstName": "Kate",
+            "lastName": "Shepherd",
+            "position": null
+          },
+          {
+            "firstName": "Skylar",
+            "lastName": "Solesbee",
+            "position": null
+          },
+          {
+            "firstName": "Sadie",
+            "lastName": "Taketa",
+            "position": null
+          },
+          {
+            "firstName": "Devyn",
+            "lastName": "Teter",
+            "position": null
+          }
+        ],
+        "source": "http://newportharborfieldhockey.com/?page_id=193",
+        "status": "listed",
+        "summary": "The team’s own site, which the school’s athletics page links, lists these 20 players as its 2026 varsity team, by name, two marked as goalkeepers. It is the preseason list (posted August 2026), so a player who joined or left later may differ."
+      },
       "players": [],
       "slug": "newport-harbor",
       "sources": []
