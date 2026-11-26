@@ -84,14 +84,19 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "quote": "\"name\":\"Beastie Hockey Club\" … {\"title\":\"State\",\"value\":\"Maryland\"}",
+          "url": "https://usafieldhockey.sport80.com/api/public/widget/data/new/1?p=0&i=20&s=Beastie&l=&d="
+        }
+      ],
       "match": [
         "beastie",
         "beasties"
       ],
       "name": "Beastie",
       "norCal": false,
-      "region": null,
+      "region": "Maryland",
       "siteClub": null,
       "slug": "beastie"
     },
@@ -337,10 +342,19 @@
     },
     {
       "california": false,
+      "description": "A Miami-area field hockey club with girls' U14, U16 and U19 teams and a U14 co-ed team at the festival.",
       "evidence": [
         {
           "quote": "Florida United\nMiami, Fla.",
           "url": "https://www.usafieldhockey.com/events/2026/June/22/ncc/qualified-teams"
+        },
+        {
+          "quote": "Florida United Miami, Fla. 8S",
+          "url": "https://www.usafieldhockey.com/events/2026/June/22/ncc/qualified-teams"
+        },
+        {
+          "quote": "U-16 Teams AGH AIM Athletes Charlotte Ambush FHL Florida United",
+          "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
         }
       ],
       "match": [
@@ -529,10 +543,23 @@
     },
     {
       "california": false,
+      "description": "Offers teams for boys and girls ages 4-18, including traveling squads from U12 to U19, through the Village of Key Biscayne's athletics program.",
       "evidence": [
         {
           "quote": "Key Biscayne Field Hockey (226175) ... State: Florida",
           "url": "https://usafieldhockey.sport80.com/public/widget/1"
+        },
+        {
+          "quote": "Field Hockey 2026 For more information please contact KBFieldHockey@gmail.com Ages Boys & Girls ages 4-18",
+          "url": "https://keybiscayne.fl.gov/parks_recreation/athletics/field_hockey.php"
+        },
+        {
+          "quote": "U12 Born between August 1, 2014 & July 31, 2016 Traveling",
+          "url": "https://keybiscayne.fl.gov/parks_recreation/athletics/field_hockey.php"
+        },
+        {
+          "quote": "U19 Born between August 1, 2008 & July 31, 2010 Traveling",
+          "url": "https://keybiscayne.fl.gov/parks_recreation/athletics/field_hockey.php"
         }
       ],
       "match": [
@@ -542,7 +569,8 @@
       "norCal": false,
       "region": "Key Biscayne, Fla.",
       "siteClub": null,
-      "slug": "key-biscayne-field-hockey"
+      "slug": "key-biscayne-field-hockey",
+      "website": "https://keybiscayne.fl.gov/parks_recreation/athletics/field_hockey.php"
     },
     {
       "california": false,
@@ -725,7 +753,7 @@
       ],
       "name": "New York H.C.",
       "norCal": false,
-      "region": null,
+      "region": "Westchester and Fairfield counties",
       "siteClub": null,
       "slug": "new-york-hc",
       "website": "https://www.newyorkhockeyclub.com/"
@@ -844,6 +872,10 @@
         {
           "quote": "a select squad of 18 female players (2 GKs) called the Red Lions",
           "url": "https://www.ussportsscholarships.com/usa-hockey-tours/"
+        },
+        {
+          "quote": "What’s Included for USA Tour: ✓ Return flights to the UK",
+          "url": "https://www.ussportsscholarships.com/usa-hockey-tours/"
         }
       ],
       "match": [
@@ -851,7 +883,7 @@
       ],
       "name": "Red Lions Hockey Club",
       "norCal": false,
-      "region": null,
+      "region": "United Kingdom",
       "siteClub": null,
       "slug": "red-lions-hockey-club"
     },
@@ -914,10 +946,19 @@
     },
     {
       "california": false,
+      "description": "A Woodbury, N.J., club whose girls' teams from U14 to U19 play USA Field Hockey's indoor and outdoor events.",
       "evidence": [
         {
           "quote": "| Spirit of USA | Woodbury, N.J. | 6 |",
           "url": "https://www.usafieldhockey.com/events/2024/june/22/ncc/qualified-teams"
+        },
+        {
+          "quote": "Spirit of USA Woodbury, N.J. 6",
+          "url": "https://www.usafieldhockey.com/events/2026/June/22/ncc/qualified-teams"
+        },
+        {
+          "quote": "Spirit of USA Stars Spirit of USA Stripes",
+          "url": "https://www.usafieldhockey.com/events/2026/February/13/nit/qualified-teams"
         }
       ],
       "match": [
@@ -940,6 +981,10 @@
         {
           "quote": "Summit (U14 Co-Ed)",
           "url": "https://summitfieldhockey.com/"
+        },
+        {
+          "quote": "Summit Field Hockey Henniker, NH",
+          "url": "https://www.sportsengine.com/org/summit-field-hockey"
         }
       ],
       "match": [
@@ -947,7 +992,7 @@
       ],
       "name": "Summit",
       "norCal": false,
-      "region": null,
+      "region": "Henniker, N.H.",
       "siteClub": null,
       "slug": "summit",
       "website": "https://summitfieldhockey.com/"
@@ -1047,10 +1092,23 @@
     },
     {
       "california": false,
+      "description": "Runs training sessions and a travel program for players from beginners through high school at The Edge Sports Center in Bedford, Mass.",
       "evidence": [
         {
           "quote": "Marketing-Home - Wizards Field Hockey",
           "url": "https://wizardsfieldhockey.com"
+        },
+        {
+          "quote": "Wizards Bedford, Mass. 3",
+          "url": "https://www.usafieldhockey.com/events/2026/June/22/ncc/qualified-teams"
+        },
+        {
+          "quote": "The mission of the Wizards Club Bedford, MA Field Hockey Program is to provide age-appropriate field hockey training with high quality coaching.",
+          "url": "https://theedgesportscenter.com/services/wizards-field-hockey/"
+        },
+        {
+          "quote": "Wizards Field Hockey welcomes players of all abilities to develop the fundamental skill set necessary to play in our travel program, if so desired. Club Programs Training sessions are offered for players of all ages, from beginner through high school.",
+          "url": "https://theedgesportscenter.com/services/wizards-field-hockey/"
         }
       ],
       "match": [
@@ -1058,7 +1116,7 @@
       ],
       "name": "Wizards",
       "norCal": false,
-      "region": null,
+      "region": "Bedford, Mass.",
       "siteClub": null,
       "slug": "wizards",
       "website": "https://wizardsfieldhockey.com"

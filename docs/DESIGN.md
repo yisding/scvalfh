@@ -5299,6 +5299,12 @@ club except the adult teams "Stars" and "Stripes".
   Club of Fremont) are not linked.
 - **Results, not explanations** (owner decision, 2026-11-26). A team card, club page or team page prints no note on
   how a team was matched to its club: the sourcing stays in festival-clubs.json's `evidence` (docs/DATA-SOURCES.md).
+- **Profile on every club and team page** (owner ask, 2026-11-26). A club page and each of its team pages print
+  the same hometown (in the header line), one-sentence description (at most 25 words, curated or inherited from the
+  site club) and "Club website" link (`clubProfile` in components/festival/club-view.ts); a test holds every team
+  page to its club page. Each field appears only with a quoted source. Still empty on 2026-11-26: Excelsior and
+  Weston (no source says which club sends the team), Stars and Stripes (no source says who they are), and the
+  descriptions of Beastie (Maryland, from USA Field Hockey's Club Finder) and FireStyx (Fleetwood, Pa.).
 
 ### 35.3 Routes
 
