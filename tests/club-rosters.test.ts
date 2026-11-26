@@ -14,6 +14,7 @@ import {
   LEAGUE_ROSTER_KIND,
   birthYearClassYears,
   birthYearsAdmit,
+  birthYearsFromTeamName,
   clubKey,
   compareClubRosters,
   rosterName,
@@ -191,6 +192,47 @@ describe('compareClubRosters (the league-roster rule)', () => {
       'Ann Lee: name-at-two-schools',
       'Ann Lee: name-at-two-schools',
     ]);
+  });
+
+  it('compares a roster row with no class year on the birth years its team\'s name gives (2026-11-26)', () => {
+    expect(birthYearsFromTeamName('Bay Area Surf ECNL G2009/10')).toEqual([2009, 2010]);
+    expect(birthYearsFromTeamName('Union FC ECNL RL G 2008/09')).toEqual([2008, 2009]);
+    expect(birthYearsFromTeamName('Diablo Valley Futbol Club ECNL RL G07/08')).toEqual([2007, 2008]);
+    expect(birthYearsFromTeamName('Bay Area Surf - ECNL G2012')).toEqual([2012]);
+    expect(birthYearsFromTeamName('MVLA N1 Gunners Green')).toBeNull();
+    expect(birthYearsFromTeamName('Team G2009/12')).toBeNull();
+    const named = (clubId: number, teamId: number, name: string, players: Array<[string, string, number | null]>) => ({ ...team(clubId, teamId, players), teamName: name });
+    const teams = [named(1, 10, 'Near ECNL G2010/11', [['Bea', 'Roe', null], ['Ann', 'Lee', 2028]]), named(1, 11, 'Near ECNL G2008/09', [['Bea', 'Roe', null]])];
+    // The class of 2029 fits 2010/11, not 2008/09: the one agreeing row is enough.
+    expect(outcome(teams, [row('Bea Roe', 2029)])).toEqual(['Bea Roe: match (new)']);
+    expect(compareClubRosters(rosters(teams), [row('Bea Roe', 2029)], tied)[0].hits.map((h) => h.team.teamName)).toEqual(['Near ECNL G2010/11']);
+    // Neither team's birth years admit 2031; a class year the row's do not give still disagrees.
+    expect(outcome(teams, [row('Bea Roe', 2031)])).toEqual(['Bea Roe: class-year-differs']);
+    // A row with a class year is still compared on it, not on the name's birth years.
+    expect(outcome(teams, [row('Ann Lee', 2029)])).toEqual(['Ann Lee: class-year-differs']);
+    // With no grade and no class year anywhere, the name is all there is.
+    expect(outcome(teams, [row('Bea Roe', null)])).toEqual(['Bea Roe: no-grade']);
+    // Rules 3-5 hold: the birth years can agree at two clubs.
+    expect(outcome([...teams, named(3, 30, 'Other ECNL G2009/10', [['Bea', 'Roe', null]])], [row('Bea Roe', 2029)])).toEqual(['Bea Roe: several-clubs']);
+  });
+
+  it('takes, of several clubs, the one a page other than a league roster ties the row to (2026-11-26)', () => {
+    const teams = [team(1, 10, [['Ann', 'Lee', 2028]]), team(3, 30, [['Ann', 'Lee', 2028]]), team(3, 31, [['Ann', 'Lee', 2028]])];
+    const r = row('Ann Lee', 2028);
+    const tieTo = (club: string, kind: string) => ({ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club, sources: [{ ...clubs.affiliations[0].sources[0], kind }] });
+    const withTies = (...ties: ReturnType<typeof tieTo>[]) => ({ ...tied, affiliations: ties as ClubsFile['affiliations'] });
+    const one = compareClubRosters(rosters(teams), [r], withTies(tieTo('near', 'ncsa')));
+    expect(one.map((x) => [x.outcome, x.tie, x.hits.map((h) => h.team.teamId), x.setAside.map((h) => h.team.teamId)])).toEqual([['match', 'tie-without-roster', [10], [30, 31]]]);
+    // A tie resting on a league roster alone picks nothing out; nor do ties to two of the clubs.
+    expect(outcome(teams, [r], withTies(tieTo('near', LEAGUE_ROSTER_KIND)))).toEqual(['Ann Lee: several-clubs']);
+    expect(outcome(teams, [r], withTies(tieTo('near', 'ncsa'), tieTo('near-two', 'hudl')))).toEqual(['Ann Lee: several-clubs']);
+    // A tie to a club none of the agreeing rows is at picks nothing out either.
+    expect(outcome(teams, [r], withTies(tieTo('far', 'ncsa')))).toEqual(['Ann Lee: several-clubs']);
+    // Rule 5 still holds for the club picked out.
+    expect(outcome([team(2, 20, [['Ann', 'Lee', 2028]]), teams[1]], [r], withTies(tieTo('far', 'ncsa')))).toEqual(['Ann Lee: club-elsewhere']);
+    // Not in the birth-year tier: a GotSport roster is undated, so a second club there says nothing.
+    const ga = [gaTeam(1, 10, [2009, 2010], [['Ann', 'Lee']]), gaTeam(7, 70, [2009, 2010], [['Ann', 'Lee']])];
+    expect(compareClubRosters(withGa(ga), [r], withTies(tieTo('near', 'ncsa'))).map((x) => x.outcome)).toEqual(['several-clubs']);
   });
 
   it('leaves a club with no record, and one based away from the schools', () => {

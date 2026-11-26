@@ -1918,24 +1918,24 @@ on 2026-11-21:
   lacrosse). Hudl's public rosters were read for every school's girls soccer teams, NCSA by name for every varsity
   row and 305 of the JV rows, every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits
   address probe over every varsity and JV row.
-- **Clubs** (`clubs.json`; recounted on 2026-11-25, after the Girls Academy and NorCal Premier rosters, the refresh's
-  ECNL ties, the Mitty drift, Alum Rock FC, the loosened league-roster rule and the roster team names of "Girls
-  soccer: club rosters" below): **52 clubs** (South Bay 20, Peninsula 15, San Francisco 10, Central Coast 5, East Bay
-  1, Marin 1) and **308 varsity ties for 260 of the 876 varsity rows, at 36 of the 46 schools with a roster** (one
-  player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while MaxPreps does not list her): 250
-  current, 37 listed (unknown) and 21 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
+- **Clubs** (`clubs.json`; recounted on 2026-11-26, after the Girls Academy and NorCal Premier rosters, the refresh's
+  ECNL ties, the Mitty drift, Alum Rock FC, the loosened league-roster rule, the roster team names and the rule's
+  two extensions of 2026-11-26 in "Girls soccer: club rosters" below): **52 clubs** (South Bay 20, Peninsula 15, San
+  Francisco 10, Central Coast 5, East Bay 1, Marin 1) and **318 varsity ties for 270 of the 876 varsity rows, at 36 of
+  the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left out as roster drift while
+  MaxPreps does not list her): 261 current, 36 listed (unknown) and 21 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
   FC tie are earlier since 2026-11-25: Santa Clara Sporting's girls left Girls Academy for the ECNL Regional League
   for 2026-27, NorCal Premier's announcement of May 11, 2026, and neither player is on her old club's 2026-27
-  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 183
-  medium (181 of them resting on a league roster alone: a class year, or a GotSport team's birth years, and the club's
-  location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 37, Almaden FC 35, Los Gatos United 32, Santa
-  Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame 9, Palo Alto SC 7. 28 clubs have no
-  tied player. The ties rest on 487 source entries on 229 URLs (league rosters 296: ECNL's 234 and GotSport Rankings'
+  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 193
+  medium (191 of them resting on a league roster alone: a class year, or a team's birth years, and the club's
+  location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 44, Almaden FC 35, Los Gatos United 32, Santa
+  Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame and Palo Alto SC 9 each. 28 clubs have no
+  tied player. The ties rest on 498 source entries on 229 URLs (league rosters 307: ECNL's 245 and GotSport Rankings'
   62, Girls Academy and NorCal Premier; NCSA 60, PrepSoccer 34, SportsRecruits 34, MaxPreps career pages 26, Hudl 22,
   TopDrawerSoccer 10, SoccerWire 3, a college release 1, a news story 1). Where a tie cites a league roster, the team
   it names is that roster's (clubs.json's notes). San Francisco, the Peninsula and the South Bay were searched for
   every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does
-  not claim it. **24 JV ties** for 24 JV players at 9 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
+  not claim it. **25 JV ties** for 25 JV players at 9 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
   Mountain View 5, Pacific Collegiate 4, Branham 3), shown marked JV.
 - **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
   hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
@@ -2113,9 +2113,14 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   and, if none states one, the roster's own, when every roster row of the name that gives a class year gives the same
   one and it is a class in high school this season (2027-2030 in 2026-27). A linked page's class year that disagrees,
   on any row, rules the match out. MaxPreps posts no grade for whole schools (Los Gatos' 18 varsity rows), and the
-  rule had taken none of their players while it asked for one. A name alone still never links: a row whose name's
-  roster rows give no class year (or two different ones), a roster row with no class year on a graded row, and a
-  class year that disagrees are reported and left alone; a Girls Academy row with no grade needs a linked page's class
+  rule had taken none of their players while it asked for one. **Since 2026-11-26** an ECNL roster row with no class
+  year is compared on the birth years its team's name gives ("Bay Area Surf ECNL G2010/11" admits the classes of
+  2028-2030, `birthYearsFromTeamName`), as a Girls Academy row is; and when the agreeing rows are at several clubs,
+  the match is the one club a page other than a league roster already ties the row to, if exactly one is, with the
+  other clubs' rows set aside and never linked (ECNL rows only: a GotSport roster is undated and keeps players a team
+  once carried; `compare-club-rosters` prints what it set aside). A name alone still never links: a row whose name's
+  roster rows give no class year (or two different ones), a roster row with no class year on a team whose name gives
+  no birth years, and a class year that disagrees are reported and left alone; a Girls Academy row with no grade needs a linked page's class
   year, as the roster gives only birth years. A roster names no school, so a tie that rests on one alone is
   **medium** confidence; the club's location stands in for the hometown rule (b) asks for. `compare-club-rosters`
   says where a match's class year came from ("class year from the profile", "from the roster").
@@ -2281,6 +2286,28 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   off; Garcia's own page ties her to Santa Cruz United), Sophia Hernandez and Emily Garcia (clubs with no record),
   Sofia Gonzalez (common name; her Hudl page disagrees too) and Summit Shasta's Scarlett Martinez (the rows are
   Mitty's player of that name). `compare-club-rosters` still lists the 11 as `class-year-differs`.
+- **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
+  club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
+  Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the
+  page data is the same on all three rows), and rule 4 left every name two clubs list at its class year. Rule 4 now
+  takes the one club another page ties the row to (above): her Bay Area Surf tie cites the roster, reads current for
+  2026-27 and names the team; MVLA is not linked. Every row left out was then gone over again, and the 13 rows whose
+  ECNL rows give no class year were the other gap: compared on their teams' birth years (above), 12 match, each at
+  one club, 11 of them new (every row they rest on re-read from the live team pages the same day, none with a class
+  year yet) and Noa Goldberg's tied already.
+  **11 new ties**, medium, current for 2026-27, resting on the roster alone: Bay Area Surf 7 (Donya Majid-Olsen and
+  Aelyn Patague, Milpitas; Jalisse Padilla, Wilcox; Clara Cohen, Willow Glen; Madison Tran, Evergreen Valley; Emily
+  Sanchez, Notre Dame San Jose; Kate Santos, Palma), Palo Alto SC 2 (Elena Chai, Mountain View; Naomi Grant,
+  Menlo-Atherton), Santa Cruz United 1 (Lani Gilbert, Soquel) and De Anza Force 1, JV (Reagan Connors, Willow Glen).
+  Noa Goldberg's and Marissa Garcia's ties, made outside the rule, now pass it (Garcia's MVLA row says class of 2029;
+  her Santa Cruz United row, with none, is on a 2008/09 team). Symphony Ceballos (Terra Nova JV, class
+  of 2030) is on two Burlingame teams born 2008/09 and 2009/10, which do not admit her class, and is not linked.
+  **Still not linked**, as before: Zoe Nesvacil, Kenna Smead and Raye Yokota (GotSport rosters at two clubs, for a
+  person to re-check); El Camino FC Salinas' rows (5 graded players at Salinas, Gonzales, Soledad, Palma and Notre Dame
+  San Jose, and Emily Garcia, one year off): the club has no record, Monterey County was not searched for clubs, and
+  its own site could not be reached from this environment to write one; the other clubs with no record (Pleasanton
+  Rage, Reno APEX, 1974 Newark FC, South Valley Chivas) or based away from the schools (Marin FC, Mustang Soccer); the
+  class years that disagree; the rows with no grade on a GotSport roster; and Kaylee Hernandez, a name at two schools.
 - **Why Los Gatos had so few links, 2026-11-25.** MaxPreps posts no grade for any of the 18 Los Gatos varsity rows
   (nor the JV list's), so the league-roster rule, which asked for a grade, took none of them although every varsity
   name is on an ECNL roster; that is what the loosened rule fixes. Its recruiting pages are few for other reasons:
