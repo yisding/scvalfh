@@ -1,4 +1,4 @@
-import type { FestivalGame } from '../../lib/festival/festival';
+import type { FestivalClub, FestivalGame } from '../../lib/festival/festival';
 import { listWords, plural } from '../../lib/format';
 import {
   byDayAndSlot,
@@ -17,7 +17,7 @@ import {
   type TeamCardModel,
   type TeamGameModel,
 } from './festival-model';
-import { siteClubInfo, type SiteClubLookup } from './site-clubs';
+import { siteClubInfo, type SiteClubInfo, type SiteClubLookup } from './site-clubs';
 
 /**
  * /festival/clubs/[club] (DESIGN §35 §6): everything a parent following one club needs. The club's teams in one
@@ -63,6 +63,27 @@ export interface ClubViewModel {
   finals: number;
 }
 
+/** What a festival page says about a club: hometown, one-sentence description and website. */
+export interface ClubProfileModel {
+  /** 'San Francisco, Calif.', or null when nothing confirms one. */
+  region: string | null;
+  description: string | null;
+  website: string | null;
+}
+
+/**
+ * A club's profile, shared by its club page and each of its team pages (owner ask, 2026-11-26): the curated
+ * festival entry's own fields first (festival-clubs.json, each with evidence), then the club's page on this site
+ * (data/field-hockey/clubs.json) for a site club.
+ */
+export function clubProfile(club: FestivalClub, info: SiteClubInfo | null): ClubProfileModel {
+  return {
+    region: club.region ?? info?.regionLabel ?? null,
+    description: club.description ?? info?.description ?? null,
+    website: club.website ?? info?.website ?? null,
+  };
+}
+
 export function buildClubView(slug: string, m: FestivalModel = festivalModel(), site: SiteClubLookup = siteClubInfo): ClubViewModel | null {
   const club = m.clubBySlug.get(slug);
   if (!club) return null;
@@ -87,9 +108,7 @@ export function buildClubView(slug: string, m: FestivalModel = festivalModel(), 
   return {
     slug,
     name: club.name,
-    region: club.region ?? info?.regionLabel ?? null,
-    description: club.description ?? info?.description ?? null,
-    website: club.website ?? info?.website ?? null,
+    ...clubProfile(club, info),
     california: club.california,
     curated: club.curated,
     site: info ? { name: info.name, href: info.href } : null,

@@ -186,6 +186,19 @@ describe('a club page’s profile (owner ask, 2026-11-26: hometown, a brief desc
     const page = render(await ClubPage(params({ club: 'stars' })));
     expect(page).not.toContain('Club website');
   });
+
+  it('a team page carries its club’s hometown, description and website too (owner ask: every team page)', async () => {
+    const page = render(await TeamPage(params({ team: 'u16-san-francisco-hawks' })));
+    const text = stripTags(page);
+    expect(text).toContain('San Francisco, Calif.');
+    expect(text).toContain('A San Francisco youth club with fall, winter and spring seasons');
+    expect(page).toMatch(/href="https:\/\/sfyouthfieldhockey\.com\/"[^>]*>Club website/);
+  });
+
+  it('a team page of a club with no profile prints none of it', async () => {
+    const page = render(await TeamPage(params({ team: 'adult-stars' })));
+    expect(page).not.toContain('Club website');
+  });
 });
 
 describe('a division without placement games', () => {

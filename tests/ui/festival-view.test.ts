@@ -558,6 +558,16 @@ describe('a club page’s description (DESIGN §35: one sentence of at most 25 w
       if (description) expect(description.split(/\s+/).length, club.slug).toBeLessThanOrEqual(25);
     }
   });
+
+  it('every team page carries the same hometown, description and website as its club page', () => {
+    for (const club of M.clubs) {
+      const { region, description, website } = buildClubView(club.slug, M)!;
+      for (const id of club.teamIds) {
+        const team = buildTeamView(M.teamById.get(id)!.slug, M)!;
+        expect(team.club, `${club.slug} / ${id}`).toEqual({ region, description, website });
+      }
+    }
+  });
 });
 
 describe('the schedule and team views', () => {

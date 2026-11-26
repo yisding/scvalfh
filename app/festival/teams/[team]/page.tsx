@@ -23,7 +23,8 @@ import { HAS_FESTIVAL } from '../../../../lib/sports/current';
  *
  * One static page per team of data/field-hockey/festival.json (`<division>-<name>` slugs: team names repeat
  * across divisions). Heading outline: h1 → h2 Games → h2 the pool → h2 Placement. The division's tab is lit
- * (`aria-current="true"`). Field hockey's alone; takes the root OG card.
+ * (`aria-current="true"`). Field hockey's alone; takes the root OG card. Under the header, the club's hometown,
+ * description and website, as on the club's page (club-view.ts clubProfile).
  */
 
 export const dynamicParams = false;
@@ -78,11 +79,19 @@ export default async function FestivalTeamPage({ params }: PageProps<'/festival/
                 {card.team.clubName}
               </Link>
             </span>
+            {view.club.region ? <span>{view.club.region}</span> : null}
           </>
         }
       />
+      {/* The club's one-sentence description, as on its club page (owner ask, 2026-11-26: every team page). */}
+      {view.club.description ? <p className="mt-3 mb-0 max-w-prose text-body text-ink-2">{view.club.description}</p> : null}
       <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1">
         <FollowButton slug={card.team.slug} name={`${card.team.name} (${card.team.divisionShort})`} />
+        {view.club.website ? (
+          <ExternalLink href={view.club.website} className="sx-action">
+            Club website
+          </ExternalLink>
+        ) : null}
       </div>
       <dl className="mt-3 mb-0 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-body">
         <dt className="text-ink-2">Record</dt>
