@@ -36,7 +36,7 @@ import {
 } from '../lib/players/registry-schema';
 import { currentSeasonSightings, pastSeasonSightings } from '../lib/players/registry-sources';
 import { SPORT_IDS, SPORT_LISTS_PLAYERS } from '../lib/sports/current';
-import { stampCuratedFiles, stampIndex } from '../scripts/build-players';
+import { rekeyRecords, stampCuratedFiles, stampIndex } from '../scripts/build-players';
 import type { RosterDrift } from '../lib/players/roster-drift';
 
 const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [], names: [] };
@@ -1008,6 +1008,33 @@ describe('what is filed by person', () => {
     // A page is added afresh every build, never carried twice.
     const third = build([row({ name: 'Ada Ng', careerIds: ['c1'], season: '25-26', obs: { grade: 10 } })], { previous: again, accounts: [] });
     expect(third.players[0].stints.flatMap((s) => s.observations).some((o) => o.src === 'profile')).toBe(false);
+  });
+
+  it('a name two people share on one list names neither in the index, whoever of them has a record', () => {
+    const file = build([
+      row({ name: 'Ana Ruiz', level: 'jv', observations: [{ src: 'school-jv-roster', name: 'Ana Ruiz', grade: 9 }] }),
+      row({ name: 'Ana Ruiz', level: 'jv', observations: [{ src: 'school-jv-roster', name: 'Ana Ruiz', grade: 12 }] }),
+    ]);
+    expect(file.players).toHaveLength(1);
+    // Two people under one name and team are one record by the name rule; build two by hand.
+    const [p] = file.players;
+    const twin = { ...p, id: 'p00000000aa', identifiers: [{ kind: 'maxpreps-career' as const, careerId: 'cX', careerProfileId: null }] };
+    const two = { ...file, players: [p, twin] };
+    expect(buildPlayerIndex(two, 'field-hockey', 'test', null, new Set([p.id])).rows).toEqual([]);
+    expect(buildPlayerIndex(file, 'field-hockey', 'test', null, new Set([p.id])).rows).toEqual([[p.id, 'alpha', 'jv', null, 'Ana Ruiz']]);
+  });
+
+  it('two commitments that become one person\'s are folded only when they agree, and otherwise both reach the check', () => {
+    const file = { players: [{ id: 'p00000000a1', formerIds: ['p00000000b2'], name: 'Ada Ng' }] } as unknown as PlayersFile;
+    const commit = (playerId: string, college: string, url: string) => ({ playerId, name: 'x', college, sport: 'soccer', sources: [{ url }] });
+    const key = (r: { college: string; sport: string }) => `${r.college} ${r.sport}`;
+    const agree = rekeyRecords([commit('p00000000a1', 'ithaca', 'https://a.test'), commit('p00000000b2', 'ithaca', 'https://b.test')], file, 'test', key);
+    expect(agree).toEqual([{ ...commit('p00000000a1', 'ithaca', 'https://a.test'), name: 'Ada Ng', sources: [{ url: 'https://a.test' }, { url: 'https://b.test' }] }]);
+    const disagree = rekeyRecords([commit('p00000000a1', 'ithaca', 'https://a.test'), commit('p00000000b2', 'vassar', 'https://b.test')], file, 'test', key);
+    expect(disagree.map((r) => [r.playerId, r.college])).toEqual([
+      ['p00000000a1', 'ithaca'],
+      ['p00000000a1', 'vassar'],
+    ]);
   });
 
   it('pages filed under an id the registry never gave are refused', () => {

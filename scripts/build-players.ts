@@ -282,7 +282,9 @@ export function main(argv: readonly string[]): number {
   const clubPeople = new Map(
     SPORT_IDS.map((sport) => [sport, rekeyFile<PersonRecord & { club: string; sources: { url: string }[] }>(`${sportDataDir(sport)}/clubs.json`, 'memberships', (r) => r.club)] as const),
   );
-  const committed = rekeyFile<PersonRecord & { college: string; sport: string; sources: { url: string }[] }>(COMMITMENTS_FILE, 'commitments', () => 'commitment', (records) => {
+  // Keyed by what the commitment is, so two records that became one person's are only folded together when they agree;
+  // two that do not reach the check below as two, and the build refuses them.
+  const committed = rekeyFile<PersonRecord & { college: string; sport: string; sources: { url: string }[] }>(COMMITMENTS_FILE, 'commitments', (r) => `${r.college} ${r.sport}`, (records) => {
     // A person has one commitment: two records that became one person's must already agree on it.
     const seen = new Map<string, string>();
     for (const r of records) {

@@ -136,7 +136,7 @@ export function buildPlayerIndex(
   if (season !== null) {
     for (const p of file.players) {
       for (const s of p.stints) {
-        if (s.sport !== sport || s.season !== season || s.gone || s.level === 'freshman' || (filed !== null && !filed.has(p.id))) continue;
+        if (s.sport !== sport || s.season !== season || s.gone || s.level === 'freshman') continue;
         for (const o of s.observations) {
           if (MAXPREPS_PAGES.has(o.src) && o.athleteId) rows.push({ playerId: p.id, team: s.team, level: s.level, athleteId: o.athleteId, name: o.name ?? s.name });
           else if (SCHOOL_LISTS.has(o.src) && o.name) rows.push({ playerId: p.id, team: s.team, level: s.level, athleteId: null, name: o.name });
@@ -156,7 +156,10 @@ export function buildPlayerIndex(
     }
   }
   const named = [...byName.values()].flatMap((rs) => (new Set(rs.map((r) => r.playerId)).size === 1 ? [rs[0]] : []));
-  const out = [...byAthlete.values(), ...named].sort((a, b) => (rowOrder(a) < rowOrder(b) ? -1 : rowOrder(a) > rowOrder(b) ? 1 : 0));
+  // Only now the people something is filed under: a name two people share is left out above whoever of them has a record.
+  const out = [...byAthlete.values(), ...named]
+    .filter((r) => filed === null || filed.has(r.playerId))
+    .sort((a, b) => (rowOrder(a) < rowOrder(b) ? -1 : rowOrder(a) > rowOrder(b) ? 1 : 0));
   const people = new Set(out.map((r) => r.playerId));
   return {
     builtBy,
