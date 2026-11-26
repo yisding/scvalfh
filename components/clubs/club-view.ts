@@ -221,6 +221,8 @@ export interface ClubLink {
   slug: string;
   /** The display name: "SF Hawks". */
   name: string;
+  /** The full name: "San Francisco Youth Field Hockey Club" (the display name when no short name is set). */
+  fullName: string;
   /** `/clubs/<slug>` */
   href: string;
 }
@@ -231,7 +233,7 @@ export interface ClubSourceLink {
 }
 
 function clubLink(club: Club): ClubLink {
-  return { slug: club.slug, name: clubDisplayName(club), href: `/clubs/${club.slug}` };
+  return { slug: club.slug, name: clubDisplayName(club), fullName: club.name, href: `/clubs/${club.slug}` };
 }
 
 // ---------------------------------------------------------------- the team roster's club line

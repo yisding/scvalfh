@@ -92,9 +92,12 @@ export function Clubs({ row }: { row: RecruitingLineRow }) {
                   link is inline-flex, an atomic inline, so a line could otherwise start with it. */}
               <span className="whitespace-nowrap">
                 {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
+                {/* `title`: hovering a short name ("SF Hawks") shows the club's full name. It never
+                    gates a value: the club's page, which the link opens, names it in full. */}
                 <Link
                   href={club.href}
                   prefetch={false}
+                  title={club.fullName}
                   className="sx-action whitespace-nowrap"
                 >
                   {/* One span, so inline-flex cannot trim the space after the sr-only name. */}

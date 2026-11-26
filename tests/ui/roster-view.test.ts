@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
 import { buildRosterView, conflictLine, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
-import { getPlayerClubs } from '../../lib/players/clubs';
+import { getClub, getPlayerClubs } from '../../lib/players/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import { classOf, getEnrichedTeamRoster, getRosters, type RosterConflict } from '../../lib/players/rosters';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
@@ -309,7 +309,10 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
           const words = { current: ['Club', 'Clubs'], unknown: ['Listed club', 'Listed clubs'], past: ['Earlier club', 'Earlier clubs'] }[g.status];
           expect(g.label, `${slug} / ${row.name}`).toBe(words[many ? 1 : 0]);
           expect(g.srLabel, `${slug} / ${row.name}`).toBe(g.label.toLowerCase());
-          for (const c of g.clubs) expect(c.href).toBe(`/clubs/${c.slug}`);
+          for (const c of g.clubs) {
+            expect(c.href).toBe(`/clubs/${c.slug}`);
+            expect(c.fullName).toBe(getClub(c.slug)!.name);
+          }
         }
         if (row.clubs.length > 0) tied += 1;
       }
@@ -590,6 +593,11 @@ describe('TeamRoster: club lines', () => {
     expect(row.indexOf('/clubs/sf-hawks')).toBeLessThan(row.indexOf('target="_blank"'));
     // Internal links: no arrow, no "opens in a new tab", never prefetched as a row.
     expect(/<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(html)![0]).not.toContain('target=');
+  });
+
+  it('shows the club’s full name on hover', () => {
+    const html = renderToStaticMarkup(createElement(TeamRoster, { view: si }));
+    expect(/<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(html)![0]).toContain('title="San Francisco Youth Field Hockey Club"');
   });
 
   it('prints no footnote about club lines, and says "listed club" only on the line of a player who has one', () => {
