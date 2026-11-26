@@ -300,7 +300,12 @@ athletics page links, http only: "2026 Varsity Team", 20 names as "Last, First",
 2026-08-01 as the preseason list). The same day's search found nothing current outside MaxPreps for the
 other ten empty field hockey teams (school sites, Hudl, league all-league lists, local and school papers),
 and school-paper game stories naming 14 Fountain Valley and 3 Bonita Vista players, too few to stand for a
-roster and not recorded; those ten entries are unchanged. The
+roster and not recorded; those ten entries are unchanged. A `listed` player may carry `profiles` (the same
+PlayerProfileSchema, at most one per platform and sport, never a MaxPreps page). With no grade to check a class
+year against, a page is linked only when it names the player and the school; the 2026-11-26 sweep linked 15 for
+13 of the 40 (rosters-enrichment.json, its last file note). A club tie cannot be stored for a listed player:
+`affiliations` join on a MaxPreps athleteId, so the two ties found (Anna Schwab and Kate Shepherd, VCRD) are kept
+in their teams' notes. The
 coaches and sources found for such a team still show under its empty state. Where a coach left
 MaxPreps blank, the school's own public roster often is not. A one-off sweep on 2026-10-02 (16
 teams; official athletics sites, one roster PDF, two school papers, MaxPreps career and JV pages)
@@ -932,9 +937,14 @@ Gotchas, found in the research (most are recorded in an affiliation's `basis` or
   Fly", mapped through the club's own about page. That page names no player, so it is not kept as
   a source of any tie (every source names the player, `notes[2]`). It is based in Los Altos, not
   San Jose.
-- **Fly FHC's team-roster page sits behind a SiteGround captcha.** Its lists give names only (no
-  school, no class year) and could not be re-read, so none of its names, and none of its team
-  labels, are used.
+- **Fly FHC publishes no roster page.** The 2026-10-03 research relayed names from a flyfhc.com
+  team-roster page (names only: no school, no class year), but its path already answered 404 and
+  it could not be re-read, so none of its names, and none of its team labels, are used. It was long
+  recorded here as "behind a SiteGround captcha"; checked again on 2026-11-26, the site's pages load
+  normally (they only carry SiteGround's bot-check script), the site's own page index
+  (`/wp-json/wp/v2/pages`) lists eleven pages (home, about, contact, programs, registration and a gear
+  form) and none is a roster, and `/team-rosters/`, `/rosters/` and `/teams/` answer 404. A Fly tie
+  rests on the player's own pages (NCSA, MaxPreps' club-teams block), never on the club's.
 - **NorCal Impact's per-player pages list earlier clubs by year** under "Other Field Hockey", which
   makes those clubs `past` (Melanie Henderson: San Jose Fly 2019-2022, and a "Lightning Field
   Hockey Club" 2015-2018 with no location, matched to Lightning by her Los Altos Hills hometown, so

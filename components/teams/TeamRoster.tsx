@@ -202,7 +202,8 @@ function OtherRostersText({ view }: { view: RosterView }) {
 /**
  * Another source's whole current list, for a team MaxPreps lists nobody for (otherRosters `listed`): the
  * names as that source writes them, in its order, with the one fact it gives (a position) where it gives
- * one. The note above it names and links the source; nothing here joins a club, commitment or profile.
+ * one, and the player's own recruiting pages where one names the player and the school. The note above
+ * it names and links the source; nothing here joins a club, commitment or stat.
  */
 function ListedRoster({ view }: { view: RosterView }) {
   if (view.listedRows.length === 0) return null;
@@ -213,6 +214,7 @@ function ListedRoster({ view }: { view: RosterView }) {
           <span className="min-w-0 flex-1">
             <span className="block text-body font-medium text-ink">{row.name}</span>
             {row.position ? <span className="block text-cell text-ink-2">{row.position}</span> : null}
+            {row.profiles.length > 0 ? <Profiles row={row} /> : null}
           </span>
         </li>
       ))}

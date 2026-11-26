@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15823,
+    "observations": 15842,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -92382,6 +92382,12 @@
               "jersey": "18",
               "name": "M. Jose",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24364190"
             }
           ],
           "positions": [
@@ -114124,6 +114130,12 @@
               "jersey": "24",
               "name": "G. Sanchez",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/athletes/gabriella-sanchez/?careerid=tsici7f6skb22"
             }
           ],
           "positions": [],
@@ -114913,6 +114925,12 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/anaya-sherrod/?careerid=n38saa0k82p33"
             }
           ],
           "positions": [
@@ -114988,6 +115006,30 @@
               "jersey": "00",
               "name": "A. Gauba",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://nfhca.sportsrecruits.com/athlete/aashi_gauba"
+            },
+            {
+              "classOf": 2027,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/mt-carmel-high-school/aashi-gauba1"
+            },
+            {
+              "classOf": 2027,
+              "kind": "fieldlevel",
+              "src": "profile",
+              "url": "https://www.fieldlevel.com/app/profile/aashi.gauba/fieldhockeywomen"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/athletes/aashi-gauba/?careerid=ccneabaeh5aee"
             }
           ],
           "positions": [
@@ -136349,6 +136391,12 @@
             {
               "name": "S. Yao",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24364189"
             }
           ],
           "positions": [
@@ -151787,6 +151835,12 @@
             {
               "name": "S. Klein",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/31382582"
             }
           ],
           "positions": [
@@ -164051,6 +164105,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/shelby-peterson/?careerid=candh0evtuim6"
             }
           ],
           "positions": [
@@ -172563,6 +172623,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29173980"
             }
           ],
           "positions": [
@@ -215145,6 +215211,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/susanville/lassen-grizzlies/athletes/austan-mueller/?careerid=aj6g3fdtq29vf"
             }
           ],
           "positions": [
@@ -232784,7 +232856,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p88a2680486",
@@ -232813,6 +232885,12 @@
               "athleteId": "85b123bb-5b0f-4a92-afcd-b3d3e14959df",
               "name": "Alayna Wang",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/33080724"
             }
           ],
           "positions": [],
@@ -321829,6 +321907,12 @@
                 "M"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/aliza-thuemler/?careerid=milunolhf6ko8"
             }
           ],
           "positions": [
@@ -331472,6 +331556,12 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/harley-slye/?careerid=kpmi9n738r9o8"
             }
           ],
           "positions": [
@@ -411300,6 +411390,12 @@
               "jersey": "32",
               "name": "Claudia Lei",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://nfhca.sportsrecruits.com/athlete/claudia_lei"
             }
           ],
           "positions": [],
@@ -422424,6 +422520,24 @@
                 "M"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/makayla-lodin/?careerid=8mova1rp0nu99"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/makayla_lodin2"
+            },
+            {
+              "classOf": 2028,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/corning/corning-union-high-school/makayla-lodin"
             }
           ],
           "positions": [

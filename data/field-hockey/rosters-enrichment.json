@@ -18,7 +18,8 @@
     "2026-11-06: NCSA's field hockey school pages (ncsasports.org/field-hockey-recruiting/california/<city>/<school>/), read for the 45 schools with a JV roster, each athlete list matched against the varsity and JV names. Seven pages for varsity-file rows were linked, each naming the school and re-read by an independent refuter: Abby Scharrenberg and Carolyn Cordoni (Saint Francis), Ruhee Bhatnagar (Monta Vista), Bintu Deen (Santa Clara), Evelyn Jaimes (Greenfield), Evalina MacLennan (Glendora: the page, 'Evie Maclennan', class of 2027, does not say which of the school's two Maclennan seniors she is, and the owner identified her as Evalina) and Colette von Klemperer (Los Gatos, a row the school marks JV, whose profiles the team page shows on its JV roster; of her two NCSA pages the fuller, coco-von-klemperer, is linked). Not linked: Charlotte Painter (Fremont) and Kasia Umholtz (Helix), named on their school's NCSA page with no profile address that answers. JV players with no row here are in data/jv-profiles.json.",
     "2026-11-13: reconciled with a fresh read of every MaxPreps roster (1,803 rows). Coaches had entered grades this file supplied for 48 players (Saratoga 21, Berkeley 12, Mission Bay 9, University City 6), every one equal to the recorded value, so those notes were dropped: MaxPreps now gives the grade. Bella Vista's McKenna Matson is spelled Mackenna on MaxPreps now (same career page). Saratoga's Kaylee Stone is off MaxPreps' roster, and so is Marin Catholic's empty Alexandra Schmidt row, a duplicate of Lexie Schmidt (the school's roster lists one Schmidt, Alexandra), whose record moved to Lexie's row. Saint Francis's Frankie Jones now wears 23/24 on MaxPreps (the school site, 24), Berkeley's Natalie Jones is listed F (the school paper's forward and midfielder is kept as a conflict), Berkeley's Anisa Alejandrino So., and Mission Bay's Olivia Lynch Sr., which unlinked a class-of-2030 SportsRecruits page accepted only while her row had no grade. Six JV-listed players joined their varsity rosters (Berkeley's Sage Murphy, Leland's Riley Salgado, Marin Catholic's Laurel and Scarlett Wu, Saint Francis's Quinn Gossett, Westview's Mia Essey), so their recruiting pages moved here from data/jv-profiles.json.",
     "2026-11-13: Hudl's public team rosters and NCSA's field hockey school pages, for all 102 schools. Hudl was read through its public GraphQL endpoint (the one its public fan pages use; the doc's EAL route), every field hockey team of the 88 schools with rows, the current season's roster or, where a team has none, its latest (Christopher's team is labelled 2023 and Convent & Stuart Hall's 2022 even on profiles created in 2026). 78 public profiles of varsity-file rows not linked before were kept, each listing a field hockey team at the row's school, its overview naming the school, and its class year agreeing with the roster (Christopher's Johanna Canseco's page gives none; it names the school): Christopher 15, University 15, Saint Francis 13, Gilroy 9, Valley Christian 7, Berkeley 5 (all on Berkeley's JV team on Hudl; Sage Murphy was on the JV list when the sweep ran and joined the varsity roster the same day), Convent 5, Mitty 4, St. Ignatius 3, Marin Catholic 1 (Lexie Schmidt, class of 2027) and Pleasant Valley 1. Given-name pages (Madison McDougall, Addison Paradiso, Alexandra Pires, Lexie Osaki) are linked on the school and class year. NCSA's school pages (read through WebFetch, 99 pages for the 88 schools, with the right slugs where a name redirects to a namesake school elsewhere: Valley Christian's are -10 and -7, Southwest's is southwest-senior-high-school) added four field hockey pages, each naming the school with a class year that agrees: Samantha Brunsell (St. Ignatius), Eleanor Navarrette (Mitty), Junali Dutta (Lynbrook) and Myla McCandless (Bishop's). An independent refuter re-opened every page and kept every one. Not linked: 96 Hudl roster entries of rostered players whose profiles are private (Valley Christian 22, La Costa Canyon 16, Pleasant Valley 9 and others); Hudl pages whose class year disagrees with the roster (among them four La Jolla Country Day pages a year earlier than the rows, which may mean the grades are off); second Hudl profiles for rows that already link one; NCSA listings with no profile address that answers (Dylan Powell, Maggie Magnano, Brooklyn Barnard, Charlotte Painter, Kasia Umholtz); and 16 FieldLevel pages from an address probe of the 1,688 varsity rows then on file, which give no class year or school. JV players' pages from the same sweep are in data/jv-profiles.json.",
-    "2026-11-13, a search of four schools (Sobrato, Cupertino, Lynbrook and Homestead; 116 players: 72 varsity rows, 44 JV), the 20 Sobrato rows new to the roster that day: a SportsRecruits address probe in every sport (4,550 addresses, name variants and suffixes 1 to 12, every live page read, the bare ones also rendered twice under the 2026-11-13 rule), every Hudl team of the four schools in every sport for 2022 to 2026 and a Hudl name search for every player, NCSA's field hockey, lacrosse, soccer, softball, volleyball and basketball school pages and a guessed address for every player, and FieldLevel in eight sports. Six pages for five players were kept, each naming the school with a class year that agrees, and an independent refuter kept all six: Sobrato's Cameron Isle (Hudl and NCSA basketball), Lynbrook's Grace Cho (Hudl soccer), Cupertino's Allenah Watkins (NCSA field hockey, not on NCSA's school list), and Homestead's Olivia Leyton Bravo (NCSA field hockey) and Aalya Jain (NCSA softball). Not linked: an NCSA address under Sobrato goalkeeper Kinzie Rasley's name that serves a page headed 'Regan Stuart '28' (Sobrato field hockey goalkeeper, class of 2028) with her name nowhere on it; bare SportsRecruits pages (a class year, no school or place, even rendered); a private Hudl profile (Rebecca Frelich); namesakes. Grades the same day: Homestead's Sarah Anton (12), Sahana Gopinath (11), Renee Lam (10) and Elle Correia (10) from Stick Together's 2025 all-league lists (derived), and Olivia Leyton Bravo (10) and Rhea Ananthateerta (10) from The Epitaph's Nov 2, 2026 game review; Lynbrook's Trishna Sinha and Sahana Rajamani keep the school site's grade 11 (owner decision), with Stick Together's 2025 list, which would make Sinha 12 and Rajamani 10, recorded as conflicts."
+    "2026-11-13, a search of four schools (Sobrato, Cupertino, Lynbrook and Homestead; 116 players: 72 varsity rows, 44 JV), the 20 Sobrato rows new to the roster that day: a SportsRecruits address probe in every sport (4,550 addresses, name variants and suffixes 1 to 12, every live page read, the bare ones also rendered twice under the 2026-11-13 rule), every Hudl team of the four schools in every sport for 2022 to 2026 and a Hudl name search for every player, NCSA's field hockey, lacrosse, soccer, softball, volleyball and basketball school pages and a guessed address for every player, and FieldLevel in eight sports. Six pages for five players were kept, each naming the school with a class year that agrees, and an independent refuter kept all six: Sobrato's Cameron Isle (Hudl and NCSA basketball), Lynbrook's Grace Cho (Hudl soccer), Cupertino's Allenah Watkins (NCSA field hockey, not on NCSA's school list), and Homestead's Olivia Leyton Bravo (NCSA field hockey) and Aalya Jain (NCSA softball). Not linked: an NCSA address under Sobrato goalkeeper Kinzie Rasley's name that serves a page headed 'Regan Stuart '28' (Sobrato field hockey goalkeeper, class of 2028) with her name nowhere on it; bare SportsRecruits pages (a class year, no school or place, even rendered); a private Hudl profile (Rebecca Frelich); namesakes. Grades the same day: Homestead's Sarah Anton (12), Sahana Gopinath (11), Renee Lam (10) and Elle Correia (10) from Stick Together's 2025 all-league lists (derived), and Olivia Leyton Bravo (10) and Rhea Ananthateerta (10) from The Epitaph's Nov 2, 2026 game review; Lynbrook's Trishna Sinha and Sahana Rajamani keep the school site's grade 11 (owner decision), with Stick Together's 2025 list, which would make Sinha 12 and Rajamani 10, recorded as conflicts.",
+    "2026-11-26, the players no sweep had reached: the 75 varsity rows MaxPreps added on 2026-11-13 at 22 schools (not Sobrato’s 20, searched that day, nor the six JV-list players who joined their varsity rosters), and the 40 players of Marina’s and Newport Harbor’s own 2026 varsity lists (otherRosters `listed`). Sources: a SportsRecruits address probe in every sport (about 2,650 addresses, suffixes to 12 or 15, nicknames), every Hudl team of the 24 schools in every sport and season 2021 to 2026 through its public GraphQL endpoint plus a Hudl name search for every player, NCSA’s school pages and a name address for every player, FieldLevel, MAX Field Hockey, and each MaxPreps row’s career page for its claimed flag (MaxPreps answered 403 to about half the requests; every page loaded on spaced retries). Each kept page was read twice by the pass that found it and re-opened by an independent refuter, which kept all 34. Linked: 19 pages for 14 MaxPreps rows (8 claimed MaxPreps pages: Hollister’s Gabriella Sanchez, Corning’s Harley Slye, Shelby Peterson, Makayla Lodin, Aliza Thuemler and Anaya Sherrod, Lassen’s Austan Mueller and Mt. Carmel’s Aashi Gauba; 5 Hudl pages, among them Stevenson’s Mia Jose filed under softball, the sport of the page’s own headline team; 3 SportsRecruits, among them Gilroy’s Claudia Lei on class of 2029 and a Gilroy hometown, the page naming no school; 2 NCSA; 1 FieldLevel), and 15 pages for 13 listed players (Marina 1, Newport Harbor 12), each naming the player and the school, as the rule asks of a player with no grade. Harper Morris’s NCSA page (2029) and Teagan Joob’s (2028) each disagree by a year with a private Hudl roster entry; both stay linked with the conflict in their note. 20 of the 75 rows also sit on MaxPreps’ JV rosters, as 147 varsity rows do; pages go on the varsity row as before. Not linked: Lassen’s Austan Mueller’s softball page (class 2030, no school or California place), Westview’s Navaeh Sotto’s (spelled Nevaeh, no school or place); 329 other pages, namesakes or bare. Private Hudl profiles: Corning’s Jade Prado and Vanessa Espinoza; Newport Harbor’s Clark, Davidson, Joob, Morris."
   ],
   "season": "26-27",
   "teams": [
@@ -7559,6 +7560,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "c309e56d-7bf6-4705-86ef-5458c7624a92",
+          "playerId": "pf88ee1e8e1",
+          "conflicts": [],
+          "fullName": "Claudia Lei",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits field hockey profile: class of 2029, midfield, Gilroy, CA. It names no school (its TEAMS block, rendered, shows only 'High School Team'), so it is linked on the class year plus a hometown in the school's own city. Created 2026-10-25. Found by the 2026-11-26 address probe and read twice, rendered. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/claudia_lei"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "gilroy",
@@ -8227,6 +8250,29 @@
               "classOf": 2030,
               "note": "SportsRecruits lacrosse profile: class of 2030, San Jose, CA (club: Alliance Lacrosse); it gives a hometown in the school's own area. Its bio says she is a varsity field hockey player; the team page's JV list had her (no grade), as does the varsity roster now. Moved from the JV list when she joined the varsity roster (read 2026-11-13). Found by the 2026-11-06 address probe and re-read by an independent refuter.",
               "sport": "lacrosse"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "85b123bb-5b0f-4a92-afcd-b3d3e14959df",
+          "playerId": "p88a2680486",
+          "conflicts": [],
+          "fullName": "Alayna Wang",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "Hudl basketball profile: class of 2030; on Leland's varsity girls basketball team (LHS Varsity Girls Basketball, 2026 - Present, #22) on Hudl and it names Leland High School, so it is linked on that. Found by the 2026-11-26 Hudl team-roster read and read twice. The row has no grade; 2030 is a class the season's roster can hold and is the class her MaxPreps career page gives (graduatingClass 2030). Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "hudl",
+              "sport": "basketball",
+              "url": "https://www.hudl.com/profile/33080724"
             }
           ],
           "sourceName": null
@@ -9198,6 +9244,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "3e08641c-89e2-4e6a-b410-48ee8acb6a30",
+          "playerId": "p42ceb0040a",
+          "conflicts": [],
+          "fullName": "Gabriella Sanchez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/athletes/gabriella-sanchez/?careerid=tsici7f6skb22"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "hollister",
@@ -9886,6 +9954,52 @@
               "platform": "sportsrecruits",
               "sport": "lacrosse",
               "url": "https://iwlca.sportsrecruits.com/athlete/bailey_ramillosa"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "32267bff-c98f-4870-9550-242475bf8071",
+          "playerId": "p36dad768eb",
+          "conflicts": [],
+          "fullName": "Mia Jose",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "Hudl softball profile: class of 2028; on Stevenson's girls varsity softball team (RLS Girls Varsity Softball, 2025 - Present, the page's most relevant team), plus its JV basketball (2024 - Present), JV volleyball (2025) and freshman volleyball (2024) teams on Hudl and it names Stevenson School, so it is linked on that. Found by the 2026-11-26 Hudl team-roster read and read twice. One Hudl page covers her three sports; it is filed under softball, the page's own most relevant team. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "hudl",
+              "sport": "softball",
+              "url": "https://www.hudl.com/profile/24364190"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "87d162c7-32d0-4502-8498-cc379c413cd4",
+          "playerId": "p4f3fd00226",
+          "conflicts": [],
+          "fullName": "Sylvia Yao",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "Hudl volleyball profile: class of 2028; on Stevenson's girls JV volleyball (2025) and freshman volleyball (2024) teams on Hudl and it names Stevenson School, so it is linked on that. Found by the 2026-11-26 Hudl team-roster read and read twice. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "hudl",
+              "sport": "volleyball",
+              "url": "https://www.hudl.com/profile/24364189"
             }
           ],
           "sourceName": null
@@ -12205,6 +12319,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "b947cda1-a3e4-4921-9b78-1315cbc6c53e",
+          "playerId": "p586ef1f26f",
+          "conflicts": [],
+          "fullName": "Stella Klein",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "Hudl profile: class of 2029; on San Francisco University High School's girls varsity field hockey team (UHS Girls Varsity Field Hockey, 2026 - Present) on Hudl and it names San Francisco University High School, so it is linked on that. Found by the 2026-11-26 Hudl team-roster read and read twice. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31382582"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "university-sf",
@@ -13585,7 +13721,155 @@
         "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: none linked, because MaxPreps lists no players for Corning, so there is no one to match a page to. Hudl has a Corning High School field hockey varsity team (seasons 2024-26) with empty rosters; NCSA search surfaced no Corning field hockey school page.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "3bd8e954-93ca-45e9-870c-ef4360c9ddd6",
+          "playerId": "pc4e47c2eaa",
+          "conflicts": [],
+          "fullName": "Harley Slye",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/harley-slye/?careerid=kpmi9n738r9o8"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6a866db2-3ab7-44e1-8708-1d72368d05ca",
+          "playerId": "p5f92155096",
+          "conflicts": [],
+          "fullName": "Shelby Peterson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/shelby-peterson/?careerid=candh0evtuim6"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "bbf4adc4-80dd-4ce4-b863-302702eb8245",
+          "playerId": "pff0dffbdf8",
+          "conflicts": [],
+          "fullName": "Makayla Lodin",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/makayla-lodin/?careerid=8mova1rp0nu99"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits softball profile: class of 2028, 3B/UTL, Corning, CA; its TEAMS block (rendered) names Corning Union High School, Corning, CA (#22), so it is linked on that; club LTG Lions Softball (18U Jason). Found by the 2026-11-26 address probe and read twice, rendered. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "sportsrecruits",
+              "sport": "softball",
+              "url": "https://my.sportsrecruits.com/athlete/makayla_lodin2"
+            },
+            {
+              "classOf": 2028,
+              "note": "NCSA basketball profile names Corning Union High School, Corning, CA; class of 2028 ('28), shooting guard/center. Found by the 2026-11-26 NCSA address probe (the field hockey address redirects to it) and read twice. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "ncsa",
+              "sport": "basketball",
+              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/corning/corning-union-high-school/makayla-lodin"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3cecbdcc-6db6-4e68-b520-68de276cd744",
+          "playerId": "pbf3b29100e",
+          "conflicts": [],
+          "fullName": "Aliza Thuemler",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/aliza-thuemler/?careerid=milunolhf6ko8"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6850dc7e-4451-4d2b-8178-2739ff9eac39",
+          "playerId": "p433881765c",
+          "conflicts": [],
+          "fullName": "Anaya Sherrod",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/anaya-sherrod/?careerid=n38saa0k82p33"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "2842c2d4-0efa-4dcb-8c1d-64c2f2555e2c",
+          "playerId": "p641cba14e1",
+          "conflicts": [],
+          "fullName": "Belinda Loera",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "Hudl soccer profile: class of 2028; on Corning's girls varsity soccer team (CUHS Soccer - Girls Varsity, 2025, #19) on Hudl and it names Corning High School, so it is linked on that. Found by the 2026-11-26 Hudl team-roster read and read twice. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "hudl",
+              "sport": "soccer",
+              "url": "https://www.hudl.com/profile/29173980"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "corning",
       "sources": []
     },
@@ -13943,6 +14227,28 @@
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/susanville/lassen-grizzlies/athletes/allison-mcgarva/?careerid=cf8d6i9ks6788"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "580870d7-f40d-48a8-a515-bf594f917047",
+          "playerId": "p7e81daa850",
+          "conflicts": [],
+          "fullName": "Austan Mueller",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/susanville/lassen-grizzlies/athletes/austan-mueller/?careerid=aj6g3fdtq29vf"
             }
           ],
           "sourceName": null
@@ -15157,6 +15463,7 @@
         "Recruiting pages swept 2026-10-06 by the rule in docs/DATA-SOURCES.md: MaxPreps lists no players for this team, so there is no row to link a page to.",
         "MaxPreps lists no varsity players, so there is nobody to link. Hudl has a Marina High School (Huntington Beach) Girls Varsity Field Hockey team (644367, 2021 season) with an empty roster; FieldLevel's Marina team page lists one athlete (HS 2025) and 3 alumni.",
         "2026-11-26, a search for a current roster outside MaxPreps (MaxPreps answered 403 that day): the school’s athletics site (marinavikingsathletics.org, its Varsity roster with the year selector on 2026-27) lists 20 players by first and last name, no number, grade or position, read twice the same; its 2025-26 view is empty and its 2026-27 JV view lists one other player. Hudl’s team 644367 still has only its empty 2021 season. Recorded as otherRosters `listed`, shown on the team page while MaxPreps lists nobody.",
+        "2026-11-26, recruiting pages and club ties for the 20 listed players: one page, Anna Schwab’s SportsRecruits field hockey profile (Marina High School, class of 2028), linked on her listed row. No Marina player is on any of the school’s 21 Hudl teams. Club, not shown: her own SportsRecruits CLUB block reads “VCRD, VCRD” (Ventura County Red Devils, club vcrd, current, high; clubTeam none, as for Eleanor Levy’s); it waits for a MaxPreps row to join to before it can go in data/field-hockey/clubs.json.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
       "otherRosters": {
@@ -15250,7 +15557,15 @@
           {
             "firstName": "Anna",
             "lastName": "Schwab",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2028,
+                "note": "SportsRecruits field hockey profile: class of 2028, Huntington Beach; the personal statement says she attends Marina High School and plays varsity field hockey, and the TEAMS block lists Marina High School (Huntington Beach, CA). Her statement (10th grade in fall 2025) agrees.",
+                "platform": "sportsrecruits",
+                "url": "https://nfhca.sportsrecruits.com/athlete/anna_schwab"
+              }
+            ]
           },
           {
             "firstName": "Kailyn",
@@ -15277,6 +15592,7 @@
         "Recruiting pages swept 2026-10-06 by the rule in docs/DATA-SOURCES.md: MaxPreps lists no players for this team, so there is no row to link a page to.",
         "MaxPreps lists no varsity players, so there is nobody to link. Hudl has Newport Harbor Womens Varsity FieldHockey (team 756723) rosters of 19 (2025) and 22 (2024); not matched to anyone because the packet has no players.",
         "2026-11-26, a search for a current roster outside MaxPreps (MaxPreps still lists nobody): the team’s site (newportharborfieldhockey.com, linked from the school’s athletics page; http only) heads its roster page \"2026 Varsity Team\", names coaches Amanda Boyer and Judy Schaefer, and lists 20 players as \"Last, First\", two marked GK, read twice the same. The page was last modified 2026-08-01 and gives the Aug 10-14 practice schedule, so it is the preseason list. 12 of the 20 are on Hudl’s 2025 roster (team 756723, no 2026 season). Recorded as otherRosters `listed`, shown on the team page while MaxPreps lists nobody.",
+        "2026-11-26, recruiting pages and club ties for the 20 listed players: 14 pages for 12 players, each naming the school, linked on the listed rows (Hudl 10, eight of them on the school’s varsity field hockey team 756723 with class years that match its 2024 and 2025 rosters, two girls’ soccer; SportsRecruits 2; NCSA 2). No page for Bablot, Clark, Davidson, Ficht, Kappler, Oranghi, Rodriguez or Salinas; Clark’s, Davidson’s, Joob’s and Morris’s Hudl entries are private. Club, not shown: Kate Shepherd’s own SportsRecruits page says “I play for Newport Harbor High School and VCRD High Performance”, CLUB block “VCRD/Rush Devils” (club vcrd, clubTeam VCRD/Rush Devils, current, high, by the Sarah Moniak precedent); it waits for a MaxPreps row to join to before it can go in data/field-hockey/clubs.json. Hudl’s 2025 season of team 756723 lists 18 today.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
       "otherRosters": {
@@ -15290,12 +15606,29 @@
           {
             "firstName": "Hayden",
             "lastName": "Beauchamp",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2029,
+                "note": "Hudl profile on Newport Harbor High School's Girls’ Soccer (team 370213); class of 2029. A soccer profile: Hudl lists her on no field hockey team.",
+                "platform": "hudl",
+                "sport": "soccer",
+                "url": "https://www.hudl.com/profile/28929958"
+              }
+            ]
           },
           {
             "firstName": "Jillian",
             "lastName": "Becker",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2027,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2027. A second Hudl profile (27299466, class of 2026, same jersey) is a duplicate import and is not linked.",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/24047727"
+              }
+            ]
           },
           {
             "firstName": "Katelyn",
@@ -15315,12 +15648,29 @@
           {
             "firstName": "Katie",
             "lastName": "Green",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2027,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2027.",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/24048584"
+              }
+            ]
           },
           {
             "firstName": "Teagan",
             "lastName": "Joob",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2028,
+                "note": "NCSA women's soccer profile headed \"TEAGAN JOOB '28 RECRUITING PROFILE\", Newport Harbor High School, Newport Beach, CA, age 17; otherwise empty. CAUTION: Hudl's 2025 Newport Harbor field hockey roster lists a private Teagan Joob entry with class of 2027; the two sources disagree by a year (age 17 in late 2026 fits 2027 better).",
+                "platform": "ncsa",
+                "sport": "soccer",
+                "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/newport-beach/newport-harbor-high-school1/teagan-joob"
+              }
+            ]
           },
           {
             "firstName": "Kiernan",
@@ -15330,17 +15680,42 @@
           {
             "firstName": "Melia",
             "lastName": "Kearns",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2028,
+                "note": "Hudl profile on Newport Harbor High School's Girls’ Soccer (team 370213); class of 2028. A soccer profile: Hudl lists her on no field hockey team.",
+                "platform": "hudl",
+                "sport": "soccer",
+                "url": "https://www.hudl.com/profile/24859864"
+              }
+            ]
           },
           {
             "firstName": "Emery",
             "lastName": "MacBeth",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2027,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2027. A second, private roster entry (31741600, class of 2027) has no public page.",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/24044366"
+              }
+            ]
           },
           {
             "firstName": "Harper",
             "lastName": "Morris",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2029,
+                "note": "NCSA field hockey profile headed \"HARPER MORRIS '29 RECRUITING PROFILE\", Newport Harbor High School, Newport Beach, CA, midfielder/defender, age 15; listed on NCSA's Newport Harbor field hockey athlete list (the slug is misspelled haper-morris). CAUTION: Hudl's 2025 Newport Harbor field hockey roster lists a private Harper Morris entry with class of 2028; the two sources disagree by a year and the NCSA page gives her age as 15 on 2026-11-26, which fits 2029, not 2028.",
+                "platform": "ncsa",
+                "url": "https://www.ncsasports.org/field-hockey-recruiting/california/newport-beach/newport-harbor-high-school1/haper-morris"
+              }
+            ]
           },
           {
             "firstName": "Ellie",
@@ -15350,7 +15725,15 @@
           {
             "firstName": "Sophia",
             "lastName": "Peca",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2027,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2027.",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/24023459"
+              }
+            ]
           },
           {
             "firstName": "Paris",
@@ -15365,22 +15748,67 @@
           {
             "firstName": "Kate",
             "lastName": "Shepherd",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2028,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2028. Her SportsRecruits page agrees (2028).",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/27299515"
+              },
+              {
+                "classOf": 2028,
+                "note": "SportsRecruits field hockey profile: class of 2028, Costa Mesa, CA; the personal statement says \"I play for Newport Harbor High School and VCRD High Performance\" and the TEAMS block lists Newport Harbor High School (Newport Beach, CA). Agrees with her Hudl page (2028).",
+                "platform": "sportsrecruits",
+                "url": "https://nfhca.sportsrecruits.com/athlete/kate_shepherd"
+              }
+            ]
           },
           {
             "firstName": "Skylar",
             "lastName": "Solesbee",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2028,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2028.",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/31754373"
+              }
+            ]
           },
           {
             "firstName": "Sadie",
             "lastName": "Taketa",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2027,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2027. Her SportsRecruits soccer page agrees (2027).",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/24026644"
+              },
+              {
+                "classOf": 2027,
+                "note": "SportsRecruits soccer profile: class of 2027, Costa Mesa, CA; the TEAMS block lists Newport Harbor High School (Newport Beach, CA) and a \"Newport Harbor field Hockey\" team card. Agrees with her Hudl page (2027). Its club (SoCal Reds FC) is a soccer club and is not tied.",
+                "platform": "sportsrecruits",
+                "sport": "soccer",
+                "url": "https://sportsrecruits.com/athlete/sadie_taketa"
+              }
+            ]
           },
           {
             "firstName": "Devyn",
             "lastName": "Teter",
-            "position": null
+            "position": null,
+            "profiles": [
+              {
+                "classOf": 2027,
+                "note": "Hudl profile on Newport Harbor High School's Womens Varsity FieldHockey (team 756723); class of 2027.",
+                "platform": "hudl",
+                "url": "https://www.hudl.com/profile/24039771"
+              }
+            ]
           }
         ],
         "source": "http://newportharborfieldhockey.com/?page_id=193",
@@ -20305,6 +20733,46 @@
           "note": null,
           "positions": null,
           "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "04297bff-1828-443f-bfb2-b7c5374cb0af",
+          "playerId": "p433a5f9a28",
+          "conflicts": [],
+          "fullName": "Aashi Gauba",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits field hockey profile: class of 2027, goalie, Poway, CA; its TEAMS block lists Mt. Carmel High (San Diego, CA), so it is linked on the school. Found by the 2026-11-26 address probe (my.sportsrecruits.com/athlete/aashi_gauba redirects to nfhca.) and read rendered twice. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/aashi_gauba"
+            },
+            {
+              "classOf": 2027,
+              "note": "NCSA page (Aashi Gauba '27) names Mt. Carmel High School, San Diego, CA, Field Hockey; its varsity entries give jersey #00, as the roster does. Listed on the school's NCSA field hockey page. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/mt-carmel-high-school/aashi-gauba1"
+            },
+            {
+              "classOf": 2027,
+              "note": "FieldLevel field hockey profile: HS 2027, GK, Poway, CA; its Teams list Mt. Carmel High School (San Diego, CA), and the school's FieldLevel field hockey roster lists her. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "fieldlevel",
+              "url": "https://www.fieldlevel.com/app/profile/aashi.gauba/fieldhockeywomen"
+            },
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-11-26. Found by the 2026-11-26 sweep of the rows no sweep had reached.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/athletes/aashi-gauba/?careerid=ccneabaeh5aee"
+            }
+          ],
           "sourceName": null
         }
       ],

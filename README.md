@@ -468,8 +468,12 @@ every roster was read again (the roster reader had been failing since MaxPreps a
 the grades it supplied, each the same value, so those notes went; four players' records changed (a name spelled
 differently, a jersey, a position, a grade), two rows left MaxPreps (one a duplicate whose record moved to the
 player's other row), one profile accepted only while a row had no grade was unlinked, and six JV-list players
-who joined their varsity rosters took their recruiting pages with them (the file's last note lists each). The
-76 rows MaxPreps added at the swept leagues have not been swept for clubs or commitments. Every entry lists
+who joined their varsity rosters took their recruiting pages with them (the file's 2026-11-13 reconciliation note lists each). The
+rows MaxPreps added that day were swept for recruiting pages and clubs on 2026-11-26 (75 rows at 22 schools,
+Sobrato's 20 having been searched on 2026-11-13): 19 pages for 14 rows and three club ties, each re-opened by an
+independent refuter; they have not been swept for commitments. The same day Marina's and Newport Harbor's 40
+listed players were searched by the same rule (a page must name the school, as they have no grade): 15 pages for 13
+players, shown on their listed rows, and two VCRD ties held in their teams' notes until they have MaxPreps rows. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list, or `listed`: a source's whole current varsity list, transcribed as
