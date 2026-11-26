@@ -8,7 +8,7 @@
  *   - only schools with a listed player appear: a school with nobody listed is not named, linked
  *     or counted anywhere on the page, and a league with no listed school has no section or chip;
  *   - regions: each region's leagues sit in that region's `data-region-scope` block, under the switcher;
- *   - privacy: nothing data/field-hockey/clubs.json or data/field-hockey/commits.json keeps but never renders reaches the
+ *   - privacy: nothing data/field-hockey/clubs.json or data/commitments.json keeps but never renders reaches the
  *     page, and the metadata names no player;
  *   - links in: the team rosters with a listed player link their school's block, and /teams, /clubs
  *     and /commits link the page.

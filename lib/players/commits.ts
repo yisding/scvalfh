@@ -1,40 +1,37 @@
 /**
- * The read API for data/field-hockey/commits.json — which players on the tracked varsity rosters a public
- * page says have committed to play a sport in college (field hockey or any other), and those
- * colleges with the team in each sport a player committed to (SPEC §1.1j3, DESIGN §21).
+ * The read API for data/commitments.json — which players on this build's varsity rosters a public page says have
+ * committed to play a sport in college (their own sport or any other), and those colleges with the team in each
+ * sport a player here committed to (SPEC §1.1j3, DESIGN §21).
  *
- * The file is research, written by hand and checked twice; no script rebuilds it (see
- * lib/players/commits-schema.ts). It is imported so the build bundles it, for the reason lib/players/rosters.ts
- * gives: a Worker has no project filesystem. It is validated once at module scope — the schema,
- * then the join to the rosters the schema cannot see — so a bad file fails at import time rather
- * than half-way through a render. There is no env override, for lib/players/clubs.ts' reason: nothing
- * writes the file, and the tests that need a bad one build it in memory and pass it to `loadCommits`.
+ * The file is research, written by hand and checked twice; no script rebuilds it (see lib/players/commits-schema.ts),
+ * and `pnpm build-players` only keeps it keyed.
+ * It is one file for every build: a commitment is filed under its person's registry id, and this module serves the
+ * commitments of the people this build's varsity rows are this season (data/<sport>/player-index.json,
+ * lib/players/player-index.ts), named as those rows are. A person on no varsity row of this build (she graduated,
+ * or plays another sport) is kept in the file and shown nowhere here. It is imported so the build bundles it, for
+ * the reason lib/players/rosters.ts gives: a Worker has no project filesystem. It is validated once at module
+ * scope — the schema, then the join to the rosters the schema cannot see — so a bad file fails at import time
+ * rather than half-way through a render. There is no env override, for lib/players/clubs.ts' reason: nothing
+ * else writes the file, and the tests that need a bad one build it in memory and pass it to `loadCommits`.
  *
  * The join, on team slug + MaxPreps athleteId, is against the MERGED rosters
  * (`getAllEnrichedRosters`), so the checks see the grade and level a reader sees. Every commitment
  * must:
- *   1. join to a row of that team, under the row's own fullName
- *   2. not be a JV row (the overlay's `level`): the pages list varsity rows only
- *   3. agree with every class year a source states: with the row's grade when it has one, else
+ *   1. join to a row of that team (the person's varsity row: the overlay's `level` keeps JV rows out)
+ *   2. agree with every class year a source states: with the row's grade when it has one, else
  *      with each other, and be a class a high school roster of the season can hold (a player with
  *      no grade anywhere still gets one class year, or none)
- * and the file's `season` must be rosters.json's. Steps 1-3 for a row with a grade are
- * lib/players/roster-join.ts, shared with lib/players/clubs.ts; only the no-grade half of step 3 is this module's,
- * because /commits groups players by class year (commitClassOf) and a club page shows none.
+ * Steps 1-2 for a row with a grade are lib/players/roster-join.ts, shared with lib/players/clubs.ts; only the
+ * no-grade half of step 2 is this module's, because /commits groups players by class year (commitClassOf) and a
+ * club page shows none.
  *
  * A roster refetch can break a commitment that held when it was written, as it can a club tie: `pnpm
- * fetch-rosters` drops a committed player's row or respells the name. That is roster drift
- * (lib/players/roster-drift.ts): the commitment is left out of what this module serves and reported (`pnpm
- * roster-drift`, a warning on the refresh's run page), and the file keeps it. Re-check that commitment's
- * sources, then edit or drop it by hand. Never prune it automatically. A season rollover still throws at
- * import (it is also when the seniors graduate: the file is redone for the new season, not carried).
+ * fetch-rosters` changes a committed player's grade. That is roster drift (lib/players/roster-drift.ts): the
+ * commitment is left out of what this module serves and reported (`pnpm roster-drift`, a warning on the
+ * refresh's run page), and the file keeps it. Re-check that commitment's sources, then edit or drop it by hand.
+ * Never prune it automatically.
  */
-
-import bundledFieldHockey from '../../data/field-hockey/commits.json';
-import bundledBasketball from '../../data/basketball/commits.json';
-import bundledVolleyball from '../../data/volleyball/commits.json';
-import bundledSoccer from '../../data/soccer/commits.json';
-import bundledValSoccer from '../../data/val-soccer/commits.json';
+import bundled from '../../data/commitments.json';
 import { validateData } from '../data-file';
 import {
   COLLEGE_DIVISIONS,
@@ -43,15 +40,16 @@ import {
   type CollegeProgram,
   type Commitment,
   type CommitsFile,
+  type CommitsView,
 } from './commits-schema';
+import { goneFrom, homeRow } from './player-index';
+import { SPORT_ID } from '../sports/current';
 import { reportDrift } from './roster-drift';
 import { joinToRoster, playerKey } from './roster-join';
 import { classOf, effectiveClassOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
-/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {
   College,
@@ -64,7 +62,10 @@ export type {
   CommitSport,
   CommitStatus,
   Commitment,
+  CommitRound,
   CommitsFile,
+  CommitsView,
+  PersonCommitment,
 } from './commits-schema';
 
 /**
@@ -77,8 +78,35 @@ export function loadCommits(
   raw: unknown,
   teams: readonly MergedTeamRoster[] = getAllEnrichedRosters(),
   season: string = getRosters().season,
-): CommitsFile {
+): CommitsView {
   return loadAndJoin(raw, teams, season).file;
+}
+
+/**
+ * The file as this build's pages read it: its round's record, the commitments of the people on its varsity rows
+ * (named as their rows are), and the colleges those name, each with only the programs they name.
+ */
+function viewOf(file: CommitsFile, teams: readonly MergedTeamRoster[], season: string): CommitsView {
+  const named = new Map(teams.flatMap((t) => t.players.flatMap((p) => (p.athleteId === null ? [] : [[playerKey(t.slug, p.athleteId), p.fullName] as const]))));
+  const commitments: Commitment[] = file.commitments.flatMap(({ name, playerId, ...c }) => {
+    const home = homeRow(playerId);
+    const row = home !== null && home.athleteId !== null && home.level === 'varsity' ? home : null;
+    if (!row) {
+      // On a row this season that no source lists any more (a coach dropped it): roster drift, kept and reported.
+      const team = home === null ? goneFrom(playerId) : null;
+      if (team !== null) {
+        reportDrift({ file: 'commitments', teamSlug: team, who: `${name} (${c.college})`, key: playerId, what: 'no roster row lists this player any more', leftOut: 'record' });
+      }
+      return [];
+    }
+    return [{ teamSlug: row.team, athleteId: row.athleteId as string, playerId, fullName: named.get(playerKey(row.team, row.athleteId as string)) ?? name, ...c }];
+  });
+  const programs = new Set(commitments.map((c) => `${c.college} ${c.sport}`));
+  const colleges = file.colleges
+    .filter((c) => commitments.some((x) => x.college === c.slug))
+    .map((c) => ({ ...c, programs: c.programs.filter((p) => programs.has(`${c.slug} ${p.sport}`)) }));
+  const round = file.rounds[SPORT_ID] ?? { builtBy: 'Nothing: no round has looked for this build\'s players\' commitments.', capturedAt: file.capturedAt, notes: [] };
+  return { ...round, season, colleges, commitments };
 }
 
 /** loadCommits, plus the merged row each committed player joined to, by `playerKey`. */
@@ -86,14 +114,11 @@ function loadAndJoin(
   raw: unknown,
   teams: readonly MergedTeamRoster[],
   season: string,
-): { file: CommitsFile; rows: Map<string, MergedPlayer> } {
-  const file = validateData('commits', CommitsFileSchema, raw);
-  if (file.season !== season) {
-    throw new Error(`commits.json is for season ${file.season}, rosters for ${season}`);
-  }
+): { file: CommitsView; rows: Map<string, MergedPlayer> } {
+  const file = viewOf(validateData('commitments', CommitsFileSchema, raw), teams, season);
   // A commitment the roster no longer supports is left out of the file this module serves (lib/players/roster-drift.ts).
   const { rows, joined } = joinToRoster(file.commitments, teams, season, {
-    label: 'commits',
+    label: 'commitments',
     noun: 'commitments',
     subject: (c) => c.college,
   });
@@ -110,7 +135,7 @@ function loadAndJoin(
       : stated.length === 1 && (stated[0] < classOf(season, 12) || stated[0] > classOf(season, 9)) ? `a source says class of ${stated[0]}, not a class on a ${season} high school roster`
       : null;
     if (why === null) return true;
-    reportDrift({ file: 'commits', teamSlug: c.teamSlug, who: `${c.fullName} (${c.college})`, key: c.athleteId, what: why, leftOut: 'record' });
+    reportDrift({ file: 'commitments', teamSlug: c.teamSlug, who: `${c.fullName} (${c.college})`, key: c.playerId ?? c.athleteId, what: why, leftOut: 'record' });
     rows.delete(playerKey(c.teamSlug, c.athleteId));
     return false;
   });
@@ -193,8 +218,8 @@ const COLLEGES_ORDERED: readonly College[] = [...file.colleges].sort(
     collegeDisplayName(a).localeCompare(collegeDisplayName(b)),
 );
 
-/** The whole file: capturedAt, notes and builtBy, as well as the records. */
-export function getCommitsFile(): CommitsFile {
+/** The file as this build's pages read it: its round's capturedAt, notes and builtBy, and its players' records. */
+export function getCommitsFile(): CommitsView {
   return file;
 }
 

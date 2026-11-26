@@ -7,8 +7,8 @@ import { renamedGameRedirects } from './lib/game-aliases';
  * The site is static route families built from one JSON snapshot — pages `/`, `/standings`,
  * `/standings/[league]`, `/schedule`, `/schedule/[league]`, `/scores/[date]`, `/game/[id]`, `/teams`,
  * `/teams/[slug]`, `/playoffs`, `/playoffs/[league]`, `/leaders`, `/history/2025-26`, `/about`, `/clubs`,
- * `/clubs/[slug]`, `/commits` and `/recruiting` (the last four from data/field-hockey/clubs.json, data/field-hockey/commits.json
- * and the roster files, not the snapshot), plus the OG
+ * `/clubs/[slug]`, `/commits` and `/recruiting` (the last four from data/field-hockey/clubs.json, data/commitments.json,
+ * data/player-accounts.json through data/field-hockey/player-index.json, and the roster files, not the snapshot), plus the OG
  * images beside them and the metadata routes (icons, manifest, sitemap, robots) — every one
  * prerendered (`dynamicParams = false` on each dynamic segment, SPEC §8.1), so there is nothing to
  * configure for data. Notably absent, on purpose:

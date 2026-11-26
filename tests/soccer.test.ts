@@ -306,7 +306,7 @@ describe('the soccer data files', () => {
   });
 });
 
-describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrichment,jv-profiles}.json; switched on 2026-11-21)', () => {
+describe('the soccer recruiting pages (data/soccer/{clubs,rosters-enrichment}.json, data/commitments.json and data/player-accounts.json; switched on 2026-11-21)', () => {
   // Written to hold both while the files are placeholders and after the 2026-11-21 round fills them: no counts.
   it('has the recruiting pages and no club calendar', () => {
     expect([m.current.HAS_RECRUITING, m.current.HAS_CLUB_CALENDAR]).toEqual([true, false]);
@@ -324,10 +324,15 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
       expect(m.clubs.getClub(a.club), a.club).toBeDefined();
       expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
     }
-    // A JV tie joins the school's MaxPreps JV roster (lib/players/clubs.ts withJvListRows): none is left out as drift.
-    const raw = JSON.parse(readFileSync('data/soccer/clubs.json', 'utf8')) as { jvAffiliations: unknown[] };
-    expect(raw.jvAffiliations.length).toBeGreaterThan(0);
-    expect(file.jvAffiliations).toHaveLength(raw.jvAffiliations.length);
+    // A JV tie joins the school's MaxPreps JV roster (lib/players/clubs.ts withJvListRows): every membership of a person
+    // whose MaxPreps row this season is a JV one (data/soccer/player-index.json) is served, none left out as drift.
+    const raw = JSON.parse(readFileSync('data/soccer/clubs.json', 'utf8')) as { memberships: Array<{ playerId: string }> };
+    const index = JSON.parse(readFileSync('data/soccer/player-index.json', 'utf8')) as { rows: Array<[string, string, string, string | null, string]> };
+    const levels = new Map<string, Set<string>>();
+    for (const [id, , level, athleteId] of index.rows) if (athleteId !== null) levels.set(id, (levels.get(id) ?? new Set()).add(level));
+    const onJv = raw.memberships.filter((t) => levels.get(t.playerId)?.has('jv') && !levels.get(t.playerId)?.has('varsity'));
+    expect(onJv.length).toBeGreaterThan(0);
+    expect(file.jvAffiliations).toHaveLength(onJv.length);
     // Shown: the JV roster's club line (found by name) and the club page, each JV player marked JV.
     const line = (team: string, name: string) =>
       m.clubView.jvPlayerClubGroups(team as never, name).flatMap((g) => g.clubs.map((c) => `${g.label}: ${c.name}`));
@@ -375,7 +380,7 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
       expect(m.commitView.playerCommitLine(c.teamSlug, c.athleteId)!.sport).toBe(c.sport === 'soccer' ? null : m.commitView.SPORT_WORDS[c.sport]);
     }
     const profiles = [
-      ...m.rosters.getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+      ...m.rosters.getAllEnrichedRosters().flatMap((t) => t.players.flatMap((p) => p.profiles)),
       ...m.jvProfiles.getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
     ];
     expect(profiles.every((p) => p.sport !== 'soccer')).toBe(true);

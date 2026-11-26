@@ -384,8 +384,6 @@ export const PlayerProfileSchema = z
   .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none')
   .refine((p) => p.platform !== 'maxfh' || (p.sport ?? SPORT_ID) === 'field-hockey', 'a maxfh profile is a field hockey page');
 
-/** A profile's uniqueness key, platform and sport (the build's own when it names none): one profile per pair. */
-export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? SPORT_ID}`;
 
 /** A grade as a conflict records it: "9" to "12". */
 const GRADE_TEXT = /^(9|1[0-2])$/;
@@ -445,21 +443,16 @@ export const EnrichedPlayerSchema = z
     jersey: EnrichedJerseySchema.nullable(),
     height: EnrichedHeightSchema.nullable(),
     conflicts: z.array(RosterConflictSchema),
-    /** The player's own recruiting pages, at most one per platform in each sport. */
-    profiles: z.array(PlayerProfileSchema),
     note: z.string().min(1).nullable(),
   })
+  .strict()
   .refine(
     (p) =>
       p.sourceName !== null || (p.name ?? null) !== null || p.level !== null || p.grade !== null || p.positions !== null ||
-      p.jersey !== null || p.height !== null || p.conflicts.length > 0 || p.profiles.length > 0,
+      p.jersey !== null || p.height !== null || p.conflicts.length > 0,
     'an enrichment record must add something',
   )
   .refine((p) => (p.level === null) === (p.levelSource === null), 'level and levelSource go together')
-  .refine(
-    (p) => new Set(p.profiles.map(profileSportKey)).size === p.profiles.length,
-    'one profile per platform in each sport',
-  )
   .refine(
     (p) => p.conflicts.filter((c) => c.rosterBehind).length <= 1,
     'at most one rosterBehind grade conflict per player',
@@ -501,11 +494,7 @@ export const RosterEnrichmentSchema = z
     /** One entry per registry team; a team nothing has been added for has empty lists. */
     teams: z.array(EnrichedTeamSchema).length(ROSTER_TEAM_COUNT),
   })
-  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === ROSTER_TEAM_COUNT, 'team slugs are not unique')
-  .refine((e) => {
-    const urls = e.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.map((x) => x.url)));
-    return new Set(urls).size === urls.length;
-  }, 'a profile URL is linked to more than one player');
+  .refine((e) => new Set(e.teams.map((t) => t.slug)).size === ROSTER_TEAM_COUNT, 'team slugs are not unique');
 
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;

@@ -1,11 +1,9 @@
 /**
- * The JV players' recruiting pages: data/field-hockey/jv-profiles.json, lib/jv/jv-profiles.ts (which joins each
- * entry to the team page's JV list by name), the profile links on the team page's JV roster
- * (components/jv/jv-roster-view.ts, TeamJvRoster) and the JV rows on /recruiting.
+ * The JV players' recruiting pages: filed by person in data/player-accounts.json, shown on the team page's JV list
+ * through lib/jv/jv-profiles.ts (which finds each JV row's person by name, data/field-hockey/player-index.json), the
+ * profile links on the team page's JV roster (components/jv/jv-roster-view.ts, TeamJvRoster) and the JV rows on
+ * /recruiting.
  */
-
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
 
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -14,31 +12,37 @@ import { describe, expect, it } from 'vitest';
 import TeamJvRoster from '../components/jv/TeamJvRoster';
 import { buildTeamJvRosterView } from '../components/jv/jv-roster-view';
 import { buildRecruitingView } from '../components/recruiting/recruiting-view';
-import { JvProfilesFileSchema, getJvPlayerProfiles, getJvProfilesFile, getOverlayJvProfileRows } from '../lib/jv/jv-profiles';
+import { getJvPlayerProfiles, getJvProfilesFile } from '../lib/jv/jv-profiles';
 import { getJvRoster, nameKey } from '../lib/jv/jv-rosters';
+import { readAccountsFile } from '../lib/players/registry-file';
 import { classOf, getEnrichedTeamRoster, getRosterEnrichment } from '../lib/players/rosters';
 import type { TeamSlug } from '../lib/types';
 import { REPO } from './helpers';
 import { textOf } from './ui/html-text';
 
-const file = JvProfilesFileSchema.parse(
-  JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'jv-profiles.json'), 'utf8')) as unknown,
+const file = getJvProfilesFile();
+const accounts = readAccountsFile(REPO)!;
+/** Every JV list row with a profile, as the site shows it. */
+const entries = file.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug, ...p })));
+/** Each page field hockey's JV round linked, with its maintainers' note. */
+const jvRoundNote = new Map(
+  accounts.players.flatMap((p) =>
+    p.accounts.filter((a) => a.linkedBy.some((r) => r.build === 'field-hockey' && r.list === 'jv')).map((a) => [a.url, a.note] as const),
+  ),
 );
-const fileEntries = file.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug as TeamSlug, ...p })));
-/** Every JV player with a profile: this file's, and the overlay's JV-marked rows (Los Gatos'). */
-const entries = [
-  ...fileEntries,
-  ...getOverlayJvProfileRows().map((r) => ({ ...r, profiles: [...getJvPlayerProfiles(r.slug, r.name)] })),
-];
+/** The JV rows as field hockey's JV round linked them: its pages only, each with its note. */
+const fileEntries = entries
+  .map((e) => ({ ...e, profiles: e.profiles.filter((x) => jvRoundNote.has(x.url)).map((x) => ({ ...x, note: jvRoundNote.get(x.url) ?? null })) }))
+  .filter((e) => e.profiles.length > 0);
 
-describe('data/field-hockey/jv-profiles.json', () => {
-  it('validates, and is the file the site reads', () => {
-    expect(getJvProfilesFile()).toEqual(file);
+describe('the JV lists\u2019 recruiting pages', () => {
+  it('carry the JV round\u2019s own record', () => {
+    expect(file.capturedAt).toBe(accounts.jvResearch['field-hockey']?.capturedAt);
     expect(file.season).toBe(getRosterEnrichment().season);
     expect(file.notes.join(' ')).toMatch(/SportsRecruits/);
   });
 
-  it('joins every entry to a player on the JV list the team page shows, never a varsity player', () => {
+  it('show on a player on the JV list the team page shows, never a varsity player', () => {
     for (const e of entries) {
       const roster = getJvRoster(e.slug);
       expect(roster, e.slug).not.toBeNull();
@@ -49,42 +53,37 @@ describe('data/field-hockey/jv-profiles.json', () => {
     }
   });
 
-  it('leaves to the overlay the JV players it has a row for, and shows their profiles on the JV list', () => {
-    const overlay = getOverlayJvProfileRows();
-    expect(overlay.length).toBeGreaterThan(0);
-    for (const r of overlay) {
-      expect(fileEntries.some((e) => e.slug === r.slug && nameKey(e.name) === nameKey(r.name)), `${r.slug}: ${r.name}`).toBe(false);
-      expect(getJvRoster(r.slug)!.players.some((p) => nameKey(p.name) === nameKey(r.name)), `${r.slug}: ${r.name}`).toBe(true);
-      expect(getJvPlayerProfiles(r.slug, r.name).length).toBeGreaterThan(0);
+  it('show a JV-marked MaxPreps row\u2019s pages on the JV list (Los Gatos, whose MaxPreps list is the whole program)', () => {
+    const marked = (getEnrichedTeamRoster('los-gatos')?.players ?? []).filter((p) => p.level === 'jv' && p.profiles.length > 0);
+    expect(marked.length).toBeGreaterThan(0);
+    for (const p of marked) {
+      const urls = getJvPlayerProfiles('los-gatos', p.sourceName ?? p.fullName).map((x) => x.url);
+      for (const x of p.profiles.filter((y) => y.platform !== 'maxpreps')) expect(urls, p.fullName).toContain(x.url);
     }
   });
 
-  it('agrees with the JV list’s grade wherever a profile states a class year', () => {
+  it('agree with the JV list\u2019s grade wherever a page states a class year, and link no MaxPreps page', () => {
     for (const e of entries) {
       const grade = getJvRoster(e.slug)!.players.find((p) => nameKey(p.name) === nameKey(e.name))!.grade;
       for (const x of e.profiles) {
-        if (x.classOf === null) continue;
-        if (grade === null) expect(x.classOf, `${e.slug}: ${e.name}`).toBeGreaterThanOrEqual(2027);
-        else expect(x.classOf, `${e.slug}: ${e.name}`).toBe(classOf(file.season, grade));
+        expect(x.platform, `${e.slug}: ${e.name}`).not.toBe('maxpreps');
+        if (x.classOf === null || grade === null) continue;
+        expect(x.classOf, `${e.slug}: ${e.name}`).toBe(classOf(file.season, grade));
       }
     }
   });
 
-  it('links no page that the varsity overlay links, and none twice', () => {
-    const varsity = new Set(
-      getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles.map((x) => x.url))),
-    );
-    const urls = fileEntries.flatMap((e) => e.profiles.map((x) => x.url));
+  it('link no page twice', () => {
+    const urls = entries.flatMap((e) => e.profiles.map((x) => x.url));
     expect(new Set(urls).size).toBe(urls.length);
-    for (const u of urls) expect(varsity.has(u), u).toBe(false);
   });
 
-  it('holds what the 2026-11-06 research found: 33 SportsRecruits pages from the address probe and one NCSA page', () => {
+  it('hold what the 2026-11-06 research found: 33 SportsRecruits pages from the address probe and one NCSA page', () => {
     const all = fileEntries.flatMap((e) => e.profiles.map((x) => ({ e, x })));
     const probe = all.filter(({ x }) => x.note?.includes('Found by the 2026-11-06 address probe'));
     // 33 pages for 33 players at 13 schools when found; on 2026-11-13 six of those players joined their varsity
-    // rosters (Berkeley, Leland, Marin Catholic twice, Saint Francis, Westview), so their pages moved to
-    // data/field-hockey/rosters-enrichment.json: 27 here, at 11 schools.
+    // rosters (Berkeley, Leland, Marin Catholic twice, Saint Francis, Westview), so their pages moved to their
+    // varsity rows: 27 here, at 11 schools.
     expect(probe).toHaveLength(27);
     expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(27);
     expect(probe.every(({ x }) => x.platform === 'sportsrecruits' && x.classOf !== null)).toBe(true);
@@ -105,9 +104,9 @@ describe('data/field-hockey/jv-profiles.json', () => {
     expect(url('st-ignatius', 'Luciana Bennett')).toEqual(['https://iwlca.sportsrecruits.com/athlete/luciana_bennett']);
   });
 
-  it('holds what the 2026-11-13 Hudl sweep found: seven JV players\u2019 Hudl pages at three schools', () => {
+  it('hold what the 2026-11-13 Hudl sweep found: seven JV players\u2019 Hudl pages at three schools', () => {
     const found = fileEntries.flatMap((e) => e.profiles.filter((x) => x.note?.includes('Found by the 2026-11-13 Hudl team-roster sweep')).map((x) => ({ e, x })));
-    // An eighth, Berkeley's Sage Murphy, joined the varsity roster the same day: her page is in the varsity overlay.
+    // An eighth, Berkeley's Sage Murphy, joined the varsity roster the same day: her page is on her varsity row.
     expect(found.map(({ e }) => `${e.slug} ${e.name}`).sort()).toEqual([
       'bonita Agatha Sosa',
       'bonita Peyton Moronez',
@@ -118,31 +117,10 @@ describe('data/field-hockey/jv-profiles.json', () => {
       'harvard-westlake Katiya Chen',
     ]);
     expect(found.every(({ x }) => x.platform === 'hudl' && x.sport === undefined)).toBe(true);
-    // 35 JV players with a profile at 15 schools.
+    // 35 JV players with a page of the JV round at 15 schools.
     expect(fileEntries).toHaveLength(35);
     expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(15);
     expect(file.capturedAt).toBe('2026-11-13');
-  });
-
-  it('refuses a claimed-MaxPreps profile, two profiles on one platform in one sport, and a player listed twice', () => {
-    const profile = (over: object) => ({ platform: 'sportsrecruits', url: 'https://nfhca.sportsrecruits.com/athlete/a_b', classOf: 2029, note: null, ...over });
-    const one = (players: unknown[]) => ({ ...file, teams: [{ slug: 'st-ignatius', players }] });
-    expect(JvProfilesFileSchema.safeParse(one([{ name: 'A B', profiles: [profile({})] }])).success).toBe(true);
-    expect(
-      JvProfilesFileSchema.safeParse(one([{ name: 'A B', profiles: [profile({ platform: 'maxpreps', url: 'https://www.maxpreps.com/x' })] }])).success,
-    ).toBe(false);
-    expect(
-      JvProfilesFileSchema.safeParse(one([{ name: 'A B', profiles: [profile({}), profile({ url: 'https://nfhca.sportsrecruits.com/athlete/a_b1' })] }])).success,
-    ).toBe(false);
-    expect(
-      JvProfilesFileSchema.safeParse(
-        one([
-          { name: 'A B', profiles: [profile({})] },
-          { name: 'a  b', profiles: [profile({ url: 'https://nfhca.sportsrecruits.com/athlete/a_b2' })] },
-        ]),
-      ).success,
-    ).toBe(false);
-    expect(JvProfilesFileSchema.safeParse(one([{ name: 'A B', profiles: [] }])).success).toBe(false);
   });
 });
 

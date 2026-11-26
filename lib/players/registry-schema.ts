@@ -63,6 +63,11 @@ export const OBSERVATION_SOURCES = [
   'maxpreps-jv-roster',
   /** another public source, recorded in data/field-hockey/rosters-enrichment.json; `kind` and `url` say which */
   'enrichment',
+  /**
+   * the school's own varsity list, for a team MaxPreps lists nobody for (data/<sport>/rosters-enrichment.json
+   * otherRosters `listed`: Marina's and Newport Harbor's field hockey sites); `url` is the page
+   */
+  'school-roster',
   /** the school's own JV list (data/field-hockey/jv-rosters-school-sites.json) */
   'school-jv-roster',
   /** the team's MaxPreps season stat sheet (data/field-hockey/player-stats.json, data/field-hockey/prior-players.json) */
@@ -261,6 +266,11 @@ export const PlayerSchema = z
  *                          do not contradict and no MaxPreps career id in common: names are never
  *                          joined across sports, so this is only a suggestion
  *   career-two-names       one MaxPreps career id is listed under two unrelated names
+ *   possible-transfer      the same name at two schools, never in the same season, with class years
+ *                          that do not contradict, each a class the other school's seasons could hold
+ *                          (no graduate, no eighth-grader), and no MaxPreps career id in common: a player who
+ *                          changed schools, or two people. Names are never joined across schools, so
+ *                          this is only a suggestion (`team` is the school of the earlier stints)
  */
 export const REVIEW_KINDS = [
   'same-name-two-careers',
@@ -269,6 +279,7 @@ export const REVIEW_KINDS = [
   'possible-match',
   'same-name-other-sport',
   'career-two-names',
+  'possible-transfer',
 ] as const;
 
 export const ReviewItemSchema = z
@@ -391,17 +402,20 @@ export function countPlayers(players: readonly Player[], review: number): Player
  * every entry says why.
  *
  *   sameAs     the name `name` on `team`'s lists in `sport` is the player with MaxPreps career
- *              `careerId`, or the player its lists call `isName`. For a spelling no rule may join
- *              alone (a nickname, a misspelling).
+ *              `careerId` (on any team: a player who changed schools), or the player its lists call
+ *              `isName` (on `isTeam`'s lists in `isSport`, when given: else the same team and sport).
+ *              For a spelling no rule may join alone (a nickname, a misspelling), and for a player
+ *              no rule follows from one school to another.
  *   rowSplits  the MaxPreps row named `name` on `team`'s `page` roster carries `careerId` but is not
  *              that career's player: it is resolved by its name instead.
  *   distinct   the two MaxPreps careers on `team` are two people, though they share a name: the
  *              resolver never joins them, and a bare name that fits both is left for review.
  *   notSame    the two names at `team` are two people (sisters, namesakes), though they look like
  *              one: the pair is no longer listed for review. Two different names are a pair of
- *              `sport`'s team; one name given twice is that name at the school in two sports. It
- *              only settles the question: two MaxPreps careers under ONE name on one team are kept
- *              apart by `distinct`.
+ *              `sport`'s team; one name given twice is that name at the school in two sports. With
+ *              `otherTeam` the second name is at another school (in `otherSport`, else `sport`): the
+ *              answer to a `possible-transfer`. It only settles the question: two MaxPreps careers
+ *              under ONE name on one team are kept apart by `distinct`.
  *   names      what the player its lists call `name` (on `team`, in `sport`) is called: `official`
  *              is the name the registry shows (any spelling, a source's or not, when the basis says
  *              where it is from), and `previous` are names she went by and no longer does. It names
@@ -425,16 +439,35 @@ export const PlayerIdentitySchema = z
           name: text,
           careerId: text.optional(),
           isName: text.optional(),
+          /** With `isName`: the team (and sport) whose lists call the player that, when not `team` (and `sport`). */
+          isTeam: text.optional(),
+          isSport: z.enum(SPORT_IDS).optional(),
           basis,
         })
         .strict()
-        .refine((e) => (e.careerId === undefined) !== (e.isName === undefined), 'give exactly one of careerId and isName'),
+        .refine((e) => (e.careerId === undefined) !== (e.isName === undefined), 'give exactly one of careerId and isName')
+        .refine((e) => e.isName !== undefined || (e.isTeam === undefined && e.isSport === undefined), 'isTeam and isSport go with isName'),
     ),
     rowSplits: z.array(
       z.object({ sport: z.enum(SPORT_IDS), team: text, page: z.enum(PLAYER_LEVELS), name: text, careerId: text, basis }).strict(),
     ),
     distinct: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, careerIds: z.tuple([text, text]), basis }).strict()),
-    notSame: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, names: z.tuple([text, text]), basis }).strict()),
+    notSame: z.array(
+      z
+        .object({
+          sport: z.enum(SPORT_IDS),
+          team: text,
+          names: z.tuple([text, text]),
+          /** The school of the second name, when it is not `team`: a `possible-transfer` answered. */
+          otherTeam: text.optional(),
+          /** With `otherTeam`: the second name's sport, when it is not `sport`. */
+          otherSport: z.enum(SPORT_IDS).optional(),
+          basis,
+        })
+        .strict()
+        .refine((e) => e.otherSport === undefined || e.otherTeam !== undefined, 'otherSport goes with otherTeam')
+        .refine((e) => e.otherTeam !== e.team, 'otherTeam is another school than team'),
+    ),
     names: z.array(
       z
         .object({

@@ -506,7 +506,7 @@ export function affiliationLeaks(
 ): string[] {
   return leaks(
     squash(text),
-    // A listed player's ties (clubs.json listedAffiliations) are held to the same rule.
+    // A listed player's ties (the memberships lib/players/clubs.ts serves as listedAffiliations) are held to the same rule.
     [...file.affiliations, ...(file.listedAffiliations ?? [])].map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
     printsItself,
     publicTerms,
@@ -516,7 +516,7 @@ export function affiliationLeaks(
 
 // ---------------------------------------------------------------- commits (SPEC §1.1j3, DESIGN §21.2)
 
-/** The slice of data/field-hockey/commits.json the leak rule reads. Type-only, so this file stays pure. */
+/** The slice of data/commitments.json the leak rule reads. Type-only, so this file stays pure. */
 interface LeakCommitment {
   teamSlug: string;
   fullName: string;
@@ -526,7 +526,7 @@ interface LeakCommitment {
 }
 
 /**
- * `affiliationLeaks` for data/field-hockey/commits.json: a commitment's `basis`, or a fragment of a source's
+ * `affiliationLeaks` for data/commitments.json: a commitment's `basis`, or a fragment of a source's
  * verbatim `quote`, shown on a page. Same rule, same threshold, same `printsItself` excuse: a
  * commitment list or a news story can name teammates and coaches who are not on the rosters, so a
  * hit is a privacy failure. One line per leak, naming whose record it came from; [] when clean.

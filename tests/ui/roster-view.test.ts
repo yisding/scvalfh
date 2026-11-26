@@ -573,7 +573,7 @@ describe('TeamRoster', () => {
 
 describe('TeamRoster: commitment lines', () => {
   // A synthetic row on a real view: the line's markup is what is under test, and no real player is
-  // named as committed anywhere data/field-hockey/commits.json does not say so.
+  // named as committed anywhere data/commitments.json does not say so.
   const si = views.find((v) => v.slug === 'st-ignatius')!.view;
   const committedRow = (status: 'committed' | 'signed', college = 'Example', sport: string | null = null) => ({
     ...si.rows[0],

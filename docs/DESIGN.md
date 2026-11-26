@@ -3307,7 +3307,8 @@ game; the board's note says only what a 400-point gap means on the scale.
 
 The site gained college commitments: which players on the tracked varsity rosters (43 then, 49 with
 the EAL) a public page says have committed to play a sport in college, and where. It began with
-field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/field-hockey/commits.json`,
+field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/commitments.json` (until
+2026-11-26 `data/field-hockey/commits.json`; one file for every build since, each commitment under its person),
 research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
 commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
 differ: the same matching rule, the same privacy posture, the same row and list layout. This section
@@ -4508,7 +4509,7 @@ the latest of the clubs file, the commitments file and the roster overlay.
 
 ### 25.3a JV players' recruiting profiles (2026-11-06)
 
-The JV players' own recruiting pages (`data/field-hockey/jv-profiles.json`, read by `lib/jv/jv-profiles.ts`) are
+The JV players' own recruiting pages (`data/player-accounts.json` since 2026-11-26, filed by person; shown by `lib/jv/jv-profiles.ts`) are
 linked by the varsity rule and drawn by the same `Profiles` line: on the team page, under the JV
 roster row's facts (`components/jv/TeamJvRoster.tsx`), with a footnote naming the platforms, the day
 they were looked for and that recall is partial; on `/recruiting`, after the school's varsity rows,

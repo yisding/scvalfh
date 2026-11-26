@@ -1,7 +1,6 @@
 {
   "builtBy": "research on 2026-10-03, and on 2026-10-04 for the schools of the six EAL teams and three club records near them: club directories (NCFHA, BAFHA), the clubs' own sites, SportsRecruits athlete and organization pages, NCSA, Hudl, the club-teams block on every rostered player's MaxPreps career page, the NFHCA 2025 and 2026 high school watchlists, MAX Field Hockey club and event pages, Stick Together, the Gilroy Dispatch and other local news; every affiliation checked twice: on 2026-10-03 by a checker that re-opened each source and then by an independent refuter, on 2026-10-04 by two independent checks that each re-opened the sources; on 2026-10-05, the club and team lists on every recruiting profile the roster overlay links (SportsRecruits pages read in a browser, since their club block is rendered by script, and NCSA pages), which added ties for players those pages list with a club the file did not tie them to; on 2026-10-06, the same research for the schools of the 53 Southern California teams and twelve club records near them, every tie re-opened by a checker and an independent refuter",
   "capturedAt": "2026-10-03",
-  "season": "26-27",
   "notes": [
     "Which club field hockey teams the players on the tracked varsity rosters (the 43 schools of the four leagues swept on 2026-10-03, the schools of the six Eastern Athletic League teams swept on 2026-10-04, and the schools of the 53 Southern California teams swept on 2026-10-06) play (or played) for, joined to data/rosters.json on team slug + MaxPreps athleteId. Only players on those rosters are named (varsity rows; rows the overlay marks JV are out of scope). A club's own roster lists many more players, who are not named here: the club's roster pages are linked instead.",
     "The linking rule is the one data/rosters-enrichment.json uses for recruiting profiles, applied to clubs: a public page must name the player and a field hockey club, and either name the player's high school, or give a class year that agrees with the roster grade together with a location in the school's half of the state, Northern or Southern California (the player's hometown, or a club or team based there; \"CA\" alone, or a hometown with no state, is not enough). A class year that disagrees with the roster grade rules a match out; a name alone never makes one. A nickname or another form of the first name (Abby for Abigail) counts when the page otherwise meets the rule and something beyond the name backs it: a second page naming the same player and class year, her own page naming the same club, or a club she is already tied to here; such a tie is medium unless a page names the school (revised 2026-10-06; before, a nickname counted only on a page naming the school). Lacrosse, soccer and ice hockey clubs do not count, and neither do social-media posts.",
@@ -1902,80 +1901,10 @@
       "checkedOn": "2026-10-06"
     }
   ],
-  "jvAffiliations": [
+  "memberships": [
     {
-      "teamSlug": "los-gatos",
-      "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
-      "playerId": "p084197fe15",
-      "fullName": "Casey Moorehouse",
-      "club": "norcal-impact",
-      "clubTeam": null,
-      "status": "current",
-      "asOf": null,
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse",
-          "kind": "sportsrecruits",
-          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact and also SF Hawks CLUB … TEAMS NorCal Impact and also SF Hawks 3 Los Gatos High School Los Gatos , CA",
-          "statedSchool": "Los Gatos High School",
-          "statedClassYear": 2030,
-          "sourceDate": null
-        }
-      ],
-      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, and lists Los Gatos High School and, as her CLUB and under TEAMS, 'NorCal Impact and also SF Hawks'. Her bio, written in 8th grade, names her older sister Mary Elizabeth \"Lizzie\" Moorehouse, a Los Gatos varsity player tied to NorCal Impact. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile listing the club with no end date, so current under the live-profile rule."
-    },
-    {
-      "teamSlug": "los-gatos",
-      "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
-      "playerId": "p084197fe15",
-      "fullName": "Casey Moorehouse",
-      "club": "sf-hawks",
-      "clubTeam": null,
-      "status": "current",
-      "asOf": null,
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse",
-          "kind": "sportsrecruits",
-          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact and also SF Hawks CLUB … TEAMS NorCal Impact and also SF Hawks 3 Los Gatos High School Los Gatos , CA",
-          "statedSchool": "Los Gatos High School",
-          "statedClassYear": 2030,
-          "sourceDate": null
-        }
-      ],
-      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, and lists Los Gatos High School and, as her CLUB and under TEAMS, 'NorCal Impact and also SF Hawks'. Her bio, written in 8th grade, names her older sister Mary Elizabeth \"Lizzie\" Moorehouse, a Los Gatos varsity player tied to NorCal Impact; SF Hawks is the San Francisco Youth Field Hockey Club. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile listing the club with no end date, so current under the live-profile rule."
-    },
-    {
-      "teamSlug": "los-gatos",
-      "athleteId": "7bf1074d-84a9-4d73-9028-ea16360038e9",
-      "playerId": "pd416f5a7f4",
-      "fullName": "Colette Von Klemperer",
-      "club": "norcal-impact",
-      "clubTeam": null,
-      "status": "current",
-      "asOf": null,
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://nfhca.sportsrecruits.com/athlete/colette_von_klemperer",
-          "kind": "sportsrecruits",
-          "quote": "2029 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact CLUB … My name is Colette (Coco) von Klemperer, Class of 2029 at Los Gatos High School and also a member of the NorCal Impact club team. … TEAMS NorCal Impact 21 Los Gatos High School Los Gatos , CA",
-          "statedSchool": "Los Gatos High School",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        }
-      ],
-      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2029 (agrees with grade 10) and Los Gatos, CA, names NorCal Impact as her CLUB and under TEAMS beside Los Gatos High School, and her bio says she is Class of 2029 at Los Gatos High School and a member of the NorCal Impact club team. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05; a live profile, so current under the live-profile rule."
-    }
-  ],
-  "affiliations": [
-    {
-      "teamSlug": "st-ignatius",
-      "athleteId": "a1861648-3e4b-469b-ac73-01011a712330",
       "playerId": "p650d4d3d69",
-      "fullName": "Caitlyn Hughes",
+      "name": "Caitlyn Hughes",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -2026,10 +1955,8 @@
       "basis": "The NFHCA 2026 watchlist lists Caitlyn Hughes at St. Ignatius College Preparatory with San Francisco Hawks, Junior (2028, agrees with grade 11). The MAX page for San Francisco Youth Field Hockey lists her as Class 2028, St. Ignatius (CA). Note that the group's linked SportsRecruits page (caitlyn_hughes3) lists no club. A second profile (caitlyn_hughes4, same name and class, bio 'St. Ignatius Varsity Player') lists the club and sits on the club's U19 Hawks Blue team page, so cite that one for the club. Two independent pages meet the rule: the Stick Together 2026-07-08 roster of the U16 SF Hawks (the SF Youth Field Hockey Club's Hawks) names Caitlyn Hughes, St. Ignatius '28, and her own SportsRecruits profile caitlyn_hughes4 lists San Francisco Youth Field Hockey Club, class 2028, with St. Ignatius varsity in her bio; the club's U19 Hawks Blue team page and current-players list agree. Note the profile that lists the club is caitlyn_hughes4, not the linked caitlyn_hughes3 (St. Ignatius 2028, no club); she also appears on the U16 NCC roster."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "98db9697-092f-4c09-a01a-9189d82330c7",
       "playerId": "p231ea50a63",
-      "fullName": "Clara Brunello",
+      "name": "Clara Brunello",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -2064,10 +1991,8 @@
       "basis": "The Stick Together 2026-07-08 roster of the U16 SF Hawks names Clara Brunello, St. Ignatius '28, which agrees with grade 11; her own (linked) SportsRecruits profile lists San Francisco Youth Field Hockey Club with class 2028, and the club's U19 Hawks Blue team page lists her at #56. Club identity is confirmed on sfyouthfieldhockey.com (Hawks is its team name; its U16 squad qualified for the 2026 National Club Championships)."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "8a84bf39-96a1-49dc-9127-738923b07ee2",
       "playerId": "p113b4ed4a8",
-      "fullName": "Dylan Powell",
+      "name": "Dylan Powell",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -2102,10 +2027,8 @@
       "basis": "Her own linked SportsRecruits field hockey profile says she is currently a forward for the San Francisco Hawks club team and Saint Ignatius varsity, class 2027, San Francisco; NCSA (curl hit Cloudflare, re-read via WebFetch) lists Club: San Francisco Hawks, and the club's own accomplishments page names Dylan Powell. The profile carries no date, so status is current only under the live-profile rule and asOf is null; she is not on the club's U19 Hawks Blue or current-players lists, which are partial."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "291464ef-7812-41ab-920b-bcb0e341e772",
       "playerId": "p895bdf6f63",
-      "fullName": "Gianna Monge",
+      "name": "Gianna Monge",
       "club": "sf-hawks",
       "clubTeam": "U16",
       "status": "current",
@@ -2140,10 +2063,8 @@
       "basis": "The Stick Together 2026-07-08 roster of the U16 SF Hawks names Gianna Monge, St. Ignatius '29 (agrees with grade 10), which meets the rule by itself; the club's own current-players page lists her under Class of 2029 as Forward, and her linked SportsRecruits profile (St. Ignatius, 2029, Forward, Daly City) matches. Her profile does not name the club, so the affiliation rests on the news roster plus the club page."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "bb85e1e6-a02b-4c6c-880f-2d056135be63",
       "playerId": "pcae7735de2",
-      "fullName": "Gigi Colant",
+      "name": "Gabriella Colant",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -2170,10 +2091,8 @@
       "basis": "Her own SportsRecruits profile (a soccer page, not the linked NFHCA one) says \"My name is Gigi Colant\", names Saint Ignatius, Class of 2027, San Francisco, and says she plays with SF Youth Hawks Field Hockey, which meets (a)(b)(c); it was written as a junior (2025-26). Medium because that single self-reported sentence in a soccer profile is the only source: the NFHCA field hockey profiles (gabriella_colant3, _5) name no club and she is on none of the club's pages."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "ef619b65-0ca7-48ba-97da-8e3b4411632a",
       "playerId": "p71a2bb3671",
-      "fullName": "Hazel Stang",
+      "name": "Hazel Stang",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -2232,10 +2151,8 @@
       "basis": "The NFHCA 2026 watchlist names Hazel Stang with St. Ignatius College Preparatory and San Francisco Hawks, Junior (2028, agrees with grade 11), and the 2025 list had her as a Sophomore at the same school and club. Her own SportsRecruits profile (the one the site links) lists class 2028 and the San Francisco Youth Field Hockey Club in San Francisco, and its bio says '2025 St Ignatius College Preparatory Varsity FH starter'. Her own live SportsRecruits profile (the page the site already links) lists San Francisco Youth Field Hockey Club, class 2028, San Francisco, and her St. Ignatius varsity highlights; the SI team page lists the same profile with jersey #22, matching the MaxPreps roster. The Stick Together article of 2026-07-08 independently puts 'Hazel Stang | St. Ignatius '28' on the roster of U16 SF Hawks at the 2026 National Club Championships, and the club's U19 Hawks Blue page lists her as 2028."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
       "playerId": "p9a878866a7",
-      "fullName": "Maggie Magnano",
+      "name": "Margaret Magnano",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -2302,10 +2219,8 @@
       "basis": "Both NFHCA watchlists (Aug 2025: 'Maggie Magnano', Junior; Aug 2026: 'Margaret Magnano', Senior) name her with St. Ignatius College Preparatory and San Francisco Hawks, which satisfies the nickname rule because the school is on the page. Her own SportsRecruits profile (class 2027, San Francisco Youth Field Hockey Club, San Rafael, bio 'Varsity Starter, St. Ignatius Prep') and the club's current-players page (Class of 2027) agree, and her profile is the one the site already links. Her own SportsRecruits profile (the linked one, under legal name Margaret) lists San Francisco Youth Field Hockey Club, class 2027, and 'Varsity Starter, St. Ignatius Prep'; the St. Ignatius team page lists this same profile with jersey #7 and defense, matching 'Maggie Magnano' on the MaxPreps roster. NCSA ('Maggie Magnano '27', St Ignatius College Preparatory, Club SF Hawks) and the club's U19 Hawks Blue page agree. NCSA's older '2027 SF Hawks (U16s)' entry is stale, so U19 Hawks Blue is used for the team."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
       "playerId": "pd905becec2",
-      "fullName": "Olivia Van de Braak",
+      "name": "Olivia Van de Braak",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -2364,10 +2279,8 @@
       "basis": "The NFHCA 2026 watchlist names Olivia Van de Braak (capitalisation differs only) with St. Ignatius College Preparatory and San Francisco Hawks, Junior (2028, agrees with grade 11), and the 2025 list repeats it as a Sophomore. Her own SportsRecruits profile (the one the site links) lists the San Francisco Youth Field Hockey Club, class 2028, San Francisco, and its bio says 'I play for St. Ignatius College Prep and San Francisco Hawks'. Her own live SportsRecruits profile (the linked one) lists San Francisco Youth Field Hockey Club and class 2028, and its bio says 'I play for St. Ignatius College Prep and San Francisco Hawks'. The Stick Together article of 2026-07-08 lists 'Olivia van de Braak | St. Ignatius '28' on the U16 SF Hawks 2026 National Club Championships roster. The MAX Class of 2028 Top 100 invitational list (event 2025-05-20) and the club's U19 Hawks Blue page agree. The MAX page is dated before Aug 2025, so it is only corroboration."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "63a9c5b4-64e5-4a19-83f0-ad28aaee353b",
       "playerId": "pa2229683f9",
-      "fullName": "Samantha Brunsell",
+      "name": "Samantha Brunsell",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -2410,10 +2323,8 @@
       "basis": "No page names both her school and the club. The MAX roster of San Francisco Youth Field Hockey (San Francisco, California) lists Samantha Brunsell, 2028, Defense, and the club's own current-players page lists 'Sam Brunsell' under Class of 2028 (Defense, #42); that meets the class year plus NorCal club route. The '(IL)' school tag on that MAX row is a mislinked school record: her own MAX athlete page (same Athlete_ID) says San Francisco, California and St. Ignatius College Prep, San Francisco. The club's 2025 high-school honors list also puts Sam Brunsell with St. Ignatius JV players (Fair, Kirk, Kwok), and the school's 2025 JV and 2026 varsity rosters list Samantha/Sam Brunsell, so I treat this as medium. Her linked SportsRecruits page lists only the school team, not a club."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "e1fceb71-79e3-46cf-80e6-c3de7ff7ad89",
       "playerId": "pf6faef38e2",
-      "fullName": "Scarlett Gammack",
+      "name": "Scarlett Gammack",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -2456,10 +2367,8 @@
       "basis": "The NFHCA 2026 watchlist (published 2026-08-27) names Scarlett Gammack with St. Ignatius College Preparatory and San Francisco Hawks, class First-Year (2030, agrees with grade 9). The club's own current-players page lists her under Class of 2030, and the club history says the San Francisco Youth Field Hockey Club became the San Francisco Hawks, so the club is the sf-hawks club. Her linked SportsRecruits page shows 2030 and St. Ignatius but no club, so I did not cite it. A second SportsRecruits profile of hers (scarlett_gammack, not the linked scarlett_gammack2) shows class 2030, San Francisco, Forward, says she joined the SF Hawks, and says she will join the St. Ignatius Wildcats coached by Michelle Van de Braak. The club's Current Players list shows her under Class of 2030 as a Forward, and the St. Ignatius team page lists her as 2030 #9 (roster jersey 9, position F). The school mention is future tense because the bio was written before she started 9th grade, and the club page has no date or school. The profile and club page give no team, so clubTeam is null."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "e79e55f0-cfce-4f33-bb37-1ea0e61ddd7f",
       "playerId": "p0224ef2d31",
-      "fullName": "Stella Kwok",
+      "name": "Stella Kwok",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
       "status": "current",
@@ -2526,10 +2435,8 @@
       "basis": "The 2026 NFHCA watchlist (dated 2026-08-27, table row cells Institution/Club/First/Last/Class) names Stella Kwok at St. Ignatius College Preparatory with club San Francisco Hawks, class Sophomore (= 2029, matches roster grade 10). Her MaxPreps career page (class 'Sophomore • 2029', Teams 'St. Ignatius College Preparatory Varsity Field Hockey') lists club SF Hawks, Field Hockey, San Francisco, CA. Her SportsRecruits profile gives 2029 at St. Ignatius, and the SF Youth FHC U16 Hawks Blue roster page lists 'Stella Kwok, 2029 #32', matching the MaxPreps jersey 32. The MaxPreps age group says U14 (a stale 2025 entry), so clubTeam uses the live U16 Hawks Blue roster. The Stick Together article (2026-07-08), captioned 'U16 SF Hawks at 2026 National Club Championships', lists 'Stella Kwok | St. Ignatius '29', which meets (a)(b)(c) alone (name, SF Hawks field hockey club, school and class 2029 = grade 10). The club's SportsRecruits U16 Hawks Blue roster ('Stella Kwok, 2029 #32') and the profile stella_kwok (2029, club, San Mateo, bio 'My club team, SF Hawks') agree. Caveat: the linked profile stella_kwok3 shows school and 2029 but no club, and stella_kwok (the one that names the club) does not name the school. It is the same player (one Kwok '29 on each Hawks U16 roster, with matching bio details), but the school tie rests on the article."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "274fec66-4428-4eaf-b1b4-c20c5c729cc2",
       "playerId": "pccbca268fb",
-      "fullName": "Stella Strain",
+      "name": "Stella Strain",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -2548,10 +2455,8 @@
       "basis": "Only one page. The San Francisco Youth Field Hockey Club (SF Hawks) 'Current Players' page lists Stella Strain (GK, #47) under the 'Class of 2027' heading, which agrees with grade 12, and the club is based in San Francisco, so (c) is met by class year plus NorCal club. The page has no school and no date; it carries the 2027-2031 class groups and images uploaded 2026-01 to 2026-03, so it is the live 2025-26/2026-27 roster. No second page ties her to the club: the SportsRecruits stella_strain profile and Hudl show 2027 at St. Ignatius but no club. Medium confidence."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
       "playerId": "p4530d791ae",
-      "fullName": "Storey Lewis",
+      "name": "Storey Lewis",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -2602,10 +2507,8 @@
       "basis": "Her own live SportsRecruits profile (the page the site already links) gives class 2027, club San Francisco Youth Field Hockey Club, San Francisco, and says she attends Saint Ignatius College Preparatory; the 2026-08-27 NFHCA watchlist independently lists Storey Lewis, St. Ignatius College Preparatory, San Francisco Hawks, Senior. The club's U19 Hawks Blue roster page lists 'Storey Lewis, 2027'. The roster grade 12 agrees, and the club is a field hockey club (her lacrosse is separate). Her own linked SportsRecruits profile (2027, club, San Francisco, bio names Saint Ignatius) meets (a)(b)(c) alone. Her NCSA profile ('Storey Lewis '27', St Ignatius College Preparatory, San Francisco; club history '2026 San Francisco Hawks (U18)'), the club's U19 Hawks Blue roster and the club's Current Players page (Class of 2027) all agree. The NCSA 'Club' field reads 'Nexus Championship', which is an event, so the NCSA club-history lines are the evidence."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "db47b519-3041-42d1-92b7-88cd0f6094dc",
       "playerId": "p3bd41d1e57",
-      "fullName": "Violet Hesslein",
+      "name": "Violet Hesslein",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -2624,10 +2527,8 @@
       "basis": "Only one page. The San Francisco Youth Field Hockey Club (SF Hawks) 'Current Players' page lists Violet Hesslein (Midfield, #26) under 'Class of 2027', which agrees with grade 12, and the club is based in San Francisco, so (c) is met by class year plus NorCal club. The page has no school and no date; it carries the 2027-2031 class groups and images uploaded 2026-01 to 2026-03, so it is the live roster. The linked SportsRecruits violet_hesslein and Hudl pages show 2027 at St. Ignatius but name no club. A search snippet that mentioned her number and school came from sfyouthfieldhockey.com/playerprofiles, which now returns 404, so I did not use it. Medium confidence."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "63bbce23-3e4d-4944-a855-4f4af401e4e6",
       "playerId": "p5177acccc8",
-      "fullName": "Abby Scharrenberg",
+      "name": "Abby Scharrenberg",
       "club": "norcal-impact",
       "clubTeam": "U16",
       "status": "current",
@@ -2646,10 +2547,8 @@
       "basis": "Her own NCSA field hockey profile names her, the school (Saint Francis High School, Mountain View), class '29 (grade 10) and the club ('Club: NorCal Impact', '2026 NorCal Impact (U16 )', RCC selection through the club), so it meets (a)(b)(c) alone. It is the only page: the club's directory and other pages do not list her, and the linked profiles list is empty. It is self-reported and the page has no date. The 2026 club entry and a 2026-08 Junior Olympics event place it in the 2025-26 season."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
       "playerId": "p3d895f0fb8",
-      "fullName": "Carolyn Cordoni",
+      "name": "Carolyn Cordoni",
       "club": "norcal-impact",
       "clubTeam": "U19",
       "status": "current",
@@ -2700,10 +2599,8 @@
       "basis": "The 2026-08-27 NFHCA watchlist names Carolyn Cordoni, Saint Francis High School (Mountain View), club NorCal Impact FHC, Senior (= 2027, matches grade 12). The NorCal Impact (San Jose) player directory lists her as Graduation Year 2027, and her SportsRecruits profile gives 2027 and says she plays varsity field hockey at Saint Francis High School, so the identity is consistent. Neither her SportsRecruits page nor MaxPreps names a club, so the watchlist is the primary source. The club's own player profile names her, 'Class of 2027', 'St. Francis High School' and 'Club: NorCal Impact', and lists 2026 U19 events with the club. Her NCSA profile independently gives '27, Saint Francis High School (Mountain View) and NorCal Impact club history (2025 U16 and U19, RCC U19 in May 2026). Class 2027 agrees with grade 12. The club page does not give the city, but NCSA does. The linked SportsRecruits profile (2027, San Jose, Saint Francis High School) names no club."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "3ca098fa-6a12-4449-b02e-729af06e663d",
       "playerId": "p2d2c0c1bf3",
-      "fullName": "Evie Ferrini",
+      "name": "Evie Ferrini",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -2762,10 +2659,8 @@
       "basis": "The 2026-08-27 NFHCA watchlist names 'Genevieve (Evie) Ferrini' at Saint Francis High School (Mountain View) with club NorCal Impact FHC, Senior (= 2027, matches grade 12). The roster's 'Evie' is the nickname printed in the watchlist and the school is named. The NorCal Impact player directory lists the same name with Graduation Year 2027, and the linked NCSA page (title and description only) ties the name to Saint Francis High School (Mountain View); that NCSA page names no club. The club's own player profile names her (as Genevieve (Evie) Ferrini), St. Francis High School, Class of 2027 (agrees with grade 12) and Club: NorCal Impact. The club's 2026-01-29 blog lists her as a member as of Fall 2025, and the SCVAL 2025-26 all-league sheet and the NCSA profile (Saint Francis HS, Mountain View, '27) confirm it is the same Saint Francis junior-of-2025-26 player. The profile is undated, so currency rests on the dated blog and the live player directory."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
       "playerId": "p579b7fef9a",
-      "fullName": "Melanie Henderson",
+      "name": "Melanie Henderson",
       "club": "fly-fhc",
       "clubTeam": null,
       "status": "past",
@@ -2792,10 +2687,8 @@
       "basis": "Her player profile on the NorCal Impact site (which names St Francis High School and Class of 2028, agreeing with grade 11) lists '2019-2022 San Jose Fly FH Club' under 'Other Field Hockey', which matches the Fly alias and Los Altos area. The years end in 2022 and her current club is NorCal Impact, so this is a past affiliation only and must not be shown as her current club. It rests on one page, though the same person is confirmed by her SportsRecruits profile."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
       "playerId": "p579b7fef9a",
-      "fullName": "Melanie Henderson",
+      "name": "Melanie Henderson",
       "club": "lightning",
       "clubTeam": null,
       "status": "past",
@@ -2822,10 +2715,8 @@
       "basis": "Her NorCal Impact player profile (St Francis High School, Class of 2028) lists '2015-2018 Lightning Field Hockey Club', a field hockey club. The page gives no location for it, so matching it to Lightning Youth Field Hockey (Los Altos Hills, which calls itself the only parent-led club in the Bay Area, and her SportsRecruits hometown is Los Altos Hills) is an inference. It is a past affiliation from 2015-2018 on a single page, so confidence is medium, not high."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
       "playerId": "p579b7fef9a",
-      "fullName": "Melanie Henderson",
+      "name": "Melanie Henderson",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -2876,10 +2767,8 @@
       "basis": "Her MaxPreps career page (class 'Junior • 2028', Teams 'Saint Francis Varsity Field Hockey', in the Saint Francis Mountain View URL) lists the single club NorCal Impact, Field Hockey, San Jose, CA, joined 2026, last modified 2026-09-23. NorCal Impact's own profile page for her gives Class of 2028, St Francis High School, 'Club: NorCal Impact' and '2022 - current NorCal Impact FH Club'. The same club page lists San Jose Fly FH Club 2019-2022 and Lightning Field Hockey Club 2015-2018 as past clubs, so only NorCal Impact is current. Her SportsRecruits page confirms 2028 at Saint Francis in Mountain View but names no club. NorCal Impact's own player profile names Melanie Henderson, St Francis High School, Class of 2028 (agrees with grade 11), Club: NorCal Impact and '2022 - current'; the profile also lists 2025 and 2025-2026 entries and she is in the club's live player directory. Her SportsRecruits profile (2028, Junior at Saint Francis HS, Mountain View) confirms the same person. The profile is undated, so asOf is the 2025-26 season shown by its latest entries."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "f1ed9be7-1b82-4055-a9f3-35cafeb66da4",
       "playerId": "pa1c905126b",
-      "fullName": "Nora Lagenfeld",
+      "name": "Nora Langenfeld",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -2914,10 +2803,8 @@
       "basis": "The NFHCA 2026 watchlist table row (school, club NorCal Impact FHC, First-Year = class of 2030, Goalkeeper) meets (a)(b)(c), and the player's own SportsRecruits profile independently gives class 2030, goalie, St. Francis HS Mountain View and lists Impact teams (Impact - U19 Wolves, Badgers, Cheetahs, Stanford 6's U14, CalCup U16). The name differs from the roster: MaxPreps prints 'Lagenfeld', but the school's own roster page prints 'Nora Langenfeld' with the same jersey 44, GK, 5'5\", Fr., so the roster spelling is the typo and the identity is not in doubt. If the site prints a name, use 'Langenfeld' with the school-site link."
     },
     {
-      "teamSlug": "los-altos",
-      "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
       "playerId": "p98f6f11f59",
-      "fullName": "Quinley McCarroll",
+      "name": "Quinley McCarroll",
       "club": "fly-fhc",
       "clubTeam": "U14",
       "status": "past",
@@ -2944,10 +2831,8 @@
       "basis": "The player's own NCSA profile (read by curl today) names Quinley McCarroll, Los Altos High School, class of 2029 (matches grade 10) and Los Altos, CA, and lists San Jose Fly seasons 2022-2024; San Jose Fly is Fly FHC per the club's about page. The affiliation is past only: the profile's current club is Norcal Impact (2026 U16/U19, 2025 U16), so it must not be shown as her current club."
     },
     {
-      "teamSlug": "los-altos",
-      "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
       "playerId": "p98f6f11f59",
-      "fullName": "Quinley McCarroll",
+      "name": "Quinley McCarroll",
       "club": "norcal-impact",
       "clubTeam": "U16/U19",
       "status": "current",
@@ -2982,10 +2867,8 @@
       "basis": "Her NCSA profile names Quinley McCarroll '29 at Los Altos High School with 'Club: Norcal Impact' and '2026 Norcal Impact (U16/U19)', with no end date, and the club's 2026-01-29 blog lists her as a member as of Fall 2025. The unlinked NFHCA SportsRecruits page that says 2028 names no school or club and is not used. NCSA '29, the SCVAL 2025-26 Freshman of the Year award and the club blog all point to class of 2029, so the roster's grade 10 holds."
     },
     {
-      "teamSlug": "los-altos",
-      "athleteId": "54b3e7a5-82eb-4dd9-ba08-f876c5c49410",
       "playerId": "p7fd9ea0aaa",
-      "fullName": "Riya Mehrotra",
+      "name": "Riya Mehrotra",
       "club": "fly-fhc",
       "clubTeam": "Black - Advanced",
       "status": "unknown",
@@ -3012,10 +2895,8 @@
       "basis": "Her own NCSA profile (curl, HTTP 200, full HTML) names Riya Mehrotra, Los Altos High School, class of 2027, and lists San Jose Fly (Black - Advanced) as her club with no end date, so (a)(b)(c) are met on one page; San Jose Fly is Fly FHC per the club's about page. The SCVAL 2025-26 all-league sheet lists her as a Los Altos grade 11 goalkeeper, which agrees with class of 2027 (the roster grade is null). Status is current only under the live-profile-with-no-end-date rule: the latest club season listed is 2025 and the profile's only varsity entry is 2024, so it may be stale."
     },
     {
-      "teamSlug": "fremont",
-      "athleteId": "5e9a850d-4212-4931-89c3-d9a7c9bb884d",
       "playerId": "p90065ed03f",
-      "fullName": "Isabella Bjork",
+      "name": "Isabella Bjork",
       "club": "fly-fhc",
       "clubTeam": null,
       "status": "current",
@@ -3034,10 +2915,8 @@
       "basis": "Her own NCSA profile (curl) names Isabella Bjork, Fremont High School (Sunnyvale), class of 2028 (agrees with roster grade 11), Sunnyvale CA, and lists Club San Jose Fly with a 2026 season and a March 2026 Fly FHC tournament, so it is current. San Jose Fly is the former name of Fly FHC per the club's about page."
     },
     {
-      "teamSlug": "cupertino",
-      "athleteId": "d62e8b1b-4c90-4ce5-9eea-0575eb0fb797",
       "playerId": "p50bcc269d9",
-      "fullName": "Jaelyn Jensen",
+      "name": "Jaelyn Jensen",
       "club": "lightning",
       "clubTeam": "U16/U19 Girls",
       "status": "current",
@@ -3064,10 +2943,8 @@
       "basis": "I re-read the MaxPreps career bio today: it lists Cupertino Varsity Field Hockey and the club team Lightning / Lightning Field Hockey (sport Field Hockey, Los Altos CA, record created 2025-09-17, no end date). So it names the player, a field hockey club and the school. The club's own 2025 Fall (and 2025 Spring) U16/U19 Girls roster pages list the same name, and the MaxPreps sophomore year of 2024 fits roster grade 12."
     },
     {
-      "teamSlug": "homestead",
-      "athleteId": "d1ed916b-9d92-4a2d-b32e-b0e5cbe8fafa",
       "playerId": "pa2bca50261",
-      "fullName": "Gabrielle Moll",
+      "name": "Gabrielle Moll",
       "club": "fly-fhc",
       "clubTeam": "U19 (Advanced - Black)",
       "status": "unknown",
@@ -3102,10 +2979,8 @@
       "basis": "Two independent profiles name her, Homestead and the field hockey club San Jose Fly (=Fly FHC): NCSA ('27, Homestead, Cupertino; club seasons '2025 San Jose Fly (U16, U19)' back to 2019) and MaxPreps (club record sport Field Hockey, U19, flyfhc.com, joined 2025, dated 2025-10-19). Status is unknown, not current, and confidence medium, because her SportsRecruits profile (nfhca.sportsrecruits.com/athlete/gabrielle_moll, modified 2026-10-03, class 2027) now lists 'Cowtown Field Hockey' as her club, and the Cowtown SportsRecruits organization page lists her on its U19 team. Cowtown is a Fort Worth, TX club. So her present club may differ from, or add to, Fly; she did play for Fly through the 2025 season. A second pass would have marked it current (as of 2025); the more conservative call is kept. Pages behind the unknown status, re-read 2026-10-03: https://nfhca.sportsrecruits.com/athlete/gabrielle_moll (meta description: '2027 • Forward, Midfield • Cowtown Field Hockey • Los Altos, CA') and https://nfhca.sportsrecruits.com/organization/cowtown_field_hockey (lists 'Gabrielle Moll, 2027')."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
       "playerId": "p35fa221b4a",
-      "fullName": "Bridget Schilb",
+      "name": "Bridget Schilb",
       "club": "fly-fhc",
       "clubTeam": "travel team",
       "status": "past",
@@ -3124,10 +2999,8 @@
       "basis": "Her own player profile (hosted by NorCal Impact; re-read by curl) states Name: Bridget Schilb, Graduation Year: Class of 2027 and High School: Archbishop Mitty High School, and lists '2023 Fly Field Hockey Club travel team' under other clubs. It is a field hockey club (flyfhc.com, Los Altos, confirmed). It is a dated 2023 entry beside her current NorCal Impact membership, so status is past. Publish it only as a past affiliation."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
       "playerId": "p35fa221b4a",
-      "fullName": "Bridget Schilb",
+      "name": "Bridget Schilb",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3170,10 +3043,8 @@
       "basis": "Three first-hand pages agree and each names the school: her own SportsRecruits profile (class 2027, Archbishop Mitty, 'I play for Norcal Impact'), the NorCal Impact club's own player profile page, and the NFHCA 2026 watchlist dated 2026-08-27 (Senior = 2027, matches roster grade 12). The club page also lists a 2023 Fly Field Hockey Club travel team, which is past and does not conflict. Current club is NorCal Impact. Both the club's own player profile and her own SportsRecruits profile (the site's existing linked profile) name Bridget Schilb, NorCal Impact and Archbishop Mitty, with class of 2027 matching roster grade 12. The club's 1/29/2026 blog lists her as a Mitty member as of Fall 2025. The profile lists 2025 Cal Cup and 2026 NXC selection with no end date, so it is current; the SR dateModified is a render timestamp shared by all profiles, so I did not use it as a date."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "9cf94b17-e6b4-435b-958f-62367101bb77",
       "playerId": "p563a338b20",
-      "fullName": "Emma Traverso",
+      "name": "Emma Traverso",
       "club": "fly-fhc",
       "clubTeam": "U19 Advanced Team (2025)",
       "status": "unknown",
@@ -3192,10 +3063,8 @@
       "basis": "Her own NCSA field hockey profile (curl, 200, 2026-10-03) names Emma Traverso, Archbishop Mitty High School, class '27 (roster grade 12 = 2027) and Club San Jose Fly (CA), with club seasons 2023 to 2025 (Fly Field Hockey Club, formerly San Jose Fly), so (a)(b)(c) are met on one page. Status is unknown, not current: the page is undated and its newest club season is 2025, and her SportsRecruits profile (nfhca.sportsrecruits.com/athlete/emma_traverso, created 2026-01-02) says 'I've recently switched over NorCal Impact', so Fly should not be shown as her current club. The flyfhc.com team-rosters page cited by the researchers could not be re-read (captcha, and its path returned 404), so it is not used."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "7bdcdcb3-f704-47a8-a8ac-740429b27160",
       "playerId": "p1804764f48",
-      "fullName": "Hana Mercado",
+      "name": "Hana Mercado",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3230,10 +3099,8 @@
       "basis": "The NFHCA 2026 High School Watchlist (published 2026-08-27, coach-nominated) has a table row with Institution Archbishop Mitty High School, Club NorCal Impact FHC, Hana Mercado, Sophomore (= class of 2029 = roster grade 10), so (a)(b)(c) are met on one first-hand page. Corroborated by the club's own January 2026 blog naming Hana Mercado, Mitty as a member as of Fall 2025, and by the MAX Field Hockey Mitty page row (read through its Caspio embed) showing Class 2029 and Club NorCal Impact. Her SportsRecruits profile confirms Mitty and 2029 but names no club. NorCal Impact's own blog post dated 1/29/2026 (re-read by curl) says its list recognizes club members as of Fall 2025 and names 'Hana Mercado, Mitty' as SCVAL El Camino Freshman of the Year. The repo's history-2025-26.json gives the same award as 'Hana Mercado, Midfield, Archbishop Mitty', which identifies the person. Her SportsRecruits profile (2029, rising sophomore at Archbishop Mitty) fits roster grade 10 but does not name a club, so I did not use it as club evidence. No class-year conflict; the club page names the school."
     },
     {
-      "teamSlug": "los-gatos",
-      "athleteId": "9342402a-1e6b-4bd5-ac04-5a246d6b9265",
       "playerId": "p785e349571",
-      "fullName": "Lizzie Moorehouse",
+      "name": "Mary Moorehouse",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3268,10 +3135,8 @@
       "basis": "The NFHCA 2026 High School Watchlist (published 2026-08-27) has a table row naming Los Gatos High School, NorCal Impact FHC, Lizzie Moorehouse, Junior (= class of 2028 = roster grade 11), so (a)(b)(c) are met on one first-hand page. The MAX Field Hockey Los Gatos High School page and the Norcal Impact club page (both read through their Caspio embeds) independently list her with Class 2028, Los Gatos and Club NorCal Impact. Her SportsRecruits profile confirms 2028, Los Gatos CA and 'I go by Lizzie' (legal name Mary Elizabeth), and her NCSA profile lists no club name, only a Club Coach (Leaf Huynh)."
     },
     {
-      "teamSlug": "los-gatos",
-      "athleteId": "f4b28b4b-941f-449f-a2be-0c6e4537e6cb",
       "playerId": "pe072bd5b7a",
-      "fullName": "Beatrix Monk",
+      "name": "Beatrix Monk",
       "club": "norcal-impact",
       "clubTeam": "U16",
       "status": "current",
@@ -3298,10 +3163,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, names 'U16, NorCal Impact' as her CLUB and lists it under TEAMS beside Los Gatos High School. Recorded among the JV ties until 2026-11-16, when her Los Gatos row was moved to varsity. Read in a browser on 2026-10-05; a live profile with 2026 events (the AAU Junior Olympics in August 2026), so current under the live-profile rule. MAX Field Hockey's athlete page for her (read 2026-11-16) names Los Gatos, class of 2030 and NorCal Impact too."
     },
     {
-      "teamSlug": "palo-alto",
-      "athleteId": "960cca5e-6fcb-4cae-a75b-cba717351145",
       "playerId": "p3b513a1359",
-      "fullName": "Hannah Niebuhr",
+      "name": "Hannah Niebuhr",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3320,10 +3183,8 @@
       "basis": "The NorCal Impact Field Hockey Club's own blog post (1/29/2026) lists Hannah Niebuhr, Palo Alto, under SCVAL El Camino First Team and says the list is of club members as of Fall 2025, so (a) name, (b) field hockey club and (c) the school are all on one first-hand page. The roster's Palo Alto and SCVAL El Camino match, and MaxPreps and the 2024 USA Field Hockey Junior NXC U-16 list place a Hannah Niebuhr of Palo Alto, CA in the same sport. I found no second source: the Impact player directory does not list her, and no recruiting profile turned up."
     },
     {
-      "teamSlug": "palo-alto",
-      "athleteId": "d51b181c-f926-43ae-a466-5254246e0123",
       "playerId": "pacfb6001a5",
-      "fullName": "Yoyo Cai",
+      "name": "Yoyo Cai",
       "club": "fly-fhc",
       "clubTeam": "Green (U16)",
       "status": "current",
@@ -3342,10 +3203,8 @@
       "basis": "The MaxPreps career bio for the same careerId as the roster row names the player (Yinuo (Yoyo) Cai), Palo Alto Varsity Field Hockey and Junior 2028, which matches grade 11. Its Club Teams entry is Green U16, San Jose Fly, sport Field Hockey, joined 2026, San Jose CA, with the embedded data last modified 2026-09-03 and no end date. flyfhc.com's footer names San Jose Fly Field Hockey Club, LLC, so San Jose Fly is Fly FHC. The club entry is user-entered on MaxPreps, and I found no second source."
     },
     {
-      "teamSlug": "presentation",
-      "athleteId": "8599db77-058e-4d9f-b592-3494a46f50b2",
       "playerId": "pd878514b35",
-      "fullName": "Brooklyn Barnard",
+      "name": "Brooklyn Barnard",
       "club": "fly-fhc",
       "clubTeam": "Guest goalkeeper",
       "status": "unknown",
@@ -3372,10 +3231,8 @@
       "basis": "Her own NCSA field hockey profile (opened by curl today) names Brooklyn Barnard, Presentation High School, San Jose CA, class '28 (roster grade 11 = 2028), Club 'San Jose Fly' and '2025 San Jose Fly - Guest goalkeeper'; Stick Together's Dec 2025 all-league page independently has her as Presentation GK in grade 10, and San Jose Fly is the former name of Fly FHC (TeamSnap site 'San Jose Fly Field Hockey' describes Fly FHC; search result of flyfhc.com/about-fly says Fly FHC was formerly San Jose Fly). Caveats for publishing: she is listed only as a 2025 guest goalkeeper, the profile is undated and was written when she was a freshman (Cal Cup 5/2025 is its latest event), so status is unknown and wording must say guest goalkeeper; the relayed flyfhc.com Fly16 Green roster line could not be opened (captcha) or reproduced and was NOT used."
     },
     {
-      "teamSlug": "lynbrook",
-      "athleteId": "2760b7f0-efef-4775-b8cb-f27fbea09b2f",
       "playerId": "p755ccdae77",
-      "fullName": "Junali Dutta",
+      "name": "Junali Dutta",
       "club": "norcal-impact",
       "clubTeam": "Impact Wolves",
       "status": "current",
@@ -3410,10 +3267,8 @@
       "basis": "Her own NCSA field hockey profile names her, Lynbrook High School and '28 (matches grade 11), and lists Club NorCal Impact. The NorCal Impact site confirms it is a field hockey club and that its owner and director is 'Leaf (Lifon) Huynh', matching the profile's club coach Lifon Huynh. The profile is live with 2026 events, so I mark it current under the live-profile rule. The only club season listed is 2024, and the profile and the Impact site carry no date, so asOf is null. Since 2026-11-13 her own two SportsRecruits field hockey profiles (junali_dutta, junali_dutta2) back it too: each names NorCal Impact as her CLUB and under TEAMS beside Lynbrook High School (San Jose) with the class of 2028, and lists 2026 events (the NFHCA Winter Escape of Jan 2026, the Nexus Region 11 camp of May 2026). Their CLUB and TEAMS blocks are drawn by script, so they were read rendered, twice the same day, as the 2026-10-05 pass read such blocks; the first gives the club team 'Impact Wolves' (the club's U19 Wolves), which clubTeam now follows. The events date the profiles, not the tie, so asOf stays null."
     },
     {
-      "teamSlug": "monta-vista",
-      "athleteId": "5496bf29-59e2-4284-8de2-6cc7b1260c04",
       "playerId": "p6a6236a961",
-      "fullName": "Ruhee Bhatnagar",
+      "name": "Ruhee Bhatnagar",
       "club": "lightning",
       "clubTeam": "U16/U19 Girls",
       "status": "unknown",
@@ -3440,10 +3295,8 @@
       "basis": "Her own NCSA field hockey profile names her, Monta Vista High School, '27 (matches grade 12 and MaxPreps Senior 2027) and Cupertino CA, and lists Club Lightning Youth Field Hockey with U16/19 seasons and 2024 Cal Cup, Stanford 6's and UC Davis events. Lightning's own 2025 Spring U16/U19 Girls roster lists her name. Status is unknown rather than current: the profile looks stale (2024 seasons and events, JV 2023 only), the club roster is Spring 2025 (Jan-May 2025, before the August 2025 cutoff), and she is absent from both Fall 2025 girls rosters."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "293542d6-46b9-4771-ae2e-e7def72f338d",
       "playerId": "p62009e0202",
-      "fullName": "Alex Pires",
+      "name": "Alex Pires",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "past",
@@ -3470,10 +3323,8 @@
       "basis": "The Gilroy Dispatch (2025-07-18) names Alex Pires in the Infinity field hockey U19 Cal Cup lineup. It ties her to Christopher only through the team nickname and a surname-only sentence (Cougars = Christopher, set up by 'Christopher coach Dani Hemeon Perez' and 'Christopher's Alyssa Montejano'), so confidence is medium, not high. Pires is the only Pires in the article and on the Christopher roster, MaxPreps shows her at Christopher as a sophomore in 2024-25 and class of 2027, and no page shows her still with Infinity after August 2025 (status past)."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
       "playerId": "p6f780b64f9",
-      "fullName": "Alyssa Montejano",
+      "name": "Alyssa Montejano",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "past",
@@ -3500,10 +3351,8 @@
       "basis": "The Gilroy Dispatch (2025-07-18) names 'Christopher's Alyssa Montejano' in the Infinity (field hockey) U19 Cal Cup lineup, which meets (a)(b)(c) on its own. Her SportsRecruits profile agrees: class of 2027, Gilroy CA, Cal Cup titles (it does not name the club). The only dated evidence is before August 2025, so status is past."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "631164df-97ba-4f2c-bdfc-7bb2192af6af",
       "playerId": "pd9f23ba3a9",
-      "fullName": "Colette Boyd",
+      "name": "Colette Boyd",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "unknown",
@@ -3538,10 +3387,8 @@
       "basis": "Her own MaxPreps career bio names Colette Boyd, Christopher High School, class of 2027 (agrees with grade 12) and a Field Hockey club team 'Infinity' (U18, Morgan Hill CA, coach Dani Hemeon Perez, site infinitysportsclub.org/field-hockey), so (a)(b)(c) are met on one first-hand page. The 2025-07-18 Dispatch lists her with Infinity's U19 Cal Cup team. Status is unknown because the club entry was last modified 2023-09-12, with no end date and nothing dated after July 2025."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "187dd89e-dcbf-4881-aed0-d4e7560c8379",
       "playerId": "p8ed7e6a7e2",
-      "fullName": "Emmie Mendez",
+      "name": "Emmie Mendez",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "past",
@@ -3568,10 +3415,8 @@
       "basis": "The Gilroy Dispatch (2025-07-18) names Emmie Mendez in the Infinity field hockey U19 Cal Cup lineup. It ties her to Christopher only through the team nickname and a surname-only sentence (Cougars = Christopher, set up by 'Christopher coach Dani Hemeon Perez'), so confidence is medium, not high. The only other Christopher Mendez, Gabby, is a 2026-27 freshman and not a 2025 Cougar. Emmie's MaxPreps career shows Christopher HS, class of 2027, and nothing is dated after July 2025 (status past)."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "ae5cf369-a096-4234-a5ed-cd1cc00410cd",
       "playerId": "p12762673cb",
-      "fullName": "Reese Dubenko",
+      "name": "Reese Dubenko",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "past",
@@ -3598,10 +3443,8 @@
       "basis": "The Gilroy Dispatch (2025-07-18) names Reese Dubenko in the Infinity field hockey U19 Cal Cup lineup and quotes her on the winning goal. It ties her to Christopher only through the team nickname and a surname-only sentence (Cougars = Christopher), so confidence is medium, not high. Her MaxPreps career shows Christopher since 2023 and class of 2027, the only Dubenko in recent years. Her SportsRecruits page is a bare '11v11 Roster Member' and adds nothing, and nothing is dated after July 2025 (status past)."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
       "playerId": "pfae571e712",
-      "fullName": "Ryan Hemeon",
+      "name": "Ryan Hemeon",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "past",
@@ -3636,10 +3479,8 @@
       "basis": "The Gilroy Dispatch (2025-07-18) names Ryan Hemeon in Infinity's U19 California Cup-winning lineup and groups her with the Cougars (Christopher) players. The school comes from the mascot grouping, not a literal 'Christopher High' beside her name, so confidence is medium. Class year 2028 (SportsRecruits, Gilroy CA) and grade 10 in fall 2025 (All-BVAL list, Christopher) agree with roster grade 11. The article is dated before Aug 2025 (2024-25 season) and no current roster lists her, so status is past. The SportsRecruits profile lists no club."
     },
     {
-      "teamSlug": "gilroy",
-      "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
       "playerId": "p6c40557952",
-      "fullName": "Hailey Moncada",
+      "name": "Hailey Moncada",
       "club": "htc",
       "clubTeam": "HTC California (High Performance)",
       "status": "current",
@@ -3666,10 +3507,8 @@
       "basis": "Her own live NCSA field hockey profile (curl today) names Hailey Moncada, Gilroy High School, class '27 (= roster grade 12) and Club HTC, with '2025 HTC (High Performance )' and '2026 USA Field Hockey National Club Championship ... Club- HTC Ca' (Club Director Mika Black, who is HTC California's regional director on htcfieldhockey.com, a field hockey club); the NFHCA 2026 watchlist (Aug 27, 2026) independently lists Gilroy High School / HTC / Hailey Moncada / Senior. The club is HTC California (San Diego area), not a NorCal club; an earlier 2024 Infinity Sports Club entry on the profile is separate. Her own live NCSA field hockey profile ('Hailey Moncada '27 Recruiting Profile', Gilroy High School, Gilroy CA) shows 'Club HTC' and lists '2025 HTC (High Performance )' as the latest season with no end date. It also lists a June 2026 national club championship with 'Club- HTC Ca' and names Mika Black as club director, who is HTC California's regional director per htcfieldhockey.com. Class 2027 agrees with grade 12. HTC is a field hockey club, and the club is based outside NorCal."
     },
     {
-      "teamSlug": "gilroy",
-      "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
       "playerId": "p6c40557952",
-      "fullName": "Hailey Moncada",
+      "name": "Hailey Moncada",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "past",
@@ -3696,10 +3535,8 @@
       "basis": "Her own NCSA profile (Gilroy High School, class '27, Gilroy CA, agrees with grade 12) lists 'Infinity Sports Club' only for the 2024 season, and the Gilroy Dispatch (2025-07-18) puts her in Infinity's May 2025 U19 Cal Cup lineup with the Gilroy Mustangs. That is the 2024-25 club season. Her current club on the same profile is HTC, so Infinity is a past affiliation."
     },
     {
-      "teamSlug": "gilroy",
-      "athleteId": "8fa110eb-da5c-438b-bf37-07ba458707c6",
       "playerId": "p657579cb99",
-      "fullName": "Lea Kim",
+      "name": "Lea Kim",
       "club": "infinity",
       "clubTeam": "U19",
       "status": "current",
@@ -3734,10 +3571,8 @@
       "basis": "Her own live NCSA field hockey profile ('Lea Kim '27 Recruiting Profile', Gilroy High School, Gilroy CA) lists Club Infinity with a 2025 season entry and no end date. Her MaxPreps bio (Gilroy, Senior 2027) lists the Infinity U19 field hockey club team. The Gilroy Dispatch (2025-07-18) calls her a rising junior at Gilroy playing in goal for Infinity. Class 2027 agrees with grade 12 across all three."
     },
     {
-      "teamSlug": "leigh",
-      "athleteId": "e9fd8a7f-3218-4b0d-80d3-df58d9212540",
       "playerId": "p44803b918c",
-      "fullName": "Alexis Marchak",
+      "name": "Alexis Marchak",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3764,10 +3599,8 @@
       "basis": "NorCal Impact's own blog (2026-01-29) lists Alexis Marchak, Leigh, among the club members (as of Fall 2025) honored for 2025 high school awards. The page names her school (Leigh), and the BVAL Mt. Hamilton Second Team entry matches the roster player. A separate 2025 All-BVAL list shows her as a junior at Leigh, which agrees with grade 12 now. No other page was found to corroborate it, and the blog gives no club team or class year."
     },
     {
-      "teamSlug": "leigh",
-      "athleteId": "03bb6a58-9af8-4d16-998f-e7e29f4125ea",
       "playerId": "p4ee2f81dd0",
-      "fullName": "Clara Froemming",
+      "name": "Clara Froemming",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3802,10 +3635,8 @@
       "basis": "NorCal Impact's own blog (1/29/2026, page title 'NorCal Impact Field Hockey Club') says the list is of its members as of Fall 2025 and names 'Clara Froemming, Leigh'; the club's 1/13/2025 post lists her again, so (a) name, (b) field hockey club and (c) school Leigh are met by a first-hand page. Stick Together's 2025 All-BVAL list shows the same name at Leigh as grade 11 in 2025-26, which agrees with roster grade 12 (class 2027) and rules out a different Clara Froemming; the Leah Froemming also in the blog is a separate older Leigh player."
     },
     {
-      "teamSlug": "leigh",
-      "athleteId": "212229bc-8374-4229-b024-964209ff8f33",
       "playerId": "p4217c7279c",
-      "fullName": "Roxana Jafarpur",
+      "name": "Roxana Jafarpur",
       "club": "fly-fhc",
       "clubTeam": "U14",
       "status": "past",
@@ -3824,10 +3655,8 @@
       "basis": "The same Leigh '28 NCSA field hockey profile lists '2024 San Jose Fly (CA) (U14)' as her earliest club season, followed by NorCal Impact in 2025 and 2026, so Fly is a past affiliation only. The club's own About page confirms San Jose Fly is the former name of Fly FHC, a field hockey club, so the entry maps to fly-fhc."
     },
     {
-      "teamSlug": "leigh",
-      "athleteId": "212229bc-8374-4229-b024-964209ff8f33",
       "playerId": "p4217c7279c",
-      "fullName": "Roxana Jafarpur",
+      "name": "Roxana Jafarpur",
       "club": "norcal-impact",
       "clubTeam": "U16",
       "status": "current",
@@ -3854,10 +3683,8 @@
       "basis": "The player's own NCSA field hockey profile (two pages for the same person, both read by curl with a browser user agent today; the roster-linked page and a duplicate with suffix '1') names Roxana Jafarpur, class '28 (agrees with grade 11), Leigh High School, San Jose, and lists NorCal Impact (U16) for 2025 and 2026 with 'Club NorCal Impact' and no end date. NCSA gives no page date, so asOf is the 2025-26 club seasons it lists."
     },
     {
-      "teamSlug": "leland",
-      "athleteId": "47883949-9d6f-4bd4-afc8-b235619df8b7",
       "playerId": "p2ff447758a",
-      "fullName": "Taytem Condit",
+      "name": "Taytem Condit",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3884,10 +3711,8 @@
       "basis": "NorCal Impact's own blog (1/29/2026) lists its members as of Fall 2025 and names 'Taytem Condit, Leland' under BVAL Santa Teresa First Team; the name, a field hockey club and the school are all on that first-hand page. Stick Together's 2025 All-BVAL list shows the same name at Leland as grade 11 in 2025-26, which agrees with class 2027 (roster grade is blank but the school profile gives grade 12)."
     },
     {
-      "teamSlug": "willow-glen",
-      "athleteId": "10f7e001-cdf1-4d56-80a3-58d3c26d05f0",
       "playerId": "pc754123859",
-      "fullName": "Addison Januario",
+      "name": "Addison Januario",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3914,10 +3739,8 @@
       "basis": "The club's own blog (1/29/2026) names 'Addie Januario, Willow Glen' (BVAL Mt Hamilton Honorable Mention) among its members; the rule allows a nickname when the page names the school, and Addie is the usual short form of Addison. MaxPreps’ Willow Glen field hockey all-time varsity roster, JV all-time roster and current freshman roster show Addison Januario as the only Januario, so no other player can be meant. Confidence is medium because the match rests on the nickname and no second page uses the form 'Addie'."
     },
     {
-      "teamSlug": "willow-glen",
-      "athleteId": "f4cb8b8c-9777-408e-8691-2f1380eb1d42",
       "playerId": "pbeb853b5c2",
-      "fullName": "Autumn Goldstein",
+      "name": "Autumn Goldstein",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3936,10 +3759,8 @@
       "basis": "NorCal Impact's own blog (1/29/2026) lists its members as of Fall 2025 and names 'Autumn Goldstein, Willow Glen' under BVAL Mt Hamilton Honorable Mention, so name, field hockey club and school are met on one first-hand page. Only one Autumn Goldstein is on the Willow Glen roster (grade 12); the page gives no class year and I found no second page for her."
     },
     {
-      "teamSlug": "willow-glen",
-      "athleteId": "5593be14-929b-447f-b0a6-1129a72c7127",
       "playerId": "p139997abcb",
-      "fullName": "Magnolia Prentice",
+      "name": "Magnolia Prentice",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -3966,10 +3787,8 @@
       "basis": "The club's own blog (dated 2026-01-29, members as of Fall 2025) lists 'Noli Prentice, Willow Glen' among NorCal Impact members; the nickname is allowed because the page names the school. Identity is corroborated: the blog's BVAL Mt Hamilton First Team names match the official 2025 All-BVAL Mt Hamilton First Team, where the only Willow Glen Prentice is Magnolia Prentice (grade 11 then, so class of 2027, matching roster grade 12), and the roster has one Prentice. Medium rather than high because the match rests on the nickname Noli."
     },
     {
-      "teamSlug": "westmont",
-      "athleteId": "2ae5b3b7-538c-47d2-a75c-432c7d365822",
       "playerId": "p65f8d53dac",
-      "fullName": "Teya Halali",
+      "name": "Teya Halali",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -4012,10 +3831,8 @@
       "basis": "NorCal Impact's own club blog (1/29/2026) lists Teya Halali, Westmont as one of its members as of Fall 2025, and the NFHCA 2026 High School Watchlist (Aug 27, 2026) independently lists Westmont High School / NorCal Impact FHC / Teya Halali / Sophomore (2026-27 sophomore = class of 2029 = roster grade 10). Her SportsRecruits JSON-LD (2029, Campbell, CA, where Westmont is) matches the roster entry but names no club; the 2025 Freshman of the Year on Stick Together's all-league page is the same Westmont player. The NorCal Impact club blog (2026-01-29) names Teya Halali with her school, Westmont, in a list it describes as club members/athletes as of Fall 2025, which meets (a)(b)(c) by itself. The same Westmont freshman (BVAL Freshman of the Year, 2025) appears on Stick Together's all-league page; she is a freshman in 2025-26, so grade 10 now. Her SportsRecruits page (class 2029, Campbell) names no club and does not conflict."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "3958e4a6-6d6b-4afc-bf13-feb5d238724b",
       "playerId": "p198c26aa67",
-      "fullName": "Chloe Arwin",
+      "name": "Chloe Arwin",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4058,10 +3875,8 @@
       "basis": "Her own live SportsRecruits profile lists San Francisco Youth Field Hockey Club with class 2028 (agrees with grade 11) and Mill Valley, and no other Chloe Arwin is on the rosters. Three more pages agree: the Stick Together U16 SF Hawks roster says Tamalpais '28, the club's SportsRecruits U19 Hawks Blue roster says 2028, and the club's current-players page lists her under Class of 2028."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
       "playerId": "pa1bf6c3324",
-      "fullName": "Josie Stout",
+      "name": "Josie Stout",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4112,10 +3927,8 @@
       "basis": "Her own live SportsRecruits profile names San Francisco Youth Field Hockey Club, Tamalpais High School and class 2028 (agrees with grade 11), and her linked NCSA profile lists San Francisco Hawks as her 2025 club. The Stick Together U16 SF Hawks roster (Tamalpais '28), the club's U19 Hawks Blue roster and its current-players page (Class of 2028) agree."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "cfbaf4db-28d0-400a-ad46-fb9c6018f46e",
       "playerId": "p6203489b4f",
-      "fullName": "Sadie Baker",
+      "name": "Sadie Baker",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -4142,10 +3955,8 @@
       "basis": "The Stick Together roster of the U16 SF Hawks at the 2026 National Club Championships (2026-07-08) names Sadie Baker, Tamalpais '28, and the club's current-players page lists a Sadie Baker under Class of 2028; class 2028 agrees with grade 11. The other roster Sadie Baker (Lick-Wilmerding, grade 12, class 2027) would sit under Class of 2027, and the page says Tamalpais, so the match is specific. Medium because she has no profile of her own (SportsRecruits sadie_baker is 404; the NCSA Sadie Baker is a Minnesota ice hockey player) and the school link rests on the newsletter."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "7844f156-ab2e-4d55-a45d-34a1ed6de3b5",
       "playerId": "p39a5fe561c",
-      "fullName": "Sierra Duncan",
+      "name": "Sierra Duncan",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -4180,10 +3991,8 @@
       "basis": "Re-read three pages with curl. The Stick Together article (2026-07-08) names her under the heading 'U16 SF Hawks at 2026 National Club Championships' as 'Sierra Duncan | Tamalpais '28', which agrees with grade 11. Her own SportsRecruits profile (JSON-LD dateModified 2026-10-03) gives 2028, Goalie, San Francisco Youth Field Hockey Club, Mill Valley, CA, matching the Tamalpais goalkeeper (G, captain). The live SportsRecruits club page lists her on U19 Hawks Blue. The Stick Together page puts her on the U16 NCC roster, so I left clubTeam null rather than choose between the two."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "f6c5e4c7-e181-43e6-b95d-5da916e83668",
       "playerId": "pc9f4621e3d",
-      "fullName": "Spencer White",
+      "name": "Spencer White",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -4218,10 +4027,8 @@
       "basis": "The Stick Together article (2026-07-08) lists 'Spencer White | Tamalpais '28' on the roster headed 'U16 SF Hawks at 2026 National Club Championships', which meets (a)(b)(c) through the school and agrees with grade 11. Her own SportsRecruits profile gives 2028 plus Mill Valley, CA and San Francisco Youth Field Hockey Club, and its bio mentions soccer and lacrosse and a junior-year academy that is consistent with Tamalpais. No competing Spencer White turned up. The two sources disagree on team (U16 NCC versus the U19 Hawks Blue page), so clubTeam is null."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "ff39f74c-7195-4f89-a47c-3fc021b439aa",
       "playerId": "p7b73965ba0",
-      "fullName": "Tashi Perkins",
+      "name": "Tashi Perkins",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
       "status": "current",
@@ -4256,10 +4063,8 @@
       "basis": "Her own SportsRecruits profile names Tamalpais High School, class 2029 (grade 10) and San Francisco Youth Field Hockey Club, and its bio says 'playing with the SF Hawks club'. The Stick Together article (2026-07-08) lists 'Tashi Perkins | Tamalpais '29' on the U16 SF Hawks NCC roster. The live SportsRecruits club page lists her on U16 Hawks Blue, which agrees with the U16 roster. Three first-hand pages agree on school, class year and club."
     },
     {
-      "teamSlug": "lick-wilmerding",
-      "athleteId": "c95652a1-f07e-4504-ab9c-b29a1f235644",
       "playerId": "pd59a238383",
-      "fullName": "Anaya Mehta-Vasisht",
+      "name": "Anaya Mehta-Vasisht",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4318,10 +4123,8 @@
       "basis": "Her SportsRecruits profile and MaxPreps bio both name Lick-Wilmerding, class 2029 (matches grade 10) and San Francisco Youth Field Hockey. The club's U19 Hawks Blue SportsRecruits roster and Current Players page (Class of 2029, #50, same jersey as MaxPreps) both list her. The SF Youth club is the sf-hawks club; MaxPreps club row last modified 2026-08-27. The old MaxPreps '-chargers' URL 404s, so I cited the current slug. The linked NCSA page returned a Cloudflare challenge and was not needed. Her own SportsRecruits profile and her NCSA profile both name Lick-Wilmerding High School, class of 2029 and the San Francisco Youth Field Hockey Club (NCSA lists the club as San Francisco Hawks, coach Michelle Van de Braak, who is also the director on the club's SportsRecruits page). The Stick Together article (2026-07-08) lists 'Anaya Mehta-Vasisht | Lick-Wilmerding '29' on the U16 SF Hawks NCC roster, so the affiliation is current. The NCSA club list shows only the 2023 and 2024 seasons, but the SportsRecruits profile, the club's live team page and the July 2026 article show it continuing. The sources disagree on team (U16 NCC versus the U19 Hawks Blue page), so clubTeam is null."
     },
     {
-      "teamSlug": "lick-wilmerding",
-      "athleteId": "5930e3d6-9b1b-4c28-a98e-c232c3be8beb",
       "playerId": "p33a0b82157",
-      "fullName": "Frankie Lemieux",
+      "name": "Francine Lemieux",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4388,10 +4191,8 @@
       "basis": "Her own SportsRecruits profile (listed as Francine, 2028, San Francisco Youth Field Hockey Club, San Francisco) names Lick-Wilmerding HS in its bio. MaxPreps titles her 'Francine \"Frankie\" Lemieux' at Lick-Wilmerding, Junior 2028 (agrees with grade 11). The NFHCA 2026 watchlist ('Francine (Frankie)', Lick-Wilmerding, San Francisco Hawks) and the club's Current Players page ('Frankie Lemieux', Class of 2028) agree. The Francine/Frankie variant is covered because the school is named. Her own live SportsRecruits profile (legal name Francine Lemieux, slug frankie_lemieux) gives class 2028, San Francisco Youth Field Hockey Club (the Hawks) and San Francisco, and its bio names Lick-Wilmerding HS, so (a)(b)(c) hold on one first-hand page; class 2028 agrees with grade 11. Stick Together (2025-12-10 and 2026-09-10) independently writes 'Lick-Wilmerding, SF Hawks' / 'Lick-Wilmerding '28', and the club's current-players page and U19 Hawks Blue SportsRecruits roster list her. clubTeam rests on the U19 Hawks Blue roster page."
     },
     {
-      "teamSlug": "university-sf",
-      "athleteId": "d42d85f0-3c5b-4903-a343-3e2d76c07b57",
       "playerId": "pee53986e10",
-      "fullName": "Anoushka Gollerkeri",
+      "name": "Anoushka Gollerkeri",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4450,10 +4251,8 @@
       "basis": "Her own SportsRecruits profile (2028, San Francisco Youth Field Hockey Club, San Francisco) names San Francisco University High School and lists 2026 club results. MaxPreps, the club's U19 Hawks Blue roster and Current Players page (Class of 2028, #7 matching MaxPreps) and the NFHCA 2026 watchlist all agree. MaxPreps says U16 (from November 2025), but the live SportsRecruits org page puts her on U19 Hawks Blue, so I gave U19 Hawks Blue as the team. The old MaxPreps '-pumas' URL 404s, so I cited the current slug. Her own live SportsRecruits profile names the club (San Francisco Youth Field Hockey Club), class 2028 and San Francisco University High School, so (a)(b)(c) hold on one first-hand page; 2028 agrees with grade 11. Stick Together (2026-07-08) names her 'University '28' on the U16 SF Hawks national roster, and the club site and U19 Hawks Blue roster list her. clubTeam is the current U19 Hawks Blue roster (the July 2026 U16 side was the 2025-26 national-championship team)."
     },
     {
-      "teamSlug": "university-sf",
-      "athleteId": "88b4f515-8a03-418d-885f-caf4b398ff0c",
       "playerId": "p488b1a0730",
-      "fullName": "Lula Polak",
+      "name": "Lula Polak",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
       "status": "current",
@@ -4512,10 +4311,8 @@
       "basis": "Her own SportsRecruits profile (2029, San Francisco Youth Field Hockey Club, San Francisco) names San Francisco University High School in its bio. MaxPreps (University HS, Sophomore 2029, SF Hawks U16, #5), the club's U16 Hawks Blue SportsRecruits roster and Current Players page (Class of 2029, #5) and the NFHCA 2026 watchlist all agree with the roster grade 10. The old MaxPreps '-pumas' URL 404s, so I cited the current slug. Her own live SportsRecruits profile gives class 2029, San Francisco Youth Field Hockey Club, San Francisco, and says she was the only freshman on the varsity team at San Francisco University High School, so (a)(b)(c) hold first-hand; 2029 agrees with grade 10. Stick Together (2026-07-08) lists her 'University '29' on the U16 SF Hawks roster; the U16 Hawks Blue roster page (#5) and the club's current-players page (#5, Class of 2029) agree."
     },
     {
-      "teamSlug": "university-sf",
-      "athleteId": "5f1af2ca-fd57-4ff8-b02f-5233f1803792",
       "playerId": "p6b5ab7411e",
-      "fullName": "Mimi Bakker",
+      "name": "Mimi Bakker",
       "club": "sf-hawks",
       "clubTeam": "U16",
       "status": "current",
@@ -4574,10 +4371,8 @@
       "basis": "Her own NCSA profile names San Francisco University High School, class '30, and Club San Francisco Hawks; the NFHCA 2026 watchlist (Aug 27, 2026) names the same school with the Hawks and 'First-Year' (class of 2030, roster grade 9), and the club's current-players page and MAX club page list her as class of 2030. The club team is not shown on any page I read, so clubTeam is null. Her NCSA profile (already linked on the site) names her, San Francisco University High School, class '30 and 'Club San Francisco Hawks' with the 2026 National Club Championship U16 SF Hawks event, so (a)(b)(c) hold first-hand; 2030 agrees with grade 9. Her SportsRecruits bio, Stick Together's 2026-07-08 U16 SF Hawks roster ('University '30') and the club's Class of 2030 list all agree. clubTeam U16 is from the NCSA event line."
     },
     {
-      "teamSlug": "university-sf",
-      "athleteId": "1cc5d30f-9fc2-4652-baa5-7148e2542179",
       "playerId": "p88147b8ec7",
-      "fullName": "Olivia Taylor",
+      "name": "Olivia Taylor",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -4636,10 +4431,8 @@
       "basis": "The MAX Field Hockey page for San Francisco Youth Field Hockey (rendered by calling its embedded data page directly) lists Olivia Taylor, Class 2027, Forward, High School San Francisco University, matching the roster (grade 12, F, San Francisco University). The club's own current-players page lists her under Class of 2027 as a Forward. I found no recruiting profile of her own, and an NCSA 'Olivia Taylor' result is a different person (Brandon HS, MS soccer), which is why school, class and position were matched on the MAX page. The club's own current-players page names her under Class of 2027 (agrees with grade 12) at a San Francisco club, which meets (a)(b)(c) through class year plus NorCal club location; no recruiting profile exists (nfhca.sportsrecruits.com/athlete/olivia_taylor is Page Not Found). Identity is tied to University by the club's own 'Olivia Taylor MCAL Second Team' matching Stick Together's 2025 All-MCAL Second Team 'Olivia Taylor, University, 11', and by the NFHCA academic squad listing her at San Francisco University High School. Medium because the club page itself gives no school."
     },
     {
-      "teamSlug": "university-sf",
-      "athleteId": "8d5fd8bd-b28c-49b9-af6d-7849379378c2",
       "playerId": "pe5cd405668",
-      "fullName": "Rachel Flynn",
+      "name": "Rachel Flynn",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -4674,10 +4467,8 @@
       "basis": "The club's own current-players page lists Rachel Flynn under Class of 2027 (agrees with grade 12) at a San Francisco club, meeting (a)(b)(c) through class year plus NorCal club location; her SportsRecruits profile (rachel_flynn) shows only '2027 • Defense' with no club or school, so it adds nothing. Identity is tied to University because the club's 'Scholar of Distinction' for Rachel Flynn matches the NFHCA 2026 high school squad listing the only California Rachel Flynn, at San Francisco University High School, as SD (the club's SD/non-SD split for its other players matches that list as well). Medium because the club page itself gives no school."
     },
     {
-      "teamSlug": "university-sf",
-      "athleteId": "dcaa2c1a-aebc-43e7-8e78-86aa3ee97895",
       "playerId": "pef30912d0d",
-      "fullName": "Vivienne Wong",
+      "name": "Vivienne Wong",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
       "status": "current",
@@ -4736,10 +4527,8 @@
       "basis": "Her own SportsRecruits profile (modified today) lists San Francisco Youth Field Hockey Club, class of 2030, San Francisco, and says she is starting at San Francisco University High School; the NFHCA 2026 watchlist names the same school with the Hawks, and the club's SportsRecruits U16 Hawks Blue team page, current-players page and the MAX club page all list her as class of 2030. Her own live SportsRecruits profile names her, the San Francisco Youth Field Hockey Club, class of 2030 and San Francisco University High School (roster: San Francisco University, grade 9 = 2030). Stick Together (Jul 8 2026, University '30 on the U16 SF Hawks roster) and the club's SR U16 Hawks Blue page agree; the club's own current-players page also links to this same profile. SF Hawks = San Francisco Youth Field Hockey Club."
     },
     {
-      "teamSlug": "convent-sacred-heart",
-      "athleteId": "b7ea3205-acc3-475a-bd40-da0caf522f4d",
       "playerId": "p22a84411ba",
-      "fullName": "Ava Long",
+      "name": "Ava Long",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -4758,10 +4547,8 @@
       "basis": "Only the San Francisco Youth Field Hockey Club's current-players page lists her, under the heading 'Class of 2029' (roster grade 10 = 2029, club based in San Francisco), with no school and no player-profile link. No conflicting same-name field hockey profile or other Ava Long in the NorCal rosters turned up, but no second page confirms the school, so medium only. A search-index summary of an older, now-404 club player-profile page said Convent, but I could not open it and did not rely on it."
     },
     {
-      "teamSlug": "convent-sacred-heart",
-      "athleteId": "a4085944-591b-4bbb-8896-36e48a6cabe9",
       "playerId": "p5c7cd0b507",
-      "fullName": "Claire Gunning",
+      "name": "Claire Gunning",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4828,10 +4615,8 @@
       "basis": "Her own SportsRecruits profile (modified today) names Convent of the Sacred Heart, class of 2028, San Francisco Youth Field Hockey Club and the San Francisco Hawks; the NFHCA 2025 and 2026 watchlists (Sophomore, then Junior) name her with the Hawks, and the 2025 list prints the full school name. The 2026 list prints 'Convent High School', which I read as the same school only because her own profile and the 2025 list give the full name. Her own live SportsRecruits profile names Convent of the Sacred Heart, class 2028 (roster grade 11) and the San Francisco Youth Field Hockey Club / San Francisco Hawks with no end date. Stick Together (Jul 8 2026) lists Convent '28 on the U16 SF Hawks national roster and the club's SR page lists her on U19 Hawks Blue, so she plays on both age-group teams; the clubTeam given is the current SR team page."
     },
     {
-      "teamSlug": "convent-sacred-heart",
-      "athleteId": "79b24568-7d66-4f62-b949-475dd8f1d729",
       "playerId": "p41a1c7608a",
-      "fullName": "Jessica Long",
+      "name": "Jessica Long",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
       "status": "current",
@@ -4858,10 +4643,8 @@
       "basis": "Her own live SportsRecruits profile (jessica_long4) names Convent of the Sacred Heart, class 2028 (roster grade 11, F/M) and the San Francisco Youth Field Hockey Club / San Francisco Hawks, with no end date; it was created Jan 2026 and says 'rising junior'. The club's SR U19 Hawks Blue page lists her at 2028, and the club's own current-players page links her card to this same profile."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
       "playerId": "pf697e822a7",
-      "fullName": "Kira Kelly",
+      "name": "Kira Kelly",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -4880,10 +4663,8 @@
       "basis": "The 2026-08-27 NFHCA watchlist names Kira Kelly, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kira Kelly at Davis. The NFHCA's 2025 watchlist (2025-08-28) named D-City as her club; this newer row is why that tie is unknown, not current."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
       "playerId": "p03836f14f8",
-      "fullName": "Kate Loscutoff",
+      "name": "Kate Loscutoff",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -4902,10 +4683,8 @@
       "basis": "The 2026-08-27 NFHCA watchlist names Kate Loscutoff, Davis Senior High School, club NorCal Impact FHC, Senior (= 2027, matches grade 12). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Kate Loscutoff at Davis. Her own NCSA profile, undated and re-read 2026-10-04, lists other clubs for 2023-2025 (D-City, then Sacramento Hockey Academy); the watchlist is the newest page, so this tie stays current and the D-City tie is past."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
       "playerId": "pfab052a020",
-      "fullName": "Amelia Zedonis",
+      "name": "Amelia Zedonis",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -4924,10 +4703,8 @@
       "basis": "The 2026-08-27 NFHCA watchlist names Amelia Zedonis, Davis Senior High School, club NorCal Impact FHC, Junior (= 2028, matches grade 11). It is the only page: it names no club team, and no other source was kept for this tie. The roster has one Amelia Zedonis at Davis. The NFHCA's 2025 watchlist (2025-08-28) named D-City as her club; this newer row is why that tie is unknown, not current."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
       "playerId": "pf697e822a7",
-      "fullName": "Kira Kelly",
+      "name": "Kira Kelly",
       "club": "d-city",
       "clubTeam": null,
       "status": "unknown",
@@ -4946,10 +4723,8 @@
       "basis": "The NFHCA's 2025 high school watchlist (published 2025-08-28) names Kira Kelly, Davis Senior High School, club D-City, Sophomore (= class of 2028, matches grade 11): one first-hand page names the player, the club and the school, so confidence is high. Status is unknown, not current: the NFHCA's 2026-08-27 watchlist names NorCal Impact FHC as her club (her NorCal Impact tie), a newer page naming another club, as for Gabrielle Moll. The table is paginated on screen (10 rows), but all 555 rows are in the page's HTML. Found by a verifier of the D-City record on 2026-10-04, then confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same row). The roster has one Kira Kelly at Davis."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
       "playerId": "p03836f14f8",
-      "fullName": "Kate Loscutoff",
+      "name": "Kate Loscutoff",
       "club": "d-city",
       "clubTeam": null,
       "status": "past",
@@ -4968,10 +4743,8 @@
       "basis": "Her own NCSA profile names Kate Loscutoff, '27 (matches grade 12), Davis Senior High School, and lists her club seasons as 2025 Sacramento Hockey Academy, 2024 D-City and 2023 D-City. D-City is a club her own page lists for earlier years, so status is past, as of 2024; her current club is NorCal Impact (the 2026-08-27 NFHCA watchlist). Sacramento Hockey Academy has no club record here and was not researched. The other Loscutoff on the Davis roster, Margaret, is in grade 10, so the '27 picks Kate. Found by a verifier of the D-City record on 2026-10-04, then confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entries)."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
       "playerId": "pfab052a020",
-      "fullName": "Amelia Zedonis",
+      "name": "Amelia Zedonis",
       "club": "d-city",
       "clubTeam": null,
       "status": "unknown",
@@ -4990,10 +4763,8 @@
       "basis": "The NFHCA's 2025 high school watchlist (published 2025-08-28) names Amelia Zedonis, Davis Senior High School, club D-City, Sophomore (= class of 2028, matches grade 11): one first-hand page names the player, the club and the school, so confidence is high. Status is unknown, not current: the NFHCA's 2026-08-27 watchlist names NorCal Impact FHC as her club (her NorCal Impact tie), a newer page naming another club, as for Gabrielle Moll. Found by a verifier of the D-City record on 2026-10-04, then confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same row). The roster has one Amelia Zedonis at Davis."
     },
     {
-      "teamSlug": "pleasant-valley",
-      "athleteId": "1917b7a2-edb2-48ed-804a-5fd79664a1c2",
       "playerId": "p585850c3e0",
-      "fullName": "Lilah Letcher",
+      "name": "Lilah Letcher",
       "club": "chico-hotshots",
       "clubTeam": "U19",
       "status": "current",
@@ -5012,10 +4783,8 @@
       "basis": "Her own MaxPreps career page (its careerId is the roster row's; Pleasant Valley, graduatingClass 2028, which matches grade 11) lists one club team: 'Chico Hotshots', club Chico Hotshots, Chico CA, sport Field Hockey, U19, joined 2023, season Spring, entered 2026-09-28 and last modified 2026-09-29. The entry carries the same MaxPreps club id as Kate Panighetti's, whose team site is the club's TeamLinkt site (Chico Hotshots Field Hockey Club), so it is this field hockey club. One first-hand page names the player, the club and the school, so confidence is high. The entry is dated after August 2025, gives no end year, and no newer page names another club for her, so status is current, as of 2026-09-29 (as for Yoyo Cai); its yearJoined is entered by the player or a parent and is not used for the club's founding year. clubTeam is the entry's age group, U19, which the club lists as a spring 2026 team. The career home page and its bio page carry the same entry. Found by the 2026-10-04 MaxPreps sweep of all 95 EAL rows and confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entry). She is the only Letcher on any roster."
     },
     {
-      "teamSlug": "pleasant-valley",
-      "athleteId": "34c472fd-d485-49fb-9c47-d2736f9067d4",
       "playerId": "p3542d12f2d",
-      "fullName": "Kate Panighetti",
+      "name": "Kate Panighetti",
       "club": "chico-hotshots",
       "clubTeam": "U19",
       "status": "current",
@@ -5034,10 +4803,8 @@
       "basis": "Her own MaxPreps career page (its careerId is the roster row's; Pleasant Valley, graduatingClass 2027, which matches grade 12) lists one club team: 'Hot Shots', club Chico Hotshots, Chico CA, sport Field Hockey, U19, joined 2026, season Spring, created 2026-05-19 and last modified 2026-05-20, with its team site set to the club's TeamLinkt site (leagues.teamlinkt.com/chicohotshotsfieldhockey). One first-hand page names the player, the club and the school, so confidence is high. Spring 2026 is in the 2025-26 club season and the entry is dated after August 2025, gives no end year, and no newer page names another club for her, so status is current, as of 2026-05-20 (as for Yoyo Cai). clubTeam is the entry's age group, U19, which the club lists as a spring 2026 team. The career home page and its bio page carry the same entry. Found by the 2026-10-04 MaxPreps sweep of all 95 EAL rows and confirmed the same day by two independent checks that each re-opened the page (HTTP 200, the same entry). She is the only Panighetti on any roster."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
       "playerId": "p6f780b64f9",
-      "fullName": "Alyssa Montejano",
+      "name": "Alyssa Montejano",
       "club": "norcal-impact",
       "clubTeam": "Wolves",
       "status": "current",
@@ -5056,10 +4823,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12), Gilroy, CA, and lists Christopher High School and the club team 'Wolves, NorCal Impact' under TEAMS, with NorCal Impact as her CLUB. The club and team list are rendered by script, so the page was read in a browser on 2026-10-05. It is a live profile with 2026 events and no end date, so the tie is current under the live-profile rule; her Infinity tie (the 2025 California Cup) stays past."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "9cf94b17-e6b4-435b-958f-62367101bb77",
       "playerId": "p563a338b20",
-      "fullName": "Emma Traverso",
+      "name": "Emma Traverso",
       "club": "norcal-impact",
       "clubTeam": null,
       "status": "current",
@@ -5078,10 +4843,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and Saratoga, CA, names NorCal Impact as her CLUB and lists it under TEAMS beside Archbishop Mitty High School. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with 2026 events, so current under the live-profile rule; her NCSA page's San Jose Fly seasons end in 2025, which is why that tie stays unknown."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
       "playerId": "p9a878866a7",
-      "fullName": "Maggie Magnano",
+      "name": "Margaret Magnano",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -5100,10 +4863,8 @@
       "basis": "Her own SportsRecruits field hockey profile (listed as Margaret Magnano, the one the roster overlay links) gives class of 2027 (agrees with grade 12) and lists three teams: St. Ignatius College Preparatory Girls Field Hockey, U19 Hawks Blue (San Francisco Youth Field Hockey Club) and 'HTC- California', which is HTC's California program (aliases HTC California, HTC-CA); the page does not say which of its groups. Read in a browser on 2026-10-05. The page gives no dates; it is a live profile with 2026 events, so current under the live-profile rule, alongside her SF Hawks tie."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "d5e8fc2f-06a0-4da7-9cba-3f54c6be249f",
       "playerId": "pb60c04f232",
-      "fullName": "Juliet Calderon",
+      "name": "Juliet Calderon",
       "club": "infinity",
       "clubTeam": null,
       "status": "current",
@@ -5122,10 +4883,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and Gilroy, CA, names Infinity as her CLUB and lists the team 'Infinity, Infinity' under TEAMS beside Christopher High School. Infinity Sports Club is the Gilroy field hockey club. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with 2026 events, so current under the live-profile rule."
     },
     {
-      "teamSlug": "willow-glen",
-      "athleteId": "3a2b6d71-e0a6-4232-a9ac-8c8bf8fa7705",
       "playerId": "p21ad36a67b",
-      "fullName": "Isabella Alonzo",
+      "name": "Isabella Alonzo",
       "club": "norcal-impact",
       "clubTeam": "NorCal Wolves",
       "status": "current",
@@ -5144,10 +4903,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and San Jose, CA, names the club team 'NorCal Wolves, NorCal Impact' as her CLUB and lists it under TEAMS beside Willow Glen High School. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with 2026 events, so current under the live-profile rule."
     },
     {
-      "teamSlug": "los-altos",
-      "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
       "playerId": "p3db6c58013",
-      "fullName": "Katarina Smith",
+      "name": "Katarina Smith",
       "club": "fly-fhc",
       "clubTeam": "U19 Fly Black",
       "status": "current",
@@ -5166,10 +4923,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2027 (agrees with grade 12) and Los Altos, CA, names 'U19 Fly Black, San Jose Fly Field Hockey Club' as her CLUB and lists it under TEAMS beside Los Altos High School Varsity. San Jose Fly is Fly FHC's former name (an alias on the club record). Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile with July 2026 events, so current under the live-profile rule."
     },
     {
-      "teamSlug": "fremont",
-      "athleteId": "6523e0ef-d011-4582-8aca-3f50dd2020a9",
       "playerId": "pa3d87a9cdb",
-      "fullName": "Sophie Dhillon",
+      "name": "Sophie Dhillon",
       "club": "fly-fhc",
       "clubTeam": null,
       "status": "current",
@@ -5188,10 +4943,8 @@
       "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Sunnyvale, CA, where Fremont High School is, and names San Jose Fly Field Hockey Club (Fly FHC's former name) as her CLUB and under TEAMS. Its high school entry reads only 'High School Team, Sunnyvale', so the match rests on the class year plus a Sunnyvale hometown and a San Jose club. Read in a browser on 2026-10-05; a live profile with 2026 events, so current under the live-profile rule."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "d1f30b24-6a0a-4f56-b88e-55d0b226494d",
       "playerId": "p91ad9351fd",
-      "fullName": "Beatrix Hom",
+      "name": "Beatrice Hom",
       "club": "sf-hawks",
       "clubTeam": "U16 Yellow",
       "status": "current",
@@ -5210,10 +4963,8 @@
       "basis": "Her own SportsRecruits field hockey profile (listed as Beatrice Hom, the one the roster overlay links) gives class of 2029 (agrees with grade 10) and San Francisco, CA, and lists two teams: St. Ignatius College Preparatory Girls Field Hockey and 'U16 Yellow, San Francisco Hawks', SF Hawks' U16 team. Read in a browser on 2026-10-05, since the team list is rendered by script. The page gives no dates; it is a live profile, so current under the live-profile rule."
     },
     {
-      "teamSlug": "chico",
-      "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
       "playerId": "pccb54180ec",
-      "fullName": "Evie Nielsen",
+      "name": "Evie Nielsen",
       "club": "chico-hotshots",
       "clubTeam": "Hotshots u19",
       "status": "current",
@@ -5232,10 +4983,8 @@
       "basis": "Her own SportsRecruits field hockey profile (listed as Evelyn Nielsen, slug evelyn_nielson; the one the roster overlay links) gives class of 2028 (agrees with grade 11) and Chico, CA; the bio says everyone calls her Evie and that she has played for Chico High and the Chico Hotshots, and TEAMS lists Chico High School - Field Hockey and 'Hotshots u19, Chico Hotshots'. Read in a browser on 2026-10-05. A live profile, so current under the live-profile rule."
     },
     {
-      "teamSlug": "chico",
-      "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
       "playerId": "pccb54180ec",
-      "fullName": "Evie Nielsen",
+      "name": "Evie Nielsen",
       "club": "fly-fhc",
       "clubTeam": "Guest player, Cal Cup 2026",
       "status": "current",
@@ -5254,10 +5003,8 @@
       "basis": "Her own SportsRecruits field hockey profile (class of 2028, agrees with grade 11; Chico High School - Field Hockey) lists 'San Jose Fly' under TEAMS, and the bio says she has been a guest player for the San Jose Fly team at Cal Cup 2026. San Jose Fly is Fly FHC's former name. She was a guest at one 2026 tournament, not a member: her own club is Chico Hotshots, so any wording must say guest player. Read in a browser on 2026-10-05."
     },
     {
-      "teamSlug": "chico",
-      "athleteId": "c95dcf7e-8daf-4e12-9806-0800bb16faf0",
       "playerId": "p45ecc86405",
-      "fullName": "Quinn Karolyi",
+      "name": "Quinn Karolyi",
       "club": "chico-hotshots",
       "clubTeam": "U16",
       "status": "current",
@@ -5276,10 +5023,8 @@
       "basis": "Her own NCSA field hockey profile (the one the roster overlay links) names Quinn Karolyi, Chico High School, Chico, CA, class of 2028 (agrees with grade 11), gives 'Club Chico Hotshots' in its header, and lists two club seasons: 2025 Chico Hotshots (U16) and 2024 Chico Hotshots (U14). It is a live profile with a May 2026 Cal Cup entry and names no other club, so the tie is current under the live-profile rule, as for Junali Dutta; no season after 2025 is listed, so asOf is null. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
     },
     {
-      "teamSlug": "chico",
-      "athleteId": "25e21b95-c6a1-4261-9f5e-78a4bed0a58e",
       "playerId": "pdcb729d25c",
-      "fullName": "Olivia Council",
+      "name": "Olivia Council",
       "club": "chico-hotshots",
       "clubTeam": null,
       "status": "unknown",
@@ -5298,10 +5043,8 @@
       "basis": "Her own NCSA field hockey profile (the one the roster overlay links) names Olivia Council, Chico High School, Chico, CA, class of 2027 (agrees with grade 12), gives 'Club Chico Hotshots' in its header, and lists one club season, 2024 Chico Hotshots, with the team given as 'Unsure'. The page names no other club, but its latest dated item is a July 2025 camp and no club season after 2024 is listed, so the status is unknown as of 2024, as for Ruhee Bhatnagar. Her SportsRecruits profile lists no club. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
     },
     {
-      "teamSlug": "davis",
-      "athleteId": "9f299134-dfdc-4d38-9c8e-2ca464f186ae",
       "playerId": "pccc2a06927",
-      "fullName": "Maisy Martin",
+      "name": "Maisy Martin",
       "club": "d-city",
       "clubTeam": "Spring training program",
       "status": "unknown",
@@ -5320,10 +5063,8 @@
       "basis": "Her own NCSA field hockey profile (the one the roster overlay links) names Maisy Martin, Davis Senior High School, Davis, CA, class of 2028 (agrees with grade 11), and lists under Training 'D-City Field Hockey, 1 year, Davis, CA club field hockey spring training program'. D-City is the Davis club. The page gives no year, so the status is unknown. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
     },
     {
-      "teamSlug": "tamalpais",
-      "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
       "playerId": "pa1bf6c3324",
-      "fullName": "Josie Stout",
+      "name": "Josie Stout",
       "club": "golden-gate-rippers",
       "clubTeam": null,
       "status": "past",
@@ -5342,10 +5083,8 @@
       "basis": "Her own NCSA field hockey profile (already a source for her SF Hawks tie) names Josie Stout, Tamalpais High School, Mill Valley, CA, class of 2028 (agrees with grade 11), and lists Golden Gate Rippers for four club seasons, 2021 to 2024, before San Francisco Hawks in 2025. Golden Gate Rippers is the Marin field hockey club. Her current club is SF Hawks, so this tie is past. Read with WebFetch on 2026-10-05 (curl gets HTTP 403)."
     },
     {
-      "teamSlug": "westmont",
-      "athleteId": "59cb47b9-86b2-4b59-9ade-7dc19c465f85",
       "playerId": "pcf9fc69b58",
-      "fullName": "Kaylee True",
+      "name": "Kaylee True",
       "club": "fly-fhc",
       "clubTeam": "U16",
       "status": "unknown",
@@ -5364,10 +5103,8 @@
       "basis": "Her own NCSA field hockey profile names Kaylee True, Westmont High School, Campbell, CA, class of 2028 (agrees with roster grade 11), and 'San Jose Fly (CA)' as her club, with one season, 2025 (U16); San Jose Fly is Fly FHC's former name. The page meets the rule on its own. Status is unknown, as for Riya Mehrotra's and Brooklyn Barnard's NCSA Fly entries: the page is undated, its only club season is 2025 and its newest school entry is the 2024 freshman team, so it may be stale. No second page names her with Fly (her MaxPreps career page lists no club, she has no SportsRecruits page, and Fly's rosters sit behind a captcha). Read with curl on 2026-10-07 and re-read in a browser by an independent refuter the same day."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "c000de5f-e69a-4006-bc0e-0db632e593dc",
       "playerId": "pcac0a06e1c",
-      "fullName": "Alexa Chan",
+      "name": "Alexa Chan",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -5402,10 +5139,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (alexa_chan3) gives class 2030, no hometown, club \"HTC - CA\" and names no school. MAX Field Hockey's The Bishop's School page lists her (class 2030) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2030, Bishop's School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2030 agrees with the roster (roster grade 9 = class of 2030). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). The SportsRecruits profile names no school, but MAX Field Hockey's Bishop's School page and its HTC-CA club page both list her with her school and class 2030."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "503c9e25-e9fd-4182-b7f0-f8030c649747",
       "playerId": "p2ab67fd17c",
-      "fullName": "Brooke Gibbons",
+      "name": "Brooke Gibbons",
       "club": "htc",
       "clubTeam": "HTC - California",
       "status": "current",
@@ -5472,10 +5207,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under The Bishop's School with the club column and a Class that equals 2029. The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under The Bishop's School with the club column and a Class that equals 2029. Her own live SportsRecruits field hockey profile (brooke_gibbons) gives class 2029, hometown San Diego, CA, club \"HTC - California, HTC Field Hockey Club\", and its TEAMS block names The Bishop's School. SportsRecruits' team page \"HTC - California\" (club HTC Field Hockey Club, location Madison, Connecticut) lists her in its roster with class 2029. MAX Field Hockey's The Bishop's School page lists her (class 2029) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2029, Bishop's School. Her own MaxPreps career page (same careerId as the roster row; Bishop's) has a club-teams entry: team \"U-19\", club \"HTC - CA\", San Diego CA, Field Hockey, joined 2024, last modified 2026-09-05. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2029 agrees with the roster (roster grade 10 = class of 2029). Status current: the latest dated source is 2026-09-05 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "c0eb9981-b5f7-4511-bb06-fd333ee59fb1",
       "playerId": "p1b77da4da5",
-      "fullName": "Cece Jeffery",
+      "name": "Cecily Jeffery",
       "club": "htc",
       "clubTeam": null,
       "status": "unknown",
@@ -5494,10 +5227,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (cece_jeffery) gives class 2027, no hometown, club \"HTC CA\", and its TEAMS block names The Bishops School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishops School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status unknown, not current: the profile's newest dated item is an event of 2024-01-14, so nothing dates her with HTC in 2025-26 (a profile not updated since an earlier season)."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "811f03a2-6ddd-4811-8886-7c84b087880c",
       "playerId": "p99d5926a32",
-      "fullName": "Kalina Parikh",
+      "name": "Kalina Parikh",
       "club": "htc",
       "clubTeam": "HTC U16 High Performance",
       "status": "current",
@@ -5516,10 +5247,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (kalina_parikh4) gives class 2028, hometown San Diego, CA, club \"HTC U16 High Performance, HTC\", and its TEAMS block names The Bishop's School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "1b6b5261-5719-42a4-b4f4-716296aff58d",
       "playerId": "p04ebfd6cc4",
-      "fullName": "Kaylyn Witt",
+      "name": "Kaylyn Witt",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -5538,10 +5267,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (kaylyn_witt2) gives class 2030, hometown San Diego, CA, club \"HTC - CA\", and its TEAMS block names The Bishop's School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2030 agrees with the roster (roster grade 9 = class of 2030). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "11115ade-64df-43ba-b6bc-fe48edc75248",
       "playerId": "p8726db7203",
-      "fullName": "Layla Holderman",
+      "name": "Layla Holderman",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -5560,10 +5287,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (layla_holderman2) gives class 2029, no hometown, club \"HTC - CA\" and names no school. Rule (b): no page names the school; the class year 2029 agrees with the roster (roster grade 10 = class of 2029) and the club is HTC California (HTC-CA, which trains in La Jolla and Chula Vista), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). Medium: the profile names no school or hometown; the match rests on class 2029 (agrees with roster grade) plus HTC-CA, a San Diego club."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "b9ec3340-2a3f-40bd-82fd-b99cc2fdb53e",
       "playerId": "pc4363a4232",
-      "fullName": "Leia Park",
+      "name": "Leia Park",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -5582,10 +5307,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (leia_park) gives class 2030, hometown San Diego, CA, club \"HTC - CA\" and names no school. Rule (b): no page names the school; the class year 2030 agrees with the roster (roster grade 9 = class of 2030) and the club is HTC California (HTC-CA, which trains in La Jolla and Chula Vista), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). Medium: the profile names no school; the match rests on class 2030 (agrees with roster grade) plus a San Diego hometown and HTC-CA."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "780f681e-83e2-420f-b1c1-e3f68cde2d63",
       "playerId": "pe6a44c82aa",
-      "fullName": "Lola Conway",
+      "name": "Lola Conway",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -5644,10 +5367,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under The Bishop's School with the club column and a Class that equals 2028. The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under The Bishop's School with the club column and a Class that equals 2028. Her own live SportsRecruits field hockey profile (lola_conway) gives class 2028, hometown San Diego, CA, club \"HTC CA, HTC CA\", and its TEAMS block names Bishop's. MAX Field Hockey's The Bishop's School page lists her (class 2028) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2028, Bishop's School. MAX Field Hockey's Class of 2028 Top 100 Players to Watch (released 2025-03-13) lists her with The Bishop’s School and the club. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club. MAX's Top 100 Players to Watch (kind event, a showcase list) also names her with The Bishop's School and HTC-CA."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "beb9b241-ab5f-4b9b-9b4c-298739321d8e",
       "playerId": "p3bc8e7dc86",
-      "fullName": "Lydia McDonald",
+      "name": "Lydia McDonald",
       "club": "htc",
       "clubTeam": "HTC California",
       "status": "current",
@@ -5690,10 +5411,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under The Bishop's School with the club column and a Class that equals 2028. The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under The Bishop's School with the club column and a Class that equals 2028. Her own live SportsRecruits field hockey profile (lydia_mcdonald) gives class 2028, hometown La Jolla, CA, club \"HTC California, HTC\", and its TEAMS block names The Bishops School. Her own MaxPreps career page (same careerId as the roster row; Bishop's) has a club-teams entry: team \"HTC-CA\", club \"HTC - CALIFORNIA\", San Diego CA, Field Hockey, joined 2023, last modified 2025-05-22. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "bishops",
-      "athleteId": "79df9b55-5329-4f94-983b-05f4d76bfa5b",
       "playerId": "p31991d4be3",
-      "fullName": "Myla McCandless",
+      "name": "Myla McCandless",
       "club": "htc",
       "clubTeam": "U16",
       "status": "current",
@@ -5736,10 +5455,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under The Bishop's School with the club column and a Class that equals 2029. Her own live SportsRecruits field hockey profile (myla_mccandless) gives class 2029, hometown La jolla, CA, club \"U16, HTC California\", and its TEAMS block names The Bishops school. MAX Field Hockey's The Bishop's School page lists her (class 2029) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2029, Bishop's School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (The Bishop's School); the class year 2029 agrees with the roster (roster grade 10 = class of 2029). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "canyon-hills",
-      "athleteId": "5369e061-d371-41ca-9654-bf7245e98432",
       "playerId": "p5a19a98165",
-      "fullName": "Eva Allen",
+      "name": "Eva Jo Allen",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -5782,10 +5499,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (eva_jo_allen) gives class 2028, hometown San Diego, CA, club \"Rush, Rush Field Hockey\", and its TEAMS block names Canyon Hills High School. RUSH's own Elite Performance Group directory page for her (last modified 2026-07-13) gives graduation year 2028 and names no school. MAX Field Hockey's Canyon Hills High School page lists her (class 2028) with club \"Rush\". MAX Field Hockey's club page lists her as class 2028, Canyon Hills. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Canyon Hills High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current: the latest dated source is 2026-07-13 (Aug 2025 or later), and nothing newer names another club. MAX prints her as Eva Jo Allen, which is the name on her SportsRecruits profile (the page names Canyon Hills)."
     },
     {
-      "teamSlug": "canyon-hills",
-      "athleteId": "1ad802a5-00af-48e0-8def-6c9f83097760",
       "playerId": "p434a12eb54",
-      "fullName": "Reese Roldan",
+      "name": "Reese Roldan",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -5820,10 +5535,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (reese_roldan) gives class 2027, hometown San Diego, CA, club \"Rush Devils\", and its TEAMS block names Canyon Hills. Her own live SportsRecruits field hockey profile (reese_roldan2) gives class 2027, hometown San Diego, club \"Rush Devils\" and names no school. RUSH's own Elite Performance Group directory page for her (last modified 2025-09-22) gives graduation year 2027 and names no school. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Canyon Hills); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2025-09-22 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "canyon-hills",
-      "athleteId": "16ffe819-dbaa-4046-bc8f-a29406bcaedc",
       "playerId": "pd07e7f62ce",
-      "fullName": "Rylie Storm",
+      "name": "Rylie Storm",
       "club": "rush",
       "clubTeam": "Rush Devils",
       "status": "current",
@@ -5882,10 +5595,8 @@
       "basis": "USA Field Hockey's 2026 National Club Championship all-star list (2026-07-13) names her in the U-16 girls for 'RUSH Devils' (name and squad only; 'Rush Devils' is a joint RUSH and VCRD squad name, so this page alone does not settle the club). Her own live SportsRecruits field hockey profile (rylie_storm) gives class 2028, hometown San Diego, CA, club \"Rush Devils, Rush\", and its TEAMS block names Canyon Hills (formerly Serra) High. RUSH's own Elite Performance Group directory page for her (last modified 2024-11-17) gives graduation year 2028 and names no school. MAX Field Hockey's Canyon Hills High School page lists her (class 2028) with club \"Rush\". MAX Field Hockey's club page lists her as class 2028, Canyon Hills. Her own MaxPreps career page (same careerId as the roster row; Canyon Hills) has a club-teams entry: team \".\", club \"RUSH\", San Diego CA, Field Hockey, joined 2023, last modified 2025-10-22. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Canyon Hills (formerly Serra) High); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current: the latest dated source is 2026-07-13 (Aug 2025 or later), and nothing newer names another club. The 'RUSH Devils' label is the joint RUSH and VCRD squad name, so the USA Field Hockey list and the 'Rush Devils' team on SportsRecruits do not settle the club alone; the tie to RUSH rests on RUSH's own directory page, MAX's Rush Field Hockey (Encinitas) club page and her MaxPreps club entry (club RUSH, San Diego), with a San Diego hometown."
     },
     {
-      "teamSlug": "canyon-hills",
-      "athleteId": "7fd8107e-38e2-492e-8ee2-2f1d16ddf779",
       "playerId": "p215bbe711a",
-      "fullName": "Sami Lee",
+      "name": "Sami Lee",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -5928,10 +5639,8 @@
       "basis": "RUSH's own Elite Performance Group directory page for her (last modified 2025-08-22) gives graduation year 2027 and names no school. MAX Field Hockey's Canyon Hills High School page lists her (class 2027) with club \"Rush\". MAX Field Hockey's club page lists her as class 2027, Canyon Hills. Her own MaxPreps career page (same careerId as the roster row; Canyon Hills) has a club-teams entry: team \"Rush\", club \"RUSH\", San Diego CA, Field Hockey, joined 2020, last modified 2024-09-25. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Canyon Hills High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2025-08-22 (Aug 2025 or later), and nothing newer names another club. The directory and MAX print her as Samantha Lee; MAX lists her under Canyon Hills and MaxPreps’ page for 'Sami Lee' (Canyon Hills) lists club RUSH, so the nickname is bound to the school. Current rests on the directory page last modified 2025-08-22; the MaxPreps entry itself dates from 2024-09."
     },
     {
-      "teamSlug": "cathedral-catholic",
-      "athleteId": "31b6ec61-58d6-4bd8-8908-6aca69a8e814",
       "playerId": "p52b9f2fac8",
-      "fullName": "Emma Forster",
+      "name": "Emma Forster",
       "club": "rush",
       "clubTeam": "Rush Devils U19",
       "status": "current",
@@ -5966,10 +5675,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (emma_forster) gives class 2027, hometown San Diego, CA, club \"Rush Devils U19, Rush Devils\", and its TEAMS block names Cathedral Catholic High School. RUSH's own Elite Performance Group directory page for her (last modified 2024-06-04) gives graduation year 2027 and names no school. Her own MaxPreps career page (same careerId as the roster row; Cathedral Catholic) has a club-teams entry: team \"Rush\", club \"RUSH\", San Diego CA, Field Hockey, joined 2024, last modified 2025-08-28. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Cathedral Catholic High School); the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current: the latest dated source is 2025-08-28 (Aug 2025 or later), and nothing newer names another club. RUSH's directory page and her MaxPreps entry (club RUSH, San Diego) make 'Rush Devils U19' on SportsRecruits RUSH San Diego, not VCRD. The roster row has no grade; the pages' class 2027 is accepted."
     },
     {
-      "teamSlug": "cathedral-catholic",
-      "athleteId": "6e96fd19-afb7-468c-bc74-79c4461277be",
       "playerId": "p168f8b1c6e",
-      "fullName": "Kate Friedman",
+      "name": "Kate Friedman",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -5996,10 +5703,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (kate_friedman) gives class 2028, hometown Poway, club \"Rush Devils\" and names no school. RUSH's own Elite Performance Group directory page for her (last modified 2026-07-15) gives graduation year 2028 and names no school. Rule (b): no page names the school; the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted) and the club is RUSH Field Hockey (San Diego), a Southern California club. Status current: the latest dated source is 2026-07-15 (Aug 2025 or later), and nothing newer names another club. Medium: no page names her school; the match rests on class 2028 (roster has no grade) plus RUSH's directory page and a Poway hometown. 'Rush Devils' on SportsRecruits is the joint squad name; RUSH's own directory page settles the club as RUSH."
     },
     {
-      "teamSlug": "cathedral-catholic",
-      "athleteId": "b3690c95-bb1d-4a7b-a163-16e0f4e89f1d",
       "playerId": "pff8e8dfb2f",
-      "fullName": "Lilly Morton",
+      "name": "Lilly Morton",
       "club": "rush",
       "clubTeam": "RUSH Devils U16",
       "status": "current",
@@ -6026,10 +5731,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (lilly_morton3) gives class 2028, hometown San Diego, CA, club \"RUSH Devils U16, Rush\", and its TEAMS block names Cathedral Catholic High School. Her own MaxPreps career page (same careerId as the roster row; Cathedral Catholic) has a club-teams entry: team \"Rush U16\", club \"RUSH\", San Diego CA, Field Hockey, joined 2025, last modified 2025-08-28. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Cathedral Catholic High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current: the latest dated source is 2025-08-28 (Aug 2025 or later), and nothing newer names another club. The SportsRecruits 'RUSH Devils U16' team is RUSH San Diego: her MaxPreps club entry is club RUSH, San Diego, and she has a San Diego hometown."
     },
     {
-      "teamSlug": "eastlake",
-      "athleteId": "8cec8fe4-4ed6-49fc-97b7-a2b731ac5047",
       "playerId": "p2606a5b551",
-      "fullName": "Isabelle Blyton",
+      "name": "Isabelle Blyton",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -6056,10 +5759,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (isabelle_blyton) gives class 2027, no hometown, club \"Powerhouse U19, Myto Field Hockey\" and names no school. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. Rule (b): no page names the school; the class year 2027 agrees with the roster (roster grade 12 = class of 2027) and the club is Myto Field Hockey (San Diego), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). Medium: the profile names no school; the match rests on class 2027 (agrees with roster grade) plus Myto, a San Diego club."
     },
     {
-      "teamSlug": "great-oak",
-      "athleteId": "f3bba43c-d023-4bd8-b7c1-e91796d5565c",
       "playerId": "p45e6af6636",
-      "fullName": "Emma Keith",
+      "name": "Emma Keith",
       "club": "htc",
       "clubTeam": "U16 Royal Blue",
       "status": "current",
@@ -6078,10 +5779,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (emma_keith3) gives class 2028, hometown Temecula, CA, club \"U16 Royal Blue, HTC - San Diego\", and its TEAMS block names Great Oak High School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Great Oak High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "great-oak",
-      "athleteId": "b26c1656-7097-4a4c-a21b-f0a39f2b0a6b",
       "playerId": "p4c20090131",
-      "fullName": "Isabel Laureles",
+      "name": "Isabel Laureles",
       "club": "htc",
       "clubTeam": "U16 Royal Blue High Performance",
       "status": "current",
@@ -6100,10 +5799,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (isabel_laureles) gives class 2028, no hometown, club \"U16 Royal Blue High Performance, HTC - CA\", and its TEAMS block names Great Oak High School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Great Oak High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "great-oak",
-      "athleteId": "2e7f7546-8ddc-422f-b197-bf93a471dd7c",
       "playerId": "pc45b14f1f1",
-      "fullName": "Linnea Gustaveson",
+      "name": "Linnea Gustaveson",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -6138,10 +5835,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (linnea_gustaveson) gives class 2028, hometown Temecula, CA, club \"Powerhouse U19, Myto Field Hockey\", and its TEAMS block names Great Oak High School. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. Her own MaxPreps career page (same careerId as the roster row; Great Oak) has a club-teams entry: team \"Myto powerhouse team\", club \"Myto Field Hockey Club\", San Diego CA, Field Hockey, joined 2025, last modified 2026-04-23. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Great Oak High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current: the latest dated source is 2026-04-23 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "great-oak",
-      "athleteId": "8dc52a5a-6629-4d6d-a40d-63ac736d3795",
       "playerId": "p6be620c5b1",
-      "fullName": "Whitley Paine",
+      "name": "Whitley Paine",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -6168,10 +5863,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (whitley_paine) gives class 2028, no hometown, club \"HTC - CA\" and names no school. Her own MaxPreps career page (same careerId as the roster row; Great Oak) has a club-teams entry: team \"Royal Blue\", club \"HTC - CA\", San Diego CA, Field Hockey, joined 2026, last modified 2026-02-18. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Great Oak); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current: the latest dated source is 2026-02-18 (Aug 2025 or later), and nothing newer names another club. High: her MaxPreps career page (Great Oak) names the club and school; the SportsRecruits profile lists the same club."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "a516f586-9742-41f9-aac6-ec9bc74f04b8",
       "playerId": "p8d5f8ded39",
-      "fullName": "Abigail Ryan",
+      "name": "Abigail Ryan",
       "club": "vcrd",
       "clubTeam": null,
       "status": "current",
@@ -6190,10 +5883,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (abigail_ryan4) gives class 2027, hometown Los Angeles, CA, club \"VCRD/ RUSH Devils\", and its TEAMS block names Harvard Westlake School. Rule (a): a page names the player, Ventura County Red Devils (VCRD, Moorpark) and the school (Harvard Westlake School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "8b4f6ecb-90b2-4a68-8706-72b7c747f5cd",
       "playerId": "ped38af0643",
-      "fullName": "Eleanor Levy",
+      "name": "Eleanor Levy",
       "club": "vcrd",
       "clubTeam": null,
       "status": "current",
@@ -6220,10 +5911,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (eleanor_levy) gives class 2030, hometown Los Angeles, CA, club \"VCRD\", and its TEAMS block names Harvard-Westlake. Rule (a): a page names the player, Ventura County Red Devils (VCRD, Moorpark) and the school (Harvard-Westlake); the class year 2030 agrees with the roster (roster grade 9 = class of 2030). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (the profile is undated). Her own MaxPreps career page (its careerId is the roster row's; claimed by the player or a parent; Harvard-Westlake, graduatingClass 2030) lists one club team: \"VCRD\", club Ventura County Red Devils -VCRD, Moorpark CA, Field Hockey, joined 2026, entered 2026-10-08 and last modified 2026-10-09, which dates the tie: asOf 2026-10-09. Added 2026-10-13 from the read of the 260 claimed MaxPreps pages' club-teams blocks (the entry postdates the 2026-10-06 sweep); the page's other club entries in that read, all field hockey, were already in this file."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
       "playerId": "pbba20946bb",
-      "fullName": "Margaux Schlumberger",
+      "name": "Margaux Schlumberger",
       "club": "htc",
       "clubTeam": null,
       "status": "unknown",
@@ -6250,10 +5939,8 @@
       "basis": "The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under Harvard-Westlake School with the club column and a Class that equals 2027. Her own live SportsRecruits field hockey profile (margaux_schlumberger) gives class 2027, hometown Santa Monica, CA, club \"RUSH DEVILS, VCRD\", and its TEAMS block names Harvard Westlake High School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Harvard-Westlake School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status unknown, not current: the 2025 watchlist (2025-08-28) and her SportsRecruits TEAMS list HTC CA, but the newer 2026 watchlist (2026-08-27) lists her clubs as VCRD, Santa Monica and Bulldogs and no longer HTC; her profile's HTC entry is the third team listed after RUSH DEVILS, VCRD."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
       "playerId": "pbba20946bb",
-      "fullName": "Margaux Schlumberger",
+      "name": "Margaux Schlumberger",
       "club": "vcrd",
       "clubTeam": "RUSH DEVILS",
       "status": "current",
@@ -6296,10 +5983,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Harvard-Westlake High School with the club column and a Class that equals 2027. The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under Harvard-Westlake School with the club column and a Class that equals 2027. Her own live SportsRecruits field hockey profile (margaux_schlumberger) gives class 2027, hometown Santa Monica, CA, club \"RUSH DEVILS, VCRD\", and its TEAMS block names Harvard Westlake High School. Her own MaxPreps career page (same careerId as the roster row; Harvard-Westlake) has a club-teams entry: team \"VCRD\", club \"Ventura County Red Devils -VCRD\", Moorpark CA, Field Hockey, joined 2023, last modified 2024-05-14. Rule (a): a page names the player, Ventura County Red Devils (VCRD, Moorpark) and the school (Harvard-Westlake High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club. 'RUSH DEVILS' is the joint RUSH and VCRD squad name; the club is VCRD because the 2026 watchlist (2026-08-27) and her MaxPreps club entry (Ventura County Red Devils -VCRD, Moorpark) name VCRD, her SportsRecruits CLUB reads 'RUSH DEVILS, VCRD', and she lives in Santa Monica."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
       "playerId": "pbba20946bb",
-      "fullName": "Margaux Schlumberger",
+      "name": "Margaux Schlumberger",
       "club": "wc-riptide",
       "clubTeam": null,
       "status": "unknown",
@@ -6318,10 +6003,8 @@
       "basis": "The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under Harvard-Westlake School with the club column and a Class that equals 2027. Rule (a): a page names the player, West Coast Riptide (Studio City) and the school (Harvard-Westlake School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status unknown: the 2025 watchlist (2025-08-28) prints 'VCRD, HTC, Riptide' and the 2026 list no longer names Riptide. Medium: the page prints only 'Riptide'; it is read as West Coast Riptide because the player attends Harvard-Westlake (Studio City) and that club is based in Studio City, with no other Southern California 'Riptide' club found. It is a nickname for the club, not a full name."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
       "playerId": "pbba20946bb",
-      "fullName": "Margaux Schlumberger",
+      "name": "Margaux Schlumberger",
       "club": "rush",
       "clubTeam": null,
       "status": "unknown",
@@ -6348,10 +6031,8 @@
       "basis": "MAX Field Hockey's athlete page for her gives class of 2027, hometown Santa Monica, CA, high school Harvard-Westlake and club \"Rush\", and MAX's Rush Field Hockey club page (RUSH, San Diego) lists her with Harvard-Westlake, class 2027. Rule (a): a page names the player, RUSH and the school; the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status unknown: neither page dates the listing. Medium: her SportsRecruits CLUB reads 'RUSH DEVILS, VCRD', the joint RUSH and VCRD squad, which this file ties to VCRD, and MAX's 'Rush' may stand for that squad rather than RUSH's own teams. Read 2026-11-16."
     },
     {
-      "teamSlug": "harvard-westlake",
-      "athleteId": "73660d1b-b39a-43eb-bc84-61a790174d8c",
       "playerId": "pf16c4852f1",
-      "fullName": "Minka Mendoza",
+      "name": "Minka Mendoza",
       "club": "vcrd",
       "clubTeam": null,
       "status": "current",
@@ -6370,10 +6051,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (minka_mendoza) gives class 2029, hometown Los Angeles, CA, club \"Ventura County Red Devils\", and its TEAMS block names Harvard-Westlake. Rule (a): a page names the player, Ventura County Red Devils (VCRD, Moorpark) and the school (Harvard-Westlake); the class year 2029 agrees with the roster (roster grade 10 = class of 2029). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). The club is named in full on the page (Ventura County Red Devils)."
     },
     {
-      "teamSlug": "helix",
-      "athleteId": "73d35610-2d5b-41ae-a5fc-0c30d4a1f083",
       "playerId": "pdf73dc2847",
-      "fullName": "Ella Aguayo",
+      "name": "Ella Aguayo",
       "club": "myto",
       "clubTeam": null,
       "status": "current",
@@ -6392,10 +6071,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (ella_aguayo3) gives class 2028, hometown La Mesa, CA, club \"Myto, Myto\", and its TEAMS block names Helix Charter High School. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Helix Charter High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "helix",
-      "athleteId": "1b02dee8-88d4-4dc4-b22d-1eab83b92fbc",
       "playerId": "pdb3c0a2fc5",
-      "fullName": "Madison Hinchman",
+      "name": "Madison Hinchman",
       "club": "myto",
       "clubTeam": "Myto",
       "status": "current",
@@ -6430,10 +6107,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (madison_hinchman2) gives class 2027, hometown La Mesa, CA, club \"Myto, Myto Field Hockey\", and its TEAMS block names Helix Charter High School. SportsRecruits' team page \"Myto\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Helix Charter High School); the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "helix",
-      "athleteId": "86def8a6-d725-4609-bf30-a33ef347f01d",
       "playerId": "pbf6f933950",
-      "fullName": "Zuri Stclair",
+      "name": "Zuri StClair",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -6460,10 +6135,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (zuri_st.clair) gives class 2027, no hometown, club \"Powerhouse U19, Myto Field Hockey\", and its TEAMS block names Helix charter High School. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Helix charter High School); the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "huntington-beach",
-      "athleteId": "baaa1d5d-3092-45a4-9ac4-3cef55a29a1a",
       "playerId": "p6c5a879e77",
-      "fullName": "Grace Moniak",
+      "name": "Grace Moniak",
       "club": "vcrd",
       "clubTeam": "Devils",
       "status": "current",
@@ -6482,10 +6155,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (grace_moniak2) gives class 2029, hometown Huntington Beach, CA, club \"Devils, VCRD\", and its TEAMS block names Huntington Beach High School. Rule (a): a page names the player, Ventura County Red Devils (VCRD, Moorpark) and the school (Huntington Beach High School); the class year 2029 agrees with the roster (roster grade 10 = class of 2029). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). The page names VCRD explicitly (Devils, VCRD), so 'Devils' is VCRD, not RUSH."
     },
     {
-      "teamSlug": "huntington-beach",
-      "athleteId": "2a35aafa-87d9-4ab4-bbc3-a001250e378f",
       "playerId": "p07bbbd6715",
-      "fullName": "Sarah Moniak",
+      "name": "Sarah Moniak",
       "club": "vcrd",
       "clubTeam": "VCRD Devils / Rush Devils",
       "status": "current",
@@ -6520,10 +6191,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (sarah_moniak) gives class 2028, hometown Huntington Beach, CA, club \"VCRD Devils / Rush Devils, Ventura County Red Devils (VCRD)\", and its TEAMS block names Huntington Beach High School. MAX Field Hockey's Huntington Beach High School page lists her (class 2028) with club \"Ventura County Red Devils\". MAX Field Hockey's club page lists her as class 2028, Huntington Beach. Rule (a): a page names the player, Ventura County Red Devils (VCRD, Moorpark) and the school (Huntington Beach High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). The page names VCRD explicitly ('VCRD Devils / Rush Devils, Ventura County Red Devils (VCRD)') and MAX lists her under Huntington Beach High School with club Ventura County Red Devils, so the joint 'Rush Devils' label is resolved to VCRD."
     },
     {
-      "teamSlug": "la-costa-canyon",
-      "athleteId": "256b6ddd-fab1-4586-b63c-7cff31619c96",
       "playerId": "p0561707b29",
-      "fullName": "Madeline Wilcox",
+      "name": "Madeline Wilcox",
       "club": "htc",
       "clubTeam": "U16 Royal Blue High Performance",
       "status": "current",
@@ -6542,10 +6211,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (madeline_wilcox) gives class 2029, hometown Encinitas, CA, club \"U16 Royal Blue High Performance, HTC\", and its TEAMS block names La Costa Canyon. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (La Costa Canyon); the class year 2029 agrees with the roster (roster grade 10 = class of 2029). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "la-jolla",
-      "athleteId": "f999a5f0-0fea-4d22-8fbc-ae3ee98f82a8",
       "playerId": "p1656e0af47",
-      "fullName": "Adalee Branstetter",
+      "name": "Adalee Branstetter",
       "club": "coastal-clash",
       "clubTeam": null,
       "status": "current",
@@ -6564,10 +6231,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (adalee_branstetter2) gives class 2028, hometown San Diego, CA, club \"Coastal Clash\", and its TEAMS block names La Jolla High School. Rule (a): a page names the player, Coastal Clash (San Diego) and the school (La Jolla High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "la-jolla-country-day",
-      "athleteId": "fc416037-115d-4c59-8fae-92d75f3a7b9f",
       "playerId": "pa80250646e",
-      "fullName": "Sonia Melvin",
+      "name": "Sonia Melvin",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -6586,10 +6251,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (sonia_melvin) gives class 2029, hometown San Diego, CA, club \"HTC CA Club\", and its TEAMS block names La Jolla Country Day School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (La Jolla Country Day School); the class year 2029 agrees with the roster (roster grade 10 = class of 2029). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "mission-bay",
-      "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
       "playerId": "pec5e344dc5",
-      "fullName": "Amelia \"Mimi\" Scatena",
+      "name": "Amelia \"Mimi\" Scatena",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -6616,10 +6279,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (amelia_scatena) gives class 2028, hometown San Diego, CA, club \"Powerhouse U19, Myto Field Hockey\", and its TEAMS block names Mission Bay High School. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Mission Bay High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "mission-bay",
-      "athleteId": "e9e4f9ae-c85f-4f11-b5f9-75315930ab0c",
       "playerId": "pdd9d53bccf",
-      "fullName": "Rosalie Orozco",
+      "name": "Rosalie Orozco",
       "club": "htc",
       "clubTeam": "Royal Blue",
       "status": "current",
@@ -6638,10 +6299,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (rosalie_orozco) gives class 2028, hometown Santee, CA, club \"Royal Blue, HTC CA High Performance\", and its TEAMS block names Mission Bay High School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Mission Bay High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "mission-vista",
-      "athleteId": "f017b120-50fa-4193-874c-e44cd99d65b3",
       "playerId": "p5fc2e9df8c",
-      "fullName": "Alessandra Carreno",
+      "name": "Alessandra Carreno",
       "club": "myto",
       "clubTeam": "Powerhouse U16",
       "status": "current",
@@ -6668,10 +6327,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (alessandra_carreno) gives class 2028, no hometown, club \"Powerhouse U16, Myto Field Hockey\" and names no school. SportsRecruits' team page \"Powerhouse U16\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. Rule (b): no page names the school; the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted) and the club is Myto Field Hockey (San Diego), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "mission-vista",
-      "athleteId": "49b1f5e3-256d-490c-b698-04aba285a2fa",
       "playerId": "pa533204e5f",
-      "fullName": "Echo Howard",
+      "name": "Echo Howard",
       "club": "myto",
       "clubTeam": "Myto",
       "status": "current",
@@ -6706,10 +6363,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (echo_howard) gives class 2028, hometown Vista, CA, club \"Myto, Myto Field Hockey\", and its TEAMS block names Mission Vista High School. SportsRecruits' team page \"Myto\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. SportsRecruits' team page \"Powerhouse U16\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Mission Vista High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "mission-vista",
-      "athleteId": "0a11b8a8-b90e-43c5-b35f-296df4a8d0b7",
       "playerId": "p3e715386f5",
-      "fullName": "Thyme Stavis",
+      "name": "Thyme Stavis",
       "club": "myto",
       "clubTeam": "Powerhouse U16",
       "status": "current",
@@ -6736,10 +6391,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (thyme_stavis) gives class 2028, no hometown, club \"Powerhouse U16, Myto Field Hockey\" and names no school. SportsRecruits' team page \"Powerhouse U16\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. Rule (b): no page names the school; the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted) and the club is Myto Field Hockey (San Diego), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "mt-carmel",
-      "athleteId": "4d1e5c99-8ebe-499e-ae5f-5bb7e36421fd",
       "playerId": "p264b14997b",
-      "fullName": "Naiya Abalos",
+      "name": "Naiya Abalos",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -6766,10 +6419,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (naiya_abalos) gives class 2028, hometown San Diego, club \"Rush Devils\" and names no school. RUSH's own Elite Performance Group directory page for her (last modified 2026-07-20) gives graduation year 2028 and names no school. Rule (b): no page names the school; the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted) and the club is RUSH Field Hockey (San Diego), a Southern California club. Status current: the latest dated source is 2026-07-20 (Aug 2025 or later), and nothing newer names another club. Medium: no page names her school; the match rests on class 2028 (roster has no grade) plus RUSH's directory page and a San Diego hometown. 'Rush Devils' on SportsRecruits is the joint squad name; RUSH's own directory page settles the club as RUSH."
     },
     {
-      "teamSlug": "san-dieguito-academy",
-      "athleteId": "fd2a0675-b08c-485a-abb5-b724ce388333",
       "playerId": "pecdef3cf1f",
-      "fullName": "Ella Rennie",
+      "name": "Ella Rennie",
       "club": "coastal-clash",
       "clubTeam": "Elite Team",
       "status": "current",
@@ -6788,10 +6439,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (ella_rennie) gives class 2027, hometown Encinitas, CA, club \"Elite Team, Coastal Clash\", and its TEAMS block names San Dieguito Academy HS. Rule (a): a page names the player, Coastal Clash (San Diego) and the school (San Dieguito Academy HS); the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "san-marcos",
-      "athleteId": "ed23c245-fc84-4024-b8c4-f1938877aaaa",
       "playerId": "p699c081de8",
-      "fullName": "McKenzie Rackleff",
+      "name": "McKenzie Rackleff",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -6826,10 +6475,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (mckenzie_rackleff) gives class 2027, hometown San Marcos, club \"HTC - CA\" and names no school. MAX Field Hockey's San Marcos High School page lists her (class 2027) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2027, San Marcos. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (San Marcos High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "e3548296-e046-490e-a434-5d5737d70aa8",
       "playerId": "pf6d74ba807",
-      "fullName": "Camryn Lathrop",
+      "name": "Camryn Lathrop",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -6848,10 +6495,8 @@
       "basis": "RUSH's own Elite Performance Group directory page for her (last modified 2026-07-14) gives graduation year 2029 and names no school. Rule (b): no page names the school; the class year 2029 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted) and the club is RUSH Field Hockey (San Diego), a Southern California club. Status current: the latest dated source is 2026-07-14 (Aug 2025 or later), and nothing newer names another club. Medium: the only page is RUSH's directory page, which gives class 2029 and no school or hometown; the match rests on that class year (roster has no grade, so any 2027-2030 is accepted) plus the San Diego club."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "811060b3-e14d-42b0-bc9c-6879d7b04d8e",
       "playerId": "pa05d735865",
-      "fullName": "Elenna Eiler",
+      "name": "Elenna Eiler",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -6870,10 +6515,8 @@
       "basis": "RUSH's own Elite Performance Group directory page for her (last modified 2026-07-29) gives graduation year 2027 and names no school. Rule (b): no page names the school; the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted) and the club is RUSH Field Hockey (San Diego), a Southern California club. Status current: the latest dated source is 2026-07-29 (Aug 2025 or later), and nothing newer names another club. Medium: the only page is RUSH's directory page, which gives class 2027 and no school or hometown; the match rests on that class year (roster has no grade, so any 2027-2030 is accepted) plus the San Diego club."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "dac8c08b-6ac2-48aa-a969-60eaa45a99d9",
       "playerId": "p0e905037ec",
-      "fullName": "Lily Cumba",
+      "name": "Liliana Cumba",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -6900,10 +6543,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (lily_cumba) gives class 2028, hometown San Diego, CA, club \"RUSH Devils\", and its TEAMS block names Scripps Ranch High School. RUSH's own Elite Performance Group directory page for her (last modified 2024-11-16) gives graduation year 2028 and names no school. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Scripps Ranch High School); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). The SportsRecruits profile shows 'RUSH Devils' with Scripps Ranch and videos dated July 2026; RUSH's directory page and her NCSA profile ('2026 RUSH Field Hockey (U16 and U19)') settle the club as RUSH San Diego."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "fe657007-2bac-428f-a486-af93022670d2",
       "playerId": "p9dd84023ec",
-      "fullName": "Samantha Ippolito",
+      "name": "Samantha Ippolito",
       "club": "rush",
       "clubTeam": "Commit Performance Group",
       "status": "current",
@@ -6954,10 +6595,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Scripps Ranch High School with the club column and a Class that equals 2027. Her own live SportsRecruits field hockey profile (samantha_ippolito) gives class 2027, hometown San Diego, CA, club \"Rush: Commit Performance Group, 2025 Junior Nexus Championship\", and its TEAMS block names Scripps Ranch. RUSH's own Elite Performance Group directory page for her (last modified 2025-08-22) gives graduation year 2027 and names no school. MAX Field Hockey's Scripps Ranch High School page lists her (class 2027) with club \"Rush\". MAX Field Hockey's club page lists her as class 2027, Scripps Ranch. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Scripps Ranch High School); the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club. The 'Rush' on the watchlist and MAX is RUSH San Diego (Scripps Ranch, San Diego hometown, RUSH directory page)."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "6b4dbd37-656d-4983-9650-be13b4cfe874",
       "playerId": "pd267e13d6c",
-      "fullName": "Vivian Preclaro",
+      "name": "Vivian Preclaro",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -6984,10 +6623,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (vivian_preclaro) gives class 2027, hometown San Diego, club \"HTC - CA\" and names no school. Her FieldLevel profile (Scripps Ranch High School, HS 2027, San Diego) lists 'HTC CA Club/Travel in San Diego, CA Aug 2025 - Present'. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Scripps Ranch High School); the class year 2027 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). The FieldLevel profile names Scripps Ranch High School and lists HTC CA from Aug 2025 to present, which raises the match to high; it also lists Rush for Aug 2022 to Aug 2025 (see the separate past RUSH tie)."
     },
     {
-      "teamSlug": "temecula-valley",
-      "athleteId": "821926b5-2c09-4e4f-a529-8fc3a4813d29",
       "playerId": "pbd0cc826de",
-      "fullName": "Kendall Gann",
+      "name": "Kendall Gann",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -7014,10 +6651,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (kendall_gann) gives class 2027, hometown Temecula, CA, club \"Powerhouse U19, Myto Field Hockey\", and its TEAMS block names temecula valley high school. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (temecula valley high school); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "abe0174c-31c6-4401-a0e8-7cc70c66f2dc",
       "playerId": "p8682e6cca6",
-      "fullName": "Antonella Eduardo",
+      "name": "Antonella Eduardo",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -7036,10 +6671,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (antonella_eduardo) gives class 2028, hometown San Diego, California, club \"HTC CA\", and its TEAMS block names Torrey Pines High School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Torrey Pines High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "a1ff46fb-b63e-4d7b-a825-611706758648",
       "playerId": "p30d519743b",
-      "fullName": "Ava Hauer",
+      "name": "Ava Hauer",
       "club": "htc",
       "clubTeam": "HTC - California",
       "status": "current",
@@ -7106,10 +6739,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Torrey Pines High School with the club column and a Class that equals 2027. The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under Torrey Pines High School with the club column and a Class that equals 2027. Her own live SportsRecruits field hockey profile (ava_hauer) gives class 2027, hometown Del Mar, CA, club \"HTC - California, HTC Field Hockey Club\", and its TEAMS block names Torrey Pines High School. SportsRecruits' team page \"HTC - California\" (club HTC Field Hockey Club, location Madison, Connecticut) lists her in its roster with class 2027. MAX Field Hockey's Torrey Pines High School page lists her (class 2027) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2027, Torrey Pines. Her own MaxPreps career page (same careerId as the roster row; Torrey Pines) has a club-teams entry: team \"HTC CA\", club \"HTC - CA\", San Diego CA, Field Hockey, joined 2023, last modified 2024-10-19. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Torrey Pines High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "316a7db0-9932-4db1-bf3b-3b7b1cb7094b",
       "playerId": "p7dbd91826d",
-      "fullName": "Dylan Rietti",
+      "name": "Dylan Rietti",
       "club": "htc",
       "clubTeam": "HTC - California",
       "status": "current",
@@ -7176,10 +6807,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Torrey Pines High School with the club column and a Class that equals 2027. The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under Torrey Pines High School with the club column and a Class that equals 2027. Her own live SportsRecruits field hockey profile (dylan_rietti) gives class 2027, hometown Rancho Santa Fe, California, club \"HTC - California, HTC Field Hockey Club\", and its TEAMS block names Torrey Pines High School. SportsRecruits' team page \"HTC - California\" (club HTC Field Hockey Club, location Madison, Connecticut) lists her in its roster with class 2027. MAX Field Hockey's Torrey Pines High School page lists her (class 2027) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2027, Torrey Pines. Her own MaxPreps career page (same careerId as the roster row; Torrey Pines) has a club-teams entry: team \"HTC\", club \"HTC - CA\", San Diego CA, Field Hockey, joined 2025, last modified 2025-08-10. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Torrey Pines High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "fd6cbab6-7dc7-4680-a778-3f513977e4b0",
       "playerId": "pd15cd86d16",
-      "fullName": "Izzy Adams",
+      "name": "Izzy Adams",
       "club": "htc",
       "clubTeam": "HTC - California",
       "status": "current",
@@ -7230,10 +6859,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Torrey Pines High School with the club column and a Class that equals 2028. Her own live SportsRecruits field hockey profile (isabelle_adams3) gives class 2028, hometown San Diego, California, club \"HTC - California, HTC Field Hockey Club\", and its TEAMS block names Torrey Pines High School. SportsRecruits' team page \"HTC - California\" (club HTC Field Hockey Club, location Madison, Connecticut) lists her in its roster with class 2028. MAX Field Hockey's Torrey Pines High School page lists her (class 2028) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2028, Torrey Pines. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Torrey Pines High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "ed7559a6-f259-46e7-8354-b8ef489ab6a7",
       "playerId": "p18c43b66a5",
-      "fullName": "Sophie Herman",
+      "name": "Sophie Herman",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -7260,10 +6887,8 @@
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Torrey Pines High School with the club column and a Class that equals 2027. Her own live SportsRecruits field hockey profile (sophie_herman) gives class 2027, hometown San Diego, club \"HTC - CA\" and names no school. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Torrey Pines High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2026-08-27 (Aug 2025 or later), and nothing newer names another club."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "4d7d4149-7771-4a2d-9312-c4557ed78e5e",
       "playerId": "p8ffd277c54",
-      "fullName": "Sophie Sant",
+      "name": "Sophie Sant",
       "club": "rush",
       "clubTeam": "U19",
       "status": "current",
@@ -7314,10 +6939,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (sophie_sant) gives class 2027, hometown Rancho Santa Fe, CA, club \"U19, RUSH\", and its TEAMS block names Varsity - Torrey Pines High School. RUSH's own Elite Performance Group directory page for her (last modified 2024-03-12) gives graduation year 2027 and names no school. MAX Field Hockey's Torrey Pines High School page lists her (class 2027) with club \"Rush\". MAX Field Hockey's club page lists her as class 2027, Torrey Pines. Her own MaxPreps career page (same careerId as the roster row; Torrey Pines) has a club-teams entry: team \"RUSH\", club \"RUSH\", San Diego CA, Field Hockey, joined 2023, last modified 2025-09-07. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Varsity - Torrey Pines High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current: the latest dated source is 2025-09-07 (Aug 2025 or later), and nothing newer names another club. 'U19, RUSH' and 'RUSH Devils NCC/RCC' on the profile are RUSH San Diego: her MaxPreps entry is club RUSH, San Diego, and RUSH's directory and MAX list her."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "580053c7-8b63-47ac-83ca-192a4db10631",
       "playerId": "pd61a5067a4",
-      "fullName": "Victoria Eduardo",
+      "name": "Victoria Eduardo",
       "club": "htc",
       "clubTeam": null,
       "status": "current",
@@ -7352,10 +6975,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (victoria_eduardo2) gives class 2028, hometown San Diego, CA, club \"HTC CA\", and its TEAMS block names Torrey Pines High School. MAX Field Hockey's Torrey Pines High School page lists her (class 2028) with club \"HTC-CA\". MAX Field Hockey's club page lists her as class 2028, Torrey Pines. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Torrey Pines High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "university-city",
-      "athleteId": "849964fc-e6c4-4ac7-adee-137c175e4409",
       "playerId": "pa15adfb44c",
-      "fullName": "Alice Powers",
+      "name": "Alice Powers",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -7382,10 +7003,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (alice_powers) gives class 2028, no hometown, club \"Powerhouse U19, Myto Field Hockey\" and names no school. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2028. Rule (b): no page names the school; the class year 2028 agrees with the roster (roster grade 11 = class of 2028) and the club is Myto Field Hockey (San Diego), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "university-city",
-      "athleteId": "7290d895-bea2-441b-91ae-de2d3fb66a1b",
       "playerId": "pc8600c73fd",
-      "fullName": "Delia Schwab",
+      "name": "Delia Schwab",
       "club": "htc",
       "clubTeam": null,
       "status": "unknown",
@@ -7404,10 +7023,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (delia_schwab) gives class 2028, hometown San Diego, CA, club \"HTC\", and its TEAMS block names University City High School. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (University City High School); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status unknown, not current: the profile's only dated item is the Cal State Games of 2025-07-19, before the 2025-26 season, so nothing dates her with HTC after July 2025."
     },
     {
-      "teamSlug": "university-city",
-      "athleteId": "839b2e4c-26b6-42aa-bbb1-921b731691c8",
       "playerId": "pc0c0fc54ee",
-      "fullName": "Laura Pellegrino",
+      "name": "Laura Pellegrino",
       "club": "coastal-clash",
       "clubTeam": null,
       "status": "unknown",
@@ -7434,10 +7051,8 @@
       "basis": "MAX Field Hockey's University City High School page lists her (class 2030) with club \"Coastal Clash\". MAX Field Hockey's club page lists her as class 2030, University City (CA). Rule (a): a page names the player, Coastal Clash (San Diego) and the school (University City High School); the class year 2030 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). MAX prints her as 'Lala (Laura) Pellegrino', named with University City High School, class 2030; the page is undated, so unknown. The roster row has no grade."
     },
     {
-      "teamSlug": "university-city",
-      "athleteId": "d776acb5-5705-4925-a450-866494c0a614",
       "playerId": "p4db1f08893",
-      "fullName": "Lucia Dewinter",
+      "name": "Lucia Dewinter",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
       "status": "current",
@@ -7464,10 +7079,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (lucia_dewinter) gives class 2027, no hometown, club \"Powerhouse U19, Myto Field Hockey\" and names no school. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. Rule (b): no page names the school; the class year 2027 agrees with the roster (roster grade 12 = class of 2027) and the club is Myto Field Hockey (San Diego), a Southern California club. Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "university-city",
-      "athleteId": "57434e03-9147-45b4-b35b-92f523dcdd7a",
       "playerId": "pfb3905662b",
-      "fullName": "Melanie Flatt",
+      "name": "Melanie Flatt",
       "club": "myto",
       "clubTeam": "Myto",
       "status": "current",
@@ -7502,10 +7115,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (melanie_flatt) gives class 2027, hometown San Diego, CA, club \"Myto, Myto Field Hockey\", and its TEAMS block names University City High School. SportsRecruits' team page \"Myto\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. SportsRecruits' team page \"Powerhouse U19\" (club Myto Field Hockey, location San Diego, California) lists her in its roster with class 2027. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (University City High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated)."
     },
     {
-      "teamSlug": "westview",
-      "athleteId": "8f52e172-ca7c-45ee-a205-e76acf5bc114",
       "playerId": "p72c04e59b2",
-      "fullName": "Brooke Lanski",
+      "name": "Brooke Lanski",
       "club": "htc",
       "clubTeam": "U19 High Performance",
       "status": "current",
@@ -7532,10 +7143,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (brooke_lanski) gives class 2027, hometown San Diego, CA, club \"U19 High Performance, HTC-CA Field Hockey Club\", and its TEAMS block names Westview High School. Her own live SportsRecruits field hockey profile (brooke_lanski2) gives class 2027, hometown San Diego, club \"HTC - CA\" and names no school. Rule (a): a page names the player, HTC California (HTC-CA, which trains in La Jolla and Chula Vista) and the school (Westview High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status current under the live-profile rule: the profile lists the club and shows no sign of being stale (no asOf, since the page is undated). Her profile names Westview and lists the club with a Sep 2026 video, so current."
     },
     {
-      "teamSlug": "westview",
-      "athleteId": "8f52e172-ca7c-45ee-a205-e76acf5bc114",
       "playerId": "p72c04e59b2",
-      "fullName": "Brooke Lanski",
+      "name": "Brooke Lanski",
       "club": "rush",
       "clubTeam": null,
       "status": "unknown",
@@ -7570,10 +7179,8 @@
       "basis": "MAX Field Hockey's Westview High School page lists her (class 2027) with club \"Rush\". MAX Field Hockey's club page lists her as class 2027, Westview. Her own MaxPreps career page (same careerId as the roster row; Westview) has a club-teams entry: team \"Elite Performance Group\", club \"RUSH\", San Diego CA, Field Hockey, joined 2025, last modified 2025-10-28. Rule (a): a page names the player, RUSH Field Hockey (San Diego) and the school (Westview High School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Unknown: her MaxPreps entry (club RUSH, San Diego, team Elite Performance Group, last modified 2025-10-28) and MAX list RUSH, but her newer live SportsRecruits profile (video 2026-09-21) lists HTC-CA, so RUSH is not read as current."
     },
     {
-      "teamSlug": "great-oak",
-      "athleteId": "b26c1656-7097-4a4c-a21b-f0a39f2b0a6b",
       "playerId": "p4c20090131",
-      "fullName": "Isabel Laureles",
+      "name": "Isabel Laureles",
       "club": "myto",
       "clubTeam": "North Orange",
       "status": "unknown",
@@ -7592,10 +7199,8 @@
       "basis": "Her own MaxPreps career page (same careerId as the roster row; Great Oak) has a club-teams entry: team \"North Orange\", club \"Myto Field Hockey Club\", San Diego CA, Field Hockey, joined 2025, last modified 2025-05-04. Rule (a): a page names the player, Myto Field Hockey (San Diego) and the school (Great Oak); the class year 2028 agrees with the roster (roster row has no grade, so any class year 2027-2030 is accepted). Unknown: the MaxPreps entry (club Myto Field Hockey Club, San Diego; team 'North Orange'; last modified 2025-05-04, before the 2025-26 season) has no end date, but her SportsRecruits profile lists HTC (see the HTC tie). The roster row has no grade; the page's class 2028 is accepted."
     },
     {
-      "teamSlug": "mission-hills",
-      "athleteId": "0d5bc983-1b6a-4010-9a2d-585cbfab4d80",
       "playerId": "pca6ac0957d",
-      "fullName": "Cambria Musick",
+      "name": "Cambria Musick",
       "club": "knights-fhc",
       "clubTeam": "Knights U19",
       "status": "current",
@@ -7614,10 +7219,8 @@
       "basis": "Her own MaxPreps career page (same careerId as the roster row; Mission Hills) has a club-teams entry: team \"Knights U19\", club \"Knights FHC\", San Marcos CA, Field Hockey, joined 2024, last modified 2026-09-22. Rule (a): a page names the player, Knights FHC (San Marcos) and the school (Mission Hills); the class year 2028 agrees with the roster (roster grade 11 = class of 2028). Status current: the latest dated source is 2026-09-22 (Aug 2025 or later), and nothing newer names another club. Her MaxPreps page names the club (Knights FHC, San Marcos) and school, and the entry was last modified 2026-09-22."
     },
     {
-      "teamSlug": "la-jolla-country-day",
-      "athleteId": "6897148f-e7a5-4009-90c7-5d69a04272fa",
       "playerId": "pc7ada514ec",
-      "fullName": "Lillia Howe",
+      "name": "Lillia Howe",
       "club": "htc",
       "clubTeam": "D1 U19",
       "status": "unknown",
@@ -7636,10 +7239,8 @@
       "basis": "Her own NCSA field hockey profile names her, La Jolla Country Day School (La Jolla, CA) and class '27 (roster grade 12 = class of 2027), with the headline 'Club HTC (CA)' and the entry '2027 HTC (CA) (D1, U19) - Played in CalCup, placed 2nd'. Rule (a) is met on one first-hand page. Status unknown rather than current: the profile is undated, the entry's year label '2027' is not a season, and its dated items (Cal Cup 2025-05-23 to 05-26, a '2025 Varsity Team' line) are from 2025, so nothing shows she is with HTC in 2025-26. HTC (CA) is HTC California (La Jolla and Chula Vista), the club in clubs[] as htc."
     },
     {
-      "teamSlug": "la-jolla-country-day",
-      "athleteId": "6897148f-e7a5-4009-90c7-5d69a04272fa",
       "playerId": "pc7ada514ec",
-      "fullName": "Lillia Howe",
+      "name": "Lillia Howe",
       "club": "myto",
       "clubTeam": "U14, U16 and U19",
       "status": "past",
@@ -7658,10 +7259,8 @@
       "basis": "Her own NCSA field hockey profile names her, La Jolla Country Day School and class '27 (roster grade 12 = class of 2027) and lists Myto (U14, U16 and U19) for 2021 and 2022, so rule (a) is met on one first-hand page. Past: both entries are earlier years (the profile's current club is HTC (CA)). 'Myto' is Myto Field Hockey, San Diego, the only Southern California club of that name found."
     },
     {
-      "teamSlug": "mission-hills",
-      "athleteId": "0f34fb61-0178-4989-883a-2bcd6d8c747d",
       "playerId": "pd8f9c7527a",
-      "fullName": "Jasmine Harris",
+      "name": "Jasmine Harris",
       "club": "knights-fhc",
       "clubTeam": "U19",
       "status": "current",
@@ -7680,10 +7279,8 @@
       "basis": "Her own NCSA field hockey profile names her, Mission Hills High School (San Marcos, CA; roster team Mission Hills, San Marcos), class '28 (roster grade 11 = class of 2028) and club Knights FHC, entry '2026 Knights FHC (U19)'; its personal statement says she joined the Knights Field Hockey Club in spring and played its summer tournaments, and an event dated 8/08/26 is listed. Rule (a) met on one first-hand page. 'Knights FHC' is the San Marcos Knights Field Hockey Club (knights-fhc), a San Marcos club, matching her San Marcos hometown. Current: the 2026 entry on a live profile with 2026 events."
     },
     {
-      "teamSlug": "mt-carmel",
-      "athleteId": "c504d11d-dbaf-4559-ab7c-184b70ecab57",
       "playerId": "p9311376789",
-      "fullName": "Lizbeth Araujo Duran",
+      "name": "Lizbeth Araujo Duran",
       "club": "coastal-clash",
       "clubTeam": "Mixed",
       "status": "past",
@@ -7702,10 +7299,8 @@
       "basis": "Her own NCSA field hockey profile names her, Mt. Carmel High School (San Diego, CA, phone 858) and class '27, and lists club Coastal Clash Field Hockey with one season, '2024 Coastal Clash Field Hockey (Mixed)'. The roster row has no grade, so class 2027 is accepted; the school is named, so rule (a) is met. Past: the only club entry is 2024 (and her school lines are JV 2023 and 2024); the headline 'Club' line is undated. Coastal Clash is the San Diego club (coastal-clash)."
     },
     {
-      "teamSlug": "patrick-henry",
-      "athleteId": "e7c3dc88-3166-4c18-a414-bb96f8eeb0eb",
       "playerId": "p5121400843",
-      "fullName": "Tina Hague",
+      "name": "Tina Hague",
       "club": "coastal-clash",
       "clubTeam": "Middle School Club Team",
       "status": "past",
@@ -7724,10 +7319,8 @@
       "basis": "Her own NCSA field hockey profile names her, Patrick Henry High School (San Diego, CA, phone 619; roster Patrick Henry, San Diego) and class '27 (roster grade 12 = class of 2027), and lists '2022 Coastal Clash Field Hockey Club (Middle School Club Team)', a small team that represented Pershing Middle at Coastal Clash tournaments. Rule (a) met. Past: one 2022 season; her other sport entry (lacrosse) is not a club here. Coastal Clash is the San Diego club (coastal-clash)."
     },
     {
-      "teamSlug": "san-marcos",
-      "athleteId": "97428ee8-743d-483a-ac09-faae1e8c50c9",
       "playerId": "p56f7df75ef",
-      "fullName": "Sophie Zammit",
+      "name": "Sophie Zammit",
       "club": "knights-fhc",
       "clubTeam": "Varsity",
       "status": "unknown",
@@ -7754,10 +7347,8 @@
       "basis": "Her own FieldLevel profile (HS 2028, San Marcos, CA; Teams: Knights FHC 'Dec 2024 - Present' and San Marcos High School 'Aug 2024 - Present') and her own NCSA profile (San Marcos High School, class '28, club Knights FHC, entry '2024 Knights FHC (Varsity)') both name her, the school and the club; roster grade 11 = class of 2028. Rule (a) met. Status unknown rather than current: neither profile is dated past January 2025 (FieldLevel's reference is 'Last updated January 25, 2025', its timeline 'updated Jan 25'; the NCSA entry is 2024), so 'Present' cannot be tied to 2025-26 even though the club itself is active in 2026. Knights FHC is the San Marcos Knights Field Hockey Club (knights-fhc)."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "6b4dbd37-656d-4983-9650-be13b4cfe874",
       "playerId": "pd267e13d6c",
-      "fullName": "Vivian Preclaro",
+      "name": "Vivian Preclaro",
       "club": "rush",
       "clubTeam": null,
       "status": "past",
@@ -7776,10 +7367,8 @@
       "basis": "Her own FieldLevel profile (HS 2027, San Diego, CA) lists the team 'Rush Club/Travel in San Diego, CA Aug 2022 - Aug 2025' beside Scripps Ranch High School (Aug 2023 - Present), so rule (a) is met; the roster row has no grade and class 2027 is accepted. Past: the entry ended in Aug 2025, when she joined HTC CA (the HTC tie, T052). 'Rush' in San Diego is RUSH Field Hockey; the page says San Diego, so there is no 'Rush Devils' ambiguity."
     },
     {
-      "teamSlug": "mission-bay",
-      "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
       "playerId": "pec5e344dc5",
-      "fullName": "Amelia \"Mimi\" Scatena",
+      "name": "Amelia \"Mimi\" Scatena",
       "club": "coastal-clash",
       "clubTeam": "Elite U16",
       "status": "past",
@@ -7798,10 +7387,8 @@
       "basis": "Her own NCSA field hockey profile names her ('Amelia \"Mimi\" Scatena', the roster's name), Mission Bay High School (San Diego, CA) and class '28, club Coastal Clash Field Hockey with one season, '2024 Coastal Clash Field Hockey (Elite U16)' (its events say she played the U16 team at the 2024 California Cup and the 2024 State Games). The roster row has no grade, so class 2028 is accepted; the school is named, so rule (a) is met. Past: the entry is 2024; her SportsRecruits profile lists Myto Powerhouse U19 now (the Myto tie, T039)."
     },
     {
-      "teamSlug": "scripps-ranch",
-      "athleteId": "dac8c08b-6ac2-48aa-a969-60eaa45a99d9",
       "playerId": "p0e905037ec",
-      "fullName": "Lily Cumba",
+      "name": "Liliana Cumba",
       "club": "coastal-clash",
       "clubTeam": "U14, U12",
       "status": "past",
@@ -7820,10 +7407,8 @@
       "basis": "Her own NCSA field hockey profile names her, Scripps Ranch High School (San Diego, CA) and class '28, and lists '2022 Coastal Clash (U14, U12)' (her first year in field hockey) before five seasons with RUSH Field Hockey. The roster row has no grade, so class 2028 is accepted; the school is named, so rule (a) is met. Past: one 2022 season; she is a RUSH player now (the RUSH tie, T049)."
     },
     {
-      "teamSlug": "torrey-pines",
-      "athleteId": "59c4c532-7ac4-4257-b0c1-db8b103e8a22",
       "playerId": "p928115d070",
-      "fullName": "Abigail Karlander",
+      "name": "Abigail Karlander",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
       "status": "current",
@@ -7850,10 +7435,8 @@
       "basis": "No page names Torrey Pines, so this rests on the revised nickname rule (owner decision of 2026-10-06), not on the school. RUSH's own Elite Performance Group directory page for 'Abby Karlander' gives graduation year 2029 and position B/M (page last modified 2026-07-15) and names no school; RUSH Field Hockey is an Encinitas, San Diego-region club, so class year 2029 (the roster's grade 10) plus a Southern California club meets the linking rule. 'Abby' is the standard short form of 'Abigail', same surname. The backing beyond the name is her SportsRecruits field hockey profile (slug abby_karlander, class of 2029, hometown shown as 'San Diego, 11v11 Roster Member', club and TEAMS 'Rush Devils (225539)', events RCC Region 11 U16 May 2026 and National Club Championship U16 June 2026): it names the same player, the same class year and a San Diego hometown, and 'Rush Devils' is the joint RUSH/VCRD squad, so on its own it ties her to neither club (the RUSH directory page is what names RUSH). The weak point: strictly that profile does not name RUSH, so the backing is the second page naming the same player and class year with a squad built from RUSH players, not a second page naming RUSH. Her MaxPreps career and bio pages (Torrey Pines, class 2029) have an empty club-teams block, and she is not yet tied to a club in data/clubs.json, so those two backings are unavailable. Same-name check: the RUSH directory has one Karlander; SportsRecruits has abby_karlander only (abigail_karlander, abby_karlander2 and abby_karlander3 are Page Not Found); no Karlander is on the NFHCA 2026 watchlist or FH College Path's 2027 list; the roster has one Karlander (grade 10, class of 2029, which agrees with both pages). Status current: RUSH page modified 2026-07-15 and the profile lists 2026 events. Medium: nickname plus class year plus club location, no school named."
     },
     {
-      "teamSlug": "corning",
-      "athleteId": "3cecbdcc-6db6-4e68-b520-68de276cd744",
       "playerId": "pbf3b29100e",
-      "fullName": "Aliza Thuemler",
+      "name": "Aliza Thuemler",
       "club": "chico-hotshots",
       "clubTeam": null,
       "status": "current",
@@ -7872,10 +7455,8 @@
       "basis": "Action News Now's Scholar Athlete of the Month story (Aug 5, 2026) names Aliza Thuemler, a Corning High School senior (class of 2027 in the 2026-27 season, agreeing with roster grade 12), and says she has played field hockey for the Chico Hotshots since age 6; she adds 'I play field hockey in Chico, I do [the Hotshots] which starts in January, February, and ends in May.' One first-hand page names player, club and school, so high; the story is dated August 2026, so current, asOf the story's date. statedClassYear 2027 is derived from 'senior' in a story published before the 2026-27 school year began ('her final year of high school ahead of the first day next week'). Her claimed MaxPreps career page has an empty club-teams block (absence, not contradiction). This is the story DATA-SOURCES §1.1j2 mentions under 'Corning has no roster rows'; Corning's rows now exist. Read twice on 2026-11-26. Read 2026-11-26."
     },
     {
-      "teamSlug": "convent-sacred-heart",
-      "athleteId": "922fe75b-7810-49d1-9161-9a72c5e6c9ea",
       "playerId": "pbbda31df73",
-      "fullName": "Alexandra Dorf",
+      "name": "Alexandra Dorf",
       "club": "sf-hawks",
       "clubTeam": null,
       "status": "current",
@@ -7894,10 +7475,8 @@
       "basis": "The SF Youth Field Hockey Club's current-players page lists Alexandra Dorf (Defense, #51) under its 'Class of 2029' heading. The page names no school and no date, so the tie rests on the class year (2029, agreeing with roster grade 10) plus a San Francisco club for a San Francisco school (Convent of the Sacred Heart): medium, as with the five earlier SF Hawks class-heading ties; current, as a club's current-players page. Her club number (#51) differs from her Convent number (#30), which is no contradiction. No other page found names her with the club: no SportsRecruits field hockey page, no MAX page, not on the NFHCA 2026 watchlist or Stick Together. Namesake check: Hudl has two Alexandra Dorf pages on Encore Volleyball teams in Redwood City (no class year) and SportsRecruits a bare volleyball page; none contradicts. The page has one Dorf. Read twice on 2026-11-26. Read 2026-11-26."
     },
     {
-      "teamSlug": "mt-carmel",
-      "athleteId": "04297bff-1828-443f-bfb2-b7c5374cb0af",
       "playerId": "p433a5f9a28",
-      "fullName": "Aashi Gauba",
+      "name": "Aashi Gauba",
       "club": "htc",
       "clubTeam": "HTC - California",
       "status": "current",
@@ -7946,12 +7525,70 @@
         }
       ],
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Mt. Carmel High School with club HTC and Class Senior (class of 2027, the roster's grade 12). Her own live SportsRecruits field hockey profile (aashi_gauba) gives class 2027, hometown Poway, CA, club \"HTC - California, HTC Field Hockey Club\", and its TEAMS block names Mt. Carmel High. SportsRecruits' team page \"HTC - California\" lists her (2027, Goalie). Her FieldLevel profile lists Mt. Carmel High School and \"HTC CA, Club/Travel in San Diego, CA\", both Active. Her NCSA profile (Mt. Carmel, '27) lists one club season, 2024 \"HTC Field Hockey MA (High performance (U16))\", read as HTC's High Performance program (alias \"HTC High Performance\"). Rule (a): pages name the player, HTC and the school; every stated class year is 2027. Status current: the watchlist is dated after August 2025 and the live profiles list the club. Not used: USA Field Hockey's 2026 National Club Championship all-star list (2026-07-13) prints \"Aashi Gauba IFHCK\" in the U-19 list, with no school or class year and no club record for IFHCK (a guest or event squad); the newer watchlist names HTC, so HTC stays current. Her MaxPreps club-teams block is empty. Read 2026-11-26."
-    }
-  ],
-  "listedAffiliations": [
+    },
     {
-      "teamSlug": "marina",
-      "fullName": "Anna Schwab",
+      "playerId": "p084197fe15",
+      "name": "Casey Moorehouse",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact and also SF Hawks CLUB … TEAMS NorCal Impact and also SF Hawks 3 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, and lists Los Gatos High School and, as her CLUB and under TEAMS, 'NorCal Impact and also SF Hawks'. Her bio, written in 8th grade, names her older sister Mary Elizabeth \"Lizzie\" Moorehouse, a Los Gatos varsity player tied to NorCal Impact. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile listing the club with no end date, so current under the live-profile rule."
+    },
+    {
+      "playerId": "p084197fe15",
+      "name": "Casey Moorehouse",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact and also SF Hawks CLUB … TEAMS NorCal Impact and also SF Hawks 3 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, and lists Los Gatos High School and, as her CLUB and under TEAMS, 'NorCal Impact and also SF Hawks'. Her bio, written in 8th grade, names her older sister Mary Elizabeth \"Lizzie\" Moorehouse, a Los Gatos varsity player tied to NorCal Impact; SF Hawks is the San Francisco Youth Field Hockey Club. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05, since the club block is rendered by script. A live profile listing the club with no end date, so current under the live-profile rule."
+    },
+    {
+      "playerId": "pd416f5a7f4",
+      "name": "Colette von Klemperer",
+      "club": "norcal-impact",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/colette_von_klemperer",
+          "kind": "sportsrecruits",
+          "quote": "2029 GRAD YR Los Gatos, CA HOMETOWN NorCal Impact CLUB … My name is Colette (Coco) von Klemperer, Class of 2029 at Los Gatos High School and also a member of the NorCal Impact club team. … TEAMS NorCal Impact 21 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2029 (agrees with grade 10) and Los Gatos, CA, names NorCal Impact as her CLUB and under TEAMS beside Los Gatos High School, and her bio says she is Class of 2029 at Los Gatos High School and a member of the NorCal Impact club team. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05; a live profile, so current under the live-profile rule."
+    },
+    {
+      "playerId": "p42a1709039",
+      "name": "Anna Schwab",
       "club": "vcrd",
       "clubTeam": null,
       "status": "current",
@@ -7970,8 +7607,8 @@
       "basis": "Her own live SportsRecruits field hockey profile (anna_schwab) gives class 2028 and hometown Huntington Beach, its CLUB block reads \"VCRD, VCRD\" and its TEAMS block lists VCRD (#27) and Marina High School. The page names the player, Ventura County Red Devils (VCRD) and the school, so it meets the rule; high, as her own profile naming the school. Current under the live-profile rule (videos dated 2025-08 and 2026-03, events through June 2026; the page itself is undated, so no asOf). A third TEAMS card, \"Bull Dogs\" (#75), has no club label or date and is not tied (the bare-team-card rule). No grade exists to check 2028 against (MaxPreps lists no Marina players); her statement (10th grade in fall 2025) agrees. clubTeam is none: the block repeats the club name, as for Eleanor Levy’s VCRD tie. A listed player (Marina’s athletics site’s 2026 varsity list; MaxPreps lists nobody for the team): no MaxPreps row, so named by team and listed name. Re-opened by an independent refuter. Read 2026-11-26."
     },
     {
-      "teamSlug": "newport-harbor",
-      "fullName": "Kate Shepherd",
+      "playerId": "p655380d9e6",
+      "name": "Kate Shepherd",
       "club": "vcrd",
       "clubTeam": "VCRD/Rush Devils",
       "status": "current",

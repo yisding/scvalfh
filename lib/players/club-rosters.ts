@@ -54,7 +54,7 @@
 import { z } from 'zod';
 
 import { slugId } from '../schema-primitives';
-import type { ClubRegion, ClubsFile } from './clubs-schema';
+import type { ClubRegion, ClubsView } from './clubs-schema';
 import { nameKey } from './name-compare';
 
 /** The kind an affiliation source built from the kept copy carries (lib/players/clubs-schema.ts CLUB_SOURCE_KINDS). */
@@ -334,12 +334,13 @@ export const rosterName = (p: Pick<ClubRosterPlayer, 'firstName' | 'lastName'>):
 /**
  * Every high school row a roster row shares a name with, and what the league-roster rule makes of it
  * (see the header): one entry per row and tier that has a roster row under the name. `clubs` is the
- * clubs file the ties are read from: a varsity row's in `affiliations`, a JV row's in `jvAffiliations`.
+ * clubs file the ties are read from, as lib/players/clubs.ts serves it: a varsity row's in `affiliations`, a JV row's in
+ * `jvAffiliations`.
  */
 export function compareClubRosters(
   file: ClubRostersFile,
   rows: readonly SchoolRow[],
-  clubs: Pick<ClubsFile, 'clubs' | 'affiliations'> & Partial<Pick<ClubsFile, 'jvAffiliations'>>,
+  clubs: Pick<ClubsView, 'clubs' | 'affiliations'> & Partial<Pick<ClubsView, 'jvAffiliations'>>,
 ): CompareRow[] {
   const byName = new Map<string, RosterHit[]>();
   for (const team of file.teams) {

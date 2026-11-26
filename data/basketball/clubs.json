@@ -1,7 +1,6 @@
 {
   "builtBy": "Research by hand, 2026-11-21: the club records from each club's own website (and the adidas 3SSB program directory); the ties from the players' Prep Hoops pages and articles, their Hudl, NCSA, SportsRecruits and MaxPreps career pages. Every tie's every source was re-read at assembly; no script rebuilds this file.",
   "capturedAt": "2026-11-21",
-  "season": "26-27",
   "notes": [
     "The travel (AAU) basketball clubs that players on the 58 boys basketball rosters MaxPreps lists so far are tied to. The linking rule is field hockey's (README, \"Clubs\"): a public page must name the player and a basketball club or program, and either name the player's high school (with the right city where a school of the name exists elsewhere), or give the roster's class year with a hometown in the school's own area. A name alone never counts, a class year that disagrees with the roster rules a match out (except one a year ahead of a roster grade that is last season's: see data/basketball/rosters-enrichment.json), and social media is never a source.",
     "Club records (13): written from each club's own site, or the adidas 3SSB program directory, for the clubs our players' pages name, the programs the circuits list near the schools, and those met on the way. No public directory lists the boys' travel programs of any area (the Nike EYBL team list is an image, Puma's and others are drawn by script or refuse automated reads), so no area was searched for every club: the Peninsula and the South Bay most, San Francisco, the East Bay and Marin only for clubs a player's page names. No club based in Santa Cruz County was found. No record names a coach.",
@@ -586,13 +585,10 @@
       "checkedOn": "2026-11-21"
     }
   ],
-  "jvAffiliations": [],
-  "affiliations": [
+  "memberships": [
     {
-      "teamSlug": "homestead",
-      "athleteId": "0008989b-829b-4464-a4d3-b193d1c6ea28",
       "playerId": "p1312c5fc25",
-      "fullName": "Camden Maylard",
+      "name": "Camden Maylard",
       "club": "san-jose-spartans",
       "clubTeam": null,
       "status": "unknown",
@@ -611,10 +607,8 @@
       "basis": "Prep Hoops player page (server HTML) names Camden Maylard, class of 2028, who attends Homestead (linked to the Prep Hoops team page titled \"Homestead High School Basketball | Cupertino, CA | Prep Hoops\", the right city) and \"plays club basketball for San Jose Spartans\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops (prephoops.com) player page says he 'attends Homestead … and plays club basketball for San Jose Spartans'; the school is confirmed by the page's team link (Cupertino, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "los-gatos",
-      "athleteId": "ea7b1625-2a03-43e0-9afb-6f6c2a4017e9",
       "playerId": "pdd52a98c07",
-      "fullName": "Milos Grabovac",
+      "name": "Milos Grabovac",
       "club": "silicon-valley-soldiers",
       "clubTeam": "Soldiers",
       "status": "unknown",
@@ -633,10 +627,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Los Gatos (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The page is not claimed, though the block is filled in."
     },
     {
-      "teamSlug": "los-gatos",
-      "athleteId": "9eec6156-fafe-4c6e-9a1a-24d897d23291",
       "playerId": "p66088c7d89",
-      "fullName": "Q Zhao",
+      "name": "Q Zhao",
       "club": "oakland-soldiers",
       "clubTeam": "Soldiers",
       "status": "unknown",
@@ -655,10 +647,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Los Gatos (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date."
     },
     {
-      "teamSlug": "milpitas",
-      "athleteId": "c43b5806-8635-42dc-9cf8-91d4b9417cff",
       "playerId": "pe767da4f0e",
-      "fullName": "Pranav Krishnan",
+      "name": "Pranavram Krishnan",
       "club": "silicon-valley-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -685,10 +675,8 @@
       "basis": "Prep Hoops player page (server HTML) names Pranav Krishnan, class of 2027, who attends Milpitas (linked to the Prep Hoops team page titled \"Milpitas High School Basketball | Milpitas, CA | Prep Hoops\", the right city) and \"plays club basketball for SV Soldiers\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Milpitas … and plays club basketball for SV Soldiers'; the school is confirmed by the page's team link (Milpitas, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "mountain-view",
-      "athleteId": "989094b8-6117-418c-a377-195d808faa78",
       "playerId": "p9decd43dcc",
-      "fullName": "Diego Inocencio",
+      "name": "Diego Inocencio",
       "club": "san-jose-spartans",
       "clubTeam": "2027",
       "status": "past",
@@ -707,10 +695,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Mountain View (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season. The page is not claimed, though the block is filled in."
     },
     {
-      "teamSlug": "mountain-view",
-      "athleteId": "7a28bb46-3336-4b88-b17b-bea3e1b385a0",
       "playerId": "pe170f45992",
-      "fullName": "Silas Yamaguma",
+      "name": "Silas Yamaguma",
       "club": "san-jose-spartans",
       "clubTeam": "CA) (16U",
       "status": "unknown",
@@ -729,10 +715,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "fremont",
-      "athleteId": "f57b35ee-42f0-4491-8975-90886bcc4f39",
       "playerId": "p568c187adf",
-      "fullName": "Roy Freikorn",
+      "name": "Roy Freikorn",
       "club": "hoopright",
       "clubTeam": "Black",
       "status": "unknown",
@@ -751,10 +735,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "los-altos",
-      "athleteId": "7cd705ac-14f1-4c2b-925a-c60b2784f9ea",
       "playerId": "p558a2bc50e",
-      "fullName": "Daren Frei",
+      "name": "Daren Frei",
       "club": "silicon-valley-soldiers",
       "clubTeam": "Soldiers",
       "status": "unknown",
@@ -773,10 +755,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Los Altos (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date."
     },
     {
-      "teamSlug": "santa-clara",
-      "athleteId": "fd077c8c-dfc1-47ed-95eb-c9e85527d0c5",
       "playerId": "p8f882bd7eb",
-      "fullName": "Ibrahim Abdelrahman",
+      "name": "Ibrahim Abdelrahman",
       "club": "oakland-soldiers",
       "clubTeam": "Oakland joined",
       "status": "unknown",
@@ -795,10 +775,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Santa Clara (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "43ba5278-dc64-49d4-b380-d474d14187f8",
       "playerId": "pce3f3ff554",
-      "fullName": "Bodie Kay",
+      "name": "Bodie Kay",
       "club": "silicon-valley-soldiers",
       "clubTeam": "Silicon Valley Soldiers",
       "status": "current",
@@ -817,10 +795,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Christopher (Gilroy, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026. The page is not claimed, though the block is filled in."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "43ba5278-dc64-49d4-b380-d474d14187f8",
       "playerId": "pce3f3ff554",
-      "fullName": "Bodie Kay",
+      "name": "Bodie Kay",
       "club": "team-esface",
       "clubTeam": "College Prep Elite",
       "status": "unknown",
@@ -855,10 +831,8 @@
       "basis": "The player's Hudl profile (on the school's own basketball team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Redwood City, CA. Prep Hoops player page (server HTML) names Bodie Kay, class of 2028, who attends Christopher (linked to the Prep Hoops team page titled \"Christopher High School Basketball | Gilroy, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Esface\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date."
     },
     {
-      "teamSlug": "christopher",
-      "athleteId": "2f99c9e4-8244-4e70-a0c9-49591c39975b",
       "playerId": "p0363167df7",
-      "fullName": "Colton Dirks",
+      "name": "Colton Dirks",
       "club": "silicon-valley-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -877,10 +851,8 @@
       "basis": "Prep Hoops player page (server HTML) names Colton Dirks, class of 2029, who attends Christopher (linked to the Prep Hoops team page titled \"Christopher High School Basketball | Gilroy, CA | Prep Hoops\", the right city) and \"plays club basketball for Silicon Valley Soldiers\". The class year agrees with the roster (2029). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops (prephoops.com) player page says he 'attends Christopher … and plays club basketball for Silicon Valley Soldiers'; the school is confirmed by the page's team link (Gilroy, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "leigh",
-      "athleteId": "c5458216-5ab8-46ab-9c57-48da55448995",
       "playerId": "pe850549b6c",
-      "fullName": "Deniz Dikici",
+      "name": "Deniz Dikici",
       "club": "silicon-valley-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -907,10 +879,8 @@
       "basis": "Prep Hoops player page (served HTML) names Deniz Dikici, class of 2028, who attends Leigh (team page \"Leigh High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown. The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Leigh (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season."
     },
     {
-      "teamSlug": "piedmont-hills",
-      "athleteId": "4a49fe30-e740-4c7e-8433-c4bd1118d0be",
       "playerId": "p99b0e9e7ff",
-      "fullName": "Theoren Djurovic",
+      "name": "Theoren Djurovic",
       "club": "silicon-valley-soldiers",
       "clubTeam": "Grassroots365 Silver Division",
       "status": "unknown",
@@ -929,10 +899,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "07b6b1cf-6339-4b1f-abfc-80e70377b186",
       "playerId": "pfa282ef7df",
-      "fullName": "Brady Clugage",
+      "name": "Brady Clugage",
       "club": "team-esface",
       "clubTeam": null,
       "status": "unknown",
@@ -951,10 +919,8 @@
       "basis": "A Prep Hoops article of 2026-01-19 lists him in the class of 2027 and its evaluation card reads \"School: Archbishop Mitty Club: Team Esface\" (served HTML). The class is a grade above the one MaxPreps' 2026-27 roster still shows: accepted on the row's stale-grade conflict. An article's date does not date the club line, so status unknown."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "5b8a9202-72da-4913-b3ca-da659793e9d5",
       "playerId": "p6a5bbbd3d4",
-      "fullName": "Isaac Turner",
+      "name": "Isaac Turner",
       "club": "team-esface",
       "clubTeam": "College Prep Elite",
       "status": "unknown",
@@ -973,10 +939,8 @@
       "basis": "The player's Hudl profile (on Archbishop Mitty High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "3cdd4460-8116-43c2-8f2f-1e94f40e1797",
       "playerId": "pcb2347bb67",
-      "fullName": "Joey Jennings",
+      "name": "Joey Jennings",
       "club": "team-esface",
       "clubTeam": null,
       "status": "unknown",
@@ -995,10 +959,8 @@
       "basis": "Prep Hoops player page (served HTML) names Joey Jennings, class of 2028, who attends Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "49b1fb04-a6a7-4ff1-a6da-63d51f6f4e8a",
       "playerId": "p649647eae1",
-      "fullName": "Joshua Chin-Wong",
+      "name": "Joshua Chin-Wong",
       "club": "san-jose-spartans",
       "clubTeam": null,
       "status": "unknown",
@@ -1017,10 +979,8 @@
       "basis": "Prep Hoops player page (served HTML) names Joshua Chin-Wong, class of 2027, who attends Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
     },
     {
-      "teamSlug": "mitty",
-      "athleteId": "a45e7646-da8a-4f82-b2e3-27cd407615d6",
       "playerId": "p67d1e0dc47",
-      "fullName": "Silas Brizard",
+      "name": "Silas Brizard",
       "club": "team-esface",
       "clubTeam": null,
       "status": "unknown",
@@ -1039,10 +999,8 @@
       "basis": "Prep Hoops player page (served HTML) names Silas Brizard, class of 2028, who attends Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "4c98f5dd-eac9-4610-aa7e-66c0c886ae37",
       "playerId": "p0b8e252f03",
-      "fullName": "Blake Poole",
+      "name": "Blake Poole",
       "club": "lakeshow",
       "clubTeam": null,
       "status": "unknown",
@@ -1085,10 +1043,8 @@
       "basis": "Prep Hoops player page (server HTML) names Blake Poole, class of 2029, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Lakeshow\". The class year agrees with the roster (2029). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 3 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Lakeshow'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "4c98f5dd-eac9-4610-aa7e-66c0c886ae37",
       "playerId": "p0b8e252f03",
-      "fullName": "Blake Poole",
+      "name": "Blake Poole",
       "club": "team-lillard",
       "clubTeam": "CA) (ADDIDAS 3SSB",
       "status": "current",
@@ -1107,10 +1063,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "90767b4a-e7a5-4c76-823b-49f80c14ca31",
       "playerId": "p57cdad94e7",
-      "fullName": "Cole White",
+      "name": "Cole White",
       "club": "team-lillard",
       "clubTeam": null,
       "status": "unknown",
@@ -1161,10 +1115,8 @@
       "basis": "Prep Hoops player page (server HTML) names Cole White, class of 2027, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Lillard\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 4 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Team Lillard'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "42342be0-7332-49d1-9f65-7929de077ff4",
       "playerId": "pe0d69e1abd",
-      "fullName": "Emmanuel Ahamefule",
+      "name": "Emmanuel Ahamefule",
       "club": "team-lillard",
       "clubTeam": null,
       "status": "unknown",
@@ -1207,10 +1159,8 @@
       "basis": "Prep Hoops player page (server HTML) names Emmanuel Ahamefule, class of 2027, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Lillard\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 3 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Team Lillard'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "04ae6dbd-bd5b-48ed-a33f-86494accfd3b",
       "playerId": "p46ece5c770",
-      "fullName": "Isaiah Howard",
+      "name": "Isaiah Howard",
       "club": "bay-city-basketball",
       "clubTeam": null,
       "status": "unknown",
@@ -1237,10 +1187,8 @@
       "basis": "Prep Hoops player page (server HTML) names Isaiah Howard, class of 2029, who attends Archbishop Riordan (not linked to a team page) and \"plays club basketball for Bay City\". The class year agrees with the roster (2029). The school is named in the sentence but not linked to a team page, so the city is not on this page; Prep Hoops' 2026 article evaluation cards for him read \"State: Northern California School: Archbishop Riordan\". Archbishop Riordan has namesakes elsewhere, hence medium. The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "a34ae929-a782-4ac4-80d4-11062b2c95bb",
       "playerId": "pb80d47983a",
-      "fullName": "Judah Van Ewjik",
+      "name": "Judah Van Ewjik",
       "club": "oakland-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -1259,10 +1207,8 @@
       "basis": "Prep Hoops player page (server HTML) names Judah Van Ewijk, class of 2029, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Oakland Soldiers\". The class year agrees with the roster (2029). The page spells the name 'Judah Van Ewijk'; the roster has 'Judah Van Ewjik': kept because school, class year and team page agree (medium on this page alone). The page gives no date for the club line (only the profile's creation date), so the status is unknown."
     },
     {
-      "teamSlug": "riordan",
-      "athleteId": "d8199c47-1df8-4e5d-ad6f-1e161114db90",
       "playerId": "p1e61227e3d",
-      "fullName": "Sean Porter",
+      "name": "Sean Porter",
       "club": "bay-city-basketball",
       "clubTeam": null,
       "status": "unknown",
@@ -1305,10 +1251,8 @@
       "basis": "Prep Hoops player page (server HTML) names Sean Porter, class of 2027, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Bay City\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 3 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Bay City'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "bellarmine",
-      "athleteId": "e893032d-639a-41b5-a151-834257346e49",
       "playerId": "p6efd88a183",
-      "fullName": "Benjamin Vo",
+      "name": "Benjamin Vo",
       "club": "san-jose-spartans",
       "clubTeam": null,
       "status": "unknown",
@@ -1327,10 +1271,8 @@
       "basis": "Prep Hoops player page (server HTML) names Benjamin Vo, class of 2027, who attends Bellarmine College Prep (linked to the Prep Hoops team page titled \"Bellarmine College Prep Basketball | San Jose, CA | Prep Hoops\", the right city) and \"plays club basketball for san jose spartans\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops (prephoops.com) player page says he 'attends Bellarmine College Prep … and plays club basketball for san jose spartans'; the school is confirmed by the page's team link (San Jose, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "bellarmine",
-      "athleteId": "9d7cbcb9-bfc8-4ef9-b7ae-5403f01106b4",
       "playerId": "p93ff2ac4c9",
-      "fullName": "Caleb Clay",
+      "name": "Caleb Clay",
       "club": "san-jose-spartans",
       "clubTeam": null,
       "status": "unknown",
@@ -1365,10 +1307,8 @@
       "basis": "Prep Hoops player page (server HTML) names Caleb Clay, class of 2028, who attends Bellarmine College Prep (linked to the Prep Hoops team page titled \"Bellarmine College Prep Basketball | San Jose, CA | Prep Hoops\", the right city) and \"plays club basketball for San Jose Spartans\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 2 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Bellarmine College Prep … and plays club basketball for San Jose Spartans'; the school is confirmed by the page's team link (San Jose, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "serra",
-      "athleteId": "c1542f49-eb72-4bd1-bb90-f3b337d31239",
       "playerId": "pabb1983d07",
-      "fullName": "Jace Cannon",
+      "name": "Jace Cannon",
       "club": "team-esface",
       "clubTeam": "2028 16U College Prep",
       "status": "unknown",
@@ -1387,10 +1327,8 @@
       "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
     },
     {
-      "teamSlug": "serra",
-      "athleteId": "06eb7841-957a-4756-ac64-99a90305951d",
       "playerId": "p1c198e2f15",
-      "fullName": "Sam McReynolds",
+      "name": "Sam McReynolds",
       "club": "team-esface",
       "clubTeam": "College Prep Elite",
       "status": "unknown",
@@ -1409,10 +1347,8 @@
       "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2028, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
     },
     {
-      "teamSlug": "serra",
-      "athleteId": "7859192b-46dd-45e5-9118-06c80de62097",
       "playerId": "pdb450c0ae0",
-      "fullName": "Wyatt Vonblanco",
+      "name": "Wyatt Vonblanco",
       "club": "team-esface",
       "clubTeam": "College Prep",
       "status": "past",
@@ -1431,10 +1367,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Junipero Serra (San Mateo, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "88363504-d724-4789-a80c-ca4e32e89e60",
       "playerId": "p11eca4442b",
-      "fullName": "Beckett Williams",
+      "name": "Beckett Williams",
       "club": "team-esface",
       "clubTeam": "College Prep Elite",
       "status": "unknown",
@@ -1453,10 +1387,8 @@
       "basis": "The player's Hudl profile (on the school's own basketball team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Redwood City, CA."
     },
     {
-      "teamSlug": "saint-francis",
-      "athleteId": "40210769-5976-49d7-b34e-2a8106bc8f41",
       "playerId": "p9ed7c4441f",
-      "fullName": "Kingston Ng",
+      "name": "Kingston Ng",
       "club": "san-jose-spartans",
       "clubTeam": "San Jose Spartans 300 Elite",
       "status": "current",
@@ -1475,10 +1407,8 @@
       "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Saint Francis (Mountain View, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "073dcdba-d1fa-4b8e-99df-074a7bab49cc",
       "playerId": "pba027e72a7",
-      "fullName": "Anthony Otis",
+      "name": "Anthony Otis",
       "club": "bay-city-basketball",
       "clubTeam": "Bay City Warriors",
       "status": "unknown",
@@ -1497,10 +1427,8 @@
       "basis": "His own SportsRecruits basketball profile (The page names St. Ignatius College Preparatory and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "ba706b57-fcb7-4977-94b3-389fe6247ad8",
       "playerId": "pd162194829",
-      "fullName": "Jack Loevner",
+      "name": "Jack Loevner",
       "club": "peninsula-gold",
       "clubTeam": null,
       "status": "unknown",
@@ -1527,10 +1455,8 @@
       "basis": "Prep Hoops player page (server HTML) names Jack Loevner, class of 2028, who attends St. Ignatius College Prep (linked to the Prep Hoops team page titled \"St. Ignatius College Prep Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Peninsula Gold\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends St. Ignatius College Prep … and plays club basketball for Peninsula Gold'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "st-ignatius",
-      "athleteId": "9c5b09ab-2c0c-4fe2-8b0c-2cc46bee5bbb",
       "playerId": "pa030edc60b",
-      "fullName": "Pedro Silva",
+      "name": "Pedro Silva",
       "club": "north-bay-basketball-academy",
       "clubTeam": null,
       "status": "unknown",
@@ -1549,10 +1475,8 @@
       "basis": "Prep Hoops player page (served HTML) names Pedro Silva, class of 2029, who attends St. Ignatius College Prep (team page \"St. Ignatius College Prep Basketball | San Francisco, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
     },
     {
-      "teamSlug": "valley-christian",
-      "athleteId": "5aab7cac-0f91-46d8-8fe3-ad7d6b177125",
       "playerId": "p0a34f772d2",
-      "fullName": "Danny Rangel",
+      "name": "Danny Rangel",
       "club": "hoopright",
       "clubTeam": "D1",
       "status": "unknown",
@@ -1571,10 +1495,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "valley-christian",
-      "athleteId": "32458cc7-8a7c-411a-8f7c-85ef80227ed5",
       "playerId": "p0c9e313ae0",
-      "fullName": "Teniola Bamisebi",
+      "name": "Teniola Bamisebi",
       "club": "team-lillard",
       "clubTeam": "17u",
       "status": "current",
@@ -1601,10 +1523,8 @@
       "basis": "Prep Hoops player page (server HTML) names Teni Bamisebi, class of 2027, who attends Valley Christian-San Jose (linked to the Prep Hoops team page titled \"Valley Christian-San Jose High School Basketball | San Jose, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Lillard\". The class year agrees with the roster (2027). The page spells the name 'Teni Bamisebi'; the roster has 'Teniola Bamisebi': kept because school, class year and team page agree (medium on this page alone). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops' own report from adidas 3SSB Session 1 (Ladera Ranch; article dated April 27, 2026) heads its write-up \"Teniola Bamisebi | 2027 | Team Lillard 17u\": his full name, the roster's class year and the club team, in the article's own text. Two pages agree, so high; dated 2026 for the 2026 spring club season, so current. Prep Hoops (prephoops.com) player page says he 'attends Valley Christian-San Jose … and plays club basketball for Team Lillard'; the school is confirmed by the page's team link (San Jose, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "kings-academy",
-      "athleteId": "4f99f4d9-7f20-4b8f-8d0e-8474a19eba30",
       "playerId": "p9b93c97827",
-      "fullName": "Boss Mhoon",
+      "name": "Boss Mhoon",
       "club": "oakland-soldiers",
       "clubTeam": "Oakland Soldiers 15u EYBL",
       "status": "unknown",
@@ -1623,10 +1543,8 @@
       "basis": "His own SportsRecruits basketball profile (The page names The King’s Academy and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown."
     },
     {
-      "teamSlug": "menlo",
-      "athleteId": "95dfab8e-99ae-4926-a550-f003ccb251fb",
       "playerId": "pcc85292ebc",
-      "fullName": "Ethan Love",
+      "name": "Ethan Love",
       "club": "oakland-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -1653,10 +1571,8 @@
       "basis": "Prep Hoops player page (server HTML) names Ethan Love, class of 2029, who attends Menlo School (linked to the Prep Hoops team page titled \"Menlo School Basketball | Atherton, CA | Prep Hoops\", the right city) and \"plays club basketball for Oakland Soldiers\". The class year agrees with the roster (2029). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Menlo School … and plays club basketball for Oakland Soldiers'; the school is confirmed by the page's team link (Atherton, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
     },
     {
-      "teamSlug": "menlo",
-      "athleteId": "9b95f39f-f4f7-4084-8fb0-7a28a44d1125",
       "playerId": "p173eecd318",
-      "fullName": "William Lenihan",
+      "name": "William Lenihan",
       "club": "peninsula-gold",
       "clubTeam": "Under Armor Rise",
       "status": "unknown",
@@ -1675,10 +1591,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "pinewood",
-      "athleteId": "ef6db2cf-6e76-40c6-8aa3-b96e19f6f2ee",
       "playerId": "p1fef8869c1",
-      "fullName": "Christian Arcangel",
+      "name": "Christian Arcangel",
       "club": "oakland-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -1697,10 +1611,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "priory",
-      "athleteId": "e4580195-6ce5-4bb5-9b00-741823d8da70",
       "playerId": "p7c9eadf455",
-      "fullName": "Teddy Xanthopoulos",
+      "name": "Teddy Xanthopoulos",
       "club": "peninsula-gold",
       "clubTeam": "17U UA Rise",
       "status": "past",
@@ -1719,10 +1631,8 @@
       "basis": "The player's Hudl profile (on Woodside Priory School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as San Mateo, CA."
     },
     {
-      "teamSlug": "sacred-heart-prep",
-      "athleteId": "7c4302aa-dbad-4447-8530-f8b9e8536dce",
       "playerId": "p6e2388238d",
-      "fullName": "Pat Bala",
+      "name": "Pat Bala",
       "club": "peninsula-gold",
       "clubTeam": null,
       "status": "unknown",
@@ -1741,10 +1651,8 @@
       "basis": "Prep Hoops player page (served HTML) names Pat Bala, class of 2028, who attends Sacred Heart Prep (team page \"Sacred Heart Prep Basketball | Atherton, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
     },
     {
-      "teamSlug": "mills",
-      "athleteId": "cc8314a7-9b1b-487b-b21b-2f8cfd39ce04",
       "playerId": "p245cbeb3ca",
-      "fullName": "Brayden Beliso",
+      "name": "Brayden Beliso",
       "club": "norcal-rush",
       "clubTeam": "D1 - D3",
       "status": "past",
@@ -1763,10 +1671,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "san-mateo",
-      "athleteId": "bd2bebf2-9490-4936-a557-b6299ed75881",
       "playerId": "pfd0069934c",
-      "fullName": "Daniel Villeda",
+      "name": "Daniel Villeda",
       "club": "oakland-soldiers",
       "clubTeam": "14u",
       "status": "past",
@@ -1785,10 +1691,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "san-mateo",
-      "athleteId": "bd2bebf2-9490-4936-a557-b6299ed75881",
       "playerId": "pfd0069934c",
-      "fullName": "Daniel Villeda",
+      "name": "Daniel Villeda",
       "club": "silicon-valley-soldiers",
       "clubTeam": "D1",
       "status": "past",
@@ -1807,10 +1711,8 @@
       "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
     },
     {
-      "teamSlug": "aptos",
-      "athleteId": "9b322f09-6a3c-4a5e-bbc3-f28eb0996fcd",
       "playerId": "p2345d5c7c2",
-      "fullName": "Levi Race",
+      "name": "Levi Race",
       "club": "team-esface",
       "clubTeam": "2028 16U College Prep",
       "status": "unknown",
@@ -1829,10 +1731,8 @@
       "basis": "The player's Hudl profile (on Aptos High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
     },
     {
-      "teamSlug": "santa-cruz",
-      "athleteId": "38c3a19c-14aa-4f9e-b22c-377c475b7253",
       "playerId": "pe336cc71d5",
-      "fullName": "Kaden Miritz",
+      "name": "Kaden Miritz",
       "club": "silicon-valley-soldiers",
       "clubTeam": null,
       "status": "unknown",
@@ -1859,10 +1759,8 @@
       "basis": "Prep Hoops player page (server HTML) names Kaden Miritz, class of 2027, who attends Santa Cruz (not linked to a team page) and \"plays club basketball for Silicon Valley soldiers\". The class year agrees with the roster (2027). The school (\"Santa Cruz\", in Northern California) is named in the sentence but not linked to a team page; reached from a 2026 Prep Hoops article card whose slug differs from his name. Medium: no city link. The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date."
     },
     {
-      "teamSlug": "soquel",
-      "athleteId": "2f3fdd03-dafa-44be-a09e-b4bb046eb7f8",
       "playerId": "p83a4ec6e75",
-      "fullName": "Ryan Grilli",
+      "name": "Ryan Grilli",
       "club": "team-esface",
       "clubTeam": "2028 16U College Prep",
       "status": "unknown",

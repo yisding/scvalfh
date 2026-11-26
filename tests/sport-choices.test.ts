@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { PLAYER_IDENTITY_FILE, PLAYERS_FILE } from '../lib/players/registry-file';
+import { COMMITMENTS_FILE, PLAYER_ACCOUNTS_FILE, PLAYER_IDENTITY_FILE, PLAYERS_FILE } from '../lib/players/registry-file';
 import { DATA_DIR, SPORT_ID, SPORT_IDS, type SportId } from '../lib/sports/current';
 import { REPO } from './helpers';
 
@@ -53,8 +53,10 @@ describe('choices among sports', () => {
   );
 
   it('finds the bundled-data chains', () => {
-    // lib/data.ts alone holds two; every loader of a per-sport file holds at least one.
-    expect(chains.length).toBeGreaterThanOrEqual(20);
+    // lib/data.ts alone holds two; every loader of a per-sport file holds at least one. (Since 2026-11-26 the
+    // commitments and the recruiting pages are one file for every build, data/commitments.json and
+    // data/player-accounts.json, and each build's data/<sport>/player-index.json has a chain of its own.)
+    expect(chains.length).toBeGreaterThanOrEqual(19);
   });
 
   it.each(chains.map((c) => [c.file, c.chain] as const))('%s: names every sport, each branch its own file', (_file, chain) => {
@@ -71,9 +73,19 @@ describe('data/<sport>/', () => {
     expect(DATA_DIR).toBe(`data/${SPORT_ID}`);
   });
 
-  it('data/ holds one folder per sport and the cross-sport player registry, nothing else', () => {
+  it('data/ holds one folder per sport and the cross-sport player registry and files filed by person, nothing else', () => {
     const entries = readdirSync(path.join(REPO, 'data')).sort();
-    expect(entries).toEqual([...SPORT_IDS, path.basename(PLAYER_IDENTITY_FILE), path.basename(PLAYERS_FILE)].sort());
+    expect(entries).toEqual(
+      [
+        ...SPORT_IDS,
+        path.basename(PLAYER_IDENTITY_FILE),
+        path.basename(PLAYERS_FILE),
+        path.basename(PLAYER_ACCOUNTS_FILE),
+        path.basename(COMMITMENTS_FILE),
+        // The one of them a build imports, typed `unknown` for tsc (tests/json-sidecars.test.ts).
+        'commitments.d.json.ts',
+      ].sort(),
+    );
     expect(path.dirname(PLAYERS_FILE)).toBe('data');
     expect(path.dirname(PLAYER_IDENTITY_FILE)).toBe('data');
   });

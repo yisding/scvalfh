@@ -8,9 +8,10 @@
  *   - data/field-hockey/rosters-enrichment.json is what other public sources add — school athletics sites, a
  *     school roster PDF, school and local papers, MaxPreps career, JV and earlier-season pages — joined on team slug +
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
- *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
- *     profiles (NCSA and the like, and MaxPreps career pages the player has claimed). `getEnrichedTeamRoster` merges the two and says, per field,
- *     where each value came from. Both files hold one entry per registry team (102); a team no run
+ *     MaxPreps stays and the disagreement is recorded. `getEnrichedTeamRoster` merges the two and says, per field,
+ *     where each value came from, and gives each row its player's own recruiting profiles (NCSA and the like, and
+ *     MaxPreps career pages the player has claimed): data/player-accounts.json files them under the person, and
+ *     data/<sport>/player-index.json (lib/players/player-index.ts) says which person each row is. Both files hold one entry per registry team (102); a team no run
  *     has covered yet is status 'pending', and a team nothing was found for has an empty overlay.
  *     A team's entry may also say what other public sources showed for its current roster
  *     (`otherRosters`, below), which is what a team page with no MaxPreps players may claim.
@@ -35,10 +36,8 @@ import bundledRostersSoccer from '../../data/soccer/rosters.json';
 import bundledRostersValSoccer from '../../data/val-soccer/rosters.json';
 import { readOverride, validateData } from '../data-file';
 import {
-  PlayerProfileSchema,
   RosterEnrichmentSchema,
   RostersSchema,
-  profileSportKey,
   type EnrichedGrade,
   type EnrichedHeight,
   type EnrichedJersey,
@@ -56,6 +55,7 @@ import {
   type TeamRoster,
 } from './rosters-schema';
 import { isPlaceholderRow } from './placeholder-name';
+import { accountsOfPerson, assertPlayerIndexSeason, homeRow, isCareerPage, personOfName, personOfRow, rowsOfPerson } from './player-index';
 import { reportDrift } from './roster-drift';
 import { dateKey, httpUrl, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
@@ -97,7 +97,8 @@ export type {
  *   listed       a source publishes the team's whole current varsity list with full names (Marina's
  *                athletics site, Newport Harbor's team site, 2026-11-26), transcribed as written in
  *                `players`, in the source's order. The page shows it in place of the empty MaxPreps
- *                list; it joins nothing (no athleteId, so no club, commitment or profile line), and once
+ *                list. Each listed player is a person in the registry (by her name on the list), so her own
+ *                recruiting pages and club ties show on her row (listedPlayerProfiles, lib/players/clubs.ts); once
  *                MaxPreps lists anyone for the team, MaxPreps' rows are shown and this is not
  *   not-checked  nobody looked; the default for a team whose entry does not say
  * It sits beside lib/players/rosters-schema.ts' team record (whose schema ignores unknown keys) and is
@@ -109,16 +110,6 @@ const ListedPlayerSchema = z
     lastName: z.string().min(1),
     /** The source's own position text ("GK"), or null where it gives none: shown through positionFromText. */
     position: z.string().min(1).nullable(),
-    /**
-     * The player's own recruiting pages, by the profile rule (docs/DATA-SOURCES.md): with no roster grade to
-     * check a class year against, a page is linked only when it names the player and the school. At most
-     * one per platform and sport, and never a MaxPreps page (the player has no MaxPreps row). Absent: none found.
-     */
-    profiles: z
-      .array(PlayerProfileSchema)
-      .refine((ps) => new Set(ps.map(profileSportKey)).size === ps.length, 'two profiles on one platform in one sport')
-      .refine((ps) => ps.every((x) => x.platform !== 'maxpreps'), 'a listed player has no MaxPreps page to link')
-      .optional(),
   })
   .strict();
 export type ListedPlayer = z.infer<typeof ListedPlayerSchema>;
@@ -170,10 +161,8 @@ function loadRosters(): Rosters {
 /**
  * The overlay's rules, checked against the base at load time (the schema alone cannot see both files):
  * every record joins to a MaxPreps row of the same team under the row's own fullName, a filled field
- * was null on MaxPreps, a recorded conflict's `kept` value is MaxPreps' own (and a `rosterBehind` one's
- * is a grade MaxPreps shows), a recruiting profile that states a class year agrees with the grade the
- * row shows (or with the corrected grade of a `rosterBehind` conflict: classYearAgrees), and a claimed
- * MaxPreps profile is the row's own career page.
+ * was null on MaxPreps, and a recorded conflict's `kept` value is MaxPreps' own (and a `rosterBehind` one's
+ * is a grade MaxPreps shows).
  *
  * Every one of those rules reads the MaxPreps row, which each roster refresh rewrites, so a record that
  * held when it was written can break with no edit of the overlay. A break is roster drift
@@ -253,18 +242,6 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
         }
         return true;
       });
-      const row = { grade: p.grade ?? e.grade?.value ?? null, conflicts: e.conflicts };
-      e.profiles = e.profiles.filter((x) => {
-        if (x.platform === 'maxpreps' && x.url !== p.careerUrl) {
-          drift(`maxpreps profile ${x.url} is not this row's career page (${p.careerUrl})`, 'field');
-          return false;
-        }
-        if (x.classOf !== null && !classYearAgrees(base.season, row, x.classOf)) {
-          drift(`${x.platform} profile says class of ${x.classOf}, the roster shows grade ${row.grade}`, 'field');
-          return false;
-        }
-        return true;
-      });
       return true;
     });
   }
@@ -321,6 +298,74 @@ const enrichment = loadEnrichment(rosters);
 const OTHER_ROSTERS = loadOtherRosters();
 const BASE_BY_SLUG = new Map<string, TeamRoster>(rosters.teams.map((t) => [t.slug, t]));
 const ENRICHMENT_BY_SLUG = new Map<string, EnrichedTeam>(enrichment.teams.map((t) => [t.slug, t]));
+assertPlayerIndexSeason(rosters.season);
+
+/**
+ * Each MaxPreps row's recruiting profiles, by `<slug> <athleteId>`: its person's accounts (lib/players/player-index.ts),
+ * on her home row only (homeRow: the row her club ties and commitment show on, so a player MaxPreps lists twice has
+ * one row with all of it; a MaxPreps career page goes on its own career's row, the home row when that is it),
+ * held to the row as the overlay's profiles always were. A class year a page states must
+ * agree with the grade the row shows (MaxPreps', else the overlay's, or the corrected grade of a `rosterBehind`
+ * conflict: classYearAgrees), and a MaxPreps page is shown only on a row of its own career. A page that fails the
+ * class year is roster drift (the grade is the roster's, which a refresh rewrites): left out of the row and reported.
+ */
+const PROFILES_BY_ROW: ReadonlyMap<string, PlayerProfile[]> = (() => {
+  const out = new Map<string, PlayerProfile[]>();
+  for (const team of rosters.teams) {
+    const extra = new Map((ENRICHMENT_BY_SLUG.get(team.slug)?.players ?? []).map((e) => [e.athleteId, e]));
+    for (const p of team.players) {
+      if (p.athleteId === null) continue;
+      const person = personOfRow(team.slug, p.athleteId);
+      const home = person === null ? null : homeRow(person);
+      if (home === null) continue;
+      const isHome = home.team === team.slug && home.athleteId === p.athleteId;
+      // The home row's career, when it is a MaxPreps row of a team rosters.json holds: a MaxPreps page of another of
+      // her careers (she was listed twice under two) shows on that career's row instead.
+      const homeCareer = home.athleteId === null ? null : (BASE_BY_SLUG.get(home.team)?.players.find((x) => x.athleteId === home.athleteId)?.careerId ?? null);
+      const e = extra.get(p.athleteId);
+      const row = { grade: p.grade ?? e?.grade?.value ?? null, conflicts: e?.conflicts ?? [] };
+      const profiles = accountsOfPerson(person).filter((x) => {
+        if (x.platform !== 'maxpreps' && !isHome) return false;
+        if (x.platform === 'maxpreps' && (!isCareerPage(x.url, p.careerId) || (!isHome && isCareerPage(x.url, homeCareer)))) return false;
+        if (x.classOf !== null && !classYearAgrees(rosters.season, row, x.classOf)) {
+          reportDrift({
+            file: 'player-accounts',
+            teamSlug: team.slug,
+            who: p.fullName,
+            key: person as string,
+            what: `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${row.grade}`,
+            leftOut: 'field',
+          });
+          return false;
+        }
+        return true;
+      });
+      if (profiles.length > 0) out.set(`${team.slug} ${p.athleteId}`, profiles);
+    }
+  }
+  return out;
+})();
+
+/**
+ * Whether a person's varsity roster row shows the page `url`: lib/jv/jv-profiles.ts leaves it off her JV list row. A
+ * row of the varsity page a school source marks JV is her JV row, so its pages show on the JV list as well.
+ */
+export function shownOnVarsityRow(playerId: string, url: string): boolean {
+  return rowsOfPerson(playerId).some(
+    (r) =>
+      r.level === 'varsity' &&
+      r.athleteId !== null &&
+      (PROFILES_BY_ROW.get(`${r.team} ${r.athleteId}`) ?? []).some((x) => x.url === url),
+  );
+}
+
+/**
+ * A listed player's recruiting profiles (otherRosters `listed`): her person's accounts, found by her name on the
+ * school's list. The list gives no grade to check a class year against, and she has no MaxPreps page to link.
+ */
+export function listedPlayerProfiles(slug: string, fullName: string): PlayerProfile[] {
+  return accountsOfPerson(personOfName(slug, 'varsity', fullName)).filter((x) => x.platform !== 'maxpreps');
+}
 
 export function getRosters(): Rosters {
   return rosters;
@@ -355,7 +400,7 @@ export interface MergedPlayer extends RosterPlayer {
   };
   /** Sources that disagree with the value shown. */
   conflicts: RosterConflict[];
-  /** The player's own recruiting pages (NCSA and the like), in the enrichment file's order. */
+  /** The player's own recruiting pages (NCSA and the like), in data/player-accounts.json's order. */
   profiles: PlayerProfile[];
 }
 
@@ -370,7 +415,7 @@ export interface MergedTeamRoster extends Omit<TeamRoster, 'players'> {
   otherRosters: OtherRosters;
 }
 
-function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlayer {
+function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined, profiles: PlayerProfile[] = []): MergedPlayer {
   const base: MergedPlayer = {
     ...p,
     sourceName: e?.sourceName ?? null,
@@ -383,7 +428,7 @@ function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlay
       height: p.height !== null ? 'maxpreps' : null,
     },
     conflicts: e?.conflicts ?? [],
-    profiles: e?.profiles ?? [],
+    profiles,
   };
   if (!e) return base;
   if (e.name) {
@@ -437,7 +482,7 @@ export function listedPlayerKey(fullName: string): string {
  * MaxPreps lists no varsity player): what a listed player's club tie joins (lib/players/clubs.ts). Each has
  * the source's name, no grade and no MaxPreps id ([] for any other team).
  */
-export function mergedListedRows(team: Pick<MergedTeamRoster, 'players' | 'otherRosters'>): MergedPlayer[] {
+export function mergedListedRows(team: Pick<MergedTeamRoster, 'slug' | 'players' | 'otherRosters'>): MergedPlayer[] {
   const other = team.otherRosters;
   if (other.status !== 'listed' || team.players.some((p) => p.level !== 'jv')) return [];
   return other.players.map((l) => {
@@ -461,7 +506,7 @@ export function mergedListedRows(team: Pick<MergedTeamRoster, 'players' | 'other
       careerUrl: null,
       createdOn: null,
     };
-    return { ...mergePlayer(row, undefined), provenance: { name: null, grade: null, positions: null, jersey: null, height: null }, profiles: l.profiles ?? [] };
+    return { ...mergePlayer(row, undefined, listedPlayerProfiles(team.slug, fullName)), provenance: { name: null, grade: null, positions: null, jersey: null, height: null } };
   });
 }
 
@@ -474,7 +519,9 @@ export function getEnrichedTeamRoster(slug: TeamSlug): MergedTeamRoster | undefi
   const { players, ...rest } = team;
   return {
     ...rest,
-    players: players.map((p) => mergePlayer(p, p.athleteId === null ? undefined : byId.get(p.athleteId))),
+    players: players.map((p) =>
+      p.athleteId === null ? mergePlayer(p, undefined) : mergePlayer(p, byId.get(p.athleteId), PROFILES_BY_ROW.get(`${slug} ${p.athleteId}`) ?? []),
+    ),
     coaches: extra?.coaches ?? [],
     sources: extra?.sources ?? [],
     enrichmentNotes: extra?.notes ?? [],

@@ -4,7 +4,7 @@
  *
  * One page for every school's recruiting data: the players' own recruiting profiles (the roster
  * overlay, data/field-hockey/rosters-enrichment.json), the youth clubs a public page ties them to
- * (data/field-hockey/clubs.json) and the college commitments a public page reports (data/field-hockey/commits.json). Each
+ * (data/field-hockey/clubs.json) and the college commitments a public page reports (data/commitments.json). Each
  * team page already shows the same three lines on its roster; this page gathers them, region →
  * league → school, under the NorCal/SoCal switcher.
  *
@@ -13,9 +13,9 @@
  *     components/teams/roster-view.ts buildRosterView (the varsity roster's own spelling and order),
  *     so its commitment line, club line and profile links are the ones the school's page shows, with
  *     nothing the data files keep but never render (a quote, a basis, a confidence). After them come
- *     the JV players with a recruiting profile (data/field-hockey/jv-profiles.json), each a row of the team page's
+ *     the JV players with a recruiting profile (data/player-accounts.json), each a row of the team page's
  *     JV roster (components/jv/jv-roster-view.ts), its facts led by "JV", and the JV players a public page ties
- *     to a club (data/<sport>/clubs.json jvAffiliations); a JV row has profile links and a club line, never a
+ *     to a club (data/<sport>/clubs.json memberships, served as jvAffiliations); a JV row has profile links and a club line, never a
  *     commitment, since commitments are researched for the varsity rosters;
  *   - a player is listed only when one of the three exists for them, and a school or league only
  *     when it has a listed player. A school with none is not named or counted anywhere on the page
@@ -32,6 +32,7 @@ import { clubsResearched, getClubsFile } from '../../lib/players/clubs';
 import { isResearched } from '../../lib/schema-primitives';
 import { getCommitsFile } from '../../lib/players/commits';
 import { getJvProfilesFile } from '../../lib/jv/jv-profiles';
+import { accountCount } from '../../lib/players/player-index';
 import { getTeamsGrouped } from '../../lib/data';
 import { dateWithYear, listWords } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
@@ -257,10 +258,8 @@ export function buildRecruitingView(): RecruitingView {
     clubsCheckedOn: dateWithYear(getClubsFile().capturedAt),
     commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
     researched: {
-      profiles: isResearched(
-        getRosterEnrichment().notes,
-        getRosterEnrichment().teams.reduce((n, t) => n + t.players.reduce((m, p) => m + p.profiles.length, 0), 0),
-      ) ||
+      // The varsity rounds are told in the overlay's notes; their pages are this build's people's accounts.
+      profiles: isResearched(getRosterEnrichment().notes, accountCount()) ||
         // The JV lists' profiles are listed here too: their file holding research is research.
         isResearched(
           getJvProfilesFile().notes,

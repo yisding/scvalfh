@@ -12,6 +12,7 @@ import path from 'node:path';
 
 import type { ZodType } from 'zod';
 
+import { AccountsFileSchema, type AccountsFile } from './accounts-schema';
 import type { BuildInput, Sighting } from './registry-build';
 import {
   PlayerIdentitySchema,
@@ -23,7 +24,6 @@ import {
 import {
   EnrichmentInput,
   HistoryInput,
-  JvProfilesInput,
   JvSchoolSitesInput,
   PlayerStatsInput,
   PriorPlayersInput,
@@ -36,10 +36,19 @@ import { SPORT_IDS, type SportId, SPORT_LISTS_PLAYERS } from '../sports/current'
 
 export const PLAYERS_FILE = 'data/players.json';
 export const PLAYER_IDENTITY_FILE = 'data/player-identity.json';
+/** Each person's recruiting pages, under her registry id (lib/players/accounts-schema.ts). */
+export const PLAYER_ACCOUNTS_FILE = 'data/player-accounts.json';
+/** Each person's college commitment, under her registry id (lib/players/commits-schema.ts). */
+export const COMMITMENTS_FILE = 'data/commitments.json';
 
 /** A sport's data directory, relative to the repository: data/<sport>/ for every sport. */
 export function sportDataDir(sport: SportId): string {
   return `data/${sport}`;
+}
+
+/** A sport's row → person index, written with the registry (lib/players/player-index-schema.ts). */
+export function playerIndexFile(sport: SportId): string {
+  return `${sportDataDir(sport)}/player-index.json`;
 }
 
 function readJson<T>(root: string, rel: string, schema: ZodType<T>): T | null {
@@ -58,12 +67,17 @@ export function readPlayersFile(root: string): PlayersFile | null {
   return readJson(root, PLAYERS_FILE, PlayersFileSchema);
 }
 
+/** data/player-accounts.json, held to its whole contract; null when there is none. */
+export function readAccountsFile(root: string): AccountsFile | null {
+  return readJson(root, PLAYER_ACCOUNTS_FILE, AccountsFileSchema);
+}
+
 export function readPlayerIdentity(root: string): PlayerIdentity {
   return readJson(root, PLAYER_IDENTITY_FILE, PlayerIdentitySchema) ?? { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [], names: [] };
 }
 
 /** The sources only a season's live files carry: a past season that has them was seen live. */
-const LIVE_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'enrichment', 'school-jv-roster']);
+const LIVE_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'enrichment', 'school-roster', 'school-jv-roster']);
 
 /**
  * Everything the build needs, read from the repository at `root`: each sport's current files in
@@ -74,6 +88,7 @@ const LIVE_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster',
 export function readBuildInput(root: string, builtBy: string): BuildInput & { skipped: string[] } {
   const previous = readPlayersFile(root);
   const identity = readPlayerIdentity(root);
+  const accounts = readAccountsFile(root)?.players ?? [];
   const built: Array<BuildInput['built'][number]> = [];
   const sightings: Sighting[] = [];
   const skipped: string[] = [];
@@ -92,7 +107,6 @@ export function readBuildInput(root: string, builtBy: string): BuildInput & { sk
           enrichment: readJson(root, `${dir}/rosters-enrichment.json`, EnrichmentInput),
           playerStats: readJson(root, `${dir}/player-stats.json`, PlayerStatsInput),
           jvSchoolSites: readJson(root, `${dir}/jv-rosters-school-sites.json`, JvSchoolSitesInput),
-          jvProfiles: readJson(root, `${dir}/jv-profiles.json`, JvProfilesInput),
         },
         identity,
       );
@@ -122,7 +136,7 @@ export function readBuildInput(root: string, builtBy: string): BuildInput & { sk
       sightings.push(...pastSeasonSightings({ sport, season, priorPlayers, history }));
     }
   }
-  return { previous, identity, built, sightings, builtBy, skipped };
+  return { previous, identity, accounts, built, sightings, builtBy, skipped };
 }
 
 /**

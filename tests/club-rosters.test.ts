@@ -23,12 +23,34 @@ import {
   type ClubRostersFile,
   type SchoolRow,
 } from '../lib/players/club-rosters';
-import type { ClubsFile } from '../lib/players/clubs-schema';
+import type { ClubAffiliation, ClubsFile, ClubsView } from '../lib/players/clubs-schema';
 import { nameKey } from '../lib/players/name-compare';
 
 const json = (rel: string): unknown => JSON.parse(readFileSync(rel, 'utf8'));
 const file = ClubRostersFileSchema.parse(json('data/soccer/club-rosters.json'));
-const clubs = json('data/soccer/clubs.json') as ClubsFile;
+
+/**
+ * data/soccer/clubs.json as the soccer pages read it (lib/players/clubs.ts): each membership on its person's MaxPreps
+ * row this season (data/soccer/player-index.json), varsity before JV. Built here because this run may be any sport's.
+ */
+const clubs: Pick<ClubsView, 'season' | 'clubs' | 'affiliations' | 'jvAffiliations'> = (() => {
+  const disk = json('data/soccer/clubs.json') as ClubsFile;
+  const index = json('data/soccer/player-index.json') as { season: string; rows: Array<[string, string, 'varsity' | 'jv', string | null, string]> };
+  const rowsOf = new Map<string, Array<{ team: string; level: string; athleteId: string; name: string }>>();
+  for (const [id, team, level, athleteId, name] of index.rows) {
+    if (athleteId !== null) rowsOf.set(id, [...(rowsOf.get(id) ?? []), { team, level, athleteId, name }]);
+  }
+  const affiliations: ClubAffiliation[] = [];
+  const jvAffiliations: ClubAffiliation[] = [];
+  for (const { playerId, name, ...tie } of disk.memberships) {
+    void name;
+    const rows = rowsOf.get(playerId) ?? [];
+    const row = rows.find((r) => r.level === 'varsity') ?? rows.find((r) => r.level === 'jv');
+    if (!row) continue;
+    (row.level === 'varsity' ? affiliations : jvAffiliations).push({ teamSlug: row.team, athleteId: row.athleteId, playerId, fullName: row.name, ...tie });
+  }
+  return { season: index.season, clubs: disk.clubs, affiliations, jvAffiliations };
+})();
 
 /** The class year a soccer row's grade gives this season, and the one a `rosterBehind` conflict corrects it to, by team and athlete. */
 function soccerClassYears(): Map<string, number[]> {
@@ -176,8 +198,8 @@ describe('compareClubRosters (the league-roster rule)', () => {
     counts: { ...file.counts, teams: teams.length, players: teams.reduce((n, t) => n + t.players.length, 0) },
     teams,
   });
-  const club = (slug: string, region: ClubsFile['clubs'][number]['region']) => ({ ...clubs.clubs[0], slug, region });
-  const tied = { clubs: [club('near', 'south-bay'), club('near-two', 'peninsula'), club('far', 'sacramento')], affiliations: [] as ClubsFile['affiliations'] };
+  const club = (slug: string, region: ClubsView['clubs'][number]['region']) => ({ ...clubs.clubs[0], slug, region });
+  const tied = { clubs: [club('near', 'south-bay'), club('near-two', 'peninsula'), club('far', 'sacramento')], affiliations: [] as ClubsView['affiliations'] };
   const row = (fullName: string, classYear: number | null, teamSlug = 'gunn', level: SchoolRow['level'] = 'varsity'): SchoolRow => ({
     level,
     teamSlug,
@@ -260,7 +282,7 @@ describe('compareClubRosters (the league-roster rule)', () => {
     const teams = [team(1, 10, [['Ann', 'Lee', 2028]]), team(3, 30, [['Ann', 'Lee', 2028]]), team(3, 31, [['Ann', 'Lee', 2028]])];
     const r = row('Ann Lee', 2028);
     const tieTo = (club: string, kind: string) => ({ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club, sources: [{ ...clubs.affiliations[0].sources[0], kind }] });
-    const withTies = (...ties: ReturnType<typeof tieTo>[]) => ({ ...tied, affiliations: ties as ClubsFile['affiliations'] });
+    const withTies = (...ties: ReturnType<typeof tieTo>[]) => ({ ...tied, affiliations: ties as ClubsView['affiliations'] });
     const one = compareClubRosters(rosters(teams), [r], withTies(tieTo('near', 'ncsa')));
     expect(one.map((x) => [x.outcome, x.tie, x.hits.map((h) => h.team.teamId), x.setAside.map((h) => h.team.teamId)])).toEqual([['match', 'tie-without-roster', [10], [30, 31]]]);
     // A tie resting on a league roster alone picks nothing out; nor do ties to two of the clubs.
@@ -404,7 +426,7 @@ describe('compareClubRosters (the league-roster rule)', () => {
     const r = row('Ann Lee', 2028);
     const tie = (kind: string, url = teams[0].url) => ({
       ...tied,
-      affiliations: [{ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club: 'near', sources: [{ ...clubs.affiliations[0].sources[0], kind, url }] }] as ClubsFile['affiliations'],
+      affiliations: [{ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club: 'near', sources: [{ ...clubs.affiliations[0].sources[0], kind, url }] }] as ClubsView['affiliations'],
     });
     expect(outcome(teams, [r], tie('ncsa'))).toEqual(['Ann Lee: match (tie-without-roster)']);
     expect(outcome(teams, [r], tie(LEAGUE_ROSTER_KIND))).toEqual(['Ann Lee: match (linked)']);
