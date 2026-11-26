@@ -39,19 +39,19 @@ const resolved = resolveFestivalClubs(festival, raw);
 const TEAMS_ON_2026_11_26: Record<string, readonly string[]> = {
   agh: ['AGH U12', 'AGH U14 1', 'AGH U14 2', 'AGH U16 1', 'AGH U16 2', 'AGH U16 3', 'AGH U19'],
   'aim-athletes': ['AIM Athletes', 'AIM Athletes U19'],
-  'atlanta-fhc': ['Atlanta FHC u10', 'Atlanta FHC u12', 'Atlanta FHC u14', 'Atlanta FHC u19'],
+  'atlanta-fhc': ['Atlanta FHC U10', 'Atlanta FHC U12', 'Atlanta FHC U14', 'Atlanta FHC U19'],
   beastie: ['Beastie U12 Black', 'Beasties U14 Black'],
   'blue-star': ['Blue Star Warriors', 'Blue Star U19'],
   'bluegrass-premier': ['Bluegrass Sky'],
   'cape-ann-fhc': ['Cape Ann FHC Black'],
   'charlotte-ambush': ['Charlotte Ambush U14', 'Charlotte Ambush U16', 'Charlotte Ambush U19'],
   'cowtown-field-hockey': ['Cowtown Field Hockey Club U14', 'Cowtown Field Hockey Club U19'],
-  doral: ['Doral u12'],
+  doral: ['Doral U12'],
   dynasty: ['Dynasty Black'],
   'excelsior-hockey-club': ['Excelsior Hockey Club'],
   fhl: ['FHL'],
   firestyx: ['FireStyx'],
-  'florida-united': ['Florida United white', 'Florida United Red', 'Florida United u16', 'Florida United u19'],
+  'florida-united': ['Florida United white', 'Florida United Red', 'Florida United U16', 'Florida United U19'],
   frontier: ['Frontier Inferno'],
   gateway: [
     'U10 Gateway Red Stars',
@@ -80,7 +80,7 @@ const TEAMS_ON_2026_11_26: Record<string, readonly string[]> = {
   'new-heights': ['New Heights U12 Gold', 'New Heights U14 Pink', 'New Heights U16 Black', 'New Heights U16 Blue', 'New Heights U19 Red'],
   'new-york-elite': ['New York Elite U16'],
   'new-york-hc': ['New York H.C.'],
-  'norcal-wolves': ['Norcal Wolves u16'],
+  'norcal-wolves': ['Norcal Wolves U16'],
   'peak-fh': ['Peak FH U19'],
   'pinnacle-field-hockey': ['Pinnacle White', 'Pinnacle Ivory', 'Pinnacle Blue', 'Pinnacle Sky', 'Pinnacle Black', 'Pinnacle Graphite'],
   'polar-bears': ['Polar Bears U14'],
@@ -90,7 +90,7 @@ const TEAMS_ON_2026_11_26: Record<string, readonly string[]> = {
   'spirit-of-usa': ['Spirit of USA', 'Spirit of USA U19'],
   summit: ['Summit'],
   'texas-pride': ['Texas Pride Red', 'Texas Pride White', 'Texas Pride Blue'],
-  weston: ['Weston u10', 'Weston u12'],
+  weston: ['Weston U10', 'Weston U12'],
   'williamsville-stampede': ['Williamsville Stampede U19'],
   'windy-city': ['Windy City Blast', 'Windy City Blaze', 'Windy City Spark', 'Windy City Flame', 'Windy City Inferno', 'Windy City Fire', 'Windy City Storm'],
   wizards: ['Wizards U12', 'Wizards U14', 'Wizards U16', 'Wizards U19', 'Wizards U19 Black'],
@@ -203,7 +203,7 @@ describe('the festival’s teams resolve to their clubs', () => {
   it('finds the California teams of 2026-11-26 among the California clubs, and not HTC’s U16 team', () => {
     const name = new Map(festival.teams.map((t) => [t.id, t.name]));
     const california = resolved.clubs.filter((c) => c.california).flatMap((c) => c.teamIds.map((id) => name.get(id)!));
-    const expected = ['Hayward Hawks', 'San Francisco Hawks U16', 'Norcal Wolves u16', 'HTC CA U19', 'San Francisco Hawks U19'];
+    const expected = ['Hayward Hawks', 'San Francisco Hawks U16', 'Norcal Wolves U16', 'HTC CA U19', 'San Francisco Hawks U19'];
     expect(california.sort()).toEqual(expected.filter((n) => festival.teams.some((t) => t.name === n)).sort());
     expect(california).not.toContain('HTC');
   });

@@ -21,7 +21,7 @@ import {
   getFestival,
   loadFestival,
 } from '../lib/festival/festival';
-import { FESTIVAL_RESERVED_SLUGS } from '../lib/festival/festival-names';
+import { FESTIVAL_RESERVED_SLUGS, displayTeamName } from '../lib/festival/festival-names';
 import { FestivalFileSchema, type FestivalFile } from '../lib/festival/festival-schema';
 import { stableStringify } from '../lib/stable-json';
 import { REPO } from './helpers';
@@ -222,5 +222,22 @@ describe('a bad festival file is refused', () => {
 
   it('refuses a fetchedAt that is not a UTC time', () => {
     expect(bad((f) => (f.fetchedAt = '2026-11-26 15:35'))).toThrow('expected an ISO UTC time');
+  });
+});
+
+describe('team names as printed (DESIGN §35.1)', () => {
+  it('capitalises the u of an age token and changes nothing else', () => {
+    expect(displayTeamName('Atlanta FHC u10')).toBe('Atlanta FHC U10');
+    expect(displayTeamName(' Norcal Wolves u16 ')).toBe('Norcal Wolves U16');
+    expect(displayTeamName('U14 Gateway Red Stars')).toBe('U14 Gateway Red Stars');
+    expect(displayTeamName('Florida United white')).toBe('Florida United white');
+    expect(displayTeamName('Pool T 3rd Place')).toBe('Pool T 3rd Place');
+    expect(displayTeamName('Summit')).toBe('Summit');
+  });
+
+  it('the committed file prints no lower-case age token in a team name or a bracket side', () => {
+    const names = [...raw.teams.map((t) => t.name), ...raw.games.flatMap((g) => g.sides.map((s) => s.label))];
+    expect(names.filter((n) => /\bu-?\d+\b/.test(n))).toEqual([]);
+    for (const n of names) expect(displayTeamName(n)).toBe(n);
   });
 });

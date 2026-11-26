@@ -24,7 +24,7 @@
 
 import { z } from 'zod';
 
-import { slugify, uniqueSlug, withoutAgeTokens } from '../festival/festival-names';
+import { displayTeamName, slugify, uniqueSlug, withoutAgeTokens } from '../festival/festival-names';
 import { localToUtc, type FestivalDivision, type FestivalFile, type FestivalGame } from '../festival/festival-schema';
 
 /** The 2026 National Hockey Festival: TourneyMachine's tournament id and USA Field Hockey's event page. */
@@ -363,7 +363,7 @@ export function normalizeFestival(raw: unknown, opts: NormalizeOptions): Festiva
       return {
         id,
         slug: uniqueSlug(`${divisionSlug}-${words}`, takenSlugs),
-        name: t.Name.trim(),
+        name: displayTeamName(t.Name),
         divisionKey: t.IDDivision,
         poolId,
         record: {
@@ -437,8 +437,8 @@ export function normalizeFestival(raw: unknown, opts: NormalizeOptions): Festiva
         poolId: poolId!,
         kind: 'pool' as const,
         sides: [
-          { teamId: a, label: g.T1.trim(), source: null },
-          { teamId: b, label: g.T2.trim(), source: null },
+          { teamId: a, label: displayTeamName(g.T1), source: null },
+          { teamId: b, label: displayTeamName(g.T2), source: null },
         ] as FestivalGame['sides'],
         layout: null,
       };
@@ -454,8 +454,8 @@ export function normalizeFestival(raw: unknown, opts: NormalizeOptions): Festiva
       poolId: null,
       kind: 'placement' as const,
       sides: [
-        { teamId: team(g.IDT1), label: g.T1.trim(), source: source(g.BT1S, g.BT1SPP) },
-        { teamId: team(g.IDT2), label: g.T2.trim(), source: source(g.BT2S, g.BT2SPP) },
+        { teamId: team(g.IDT1), label: displayTeamName(g.T1), source: source(g.BT1S, g.BT1SPP) },
+        { teamId: team(g.IDT2), label: displayTeamName(g.T2), source: source(g.BT2S, g.BT2SPP) },
       ] as FestivalGame['sides'],
       layout: layouts.get(divisionKey)!.get(key)!,
     };

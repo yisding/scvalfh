@@ -676,7 +676,7 @@
           "teamId": "h2026103013203209240a92b74e35445"
         },
         {
-          "label": "Atlanta FHC u14",
+          "label": "Atlanta FHC U14",
           "source": null,
           "teamId": "h20261030132032092064bc79d18f14a"
         }
@@ -821,7 +821,7 @@
           "teamId": "h2026103014561251926c73356c1fb40"
         },
         {
-          "label": "Atlanta FHC u19",
+          "label": "Atlanta FHC U19",
           "source": null,
           "teamId": "h20261030145612519817d217000204d"
         }
@@ -908,7 +908,7 @@
           "teamId": "h2026103014374221209296f4e95024a"
         },
         {
-          "label": "Norcal Wolves u16",
+          "label": "Norcal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -990,12 +990,12 @@
       ],
       "sides": [
         {
-          "label": "Atlanta FHC u12",
+          "label": "Atlanta FHC U12",
           "source": null,
           "teamId": "h2026103013201976939fa2f147c584d"
         },
         {
-          "label": "Doral u12",
+          "label": "Doral U12",
           "source": null,
           "teamId": "h20261030132019769345d68bb71e241"
         }
@@ -1363,12 +1363,12 @@
       "score": null,
       "sides": [
         {
-          "label": "Weston u10",
+          "label": "Weston U10",
           "source": null,
           "teamId": "h20261030122724032361483ff3fe548"
         },
         {
-          "label": "Atlanta FHC u10",
+          "label": "Atlanta FHC U10",
           "source": null,
           "teamId": "h20261030122724032829b3947a6f64a"
         }
@@ -1623,7 +1623,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Weston u12",
+          "label": "Weston U12",
           "source": null,
           "teamId": "h20261030132019768a9f420ac607a40"
         },
@@ -1758,7 +1758,7 @@
           "teamId": "h202610301456125199e5ea022475a40"
         },
         {
-          "label": "Florida United u19",
+          "label": "Florida United U19",
           "source": null,
           "teamId": "h20261030145612519ee5a5197e3cc47"
         }
@@ -1966,7 +1966,7 @@
           "teamId": "h202610301320197697f731fc5d9724c"
         },
         {
-          "label": "Atlanta FHC u12",
+          "label": "Atlanta FHC U12",
           "source": null,
           "teamId": "h2026103013201976939fa2f147c584d"
         }
@@ -2200,7 +2200,7 @@
           "teamId": "h20261030143742212f37676d7566445"
         },
         {
-          "label": "Florida United u16",
+          "label": "Florida United U16",
           "source": null,
           "teamId": "h202610301437422129d38ded796084f"
         }
@@ -2252,7 +2252,7 @@
           "teamId": "h202610301320320925078bc28bbd84b"
         },
         {
-          "label": "Atlanta FHC u14",
+          "label": "Atlanta FHC U14",
           "source": null,
           "teamId": "h20261030132032092064bc79d18f14a"
         }
@@ -2299,7 +2299,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Doral u12",
+          "label": "Doral U12",
           "source": null,
           "teamId": "h20261030132019769345d68bb71e241"
         },
@@ -2330,7 +2330,7 @@
           "teamId": "h20261030122724032629e65be1ac745"
         },
         {
-          "label": "Weston u10",
+          "label": "Weston U10",
           "source": null,
           "teamId": "h20261030122724032361483ff3fe548"
         }
@@ -2377,7 +2377,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Atlanta FHC u19",
+          "label": "Atlanta FHC U19",
           "source": null,
           "teamId": "h20261030145612519817d217000204d"
         },
@@ -2798,7 +2798,7 @@
           "teamId": "h20261030145612519d872555e88ad4d"
         },
         {
-          "label": "Florida United u19",
+          "label": "Florida United U19",
           "source": null,
           "teamId": "h20261030145612519ee5a5197e3cc47"
         }
@@ -2850,7 +2850,7 @@
           "teamId": "h202610301227240321609fc64e2ca47"
         },
         {
-          "label": "Atlanta FHC u10",
+          "label": "Atlanta FHC U10",
           "source": null,
           "teamId": "h20261030122724032829b3947a6f64a"
         }
@@ -2871,7 +2871,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Weston u12",
+          "label": "Weston U12",
           "source": null,
           "teamId": "h20261030132019768a9f420ac607a40"
         },
@@ -2902,7 +2902,7 @@
           "teamId": "h20261030143742212ee97d052b6204f"
         },
         {
-          "label": "Florida United u16",
+          "label": "Florida United U16",
           "source": null,
           "teamId": "h202610301437422129d38ded796084f"
         }
@@ -3084,7 +3084,7 @@
           "teamId": "h202610301437422118fd47143b23d43"
         },
         {
-          "label": "Norcal Wolves u16",
+          "label": "Norcal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -3370,7 +3370,7 @@
           "teamId": "h202610301320197692eaa6e55212041"
         },
         {
-          "label": "Atlanta FHC u12",
+          "label": "Atlanta FHC U12",
           "source": null,
           "teamId": "h2026103013201976939fa2f147c584d"
         }
@@ -3500,7 +3500,7 @@
           "teamId": "h2026103014561251987ae02b5464b4e"
         },
         {
-          "label": "Florida United u19",
+          "label": "Florida United U19",
           "source": null,
           "teamId": "h20261030145612519ee5a5197e3cc47"
         }
@@ -3573,7 +3573,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Florida United u16",
+          "label": "Florida United U16",
           "source": null,
           "teamId": "h202610301437422129d38ded796084f"
         },
@@ -3604,7 +3604,7 @@
           "teamId": "h20261030132019768e00980267efa47"
         },
         {
-          "label": "Weston u12",
+          "label": "Weston U12",
           "source": null,
           "teamId": "h20261030132019768a9f420ac607a40"
         }
@@ -3677,7 +3677,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Doral u12",
+          "label": "Doral U12",
           "source": null,
           "teamId": "h20261030132019769345d68bb71e241"
         },
@@ -3911,7 +3911,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Atlanta FHC u10",
+          "label": "Atlanta FHC U10",
           "source": null,
           "teamId": "h20261030122724032829b3947a6f64a"
         },
@@ -3963,7 +3963,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Atlanta FHC u14",
+          "label": "Atlanta FHC U14",
           "source": null,
           "teamId": "h20261030132032092064bc79d18f14a"
         },
@@ -4046,7 +4046,7 @@
           "teamId": "h20261030143742211c58286bf58cc47"
         },
         {
-          "label": "Norcal Wolves u16",
+          "label": "Norcal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -4197,7 +4197,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Atlanta FHC u12",
+          "label": "Atlanta FHC U12",
           "source": null,
           "teamId": "h2026103013201976939fa2f147c584d"
         },
@@ -4332,7 +4332,7 @@
           "teamId": "h202610301456125192bd4c66ed2ca4d"
         },
         {
-          "label": "Atlanta FHC u19",
+          "label": "Atlanta FHC U19",
           "source": null,
           "teamId": "h20261030145612519817d217000204d"
         }
@@ -4410,7 +4410,7 @@
           "teamId": "h20261030143742212c1deb3cd8d0a4b"
         },
         {
-          "label": "Florida United u16",
+          "label": "Florida United U16",
           "source": null,
           "teamId": "h202610301437422129d38ded796084f"
         }
@@ -4540,7 +4540,7 @@
           "teamId": "h202610301320197689405677cf59c48"
         },
         {
-          "label": "Weston u12",
+          "label": "Weston U12",
           "source": null,
           "teamId": "h20261030132019768a9f420ac607a40"
         }
@@ -4592,7 +4592,7 @@
           "teamId": "h202610301227240321609fc64e2ca47"
         },
         {
-          "label": "Weston u10",
+          "label": "Weston U10",
           "source": null,
           "teamId": "h20261030122724032361483ff3fe548"
         }
@@ -4639,7 +4639,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Florida United u19",
+          "label": "Florida United U19",
           "source": null,
           "teamId": "h20261030145612519ee5a5197e3cc47"
         },
@@ -4852,7 +4852,7 @@
           "teamId": "h202610301227240328a6c30ea906c4b"
         },
         {
-          "label": "Atlanta FHC u10",
+          "label": "Atlanta FHC U10",
           "source": null,
           "teamId": "h20261030122724032829b3947a6f64a"
         }
@@ -5003,7 +5003,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Atlanta FHC u19",
+          "label": "Atlanta FHC U19",
           "source": null,
           "teamId": "h20261030145612519817d217000204d"
         },
@@ -5216,7 +5216,7 @@
           "teamId": "h20261030132019769e8368333aaa547"
         },
         {
-          "label": "Doral u12",
+          "label": "Doral U12",
           "source": null,
           "teamId": "h20261030132019769345d68bb71e241"
         }
@@ -5450,7 +5450,7 @@
           "teamId": "h20261030132032092d66d2cdde0034a"
         },
         {
-          "label": "Atlanta FHC u14",
+          "label": "Atlanta FHC U14",
           "source": null,
           "teamId": "h20261030132032092064bc79d18f14a"
         }
@@ -5757,7 +5757,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Weston u10",
+          "label": "Weston U10",
           "source": null,
           "teamId": "h20261030122724032361483ff3fe548"
         },
@@ -6370,7 +6370,7 @@
           "teamId": "h20261030145612519d10d7910c32445"
         },
         {
-          "label": "Florida United u19",
+          "label": "Florida United U19",
           "source": null,
           "teamId": "h20261030145612519ee5a5197e3cc47"
         }
@@ -6478,7 +6478,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Weston u12",
+          "label": "Weston U12",
           "source": null,
           "teamId": "h20261030132019768a9f420ac607a40"
         },
@@ -6936,7 +6936,7 @@
           "teamId": "h20261030143742211e6b874a3b6594e"
         },
         {
-          "label": "Norcal Wolves u16",
+          "label": "Norcal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -7144,7 +7144,7 @@
           "teamId": "h20261030132032092b56ff374bd8c4f"
         },
         {
-          "label": "Atlanta FHC u14",
+          "label": "Atlanta FHC U14",
           "source": null,
           "teamId": "h20261030132032092064bc79d18f14a"
         }
@@ -7231,7 +7231,7 @@
           "teamId": "h20261030143742212c5abb28c836548"
         },
         {
-          "label": "Florida United u16",
+          "label": "Florida United U16",
           "source": null,
           "teamId": "h202610301437422129d38ded796084f"
         }
@@ -8096,7 +8096,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Norcal Wolves u16",
+          "label": "Norcal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         },
@@ -8404,7 +8404,7 @@
     {
       "divisionKey": 3,
       "id": "h20261030122724032829b3947a6f64a",
-      "name": "Atlanta FHC u10",
+      "name": "Atlanta FHC U10",
       "poolId": "h20261030122724032d9ced45cf8fb47",
       "record": {
         "ga": 0,
@@ -8468,7 +8468,7 @@
     {
       "divisionKey": 3,
       "id": "h20261030122724032361483ff3fe548",
-      "name": "Weston u10",
+      "name": "Weston U10",
       "poolId": "h20261030122724032d9ced45cf8fb47",
       "record": {
         "ga": 0,
@@ -8500,7 +8500,7 @@
     {
       "divisionKey": 5,
       "id": "h2026103013201976939fa2f147c584d",
-      "name": "Atlanta FHC u12",
+      "name": "Atlanta FHC U12",
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
         "ga": 4,
@@ -8532,7 +8532,7 @@
     {
       "divisionKey": 5,
       "id": "h20261030132019769345d68bb71e241",
-      "name": "Doral u12",
+      "name": "Doral U12",
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
         "ga": 0,
@@ -8708,7 +8708,7 @@
     {
       "divisionKey": 5,
       "id": "h20261030132019768a9f420ac607a40",
-      "name": "Weston u12",
+      "name": "Weston U12",
       "poolId": "h202610301320197684a409fbf141e42",
       "record": {
         "ga": 0,
@@ -8772,7 +8772,7 @@
     {
       "divisionKey": 29,
       "id": "h20261030132032092064bc79d18f14a",
-      "name": "Atlanta FHC u14",
+      "name": "Atlanta FHC U14",
       "poolId": "h20261030132032091fbd1c813615643",
       "record": {
         "ga": 3,
@@ -9348,7 +9348,7 @@
     {
       "divisionKey": 16,
       "id": "h202610301437422129d38ded796084f",
-      "name": "Florida United u16",
+      "name": "Florida United U16",
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
         "ga": 0,
@@ -9540,7 +9540,7 @@
     {
       "divisionKey": 16,
       "id": "h20261030143742211fdeddb98b98947",
-      "name": "Norcal Wolves u16",
+      "name": "Norcal Wolves U16",
       "poolId": "h20261030143742211796f627a781e47",
       "record": {
         "ga": 3,
@@ -9764,7 +9764,7 @@
     {
       "divisionKey": 22,
       "id": "h20261030145612519817d217000204d",
-      "name": "Atlanta FHC u19",
+      "name": "Atlanta FHC U19",
       "poolId": "h20261030145612519cfe5cd6fc46141",
       "record": {
         "ga": 1,
@@ -9876,7 +9876,7 @@
     {
       "divisionKey": 22,
       "id": "h20261030145612519ee5a5197e3cc47",
-      "name": "Florida United u19",
+      "name": "Florida United U19",
       "poolId": "h2026103014561251985cb1d0280774d",
       "record": {
         "ga": 0,

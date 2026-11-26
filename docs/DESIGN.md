@@ -5244,6 +5244,10 @@ except where this section says otherwise (§35.4 times, §35.7 the freshness pol
   start in venue time and UTC, field, two sides, score, status, exhibition flag, and a placement game's place in
   its bracket). **Dropped on purpose:** the team colours (random on every request: every run would commit), the
   video fields and the blank city/state fields.
+- **Team names as printed.** A team's name and a resolved bracket side are the feed's own words with one change:
+  every age token's `u` is capitalised ("Atlanta FHC u10" → "Atlanta FHC U10", "Norcal Wolves u16" → "Norcal
+  Wolves U16"; `displayTeamName` in lib/festival/festival-names.ts), so a division's teams read alike (owner
+  decision, 2026-11-26). Nothing else is restyled, and slugs and club matching are case-blind, so no URL moves.
 - **Never invent.** A placement game's sides are the feed's own labels ("Pool R 1st place v Pool S 1st place"):
   no game is called a final or a championship unless the feed says so, and no word of the "eliminat-" family is
   used anywhere (the copy gate). A column of the bracket is titled from its sources ("Pool R and S crossovers",
@@ -5265,7 +5269,7 @@ club from its own name, so a team added mid-event never breaks the refresh. Toda
 club except the adult teams "Stars" and "Stripes".
 
 - **California teams.** San Francisco Hawks U16 and U19 (`sf-hawks`), Hayward Hawks (U12, `hayward-hawks`) and
-  Norcal Wolves u16 (`norcal-impact`, worded as NorCal Impact's Wolves team only with the evidence quote) are
+  Norcal Wolves U16 (`norcal-impact`, worded as NorCal Impact's Wolves team only with the evidence quote) are
   Northern California; HTC CA U19 (`htc`, San Diego) is Southern California. HTC's U16 team is its East Coast
   team, so HTC is two festival clubs, `htc` and `htc-ca`, both linked to the one site club: only HTC CA U19 is
   listed as a California team.

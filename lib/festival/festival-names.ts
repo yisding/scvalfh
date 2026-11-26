@@ -13,6 +13,16 @@ export const FESTIVAL_RESERVED_SLUGS: readonly string[] = ['clubs', 'teams', 'sc
 /** An age token anywhere in a team name: 'U14', 'u16', 'U-19'. */
 const AGE_TOKEN = /\bu-?\d+\b/gi;
 
+/**
+ * A team name as the festival pages print it: the feed's own words, with every age token's `u` capitalised
+ * ('Atlanta FHC u10' → 'Atlanta FHC U10', 'Norcal Wolves u16' → 'Norcal Wolves U16'), so a division's teams read
+ * alike (owner decision, 2026-11-26). Nothing else is changed: 'Florida United white' keeps its lower-case colour.
+ * Slugs and club matching are case-blind, so this never moves a URL.
+ */
+export function displayTeamName(name: string): string {
+  return name.trim().replace(AGE_TOKEN, (token) => `U${token.slice(1)}`);
+}
+
 /** 'San Francisco Hawks U16' → 'san-francisco-hawks'; 'New York H.C.' → 'new-york-h-c'; nothing usable → ''. */
 export function slugify(name: string): string {
   return name
