@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "46d5a4f5ced789b579139dc239a28b1374c11179a46085a190fec7edce1ac0c9",
+  "contentHash": "fe9e7933c691b4d247bc5b4284e68f09c9be23b4313692a330109eb80cebbe96",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,7 +19,7 @@
       },
       "pal": {
         "backfilled": 0,
-        "finals": 5,
+        "finals": 6,
         "games": 222,
         "leagueGames": 110,
         "teams": 16
@@ -61,27 +61,27 @@
       },
       "wcal": {
         "backfilled": 0,
-        "finals": 2,
+        "finals": 3,
         "games": 110,
         "leagueGames": 56,
         "teams": 8
       }
     },
-    "finals": 35,
+    "finals": 36,
     "games": 1292,
     "leagueGames": 683,
     "mismatches": 4,
-    "pending": 13,
+    "pending": 12,
     "teams": 133
   },
   "crossCheck": {
-    "agreements": 24,
+    "agreements": 25,
     "backfilled": 0,
-    "compared": 137,
-    "conflicts": 1,
-    "sbliveOnlyScored": 2
+    "compared": 141,
+    "conflicts": 0,
+    "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-11-26T06:24:16.559Z",
+  "fetchedAt": "2026-11-26T15:14:50.874Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -561,7 +561,7 @@
     },
     {
       "label": "eastside schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -1095,18 +1095,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2125-bval-mt-hamilton scoreboard 2026-11-25",
-      "rowCount": 2,
-      "status": "ok"
-    },
-    {
       "label": "sblive 2128-bval-west-valley scoreboard 2026-11-24",
       "rowCount": 2,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2128-bval-west-valley scoreboard 2026-11-25",
-      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -1115,8 +1105,18 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2259-pcal-cypress scoreboard 2026-11-25",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-24",
       "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-25",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1125,8 +1125,18 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2261-pcal-mission scoreboard 2026-11-25",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2262-pcal-santa-lucia scoreboard 2026-11-24",
       "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2262-pcal-santa-lucia scoreboard 2026-11-25",
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -1185,17 +1195,17 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2284-sccal scoreboard 2026-11-25",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2326-wbal scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "sblive 2327-wcal scoreboard 2026-11-24",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2327-wcal scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
@@ -1215,11 +1225,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-25",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
       "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-23",
       "rowCount": 3,
       "status": "ok"
@@ -1227,11 +1232,6 @@
     {
       "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-24",
       "rowCount": 3,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-25",
-      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1275,6 +1275,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive carlmont games",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
       "label": "sblive el-camino-ssf games",
       "rowCount": 20,
       "status": "ok"
@@ -1302,11 +1307,6 @@
     {
       "label": "sblive prospect games",
       "rowCount": 14,
-      "status": "ok"
-    },
-    {
-      "label": "sblive valley-christian games",
-      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -1350,8 +1350,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-25",
-  "warnings": 22,
+  "today": "2026-11-26",
+  "warnings": 21,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",

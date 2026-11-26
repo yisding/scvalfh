@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-26T06:24:16.559Z",
+  "fetchedAt": "2026-11-26T15:14:50.874Z",
   "fixtures": [
     {
       "claims": {
@@ -602,8 +602,8 @@
             "away": {
               "city": "San Jose",
               "name": "Valley Christian",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 61,
               "slug": "valley-christian",
               "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
             },
@@ -616,13 +616,13 @@
             "dateKey": "2026-11-19",
             "dateLocal": "2026-11-19T19:00:00",
             "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Atherton",
               "name": "Menlo-Atherton",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 30,
               "slug": "menlo-atherton",
               "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a"
             },
@@ -635,13 +635,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T16:59:22",
+              "maxprepsModifiedOn": "2026-11-26T10:35:03",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": "https://gofan.co/event/7088762?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/menlo-atherton-vs-valley-christian-san-jose/11-19-2026/?c=ef222dcf-2f10-473e-9dbb-e41ed2b8c25d",
@@ -3179,7 +3179,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T06:20:03",
+              "maxprepsModifiedOn": "2026-11-26T07:48:10",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3196,26 +3196,7 @@
             }
           },
           "ref": "8cde47bc-c5ed-483e-beac-b003ea985127"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "8cde47bc-c5ed-483e-beac-b003ea985127",
-              "published": {
-                "away": 52,
-                "home": 63
-              },
-              "scoreConflict": {
-                "note": "Sources disagree: we show MaxPreps’ 52-63 (Santa Cruz–Oakwood); si.com reports 0-0. MaxPreps’ score stands.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:8cde47bc-c5ed-483e-beac-b003ea985127"
-          }
-        ]
+        }
       },
       "id": "2026-11-25-santa-cruz-at-name:oakwood",
       "published": [
@@ -81604,7 +81585,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T02:31:14",
+              "maxprepsModifiedOn": "2026-11-26T10:32:11",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -88826,7 +88807,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": "https://gofan.co/event/7105961?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7105947?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-hillsdale-fighting-knights-san-mateo/2-12-2027/?c=f9806118-254f-4231-af48-5da8adaa05c7",
               "nfhsStream": null
             },
