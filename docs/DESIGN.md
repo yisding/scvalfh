@@ -1943,6 +1943,8 @@ every plane but collapses CVD separation from 10.4 to **5.5**, `exit=1`; the lig
   *state*, not its row number.
 - **Refetch:** there is none. The page is static; a new snapshot is a new deploy. A re-filter
   holds the previous list at `opacity: .6` — no skeleton flash, no layout jump.
+  *(The festival pages are the one exception, §35.7: a HEAD request to their own URL every three
+  minutes while the tab is visible, to say "New scores are in" — never a refetch of the page.)*
 
 ---
 
@@ -2463,7 +2465,8 @@ Every line is a gate, not an aspiration; §10.9 lists which ones CI enforces.
     page (`localStorage` keys `scvalfh.theme`, `scvalfh.pinnedTeam`, `scvalfh.league`; the league
     key is written only by an explicit choice, never by following a link). No accounts, no
     analytics cookies, no third-party requests on any page (no hotlinked images, self-hosted
-    fonts). *(Amended in §15; this item originally said "exactly two things".)*
+    fonts). *(Amended in §15; this item originally said "exactly two things". §24.3 added the region, and
+    §35.7 a fifth key in field hockey's build alone, `scvalfh.festivalTeams`, the festival teams a reader follows.)*
 
 ---
 
@@ -5218,3 +5221,165 @@ links. Per-row internal links carry `prefetch={false}`. Nothing on the page is a
   list yet (the region toggle does not scope the page: it says "Northern California" in its header).
 - No automatic refresh: club events are posted on many small sites in many shapes, and a wrong date
   costs a family a drive. The file is re-read by hand.
+
+## 35. National Hockey Festival amendment (2026-11-26)
+
+USA Field Hockey's 2026 National Hockey Festival is played Nov 26–28 at the Paradise Coast Sports Complex in
+Naples, Fla.: 118 teams in eight divisions, 295 games on 12 fields, results posted on TourneyMachine. Families of
+the site's Northern California players travel to it, and the event was live on the day this was built. The site
+gained one family of pages for it, `/festival`, field hockey's build alone. Everything in §1-§34 still stands
+except where this section says otherwise (§35.4 times, §35.7 the freshness poll).
+
+### 35.1 Data
+
+- **One committed file, refreshed by a job.** `data/field-hockey/festival.json` is TourneyMachine's public results
+  feed trimmed and normalized by `lib/sources/tourneymachine.ts` (`normalizeFestival`, a pure function over the
+  raw JSON) and written by `scripts/fetch-festival.ts` (`pnpm fetch-festival`); its schema and joins are
+  `lib/festival/festival-schema.ts`, its loader `lib/festival/festival.ts` (docs/DATA-SOURCES.md). Pages read only
+  the committed file: the browser never calls TourneyMachine, and `lib/sources` stays out of app/ and components/.
+- **What is kept.** The tournament (name, dates, venue, the venue's time zone and UTC offset, links to
+  TourneyMachine's results and USA Field Hockey's event page), the fields, each division (key, slug, the feed's
+  name, a short label, format, pools with their teams in TourneyMachine's rank order), each team (its pool record
+  as TourneyMachine computes it: W, L, T, points, GF, GA, GD) and each game (number, division, pool or placement,
+  start in venue time and UTC, field, two sides, score, status, exhibition flag, and a placement game's place in
+  its bracket). **Dropped on purpose:** the team colours (random on every request: every run would commit), the
+  video fields and the blank city/state fields.
+- **Never invent.** A placement game's sides are the feed's own labels ("Pool R 1st place v Pool S 1st place"):
+  no game is called a final or a championship unless the feed says so, and no word of the "eliminat-" family is
+  used anywhere (the copy gate). A column of the bracket is titled from its sources ("Pool R and S crossovers",
+  "Pool A placement"), computed in the view, not stored.
+- **Commit only on a content change.** `festivalContentKey` ignores `fetchedAt` alone, so a run that finds the
+  same results writes nothing; the feed's version stamp (`sourceVersion`) is content, so a version bump with new
+  results commits. `fetchedAt` therefore moves only with the results, and the sitemap's `lastModified` for every
+  festival page is that stamp (the club pages the later of it and the curated clubs file's `checkedOn`), never
+  `Date.now()`.
+
+### 35.2 Clubs
+
+TourneyMachine has teams, not clubs. `data/field-hockey/festival-clubs.json` is a curated map, checked by hand on
+2026-11-26 against USA Field Hockey's participating-clubs page: each club's display name (as that page lists it),
+the lower-case name prefixes its teams start with, and, only with a quoted source, its region, whether it is a
+California club (Northern or Southern) and its slug in `data/field-hockey/clubs.json`. A team joins the club with
+the longest matching prefix (prefixes are unique, so there is no tie); a team no club matches gets an automatic
+club from its own name, so a team added mid-event never breaks the refresh. Today every team resolves to a curated
+club except the adult teams "Stars" and "Stripes".
+
+- **California teams.** San Francisco Hawks U16 and U19 (`sf-hawks`), Hayward Hawks (U12, `hayward-hawks`) and
+  Norcal Wolves u16 (`norcal-impact`, worded as NorCal Impact's Wolves team only with the evidence quote) are
+  Northern California; HTC CA U19 (`htc`, San Diego) is Southern California. HTC's U16 team is its East Coast
+  team, so HTC is two festival clubs, `htc` and `htc-ca`, both linked to the one site club: only HTC CA U19 is
+  listed as a California team.
+- **Linked both ways.** A festival club with a site club links `/clubs/<slug>` ("Club page on this site"), and
+  that club page links back ("At the National Hockey Festival"; HTC's names both of its festival clubs). Checked
+  against all 28 registry clubs; the false friends (New Heights and Pacific Heights, Windy City and D-City, Lonestar
+  Orange and OC Field Hockey Club, Mid-Jersey Knights and San Marcos Knights, Red Lions Hockey Club and Lions Hockey
+  Club of Fremont) are not linked.
+
+### 35.3 Routes
+
+All prerendered from the file (`dynamicParams = false`), all on the root OG card, all in the sitemap, all gated
+on `HAS_FESTIVAL` (`SPORT_FEATURES.festival` in lib/sports/current.ts; every other build renders them as 404s,
+has no params for them and lists none):
+
+| Route | What |
+|---|---|
+| `/festival` | The hub: a status line from the data, Your teams, California teams, latest results, up next, divisions, clubs, about these results |
+| `/festival/schedule` | Every game by day, then time slot; "Only my teams" |
+| `/festival/clubs` | The clubs A–Z, California clubs first (Northern, then Southern California) |
+| `/festival/clubs/[club]` | One club: its teams, one merged club schedule, then each team's games, pool table and placement paths |
+| `/festival/teams/[team]` | One team: record, games, pool table, placement path, Follow |
+| `/festival/[division]` | One division: pools, its bracket, its schedule |
+
+Division slugs are `u10`, `u12`, `u14-coed`, `u14-7v7`, `u14-11v11`, `u16`, `u19` and `adult`; a team's slug is
+its division's slug and its name without age tokens (`u16-san-francisco-hawks`). The static `schedule`, `clubs`
+and `teams` segments outrank `[division]`, and the schema refuses those three words as division slugs. The
+registries hold the family exactly: `scripts/lib/prerender-expectations.ts` lists the three fixed pages and the
+three families (the fixed `festival/schedule` and `festival/clubs` pages sit in the division pages' folder and are
+not counted as divisions), `scripts/smoke-server.sh` checks the sitemap's counts and the 404s,
+`scripts/a11y-axe.mjs` runs the fixed pages, a page of each family and a run with a followed team, and
+`scripts/assert-budgets.ts` holds their HTML and first-load JS (§35.8).
+
+**Surfacing** (§17.6's "links in, not nav" holds for the header and the four tabs): a "Festival" row in the phone
+bar's More sheet (the More tab is lit on every festival page), a section head on `/` ("National Hockey Festival",
+"Naples, Fla. · Nov 26–28", "Results and brackets") while the build instant is between a week before the first day
+and three days after the last, and the club-page links of §35.2. The home head is a section head, not a strip: a
+strip's right end does not wrap, and the meta and the link do not fit a 320 px row together. It is not a filled
+banner.
+
+### 35.4 Times: ET first (a recorded deviation from §10.11)
+
+The feed's times are naive Eastern wall-clock times, and every reader who needs them is at the venue. Festival
+pages show venue time labelled ET as the primary time ("8:00 AM ET" in rows), with Pacific time beside it in slot
+headings ("Thu Nov 26 · 8:00 AM ET · 5:00 AM PT") and in the freshness stamp ("Scores as of 3:42 PM ET · 12:42 PM
+PT"). This is the one place the site labels a time anything but PT. The offset is stored (`utcOffset`, −05:00 for
+all three days) and validated: every game's UTC start is its venue start plus five hours. `<time datetime>` carries
+the UTC instant.
+
+The site footer (§33) keeps its "All times Pacific." under the festival pages too: it is the root layout's, and it
+describes the league pages and the league data's "Updated" stamp beside it. Every time a festival page shows carries
+its zone ("ET", "PT"), or sits under a slot or section heading that does, so no festival time is left to
+that line. A festival-specific footer was not worth a
+second layout for three days.
+
+### 35.5 Results and ties
+
+Points 3/1/0, and the pool order is TourneyMachine's rank (the tiebreak order of the event's regulations, D.2–D.4,
+quoted briefly in "About these results"). Placement games tied at full time are decided by a shoot-out and the
+feed has no shoot-out field, so such a game shows "Tied — shoot-out" and no winner is picked. Scores follow the
+site's score rules (an en dash, never 0, for a missing score). The site is unofficial; the corrections link is the
+site's usual thread.
+
+### 35.6 Refresh: three checks an hour per slot hour
+
+A slot is a distinct start time; games last 55 minutes (two 25-minute halves and a 5-minute break, or four
+12-minute quarters). The job `.github/workflows/update-data-festival.yml` runs 12, 32 and 52 minutes after each
+slot ends (:07, :27 and :47 past the next hour, clear of the :00 rush on GitHub's scheduler), plus one catch-up
+per day 2 h 15 min after the day's last slot. The cron lines are derived from the file's slots
+(`lib/festival/festival-crons.ts`), and tests/workflows.test.ts alone asserts the YAML matches them, so a schedule
+change upstream never blocks a data commit. Each run first reads TourneyMachine's ~30-byte "last updated" stamp
+and stops when it equals the committed `sourceVersion`: no install, no download, no commit, no deploy. Only a
+changed stamp downloads the ~275 KB feed, runs the festival tests and commits on a content change; Cloudflare
+Workers Builds redeploys the push in about 2.5 minutes. So a score entered at the field appears here a few minutes
+after the check that finds it; score entry itself lags the games by 10–30 minutes.
+
+### 35.7 Following teams, and the freshness notice
+
+- **Follow, saved in this browser only.** A Follow control on every team (and "Follow all N teams" on a club page)
+  stores the team's slug under `scvalfh.festivalTeams` (space-separated, validated against the pattern and the
+  build's own team slugs where it is read, at most 40). It is the fifth stored thing (§10.12), field hockey's alone,
+  written only by a Follow control. The control follows PinControl's convention (§7.12): it says the state and
+  offers the action, is invisible until ready, is at least 44 px tall, and is replaced by one sentence when storage
+  is unavailable.
+- **Painted before first paint, by CSS.** A tiny head script (in the root layout, after the pinned-team script)
+  stamps `<html data-fest-follow="slug slug">`; the festival layout's generated stylesheet reveals each followed
+  team's hidden "Your teams" card and marks its name with the accent star (with hidden words, "Following") and a
+  bold name. The attributes are `data-fest-*`, never `data-team-slug`, so the site's pinned-team marks never pick
+  them up. With no JavaScript the hub explains how following works and shows every other section unchanged.
+- **The freshness notice: the one network request.** While a festival tab is visible, a small client component
+  sends `HEAD` to the page's own URL every three minutes and compares its ETag or Last-Modified with the first one
+  it saw; when it changes it shows "New scores are in. Reload". It stops when the tab is hidden and never runs once
+  every game is final. It asks only our own static origin, and it is the only polling on the site (§6.7 otherwise
+  holds: no refetch).
+
+### 35.8 Gates and budgets
+
+- **Prerender.** Both prerender gates expect the three fixed pages and exactly one page per division, club and
+  team; another sport's build expects none and skips the six routes (`SKIPPED_ROUTES`).
+- **Budgets.** `main` has no baseline for these pages (§17.6), so each is held to a multiple of the `schedule`
+  baseline HTML gzip (120,444 B), set by §24.6's rule (measured × 1.12 / baseline, rounded up to one decimal) from
+  the larger of two builds: the committed file (24 of 295 games final) and the same file with every game final and
+  every placement side named, the event's end state. The first-load JS of all five routes is held to the
+  `standings` baseline + 24 KB (their client modules, the follow controls, the filter and the notice, take plain
+  props and import no data).
+
+  | Page (HTML gzip) | Today | All final | Limit (multiplier; % used at the larger) |
+  |---|---|---|---|
+  | `/festival` | 47,812 | 45,868 | 60,222 (0.5 ×; 79%) |
+  | `/festival/schedule` | 52,036 | 57,099 | 72,266 (0.6 ×; 79%) |
+  | `/festival/clubs` | 27,373 | 27,373 | 36,133 (0.3 ×; 76%) |
+  | Largest division (U19) | 34,356 | 35,858 | 48,178 (0.4 ×; 74%) |
+  | Largest club (Gateway) | 41,779 | 41,459 | 48,178 (0.4 ×; 87%) |
+  | Largest team | 22,136 | 21,854 | 36,133 (0.3 ×; 61%) |
+
+- **Not built.** No per-page OG card, no live scores in the browser, no push notification, no account, no
+  calendar export, no pages for another USA Field Hockey event. The pages stay after the event as its record.

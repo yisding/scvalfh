@@ -317,6 +317,31 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
     expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs/:slug');
   });
 
+  it('has no National Hockey Festival: its pages are skipped and none is expected (DESIGN §35)', () => {
+    expect(m.current.HAS_FESTIVAL).toBe(false);
+    expect(m.expectations.FIXED_PAGES.filter((p) => p === 'festival' || p.startsWith('festival/'))).toEqual([]);
+    expect(m.expectations.SKIPPED_ROUTES).toEqual(
+      expect.arrayContaining([
+        '/festival',
+        '/festival/schedule',
+        '/festival/clubs',
+        '/festival/clubs/:club',
+        '/festival/teams/:team',
+        '/festival/:division',
+      ]),
+    );
+    // This build writes the fixed festival pages as 404s in festival/, the division pages' folder: they are no
+    // division page, so the empty festival family still passes.
+    const fails: string[] = [];
+    const checker = m.expectations.makeFamilyChecker(['festival/schedule.html', 'festival/clubs.html'], {
+      cardSuffix: '/opengraph-image.body',
+      fail: (msg) => fails.push(msg),
+    });
+    checker.family('festival', [], { og: false });
+    checker.family('festival/clubs', [], { og: false });
+    expect(fails).toEqual([]);
+  });
+
   it('loads the clubs through the validating loader: every tie joins its row (varsity, or the JV list) of a club in the file', () => {
     const file = m.clubs.getClubsFile();
     expect(file.season).toBe(m.rosters.getRosters().season);

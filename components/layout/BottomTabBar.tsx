@@ -1,6 +1,7 @@
 import { getFetchedAt, getScoresLandingDate } from '../../lib/data';
 import { formatStamp } from '../../lib/format';
 import { LEAGUE_IDS } from '../../lib/leagues';
+import { HAS_FESTIVAL } from '../../lib/sports/current';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import MoreMenu, { type MoreMenuLink } from './MoreMenu';
@@ -11,7 +12,7 @@ import { DATA_CORRECTIONS_URL, NAV_LABELS } from './site';
 /**
  * The phone bar (DESIGN §33). Four text tabs and a More sheet: Scores, Standings, Playoffs, Teams
  * (the same four sections, in the same order, as the start of the header nav), then `<MoreMenu />`
- * with the reader's team, Leaders, JV, History, About, the corrections thread and the two
+ * with the reader's team, Leaders, JV, History, the Festival (field hockey), About, the corrections thread and the two
  * preferences. The wordmark is Home, and home is the Scores page, so on `/` the Scores cell is the
  * selected one. No icons.
  *
@@ -67,11 +68,16 @@ export const TABS: ReadonlyArray<{ href: string; label: string }> = [
   { href: '/teams', label: NAV_LABELS.teams },
 ];
 
-/** The More sheet's links, in the footer index's order. Every route here is in MoreMenu's MORE_ROUTES. */
-const MORE_LINKS: readonly MoreMenuLink[] = [
+/**
+ * The More sheet's links, in the footer index's order. Every route here is in MoreMenu's MORE_ROUTES. The National
+ * Hockey Festival's results (field hockey, HAS_FESTIVAL; DESIGN §35) sit after History: a sheet row, not a tab or a
+ * footer entry, which tests/ui/tab-labels.test.ts and tests/ui/attribution.test.ts pin.
+ */
+export const MORE_LINKS: readonly MoreMenuLink[] = [
   { href: '/leaders', label: NAV_LABELS.leaders },
   { href: '/jv', label: NAV_LABELS.jv },
   { href: '/history/2025-26', label: NAV_LABELS.history },
+  ...(HAS_FESTIVAL ? [{ href: '/festival', label: 'Festival' }] : []),
   { href: '/about', label: NAV_LABELS.about },
   { href: DATA_CORRECTIONS_URL, label: NAV_LABELS.report, external: true },
 ];

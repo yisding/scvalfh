@@ -840,6 +840,12 @@
   .sx-logrow:hover { background: var(--sx-surface-2); }
   .sx-logrow-note { font-size: 0.875rem; color: var(--sx-text-2); }
   .sx-logrow .sx-teamcell > :is(a, span) { min-width: 0; white-space: normal; line-height: 1.25rem; }   /* a long opponent wraps; it is never cut */
+  /* A festival club's merged schedule (DESIGN §35): its rows sit under day and slot headings, so the row has no
+     weekday or time column: chip, score, the club's team v the opponent, the field. */
+  .sx-logrow[data-slotted] { grid-template-columns: 1.25rem 3.25rem minmax(0, 1fr) auto; }
+  .sx-logrow[data-slotted] > .sx-num:nth-child(2) { font-size: 1.25rem; font-weight: 600; }
+  .sx-logrow[data-slotted="plain"] { grid-template-columns: minmax(0, 1fr) auto; }
+  .sx-logrow[data-slotted="plain"] > :first-child { color: inherit; }   /* the names cell here, not the muted weekday */
   .sx-nonleague { color: var(--sx-text-2); }
 
   /* ── Your team line. On the Scores page, when the reader's team has NO game on the selected day:
@@ -1067,6 +1073,10 @@
     .sx-logrow { grid-template-columns: 3.25rem 1.25rem 4.75rem minmax(0, 1fr); padding-block: 0.375rem; }
     .sx-logrow-note { grid-column: 4; min-width: 0; white-space: normal; line-height: 1.25rem; }   /* under the name on a phone: a long note wraps, it is never cut */
     .sx-logrow-note:empty { display: none; }
+    .sx-logrow[data-slotted] { grid-template-columns: 1.25rem 3.25rem minmax(0, 1fr); }
+    .sx-logrow[data-slotted] > .sx-logrow-note { grid-column: 3; }
+    .sx-logrow[data-slotted="plain"] { grid-template-columns: minmax(0, 1fr); }
+    .sx-logrow[data-slotted="plain"] > .sx-logrow-note { grid-column: 1; }
   }
   @media (max-width: 29.99rem) {
     .sx-logrow { column-gap: 0.5rem; padding-inline: 0.25rem; }

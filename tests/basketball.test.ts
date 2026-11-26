@@ -502,6 +502,21 @@ describe('the basketball recruiting pages (data/basketball/{clubs,commits,roster
     expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs/:slug');
   });
 
+  it('has no National Hockey Festival: its pages are skipped and none is expected (DESIGN §35)', () => {
+    expect(m.current.HAS_FESTIVAL).toBe(false);
+    expect(m.expectations.FIXED_PAGES.filter((p) => p === 'festival' || p.startsWith('festival/'))).toEqual([]);
+    expect(m.expectations.SKIPPED_ROUTES).toEqual(
+      expect.arrayContaining([
+        '/festival',
+        '/festival/schedule',
+        '/festival/clubs',
+        '/festival/clubs/:club',
+        '/festival/teams/:team',
+        '/festival/:division',
+      ]),
+    );
+  });
+
   it('loads the clubs through the validating loader: every tie joins a varsity row of a club in the file', () => {
     const file = m.clubs.getClubsFile();
     expect(file.season).toBe(m.rosters.getRosters().season);

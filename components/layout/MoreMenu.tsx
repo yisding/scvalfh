@@ -41,8 +41,11 @@ export interface MoreMenuProps {
   glyph?: React.ReactNode;
 }
 
-/** Routes the sheet's links lead to: on any of them the More tab is the lit one. */
-const MORE_ROUTES = ['/leaders', '/jv', '/history', '/about', '/clubs', '/club-calendar', '/commits', '/recruiting'];
+/**
+ * Routes the sheet's links lead to: on any of them the More tab is the lit one. /festival is listed in every build;
+ * only field hockey's has the page (and the sheet's link to it), elsewhere it is a 404.
+ */
+const MORE_ROUTES = ['/leaders', '/jv', '/history', '/about', '/clubs', '/club-calendar', '/commits', '/recruiting', '/festival'];
 
 const under = (pathname: string, root: string) => pathname === root || pathname.startsWith(`${root}/`);
 

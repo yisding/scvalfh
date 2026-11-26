@@ -16,7 +16,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { localDateKey } from '../lib/format';
-import { festivalSlots, getFestival } from '../lib/festival/festival';
+import { festivalClubSlugs, festivalDivisionSlugs, festivalSlots, festivalTeamSlugs, getFestival } from '../lib/festival/festival';
 import { festivalCrons } from '../lib/festival/festival-crons';
 import { withFixtureGames } from '../lib/results/fixture-games';
 import { FESTIVAL_TOURNAMENT_ID, lastUpdatedUrl } from '../lib/sources/tourneymachine';
@@ -949,7 +949,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'club-calendar', 'commits', 'recruiting', 'jv', 'draft/awards']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'club-calendar', 'commits', 'recruiting', 'jv', 'draft/awards', 'festival', 'festival/schedule', 'festival/clubs']) {
       put(`${p}.html`);
     }
     put('opengraph-image.body');
@@ -979,6 +979,11 @@ describe('assert:prerender on a .next that has served traffic', () => {
     for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
     // One JV calendar per league (app/jv/[league]), no OG card either.
     for (const league of LEAGUE_IDS) put(`jv/${league}.html`);
+    // The National Hockey Festival (DESIGN §35): one page per division (beside the fixed festival/schedule and
+    // festival/clubs pages), club and team of data/field-hockey/festival.json, all on the root OG card.
+    for (const division of festivalDivisionSlugs()) put(`festival/${division}.html`);
+    for (const club of festivalClubSlugs()) put(`festival/clubs/${club}.html`);
+    for (const team of festivalTeamSlugs()) put(`festival/teams/${team}.html`);
     for (const [rel, body] of Object.entries(extra)) put(rel, body);
     return root;
   }
@@ -1029,6 +1034,22 @@ describe('assert:prerender on a .next that has served traffic', () => {
     rmSync(path.join(root, '.next', 'server', 'app', 'clubs', `${slug}.html`));
     const missing = run(root);
     expect(missing.output).toContain(`FAIL clubs/: 1 expected page(s) not prerendered: ${slug}`);
+    expect(missing.status).toBe(1);
+  });
+
+  it('holds each festival family to its own pages: the fixed ones beside the divisions are none, a stray one is named', () => {
+    const ok = run(tree({}));
+    expect(ok.output).toMatch(new RegExp(`festival ${festivalDivisionSlugs().length}/${festivalDivisionSlugs().length} divisions`));
+    const extra = run(tree({ 'festival/nope.html': '', 'festival/teams/nope.html': '' }));
+    expect(extra.output).toContain('FAIL festival/: 1 unexpected page(s) prerendered: nope');
+    expect(extra.output).toContain('FAIL festival/teams/: 1 unexpected page(s) prerendered: nope');
+    expect(extra.status).toBe(1);
+
+    const root = tree({});
+    const team = festivalTeamSlugs()[0];
+    rmSync(path.join(root, '.next', 'server', 'app', 'festival', 'teams', `${team}.html`));
+    const missing = run(root);
+    expect(missing.output).toContain(`FAIL festival/teams/: 1 expected page(s) not prerendered: ${team}`);
     expect(missing.status).toBe(1);
   });
 

@@ -6,6 +6,7 @@ import BottomTabBar from '../components/layout/BottomTabBar';
 import SiteHeader from '../components/layout/SiteHeader';
 import { BUILD_INSTANT } from '../components/layout/build-instant';
 import { DISCLOSURE_SCRIPT } from '../components/layout/disclosure-script';
+import { FEST_FOLLOW_SCRIPT } from '../components/festival/follow-script';
 import { buildLeagueScopeCss } from '../components/prefs/league-scope-css';
 import { buildPrefsScript } from '../components/prefs/prefs-script';
 import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '../components/layout/site';
@@ -16,6 +17,7 @@ import TwinMarks from '../components/layout/TwinMarks';
 import { getFetchedAt, getTeams } from '../lib/data';
 import { DEFAULT_REGION } from '../lib/league-config/sections';
 import { LEAGUE_IDS, regionOf } from '../lib/leagues';
+import { HAS_FESTIVAL } from '../lib/sports/current';
 
 import './globals.css';
 
@@ -127,6 +129,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <PinnedTeamMarks /> below re-applies it after every client-side navigation; see
             components/prefs/pinned-team-script.ts for why this pass still lives here. */}
         <script dangerouslySetInnerHTML={{ __html: PINNED_TEAM_SCRIPT }} />
+        {/* The followed festival teams (DESIGN §35): stamps data-fest-follow on <html> before first
+            paint, so /festival's stylesheet marks them in the first paint and after every client-side
+            navigation; see components/festival/follow-script.ts. Field hockey's build only. */}
+        {HAS_FESTIVAL ? <script dangerouslySetInnerHTML={{ __html: FEST_FOLLOW_SCRIPT }} /> : null}
         {/* The remembered league and region (SPEC §8.2, DESIGN-socal §2.4), a SEPARATE blocking
             script: stamps data-js, data-league, data-region (SoCal only), data-pin and
             data-pin-stale on <html> before first paint, so the scope stylesheet below paints the

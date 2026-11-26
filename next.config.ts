@@ -8,7 +8,9 @@ import { renamedGameRedirects } from './lib/game-aliases';
  * `/standings/[league]`, `/schedule`, `/schedule/[league]`, `/scores/[date]`, `/game/[id]`, `/teams`,
  * `/teams/[slug]`, `/playoffs`, `/playoffs/[league]`, `/leaders`, `/history/2025-26`, `/about`, `/clubs`,
  * `/clubs/[slug]`, `/commits` and `/recruiting` (the last four from data/field-hockey/clubs.json, data/field-hockey/commits.json
- * and the roster files, not the snapshot), plus the OG
+ * and the roster files, not the snapshot), `/festival`, `/festival/schedule`, `/festival/clubs`,
+ * `/festival/clubs/[club]`, `/festival/teams/[team]` and `/festival/[division]` (field hockey only, from
+ * data/field-hockey/festival.json and festival-clubs.json, DESIGN §35), plus the OG
  * images beside them and the metadata routes (icons, manifest, sitemap, robots) — every one
  * prerendered (`dynamicParams = false` on each dynamic segment, SPEC §8.1), so there is nothing to
  * configure for data. Notably absent, on purpose:

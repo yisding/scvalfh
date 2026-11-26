@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import FestivalNotice from '../components/home/FestivalNotice';
 import FindYourTeam from '../components/home/FindYourTeam';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
 import JsonLd from '../components/metadata/JsonLd';
@@ -16,7 +17,9 @@ import { TEAMS } from '../lib/teams';
  * `/`: the visually hidden h1 starts with the site name.
  *
  * The one thing this page adds is the first-visit block, "Find your team", which the view prints at
- * the top of its main column; the scope stylesheet shows it only while no league is remembered.
+ * the top of its main column; the scope stylesheet shows it only while no league is remembered. Above it, in field
+ * hockey's build and only around the event's dates, a section head pointing to the National Hockey Festival's
+ * results (components/home/FestivalNotice.tsx, DESIGN §35.8).
  *
  * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
  * this page with `react-dom/server` under Vitest, which has no path alias.
@@ -36,7 +39,16 @@ export default function Home() {
   return (
     <>
       <JsonLd data={websiteJsonLd()} />
-      <ScoreDay date={getToday()} home before={<FindYourTeam index={getTeamSearchIndex()} />} />
+      <ScoreDay
+        date={getToday()}
+        home
+        before={
+          <>
+            <FestivalNotice />
+            <FindYourTeam index={getTeamSearchIndex()} />
+          </>
+        }
+      />
     </>
   );
 }
