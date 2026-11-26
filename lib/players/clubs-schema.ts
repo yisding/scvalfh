@@ -13,21 +13,24 @@
  * Separate from lib/players/clubs.ts (the read API, which imports the file) so tests and scripts can parse
  * a file without loading one — the same split as lib/players/rosters-schema.ts / lib/players/rosters.ts.
  *
+ * A tie is a `membership`: a person (her registry id, data/players.json) and a club. Since 2026-11-26 it names
+ * no roster row; data/<sport>/player-index.json finds the person on this season's rows, and lib/players/clubs.ts
+ * serves each tie as the row's (a varsity row's, a JV row's, or a listed player's).
+ *
  * Invariants:
  *   1. club slugs are unique
- *   2. every affiliation's `club` names a club in clubs[]
- *   3. (teamSlug, athleteId, club) is unique
+ *   2. every membership's `club` names a club in clubs[]
+ *   3. (playerId, club) is unique
  *   4. every URL is https and none is on a social-media host (BANNED_HOSTS): a website, a program
  *      or roster page, and every source
- *   5. every club and every affiliation has at least one source
+ *   5. every club and every membership has at least one source
  *   6. a quote is 1-300 characters (it is kept for maintainers and never rendered)
  *   7. `asOf` takes one of five shapes (isAsOf); `sourceDate` is free text ("2025 Fall Season")
- *   8. the join to data/field-hockey/rosters.json — the row exists, carries the same fullName, is not JV, and
- *      agrees with every stated class year — lives in lib/players/clubs.ts: this file cannot see the rosters
- *   9. `jvAffiliations` hold the same records for players on JV rows, under the same rules (1-8,
- *      except that each must join to a JV row); a player is in one list or the other, never both
- * 1-3 and 9's one-list rule are one file-level `superRefine(checkClubsFile)`, whose every failure is a named issue with
- * a path (the lib/snapshot/snapshot-schema.ts idiom).
+ *   8. the join to this season's rows — the person has one, and every class year a source states agrees with
+ *      its grade — lives in lib/players/clubs.ts: this file cannot see the rosters; that every id is a registry
+ *      player's, and `name` one of hers, is tests/clubs-file.test.ts's (the registry is never bundled)
+ * 1-3 are one file-level `superRefine(checkClubsFile)`, whose every failure is a named issue with a path (the
+ * lib/snapshot/snapshot-schema.ts idiom).
  *
  * Club records name no individual (no coaches, no directors) and that is deliberate; nothing here
  * can check it, so it is a rule for whoever edits the file.
@@ -137,7 +140,7 @@ export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
  * Social media is never a source, nor a club's website. A host is banned when it IS one of these or
  * a subdomain of one (`www.instagram.com`, `m.facebook.com`) — never by substring, so `notx.com`
  * and `maxpreps.com` pass. The list covers the networks themselves and their short links (`fb.me`,
- * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/field-hockey/commits.json (lib/players/commits-schema.ts),
+ * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commitments.json (lib/players/commits-schema.ts),
  * whose commitments are most often announced on one of them.
  */
 export const BANNED_HOSTS = [
@@ -290,16 +293,41 @@ export const AffiliationSourceSchema = z.object({
   path: ['classYearDiffers'],
 });
 
+/**
+ * A person's tie to a club, as the file records it: under her registry id (data/players.json), which follows her
+ * from season to season, school to school and squad to squad. Since 2026-11-26; before, a tie named a roster row
+ * (team slug and MaxPreps' per-season athleteId, or a listed player's name), so a new season's rows lost them.
+ */
+export const MembershipSchema = z
+  .object({
+    /** The person's registry id: data/<sport>/player-index.json finds her on this season's rows. */
+    playerId,
+    /** Her official name in the registry, for whoever reads the file: `pnpm build-players` keeps it so. */
+    name: text,
+    club: slugId,
+    /** The club's own team name ("U19 Hawks Blue"), when a source gives one. */
+    clubTeam: text.nullable(),
+    status: z.enum(AFFILIATION_STATUSES),
+    /** The date or season the status rests on (isAsOf), when a source gives one. */
+    asOf: z.string().refine(isAsOf, 'expected YYYY-MM-DD, YYYY-MM, YYYY, a season (2025-26) or a range (2015-2018)').nullable(),
+    confidence: z.enum(AFFILIATION_CONFIDENCES),
+    sources: z.array(AffiliationSourceSchema).min(1, 'a membership needs at least one source'),
+    /** What the match rests on, for maintainers. Never rendered: it can name people who are not players. */
+    basis: text,
+  })
+  .strict();
+
+/**
+ * A tie as the pages read it (lib/players/clubs.ts): a membership found on one of this season's roster rows, named
+ * by the row (team slug, MaxPreps athleteId and the name the row shows). Never written to a file.
+ */
 export const ClubAffiliationSchema = z.object({
   teamSlug,
-  /** The MaxPreps per-season athlete GUID: the join key to data/field-hockey/rosters.json. */
+  /** The MaxPreps per-season athlete GUID of the row the person was found on (a listed player's: listedPlayerKey). */
   athleteId: text,
-  /**
-   * The player's id in the player registry (data/players.json), written by `pnpm build-players`. It
-   * outlasts `athleteId`, which MaxPreps reissues every season. Never read by the site.
-   */
+  /** The person's registry id (data/players.json): the membership's. */
   playerId: playerId.optional(),
-  /** As MaxPreps spells it; lib/players/clubs.ts refuses any other spelling. */
+  /** As the row spells it. */
   fullName: text,
   club: slugId,
   /** The club's own team name ("U19 Hawks Blue"), when a source gives one. */
@@ -313,23 +341,40 @@ export const ClubAffiliationSchema = z.object({
   basis: text,
 });
 
-const ClubsFileObject = z.object({
-  /** How the file was made. */
-  builtBy: text,
-  capturedAt: calendarDateKey,
-  /** The roster season the affiliations join to ("26-27"); lib/players/clubs.ts checks it is rosters.json's. */
-  season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
-  /** Method, rules and recall, in words. */
-  notes: z.array(text),
-  /** Empty only in a placeholder no research round has filled yet (lib/schema-primitives.ts isResearched). */
-  clubs: z.array(ClubSchema),
-  affiliations: z.array(ClubAffiliationSchema),
-  /**
-   * Ties for players on JV rows (the overlay's `level`), kept apart from `affiliations`, which list
-   * varsity rows only. Recorded on 2026-10-05; nothing renders them yet.
-   */
-  jvAffiliations: z.array(ClubAffiliationSchema).default([]),
-});
+/** A listed player's tie (otherRosters `listed`): an affiliation without the MaxPreps athleteId she does not have. */
+export const ListedAffiliationSchema = ClubAffiliationSchema.omit({ athleteId: true }).strict();
+
+const ClubsFileObject = z
+  .object({
+    /** How the file was made. */
+    builtBy: text,
+    capturedAt: calendarDateKey,
+    /** Method, rules and recall, in words. */
+    notes: z.array(text),
+    /** Empty only in a placeholder no research round has filled yet (lib/schema-primitives.ts isResearched). */
+    clubs: z.array(ClubSchema),
+    /**
+     * Every tie, by person. Which list a page shows it in follows from the row the person is on this season
+     * (lib/players/clubs.ts): a varsity row's, a JV row's, or a listed player's (otherRosters `listed`).
+     */
+    memberships: z.array(MembershipSchema),
+  })
+  .strict();
+
+/**
+ * The file as the pages read it (lib/players/clubs.ts getClubsFile): its clubs, and its memberships found on this
+ * season's rows, each list as the pages have always read it.
+ */
+export interface ClubsView extends Omit<z.infer<typeof ClubsFileObject>, 'memberships'> {
+  /** The season of the rows the ties were found on: rosters.json's. */
+  season: string;
+  /** Ties of people on a varsity row (a MaxPreps row the overlay does not mark JV). */
+  affiliations: ClubAffiliation[];
+  /** Ties of people on a JV row: a MaxPreps JV roster page's, or a varsity page's the overlay marks JV. */
+  jvAffiliations: ClubAffiliation[];
+  /** Ties of listed players (otherRosters `listed`), named by team and the listed name. */
+  listedAffiliations: ListedAffiliation[];
+}
 
 type Ctx = z.RefinementCtx;
 
@@ -344,27 +389,12 @@ function checkClubsFile(f: z.infer<typeof ClubsFileObject>, ctx: Ctx): void {
     if (slugs.has(c.slug)) issue(ctx, ['clubs', i, 'slug'], `duplicate club slug ${c.slug}`);
     slugs.add(c.slug);
   });
-  const triples = new Set<string>();
-  f.affiliations.forEach((a, i) => {
-    if (!slugs.has(a.club)) issue(ctx, ['affiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
-    const key = `${a.teamSlug} ${a.athleteId} ${a.club}`;
-    if (triples.has(key)) {
-      issue(ctx, ['affiliations', i], `duplicate affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
-    }
-    triples.add(key);
-  });
-  const varsityPlayers = new Set(f.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
-  const jvTriples = new Set<string>();
-  f.jvAffiliations.forEach((a, i) => {
-    if (!slugs.has(a.club)) issue(ctx, ['jvAffiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
-    const key = `${a.teamSlug} ${a.athleteId} ${a.club}`;
-    if (jvTriples.has(key)) {
-      issue(ctx, ['jvAffiliations', i], `duplicate JV affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
-    }
-    jvTriples.add(key);
-    if (varsityPlayers.has(`${a.teamSlug} ${a.athleteId}`)) {
-      issue(ctx, ['jvAffiliations', i], `${a.teamSlug} / ${a.fullName} is also in affiliations`);
-    }
+  const pairs = new Set<string>();
+  f.memberships.forEach((m, i) => {
+    if (!slugs.has(m.club)) issue(ctx, ['memberships', i, 'club'], `${m.club} is not a club in clubs[]`);
+    const key = `${m.playerId} ${m.club}`;
+    if (pairs.has(key)) issue(ctx, ['memberships', i], `duplicate membership: ${m.name} (${m.playerId}) / ${m.club}`);
+    pairs.add(key);
   });
 }
 
@@ -375,4 +405,6 @@ export type ClubSource = z.infer<typeof ClubSourceSchema>;
 export type Club = z.infer<typeof ClubSchema>;
 export type AffiliationSource = z.infer<typeof AffiliationSourceSchema>;
 export type ClubAffiliation = z.infer<typeof ClubAffiliationSchema>;
+export type ListedAffiliation = z.infer<typeof ListedAffiliationSchema>;
+export type Membership = z.infer<typeof MembershipSchema>;
 export type ClubsFile = z.infer<typeof ClubsFileSchema>;

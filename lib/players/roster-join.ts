@@ -1,5 +1,5 @@
 /**
- * The join data/field-hockey/clubs.json and data/field-hockey/commits.json both make to the merged rosters (DESIGN §17,
+ * The join data/field-hockey/clubs.json and data/commitments.json both make to the merged rosters (DESIGN §17,
  * §21: commitments follow the clubs' matching rule), on team slug + MaxPreps athleteId.
  *
  * Every record must join to a row of its team under the row's own fullName, the row must be at the
@@ -29,6 +29,8 @@ export function playerKey(teamSlug: string, athleteId: string): string {
 export interface RosterJoinRecord {
   teamSlug: string;
   athleteId: string;
+  /** The person's registry id, when the record is filed by person: what a drift report names it by. */
+  playerId?: string | null;
   fullName: string;
   /** `classYearDiffers`: a source whose class year may be one off the grade's (lib/players/clubs-schema.ts). */
   sources: readonly { kind: string; statedClassYear: number | null; classYearDiffers?: true }[];
@@ -36,7 +38,7 @@ export interface RosterJoinRecord {
 
 export interface RosterJoinOptions<R> {
   /** The file, as error messages name it. */
-  label: 'clubs' | 'commits';
+  label: 'clubs' | 'commitments';
   /** What the file lists, for the level message: "clubs list varsity rows only". */
   noun: string;
   /**
@@ -67,7 +69,7 @@ export function joinToRoster<R extends RosterJoinRecord>(
     if (!team) throw new Error(`${label}: ${r.teamSlug} / ${r.fullName} (${subject(r)}): no such team in rosters.json`);
     const why = mismatch(r, team, season, level, noun);
     if (why !== null) {
-      reportDrift({ file: label, teamSlug: r.teamSlug, who: `${r.fullName} (${subject(r)})`, key: r.athleteId, what: why, leftOut: 'record' });
+      reportDrift({ file: label, teamSlug: r.teamSlug, who: `${r.fullName} (${subject(r)})`, key: r.playerId ?? r.athleteId, what: why, leftOut: 'record' });
       continue;
     }
     rows.set(playerKey(r.teamSlug, r.athleteId), team.players.find((p) => p.athleteId === r.athleteId)!);

@@ -59,7 +59,7 @@
  * McCarroll") is that official line in other words, not a leak (ARCHIVE_LINES). On the
  * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
  * /about — nothing is excused, since they link the very sources the quotes come from.
- * The same rule covers data/field-hockey/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
+ * The same rule covers data/commitments.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
  * and no fragment of a source's `quote` on any page, nothing excused on /commits, every
  * /teams/<slug> (the commitment line) and /about.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL, MCAL and EAL unavailable):
@@ -87,8 +87,7 @@ import path from 'node:path';
 
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/players/clubs';
-import { getRosterEnrichment } from '../lib/players/rosters';
-import { getJvProfilesFile } from '../lib/jv/jv-profiles';
+import { everyAccount } from '../lib/players/player-index';
 import { profileLabel } from '../components/teams/roster-view';
 import { SPORT_WORDS } from '../components/commits/commit-view';
 import { getCommitsFile } from '../lib/players/commits';
@@ -177,7 +176,7 @@ const builtFromClubs = (file: string) =>
   file.startsWith('teams/') ||
   file === 'recruiting.html' ||
   file === 'about.html';
-const clubSourceUrls = [...new Set(clubsFile.affiliations.flatMap((a) => a.sources.map((s) => s.url)))];
+const clubSourceUrls = [...new Set([...clubsFile.affiliations, ...clubsFile.listedAffiliations].flatMap((a) => a.sources.map((s) => s.url)))];
 /** The clubs file's source documents a page links (an href is HTML-escaped: `&` is `&amp;`). */
 const citedBy = (html: string) =>
   new Set(clubSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
@@ -211,12 +210,9 @@ const PROPER_NOUNS: string[] = [
     ...c.programs.flatMap((p) => [p.name, p.detail]),
     ...c.sources.map((s) => s.what),
   ]).filter((s): s is string => typeof s === 'string' && s.length > 0),
-  // A player's own profile in another sport ("NCSA basketball profile", rosters-enrichment.json and
-  // jv-profiles.json `sport`) is a fact about the player, not this site naming another build's program.
-  ...[
-    ...getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
-    ...getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
-  ]
+  // A player's own profile in another sport ("NCSA basketball profile", data/player-accounts.json `sports`) is a fact
+  // about the player, not this site naming another build's program.
+  ...everyAccount()
     .filter((x) => x.sport !== undefined)
     .map((x) => profileLabel(x)),
   // A player's commitment in another sport (commits.json `sport`: a basketball player's soccer commitment) is a fact
@@ -259,7 +255,7 @@ for (const file of files) {
     publicTerms: PUBLIC_TERMS,
     restatedLines,
   })) {
-    fail(file, `shows what data/field-hockey/commits.json never renders: ${leak}`);
+    fail(file, `shows what data/commitments.json never renders: ${leak}`);
   }
   // The EAL claims (DESIGN §22.5), over what a reader sees or is read out: the body text, then the
   // title, description metas and title/aria-label/alt attributes.
@@ -505,7 +501,7 @@ console.log(
     `${nonCcsPages.length} non-CCS pages checked inside <main>; ${CARD_LEAGUE_IDS.length} /playoffs card(s) ` +
     `and ${cardLeaguePages} pages of their leagues checked for seed words; ` +
     `${siteOrderedPages} pages of the ${siteOrderedLeagues.length} site-ordered leagues checked for "rules require"; ` +
-    `the quotes and bases of ${clubsFile.affiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
+    `the quotes and bases of ${clubsFile.affiliations.length + clubsFile.listedAffiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
     `college commitments looked for on every page`,
 );
 if (problems.length) {

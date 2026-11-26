@@ -22,7 +22,10 @@ import {
   isBannedHost,
   clubSiteKey,
   type ClubsFile,
+  type ClubsView,
+  type Membership,
 } from '../lib/players/clubs-schema';
+import { rowsOfPerson } from '../lib/players/player-index';
 import {
   SEARCHED_REGIONS,
   clubDisplayName,
@@ -36,15 +39,19 @@ import {
   getJvClubAffiliations,
   getPlayerClubs,
   getTeamClubAffiliations,
+  getVarsityClubAffiliations,
   loadClubs,
 } from '../lib/players/clubs';
 import { LEAGUES } from '../lib/leagues';
-import { classOf, classYearAgrees, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
+import { classOf, classYearAgrees, getAllEnrichedRosters, getEnrichedTeamRoster, getRosters, listedPlayerKey } from '../lib/players/rosters';
 import { isHttpsUrl, isResearched } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
 import { loadProblems, REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'clubs.json'), 'utf8')) as ClubsFile;
+/** The file as committed: clubs, and each tie under its person (`memberships`). */
+const disk = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'clubs.json'), 'utf8')) as ClubsFile;
+/** The file as the pages read it: each membership found on this season's rows, as a varsity, JV or listed tie. */
+const raw = getClubsFile();
 /** The twelve club records the 2026-10-06 Southern California sweep added. */
 const SOCAL_CLUBS: ReadonlySet<string> = new Set([
   'rush', 'coastal-clash', 'myto', 'knights-fhc', 'vcrd', 'bulldogs',
@@ -65,6 +72,13 @@ function at(name: string, club?: string): number {
   return i;
 }
 
+/** The membership of the person `name` (her registry name), at `club` when she has several. */
+function member(f: ClubsFile, name: string, club?: string): Membership {
+  const m = f.memberships.find((x) => x.name === name && (club === undefined || x.club === club));
+  if (!m) throw new Error(`no membership for ${name}${club ? ` at ${club}` : ''}`);
+  return m;
+}
+
 /** What the schema says about `f`, as `path: message` lines; [] when it passes. */
 function refusals(f: unknown): string[] {
   const parsed = ClubsFileSchema.safeParse(f);
@@ -81,7 +95,7 @@ function loadError(f: unknown, ...rest: [typeof teams?, string?]): string {
 }
 
 /** Every URL the file holds: websites, program and roster pages, and every source. */
-function allUrls(f: ClubsFile): string[] {
+function allUrls(f: ClubsView): string[] {
   return [
     ...f.clubs.flatMap((c) => [
       ...(c.website ? [c.website] : []),
@@ -108,22 +122,32 @@ const countBy = <T>(xs: readonly T[], key: (x: T) => string) =>
 
 describe('data/field-hockey/clubs.json', () => {
   it('validates against the contract, drops nothing in the parse, and is what lib/players/clubs.ts serves', () => {
-    expect(refusals(raw)).toEqual([]);
-    // Zod strips keys it does not know: equality proves the contract covers every key in the file.
-    expect(loadClubs(raw)).toEqual(raw);
-    expect(getClubsFile()).toEqual(raw);
+    expect(refusals(disk)).toEqual([]);
+    // The contract is strict: a key it does not know is refused, so the parse is the file.
+    expect(ClubsFileSchema.parse(disk)).toEqual(disk);
+    expect(loadClubs(disk)).toEqual(raw);
+  });
+
+  it('serves every membership on its person\'s row this season, and keeps one whose person is on none', () => {
+    const served = new Set([...raw.affiliations, ...raw.jvAffiliations, ...raw.listedAffiliations].map((a) => `${a.playerId} ${a.club}`));
+    for (const m of disk.memberships) {
+      if (served.has(`${m.playerId} ${m.club}`)) continue;
+      // Shown nowhere: she is on no field hockey row this season (gone from her roster, or graduated).
+      expect(rowsOfPerson(m.playerId), `${m.name} (${m.club})`).toEqual([]);
+    }
+    expect(served.size).toBe(raw.affiliations.length + raw.jvAffiliations.length + raw.listedAffiliations.length);
   });
 
   it('is for the rosters\' season', () => {
     expect(raw.season).toBe(season);
   });
 
-  it('has unique club slugs, a real club behind every affiliation, and each (team, athlete, club) once', () => {
-    const slugs = raw.clubs.map((c) => c.slug);
+  it('has unique club slugs, a real club behind every membership, and each (person, club) once', () => {
+    const slugs = disk.clubs.map((c) => c.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
-    for (const a of raw.affiliations) expect(slugs, `${a.fullName} -> ${a.club}`).toContain(a.club);
-    const triples = raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId} ${a.club}`);
-    expect(new Set(triples).size).toBe(triples.length);
+    for (const m of disk.memberships) expect(slugs, `${m.name} -> ${m.club}`).toContain(m.club);
+    const pairs = disk.memberships.map((m) => `${m.playerId} ${m.club}`);
+    expect(new Set(pairs).size).toBe(pairs.length);
   });
 
   it('joins every affiliation to a varsity roster row of that team, under the row\'s own name', () => {
@@ -547,6 +571,51 @@ describe('data/field-hockey/clubs.json', () => {
 
 });
 
+describe('data/field-hockey/clubs.json: listedAffiliations', () => {
+  it('ties two listed players to VCRD, each by team and listed name, from her own page (2026-11-26)', () => {
+    expect(raw.listedAffiliations.map((a) => [a.teamSlug, a.fullName, a.club, a.clubTeam, a.status, a.asOf, a.confidence])).toEqual([
+      ['marina', 'Anna Schwab', 'vcrd', null, 'current', null, 'high'],
+      ['newport-harbor', 'Kate Shepherd', 'vcrd', 'VCRD/Rush Devils', 'current', null, 'high'],
+    ]);
+    for (const a of raw.listedAffiliations) {
+      // A listed player has no MaxPreps row, so no athleteId; she is a registry person like any other.
+      expect(Object.keys(a), a.fullName).not.toContain('athleteId');
+      expect(rowsOfPerson(a.playerId as string).map((r) => [r.team, r.athleteId, r.name]), a.fullName).toEqual([[a.teamSlug, null, a.fullName]]);
+      // She is on her team's listed roster, under that name.
+      const other = getEnrichedTeamRoster(a.teamSlug)!.otherRosters;
+      expect(other.status, a.fullName).toBe('listed');
+      if (other.status === 'listed') expect(other.players.map((p) => `${p.firstName} ${p.lastName}`), a.fullName).toContain(a.fullName);
+      expect(a.sources.map((s) => [s.kind, s.statedSchool, s.statedClassYear]), a.fullName).toEqual([
+        ['sportsrecruits', a.teamSlug === 'marina' ? 'Marina High School' : 'Newport Harbor High School', 2028],
+      ]);
+      expect(a.basis, a.fullName).toMatch(/Read 2026-11-26\.$/);
+    }
+  });
+
+  it('serves them with the varsity ties, keyed as the listed rows are, and joined to those rows', () => {
+    const listed = getVarsityClubAffiliations().filter((a) => a.athleteId.startsWith('listed:'));
+    expect(listed.map((a) => [a.teamSlug, a.athleteId, a.club])).toEqual([
+      ['marina', listedPlayerKey('Anna Schwab'), 'vcrd'],
+      ['newport-harbor', listedPlayerKey('Kate Shepherd'), 'vcrd'],
+    ]);
+    for (const a of listed) {
+      expect(getAffiliatedPlayer(a)).toMatchObject({ fullName: a.fullName, grade: null, careerUrl: null, level: null });
+      expect(getPlayerClubs(a.teamSlug, a.athleteId)).toEqual([a]);
+      expect(getTeamClubAffiliations(a.teamSlug)).toEqual([a]);
+    }
+    expect(getClubAffiliations('vcrd').filter((a) => a.athleteId.startsWith('listed:'))).toEqual(listed);
+  });
+
+  it('names a listed player by her person, like any other: an unknown club and a tie given twice are refused', () => {
+    const anna = member(disk, 'Anna Schwab');
+    const withAnna = (memberships: unknown[]) => ({ ...structuredClone(disk), memberships });
+    expect(loadError(withAnna([anna]))).toBe('');
+    expect(loadError(withAnna([{ ...anna, club: 'nope' }]))).toMatch(/memberships\.0\.club: nope is not a club/);
+    expect(loadError(withAnna([anna, anna]))).toMatch(/duplicate membership: Anna Schwab \(p[0-9a-f]+\) \/ vcrd/);
+    expect(loadError(withAnna([{ ...anna, teamSlug: 'marina' }]))).toMatch(/Unrecognized key/);
+  });
+});
+
 describe('data/field-hockey/clubs.json: jvAffiliations', () => {
   it('holds 3 ties for 2 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
     expect(raw.jvAffiliations.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
@@ -581,7 +650,8 @@ describe('data/field-hockey/clubs.json: jvAffiliations', () => {
     expect(getJvClubAffiliations()).toEqual(raw.jvAffiliations);
     const jvPlayers = new Set(raw.jvAffiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const served = getClubSlugs().flatMap((slug) => getClubAffiliations(slug));
-    expect(served).toHaveLength(raw.affiliations.length);
+    // The varsity ties and the listed players' (listedAffiliations), which are varsity players too.
+    expect(served).toHaveLength(raw.affiliations.length + raw.listedAffiliations.length);
     expect(served.filter((a) => jvPlayers.has(`${a.teamSlug} ${a.athleteId}`))).toEqual([]);
     for (const a of raw.jvAffiliations) {
       expect(getPlayerClubs(a.teamSlug, a.athleteId)).toEqual([]);
@@ -655,7 +725,7 @@ describe('lib/players/clubs.ts', () => {
     expect(getClubAffiliations('pac-heights')).toEqual([]);
     expect(getClubAffiliations('nope')).toEqual([]);
     const total = getClubSlugs().reduce((n, slug) => n + getClubAffiliations(slug).length, 0);
-    expect(total).toBe(raw.affiliations.length);
+    expect(total).toBe(raw.affiliations.length + raw.listedAffiliations.length);
   });
 
   it('serves a team\'s affiliations', () => {
@@ -750,11 +820,11 @@ describe('lib/players/clubs-schema.ts helpers', () => {
 
 describe('a bad file is refused at load', () => {
   it('loads the untouched file', () => {
-    expect(loadError(structuredClone(raw))).toBe('');
+    expect(loadError(structuredClone(disk))).toBe('');
   });
 
   it('loads a placeholder with no club, which isResearched reads as no research (a recruiting build before its first round)', () => {
-    const placeholder = { ...structuredClone(raw), notes: [], clubs: [], affiliations: [], jvAffiliations: [] };
+    const placeholder = { ...structuredClone(disk), notes: [], clubs: [], memberships: [] };
     expect(loadError(placeholder)).toBe('');
     expect(isResearched(placeholder.notes, placeholder.clubs.length)).toBe(false);
     expect(isResearched(raw.notes, raw.clubs.length)).toBe(true);
@@ -762,11 +832,10 @@ describe('a bad file is refused at load', () => {
   });
 
   it('refuses a class year that disagrees with a MaxPreps grade, naming the player', () => {
-    const bad = structuredClone(raw);
-    const a = bad.affiliations[at('Caitlyn Hughes')];
-    const row = rowOf(a)!;
+    const bad = structuredClone(disk);
+    const row = rowOf(raw.affiliations[at('Caitlyn Hughes')])!;
     expect(row.provenance.grade).toBe('maxpreps');
-    a.sources[0].statedClassYear = classOf(season, row.grade!) + 1;
+    member(bad, 'Caitlyn Hughes').sources[0].statedClassYear = classOf(season, row.grade!) + 1;
     const msg = loadError(bad);
     expect(msg).toMatch(/class of/);
     expect(msg).toContain('Caitlyn Hughes');
@@ -775,22 +844,21 @@ describe('a bad file is refused at load', () => {
   });
 
   it('checks a class year against the overlay grade when MaxPreps has none', () => {
-    const bad = structuredClone(raw);
-    const a = bad.affiliations[at('Junali Dutta')];
-    const row = rowOf(a)!;
+    const bad = structuredClone(disk);
+    const row = rowOf(raw.affiliations[at('Junali Dutta')])!;
     expect(row.provenance.grade).not.toBe('maxpreps');
     expect(row.grade).not.toBeNull();
-    a.sources[0].statedClassYear = classOf(season, row.grade!) - 1;
+    member(bad, 'Junali Dutta').sources[0].statedClassYear = classOf(season, row.grade!) - 1;
     const msg = loadError(bad);
     expect(msg).toMatch(/class of/);
     expect(msg).toContain('Junali Dutta');
   });
 
   it('lets a league-roster source marked classYearDiffers be one year off the grade, and no more (owner decision, 2026-11-25)', () => {
+    const row = rowOf(raw.affiliations[at('Caitlyn Hughes')])!;
     const withSource = (offset: number, kind: 'league-roster' | 'event' = 'league-roster') => {
-      const f = structuredClone(raw);
-      const a = f.affiliations[at('Caitlyn Hughes')];
-      Object.assign(a.sources[0], { kind, statedClassYear: classOf(season, rowOf(a)!.grade!) + offset, classYearDiffers: true });
+      const f = structuredClone(disk);
+      Object.assign(member(f, 'Caitlyn Hughes').sources[0], { kind, statedClassYear: classOf(season, row.grade!) + offset, classYearDiffers: true });
       return loadError(f);
     };
     expect(withSource(1)).toBe('');
@@ -800,166 +868,136 @@ describe('a bad file is refused at load', () => {
   });
 
   it('lets any class year stand for a player with no grade anywhere', () => {
-    const ok = structuredClone(raw);
-    const a = ok.affiliations[at('Ella Rennie')];
-    expect(rowOf(a)!.grade).toBeNull();
-    for (const s of a.sources) s.statedClassYear = 2035;
+    const ok = structuredClone(disk);
+    expect(rowOf(raw.affiliations[at('Ella Rennie')])!.grade).toBeNull();
+    for (const s of member(ok, 'Ella Rennie').sources) s.statedClassYear = 2035;
     expect(loadError(ok)).toBe('');
   });
 
-  it('refuses an affiliation to a club that is not in clubs[], with its path', () => {
-    const bad = structuredClone(raw);
-    bad.affiliations[3].club = 'nope';
-    expect(refusals(bad)).toEqual(['affiliations.3.club: nope is not a club in clubs[]']);
-    expect(loadError(bad)).toContain('affiliations.3.club: nope is not a club in clubs[]');
+  it('refuses a membership of a club that is not in clubs[], with its path', () => {
+    const bad = structuredClone(disk);
+    bad.memberships[3].club = 'nope';
+    expect(refusals(bad)).toEqual(['memberships.3.club: nope is not a club in clubs[]']);
+    expect(loadError(bad)).toContain('memberships.3.club: nope is not a club in clubs[]');
   });
 
-  it('refuses an athlete who is not on that team\'s roster', () => {
-    const bad = structuredClone(raw);
-    bad.affiliations[0].athleteId = '00000000-0000-0000-0000-000000000000';
-    expect(refusals(bad)).toEqual([]);
-    expect(loadError(bad)).toMatch(/st-ignatius \/ Caitlyn Hughes \(sf-hawks\): athleteId 0{8}-.* is not a MaxPreps row of this team/);
-    // Left out of what the module serves, not thrown: a roster refresh that drops a player must not fail the build.
-    expect(loadClubs(bad).affiliations).toHaveLength(raw.affiliations.length - 1);
-    // A real athlete under the wrong team is the same failure.
-    const moved = structuredClone(raw);
-    moved.affiliations[0].teamSlug = 'leigh';
-    expect(loadError(moved)).toMatch(/not a MaxPreps row/);
+  it('keeps the membership of a person on no row this season, and shows it nowhere', () => {
+    const away = structuredClone(disk);
+    // A person who is on no field hockey row this season (a player of another sport).
+    const elsewhere = 'p0000000000';
+    away.memberships[0].playerId = elsewhere;
+    expect(rowsOfPerson(elsewhere)).toEqual([]);
+    expect(loadError(away)).toBe('');
+    expect(loadClubs(away).affiliations).toHaveLength(raw.affiliations.length - 1);
   });
 
-  it('refuses a name MaxPreps spells differently', () => {
-    const bad = structuredClone(raw);
-    bad.affiliations[0].fullName = 'Kaitlyn Hughes';
-    expect(loadError(bad)).toMatch(/Kaitlyn Hughes \(sf-hawks\): MaxPreps spells this player "Caitlyn Hughes"/);
+  it('shows the row\'s own name, whatever the membership calls her (pnpm build-players keeps it the registry\'s)', () => {
+    const renamed = structuredClone(disk);
+    member(renamed, 'Caitlyn Hughes').name = 'Kaitlyn Hughes';
+    expect(loadClubs(renamed).affiliations[at('Caitlyn Hughes')].fullName).toBe('Caitlyn Hughes');
   });
 
-  it('refuses a JV row', () => {
-    const lg = teams.find((t) => t.slug === 'los-gatos')!;
-    const jv = lg.players.find((p) => p.level === 'jv')!;
-    const bad = structuredClone(raw);
-    const a = bad.affiliations[0];
-    Object.assign(a, { teamSlug: 'los-gatos', athleteId: jv.athleteId, fullName: jv.fullName });
-    for (const s of a.sources) s.statedClassYear = null;
-    const msg = loadError(bad);
-    expect(msg).toMatch(/JV/);
-    expect(msg).toContain(jv.fullName);
-  });
-
-  it('refuses a JV tie on a varsity row, to a club the file does not hold, or for a player also in affiliations', () => {
-    const varsity = structuredClone(raw);
-    const v = raw.affiliations[at('Lizzie Moorehouse')];
-    Object.assign(varsity.jvAffiliations[0], { athleteId: v.athleteId, fullName: v.fullName, club: 'sf-hawks' });
-    for (const s of varsity.jvAffiliations[0].sources) s.statedClassYear = null;
-    expect(refusals(varsity)).toEqual(['jvAffiliations.0: los-gatos / Lizzie Moorehouse is also in affiliations']);
-    varsity.affiliations.splice(at('Lizzie Moorehouse'), 1);
-    expect(loadError(varsity)).toMatch(/los-gatos \/ Lizzie Moorehouse \(sf-hawks\): not a JV row: jvAffiliations list JV rows only/);
-    const club = structuredClone(raw);
-    club.jvAffiliations[0].club = 'nope';
-    expect(loadError(club)).toContain('jvAffiliations.0.club: nope is not a club in clubs[]');
-    const twice = structuredClone(raw);
-    twice.jvAffiliations.push(structuredClone(twice.jvAffiliations[0]));
-    expect(refusals(twice)).toEqual(['jvAffiliations.3: duplicate JV affiliation: los-gatos / Casey Moorehouse / norcal-impact']);
-    const year = structuredClone(raw);
-    year.jvAffiliations[0].sources[0].statedClassYear = 2027;
+  it('serves a JV player\'s tie as a JV tie, on her JV row, and checks its class year there', () => {
+    const casey = member(disk, 'Casey Moorehouse', 'norcal-impact');
+    expect(raw.jvAffiliations.some((a) => a.playerId === casey.playerId && a.club === 'norcal-impact')).toBe(true);
+    const year = structuredClone(disk);
+    member(year, 'Casey Moorehouse', 'norcal-impact').sources[0].statedClassYear = 2027;
     expect(loadError(year)).toMatch(/Casey Moorehouse \(norcal-impact\): sportsrecruits source says class of 2027, the roster shows grade 9/);
   });
 
   it('refuses a team the rosters do not hold', () => {
-    expect(loadError(raw, teams.filter((t) => t.slug !== 'st-ignatius'))).toMatch(/st-ignatius \/ .*: no such team in rosters\.json/);
+    expect(loadError(disk, teams.filter((t) => t.slug !== 'st-ignatius'))).toMatch(/st-ignatius \/ .*: no such team in rosters\.json/);
   });
 
-  it('refuses a file for another season', () => {
-    expect(loadError({ ...structuredClone(raw), season: '25-26' })).toBe(`clubs.json is for season 25-26, rosters for ${season}`);
-    expect(loadError(raw, teams, '25-26')).toMatch(/season/);
-    expect(refusals({ ...structuredClone(raw), season: '2026-27' })).toEqual(['season: expected a season like 26-27']);
+  it('names no season: the player index says which season\'s rows it is of', () => {
+    expect(refusals({ ...structuredClone(disk), season: '26-27' })).toEqual([': Unrecognized key: "season"']);
   });
 
   it('refuses a social-media page anywhere: a source, a website, a program or roster page', () => {
-    const club = raw.clubs.findIndex((c) => c.programs.length > 0 && c.website !== null);
-    const source = structuredClone(raw);
-    source.affiliations[2].sources[0].url = 'https://www.instagram.com/p/abc123/';
-    expect(refusals(source)).toEqual(['affiliations.2.sources.0.url: social media is not a source']);
-    expect(loadError(source)).toContain('affiliations.2.sources.0.url: social media is not a source');
-    const website = structuredClone(raw);
+    const club = disk.clubs.findIndex((c) => c.programs.length > 0 && c.website !== null);
+    const source = structuredClone(disk);
+    source.memberships[2].sources[0].url = 'https://www.instagram.com/p/abc123/';
+    expect(refusals(source)).toEqual(['memberships.2.sources.0.url: social media is not a source']);
+    expect(loadError(source)).toContain('memberships.2.sources.0.url: social media is not a source');
+    const website = structuredClone(disk);
     website.clubs[club].website = 'https://www.facebook.com/someclub';
     expect(refusals(website)).toEqual([`clubs.${club}.website: social media is not a source`]);
-    const program = structuredClone(raw);
+    const program = structuredClone(disk);
     program.clubs[club].programs[0].source = 'https://x.com/someclub/status/1';
     expect(refusals(program)).toEqual([`clubs.${club}.programs.0.source: social media is not a source`]);
-    const roster = structuredClone(raw);
+    const roster = structuredClone(disk);
     roster.clubs[club].rosterPages.push('https://www.tiktok.com/@someclub');
     expect(refusals(roster)).toEqual([`clubs.${club}.rosterPages.${roster.clubs[club].rosterPages.length - 1}: social media is not a source`]);
-    const clubSource = structuredClone(raw);
+    const clubSource = structuredClone(disk);
     clubSource.clubs[club].sources[0].url = 'https://twitter.com/someclub';
     expect(refusals(clubSource)).toEqual([`clubs.${club}.sources.0.url: social media is not a source`]);
   });
 
   it('refuses a URL that is not https', () => {
-    const club = raw.clubs.findIndex((c) => c.website !== null);
-    const http = structuredClone(raw);
+    const club = disk.clubs.findIndex((c) => c.website !== null);
+    const http = structuredClone(disk);
     http.clubs[club].website = http.clubs[club].website!.replace(/^https:/, 'http:');
     expect(refusals(http)).toEqual([`clubs.${club}.website: expected an https URL`]);
-    const junk = structuredClone(raw);
-    junk.affiliations[0].sources[0].url = 'javascript:alert(1)';
-    expect(refusals(junk)).toEqual(['affiliations.0.sources.0.url: expected an https URL']);
+    const junk = structuredClone(disk);
+    junk.memberships[0].sources[0].url = 'javascript:alert(1)';
+    expect(refusals(junk)).toEqual(['memberships.0.sources.0.url: expected an https URL']);
   });
 
-  it('refuses a duplicate club slug and a duplicate affiliation', () => {
-    const club = structuredClone(raw);
+  it('refuses a duplicate club slug and a duplicate membership', () => {
+    const club = structuredClone(disk);
     club.clubs.push(structuredClone(club.clubs[1]));
-    expect(refusals(club)).toEqual([`clubs.${raw.clubs.length}.slug: duplicate club slug ${raw.clubs[1].slug}`]);
-    const aff = structuredClone(raw);
-    aff.affiliations.push(structuredClone(aff.affiliations[0]));
-    expect(refusals(aff)).toEqual([
-      `affiliations.${raw.affiliations.length}: duplicate affiliation: st-ignatius / Caitlyn Hughes / sf-hawks`,
-    ]);
+    expect(refusals(club)).toEqual([`clubs.${disk.clubs.length}.slug: duplicate club slug ${disk.clubs[1].slug}`]);
+    const twice = structuredClone(disk);
+    twice.memberships.push(structuredClone(twice.memberships[0]));
+    const first = disk.memberships[0];
+    expect(refusals(twice)).toEqual([`memberships.${disk.memberships.length}: duplicate membership: ${first.name} (${first.playerId}) / ${first.club}`]);
     // The same player at a second club is not a duplicate.
-    const second = structuredClone(raw);
-    second.affiliations.push({ ...structuredClone(second.affiliations[0]), club: 'pac-heights' });
+    const second = structuredClone(disk);
+    second.memberships.push({ ...structuredClone(second.memberships[0]), club: 'pac-heights' });
     expect(refusals(second)).toEqual([]);
   });
 
-  it('refuses an affiliation or a club with no source', () => {
-    const aff = structuredClone(raw);
-    aff.affiliations[0].sources = [];
-    expect(refusals(aff)).toEqual(['affiliations.0.sources: an affiliation needs at least one source']);
-    const club = structuredClone(raw);
+  it('refuses a membership or a club with no source', () => {
+    const tie = structuredClone(disk);
+    tie.memberships[0].sources = [];
+    expect(refusals(tie)).toEqual(['memberships.0.sources: a membership needs at least one source']);
+    const club = structuredClone(disk);
     club.clubs[0].sources = [];
     expect(refusals(club)).toEqual(['clubs.0.sources: a club needs at least one source']);
   });
 
   it('refuses an asOf in no known shape', () => {
     for (const asOf of ['2025/26', '2025-27', '2018-2015', 'last fall']) {
-      const bad = structuredClone(raw);
-      bad.affiliations[0].asOf = asOf;
+      const bad = structuredClone(disk);
+      bad.memberships[0].asOf = asOf;
       expect(refusals(bad), asOf).toHaveLength(1);
-      expect(refusals(bad)[0], asOf).toMatch(/^affiliations\.0\.asOf: /);
+      expect(refusals(bad)[0], asOf).toMatch(/^memberships\.0\.asOf: /);
     }
   });
 
   it('refuses a quote over 300 characters, and an empty one', () => {
-    const at300 = structuredClone(raw);
-    at300.affiliations[0].sources[0].quote = 'x'.repeat(300);
+    const at300 = structuredClone(disk);
+    at300.memberships[0].sources[0].quote = 'x'.repeat(300);
     expect(refusals(at300)).toEqual([]);
-    const over = structuredClone(raw);
-    over.affiliations[0].sources[0].quote = 'x'.repeat(301);
+    const over = structuredClone(disk);
+    over.memberships[0].sources[0].quote = 'x'.repeat(301);
     expect(refusals(over)).toHaveLength(1);
-    expect(refusals(over)[0]).toMatch(/^affiliations\.0\.sources\.0\.quote: /);
-    const empty = structuredClone(raw);
-    empty.affiliations[0].sources[0].quote = '';
-    expect(refusals(empty)[0]).toMatch(/^affiliations\.0\.sources\.0\.quote: /);
+    expect(refusals(over)[0]).toMatch(/^memberships\.0\.sources\.0\.quote: /);
+    const empty = structuredClone(disk);
+    empty.memberships[0].sources[0].quote = '';
+    expect(refusals(empty)[0]).toMatch(/^memberships\.0\.sources\.0\.quote: /);
   });
 
-  it('refuses a status, kind, confidence or region outside its list, and a team outside the registry', () => {
+  it('refuses a status, kind, confidence or region outside its list, and an id that is no player id', () => {
     const cases: Array<[string, (f: ClubsFile) => void]> = [
-      ['affiliations.0.status', (f) => ((f.affiliations[0] as { status: string }).status = 'former')],
-      ['affiliations.0.sources.0.kind', (f) => ((f.affiliations[0].sources[0] as { kind: string }).kind = 'instagram')],
-      ['affiliations.0.confidence', (f) => ((f.affiliations[0] as { confidence: string }).confidence = 'low')],
+      ['memberships.0.status', (f) => ((f.memberships[0] as { status: string }).status = 'former')],
+      ['memberships.0.sources.0.kind', (f) => ((f.memberships[0].sources[0] as { kind: string }).kind = 'instagram')],
+      ['memberships.0.confidence', (f) => ((f.memberships[0] as { confidence: string }).confidence = 'low')],
       ['clubs.0.region', (f) => ((f.clubs[0] as { region: string }).region = 'las-vegas')],
-      ['affiliations.0.teamSlug', (f) => (f.affiliations[0].teamSlug = 'not-a-school')],
+      ['memberships.0.playerId', (f) => (f.memberships[0].playerId = 'not-an-id')],
     ];
     for (const [where, edit] of cases) {
-      const bad = structuredClone(raw);
+      const bad = structuredClone(disk);
       edit(bad);
       expect(refusals(bad).map((r) => r.split(':')[0]), where).toEqual([where]);
     }

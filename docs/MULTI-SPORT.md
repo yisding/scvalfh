@@ -399,6 +399,11 @@ now". What made that possible:
   record, and `tests/prior-commits.test.ts` no longer forbids pages naming them.
 - `COLLEGE_DIVISIONS` gained `njcaa` and `cccaa` in every sport's `commits.json` (`lib/players/commits-schema.ts`),
   worded "NJCAA" and "CCCAA" on /commits ("a CCCAA program").
+- Since 2026-11-26 what is known about a player beyond one roster row is filed under her registry id, once for every
+  build: her recruiting pages in `data/player-accounts.json`, her college commitment in `data/commitments.json`, and
+  her ties to a sport's clubs in that sport's `clubs.json` `memberships`. Each build finds the people on its rows
+  through `data/<sport>/player-index.json`, which `pnpm build-players` writes, so a two-sport player's pages and
+  commitment show on both builds' rosters from one record (README, "The player registry").
 - Stale grades: a grade conflict in the roster overlay may be marked `rosterBehind` (`other` exactly `kept` + 1),
   and may cite a recruiting profile or a scouting site (`CONFLICT_KINDS`, `lib/players/rosters-schema.ts`). Profiles,
   club ties and commitments check a stated class year through one function, `classYearAgrees`

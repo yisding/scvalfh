@@ -189,8 +189,9 @@ jobs:
           set -euo pipefail
           # A registry step that did not succeed commits no rosters and no registry: one that failed has restored them
           # already, and one its timeout killed could not (scripts/refresh-player-registry.sh).
+          registry="$(scripts/refresh-player-registry.sh --files)"
           if [ "$REGISTRY" != "success" ]; then
-            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json data/players.json
+            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json $registry data/player-accounts.json data/commitments.json 'data/*/clubs.json'
           fi
           # The snapshot changed when its contentHash did (update-data.yml explains why a plain diff
           # never is quiet).
@@ -238,7 +239,7 @@ jobs:
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh soccer", nothing but
           # the files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
-          # player-stats.json, jv.json, freshman.json, rosters.json and jv-rosters.json, and data/players.json rebuilt from the rosters
+          # player-stats.json, jv.json, freshman.json, rosters.json and jv-rosters.json, and the registry rebuilt from the rosters (data/players.json and each sport's player-index.json)
           # (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -259,10 +260,10 @@ jobs:
           fi
           if [ "$ROSTERS" = "true" ]; then
             git add data/soccer/rosters.json data/soccer/jv-rosters.json
-            # The registry rebuilt from them (the Rebuild the player registry step), when it changed.
-            if ! git diff --quiet -- data/players.json; then
-              git add data/players.json
-            fi
+            # The registry rebuilt from them (the Rebuild the player registry step): data/players.json and each sport's
+            # row -> person index (a file that did not change adds nothing). Never a file filed by person: that step
+            # fails rather than leave one rewritten.
+            git add -- $registry
           fi
           git commit -m "data: refresh soccer ${DAY} · ${SUMMARY}"
           echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -272,15 +273,18 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         run: |
           set -euo pipefail
+          registry="$(scripts/refresh-player-registry.sh --files)"
           before="$(git rev-parse HEAD~1)"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
           # The registry this commit carries was built before the rebase. When a commit it was rebased onto changed the
-          # registry's curation (a person editing data/player-identity.json meanwhile), rebuild it over the rebased files
+          # registry's curation (a person editing data/player-identity.json, or a file filed by person, meanwhile), rebuild
+          # it over the rebased files
           # and hold it to its tests again; push nothing rather than a registry its inputs no longer support.
           if git show --name-only --format= HEAD | grep -qx 'data/players.json' \
-            && ! git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json; then
-            if pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts; then
-              git add data/players.json
+            && ! git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/player-accounts.json data/commitments.json 'data/*/clubs.json' $registry; then
+            if pnpm -s build-players --no-stamp && git diff --quiet -- data/player-accounts.json data/commitments.json 'data/*/clubs.json' \
+              && pnpm exec vitest run tests/players-registry.test.ts; then
+              git add -- $registry
               git commit --amend --no-edit
             else
               echo "::error title=Player registry::main changed the registry's curation under this refresh and the registry no longer rebuilds over it; nothing pushed, the next run rebuilds it"

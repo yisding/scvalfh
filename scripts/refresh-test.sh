@@ -9,7 +9,8 @@
 #   jv       data/<sport>/jv.json
 #   freshman data/<sport>/freshman.json (soccer and basketball; a sport without the file never changes it)
 #   stats    data/<sport>/player-stats.json
-#   rosters  data/<sport>/rosters.json, data/<sport>/jv-rosters.json and data/players.json (rebuilt from them)
+#   rosters  data/<sport>/rosters.json, data/<sport>/jv-rosters.json and the player registry rebuilt from them
+#            (scripts/refresh-player-registry.sh --files: data/players.json and the files it writes with it)
 # When the tests fail, each group this run changed is put back on its own and the tests run again; the first that
 # passes is the group they refused, and the other groups' new files stay for the commit. Only when no group alone is
 # enough do all of them go back for a last run, whose verdict decides. A group this run did not change is never
@@ -32,7 +33,7 @@ files_of() {
     jv) echo "data/$sport/jv.json" ;;
     freshman) echo "data/$sport/freshman.json" ;;
     stats) echo "data/$sport/player-stats.json" ;;
-    rosters) echo "data/$sport/rosters.json data/$sport/jv-rosters.json data/players.json" ;;
+    rosters) echo "data/$sport/rosters.json data/$sport/jv-rosters.json $("$(dirname "$0")/refresh-player-registry.sh" --files)" ;;
   esac
 }
 

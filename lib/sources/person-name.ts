@@ -160,6 +160,14 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
     basis: "Eleanor (Norah) Elder (Archie Williams field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner's request (2026-11-25).",
   },
   {
+    maxpreps: 'Decker Alina',
+    spelled: 'Alina Decker',
+    basis:
+      "Alina Decker (Menlo-Atherton soccer): MaxPreps' row has her first and last names the other way round (first name " +
+      "'Decker', last name 'Alina'); the M-A Chronicle names her Alina Decker, and the site owner asked for the swap (2026-11-26). " +
+      'The pairs apply at once, so her first name becomes Alina and her last name Decker.',
+  },
+  {
     maxpreps: 'Amelia "mimi" Scatena',
     spelled: 'Amelia "Mimi" Scatena',
     basis: 'Amelia "Mimi" Scatena (Mission Bay field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner\'s request (2026-11-25).',
@@ -186,16 +194,20 @@ function respell(name: string): string {
 
 /**
  * A first or last name respelled word for word by every entry its row's full name matched: "Gretta" is
- * "Greta" only on Gretta Jungjohann's row, never on every Gretta's.
+ * "Greta" only on Gretta Jungjohann's row, never on every Gretta's. An entry's word pairs apply in one pass,
+ * so an entry that swaps two words ("Decker Alina" → "Alina Decker") swaps them rather than undoing itself.
  */
 function respellPart(part: string, fullName: string): string {
   return SPELLINGS.filter(({ re }) => {
     re.lastIndex = 0;
     return re.test(fullName);
-  }).reduce(
-    (n, { whole, spelled, pairs }) => (whole.test(n) ? spelled : pairs.reduce((m, [from, to]) => m.replace(wholeWords(from, 'giu'), to), n)),
-    part,
-  );
+  }).reduce((n, { whole, spelled, pairs }) => {
+    if (whole.test(n)) return spelled;
+    if (pairs.length === 0) return n;
+    const to = new Map(pairs.map(([from, word]) => [from.toLowerCase(), word]));
+    const any = new RegExp(`(?<![\\p{L}'’-])(?:${pairs.map(([from]) => escape(from)).join('|')})(?![\\p{L}'’-])`, 'giu');
+    return n.replace(any, (word) => to.get(word.toLowerCase()) ?? word);
+  }, part);
 }
 
 function recaseAs(name: string, uncased: boolean): string {

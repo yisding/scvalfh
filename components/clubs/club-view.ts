@@ -33,6 +33,7 @@ import {
   getClubsFile,
   getJvClubAffiliations,
   getPlayerClubs,
+  getVarsityClubAffiliations,
   type AffiliationSource,
   type AffiliationStatus,
   type Club,
@@ -262,7 +263,7 @@ const GROUP_WORDS = {
 const GROUP_ORDER: readonly AffiliationStatus[] = ['current', 'unknown', 'past'];
 
 /**
- * Whether this build lists JV players' club ties (data/<sport>/clubs.json `jvAffiliations`): when it
+ * Whether this build lists JV players' club ties (data/<sport>/clubs.json's memberships served as `jvAffiliations`): when it
  * does, the club pages say they name the JV lists' players too.
  */
 export function listsJvTies(): boolean {
@@ -444,7 +445,7 @@ export function buildClubsIndexView(): ClubsIndexView {
     (r) => r !== 'elsewhere' && !SEARCHED_REGIONS.includes(r) && clubs.some((c) => c.region === r),
   );
 
-  const tied = [...file.affiliations, ...file.jvAffiliations];
+  const tied = [...getVarsityClubAffiliations(), ...file.jvAffiliations];
   const playerCount = new Set(tied.map((a) => `${a.teamSlug} ${a.athleteId}`)).size;
   const schoolCount = new Set(tied.map((a) => a.teamSlug)).size;
   const withPlayers = rows

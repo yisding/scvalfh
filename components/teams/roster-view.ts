@@ -30,6 +30,8 @@ import {
   classOf,
   getEnrichedTeamRoster,
   getRosters,
+  listedPlayerKey,
+  listedPlayerProfiles,
   sortedPlayers,
   type EnrichmentSource,
   type MergedPlayer,
@@ -304,7 +306,7 @@ export interface RosterView {
    * order, each with the position it gives in the site's words. Empty otherwise, and empty as soon as
    * MaxPreps lists anyone, so MaxPreps' rows always win.
    */
-  listedRows: Array<{ key: string; name: string; position: string | null; profiles: RosterProfileLink[] }>;
+  listedRows: Array<{ key: string; name: string; position: string | null; profiles: RosterProfileLink[]; clubs: RosterClubGroup[] }>;
 }
 
 /** A conflict's value in the list's own words, lower-cased for the middle of a sentence. */
@@ -617,7 +619,9 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
             key: `${p.firstName}-${p.lastName}-${i}`,
             name: `${p.firstName} ${p.lastName}`,
             position: positionFromText(p.position),
-            profiles: profileLinks(p.profiles ?? []),
+            profiles: profileLinks(listedPlayerProfiles(slug, `${p.firstName} ${p.lastName}`)),
+            // A listed player's ties (data/<sport>/clubs.json memberships, served as listedAffiliations), found by her listed name.
+            clubs: playerClubGroups(slug, listedPlayerKey(`${p.firstName} ${p.lastName}`)),
           }))
         : [],
   };

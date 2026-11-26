@@ -109,14 +109,17 @@ const PIN_LEAGUE = snapshot?.teams.find((t) => t.slug === PIN)?.league ?? 'mcal'
 const SOCAL_QUERY = 'la jolla';
 
 /**
- * The clubs of data/field-hockey/clubs.json no affiliation names: their pages show the empty state. Read like
- * the snapshot, from this tree; none (and no extra run) when the script runs outside the repo.
+ * The clubs of data/field-hockey/clubs.json whose pages show the empty state: no membership names a person on one of
+ * this season's rows (data/field-hockey/player-index.json, which lib/players/clubs.ts serves the ties through). Read
+ * like the snapshot, from this tree; none (and no extra run) when the script runs outside the repo.
  */
 function readEmptyClubs() {
   const file = 'data/field-hockey/clubs.json';
-  if (!existsSync(file)) return new Set();
-  const { clubs, affiliations } = JSON.parse(readFileSync(file, 'utf8'));
-  const tied = new Set(affiliations.map((a) => a.club));
+  const indexFile = 'data/field-hockey/player-index.json';
+  if (!existsSync(file) || !existsSync(indexFile)) return new Set();
+  const { clubs, memberships } = JSON.parse(readFileSync(file, 'utf8'));
+  const onARow = new Set(JSON.parse(readFileSync(indexFile, 'utf8')).rows.map((r) => r[0]));
+  const tied = new Set(memberships.filter((m) => onARow.has(m.playerId)).map((m) => m.club));
   return new Set(clubs.map((c) => c.slug).filter((slug) => !tied.has(slug)));
 }
 const EMPTY_CLUBS = readEmptyClubs();

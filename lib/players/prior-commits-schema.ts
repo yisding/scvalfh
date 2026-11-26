@@ -4,8 +4,8 @@
  * or joined a college team, in their own sport or any other, and those colleges.
  *
  * The files are the 2026-11-18 research record. The commitments of their players who are on a 2026-27 roster were
- * copied into data/soccer/commits.json on 2026-11-21 as ordinary commitments, and the pages read that file, not
- * these. They are research, written by hand like data/field-hockey/commits.json, under its rules (README "College
+ * copied into data/soccer/commits.json on 2026-11-21 as ordinary commitments (merged into data/commitments.json on
+ * 2026-11-26), and the pages read that file, not these. They are research, written by hand like data/commitments.json, under its rules (README "College
  * commitments"), with two differences:
  *
  *   - The players are last season's, not this season's roster rows. A commitment names its player by
@@ -21,7 +21,7 @@
  *   2. every commitment names a college in colleges[] with a program in its sport
  *   3. a player (playerId) has at most one commitment
  *   4. every college and every program has a commitment, and no `asOf` is after `capturedAt`
- *   5-8. as data/field-hockey/commits.json's (https only, social media only as an official account's post, a source
+ *   5-8. as data/commitments.json's (https only, social media only as an official account's post, a source
  *      for every record, quotes of 1-300 characters, `asOf` a day, month or year): the shared pieces
  *      of lib/players/commits-schema.ts
  *   9. the join (joinPriorCommits), against the registry: a player named by `careerId` and `seasonRoster`

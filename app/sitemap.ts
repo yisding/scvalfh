@@ -64,7 +64,7 @@ import { HAS_CLUB_CALENDAR, HAS_FESTIVAL, HAS_RECRUITING } from '../lib/sports/c
  * pages take the last day data/field-hockey/clubs.json was checked
  * instead (`getClubsLastChecked`: its `capturedAt`, or a later club `checkedOn`), as /commits does:
  * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
- * /commits takes the last day data/field-hockey/commits.json was checked (`getCommitsLastChecked`: its
+ * /commits takes the last day data/commitments.json was checked (`getCommitsLastChecked`: its
  * `capturedAt`, or a later college `checkedOn`) for the same reason (DESIGN §21.4). /recruiting gathers
  * the clubs, the commitments, the roster overlay's recruiting profiles and the JV players' (DESIGN §25),
  * so it takes the latest of the four files' dates. The National Hockey Festival's pages (field hockey only, DESIGN §35)

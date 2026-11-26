@@ -160,7 +160,7 @@ jobs:
       # schools, Red Bluff's status overstated, "EAL school", a seed word on an EAL page),
       # the old /standings#de-anza / #el-camino anchors still there, and nowhere a club
       # affiliation's or college commitment's basis or source quote, which data/field-hockey/clubs.json and
-      # data/field-hockey/commits.json keep but never render.
+      # data/commitments.json keep but never render.
       - name: Assert copy honesty in the built pages
         run: pnpm assert:copy
 
