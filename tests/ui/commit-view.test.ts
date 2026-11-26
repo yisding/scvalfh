@@ -393,14 +393,15 @@ describe('/commits, rendered', () => {
     expect(ids.length).toBe(new Set(ids).size);
   });
 
-  it('puts each region’s commitments in its own scope block, NorCal first, with no region control of its own', () => {
+  it('puts each region’s commitments in its own scope block, NorCal first, under the region switch', () => {
     if (file.commitments.length === 0) return;
     const starts = view.regions.map((r) => html.indexOf(`<div id="${r.id}" data-region-scope="${r.id}">`));
     for (const at of starts) expect(at).toBeGreaterThan(-1);
     expect(starts).toEqual([...starts].sort((a, b) => a - b));
-    // The footer and the More sheet carry the region (DESIGN §33); the page draws no switch.
-    expect(html).not.toContain('aria-label="Region"');
-    expect(html).not.toContain('data-region-option');
+    // The region switch sits under the tabs, before the first region's block.
+    const sw = html.indexOf('data-region-option="socal"');
+    expect(sw).toBeGreaterThan(-1);
+    expect(sw).toBeLessThan(starts[0]);
     view.regions.forEach((region, i) => {
       const block = html.slice(starts[i], starts[i + 1] ?? html.length);
       expect(textOf(block)).toContain(region.summary);

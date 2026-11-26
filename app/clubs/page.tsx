@@ -4,6 +4,7 @@ import Link from 'next/link';
 import ClubList from '../../components/clubs/ClubList';
 import { buildClubsIndexView, trackedRostersWords } from '../../components/clubs/club-view';
 import PageHeader from '../../components/layout/PageHeader';
+import ScopeBar from '../../components/prefs/ScopeBar';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
@@ -37,7 +38,7 @@ const PAGE_TITLE = 'Club teams';
  * Regions (DESIGN §24.12): each region's section carries its half of the site's `data-region-scope`
  * (lib/players/clubs-schema.ts CLUB_REGION_SITE_REGION), so a reader sees the clubs of their own
  * half; `elsewhere` shows under both, and without JavaScript every section renders, NorCal's first.
- * The page has no region control of its own (DESIGN §33): the footer and the More sheet carry it.
+ * Under the tabs, the region switch (`ScopeBar` with no league row and no stamp, as on /leaders).
  *
  * Under the tabs, a link to /club-calendar (DESIGN §34): the clubs'
  * tournaments and leagues.
@@ -62,6 +63,8 @@ export default function ClubsPage() {
       <PageHeader title="Club teams">
         <RecruitingTabs current="clubs" />
       </PageHeader>
+      {/* The region switch, as on /leaders: each club region below is one half's. */}
+      {view.clubCount > 0 ? <ScopeBar /> : null}
       {HAS_CLUB_CALENDAR ? (
         <ul className="sx-linkrow">
           <li>
