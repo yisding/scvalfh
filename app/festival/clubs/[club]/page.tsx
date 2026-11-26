@@ -11,6 +11,7 @@ import TeamGameList from '../../../../components/festival/TeamGameList';
 import { buildClubView } from '../../../../components/festival/club-view';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../../components/layout/site';
 import SectionHeader from '../../../../components/ui/SectionHeader';
+import ExternalLink from '../../../../components/ui/ExternalLink';
 import { plural } from '../../../../components/words/plural';
 import { festivalClubSlugs, getFestival } from '../../../../lib/festival/festival';
 import { HAS_FESTIVAL } from '../../../../lib/sports/current';
@@ -67,8 +68,14 @@ export default async function FestivalClubPage({ params }: PageProps<'/festival/
           </>
         }
       />
+      {view.description ? <p className="mt-3 mb-0 max-w-prose text-body text-ink-2">{view.description}</p> : null}
       <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1">
         <FollowClubButton slugs={view.slugs} name={view.name} />
+        {view.website ? (
+          <ExternalLink href={view.website} className="sx-action">
+            Club website
+          </ExternalLink>
+        ) : null}
         {view.site ? (
           <Link href={view.site.href} prefetch={false} className="sx-action">
             Club page on this site

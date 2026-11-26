@@ -17,7 +17,9 @@
  *   2. a prefix is lower case, trimmed and single-spaced (it is compared with lib/festival/festival-names.ts
  *      clubMatchText)
  *   3. a Northern California club is a California club
- *   4. a club with a region, a California flag or a siteClub cites at least one piece of evidence
+ *   4. a club with a region, a California flag, a siteClub, a website or a description cites at least one piece of
+ *      evidence
+ *   5. a description is at most 25 words
  * That every siteClub names a club in data/field-hockey/clubs.json is checked by lib/festival/festival.ts, which
  * can see the clubs; this file cannot.
  */
@@ -42,6 +44,13 @@ export const FestivalCuratedClubSchema = z.object({
   norCal: z.boolean(),
   /** The club's slug in data/field-hockey/clubs.json, when this site has a page for it (/clubs/<slug>). */
   siteClub: slugId.nullable(),
+  /** The club's own website (owner ask, 2026-11-26: each club page links it), only with evidence. */
+  website: httpsUrl.nullable().optional(),
+  /**
+   * One plain sentence on the club, at most 25 words, paraphrased from its own site: who it serves and what it runs.
+   * No superlatives or rankings, no people's names. Only with evidence.
+   */
+  description: text.nullable().optional(),
   /** A note on one team, keyed by its TourneyMachine name verbatim. */
   teamNotes: z.record(z.string().min(1), text).optional(),
   evidence: z.array(FestivalClubEvidenceSchema),
@@ -75,8 +84,11 @@ function checkFestivalClubsFile(f: z.infer<typeof FestivalClubsFileObject>, ctx:
       owner.set(m, c.slug);
     });
     if (c.norCal && !c.california) issue(ctx, ['clubs', i, 'norCal'], 'a Northern California club is a California club');
-    if ((c.region !== null || c.california || c.siteClub !== null) && c.evidence.length === 0) {
-      issue(ctx, ['clubs', i, 'evidence'], 'a region, California flag or siteClub cites its evidence');
+    if ((c.region !== null || c.california || c.siteClub !== null || c.website || c.description) && c.evidence.length === 0) {
+      issue(ctx, ['clubs', i, 'evidence'], 'a region, California flag, siteClub, website or description cites its evidence');
+    }
+    if (c.description && c.description.split(/\s+/).length > 25) {
+      issue(ctx, ['clubs', i, 'description'], 'a club description is one sentence of at most 25 words');
     }
   });
 }

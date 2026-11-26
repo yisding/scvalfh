@@ -110,7 +110,12 @@ export function getFestivalClubsFile(): FestivalClubsFile {
 export interface FestivalClub {
   slug: string;
   name: string;
+  /** Its hometown: 'Fremont, Calif.'. */
   region: string | null;
+  /** Its own website. */
+  website: string | null;
+  /** One sentence on the club. */
+  description: string | null;
   california: boolean;
   norCal: boolean;
   /** Its slug in data/field-hockey/clubs.json (/clubs/<slug>), when this site has a page for it. */
@@ -151,6 +156,8 @@ export function resolveFestivalClubs(festival: FestivalFile, clubs: FestivalClub
         slug: c.slug,
         name: c.name,
         region: c.region,
+        website: c.website ?? null,
+        description: c.description ?? null,
         california: c.california,
         norCal: c.norCal,
         siteClub: c.siteClub,
@@ -177,6 +184,8 @@ export function resolveFestivalClubs(festival: FestivalFile, clubs: FestivalClub
           slug,
           name,
           region: null,
+          website: null,
+          description: null,
           california: false,
           norCal: false,
           siteClub: null,

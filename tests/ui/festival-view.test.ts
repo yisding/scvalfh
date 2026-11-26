@@ -455,10 +455,10 @@ describe('latest results and up next (statuses, never the clock)', () => {
 describe('clubs and California', () => {
   const site: SiteClubLookup = (slug) =>
     ({
-      'sf-hawks': { slug, name: 'SF Hawks', href: `/clubs/${slug}`, regionLabel: 'San Francisco', siteRegion: 'norcal' as const },
-      'hayward-hawks': { slug, name: 'Hayward Hawks', href: `/clubs/${slug}`, regionLabel: 'East Bay', siteRegion: 'norcal' as const },
-      'norcal-impact': { slug, name: 'NorCal Impact', href: `/clubs/${slug}`, regionLabel: 'South Bay', siteRegion: 'norcal' as const },
-      htc: { slug, name: 'HTC', href: `/clubs/${slug}`, regionLabel: 'San Diego', siteRegion: 'socal' as const },
+      'sf-hawks': { slug, name: 'SF Hawks', href: `/clubs/${slug}`, regionLabel: 'San Francisco', siteRegion: 'norcal' as const, website: null, description: null },
+      'hayward-hawks': { slug, name: 'Hayward Hawks', href: `/clubs/${slug}`, regionLabel: 'East Bay', siteRegion: 'norcal' as const, website: null, description: null },
+      'norcal-impact': { slug, name: 'NorCal Impact', href: `/clubs/${slug}`, regionLabel: 'South Bay', siteRegion: 'norcal' as const, website: null, description: null },
+      htc: { slug, name: 'HTC', href: `/clubs/${slug}`, regionLabel: 'San Diego', siteRegion: 'socal' as const, website: null, description: null },
     })[slug] ?? null;
 
   it('groups the California clubs Northern then Southern by this site’s club region; HTC’s East Coast team is not one', () => {

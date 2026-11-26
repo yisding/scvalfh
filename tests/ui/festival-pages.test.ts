@@ -169,6 +169,22 @@ describe('team names in matches (owner ask, 2026-11-26: tapping a name opens the
   });
 });
 
+describe('a club page’s profile (owner ask, 2026-11-26: hometown, a brief description and the club’s website)', () => {
+  it('prints the hometown in its header, its one-line description and a "Club website" link', async () => {
+    const page = render(await ClubPage(params({ club: 'san-francisco-hawks' })));
+    const text = stripTags(page);
+    expect(text).toContain('San Francisco, Calif.');
+    // SF Hawks' description and website come from its page on this site (data/field-hockey/clubs.json).
+    expect(text).toContain('San Francisco youth club for boys and girls');
+    expect(page).toMatch(/href="https:\/\/sfyouthfieldhockey\.com\/"[^>]*>Club website/);
+  });
+
+  it('prints neither when a club has none (the adult "Stars" team’s automatic club)', async () => {
+    const page = render(await ClubPage(params({ club: 'stars' })));
+    expect(page).not.toContain('Club website');
+  });
+});
+
 describe('a division without placement games', () => {
   it('says "Pool play only" in its header, and the hub’s division list links its pools where others link a bracket', () => {
     expect(stripTags(u16)).toContain('Pool play only');
