@@ -2849,23 +2849,23 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/285095/roster",
-          "kind": "league-roster",
-          "quote": "GA 09/10 | Markovic | Charlotte | No Position Listed",
-          "statedSchool": null,
-          "statedClassYear": null,
-          "sourceDate": null
-        },
-        {
           "url": "https://rankings.gotsport.com/teams/74940/roster",
           "kind": "league-roster",
           "quote": "N1 G2008/09 Quicksilver Green (CA) | Markovic | Charlotte | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Charlotte Markovic | - | #22 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club's rosters on GotSport Rankings (Girls Academy 2026-27, Northwest conference: GA 09/10 (born 2009/2010); NorCal N1 League 2026-27: N1 G2008/09 Quicksilver Green (CA) (born 2008/2009)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028, which the player's own linked recruiting page states (the JV roster row has no grade; rule 2 as loosened on 2026-11-25), is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in San Jose. The pages name no school and give no class year, jersey or date, so they date nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U17 GA (the GA U17 team, born 2009/2010), with no class year; those birth years admit the class of 2028) lists a player of this name; the class year compared is the class year the player's own linked recruiting page states (the row has no grade). Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 09/10, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "los-gatos",
@@ -3266,6 +3266,28 @@
         }
       ],
       "basis": "Linked on the owner's decision (2026-11-25), outside the league-roster rule (lib/players/club-rosters.ts), which leaves the row as 'no-grade': the league's own 2026-27 rosters (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2010/11, Force (CA) ECNL RL G2008/09) list a player of this name with no class year, and the JV roster row has no grade, so no class year was compared. No other tracked school has the name, varsity or JV; every ECNL roster row of the name is at this club; the club is based in the South Bay. No page names the school. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data in a fresh read of every ECNL team, 2026-11-25."
+    },
+    {
+      "teamSlug": "leland",
+      "athleteId": "72570479-c955-4800-8d7a-1561025a3b3f",
+      "playerId": "p07402fcc87",
+      "fullName": "Alys Myers",
+      "club": "almaden-fc",
+      "clubTeam": "GA 11/12",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U15 GA (Almaden FC), Season 2026-2027 | Alys Myers | - | #25 | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U15 GA (the GA U15 team, born 2011/2012), with class of 2030) lists a player of this name; the class year compared is the class year the Hudl roster gives (the row has no grade). Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 11/12, Hudl's AFC U15 GA), which gives its birth years."
     }
   ],
   "affiliations": [
@@ -3513,9 +3535,9 @@
       "playerId": "pacfb769548",
       "fullName": "Rebecca Guting",
       "club": "almaden-fc",
-      "clubTeam": null,
+      "clubTeam": "GA 09/10",
       "status": "current",
-      "asOf": "2026-04-18",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -3533,9 +3555,25 @@
           "statedSchool": "Los Altos",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Rebecca Guting | - | #16 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Rebecca Guting | - | #16 | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"Almaden FC\" (linked to https://prepsoccer.com/program/almaden-fc/) and her school \"Los Altos\", linked to the team page titled \"Los Altos High School Soccer | Los Altos, CA | Prep Soccer\"; class 2028 equals the roster. Server-rendered HTML; profile created 2026-04-18. PrepSoccer's program page for the club lists her under Class of 2028 with high school Los Altos (same site; agrees). Status current: a source dated 2026-04-18 (2026) states the club in the present tense. Every source re-read at assembly on 2026-11-21."
+      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page, reached by address probe: names her, club soccer, the club \"Almaden FC\" (linked to https://prepsoccer.com/program/almaden-fc/) and her school \"Los Altos\", linked to the team page titled \"Los Altos High School Soccer | Los Altos, CA | Prep Soccer\"; class 2028 equals the roster. Server-rendered HTML; profile created 2026-04-18. PrepSoccer's program page for the club lists her under Class of 2028 with high school Los Altos (same site; agrees). Status current: a source dated 2026-04-18 (2026) states the club in the present tense. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2028; AFC U17 GA (the GA U17 team, born 2009/2010), with class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "los-altos",
@@ -3619,9 +3657,9 @@
       "playerId": "p93536997d6",
       "fullName": "Kristen Honer",
       "club": "almaden-fc",
-      "clubTeam": "AFC U17 GA",
-      "status": "unknown",
-      "asOf": "2024",
+      "clubTeam": "GA 09/10",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -3631,9 +3669,17 @@
           "statedSchool": "Mountain View High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Kristen Honer | M | #2 | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U17 GA (the GA U17 team, born 2009/2010), with class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "mountain-view",
@@ -4874,15 +4920,23 @@
           "sourceDate": null
         },
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Hickey | Rylan | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Rylan Hickey | - | #17 | Class of 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Hickey | Rylan | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Merged at assembly from ncsa; status from the ncsa entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with class of 2027) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2027 (read from the kept copy and again as displayed in Chromium, 2026-11-26). It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "leland",
@@ -5002,9 +5056,9 @@
       "playerId": "pba532f1e2b",
       "fullName": "Brooke Benak",
       "club": "almaden-fc",
-      "clubTeam": "AFC U16 GA",
-      "status": "unknown",
-      "asOf": "2024",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5014,9 +5068,17 @@
           "statedSchool": "Pioneer High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Brooke Benak | D, F | #18 | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     },
     {
       "teamSlug": "pioneer",
@@ -5024,9 +5086,9 @@
       "playerId": "pe2d3efde55",
       "fullName": "Fiona Benak",
       "club": "almaden-fc",
-      "clubTeam": "AFC U16 GA",
-      "status": "unknown",
-      "asOf": "2024",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5036,9 +5098,17 @@
           "statedSchool": "Pioneer High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Fiona Benak | - | #88 | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from hudl; status from the hudl entry. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     },
     {
       "teamSlug": "pioneer",
@@ -5046,9 +5116,9 @@
       "playerId": "p569c6ae8f8",
       "fullName": "Hayden Casey",
       "club": "almaden-fc",
-      "clubTeam": "Almaden FC 2011 Girls Academy",
-      "status": "unknown",
-      "asOf": "2025-12-02",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5066,9 +5136,17 @@
           "statedSchool": "Pioneer High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Hayden Casey | D, M | #4 | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Pioneer (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from maxpreps, hudl; status from the maxpreps entry. Every source re-read at assembly on 2026-11-21."
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Pioneer (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Merged at assembly from maxpreps, hudl; status from the maxpreps entry. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     },
     {
       "teamSlug": "pioneer",
@@ -5144,15 +5222,23 @@
           "sourceDate": null
         },
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Hellman | Kayla | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Kayla Hellman | - | #2 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Hellman | Kayla | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 3 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Her own SportsRecruits soccer profile (The page names Pioneer High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from hudl, sportsrecruits; status from the hudl entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 3 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Her own SportsRecruits soccer profile (The page names Pioneer High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from hudl, sportsrecruits; status from the hudl entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2028 (read from the kept copy and again as displayed in Chromium, 2026-11-26). It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "pioneer",
@@ -5208,7 +5294,7 @@
       "club": "almaden-fc",
       "clubTeam": "GA 10/11",
       "status": "current",
-      "asOf": "2026",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5228,15 +5314,15 @@
           "sourceDate": null
         },
         {
-          "url": "https://rankings.gotsport.com/teams/411449/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 10/11 | Akra | Yasmeen | No Position Listed",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Yasmeen Akra | M | #20 | Class of 2029",
           "statedSchool": null,
-          "statedClassYear": null,
-          "sourceDate": null
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 2 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Her own SportsRecruits soccer profile (The page names Pioneer High School and class of 2029, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from hudl, sportsrecruits; status from the hudl entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25."
+      "basis": "The player's Hudl profile (on the school's own soccer team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 2 team entries for this club on the page; the latest is used. Hudl gives the organization's location as San Jose, CA. Her own SportsRecruits soccer profile (The page names Pioneer High School and class of 2029, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Merged at assembly from hudl, sportsrecruits; status from the hudl entry. Every source re-read at assembly on 2026-11-21. The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. It no longer cites the GotSport roster of GA 10/11, which Hudl's replaces. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     },
     {
       "teamSlug": "pioneer",
@@ -5801,15 +5887,23 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Martinez | Mireya | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Mireya Martinez | - | #21 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Martinez | Mireya | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2027) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2027 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "prospect",
@@ -5817,29 +5911,29 @@
       "playerId": "p518c4088ed",
       "fullName": "Natalie Hammer",
       "club": "almaden-fc",
-      "clubTeam": "GA 08/09",
+      "clubTeam": "GA 09/10",
       "status": "current",
       "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Hammer | Natalie | No Position Listed",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Natalie Hammer | GK | #3 | Class of -",
           "statedSchool": null,
           "statedClassYear": null,
-          "sourceDate": null
+          "sourceDate": "2026-27"
         },
         {
-          "url": "https://rankings.gotsport.com/teams/285095/roster",
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
           "kind": "league-roster",
-          "quote": "GA 09/10 | Hammer | Natalie | No Position Listed",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Hammer | Natalie | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U17 GA (the GA U17 team, born 2009/2010), with no class year; those birth years admit the class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2028 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport rosters of GA 08/09, GA 09/10, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "prospect",
@@ -5869,9 +5963,9 @@
       "playerId": "p0f7354bd7b",
       "fullName": "Aashi Ahuja",
       "club": "almaden-fc",
-      "clubTeam": "AFC",
-      "status": "unknown",
-      "asOf": "2025-03-03",
+      "clubTeam": "GA 09/10",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -5881,9 +5975,17 @@
           "statedSchool": "Archbishop Mitty (San Jose, CA)",
           "statedClassYear": 2028,
           "sourceDate": "2025-03-03"
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Aashi Ahuja | M | #13 | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Archbishop Mitty (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. Every source re-read at assembly on 2026-11-21."
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page her/his Archbishop Mitty (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U17 GA (the GA U17 team, born 2009/2010), with class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "mitty",
@@ -6149,9 +6251,9 @@
       "playerId": "p0bf1364382",
       "fullName": "Lilly Jones",
       "club": "almaden-fc",
-      "clubTeam": "GA",
+      "clubTeam": "GA 08/09",
       "status": "current",
-      "asOf": "2026",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -6161,9 +6263,17 @@
           "statedSchool": "Archbishop Mitty High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Lilly Jones | - | #39 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21."
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label. Every source re-read at assembly on 2026-11-21. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "mitty",
@@ -6479,23 +6589,23 @@
           "sourceDate": null
         },
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Mcdougall | Madison | No Position Listed",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Madison McDougall | M | #15 | Class of 2028",
           "statedSchool": null,
-          "statedClassYear": null,
-          "sourceDate": null
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
         },
         {
-          "url": "https://rankings.gotsport.com/teams/285095/roster",
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
           "kind": "league-roster",
-          "quote": "GA 09/10 | Mcdougall | Madison | No Position Listed",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Mcdougall | Madison | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits soccer profile (The page names Valley Christian High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "Her own SportsRecruits soccer profile (The page names Valley Christian High School and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown. Every source re-read at assembly on 2026-11-21. The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009) and GA 09/10 (born 2009/2010)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2028 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date. Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U17 GA (the GA U17 team, born 2009/2010), with class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2028 (read from the kept copy and again as displayed in Chromium, 2026-11-26). It no longer cites the GotSport rosters of GA 08/09, GA 09/10, which Hudl's replaces. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "valley-christian",
@@ -7800,15 +7910,23 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Altinel | Aylin | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Aylin Altinel | - | #3 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Altinel | Aylin | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2027) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2027 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "willow-glen",
@@ -8075,8 +8193,8 @@
       "fullName": "Joslyn Barajas",
       "club": "almaden-fc",
       "clubTeam": "GA 08/09",
-      "status": "current",
-      "asOf": "2026-27",
+      "status": "past",
+      "asOf": null,
       "confidence": "medium",
       "sources": [
         {
@@ -8088,7 +8206,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date. Status past (2026-11-26): the club's Hudl roster of the same team for the 2026-2027 season (AFC U18 GA), which replaces the GotSport roster in the comparison, does not list her, nor does any of the club's Hudl GA rosters, and the 2026-27 ECNL RL roster of Los Gatos United Soccer Club's G2008/09 does; the GotSport page, undated, keeps players a team once carried."
     },
     {
       "teamSlug": "andrew-hill",
@@ -9282,15 +9400,15 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/411449/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 10/11 | Littlewood | Audrey | No Position Listed",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Audrey Littlewood | D | #9 | Class of -",
           "statedSchool": null,
           "statedClassYear": null,
-          "sourceDate": null
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2029 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 10/11, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     },
     {
       "teamSlug": "los-altos",
@@ -9900,29 +10018,37 @@
       "playerId": "p4f60f66a2e",
       "fullName": "Megan Le",
       "club": "almaden-fc",
-      "clubTeam": "GA 10/11",
+      "clubTeam": "GA 11/12",
       "status": "current",
       "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/411449/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 10/11 | Le | Megan | No Position Listed",
+          "quote": "AFC U15 GA (Almaden FC), Season 2026-2027 | Megan Le | D, M | #10 | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/103516/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2012/13 Quicksilver Green (CA) | Le | Megan | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         },
         {
-          "url": "https://rankings.gotsport.com/teams/529662/roster",
+          "url": "https://rankings.gotsport.com/teams/103515/roster",
           "kind": "league-roster",
-          "quote": "GA 11/12 | Le | Megan | No Position Listed",
+          "quote": "N1 G2011/12 Quicksilver Green (CA) | Le | Megan | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy rosters on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011) and GA 11/12 (born 2011/2012)) list a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U15 GA (the GA U15 team, born 2011/2012), with class of 2030) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2012/13 Quicksilver Green (CA); N1 G2011/12 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2030 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport rosters of GA 10/11, GA 11/12, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 11/12, Hudl's AFC U15 GA), which gives its birth years."
     },
     {
       "teamSlug": "branham",
@@ -10024,15 +10150,23 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/529662/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 11/12 | Buckelew | Alina | No Position Listed",
+          "quote": "AFC U15 GA (Almaden FC), Season 2026-2027 | Alina Buckelew | D | #13 | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/103516/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2012/13 Quicksilver Green (CA) | Buckelew | Alina | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 11/12 (born 2011/2012)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U15 GA (the GA U15 team, born 2011/2012), with class of 2030) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2012/13 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2030 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 11/12, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 11/12, Hudl's AFC U15 GA), which gives its birth years."
     },
     {
       "teamSlug": "willow-glen",
@@ -10282,15 +10416,23 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Gonzales | Isabella | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Isabella Gonzales | - | #18 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Gonzales | Isabella | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2027) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2027 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "mitty",
@@ -10304,15 +10446,15 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Dominguez | Angelia | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Angelia Dominguez | - | #11 | Class of -",
           "statedSchool": null,
           "statedClassYear": null,
-          "sourceDate": null
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2027) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "mitty",
@@ -10422,15 +10564,15 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/145734/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 08/09 | Costa | Alessia | No Position Listed",
+          "quote": "AFC U18 GA (Almaden FC), Season 2026-2027 | Alessia Costa | - | #28 | Class of -",
           "statedSchool": null,
           "statedClassYear": null,
-          "sourceDate": null
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 08/09 (born 2008/2009)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U18 GA (the GA U19 team, born 2008/2009), with no class year; those birth years admit the class of 2027) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 08/09, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 08/09, Hudl's AFC U18 GA), which gives its birth years."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -10444,15 +10586,15 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/411449/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 10/11 | Chu | Elyse | No Position Listed",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Elyse Chu | D | #8 | Class of -",
           "statedSchool": null,
           "statedClassYear": null,
-          "sourceDate": null
+          "sourceDate": "2026-27"
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 10/11 (born 2010/2011)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2030 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2030) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 10/11, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -10466,15 +10608,24 @@
       "confidence": "medium",
       "sources": [
         {
-          "url": "https://rankings.gotsport.com/teams/285095/roster",
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
           "kind": "league-roster",
-          "quote": "GA 09/10 | Vemuri | Jasmine | No Position Listed",
+          "quote": "AFC U17 GA (Almaden FC), Season 2026-2027 | Jasmine Vemuri | D | #10 | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27",
+          "classYearDiffers": true
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/74940/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Quicksilver Green (CA) | Vemuri | Jasmine | No Position Listed",
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
         }
       ],
-      "basis": "The club's Girls Academy roster on GotSport Rankings (Almaden FC: GA 09/10 (born 2009/2010)) lists a player of this name; under the league-roster rule's birth-year tier (lib/players/club-rosters.ts) the class of 2027 is one those birth years admit, no other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). The page names no school and gives no class year, jersey or date, so it dates nothing. Read from the kept copy (data/soccer/club-rosters.json) and again on each team page as displayed in Chromium, 2026-11-25. A roster alone, matched on name, class year and the club's location: medium confidence; status unknown. Status current (owner decision, 2026-11-25): a club roster read this season (GotSport Rankings, 2026-11-25) lists the player, and the club's own current roster counts as current although the page gives no date."
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U17 GA (the GA U17 team, born 2009/2010), with class of 2028) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. The Hudl roster's class of 2028 is one year off the roster grade's 2027; tied anyway, the source marked classYearDiffers (owner decision, 2026-11-25: a club's class year is often entered by the family, or the player plays up or down; an uncommon name, tied to this club before on its GotSport roster). The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Quicksilver Green (CA)) also lists the name, at birth years that admit the class of 2027 (read from the kept copy and again as displayed in Chromium, 2026-11-26). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. It no longer cites the GotSport roster of GA 09/10, which Hudl's replaces. The club team is named as the GotSport page names the same team (GA 09/10, Hudl's AFC U17 GA), which gives its birth years."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -11880,6 +12031,116 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "f5a9d961-207e-4483-8628-6d607989336f",
+      "playerId": "pe9c5a0d5f3",
+      "fullName": "Caliana Nelson",
+      "club": "almaden-fc",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Caliana Nelson | F, D | #17 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2029) lists a player of this name; the class year compared is the class year the player's own linked recruiting page states (the row has no grade). Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
+    },
+    {
+      "teamSlug": "santa-clara",
+      "athleteId": "f5c6cca4-d90e-491b-b126-43681d814c80",
+      "playerId": "p3b9285827f",
+      "fullName": "Daniela Jimenez",
+      "club": "almaden-fc",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Daniela Jimenez | - | #None | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
+    },
+    {
+      "teamSlug": "silver-creek",
+      "athleteId": "988ada01-bfa1-42b3-9fd6-fbe89f5362a4",
+      "playerId": "p35087e23e2",
+      "fullName": "Maya Barajas",
+      "club": "almaden-fc",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Maya Barajas | - | #89 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
+    },
+    {
+      "teamSlug": "menlo-atherton",
+      "athleteId": "aac57de4-d3a2-4574-a9cd-00219eedc57f",
+      "playerId": "p39a9f74fe5",
+      "fullName": "Grace Wagner",
+      "club": "almaden-fc",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Grace Wagner | - | #67 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "18040d30-4e48-4061-8a16-73932cdf47f0",
+      "playerId": "pd3f5ff1e99",
+      "fullName": "Ella Uribe",
+      "club": "almaden-fc",
+      "clubTeam": "GA 10/11",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+          "kind": "league-roster",
+          "quote": "AFC U16 GA (Almaden FC), Season 2026-2027 | Ella Uribe | F, D | #10 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
     }
   ]
 }

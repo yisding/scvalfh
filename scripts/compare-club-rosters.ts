@@ -3,8 +3,10 @@
  * Compare the kept copy of the ECNL and ECNL Regional League team rosters, and of the Girls Academy
  * rosters kept by hand (data/soccer/club-rosters.json, `pnpm fetch-club-rosters`), with the high school
  * rosters, varsity and JV, and say which players the league-roster rule matches
- * (lib/players/club-rosters.ts) and how each stands in data/soccer/clubs.json. A Girls Academy roster
- * gives no class year: its rows are compared on the team's birth years, listed apart ("birth-years").
+ * (lib/players/club-rosters.ts) and how each stands in data/soccer/clubs.json. A Girls Academy GotSport
+ * roster gives no class year: its rows are compared on the team's birth years, listed apart
+ * ("birth-years"). A GA team kept from Hudl is compared with the ECNL teams, and the GotSport roster it
+ * supersedes is not compared.
  *
  *   pnpm compare-club-rosters                  the counts, and every match clubs.json does not cite yet
  *   pnpm compare-club-rosters --all            every row a roster shares a name with, whatever the outcome
@@ -68,7 +70,7 @@ function schoolRows(): SchoolRow[] {
 /** One compared row: its hits by team name, and, with `urls`, each team's page (two clubs' GA teams share a name). */
 function line(r: CompareRow, urls = false): string {
   const year = (h: CompareRow['hits'][number]) =>
-    h.team.birthYears ? `born ${h.team.birthYears.join('/')}` : (h.player.gradYear ?? 'no class year');
+    h.player.gradYear ?? (h.team.birthYears ? `born ${h.team.birthYears.join('/')}` : 'no class year');
   const hits = r.hits.map(
     (h) => `${h.team.teamName} (${rosterName(h.player)}, ${year(h)}, ${h.player.playerType ?? 'no label'}${urls ? `; ${h.team.url}` : ''})`,
   );

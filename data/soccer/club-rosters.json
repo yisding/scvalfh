@@ -82,13 +82,14 @@
   "gotsport-13066": "santa-cruz-united-fc",
   "gotsport-8384": "stanford-strikers-fc",
   "gotsport-18476": "alum-rock-fc",
-  "4063": "el-camino-fc-salinas"
+  "4063": "el-camino-fc-salinas",
+  "hudl-97189": "almaden-fc"
  },
  "counts": {
-  "teams": 340,
-  "players": 5059,
+  "teams": 345,
+  "players": 5146,
   "hidden": 0,
-  "tooYoung": 1155,
+  "tooYoung": 1157,
   "emptyTeams": 14
  },
  "teams": [
@@ -34360,6 +34361,7 @@
     2008,
     2009
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34531,6 +34533,7 @@
     2009,
     2010
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34716,6 +34719,7 @@
     2010,
     2011
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34803,6 +34807,7 @@
     2011,
     2012
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34890,6 +34895,7 @@
     2012,
     2013
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/884434/afc-u14-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -38065,6 +38071,700 @@
     {
      "firstName": "Ariana",
      "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 819095,
+   "teamName": "AFC U18 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylin",
+     "lastName": "Altinel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amanda",
+     "lastName": "Au",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tayanna",
+     "lastName": "Bonilla",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jazleen",
+     "lastName": "Cerda",
+     "gradYear": 2027,
+     "position": "F, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Alessia",
+     "lastName": "Costa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Dini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Angelia",
+     "lastName": "Dominguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Gonzales",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rebecca",
+     "lastName": "Guting",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kayla",
+     "lastName": "Hellman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Herrera",
+     "gradYear": 2027,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Rylan",
+     "lastName": "Hickey",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lilly",
+     "lastName": "Jones",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mireya",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Perez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emmi",
+     "lastName": "Pham",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaya",
+     "lastName": "Schaefer",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 819097,
+   "teamName": "AFC U17 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Aashi",
+     "lastName": "Ahuja",
+     "gradYear": 2028,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Rylee",
+     "lastName": "Alas",
+     "gradYear": 2028,
+     "position": "F, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Tayanna",
+     "lastName": "Bonilla",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Delilah",
+     "lastName": "Cortez",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alana",
+     "lastName": "Francisco",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Rebecca",
+     "lastName": "Guting",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalie",
+     "lastName": "Hammer",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Kristen",
+     "lastName": "Honer",
+     "gradYear": 2028,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Sofi",
+     "lastName": "Houston",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Kang",
+     "gradYear": null,
+     "position": "M, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Markovic",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "McDougall",
+     "gradYear": 2028,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Mulcaire",
+     "gradYear": 2029,
+     "position": "D, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Emilie",
+     "lastName": "Santiago",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Sarabia",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jasmine",
+     "lastName": "Vemuri",
+     "gradYear": 2028,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Elah",
+     "lastName": "Vilchis-Martinez",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Natalia",
+     "lastName": "Warner",
+     "gradYear": 2028,
+     "position": "D",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 819098,
+   "teamName": "AFC U16 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": 2029,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Barajas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Brooke",
+     "lastName": "Benak",
+     "gradYear": 2029,
+     "position": "D, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Fiona",
+     "lastName": "Benak",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hayden",
+     "lastName": "Casey",
+     "gradYear": 2029,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Elyse",
+     "lastName": "Chu",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Cameron",
+     "lastName": "Collins",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jocelyn",
+     "lastName": "Deleon",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Johanna",
+     "lastName": "Hernandez",
+     "gradYear": 2030,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Daniela",
+     "lastName": "Jimenez",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Littlewood",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ellie",
+     "lastName": "Luz Torres-Guiang",
+     "gradYear": 2029,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Mercado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Caliana",
+     "lastName": "Nelson",
+     "gradYear": null,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ally",
+     "lastName": "Solano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Katara",
+     "lastName": "Sotelo",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Erin",
+     "lastName": "Tran",
+     "gradYear": null,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ella",
+     "lastName": "Uribe",
+     "gradYear": null,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Grace",
+     "lastName": "Wagner",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 819099,
+   "teamName": "AFC U15 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Alexis",
+     "lastName": "Bonham",
+     "gradYear": null,
+     "position": "D, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Teagan",
+     "lastName": "Borges",
+     "gradYear": null,
+     "position": "M, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Alina",
+     "lastName": "Buckelew",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Jackie",
+     "lastName": "Chavez",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Cho",
+     "gradYear": 2030,
+     "position": "F, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Cork",
+     "gradYear": 2030,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Samia",
+     "lastName": "Ducker",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mariah",
+     "lastName": "Enchill",
+     "gradYear": 2030,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Danica",
+     "lastName": "Garcia",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Malia",
+     "lastName": "Huynh",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Megan",
+     "lastName": "Le",
+     "gradYear": 2030,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Alys",
+     "lastName": "Myers",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Annabel",
+     "lastName": "Ross",
+     "gradYear": 2030,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Ishanvi",
+     "lastName": "Shinde",
+     "gradYear": 2030,
+     "position": "M, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Savannah",
+     "lastName": "Vo",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Alice",
+     "lastName": "Whiteside",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Woodbury",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Tamar",
+     "lastName": "Woodbury",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Stella",
+     "lastName": "Yerena",
+     "gradYear": 2030,
+     "position": "M, F",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 884434,
+   "teamName": "AFC U14 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/884434/afc-u14-ga/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 2,
+   "players": [
+    {
+     "firstName": "Lea",
+     "lastName": "Chinn",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Dominguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Miller",
+     "lastName": "Gray",
+     "gradYear": 2030,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Lauren",
+     "lastName": "Huether",
+     "gradYear": 2028,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Alia",
+     "lastName": "Jones",
+     "gradYear": 2030,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Lee",
+     "gradYear": 2030,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Sawyer",
+     "lastName": "Milroy",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Michaela",
+     "lastName": "Palma",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Rhinehart",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Shayne",
+     "lastName": "Semore",
+     "gradYear": null,
+     "position": "M, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Kyra",
+     "lastName": "Sneller",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eliana",
+     "lastName": "Yu",
+     "gradYear": null,
+     "position": "M, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Xuandi",
+     "lastName": "Yuan",
      "gradYear": null,
      "position": null,
      "playerType": null

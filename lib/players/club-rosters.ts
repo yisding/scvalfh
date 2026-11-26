@@ -1,8 +1,8 @@
 /**
  * data/soccer/club-rosters.json: a kept copy of the public team rosters of the Northern California girls
  * leagues ECNL runs (ECNL Girls Northern Cal and the ECNL Regional League's NorCal and Golden State
- * conferences), written by `pnpm fetch-club-rosters`, and of Girls Academy teams' GotSport rosters, kept
- * by hand; and the comparison of it with the high school rosters that `pnpm compare-club-rosters`
+ * conferences), written by `pnpm fetch-club-rosters`, and of Girls Academy teams' GotSport rosters and,
+ * where a club keeps them there, their Hudl rosters, kept by hand; and the comparison of it with the high school rosters that `pnpm compare-club-rosters`
  * prints (README, "Club rosters").
  *
  * The copy exists so that a school's roster can be compared the day it is posted, without reading the
@@ -41,6 +41,14 @@
  * be in" (birthYearsAdmit: California's September 1 cutoff puts a 2008 birth in the class of 2026
  * or 2027). Rules 3-5 hold within each tier, so a GA row neither blocks nor is blocked by an ECNL row
  * at another club: a player's ties are per club, each with its own status.
+ *
+ * Hudl (added 2026-11-26). A club that keeps its GA teams on Hudl (Almaden FC) has a roster there for
+ * the season ("2026-2027"), listing the players this season's team carries, most with a class year,
+ * where GotSport Rankings lists everyone a team has carried. Such a team is kept from Hudl and compared
+ * in the class-year tier, as an ECNL team is: a row with a class year on it, a row with none on the
+ * team's birth years (`birthYears`, the GA age group's). The GotSport roster of the same team is kept
+ * with `supersededBy` naming the Hudl page and is no longer compared: a tie still citing it is one the
+ * season's roster does not confirm.
  */
 
 import { z } from 'zod';
@@ -63,20 +71,26 @@ const leagueUrl = z
     /^https:\/\/(app\.athleteone\.com\/public\/event\/\d+\/|system\.gotsport\.com\/org_event\/events\/\d+$)/,
     'expected a league page on app.athleteone.com or system.gotsport.com',
   );
-/** A team's public roster: its Athlete One team page, or its GotSport Rankings roster page. */
+/** A team's public roster: its Athlete One team page, its GotSport Rankings roster page, or its Hudl roster page. */
 const teamUrl = z
   .string()
   .regex(
-    /^https:\/\/(app\.athleteone\.com\/public\/event\/\d+\/|rankings\.gotsport\.com\/teams\/\d+\/roster$)/,
-    'expected a team page on app.athleteone.com or a roster on rankings.gotsport.com',
+    /^https:\/\/(app\.athleteone\.com\/public\/event\/\d+\/|rankings\.gotsport\.com\/teams\/\d+\/roster$|fan\.hudl\.com\/[a-z0-9/-]+\/team\/\d+\/[a-z0-9-]+\/roster$)/,
+    'expected a team page on app.athleteone.com, a roster on rankings.gotsport.com or a team roster on fan.hudl.com',
   );
 const GOTSPORT_TEAM = /^https:\/\/rankings\.gotsport\.com\//;
+const HUDL_TEAM = /^https:\/\/fan\.hudl\.com\//;
+
+/** Where a kept team's roster was read: the source decides its tier and its club key. */
+export type RosterSource = 'athleteone' | 'gotsport' | 'hudl';
+export const rosterSource = (team: Pick<ClubRosterTeam, 'url'>): RosterSource =>
+  GOTSPORT_TEAM.test(team.url) ? 'gotsport' : HUDL_TEAM.test(team.url) ? 'hudl' : 'athleteone';
 
 export const ClubRosterPlayerSchema = z
   .object({
     firstName: z.string(),
     lastName: z.string(),
-    /** The class year the team page's data carries; null when it has none. */
+    /** The class year the team page's data carries (Hudl's "Class of"); null when it has none. */
     gradYear: z.number().int().min(2020).max(2040).nullable(),
     position: text.nullable(),
     /** The roster's own label: "First Team Player", "Club Player Pool", "Discovery Player", "Guest Player". */
@@ -87,7 +101,7 @@ export const ClubRosterPlayerSchema = z
 export const ClubRosterTeamSchema = z
   .object({
     league: slugId,
-    /** The age group, as the league names it: "GU17". */
+    /** The age group, as the league names it: "GU17" (on a Hudl team, the GA age group it plays in). */
     division: text,
     teamId: z.number().int(),
     teamName: text,
@@ -96,10 +110,16 @@ export const ClubRosterTeamSchema = z
     /** The team's public page: an Athlete One team page (its Roster button lists the players) or a GotSport Rankings roster. */
     url: teamUrl,
     /**
-     * The birth years the team is for ([2008, 2009] for "08/09"), on a team whose roster gives no class
-     * year (Girls Academy's GotSport rosters); absent on a team whose rows carry one.
+     * The birth years the team is for ([2008, 2009] for "08/09"): on a GotSport roster, which gives no
+     * class year, and on a Hudl GA team, whose name gives none ("AFC U17 GA"), for its rows with no class
+     * year; absent on an Athlete One team (its rows carry one, or its name gives the birth years).
      */
     birthYears: z.array(z.number().int().min(2000).max(2030)).min(1).optional(),
+    /**
+     * On a GotSport roster only: the Hudl roster of the same team, kept in this file, which replaces it in
+     * the comparison (the season's roster, where Rankings lists everyone the team has carried).
+     */
+    supersededBy: teamUrl.optional(),
     /** Players the team hides from its public roster: counted, never kept. */
     hidden: z.number().int().min(0),
     /** Players too young to be in high school this season: counted, never kept. */
@@ -117,10 +137,10 @@ export const ClubRostersFileSchema = z
     notes: z.array(text),
     leagues: z.array(z.object({ id: slugId, name: text, eventId: z.number().int(), url: leagueUrl }).strict()).min(1),
     /**
-     * A league club (clubKey: Athlete One's club id, or "gotsport-" and GotSport's) → the club's slug in
-     * clubs.json. Hand-kept; a club with no entry is never linked.
+     * A league club (clubKey: Athlete One's club id, or "gotsport-" and GotSport's, or "hudl-" and Hudl's
+     * organization id) → the club's slug in clubs.json. Hand-kept; a club with no entry is never linked.
      */
-    clubSlugs: z.record(z.string().regex(/^(gotsport-)?\d+$/), slugId),
+    clubSlugs: z.record(z.string().regex(/^(gotsport-|hudl-)?\d+$/), slugId),
     counts: z
       .object({ teams: z.number().int(), players: z.number().int(), hidden: z.number().int(), tooYoung: z.number().int(), emptyTeams: z.number().int() })
       .strict(),
@@ -130,16 +150,24 @@ export const ClubRostersFileSchema = z
   .superRefine((f, ctx) => {
     const leagues = new Set(f.leagues.map((l) => l.id));
     const seen = new Set<string>();
+    const urls = new Map(f.teams.map((t) => [t.url, t]));
     f.teams.forEach((t, i) => {
       if (!leagues.has(t.league)) ctx.addIssue({ code: 'custom', path: ['teams', i, 'league'], message: `${t.league} is not in leagues[]` });
-      const key = `${t.league} ${t.teamId}`;
+      const key = `${rosterSource(t)} ${t.league} ${t.teamId}`;
       if (seen.has(key)) ctx.addIssue({ code: 'custom', path: ['teams', i], message: `duplicate team ${key}` });
       seen.add(key);
-      if (GOTSPORT_TEAM.test(t.url) !== (t.birthYears !== undefined)) {
-        ctx.addIssue({ code: 'custom', path: ['teams', i, 'birthYears'], message: 'a GotSport roster, and only one, gives the team\'s birth years' });
+      const source = rosterSource(t);
+      if ((source !== 'athleteone') !== (t.birthYears !== undefined)) {
+        ctx.addIssue({ code: 'custom', path: ['teams', i, 'birthYears'], message: 'a GotSport or Hudl roster, and only one, gives the team\'s birth years' });
       }
-      if (t.birthYears !== undefined && t.players.some((p) => p.gradYear !== null)) {
+      if (source === 'gotsport' && t.players.some((p) => p.gradYear !== null)) {
         ctx.addIssue({ code: 'custom', path: ['teams', i, 'players'], message: 'a team compared on its birth years keeps no class year' });
+      }
+      if (t.supersededBy !== undefined) {
+        const by = urls.get(t.supersededBy);
+        if (source !== 'gotsport' || by === undefined || rosterSource(by) !== 'hudl' || by.league !== t.league) {
+          ctx.addIssue({ code: 'custom', path: ['teams', i, 'supersededBy'], message: 'only a GotSport roster is superseded, and by a Hudl roster of the same league in this file' });
+        }
       }
     });
     const players = f.teams.reduce((n, t) => n + t.players.length, 0);
@@ -152,8 +180,17 @@ export type ClubRosterPlayer = z.infer<typeof ClubRosterPlayerSchema>;
 export type ClubRosterTeam = z.infer<typeof ClubRosterTeamSchema>;
 export type ClubRostersFile = z.infer<typeof ClubRostersFileSchema>;
 
-/** The key clubSlugs maps a team's club by: GotSport's club ids are their own series, apart from Athlete One's. */
-export const clubKey = (team: Pick<ClubRosterTeam, 'clubId' | 'url'>): string => (GOTSPORT_TEAM.test(team.url) ? `gotsport-${team.clubId}` : String(team.clubId));
+/** The key clubSlugs maps a team's club by: GotSport's and Hudl's club ids are their own series, apart from Athlete One's. */
+export const clubKey = (team: Pick<ClubRosterTeam, 'clubId' | 'url'>): string => {
+  const source = rosterSource(team);
+  return source === 'athleteone' ? String(team.clubId) : `${source}-${team.clubId}`;
+};
+
+/**
+ * The tier a team's rows are compared in: a GotSport roster's on the team's birth years alone, every
+ * other's (ECNL's, Hudl's) on the class year a row carries, else the team's birth years.
+ */
+export const teamTier = (team: Pick<ClubRosterTeam, 'url'>): CompareTier => (rosterSource(team) === 'gotsport' ? 'birth-years' : 'class-year');
 
 /**
  * The class years a team's birth years admit. California's school-entry cutoff is September 1, so a
@@ -273,7 +310,7 @@ export function seasonClassYears(season: string): { first: number; last: number 
  * report it as disagreeing (a class of 2026 on a 2026-27 high school roster).
  */
 export function classYearFromRoster(hits: readonly RosterHit[]): number | null {
-  const years = new Set(hits.filter((h) => h.team.birthYears === undefined && h.player.gradYear !== null).map((h) => h.player.gradYear!));
+  const years = new Set(hits.filter((h) => teamTier(h.team) === 'class-year' && h.player.gradYear !== null).map((h) => h.player.gradYear!));
   return years.size === 1 ? [...years][0] : null;
 }
 
@@ -306,6 +343,7 @@ export function compareClubRosters(
 ): CompareRow[] {
   const byName = new Map<string, RosterHit[]>();
   for (const team of file.teams) {
+    if (team.supersededBy !== undefined) continue; // its Hudl roster is compared instead
     const club = file.clubSlugs[clubKey(team)] ?? null;
     for (const player of team.players) {
       const key = nameKey(rosterName(player));
@@ -331,11 +369,16 @@ export function compareClubRosters(
     const pages = new Set(agreeing.map((h) => h.team.url));
     return tie.sources.some((s) => s.kind === LEAGUE_ROSTER_KIND && pages.has(s.url)) ? 'linked' : 'tie-without-roster';
   };
-  // A team's birth years: a GotSport team's own, else, for a roster row with no class year, the team name's.
+  // A team's birth years: a GotSport team's own; for a row with no class year on another team, the team's
+  // own (Hudl's) or its name's (ECNL's).
   const birthYearsOf = (h: RosterHit): readonly number[] | null =>
-    h.team.birthYears ?? (h.player.gradYear === null ? birthYearsFromTeamName(h.team.teamName) : null);
+    teamTier(h.team) === 'birth-years'
+      ? h.team.birthYears!
+      : h.player.gradYear === null
+        ? (h.team.birthYears ?? birthYearsFromTeamName(h.team.teamName))
+        : null;
   const agrees = (h: RosterHit, classYear: number): boolean => {
-    if (h.team.birthYears === undefined && h.player.gradYear !== null) return h.player.gradYear === classYear;
+    if (teamTier(h.team) === 'class-year' && h.player.gradYear !== null) return h.player.gradYear === classYear;
     const years = birthYearsOf(h);
     return years !== null && birthYearsAdmit(years, classYear);
   };
@@ -350,7 +393,7 @@ export function compareClubRosters(
     const named = key === '' ? undefined : byName.get(key);
     if (!named) continue;
     for (const tier of ['class-year', 'birth-years'] as const) {
-      const all = named.filter((h) => (h.team.birthYears === undefined ? 'class-year' : 'birth-years') === tier);
+      const all = named.filter((h) => teamTier(h.team) === tier);
       if (all.length === 0) continue;
       let classYear: number | null = null;
       let classYearFrom: ClassYearFrom | null = null;
@@ -379,15 +422,16 @@ export function compareClubRosters(
       }
       const agreeing = all.filter((h) => agrees(h, year));
       if (agreeing.length === 0) {
-        result(all.every((h) => h.team.birthYears === undefined && h.player.gradYear === null && birthYearsOf(h) === null) ? 'no-class-year' : 'class-year-differs');
+        result(all.every((h) => birthYearsOf(h) === null && h.player.gradYear === null) ? 'no-class-year' : 'class-year-differs');
         continue;
       }
       let kept = agreeing;
       let setAside: RosterHit[] = [];
       if (new Set(agreeing.map(clubOf)).size > 1) {
-        // Rule 4's second case: exactly one of the clubs is tied by a page other than a league roster. ECNL's
-        // tier only: its rosters are this season's, where a GotSport roster is undated and keeps players a
-        // team once carried, so a second club there says nothing about which is current.
+        // Rule 4's second case: exactly one of the clubs is tied by a page other than a league roster. The
+        // class-year tier only: its rosters (ECNL's, Hudl's) are this season's, where a GotSport roster is
+        // undated and keeps players a team once carried, so a second club there says nothing about which is
+        // current.
         if (tier !== 'class-year') {
           result('several-clubs', agreeing);
           continue;

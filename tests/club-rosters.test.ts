@@ -1,6 +1,6 @@
 /**
  * data/soccer/club-rosters.json (the kept copy of the ECNL and ECNL Regional League team rosters, and of
- * Girls Academy's GotSport rosters) and the league-roster rule that compares it with the high school
+ * Girls Academy's GotSport and Hudl rosters) and the league-roster rule that compares it with the high school
  * rosters (lib/players/club-rosters.ts).
  * Reads the soccer files from disk, whatever sport the run is for.
  */
@@ -18,6 +18,8 @@ import {
   clubKey,
   compareClubRosters,
   rosterName,
+  rosterSource,
+  teamTier,
   type ClubRostersFile,
   type SchoolRow,
 } from '../lib/players/club-rosters';
@@ -63,13 +65,32 @@ describe('data/soccer/club-rosters.json', () => {
 
   it('compares a GotSport team (Girls Academy, NorCal Premier) on its birth years: a Rankings roster, no class year', () => {
     const gotsport = new Set(['ga', 'n1', 'norcal-fall']);
-    for (const id of gotsport) expect(file.teams.some((t) => t.league === id), id).toBe(true);
-    for (const t of file.teams.filter((x) => gotsport.has(x.league))) {
+    for (const id of gotsport) expect(file.teams.some((t) => t.league === id && rosterSource(t) === 'gotsport'), id).toBe(true);
+    for (const t of file.teams.filter((x) => gotsport.has(x.league) && rosterSource(x) !== 'hudl')) {
       expect(t.url, t.teamName).toMatch(/^https:\/\/rankings\.gotsport\.com\/teams\/\d+\/roster$/);
+      expect(teamTier(t), t.teamName).toBe('birth-years');
       expect(t.birthYears, t.teamName).toBeDefined();
       expect(t.players.every((p) => p.gradYear === null)).toBe(true);
     }
     for (const t of file.teams.filter((x) => !gotsport.has(x.league))) expect(t.birthYears).toBeUndefined();
+  });
+
+  it('keeps a GA team from Hudl where the club keeps it there, and the GotSport roster it replaces as superseded (2026-11-26)', () => {
+    const hudl = file.teams.filter((t) => rosterSource(t) === 'hudl');
+    expect(hudl.map((t) => t.teamName)).toEqual(['AFC U18 GA', 'AFC U17 GA', 'AFC U16 GA', 'AFC U15 GA', 'AFC U14 GA']);
+    for (const t of hudl) {
+      expect(t.league).toBe('ga');
+      expect(teamTier(t)).toBe('class-year');
+      expect(t.birthYears, t.teamName).toBeDefined();
+      expect(file.clubSlugs[clubKey(t)]).toBe('almaden-fc');
+      // Each replaces the club's GotSport roster of the same age group, which says so.
+      const replaced = file.teams.filter((g) => g.supersededBy === t.url);
+      expect(replaced.map((g) => [rosterSource(g), g.clubName, g.division, g.birthYears]), t.teamName).toEqual([['gotsport', t.clubName, t.division, t.birthYears]]);
+    }
+    expect(file.teams.filter((t) => t.supersededBy !== undefined)).toHaveLength(hudl.length);
+    // Rebecca Guting (Los Altos, class of 2028) is on the U17 team with her class year.
+    const u17 = hudl.find((t) => t.teamName === 'AFC U17 GA')!;
+    expect(u17.players.find((p) => rosterName(p) === 'Rebecca Guting')?.gradYear).toBe(2028);
   });
 
   it('keeps nothing but a name, a class year, a position and the roster label for a player', () => {
@@ -87,6 +108,11 @@ describe('data/soccer/club-rosters.json', () => {
   });
 
   it('backs every league-roster source in clubs.json, varsity and JV: the team page is in the copy and lists the player with that class year (or, on a GA team, one its birth years admit)', () => {
+    const tieByUrl = (url: string) => [...clubs.affiliations, ...(clubs.jvAffiliations ?? [])].filter((a) => a.sources.some((s) => s.url === url));
+    // A superseded GotSport roster is not the season's: a tie still citing it is not current on it.
+    for (const t of file.teams.filter((x) => x.supersededBy !== undefined)) {
+      for (const a of tieByUrl(t.url)) expect(a.status, `${a.teamSlug} / ${a.fullName} cites ${t.teamName} (${t.url}), superseded by ${t.supersededBy}`).not.toBe('current');
+    }
     const teamByUrl = new Map(file.teams.map((t) => [t.url, t]));
     const classYears = soccerClassYears();
     const cited = [...clubs.affiliations, ...(clubs.jvAffiliations ?? [])].flatMap((a) =>
@@ -102,7 +128,15 @@ describe('data/soccer/club-rosters.json', () => {
       const listed = team!.players.some((p) => nameKey(rosterName(p)) === nameKey(a.fullName) && p.gradYear === s.statedClassYear);
       expect(listed, `${label}: the kept roster of ${team!.teamName} does not list her with class year ${s.statedClassYear}`).toBe(true);
       expect(s.statedSchool).toBeNull();
-      if (team!.birthYears) {
+      if (rosterSource(team!) === 'hudl') {
+        // The season's roster: its quote names the team and the season, and a row with no class year is one the team's birth years admit.
+        expect(s.quote.startsWith(`${team!.teamName} (`), label).toBe(true);
+        expect(s.sourceDate, label).toBe('2026-27');
+        const years = classYears.get(`${a.teamSlug} ${a.athleteId}`);
+        if (s.statedClassYear === null && years !== undefined) {
+          expect(years.some((y) => birthYearsAdmit(team!.birthYears!, y)), `${label}: ${team!.teamName} admits no class of ${years.join(' or ')}`).toBe(true);
+        }
+      } else if (team!.birthYears) {
         // The GotSport page states no class year; the tie's player's must be one the team's birth years admit.
         expect(s.statedClassYear, label).toBeNull();
         expect(s.quote.startsWith(`${team!.teamName} | `), label).toBe(true);
@@ -302,6 +336,56 @@ describe('compareClubRosters (the league-roster rule)', () => {
   it('judges each tier apart: an ECNL row at one club and a GA row at another each match', () => {
     const teams = [team(1, 10, [['Ann', 'Lee', 2027]]), gaTeam(1, 11, [2008, 2009], [['Ann', 'Lee']])];
     expect(gaOutcome(teams, [row('Ann Lee', 2027)])).toEqual(['Ann Lee: class-year match (new)', 'Ann Lee: birth-years match (new)']);
+  });
+
+  const hudlTeam = (clubId: number, teamId: number, birthYears: number[], players: Array<[string, string, number | null]>): ClubRostersFile['teams'][number] => ({
+    league: 'ga',
+    division: 'U17',
+    teamId,
+    teamName: `AFC U${teamId} GA`,
+    clubId,
+    clubName: `Club ${clubId}`,
+    url: `https://fan.hudl.com/usa/ca/san-jose/organization/${clubId}/club/team/${teamId}/afc-u${teamId}-ga/roster`,
+    birthYears,
+    hidden: 0,
+    tooYoung: 0,
+    players: players.map(([firstName, lastName, gradYear]) => ({ firstName, lastName, gradYear, position: null, playerType: null })),
+  });
+  const withHudl = (teams: ClubRostersFile['teams']): ClubRostersFile => ({ ...withGa(teams), clubSlugs: { ...withGa(teams).clubSlugs, 'hudl-1': 'near' } });
+
+  it('compares a Hudl GA roster in the class-year tier: a row\'s class year, else the team\'s birth years (2026-11-26)', () => {
+    const t = hudlTeam(1, 17, [2009, 2010], [['Ann', 'Lee', 2028], ['Bea', 'Roe', null]]);
+    expect(clubKey(t)).toBe('hudl-1');
+    const run = (rows: SchoolRow[]) => compareClubRosters(withHudl([t]), rows, tied).map((r) => `${r.row.fullName}: ${r.tier} ${r.outcome}`);
+    expect(run([row('Ann Lee', 2028), row('Bea Roe', 2029)])).toEqual(['Ann Lee: class-year match', 'Bea Roe: class-year match']);
+    // The row's own class year rules, not the birth years (which admit 2027-2029).
+    expect(run([row('Ann Lee', 2027)])).toEqual(['Ann Lee: class-year class-year-differs']);
+    expect(run([row('Bea Roe', 2030)])).toEqual(['Bea Roe: class-year class-year-differs']);
+    // A row with no grade takes the Hudl roster's class year, as it takes an ECNL roster's.
+    expect(compareClubRosters(withHudl([t]), [row('Ann Lee', null)], tied).map((r) => [r.outcome, r.classYear, r.classYearFrom])).toEqual([['match', 2028, 'roster']]);
+    // An ECNL row at another club at that class year is in the same tier: two clubs.
+    expect(compareClubRosters(withHudl([t, team(3, 30, [['Ann', 'Lee', 2028]])]), [row('Ann Lee', 2028)], tied).map((r) => r.outcome)).toEqual(['several-clubs']);
+  });
+
+  it('leaves a GotSport roster a Hudl roster supersedes out of the comparison', () => {
+    const h = hudlTeam(1, 17, [2009, 2010], [['Ann', 'Lee', 2028]]);
+    const plain = gaTeam(1, 70, [2009, 2010], [['Ann', 'Lee'], ['Cy', 'Poe']]);
+    const g = { ...plain, supersededBy: h.url };
+    const r = compareClubRosters(withHudl([h, g]), [row('Ann Lee', 2028), row('Cy Poe', 2028)], tied);
+    // Cy Poe is on the GotSport roster only: no longer compared. Ann Lee is compared on Hudl's alone.
+    expect(r.map((x) => `${x.row.fullName}: ${x.tier} ${x.outcome} ${x.hits.map((h2) => h2.team.url === h.url ? 'hudl' : 'gotsport').join(',')}`)).toEqual(['Ann Lee: class-year match hudl']);
+    expect(compareClubRosters(withHudl([h, plain]), [row('Cy Poe', 2028)], tied).map((x) => x.outcome)).toEqual(['match']);
+  });
+
+  it('accepts supersededBy only on a GotSport roster, naming a Hudl roster of the same league in the file', () => {
+    const h = hudlTeam(1, 17, [2009, 2010], [['Ann', 'Lee', 2028]]);
+    const g = gaTeam(1, 70, [2009, 2010], [['Ann', 'Lee']]);
+    const parse = (teams: ClubRostersFile['teams']) => ClubRostersFileSchema.safeParse({ ...withHudl(teams), counts: { ...file.counts, teams: teams.length, players: teams.reduce((n, t) => n + t.players.length, 0) } }).success;
+    expect(parse([h, { ...g, supersededBy: h.url }])).toBe(true);
+    expect(parse([{ ...g, supersededBy: h.url }])).toBe(false); // not in the file
+    expect(parse([h, { ...g, supersededBy: h.url }, { ...team(1, 10, []), supersededBy: h.url }])).toBe(false); // not a GotSport roster
+    expect(parse([h, { ...g, supersededBy: g.url }])).toBe(false); // not a Hudl roster
+    expect(parse([{ ...h, birthYears: undefined }])).toBe(false); // a Hudl GA team keeps its birth years
   });
 
   it('still leaves a GA name two clubs list within the birth years', () => {

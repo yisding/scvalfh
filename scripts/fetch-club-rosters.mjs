@@ -261,7 +261,7 @@ async function main() {
     const fetchedAt = new Date().toISOString();
     const file = {
       builtBy:
-        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. The Girls Academy teams (league ga) are kept by hand and carried over; so is clubSlugs.',
+        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. The Girls Academy teams (league ga; GotSport Rankings rosters, and Hudl's where a club keeps its GA teams there) and NorCal Premier's are kept by hand and carried over; so is clubSlugs.',
       fetchedAt,
       season: SEASON,
       notes: previous?.notes ?? [],
