@@ -5280,6 +5280,8 @@ club except the adult teams "Stars" and "Stripes".
   against all 28 registry clubs; the false friends (New Heights and Pacific Heights, Windy City and D-City, Lonestar
   Orange and OC Field Hockey Club, Mid-Jersey Knights and San Marcos Knights, Red Lions Hockey Club and Lions Hockey
   Club of Fremont) are not linked.
+- **Results, not explanations** (owner decision, 2026-11-26). A team card, club page or team page prints no note on
+  how a team was matched to its club: the sourcing stays in festival-clubs.json's `evidence` (docs/DATA-SOURCES.md).
 
 ### 35.3 Routes
 

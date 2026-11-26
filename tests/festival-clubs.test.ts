@@ -205,10 +205,9 @@ describe('the festival’s teams resolve to their clubs', () => {
     }
   });
 
-  it('carries the curated facts and keys team notes by team id', () => {
-    const htc = clubBySlug.get('htc')!;
-    const htcTeam = festival.teams.find((t) => t.name === 'HTC');
-    if (htcTeam) expect(Object.keys(htc.teamNotes)).toEqual([htcTeam.id]);
+  it('carries the curated facts, and no team note: the pages show results, not explanations (owner decision)', () => {
+    expect(raw.clubs.filter((c) => c.teamNotes && Object.keys(c.teamNotes).length > 0).map((c) => c.slug)).toEqual([]);
+    expect(resolved.clubs.filter((c) => Object.keys(c.teamNotes).length > 0).map((c) => c.slug)).toEqual([]);
     const facts = { california: true, norCal: true, siteClub: 'sf-hawks', region: 'San Francisco, Calif.' };
     expect(raw.clubs.find((c) => c.slug === 'san-francisco-hawks')).toMatchObject(facts);
     // The resolved club exists only while it has a team in the file (both Hawks teams could withdraw).
