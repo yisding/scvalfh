@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15823,
+    "observations": 15837,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -14432,6 +14432,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "23",
+              "name": "M. Lieu",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -31721,6 +31726,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "R. Fossati",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -115523,6 +115533,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "5",
+              "name": "I. Perez",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -160757,6 +160772,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "11",
+              "name": "N. Le",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -188509,6 +188529,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "25",
+              "name": "M. Dunning",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -234701,6 +234726,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "34",
+              "name": "R. Young",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -242476,6 +242506,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "30",
+              "name": "C. McIntyre",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -260009,6 +260044,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "24",
+              "name": "N. Finuliar",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -261791,6 +261831,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "10",
+              "name": "T. Djurovic",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "ncsa",
               "src": "profile",
@@ -262252,6 +262297,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "3",
+              "name": "J. Arciaga",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -334604,6 +334654,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "32",
+              "name": "P. Bufalini",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -366351,6 +366406,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "42",
+              "name": "M. Smith",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "src": "profile",
@@ -389892,6 +389952,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "14",
+              "name": "W. Sparling",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -393392,6 +393457,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "50",
+              "name": "C. Dashiell",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
