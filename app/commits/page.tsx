@@ -19,7 +19,7 @@ const PAGE_TITLE = 'College commitments';
 /**
  * /commits — "Who here has committed to play in college, and where?" (DESIGN §21.1, SPEC §1.1j3).
  *
- * The commitments of data/field-hockey/commits.json: players on the tracked varsity rosters that a public page
+ * The commitments of data/commitments.json: players on the tracked varsity rosters that a public page
  * says have committed to (or signed with) a college team, in field hockey or any other sport.
  *
  * Under the title, the recruiting family's one tab row (components/recruiting/RecruitingTabs.tsx).

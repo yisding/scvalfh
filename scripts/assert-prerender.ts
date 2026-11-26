@@ -11,7 +11,7 @@
  * generateStaticParams (it would render on demand instead), fails here by name:
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
- *    commits (DESIGN §21: one page from data/field-hockey/commits.json, with the root OG card);
+ *    commits (DESIGN §21: one page from data/commitments.json, with the root OG card);
  *  - `standings/<id>.html` and `schedule/<id>.html` for each league id (nine since the Southern
  *    California amendment), `playoffs/<id>.html` for each league-tournament league (still MCAL only:
  *    the EAL, the Sunset and the three San Diego leagues have no page of their own, only a card,

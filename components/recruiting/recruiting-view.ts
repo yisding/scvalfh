@@ -4,7 +4,7 @@
  *
  * One page for every school's recruiting data: the players' own recruiting profiles (the roster
  * overlay, data/field-hockey/rosters-enrichment.json), the youth clubs a public page ties them to
- * (data/field-hockey/clubs.json) and the college commitments a public page reports (data/field-hockey/commits.json). Each
+ * (data/field-hockey/clubs.json) and the college commitments a public page reports (data/commitments.json). Each
  * team page already shows the same three lines on its roster; this page gathers them, region →
  * league → school, under the NorCal/SoCal switcher.
  *
@@ -13,9 +13,9 @@
  *     components/teams/roster-view.ts buildRosterView (the varsity roster's own spelling and order),
  *     so its commitment line, club line and profile links are the ones the school's page shows, with
  *     nothing the data files keep but never render (a quote, a basis, a confidence). After them come
- *     the JV players with a recruiting profile (data/field-hockey/jv-profiles.json), each a row of the team page's
+ *     the JV players with a recruiting profile (data/player-accounts.json), each a row of the team page's
  *     JV roster (components/jv/jv-roster-view.ts), its facts led by "JV", and the JV players a public page ties
- *     to a club (data/<sport>/clubs.json jvAffiliations); a JV row has profile links and a club line, never a
+ *     to a club (data/<sport>/clubs.json memberships, served as jvAffiliations); a JV row has profile links and a club line, never a
  *     commitment, since commitments are researched for the varsity rosters;
  *   - a player is listed only when one of the three exists for them, and a school or league only
  *     when it has a listed player. A school with none is not named or counted anywhere on the page

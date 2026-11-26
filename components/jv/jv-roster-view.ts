@@ -2,7 +2,7 @@
  * A team page's JV roster section: the school's JV list from lib/jv/jv-rosters.ts (the fuller of the
  * school's own athletics site's and MaxPreps' JV roster page), in the varsity roster's
  * order and words, less the players on the varsity roster the page shows above it, with the JV
- * players' own recruiting pages (data/field-hockey/jv-profiles.json, lib/jv/jv-profiles.ts) linked as the varsity
+ * players' own recruiting pages (data/player-accounts.json, through lib/jv/jv-profiles.ts) linked as the varsity
  * roster links its players', and the youth clubs a public page ties them to (data/<sport>/clubs.json
  * `jvAffiliations`, in the varsity roster's club-line words). JV players stay apart from varsity otherwise:
  * nothing here feeds the varsity roster or the commitments, which are built from the varsity rosters alone.

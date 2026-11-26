@@ -1,5 +1,5 @@
 /**
- * The join data/field-hockey/clubs.json and data/field-hockey/commits.json both make to the merged rosters (DESIGN §17,
+ * The join data/field-hockey/clubs.json and data/commitments.json both make to the merged rosters (DESIGN §17,
  * §21: commitments follow the clubs' matching rule), on team slug + MaxPreps athleteId.
  *
  * Every record must join to a row of its team under the row's own fullName, the row must be at the

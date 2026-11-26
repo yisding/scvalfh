@@ -263,7 +263,7 @@ const GROUP_WORDS = {
 const GROUP_ORDER: readonly AffiliationStatus[] = ['current', 'unknown', 'past'];
 
 /**
- * Whether this build lists JV players' club ties (data/<sport>/clubs.json `jvAffiliations`): when it
+ * Whether this build lists JV players' club ties (data/<sport>/clubs.json's memberships served as `jvAffiliations`): when it
  * does, the club pages say they name the JV lists' players too.
  */
 export function listsJvTies(): boolean {

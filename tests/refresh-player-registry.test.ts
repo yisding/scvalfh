@@ -132,6 +132,10 @@ describe("the refresh's Push step: a registry rebuilt before the rebase", () => 
     mkdirSync(path.join(seed, 'data', 'soccer'), { recursive: true });
     git(seed, 'init', '-q', '-b', 'main');
     for (const f of ['data/players.json', 'data/player-identity.json', 'data/soccer/player-stats.json']) writeFileSync(path.join(seed, f), '{"v":1}\n');
+    // The Push step names the registry's files through the script (--files), as the workflow runs it from the repository.
+    mkdirSync(path.join(seed, 'scripts'));
+    writeFileSync(path.join(seed, 'scripts', 'refresh-player-registry.sh'), readFileSync(SCRIPT, 'utf8'));
+    chmodSync(path.join(seed, 'scripts', 'refresh-player-registry.sh'), 0o755);
     git(seed, 'add', '.');
     git(seed, ...id, 'commit', '-q', '-m', 'base');
     git(seed, 'remote', 'add', 'origin', remote);

@@ -140,7 +140,7 @@ export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
  * Social media is never a source, nor a club's website. A host is banned when it IS one of these or
  * a subdomain of one (`www.instagram.com`, `m.facebook.com`) — never by substring, so `notx.com`
  * and `maxpreps.com` pass. The list covers the networks themselves and their short links (`fb.me`,
- * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/field-hockey/commits.json (lib/players/commits-schema.ts),
+ * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commitments.json (lib/players/commits-schema.ts),
  * whose commitments are most often announced on one of them.
  */
 export const BANNED_HOSTS = [

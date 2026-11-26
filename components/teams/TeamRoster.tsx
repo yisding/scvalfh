@@ -202,7 +202,7 @@ function OtherRostersText({ view }: { view: RosterView }) {
 /**
  * Another source's whole current list, for a team MaxPreps lists nobody for (otherRosters `listed`): the
  * names as that source writes them, in its order, with the one fact it gives (a position) where it gives
- * one, her club line (data/<sport>/clubs.json listedAffiliations) and her own recruiting pages where one
+ * one, her club line (data/<sport>/clubs.json memberships, served as listedAffiliations) and her own recruiting pages where one
  * names the player and the school. The note above it names and links the source; nothing here joins a
  * commitment or a stat.
  */

@@ -1,5 +1,5 @@
 /**
- * `components/commits/commit-view.ts` and /commits over the committed data/field-hockey/commits.json,
+ * `components/commits/commit-view.ts` and /commits over the committed data/commitments.json,
  * data/field-hockey/rosters.json and data/field-hockey/rosters-enrichment.json (SPEC §1.1j3, DESIGN §21), plus the team
  * roster's commitment line.
  *

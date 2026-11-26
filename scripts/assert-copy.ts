@@ -59,7 +59,7 @@
  * McCarroll") is that official line in other words, not a leak (ARCHIVE_LINES). On the
  * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
  * /about — nothing is excused, since they link the very sources the quotes come from.
- * The same rule covers data/field-hockey/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
+ * The same rule covers data/commitments.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
  * and no fragment of a source's `quote` on any page, nothing excused on /commits, every
  * /teams/<slug> (the commitment line) and /about.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL, MCAL and EAL unavailable):
@@ -255,7 +255,7 @@ for (const file of files) {
     publicTerms: PUBLIC_TERMS,
     restatedLines,
   })) {
-    fail(file, `shows what data/field-hockey/commits.json never renders: ${leak}`);
+    fail(file, `shows what data/commitments.json never renders: ${leak}`);
   }
   // The EAL claims (DESIGN §22.5), over what a reader sees or is read out: the body text, then the
   // title, description metas and title/aria-label/alt attributes.

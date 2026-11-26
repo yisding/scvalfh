@@ -33,7 +33,7 @@ files_of() {
     jv) echo "data/$sport/jv.json" ;;
     freshman) echo "data/$sport/freshman.json" ;;
     stats) echo "data/$sport/player-stats.json" ;;
-    rosters) echo "data/$sport/rosters.json data/$sport/jv-rosters.json $(scripts/refresh-player-registry.sh --files)" ;;
+    rosters) echo "data/$sport/rosters.json data/$sport/jv-rosters.json $("$(dirname "$0")/refresh-player-registry.sh" --files)" ;;
   esac
 }
 

@@ -473,8 +473,8 @@ rows MaxPreps added that day were swept for recruiting pages and clubs on 2026-1
 Sobrato's 20 having been searched on 2026-11-13): 19 pages for 14 rows and three club ties, each re-opened by an
 independent refuter; they have not been swept for commitments. The same day Marina's and Newport Harbor's 40
 listed players were searched by the same rule (a page must name the school, as they have no grade): 15 pages for 13
-players, shown on their listed rows, and two VCRD ties, in `clubs.json` `listedAffiliations` (named by team and
-listed name, as these players have no MaxPreps row) and shown on their rows and VCRD's page. Every entry lists
+players, shown on their listed rows, and two VCRD ties (in `clubs.json`'s memberships, by person: since 2026-11-26
+each listed player is a registry person) and shown on their rows and VCRD's page. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list, or `listed`: a source's whole current varsity list, transcribed as
@@ -574,8 +574,8 @@ of a list). MaxPreps rows match the varsity roster by career id or name, a schoo
 both sources list a school, the page shows the one with more JV players once those are taken out (the
 school's own on a tie: 25 school lists and 23 MaxPreps lists are shown) and names the other with its
 count. A JV player's own recruiting pages are linked under their row, by the varsity rule
-(`data/field-hockey/jv-profiles.json`, `lib/jv/jv-profiles.ts`, joined on the name the shown list gives; a Los Gatos row
-the varsity overlay marks JV keeps its profiles there), and `/recruiting` lists those players after each
+(filed by person in `data/player-accounts.json` since 2026-11-26, shown through `lib/jv/jv-profiles.ts` on the row whose name
+the player index ties to the person; a Los Gatos row the varsity overlay marks JV shows its person's pages there too), and `/recruiting` lists those players after each
 school's varsity rows, marked "JV": on 2026-11-13, 35 JV players at 15 schools (27 SportsRecruits pages from the
 2026-11-06 address probe of the 746 JV players, 26 of them lacrosse, one NCSA page, and seven Hudl pages from the
 2026-11-13 sweep of the schools' Hudl team rosters, at Bonita, Great Oak and Harvard-Westlake; the pages of six JV
@@ -962,8 +962,9 @@ SCVAL_SPORT=soccer pnpm fetch-jv --level freshman --fixtures tests/fixtures/fres
 rostered player is tied to, plus three clubs met near the EAL teams' schools on 2026-10-04 (D-City in Davis and
 Roseville FHC, in the Sacramento area, and Chico Hotshots, in the North State; neither area was searched for every
 club), plus the twelve clubs around the 53 Southern California teams' schools swept on 2026-10-06, and the ties themselves: which players on the tracked varsity rosters
-a public page ties to which club (`affiliations`, joined to `data/field-hockey/rosters.json` on team slug +
-MaxPreps athleteId). A club record has its name and the shorter name the site shows, city, region,
+a public page ties to which club (`memberships`, filed by person since 2026-11-26: the player index finds the
+person's row this season, and the loader serves the tie as that row's `affiliation`, or its `jvAffiliation` or
+`listedAffiliation`). A club record has its name and the shorter name the site shows, city, region,
 website, founding year, one factual sentence, the teams and programs it lists (each with the page
 it was read from), its own public roster pages and its sources. It names no individual: no
 coaches, no directors. An affiliation has the club team when a source gives one, a `status`
@@ -1067,11 +1068,11 @@ overlay marks that row JV, the tie is roster drift (`lib/players/roster-drift.ts
 it out of what the site shows and reports it as `clubs: <team> / <player> (<club>): <what>`, so one departed
 player never holds back a refresh's other roster changes. `pnpm roster-drift` lists the drift of every curated
 file; the refreshes turn each line into a warning on the run page, and CI fails a pull request only for drift on
-records the pull request itself added or edited. A season rollover (rosters.json for a season
-`data/field-hockey/clubs.json` is not for) still throws at import. Re-check a drifting affiliation's sources, then
-edit or drop it by hand (on a rollover, redo the research for the new season). Never prune it
-automatically. Each affiliation also carries the player's `playerId` (see "The player registry"), which
-does not change with the season: on a rollover it is what says which new row a record was about.
+records the pull request itself added or edited. A player index of another season than the rosters' still
+throws at import (rebuild the registry). Re-check a drifting membership's sources, then edit or drop it by hand.
+Never prune it automatically. A membership names the player by her registry id (see "The player registry"),
+which does not change with the season: a rollover needs no re-keying, and a person on no row this season keeps
+her ties, shown nowhere.
 
 `lib/players/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
@@ -1113,9 +1114,10 @@ new events), edit the file by hand, move `capturedAt` to the day you read them, 
 
 ### College commitments
 
-`data/field-hockey/commits.json` holds which players on the tracked varsity rosters a public page says have
-committed to play a sport in college (field hockey, or any other), and those colleges. A commitment
-(`commitments`, joined to `data/field-hockey/rosters.json` on team slug + MaxPreps athleteId, one per player) has
+`data/commitments.json` (one file for every build since 2026-11-26; field hockey's research was
+`data/field-hockey/commits.json`) holds which players a public page says have committed to play a sport in college
+(their own sport, or any other), and those colleges. A commitment (`commitments`, filed by the person's registry id,
+one per person, shown on her varsity row in every build she is on) has
 the college, the `sport`, a `status` (`committed`, or `signed` only where a source says so), `asOf` (the earliest date a kept
 source gives for it: a day, a month or a year, never after `capturedAt`), a `confidence` (`high` or
 `medium`) and its sources: URL, kind, a verbatim quote of at most 300 characters, and the school,
@@ -1323,9 +1325,9 @@ rest.
 **When a roster refetch breaks it.** As for the clubs: a commitment whose player's row `pnpm fetch-rosters`
 drops or respells, or the overlay marks JV, is roster drift, left out of the site and reported as
 `commits: <team> / <player> (<college>): <what>` (`pnpm roster-drift`, a warning on the refresh's run page). A
-season rollover still throws at import. Re-check the commitment's sources, then edit or drop it by hand. On a
-rollover the seniors graduate: redo the research for the new season. Each
-commitment also carries the player's `playerId` (see "The player registry").
+player index of another season than the rosters' still throws at import. Re-check the commitment's sources, then
+edit or drop it by hand. On a rollover the seniors graduate: their commitments stay in the file, shown nowhere, and
+the new season's research adds the new class's.
 
 `lib/players/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
 name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
@@ -1510,9 +1512,10 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/field-hockey/jv.json` | `lib/jv/jv.ts` |
 | `data/field-hockey/rosters.json`, `data/field-hockey/rosters-enrichment.json` | `lib/players/rosters.ts` |
 | `data/field-hockey/jv-rosters.json`, `data/field-hockey/jv-rosters-school-sites.json` | `lib/jv/jv-rosters.ts` |
-| `data/field-hockey/jv-profiles.json` (JV players' recruiting profiles) | `lib/jv/jv-profiles.ts` |
+| `data/field-hockey/player-index.json` (which person each roster row is; written by `pnpm build-players`) | `lib/players/player-index.ts` |
+| the JV lists' recruiting profiles (`data/player-accounts.json`, through the player index) | `lib/jv/jv-profiles.ts` |
 | `data/field-hockey/clubs.json` | `lib/players/clubs.ts` |
-| `data/field-hockey/commits.json` | `lib/players/commits.ts` |
+| `data/commitments.json` (every build's) | `lib/players/commits.ts` |
 | `data/field-hockey/ccs-bracket-2026.json` | `lib/postseason/ccs-bracket.ts` |
 | `data/field-hockey/sds-brackets-2026.json` | `lib/postseason/sds-bracket.ts` |
 | `data/field-hockey/schools.json` (each registry school's campus address, by slug) | `lib/schools/schools.ts` |
@@ -1915,7 +1918,9 @@ The soccer and basketball builds have /clubs, /clubs/[slug], /commits and /recru
 team rosters show the same profile, club and commitment lines field hockey's and volleyball's do (`HAS_RECRUITING`
 in `lib/sports/current.ts`, now every high school build's; the VAL's middle school build has none). The data is
 research by hand in `data/soccer/` and `data/basketball/` (`rosters-enrichment.json`, `jv-profiles.json`,
-`clubs.json`, `commits.json`), under field hockey's schemas, loaders and rules ("Rosters", "Clubs" and "College
+`clubs.json`, `commits.json`; since 2026-11-26 the profiles are filed by person in `data/player-accounts.json`, the
+club ties as `clubs.json` memberships and the commitments in `data/commitments.json`, and the counts below are as
+each round recorded them), under field hockey's schemas, loaders and rules ("Rosters", "Clubs" and "College
 commitments" above), with volleyball's change of place: rule (b) asks for the roster's class year plus a hometown
 in the school's own area (its city or a neighbouring one). One round, 2026-11-21, over the rosters MaxPreps had
 posted that day, early in the season: girls soccer 32 of the 82 teams (634 varsity rows, 160 of them with no grade
@@ -2548,8 +2553,8 @@ game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/cro
 rounds). Beside those, `tests/pipeline/` runs the fetch pipeline over the recorded corpora (end to
 end and every variant), `tests/ui/` covers the view models and rendered pages, the data-file
 validators check `data/field-hockey/rosters.json`, `data/field-hockey/player-stats.json`, `data/field-hockey/jv.json` (with the JV merge
-rules and an offline `fetch-jv` run over `tests/fixtures/jv`), `data/field-hockey/clubs.json` and
-`data/field-hockey/commits.json`, and further suites pin the copy rules, the workflow files and the
+rules and an offline `fetch-jv` run over `tests/fixtures/jv`), `data/field-hockey/clubs.json`,
+`data/commitments.json` and `data/player-accounts.json`, and further suites pin the copy rules, the workflow files and the
 update-data issue builder, the scoped typecheck's globs and the legacy-import guard. Fixtures
 captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
 
@@ -2570,10 +2575,39 @@ pnpm build-players --check     # exit 1 if a build would change a file
 pnpm build-players --dry-run   # build and report, write nothing
 ```
 
-Run it after `pnpm fetch-rosters`, after editing an overlay, and **before a season rollover**: a season the
-registry has seen stays in it once `rosters.json` is overwritten; one it has not seen is gone with the
-files. It also writes each player's `playerId` into `data/field-hockey/clubs.json`, `data/field-hockey/commits.json`,
-`data/field-hockey/rosters-enrichment.json` and `data/field-hockey/jv-profiles.json`, beside the per-season key those files join on.
+Run it after `pnpm fetch-rosters`, after editing an overlay or a file filed by person, and **before a season
+rollover**: a season the registry has seen stays in it once `rosters.json` is overwritten; one it has not seen is
+gone with the files. It also writes each player's `playerId` into `data/<sport>/rosters-enrichment.json`, beside the
+per-season athleteId the overlay joins on.
+
+**Filed by person (since 2026-11-26).** What is known about a person beyond one roster row is filed under her
+registry id, so it follows her from season to season, school to school, squad to squad and sport to sport:
+
+| File | What | Shown on |
+|---|---|---|
+| `data/player-accounts.json` | her own recruiting pages, every sport's, each with the sports it shows her in and the research rounds that linked it (`linkedBy`) | every row of hers, in every build |
+| `data/<sport>/clubs.json` `memberships` | her ties to that sport's clubs (current, earlier, or not known to be current) | her varsity row, else her listed row, else her JV row |
+| `data/commitments.json` | her college commitment, in any sport (each build's research round in `rounds`) | her varsity row, in every build she is on |
+
+Each build finds people on its rows through `data/<sport>/player-index.json`, which `pnpm build-players` writes
+with the registry: for each of this season's roster rows (a MaxPreps row by athleteId, a school's own varsity or
+JV list by name) the person it is, and what the pages show of those people's recruiting pages. Nothing filed by
+person is ever re-keyed by hand: a roster refresh or a new season rewrites the index, and when a build retires an
+id (two records found to be one person) it rewrites the person-filed files to the id that stayed. A person on no
+row of a build this season (graduated, moved away, plays another sport) keeps her records, shown nowhere there:
+that is not roster drift. Previous schools are not shown on any page (owner's decision, 2026-11-26); previous
+clubs are, as before.
+
+**Every high school player is a person.** Since 2026-11-26 a school's own varsity list (otherRosters `listed`:
+Marina, Newport Harbor) is read into the registry too, so a listed player has an id like any other. Players on
+club rosters alone (`data/soccer/club-rosters.json`) are not people here.
+
+**Changing schools.** A name is never joined across schools by rule. `review` lists a `possible-transfer` (one
+name at two schools, never in the same season, with class years each school's seasons can hold); a person answers
+in `data/player-identity.json` with `sameAs` (the earlier school's name to the later one's career, or with `isTeam`
+to a name on the other school's lists) or `notSame` with `otherTeam`. Three were answered on 2026-11-26 (Kiley
+McGibben, Sacred Heart Prep to Menlo; Thais Ross, Los Altos to Mountain View; Ella Claveran, Presentation to
+Mitty); four are left (Josiah Olmos, Derrick Jones, Esha Singh, Reagan Connors).
 
 Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
 nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under

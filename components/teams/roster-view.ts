@@ -620,7 +620,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
             name: `${p.firstName} ${p.lastName}`,
             position: positionFromText(p.position),
             profiles: profileLinks(listedPlayerProfiles(slug, `${p.firstName} ${p.lastName}`)),
-            // A listed player's ties (data/<sport>/clubs.json listedAffiliations), found by her listed name.
+            // A listed player's ties (data/<sport>/clubs.json memberships, served as listedAffiliations), found by her listed name.
             clubs: playerClubGroups(slug, listedPlayerKey(`${p.firstName} ${p.lastName}`)),
           }))
         : [],
