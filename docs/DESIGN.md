@@ -5336,6 +5336,13 @@ stylesheet hides `[data-festival-notice]` under it. The home head is a section h
 strip's right end does not wrap, and the meta and the link do not fit a 320 px row together. It is not a filled
 banner.
 
+**No site chrome at the bottom on a phone** (owner ask, 2026-11-26). Below 48rem the festival layout hides the
+fixed tab bar and the footer, and drops the body and scroll padding that cleared the bar: on a phone their Scores,
+Standings, Playoffs and Teams read as the festival's own sections. Both stay in the HTML and come back as soon as
+the reader leaves /festival. The header's wordmark leads back to the site, and FestivalChrome's "Scores as of …,
+from TourneyMachine" line keeps the source on every page (SPEC §6). From 48rem up the footer shows as everywhere
+else.
+
 ### 35.4 Times: ET first (a recorded deviation from §10.11)
 
 The feed's times are naive Eastern wall-clock times, and every reader who needs them is at the venue. Festival

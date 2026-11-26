@@ -258,4 +258,10 @@ describe('the layout', () => {
     expect(html).toContain('@layer base{[data-fest-team]{--sx-fest-pin:none}');
     expect(html).toContain('<p>child</p>');
   });
+
+  it('hides the tab bar and footer below the 48rem breakpoint (owner ask: on a phone they read as the festival’s)', () => {
+    const html = render(createElement(FestivalLayout as never, { children: null } as never));
+    expect(html).toContain('@media not all and (min-width:48rem){.sx-tabbar,.sx-foot{display:none}');
+    expect(html).toContain('body{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}');
+  });
 });
