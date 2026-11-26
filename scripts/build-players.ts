@@ -267,18 +267,22 @@ export function main(argv: readonly string[]): number {
     writes.set(PLAYER_ACCOUNTS_FILE, `${JSON.stringify(accounts, null, 2)}\n`);
   }
   // Each sport's club memberships and the commitments, the same way (lib/players/clubs-schema.ts, commits-schema.ts).
-  const rekeyFile = <R extends PersonRecord & { sources: ReadonlyArray<{ url: string }> }>(rel: string, list: string, same: (r: R) => string, check?: (records: R[]) => void) => {
+  /** Rekeys one file's list; returns the ids its records name now. */
+  const rekeyFile = <R extends PersonRecord & { sources: ReadonlyArray<{ url: string }> }>(rel: string, list: string, same: (r: R) => string, check?: (records: R[]) => void): string[] => {
     const at = path.join(root, rel);
-    if (!existsSync(at)) return;
+    if (!existsSync(at)) return [];
     const raw = readFileSync(at, 'utf8');
     const json = JSON.parse(raw) as Json;
     const records = rekeyRecords(json[list] as R[], file, rel, same);
     check?.(records);
     const next = { ...json, [list]: records };
     if (JSON.stringify(next) !== JSON.stringify(json)) writes.set(rel, `${JSON.stringify(next, null, 2)}\n`);
+    return records.map((r) => r.playerId);
   };
-  for (const sport of SPORT_IDS) rekeyFile<PersonRecord & { club: string; sources: { url: string }[] }>(`${sportDataDir(sport)}/clubs.json`, 'memberships', (r) => r.club);
-  rekeyFile<PersonRecord & { college: string; sport: string; sources: { url: string }[] }>(COMMITMENTS_FILE, 'commitments', () => 'commitment', (records) => {
+  const clubPeople = new Map(
+    SPORT_IDS.map((sport) => [sport, rekeyFile<PersonRecord & { club: string; sources: { url: string }[] }>(`${sportDataDir(sport)}/clubs.json`, 'memberships', (r) => r.club)] as const),
+  );
+  const committed = rekeyFile<PersonRecord & { college: string; sport: string; sources: { url: string }[] }>(COMMITMENTS_FILE, 'commitments', () => 'commitment', (records) => {
     // A person has one commitment: two records that became one person's must already agree on it.
     const seen = new Map<string, string>();
     for (const r of records) {
@@ -291,7 +295,9 @@ export function main(argv: readonly string[]): number {
   // accounts, club ties and commitment through.
   for (const sport of SPORT_IDS) {
     const rel = playerIndexFile(sport);
-    const body = formatPlayerIndex(buildPlayerIndex(file, sport, 'scripts/build-players.ts', accounts));
+    // Only the people something is filed under: what a page can show of anyone else is nothing.
+    const filed = new Set([...(accounts?.players ?? []).map((p) => p.playerId), ...(clubPeople.get(sport) ?? []), ...committed]);
+    const body = formatPlayerIndex(buildPlayerIndex(file, sport, 'scripts/build-players.ts', accounts, filed));
     const had = existsSync(path.join(root, rel)) ? readFileSync(path.join(root, rel), 'utf8') : null;
     if (body !== had) writes.set(rel, body);
   }

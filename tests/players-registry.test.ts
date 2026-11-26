@@ -1400,8 +1400,11 @@ describe('data/players.json', () => {
     for (const sport of SPORT_IDS) {
       it(`${sport}: the player index is what pnpm build-players writes from the committed registry`, () => {
         const rel = playerIndexFile(sport);
+        const members = ((read(`${sportDataDir(sport)}/clubs.json`)?.memberships ?? []) as Array<{ playerId: string }>).map((m) => m.playerId);
+        const committed = ((read(COMMITMENTS_FILE)?.commitments ?? []) as Array<{ playerId: string }>).map((c) => c.playerId);
+        const filed = new Set([...(accounts?.players ?? []).map((p) => p.playerId), ...members, ...committed]);
         expect(readFileSync(path.join(ROOT, rel), 'utf8'), `${rel} is stale: run pnpm build-players`).toBe(
-          formatPlayerIndex(buildPlayerIndex(file, sport, 'scripts/build-players.ts', accounts)),
+          formatPlayerIndex(buildPlayerIndex(file, sport, 'scripts/build-players.ts', accounts, filed)),
         );
       });
     }

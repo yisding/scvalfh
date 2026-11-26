@@ -2218,7 +2218,8 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   registry id, not under a roster row, so nothing needs re-keying at a rollover or when she changes school, squad
   or sport. `pnpm build-players` writes `data/<sport>/player-index.json` with the registry: which person each of
   this season's rows is (a MaxPreps row by `athleteId`, a school's own varsity or JV list by name; a stint no
-  source lists any more is no row), and what the pages show of those people's pages. The loaders find people
+  source lists any more is no row; only the people something is filed under, to keep each build's bundle small),
+  and what the pages show of those people's pages. The loaders find people
   through it, and it is held to be what a build writes (`tests/players-registry.test.ts`). The build also keeps
   the person-filed files keyed: an id it retires (two records found to be one person) is rewritten to the one
   that stayed, and every `name` to the official one. A page's class year is a statement about its person, added

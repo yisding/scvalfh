@@ -2590,8 +2590,9 @@ registry id, so it follows her from season to season, school to school, squad to
 | `data/commitments.json` | her college commitment, in any sport (each build's research round in `rounds`) | her varsity row, in every build she is on |
 
 Each build finds people on its rows through `data/<sport>/player-index.json`, which `pnpm build-players` writes
-with the registry: for each of this season's roster rows (a MaxPreps row by athleteId, a school's own varsity or
-JV list by name) the person it is, and what the pages show of those people's recruiting pages. Nothing filed by
+with the registry: for each of this season's roster rows of a person something is filed under (a MaxPreps row by
+athleteId, a school's own varsity or JV list by name) the person it is, and what the pages show of those people's
+recruiting pages. Run it after adding a record for someone new, as the tests say. Nothing filed by
 person is ever re-keyed by hand: a roster refresh or a new season rewrites the index, and when a build retires an
 id (two records found to be one person) it rewrites the person-filed files to the id that stayed. A person on no
 row of a build this season (graduated, moved away, plays another sport) keeps her records, shown nowhere there:

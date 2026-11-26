@@ -19,7 +19,9 @@
  *                    otherRosters `listed`, `level` varsity) or JV list (jv-rosters-school-sites.json, `level` jv)
  * `name` is the row's name as that source spells it, or the stint's when the source gives none (MaxPreps'
  * "Player #4" stand-in the overlay names). The file names only rows of players the registry files under
- * this sport's current season; a sport that lists no players (the VAL's middle schools) has none.
+ * this sport's current season, and of those only the people something is filed under (a recruiting page, a club
+ * tie in this sport, a commitment): the rest would only weigh down the bundle. A sport that lists no players (the
+ * VAL's middle schools) has none.
  *
  * It also carries what the pages show of those people's recruiting pages (`accounts`: platform, URL, sports
  * and class year, from data/player-accounts.json, whose maintainers' notes stay there) and this sport's JV
@@ -104,7 +106,7 @@ export const PlayerIndexFileSchema = z
 export type PlayerIndexFile = z.infer<typeof PlayerIndexFileSchema>;
 
 export const PLAYER_INDEX_NOTES = [
-  'Which person (data/players.json id) each of this season\'s roster rows is, for this sport: a MaxPreps row by its athleteId, a school\'s own varsity or JV list by its name (athleteId null). Written by pnpm build-players from the registry; never edited by hand.',
+  'Which person (data/players.json id) each of this season\'s roster rows is, for this sport: a MaxPreps row by its athleteId, a school\'s own varsity or JV list by its name (athleteId null), for the people something is filed under (a recruiting page, a club tie, a commitment). Written by pnpm build-players from the registry; never edited by hand.',
   'What is known about a person (recruiting pages, club ties, a college commitment) is filed under her id; a page finds it for a row through this file. A roster refresh or a new season rewrites the rows, and nothing filed under a person moves.',
 ];
 
@@ -121,13 +123,20 @@ export function currentSeason(file: PlayersFile, sport: SportId): string | null 
  * The index for one sport, from a registry: every MaxPreps roster row and school-list name of the sport's
  * current season, with the person it was filed under. A stint no source lists any more (`gone`) is not a row.
  */
-export function buildPlayerIndex(file: PlayersFile, sport: SportId, builtBy: string, accounts: AccountsFile | null = null): PlayerIndexFile {
+export function buildPlayerIndex(
+  file: PlayersFile,
+  sport: SportId,
+  builtBy: string,
+  accounts: AccountsFile | null = null,
+  /** The people something is filed under; every row's person when null. */
+  filed: ReadonlySet<string> | null = null,
+): PlayerIndexFile {
   const season = currentSeason(file, sport);
   const rows: PlayerIndexRow[] = [];
   if (season !== null) {
     for (const p of file.players) {
       for (const s of p.stints) {
-        if (s.sport !== sport || s.season !== season || s.gone || s.level === 'freshman') continue;
+        if (s.sport !== sport || s.season !== season || s.gone || s.level === 'freshman' || (filed !== null && !filed.has(p.id))) continue;
         for (const o of s.observations) {
           if (MAXPREPS_PAGES.has(o.src) && o.athleteId) rows.push({ playerId: p.id, team: s.team, level: s.level, athleteId: o.athleteId, name: o.name ?? s.name });
           else if (SCHOOL_LISTS.has(o.src) && o.name) rows.push({ playerId: p.id, team: s.team, level: s.level, athleteId: null, name: o.name });
