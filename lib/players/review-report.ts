@@ -56,6 +56,7 @@ const SOURCE_LABEL: Record<ObservationSource, string> = {
   'maxpreps-roster': 'MaxPreps roster',
   'maxpreps-jv-roster': 'MaxPreps JV roster',
   enrichment: 'overlay',
+  'school-roster': 'school varsity list',
   'school-jv-roster': 'school JV list',
   'maxpreps-stats': 'MaxPreps stat sheet',
   'all-league': 'all-league list',
@@ -115,7 +116,7 @@ export interface ReviewReport {
   drafts: Drafts;
 }
 
-const QUESTION_KINDS: ReadonlyArray<ReviewItem['kind']> = ['possible-match', 'same-name-other-sport', 'name-ambiguous', 'name-class-mismatch'];
+const QUESTION_KINDS: ReadonlyArray<ReviewItem['kind']> = ['possible-match', 'same-name-other-sport', 'possible-transfer', 'name-ambiguous', 'name-class-mismatch'];
 const byText = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 
 function stintsOn(p: Player, sport: string, team: string): Stint[] {
@@ -248,7 +249,7 @@ export function buildReviewReport(
       spelling: item.names[i] ?? p.name,
       classOf: p.classOf,
       careers: careersOf(p, urls),
-      stints: (item.kind === 'same-name-other-sport' ? p.stints.filter((s) => s.team === item.team) : stintsOn(p, item.sport, item.team)).map(evidence),
+      stints: (item.kind === 'same-name-other-sport' ? p.stints.filter((s) => s.team === item.team) : item.kind === 'possible-transfer' ? p.stints : stintsOn(p, item.sport, item.team)).map(evidence),
     }));
     const pattern: Pattern = item.kind === 'possible-match' && players.length === 2 ? classify(item.sport, item.team, players[0], players[1]) : 'unclear';
     questions.push({

@@ -63,7 +63,7 @@ export function readPlayerIdentity(root: string): PlayerIdentity {
 }
 
 /** The sources only a season's live files carry: a past season that has them was seen live. */
-const LIVE_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'enrichment', 'school-jv-roster']);
+const LIVE_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'enrichment', 'school-roster', 'school-jv-roster']);
 
 /**
  * Everything the build needs, read from the repository at `root`: each sport's current files in

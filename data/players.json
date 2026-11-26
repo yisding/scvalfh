@@ -36,19 +36,19 @@
   "builtBy": "scripts/build-players.ts",
   "counts": {
     "classOfConflicts": 307,
-    "multiSeason": 1201,
+    "multiSeason": 1204,
     "multiSport": 87,
-    "nameOnly": 568,
-    "observations": 15842,
-    "players": 7666,
-    "review": 64,
+    "nameOnly": 607,
+    "observations": 15898,
+    "players": 7711,
+    "review": 68,
     "stintConflicts": 186,
-    "stints": 9574,
-    "withCareer": 7098
+    "stints": 9622,
+    "withCareer": 7104
   },
   "notes": [
     "One record per person across every sport and season this repository holds. Internal: no page reads this file.",
-    "A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team's lists. Rows are joined on a career id (unless it is listed under names that could not be one person's), or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match).",
+    "A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team's lists. Rows are joined on a career id (unless it is listed under names that could not be one person's), or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match), and never on a name at another school (listed as possible-transfer).",
     "A stint is one player on one team in one season of one sport at one level; its fields are the first of its observations to state them, in the order MaxPreps roster page, overlay, school JV list, stat sheet, all-league list, recruiting profile. Every other statement that differs is listed under conflicts. A stint marked gone is one no source lists any more, kept as an earlier build left it.",
     "name is the player's official name: the fullest of her spellings (never a nickname or a part of another), then the clean one, the one more sources give, the one with its accents, and the one from the more official source (lib/players/official-name.ts). aliases lists every other spelling as a nickname, previous name, short form, spelling or variant.",
     "classOf is the graduation year most of the player's sources imply (a tie goes to the latest season's best source); classOfConflicts lists every statement implying another year.",
@@ -4389,6 +4389,46 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "live-oak"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p02ae3bbe72",
+      "identifiers": [
+        {
+          "careerId": "qv85mcffvuv33",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "E. Salihovic",
+      "names": [
+        "E. Salihovic"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "32",
+          "level": "varsity",
+          "name": "E. Salihovic",
+          "observations": [
+            {
+              "jersey": "32",
+              "name": "E. Salihovic",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
         }
       ]
     },
@@ -16308,6 +16348,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "lynbrook"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0a64250a1b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "haydenbeauchamp",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Hayden Beauchamp",
+      "names": [
+        "Hayden Beauchamp"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Hayden Beauchamp",
+          "observations": [
+            {
+              "name": "Hayden Beauchamp",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -78404,6 +78485,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p2e39cd520c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "alinamartin",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Alina Martin",
+      "names": [
+        "Alina Martin"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Alina Martin",
+          "observations": [
+            {
+              "name": "Alina Martin",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -80374,6 +80496,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "overfelt"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p2f6e1a50c4",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kailynscottschubert",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Kailyn Scott-Schubert",
+      "names": [
+        "Kailyn Scott-Schubert"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kailyn Scott-Schubert",
+          "observations": [
+            {
+              "name": "Kailyn Scott-Schubert",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -82354,6 +82517,47 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "los-gatos"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p30b7f258f2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "joniergebraeel",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Jonier Gebraeel",
+      "names": [
+        "Jonier Gebraeel"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jonier Gebraeel",
+          "observations": [
+            {
+              "name": "Jonier Gebraeel",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -84685,7 +84889,9 @@
       "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p5cde2716c2"
+      ],
       "id": "p321616168c",
       "identifiers": [
         {
@@ -84699,6 +84905,32 @@
         "Ella Claveran"
       ],
       "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ella Claveran",
+          "observations": [
+            {
+              "award": "firstTeam",
+              "grade": 10,
+              "name": "Ella Claveran",
+              "positions": [
+                "Goalkeeper"
+              ],
+              "src": "all-league"
+            }
+          ],
+          "positions": [
+            "Goalkeeper"
+          ],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "presentation"
+        },
         {
           "captain": false,
           "conflicts": [],
@@ -86301,6 +86533,52 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "aragon"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3306687fcc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "katelynclark",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Katelyn Clark",
+      "names": [
+        "Katelyn Clark"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Katelyn Clark",
+          "observations": [
+            {
+              "name": "Katelyn Clark",
+              "positions": [
+                "GK"
+              ],
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [
+            "GK"
+          ],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -88059,6 +88337,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p344116a4ac",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "alondrasalinas",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Alondra Salinas",
+      "names": [
+        "Alondra Salinas"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Alondra Salinas",
+          "observations": [
+            {
+              "name": "Alondra Salinas",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -89146,6 +89465,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "32",
+              "name": "Z. Kelly",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -96780,6 +97104,46 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p39a59b7fe0",
+      "identifiers": [
+        {
+          "careerId": "rtpjc7gekjisc",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "T. Ota",
+      "names": [
+        "T. Ota"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "10",
+          "level": "varsity",
+          "name": "T. Ota",
+          "observations": [
+            {
+              "jersey": "10",
+              "name": "T. Ota",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -99359,6 +99723,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "la-jolla"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3ad7457aa2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "harpermorris",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Harper Morris",
+      "names": [
+        "Harper Morris"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Harper Morris",
+          "observations": [
+            {
+              "name": "Harper Morris",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -114029,6 +114434,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p42a1709039",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "annaschwab",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Anna Schwab",
+      "names": [
+        "Anna Schwab"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Anna Schwab",
+          "observations": [
+            {
+              "name": "Anna Schwab",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -115194,6 +115640,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p4344d4cebd",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sofiadavidson",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Sofia Davidson",
+      "names": [
+        "Sofia Davidson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sofia Davidson",
+          "observations": [
+            {
+              "name": "Sofia Davidson",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -115402,6 +115889,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "notre-dame-san-jose"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p435614fc33",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "clairako",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Claira Ko",
+      "names": [
+        "Claira Ko"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Claira Ko",
+          "observations": [
+            {
+              "name": "Claira Ko",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -140904,9 +141432,16 @@
       "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p7017bcad48"
+      ],
       "id": "p51b1d051e9",
       "identifiers": [
+        {
+          "careerId": "2ft86qcdvaaaa",
+          "careerProfileId": "301c6a62-f27e-424b-bdb1-a827e31b3b3f",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "3n0p3gmcbkj00",
           "careerProfileId": null,
@@ -140943,6 +141478,45 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "sacred-heart-prep"
+        },
+        {
+          "captain": true,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": "4",
+          "level": "varsity",
+          "name": "Kiley McGibben",
+          "observations": [
+            {
+              "athleteId": "0cd0d27c-4117-468f-8213-34b507d9dabd",
+              "captain": true,
+              "grade": 12,
+              "jersey": "4",
+              "name": "Kiley McGibben",
+              "positions": [
+                "S"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "K. McGibben",
+              "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19026272"
+            }
+          ],
+          "positions": [
+            "S"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "menlo"
         }
       ]
     },
@@ -141555,6 +142129,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p5208b8bdc5",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "madianfernandez",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Madian Fernandez",
+      "names": [
+        "Madian Fernandez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Madian Fernandez",
+          "observations": [
+            {
+              "name": "Madian Fernandez",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -141600,6 +142215,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "aragon"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p5221837cb9",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "autumnbablot",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Autumn Bablot",
+      "names": [
+        "Autumn Bablot"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Autumn Bablot",
+          "observations": [
+            {
+              "name": "Autumn Bablot",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -145040,6 +145696,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "presentation"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p54313a3dbc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "elleneelgindi",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Ellene Elgindi",
+      "names": [
+        "Ellene Elgindi"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ellene Elgindi",
+          "observations": [
+            {
+              "name": "Ellene Elgindi",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -159759,53 +160456,6 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "saratoga"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p5cde2716c2",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "ellaclaveran",
-          "sport": "soccer",
-          "team": "presentation"
-        }
-      ],
-      "name": "Ella Claveran",
-      "names": [
-        "Ella Claveran"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 10,
-          "height": null,
-          "jersey": null,
-          "level": "varsity",
-          "name": "Ella Claveran",
-          "observations": [
-            {
-              "award": "firstTeam",
-              "grade": 10,
-              "name": "Ella Claveran",
-              "positions": [
-                "Goalkeeper"
-              ],
-              "src": "all-league"
-            }
-          ],
-          "positions": [
-            "Goalkeeper"
-          ],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "presentation"
         }
       ]
     },
@@ -175005,6 +175655,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p655380d9e6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kateshepherd",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Kate Shepherd",
+      "names": [
+        "Kate Shepherd"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kate Shepherd",
+          "observations": [
+            {
+              "name": "Kate Shepherd",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -183376,6 +184067,46 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6a1661fba9",
+      "identifiers": [
+        {
+          "careerId": "36ugoh2aq84n7",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "P. Rajkovic",
+      "names": [
+        "P. Rajkovic"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "35",
+          "level": "varsity",
+          "name": "P. Rajkovic",
+          "observations": [
+            {
+              "jersey": "35",
+              "name": "P. Rajkovic",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -184380,6 +185111,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "live-oak"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6aaf235cb8",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "hannahly",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Hannah Ly",
+      "names": [
+        "Hannah Ly"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Hannah Ly",
+          "observations": [
+            {
+              "name": "Hannah Ly",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -192726,65 +193498,6 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "sacred-heart-prep"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p7017bcad48",
-      "identifiers": [
-        {
-          "careerId": "2ft86qcdvaaaa",
-          "careerProfileId": "301c6a62-f27e-424b-bdb1-a827e31b3b3f",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Kiley McGibben",
-      "names": [
-        "Kiley McGibben"
-      ],
-      "stints": [
-        {
-          "captain": true,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "4",
-          "level": "varsity",
-          "name": "Kiley McGibben",
-          "observations": [
-            {
-              "athleteId": "0cd0d27c-4117-468f-8213-34b507d9dabd",
-              "captain": true,
-              "grade": 12,
-              "jersey": "4",
-              "name": "Kiley McGibben",
-              "positions": [
-                "S"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "4",
-              "name": "K. McGibben",
-              "src": "maxpreps-stats"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/19026272"
-            }
-          ],
-          "positions": [
-            "S"
-          ],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "menlo"
         }
       ]
     },
@@ -205175,6 +205888,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p77e753a456",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sadietaketa",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Sadie Taketa",
+      "names": [
+        "Sadie Taketa"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sadie Taketa",
+          "observations": [
+            {
+              "name": "Sadie Taketa",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [
         {
@@ -210132,6 +210886,47 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "p7b1c643eb4",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kailamartin",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Kaila Martin",
+      "names": [
+        "Kaila Martin"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kaila Martin",
+          "observations": [
+            {
+              "name": "Kaila Martin",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "p7b1f0a888c",
       "identifiers": [
         {
@@ -212319,6 +213114,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "leland"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7c7ee7e6bd",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ninaendl",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Nina Endl",
+      "names": [
+        "Nina Endl"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Nina Endl",
+          "observations": [
+            {
+              "name": "Nina Endl",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -218576,6 +219412,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "10",
+              "name": "S. Johnson",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -223729,6 +224570,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8374c042bb",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ravynarazi",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Ravyn Arazi",
+      "names": [
+        "Ravyn Arazi"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ravyn Arazi",
+          "observations": [
+            {
+              "name": "Ravyn Arazi",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -227233,6 +228115,46 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p85ac83f56c",
+      "identifiers": [
+        {
+          "careerId": "ve7kk2r7cv833",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "J. Salgado",
+      "names": [
+        "J. Salgado"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "5",
+          "level": "varsity",
+          "name": "J. Salgado",
+          "observations": [
+            {
+              "jersey": "5",
+              "name": "J. Salgado",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -228839,6 +229761,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "pioneer"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p864b7f8f3e",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "tanithquesada",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Tanith Quesada",
+      "names": [
+        "Tanith Quesada"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Tanith Quesada",
+          "observations": [
+            {
+              "name": "Tanith Quesada",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -230703,6 +231666,46 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "bellarmine"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8758218220",
+      "identifiers": [
+        {
+          "careerId": "m0ll6p2200h22",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "B. Smith-Keeney",
+      "names": [
+        "B. Smith-Keeney"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "11",
+          "level": "varsity",
+          "name": "B. Smith-Keeney",
+          "observations": [
+            {
+              "jersey": "11",
+              "name": "B. Smith-Keeney",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
         }
       ]
     },
@@ -241776,6 +242779,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "13",
+              "name": "A. Thomsen",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -252649,6 +253657,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p936250f0ba",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "haileyficht",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Hailey Ficht",
+      "names": [
+        "Hailey Ficht"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Hailey Ficht",
+          "observations": [
+            {
+              "name": "Hailey Ficht",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -253564,6 +254613,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "san-lorenzo-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p94213cd33d",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sophiapeca",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Sophia Peca",
+      "names": [
+        "Sophia Peca"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sophia Peca",
+          "observations": [
+            {
+              "name": "Sophia Peca",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -271405,6 +272495,46 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p9fed50d7e5",
+      "identifiers": [
+        {
+          "careerId": "03gbte4gtci77",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "N. Carlson",
+      "names": [
+        "N. Carlson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "23",
+          "level": "varsity",
+          "name": "N. Carlson",
+          "observations": [
+            {
+              "jersey": "23",
+              "name": "N. Carlson",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -278647,6 +279777,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "15",
+              "name": "O. Benham",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -285735,6 +286870,46 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa8b6a01fab",
+      "identifiers": [
+        {
+          "careerId": "tem6p7cnvq600",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "S. Gill",
+      "names": [
+        "S. Gill"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "0",
+          "level": "varsity",
+          "name": "S. Gill",
+          "observations": [
+            {
+              "jersey": "0",
+              "name": "S. Gill",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -287843,6 +289018,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "yerba-buena"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "paa1b2d59c3",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "emerymacbeth",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Emery MacBeth",
+      "names": [
+        "Emery MacBeth"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Emery MacBeth",
+          "observations": [
+            {
+              "name": "Emery MacBeth",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -290706,6 +291922,46 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "paba0346508",
+      "identifiers": [
+        {
+          "careerId": "qc6v4o5d8hbh1",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "M. Pereira Jr.",
+      "names": [
+        "M. Pereira Jr."
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "13",
+          "level": "varsity",
+          "name": "M. Pereira Jr.",
+          "observations": [
+            {
+              "jersey": "13",
+              "name": "M. Pereira Jr.",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "oakwood"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "paba24fe0e0",
       "identifiers": [
         {
@@ -292020,6 +293276,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "oceana"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pac1dbee780",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "teaganjoob",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Teagan Joob",
+      "names": [
+        "Teagan Joob"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Teagan Joob",
+          "observations": [
+            {
+              "name": "Teagan Joob",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -299729,6 +301026,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "branham"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb11ba9a925",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "leynabuile",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Leyna Bui Le",
+      "names": [
+        "Leyna Bui Le"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Leyna Bui Le",
+          "observations": [
+            {
+              "name": "Leyna Bui Le",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -329071,6 +330409,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "4",
+              "name": "D. Protti",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -333704,9 +335047,16 @@
       "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "pfcd44988ea"
+      ],
       "id": "pc68ed525f8",
       "identifiers": [
+        {
+          "careerId": "a2lkggb1tihi2",
+          "careerProfileId": "295ce841-6317-4ef6-a44a-5e86304a2fae",
+          "kind": "maxpreps-career"
+        },
         {
           "careerId": "e9qjfm9ipdqj3",
           "careerProfileId": null,
@@ -333738,6 +335088,86 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "los-altos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "5'10\"",
+          "jersey": "12",
+          "level": "varsity",
+          "name": "Thais Ross",
+          "observations": [
+            {
+              "athleteId": "656a825e-8e3d-4740-926e-1f72d580ecd1",
+              "grade": 11,
+              "height": "5'10\"",
+              "jersey": "12",
+              "name": "Thais Ross",
+              "positions": [
+                "MB"
+              ],
+              "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "12",
+              "name": "T. Ross",
+              "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/23586924"
+            }
+          ],
+          "positions": [
+            "MB"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "mountain-view"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc6916714cc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "lilymcewen",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Lily McEwen",
+      "names": [
+        "Lily McEwen"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lily McEwen",
+          "observations": [
+            {
+              "name": "Lily McEwen",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -337372,6 +338802,47 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "marin-catholic"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc91d300633",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "aureliasawyer",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Aurelia Sawyer",
+      "names": [
+        "Aurelia Sawyer"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Aurelia Sawyer",
+          "observations": [
+            {
+              "name": "Aurelia Sawyer",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -346270,6 +347741,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pcedfc34dd9",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "lillianle",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Lillian LE",
+      "names": [
+        "Lillian LE"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lillian LE",
+          "observations": [
+            {
+              "name": "Lillian LE",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -352699,6 +354211,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "los-gatos"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd2ccf569a9",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ellieoranghi",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Ellie Oranghi",
+      "names": [
+        "Ellie Oranghi"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ellie Oranghi",
+          "observations": [
+            {
+              "name": "Ellie Oranghi",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -359864,6 +361417,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd7442136d0",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "baileyuriarte",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Bailey Uriarte",
+      "names": [
+        "Bailey Uriarte"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Bailey Uriarte",
+          "observations": [
+            {
+              "name": "Bailey Uriarte",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -361983,6 +363577,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd87ac54a5b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jillianbecker",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Jillian Becker",
+      "names": [
+        "Jillian Becker"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jillian Becker",
+          "observations": [
+            {
+              "name": "Jillian Becker",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -376081,6 +377716,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "0",
+              "name": "L. Leagan",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -377067,6 +378707,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "el-camino-ssf"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe2a157fb8b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "devynteter",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Devyn Teter",
+      "names": [
+        "Devyn Teter"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Devyn Teter",
+          "observations": [
+            {
+              "name": "Devyn Teter",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -378332,6 +380013,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "5",
+              "name": "K. Miritz",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -386205,6 +387891,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe87e5cfdd2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "gracefernandez",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Grace Fernandez",
+      "names": [
+        "Grace Fernandez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Grace Fernandez",
+          "observations": [
+            {
+              "name": "Grace Fernandez",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -386568,6 +388295,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "los-altos"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe8b53d0056",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "reaganmcewen",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Reagan McEwen",
+      "names": [
+        "Reagan McEwen"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Reagan McEwen",
+          "observations": [
+            {
+              "name": "Reagan McEwen",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -394871,6 +396639,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "presentation"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pedec7bcde0",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sharayadunsford",
+          "sport": "field-hockey",
+          "team": "marina"
+        }
+      ],
+      "name": "Sharaya Dunsford",
+      "names": [
+        "Sharaya Dunsford"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sharaya Dunsford",
+          "observations": [
+            {
+              "name": "Sharaya Dunsford",
+              "src": "school-roster",
+              "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "marina"
         }
       ]
     },
@@ -406700,6 +408509,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pf5c23f6018",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "parisrodriguez",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Paris Rodriguez",
+      "names": [
+        "Paris Rodriguez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Paris Rodriguez",
+          "observations": [
+            {
+              "name": "Paris Rodriguez",
+              "positions": [
+                "GK"
+              ],
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [
+            "GK"
+          ],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -410578,6 +412433,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "1",
+              "name": "Z. Hamilton",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "ncsa",
               "src": "profile",
@@ -413859,6 +415719,47 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "santa-clara"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pfa535819c0",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "meliakearns",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Melia Kearns",
+      "names": [
+        "Melia Kearns"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Melia Kearns",
+          "observations": [
+            {
+              "name": "Melia Kearns",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -418076,6 +419977,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pfc5925a791",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kiernankappler",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Kiernan Kappler",
+      "names": [
+        "Kiernan Kappler"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kiernan Kappler",
+          "observations": [
+            {
+              "name": "Kiernan Kappler",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -418632,65 +420574,6 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "gilroy"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2028,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "pfcd44988ea",
-      "identifiers": [
-        {
-          "careerId": "a2lkggb1tihi2",
-          "careerProfileId": "295ce841-6317-4ef6-a44a-5e86304a2fae",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Thais Ross",
-      "names": [
-        "Thais Ross"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": "5'10\"",
-          "jersey": "12",
-          "level": "varsity",
-          "name": "Thais Ross",
-          "observations": [
-            {
-              "athleteId": "656a825e-8e3d-4740-926e-1f72d580ecd1",
-              "grade": 11,
-              "height": "5'10\"",
-              "jersey": "12",
-              "name": "Thais Ross",
-              "positions": [
-                "MB"
-              ],
-              "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "12",
-              "name": "T. Ross",
-              "src": "maxpreps-stats"
-            },
-            {
-              "classOf": 2028,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/23586924"
-            }
-          ],
-          "positions": [
-            "MB"
-          ],
-          "season": "26-27",
-          "sport": "volleyball",
-          "team": "mountain-view"
         }
       ]
     },
@@ -419559,6 +421442,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "fremont"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pfd68b85a05",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "skylarsolesbee",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Skylar Solesbee",
+      "names": [
+        "Skylar Solesbee"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Skylar Solesbee",
+          "observations": [
+            {
+              "name": "Skylar Solesbee",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
         }
       ]
     },
@@ -423426,6 +425350,47 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pffc70e63f2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "katiegreen",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ],
+      "name": "Katie Green",
+      "names": [
+        "Katie Green"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Katie Green",
+          "observations": [
+            {
+              "name": "Katie Green",
+              "src": "school-roster",
+              "url": "http://newportharborfieldhockey.com/?page_id=193"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "newport-harbor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pffccb2fde5",
       "identifiers": [
         {
@@ -423775,6 +425740,74 @@
       ],
       "sport": "volleyball",
       "team": "sacred-heart-cathedral"
+    },
+    {
+      "kind": "possible-transfer",
+      "names": [
+        "Josiah Olmos"
+      ],
+      "note": "Josiah Olmos (cupertino basketball 25-26) and Josiah Olmos (capuchino basketball 26-27) share a name, never play in the same season and their class years do not contradict; each has its own MaxPreps career id: a player who changed schools, or two people. Not joined: if one, say so in data/player-identity.json sameAs (the earlier school's name, the later one's career or name); if two, in notSame with otherTeam.",
+      "players": [
+        "pb7aa620f7b",
+        "pfd767fdc23"
+      ],
+      "seasons": [
+        "25-26",
+        "26-27"
+      ],
+      "sport": "basketball",
+      "team": "cupertino"
+    },
+    {
+      "kind": "possible-transfer",
+      "names": [
+        "Derrick Jones"
+      ],
+      "note": "Derrick Jones (overfelt basketball 25-26) and Derrick Jones (hollister basketball 26-27) share a name, never play in the same season and their class years do not contradict; each has its own MaxPreps career id: a player who changed schools, or two people. Not joined: if one, say so in data/player-identity.json sameAs (the earlier school's name, the later one's career or name); if two, in notSame with otherTeam.",
+      "players": [
+        "p7d6d348cc3",
+        "pa5c6e64498"
+      ],
+      "seasons": [
+        "25-26",
+        "26-27"
+      ],
+      "sport": "basketball",
+      "team": "overfelt"
+    },
+    {
+      "kind": "possible-transfer",
+      "names": [
+        "Esha Singh"
+      ],
+      "note": "Esha Singh (fremont soccer 25-26) and Esha Singh (cupertino soccer 26-27) share a name, never play in the same season and their class years do not contradict: a player who changed schools, or two people. Not joined: if one, say so in data/player-identity.json sameAs (the earlier school's name, the later one's career or name); if two, in notSame with otherTeam.",
+      "players": [
+        "p4255545868",
+        "p7ef120844b"
+      ],
+      "seasons": [
+        "25-26",
+        "26-27"
+      ],
+      "sport": "soccer",
+      "team": "fremont"
+    },
+    {
+      "kind": "possible-transfer",
+      "names": [
+        "Reagan Connors"
+      ],
+      "note": "Reagan Connors (kings-academy soccer 25-26) and Reagan Connors (willow-glen soccer 26-27) share a name, never play in the same season and their class years do not contradict: a player who changed schools, or two people. Not joined: if one, say so in data/player-identity.json sameAs (the earlier school's name, the later one's career or name); if two, in notSame with otherTeam.",
+      "players": [
+        "pa9515595e7",
+        "p434b2a689f"
+      ],
+      "seasons": [
+        "25-26",
+        "26-27"
+      ],
+      "sport": "soccer",
+      "team": "kings-academy"
     },
     {
       "kind": "same-name-two-careers",

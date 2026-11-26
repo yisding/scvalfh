@@ -15,9 +15,11 @@
  *                                    the id and is known by its name.
  *   rosters-enrichment.json          joined to its varsity-page row by athleteId: each filled field
  *                                    is an observation naming its source, each recorded conflict a
- *                                    rejected one, each recruiting profile a class-year statement,
- *                                    `sourceName` another spelling, and `level` moves the row to the
- *                                    squad the school says it is on.
+ *                                    rejected one, `sourceName` another spelling, and `level` moves the
+ *                                    row to the squad the school says it is on. A team's otherRosters
+ *                                    `listed` (the school's own varsity list, for a team MaxPreps lists
+ *                                    nobody for) is one sighting per listed name, with no id, while the
+ *                                    team page shows it.
  *   player-stats.json                the stat sheet's number for the career, filed under varsity
  *                                    unless the player's only row that season is a JV one
  *   prior-players.json               a past season's stat sheet: career id, rebuilt name, class,
@@ -59,11 +61,19 @@ export const RostersInput = z.looseObject({
 
 const sourced = { kind: text, source: text };
 
+/** otherRosters, as the registry reads it: only a `listed` team's names say who is on it. */
+const OtherRostersInput = z.looseObject({
+  status: text,
+  source: text.optional(),
+  players: z.array(z.looseObject({ firstName: text, lastName: text, position: text.nullable() })).optional(),
+});
+
 export const EnrichmentInput = z.looseObject({
   season: text,
   teams: z.array(
     z.looseObject({
       slug: text,
+      otherRosters: OtherRostersInput.optional(),
       players: z.array(
         z.looseObject({
           athleteId: text,
@@ -281,6 +291,30 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
   const overlay = new Map((files.enrichment?.teams ?? []).flatMap((t) => t.players.map((p) => [`${t.slug} ${p.athleteId}`, p] as const)));
   fromPage(files.rosters, 'varsity', overlay);
   if (files.jvRosters) fromPage(files.jvRosters, 'jv', new Map());
+
+  // A school's own varsity list, for a team MaxPreps lists nobody for: read while the team page shows it, which is
+  // while no MaxPreps row of the team is a varsity one (lib/players/rosters.ts mergedListedRows). Once MaxPreps lists
+  // the team, its rows are the sightings, and each listed player is joined to her MaxPreps row by her name.
+  const rostered = new Map(files.rosters.teams.map((t) => [t.slug, t.players]));
+  for (const team of files.enrichment?.teams ?? []) {
+    const other = team.otherRosters;
+    if (other?.status !== 'listed' || !other.players) continue;
+    const onMaxPreps = (rostered.get(team.slug) ?? []).some((row) => row.athleteId === null || overlay.get(`${team.slug} ${row.athleteId}`)?.level !== 'jv');
+    if (onMaxPreps) continue;
+    for (const p of other.players) {
+      const name = `${p.firstName} ${p.lastName}`;
+      sightings.push({
+        ...base(team.slug, 'varsity'),
+        careerIds: [],
+        nameKeys: [nameKey(name)],
+        firstName: p.firstName,
+        lastName: p.lastName,
+        observations: [
+          { src: 'school-roster', ...(other.source ? { url: other.source } : {}), name, ...(p.position !== null ? { positions: [p.position] } : {}) },
+        ],
+      });
+    }
+  }
 
   for (const team of files.playerStats?.teams ?? []) {
     for (const p of team.players) {

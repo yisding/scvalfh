@@ -908,6 +908,52 @@ describe('what the reviewers broke', () => {
     expect(answered.players).toEqual(before.players);
   });
 
+  it('one name at two schools in different seasons is a possible transfer, settled by sameAs or notSame', () => {
+    const rows = [
+      stat('Kiley Mags', 'c1', { season: '25-26', team: 'beta', sport: 'volleyball' }, { grade: 11, jersey: '4' }),
+      row({ name: 'Kiley Mags', careerIds: ['c2'], sport: 'volleyball', obs: { grade: 12, jersey: '4' } }),
+      // At two schools in one season: two people, not a question.
+      row({ name: 'Ana Ruiz', careerIds: ['c3'] }),
+      row({ name: 'Ana Ruiz', careerIds: ['c4'], team: 'beta' }),
+      // Last season's senior has graduated: two people.
+      stat('Lia Wu', 'c5', { season: '25-26', team: 'beta' }, { grade: 12 }),
+      row({ name: 'Lia Wu', careerIds: ['c6'], obs: { grade: 12 } }),
+      // This season's freshman was in eighth grade last season: two people.
+      stat('Mo Diaz', 'c7', { season: '25-26', team: 'beta' }, {}),
+      row({ name: 'Mo Diaz', careerIds: ['c8'], obs: { grade: 9 } }),
+    ];
+    const file = build(rows);
+    expect(file.review.map((r) => `${r.kind}: ${r.names.join(' / ')} ${r.team}`)).toEqual(['possible-transfer: Kiley Mags beta']);
+    expect(file.players).toHaveLength(8);
+
+    const joined = build(rows, {
+      identity: { ...NO_IDENTITY, sameAs: [{ sport: 'volleyball', team: 'beta', name: 'Kiley Mags', careerId: 'c2', basis: 'changed schools' }] },
+    });
+    expect(joined.review).toEqual([]);
+    const kiley = named(joined, 'Kiley Mags');
+    expect(kiley).toHaveLength(1);
+    expect(kiley[0].stints.map((s) => `${s.season} ${s.team}`)).toEqual(['25-26 beta', '26-27 alpha']);
+
+    const apart = build(rows, {
+      identity: { ...NO_IDENTITY, notSame: [{ sport: 'volleyball', team: 'beta', otherTeam: 'alpha', names: ['Kiley Mags', 'Kiley Mags'], basis: 'two girls' }] },
+    });
+    expect(apart.review).toEqual([]);
+    expect(named(apart, 'Kiley Mags')).toHaveLength(2);
+  });
+
+  it('sameAs joins a name to a name on another school\'s lists', () => {
+    const file = build(
+      [
+        row({ name: 'Ella Clave', season: '25-26', team: 'beta', observations: [{ src: 'all-league', name: 'Ella Clave', grade: 10, award: 'firstTeam' }] }),
+        row({ name: 'Ella Clave', level: 'jv', observations: [{ src: 'school-jv-roster', name: 'Ella Clave', grade: 11 }] }),
+      ],
+      { identity: { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'beta', name: 'Ella Clave', isName: 'Ella Clave', isTeam: 'alpha', basis: 'changed schools' }] } },
+    );
+    expect(file.players).toHaveLength(1);
+    expect(file.players[0].stints.map((s) => s.team)).toEqual(['beta', 'alpha']);
+    expect(file.review).toEqual([]);
+  });
+
   it('review items about seasons a build no longer reads are kept', () => {
     const first = build([row({ name: 'Gabrielle Moll', careerIds: ['c1'], season: '25-26' }), jv('Gabby Moll', {}, { season: '25-26' })]);
     expect(first.review).toHaveLength(1);
@@ -969,6 +1015,38 @@ describe('the sources as sightings', () => {
     expect(p.stints.map((s) => s.level)).toEqual(['jv']);
     expect(p.stints[0]).toMatchObject({ grade: 10, jersey: '6', captain: true });
     expect(p.classOf).toBe(2029);
+  });
+
+  it("a school's own varsity list is a sighting per name while MaxPreps lists nobody for the team", () => {
+    const listed = {
+      status: 'listed',
+      source: 'https://school.test/roster',
+      players: [
+        { firstName: 'Anna', lastName: 'Schwab', position: null },
+        { firstName: 'Katelyn', lastName: 'Clark', position: 'GK' },
+      ],
+    };
+    const read = (players: ReturnType<typeof rosterRow>[]) =>
+      currentSeasonSightings(
+        {
+          sport: 'field-hockey',
+          rosters: { season: '26-27', teams: [{ slug: 'alpha', players }] },
+          jvRosters: null,
+          enrichment: { season: '26-27', teams: [{ slug: 'alpha', players: [], otherRosters: listed }] },
+          playerStats: null, jvSchoolSites: null, jvProfiles: null,
+        },
+        NO_IDENTITY,
+      ).sightings;
+    const sightings = read([]);
+    expect(sightings.map((s) => [s.level, s.careerIds, s.nameKeys, s.observations])).toEqual([
+      ['varsity', [], ['annaschwab'], [{ src: 'school-roster', url: 'https://school.test/roster', name: 'Anna Schwab' }]],
+      ['varsity', [], ['katelynclark'], [{ src: 'school-roster', url: 'https://school.test/roster', name: 'Katelyn Clark', positions: ['GK'] }]],
+    ]);
+    expect(build(sightings).players.map((p) => p.identifiers.map(identifierKey).join())).toEqual(
+      expect.arrayContaining(['name:field-hockey:alpha:annaschwab', 'name:field-hockey:alpha:katelynclark']),
+    );
+    // Once MaxPreps lists the team, its rows are the sightings.
+    expect(read([rosterRow({})]).map((s) => s.observations[0].src)).toEqual(['maxpreps-roster']);
   });
 
   it('a row a person has split from its career is known by its name', () => {

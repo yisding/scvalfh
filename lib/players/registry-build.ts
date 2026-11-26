@@ -395,7 +395,7 @@ interface Row extends Sighting {
   gone?: boolean;
 }
 
-const ROSTER_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'school-jv-roster']);
+const ROSTER_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'school-roster', 'school-jv-roster']);
 
 /** What a build may say beside the file it returns. */
 export interface BuildOptions {
@@ -486,6 +486,8 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     for (const id of e.careerIds) if (!knownCareers.has(id)) drift('distinct', e, e.careerIds.join(' / '), `distinct names ${unlisted(id)}`);
   }
   const sameAs = new Map(liveSameAs.map((e) => [`${e.sport} ${e.team} ${nameKey(e.name)}`, e]));
+  /** Whether an `isName` entry names a player of its own team and sport (no `isTeam`/`isSport` elsewhere). */
+  const sameTeam = (e: PlayerIdentity['sameAs'][number]) => (e.isTeam ?? e.team) === e.team && (e.isSport ?? e.sport) === e.sport;
   const all: Row[] = rows
     .map((s): Row => {
       // A row with a career of its own is joined after the careers are (below), not rewritten here.
@@ -493,9 +495,10 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
       const hit = s.nameKeys.map((k) => sameAs.get(`${s.sport} ${s.team} ${k}`)).find((e) => e !== undefined);
       if (!hit) return s;
       const formerKeys = s.nameKeys.map((k) => `name:${s.sport}:${s.team}:${k}`);
-      return hit.careerId !== undefined
-        ? { ...s, careerIds: [hit.careerId], curated: true, formerKeys }
-        : { ...s, nameKeys: [nameKey(hit.isName as string)], curated: true, formerKeys };
+      if (hit.careerId !== undefined) return { ...s, careerIds: [hit.careerId], curated: true, formerKeys };
+      // A name on another school's lists: the row keeps its own name here, and is joined to that player whole (below).
+      if (!sameTeam(hit)) return { ...s, curated: true };
+      return { ...s, nameKeys: [nameKey(hit.isName as string)], curated: true, formerKeys };
     });
   const orderKey = (s: Row) =>
     [s.sport, s.season, s.team, PLAYER_LEVELS.indexOf(s.level), s.careerIds.join(','), s.nameKeys.join(','), JSON.stringify(s.observations), s.prev ?? ''].join('\u0001');
@@ -588,10 +591,15 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
   for (const groups of groupsOf.values()) for (const g of groups.slice(1)) for (const i of g.slice(1)) clusters.union(g[0], i);
   // What a person decided about a name whose rows have a career of their own ("Addy Paradiso",
   // under this year's id, is last year's "Addison Paradiso"): the two records are joined whole.
+  // A player who changed schools is the same: a name on one school's lists tied to a career or a name at another.
   for (const e of liveSameAs) {
-    const named = (name: string) => all.flatMap((s, i) => (s.sport === e.sport && s.team === e.team && s.nameKeys.includes(nameKey(name)) ? [i] : []));
+    const named = (name: string, sport: string = e.sport, team: string = e.team) =>
+      all.flatMap((s, i) => (s.sport === sport && s.team === team && s.nameKeys.includes(nameKey(name)) ? [i] : []));
     const from = named(e.name);
-    const to = e.careerId !== undefined ? [firstWithCareer.get(e.careerId)].flatMap((i) => (i === undefined ? [] : [i])) : named(e.isName as string);
+    const to =
+      e.careerId !== undefined
+        ? [firstWithCareer.get(e.careerId)].flatMap((i) => (i === undefined ? [] : [i]))
+        : named(e.isName as string, e.isSport ?? e.sport, e.isTeam ?? e.team);
     if (to.length === 0) continue;
     for (const i of from) clusters.union(to[0], i);
   }
@@ -1030,6 +1038,10 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     const [first, second = first] = old.names;
     if (pairKinds.includes(old.kind) && settledPairs.has(settledKey(old.kind === 'possible-match' ? old.sport : null, old.team, first, second))) continue;
     const ids = [...new Set(old.players.flatMap((id) => (nowId.has(id) ? [nowId.get(id) as string] : [])))];
+    if (old.kind === 'possible-transfer' && ids.length === 2) {
+      const [a, b] = ids.map((id) => players.find((p) => p.id === id) as Player);
+      if (transferSettled(settledPairs, a, b)) continue;
+    }
     // Two players since found to be one, or gone: nothing left to decide.
     if (ids.length !== new Set(old.players).size) continue;
     review.push({ ...old, players: ids });
@@ -1073,11 +1085,26 @@ function settledKey(sport: SportId | null, team: string, a: string, b: string): 
   return `${sport ?? '*'} ${team} ${[nameKey(a), nameKey(b)].sort().join(' ')}`;
 }
 
+/** The key a `notSame` across two schools is found by: each side's sport, school and name, in one order. */
+function settledAcrossKey(a: { sport: string; team: string; name: string }, b: { sport: string; team: string; name: string }): string {
+  return `x ${[`${a.sport} ${a.team} ${nameKey(a.name)}`, `${b.sport} ${b.team} ${nameKey(b.name)}`].sort().join(' | ')}`;
+}
+
 /** Every pair a person has said is two people, under both keys it can be asked by. */
 function settledBy(identity: PlayerIdentity): Set<string> {
   return new Set(
-    identity.notSame.map((e) => settledKey(nameKey(e.names[0]) === nameKey(e.names[1]) ? null : e.sport, e.team, e.names[0], e.names[1])),
+    identity.notSame.map((e) =>
+      e.otherTeam !== undefined
+        ? settledAcrossKey({ sport: e.sport, team: e.team, name: e.names[0] }, { sport: e.otherSport ?? e.sport, team: e.otherTeam, name: e.names[1] })
+        : settledKey(nameKey(e.names[0]) === nameKey(e.names[1]) ? null : e.sport, e.team, e.names[0], e.names[1]),
+    ),
   );
+}
+
+/** Whether a person has said that two players at two schools are two people (`notSame` with `otherTeam`). */
+function transferSettled(settled: ReadonlySet<string>, a: Player, b: Player): boolean {
+  const sides = (p: Player) => [...new Map(p.stints.flatMap((s) => p.names.map((name) => [`${s.sport} ${s.team} ${name}`, { sport: s.sport, team: s.team, name }] as const))).values()];
+  return sides(a).some((x) => sides(b).some((y) => x.team !== y.team && settled.has(settledAcrossKey(x, y))));
 }
 
 /** The class years a player's accepted observations imply. */
@@ -1169,12 +1196,66 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
       }
     }
   }
+
+  // One name at two schools, never in the same season: a player who changed schools, or two people. Names are
+  // never joined across schools, so the pair is only listed. A season at both schools (in any sports) is two
+  // people at once, and not a question.
+  const byName = new Map<string, Player[]>();
+  for (const p of players) for (const k of new Set(fullOf(p).map(nameKey))) if (k) byName.set(k, [...(byName.get(k) ?? []), p]);
+  const schoolSeasons = (p: Player) => {
+    const out = new Map<string, Set<string>>();
+    for (const s of p.stints) out.set(s.team, (out.get(s.team) ?? new Set()).add(s.season));
+    return out;
+  };
+  /** Whether the player's class year (when known) is one a high school roster of each of `seasons` can hold. */
+  const inHighSchool = (p: Player, seasons: ReadonlySet<string>) =>
+    p.classOf === null || [...seasons].every((season) => p.classOf! >= classOfFor(season, 12) && p.classOf! <= classOfFor(season, 9));
+  const seen = new Set<string>();
+  for (const k of [...byName.keys()].sort()) {
+    const same = byName.get(k) as Player[];
+    for (let i = 0; i < same.length; i += 1) {
+      for (let j = i + 1; j < same.length; j += 1) {
+        const [a, b] = [same[i], same[j]];
+        const pairId = [a.id, b.id].sort().join(' ');
+        if (seen.has(pairId)) continue;
+        const [sa, sb] = [schoolSeasons(a), schoolSeasons(b)];
+        // A school both played at is the same-school rules' business.
+        if ([...sa.keys()].some((t) => sb.has(t))) continue;
+        const seasonsA = new Set([...sa.values()].flatMap((x) => [...x]));
+        const seasonsB = new Set([...sb.values()].flatMap((x) => [...x]));
+        if ([...seasonsA].some((x) => seasonsB.has(x))) continue;
+        if (gap(a, b) > 1 || transferSettled(settled, a, b)) continue;
+        // A class year outside a season's four high school classes (a graduate, an eighth-grader) is two people.
+        if (!inHighSchool(a, seasonsB) || !inHighSchool(b, seasonsA)) continue;
+        seen.add(pairId);
+        // The earlier school first.
+        const [early, late] = [...seasonsA].sort()[0] <= [...seasonsB].sort()[0] ? [a, b] : [b, a];
+        const where = (p: Player) =>
+          [...new Map(p.stints.map((s) => [`${s.team} ${s.sport}`, s] as const)).values()]
+            .map((s) => `${s.team} ${s.sport} ${[...new Set(p.stints.filter((x) => x.team === s.team && x.sport === s.sport).map((x) => x.season))].sort().join(', ')}`)
+            .join('; ');
+        const firstStint = [...early.stints].sort((x, y) => byText(x.season, y.season))[0];
+        out.push({
+          kind: 'possible-transfer',
+          sport: firstStint.sport,
+          team: firstStint.team,
+          seasons: seasonsOf([early.id, late.id]),
+          names: [...new Set([early.name, late.name])],
+          players: [early.id, late.id],
+          note:
+            `${early.name} (${where(early)}) and ${late.name} (${where(late)}) share a name, never play in the same season and their class years do not contradict` +
+            `${careers(early).length && careers(late).length ? '; each has its own MaxPreps career id' : ''}: a player who changed schools, or two people. Not joined: ` +
+            `if one, say so in data/player-identity.json sameAs (the earlier school's name, the later one's career or name); if two, in notSame with otherTeam.`,
+        });
+      }
+    }
+  }
   return out;
 }
 
 const NOTES = [
   'One record per person across every sport and season this repository holds. Internal: no page reads this file.',
-  'A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team\'s lists. Rows are joined on a career id (unless it is listed under names that could not be one person\'s), or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match).',
+  'A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team\'s lists. Rows are joined on a career id (unless it is listed under names that could not be one person\'s), or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match), and never on a name at another school (listed as possible-transfer).',
   'A stint is one player on one team in one season of one sport at one level; its fields are the first of its observations to state them, in the order MaxPreps roster page, overlay, school JV list, stat sheet, all-league list, recruiting profile. Every other statement that differs is listed under conflicts. A stint marked gone is one no source lists any more, kept as an earlier build left it.',
   'name is the player\'s official name: the fullest of her spellings (never a nickname or a part of another), then the clean one, the one more sources give, the one with its accents, and the one from the more official source (lib/players/official-name.ts). aliases lists every other spelling as a nickname, previous name, short form, spelling or variant.',
   'classOf is the graduation year most of the player\'s sources imply (a tie goes to the latest season\'s best source); classOfConflicts lists every statement implying another year.',

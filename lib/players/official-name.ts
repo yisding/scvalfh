@@ -76,6 +76,7 @@ export interface NameChoice {
 
 /** Most official first: rule 6 above. */
 const OFFICIAL_SOURCES: readonly ObservationSource[] = [
+  'school-roster',
   'school-jv-roster',
   'enrichment',
   'maxpreps-roster',
