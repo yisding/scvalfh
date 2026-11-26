@@ -1,0 +1,236 @@
+# The 2026 National Hockey Festival's results (USA Field Hockey, Nov 26-28, Paradise Coast Sports Complex, Naples,
+# Fla.; /festival, DESIGN §35): `pnpm fetch-festival` reads TourneyMachine's feed into data/field-hockey/festival.json
+# (scripts/fetch-festival.ts, DATA-SOURCES §1.16), the festival data tests run on it, and the file is committed only
+# when its content changed (festivalContentKey: everything but `fetchedAt`). The commit is the deploy: Cloudflare
+# Workers Builds rebuilds the field hockey Worker on a push touching data/field-hockey/ (about 2½ minutes), and the
+# page shows the new scores. Field hockey's build only; the job writes nothing else.
+#
+# Schedule (owner decision, 2026-11-26; lib/festival/festival-crons.ts). Games start on the hour (Thu 8 AM-4 PM ET,
+# Fri 8 AM-6 PM, Sat 8 AM-2 PM) and last 55 minutes (two 25-minute halves and a 5-minute half time, or four 12-minute
+# quarters: "The format is 55-minute games"), so a slot ends at :55. Each slot's end is followed by three runs, 12,
+# 32 and 52 minutes after it: :07, :27 and :47 past the next hour, an even 20-minute cadence up to the next slot's
+# end, and never on :00, GitHub's busiest minute. GitHub starts a scheduled run 5 to 15 minutes late (this repo's
+# runs: 14:37 for a 14:30 cron, 15:14 for 15:07), and scores are entered at the fields 10 to 30 minutes after a
+# slot ends, unevenly (on Nov 26 at 10:13 ET, 18 minutes after the 9 AM slot ended, 4 of its 12 results were in, and
+# only 7 of the 8 and 9 AM slots' 24 games were final), so the first run catches the quick ones and the next two
+# the rest; every run reads the whole feed, so a score from an earlier slot that comes in late is caught too. One
+# catch-up a day follows its last slot by 2 h 15 min, for the scores entered after the fields close. Cron fields
+# are UTC and Naples is on EST (UTC-5) all three days, so Friday's 6 PM slot's runs (00:07-00:47 UTC Nov 28) and
+# the Thursday and Friday catch-ups (7:10 PM and 9:10 PM ET) fall on the next UTC day. The lines below are exactly
+# what `pnpm festival-crons` derives from the committed festival.json; tests/workflows.test.ts holds them to it, so
+# a slot TourneyMachine moves fails ci (never this job's data commit). Day-of-week is '*': with both day fields
+# restricted, cron fires on either.
+#
+# Scheduled workflows run only from the default branch: none of this fires until this file is on main.
+#
+# Load. Every scheduled run starts with the `window` job, which checks nothing out (about 5 seconds): inside the
+# festival's Eastern dates, it makes one ~30-byte GET of TournamentResultsLastUpdated (the version stamp
+# TourneyMachine's own web app polls; cache-control max-age=10) and one GitHub contents API read of the committed
+# file's `sourceVersion`. Equal, and the `refresh` job is skipped whole: no install, no 275 KB download, no commit,
+# no deploy. So TourneyMachine sees about three tiny requests an hour while games are on (84 runs over the three
+# days), and the whole feed is read at most once a run, in practice only as often as scores actually post. Any
+# failure of that check (TourneyMachine or the API unreachable, a body of another shape) runs the refresh rather
+# than skipping it: a missed score costs more than one 275 KB read. The fetch script repeats the same check against
+# its checkout, which is what a manual run relies on.
+#
+# The window: FEST_START … FEST_END, by the Eastern date (the 00:xx and 02:xx UTC runs belong to the previous
+# Eastern day), so the crons, which carry no year, do nothing on Nov 26-28 of later years. A manual run with `force`
+# skips both the window and the change check, and reads the whole feed even when its version is the committed one.
+#
+# Its own concurrency group, not the other refreshes' `update-data`: GitHub keeps one pending run per group and a
+# newer one cancels it, and that group is busy in festival hours (soccer 14:30 UTC, basketball 15:07 for 10-12
+# minutes, VAL soccer 15:30, and on Saturday field hockey 14:00 and volleyball 14:20), so a festival run queued
+# behind them would be dropped exactly when the 9 and 10 AM ET scores come in. Only this job writes festival.json,
+# so a rebase never conflicts; a push racing another refresh's is retried.
+#
+# The commit message starts "data: refresh festival", which deploy-cloudflare.yml accepts as a data commit
+# (tests/workflows.test.ts holds the file and the message to its gate).
+
+name: update-data-festival
+
+on:
+  schedule:
+    - cron: '7,27,47 14-22 26 11 *'
+    - cron: '7,27,47 14-23 27 11 *'
+    - cron: '7,27,47 0,14-20 28 11 *'
+    - cron: '10 0 27 11 *'
+    - cron: '10 2,22 28 11 *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even outside Nov 26-28 (Eastern), and read the whole feed even when its version is the committed one'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Its own group (see the header): one festival refresh at a time, never cancelled, never queued behind the others.
+concurrency:
+  group: update-data-festival
+  cancel-in-progress: false
+
+jobs:
+  # In the festival's dates, and did TourneyMachine's version stamp move? Nothing is checked out or installed.
+  window:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      in_window: ${{ steps.check.outputs.in_window }}
+      changed: ${{ steps.upstream.outputs.changed }}
+    steps:
+      - name: Festival window
+        id: check
+        env:
+          FEST_START: '2026-11-26'
+          FEST_END: '2026-11-28'
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          today="$(TZ=America/New_York date +%F)"
+          if [ -n "$FORCE" ]; then
+            echo "forced: running on ${today}, whatever the window"
+            in_window=true
+          elif [[ ! "$today" < "$FEST_START" && ! "$today" > "$FEST_END" ]]; then
+            echo "festival day: ${today} is inside ${FEST_START} … ${FEST_END} Eastern"
+            in_window=true
+          else
+            echo "not a festival day: ${today} is outside ${FEST_START} … ${FEST_END} Eastern. Nothing installed, fetched or written."
+            in_window=false
+          fi
+          echo "in_window=${in_window}" >> "$GITHUB_OUTPUT"
+          echo "### update-data-festival: ${today} Eastern, festival day: \`${in_window}\`" >> "$GITHUB_STEP_SUMMARY"
+
+      # changed=false only when both stamps were read and are equal; anything else refreshes. The step cannot fail
+      # the job (continue-on-error), and an empty output also refreshes (`refresh` tests != 'false').
+      - name: Upstream change check
+        id: upstream
+        if: steps.check.outputs.in_window == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LAST_UPDATED_URL: https://tourneymachine.com/Public/Service/JSON/TournamentResultsLastUpdated.aspx?IDTournament=h20260601141424398b290c0851f3e4c
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          # Not -e (GitHub's default): a failed read must reach the `changed=true` below, not end the step.
+          set +e -uo pipefail
+          changed=true
+          if [ -n "$FORCE" ]; then
+            echo "forced: reading the whole feed whatever its version"
+          else
+            ua="scvalfh/1.0 (NorCal girls field hockey scoreboard; unofficial fan site; +${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}; festival change check)"
+            # A JSON string ("v6_11\/26\/2026 3:26:47 PM"); jq decodes it.
+            upstream=$(curl -fsS --max-time 20 --retry 2 -A "$ua" "$LAST_UPDATED_URL" | jq -er 'strings') || upstream=''
+            # The branch's tip, as the refresh job checks it out, not the commit this run was queued at.
+            committed=$(gh api "repos/${GITHUB_REPOSITORY}/contents/data/field-hockey/festival.json?ref=${GITHUB_REF_NAME}" \
+              -H 'Accept: application/vnd.github.raw' | jq -er '.sourceVersion | strings') || committed=''
+            if [ -z "$upstream" ]; then
+              echo "::warning::could not read TourneyMachine's version stamp; refreshing anyway"
+            elif [ -z "$committed" ]; then
+              echo "::warning::could not read the committed festival.json's sourceVersion; refreshing anyway"
+            elif [ "$upstream" = "$committed" ]; then
+              echo "unchanged upstream: ${upstream} is the committed version. Nothing installed, fetched or written."
+              changed=false
+            else
+              echo "changed upstream: ${committed} → ${upstream}"
+            fi
+          fi
+          echo "changed=${changed}" >> "$GITHUB_OUTPUT"
+          echo "- changed upstream: \`${changed}\`" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+  refresh:
+    needs: window
+    if: needs.window.outputs.in_window == 'true' && needs.window.outputs.changed != 'false'
+    runs-on: ubuntu-latest
+    # One ~275 KB read, the install and three test files: a few minutes on a slow day.
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          # The branch's tip, not the commit the run was queued at: a run queued behind another festival run must
+          # start from that run's commit, or its own would conflict with it on the rebase.
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      # pnpm BEFORE setup-node (see update-data.yml).
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Exit 1 only when the feed cannot be read or normalized faithfully; the committed file stays as it was.
+      - name: Fetch the festival
+        timeout-minutes: 3
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-festival "${args[@]}"
+
+      # The festival file through its validating loader and the clubs map against it; not the whole suite.
+      - name: Test
+        run: pnpm exec vitest run tests/festival-file.test.ts tests/tourneymachine.test.ts tests/festival-clubs.test.ts
+
+      - name: Commit the data that changed
+        id: commit
+        run: |
+          set -euo pipefail
+          # fetch-festival writes the file only when its content key changed, so a quiet diff is no change.
+          if git diff --quiet -- data/field-hockey/festival.json; then
+            echo "nothing to commit: the festival's content is the committed one"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          DAY=$(TZ=America/New_York date +%F)
+          SUMMARY=$(node -e '
+            const f = require("./data/field-hockey/festival.json");
+            const finals = f.games.filter((g) => g.status === "final").length;
+            process.stdout.write(`${finals} of ${f.games.length} games final`);
+          ')
+          # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one: author
+          # github-actions[bot], one parent, a message starting "data: refresh festival", nothing but the file below
+          # (tests/workflows.test.ts).
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/field-hockey/festival.json
+          git commit -m "data: refresh festival ${DAY} · ${SUMMARY}"
+          echo "summary=${SUMMARY}" >> "$GITHUB_OUTPUT"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Rebase-then-push, three tries: another refresh can push between the pull and the push (its own group does
+      # not wait for this one). A failed rebase is undone before the next try.
+      - name: Push
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          set -uo pipefail
+          for i in 1 2 3; do
+            if git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 5))
+          done
+          echo "::error::could not push the festival commit after three tries"
+          exit 1
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### update-data-festival"
+            echo ""
+            echo "- committed: \`${{ steps.commit.outputs.changed || 'false' }}\`"
+            echo "- games: ${{ steps.commit.outputs.summary || 'unchanged' }}"
+          } >> "$GITHUB_STEP_SUMMARY"

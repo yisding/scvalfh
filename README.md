@@ -324,6 +324,24 @@ For this to work on a deployed copy of this repo:
 3. Connect your host (see "Deploy notes") to redeploy automatically on push to `main` — most
    static hosts do this without any extra configuration once the repo is linked.
 
+### The festival refresh
+
+`.github/workflows/update-data-festival.yml` keeps `/festival` (the 2026 National Hockey Festival, Nov 26-28, Naples,
+Fla.) current while games are on: `pnpm fetch-festival` reads TourneyMachine into `data/field-hockey/festival.json`,
+`tests/festival-file.test.ts`, `tests/tourneymachine.test.ts` and `tests/festival-clubs.test.ts` run on it, and the
+file is committed (`data: refresh festival <day> · <finals> of <games> games final`) only when its content changed.
+Games start on the hour and last 55 minutes, so it runs 12, 32 and 52 minutes after each slot ends (:07, :27 and :47
+past the next hour, UTC crons) and once more 2 h 15 min after each day's last slot. The crons are derived from the
+committed file: `pnpm festival-crons` prints them (`lib/festival/festival-crons.ts`), and `tests/workflows.test.ts`
+fails when the workflow's differ, for instance after TourneyMachine moves a slot.
+
+Each run first checks, with nothing checked out, that the Eastern date is Nov 26-28 and that TourneyMachine's
+~30-byte version stamp differs from the committed file's `sourceVersion`; when they are equal the refresh job is
+skipped, so a quiet run costs one tiny request. Any error in that check refreshes anyway. The job has its own
+concurrency group, `update-data-festival`, so it never waits behind the other refreshes. A manual **Run workflow**
+with `force` runs outside the dates and reads the whole feed whatever its version. Schedules run only from the
+default branch.
+
 ### Self-hosting the cron
 
 If you're not using GitHub Actions, run the same commands (`fetch-player-stats` and `fetch-jv` are
@@ -3718,6 +3736,9 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   `update-data-basketball.yml` refreshes `data/basketball/` Nov–Mar (6:07 and 15:07 UTC, after the other two,
   in the same concurrency group), ci's `basketball` job builds and asserts the site on every PR, and
   `deploy-cloudflare.yml` lets its data commits through. No domain is chosen in the repo.
+- **The National Hockey Festival.** `update-data-festival.yml` commits `data/field-hockey/festival.json` up to
+  three times an hour while the festival's games are on (Nov 26-28, 2026; see "The festival refresh"). Only the
+  field hockey build reads it, so only that project rebuilds, and `deploy-cloudflare.yml` lets its commits through.
 - **Rosters refresh for the winter sports.** `update-data-soccer.yml` and `update-data-basketball.yml` also
   run `pnpm fetch-rosters` and `pnpm fetch-rosters --level jv` on every run and commit
   `data/<sport>/rosters.json` and `data/<sport>/jv-rosters.json` when their content changed: coaches post
@@ -3886,8 +3907,8 @@ A real deploy needs:
   build time.
 
 `.github/workflows/deploy-cloudflare.yml` runs that deploy from GitHub Actions. It follows the `ci`
-workflow and the three refreshes, `update-data`, `update-data-soccer` and `update-data-basketball`
-(`workflow_run`, on `main`), rather than `push`, because each refresh
+workflow and the refreshes, `update-data`, `update-data-soccer`, `update-data-basketball`, `update-data-volleyball`,
+`update-data-val-soccer` and `update-data-festival` (`workflow_run`, on `main`), rather than `push`, because each refresh
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
 `main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a

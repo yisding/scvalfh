@@ -135,6 +135,29 @@ export function parseLastUpdated(body: string): string {
   return z.string().min(1).parse(JSON.parse(body));
 }
 
+/**
+ * The instant a TournamentResultsLastUpdated value names, in ms: its clock is UTC (on 2026-11-26 the value read
+ * '3:13:00 PM' at 15:13 UTC, when four scores posted). null when it does not look like 'v6_M/D/YYYY h:mm:ss AM'.
+ * The space before AM/PM is a narrow no-break space (U+202F) in the live value, so any whitespace is accepted.
+ */
+export function versionInstant(version: string): number | null {
+  const m = /(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)$/i.exec(version.trim());
+  if (!m) return null;
+  const hour = (Number(m[4]) % 12) + (m[7].toUpperCase() === 'PM' ? 12 : 0);
+  return Date.UTC(Number(m[3]), Number(m[1]) - 1, Number(m[2]), hour, Number(m[5]), Number(m[6]));
+}
+
+/**
+ * Whether a whole-feed response is at least as new as `version`: its Last-Modified (when Cloudflare's copy was made;
+ * the feed is cached with max-age 30 and was seen served at age 82) is not before the version's instant. Unknowable
+ * (no header, a version of another shape) counts as current.
+ */
+export function feedIsCurrent(lastModified: string | null, version: string): boolean {
+  const changed = versionInstant(version);
+  const made = lastModified === null ? NaN : Date.parse(lastModified);
+  return changed === null || Number.isNaN(made) || made >= changed;
+}
+
 // ---------------------------------------------------------------- pieces
 
 /** '11/26/2026' → '2026-11-26'. */

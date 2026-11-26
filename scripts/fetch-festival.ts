@@ -15,10 +15,10 @@
  * of TournamentResultsLastUpdated, the version string TourneyMachine's own web app polls; when it equals the
  * committed file's `sourceVersion` the run stops there ("unchanged upstream"). Otherwise one ~275 KB read of the
  * whole tournament, through lib/sources/http.ts (descriptive User-Agent, 15 s timeout, retries on 429/5xx only).
- * The whole-feed URL carries the version it was asked for as a query parameter: Cloudflare caches that URL (max-age
- * 30, and an older copy was seen served at age 82), and a stale copy stored under the new version would never be
- * read again, because the next run would find the version unchanged. One extra origin read per version change is
- * the cost.
+ * Cloudflare caches the whole feed (max-age 30; a copy was seen served at age 82) and the endpoint refuses any extra
+ * query parameter, so a read can be older than the version just checked. Stored under that version, the older
+ * content would never be read again (every later run would find the version unchanged), so a read whose
+ * Last-Modified is before the version's own time keeps the committed `sourceVersion`, and the next run reads again.
  *
  * The normalized file (lib/sources/tourneymachine.ts) is held to lib/festival/festival-schema.ts and written only
  * when its content key (everything but `fetchedAt`) differs from the committed file's, so a run that finds nothing
@@ -38,6 +38,7 @@ import { HttpClient } from '../lib/sources/http';
 import { IS_FIELD_HOCKEY, SPORT_ID } from '../lib/sports/current';
 import {
   FESTIVAL_TOURNAMENT_ID,
+  feedIsCurrent,
   festivalCounts,
   lastUpdatedUrl,
   normalizeFestival,
@@ -104,8 +105,11 @@ function readPrevious(out: string): FestivalFile | null {
   return null;
 }
 
-/** Check the version, read the feed when it changed, normalize, validate, write when the content changed. */
-export async function main(argv: readonly string[], http: HttpClient = new HttpClient({ onLog: (line) => console.log(line) })): Promise<number> {
+/**
+ * Check the version, read the feed when it changed, normalize, validate, write when the content changed.
+ * `fetchImpl` is the test seam (HttpClient's).
+ */
+export async function main(argv: readonly string[], fetchImpl: typeof fetch = globalThis.fetch): Promise<number> {
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);
@@ -117,6 +121,16 @@ export async function main(argv: readonly string[], http: HttpClient = new HttpC
   }
   const capture = prepareCapture(args);
   const previous = readPrevious(args.out);
+  // HttpClient returns no headers; the feed's Last-Modified is read on the way through.
+  const lastModified = new Map<string, string | null>();
+  const http = new HttpClient({
+    onLog: (line) => console.log(line),
+    fetchImpl: async (input, init) => {
+      const res = await fetchImpl(input, init);
+      lastModified.set(String(input), res.headers.get('last-modified'));
+      return res;
+    },
+  });
 
   const check = await http.text(lastUpdatedUrl(FESTIVAL_TOURNAMENT_ID), 'application/json');
   if (capture) saveCapture(capture, 'last-updated.json', check.body);
@@ -127,12 +141,20 @@ export async function main(argv: readonly string[], http: HttpClient = new HttpC
   }
   console.log(`fetch-festival: upstream version ${version}${previous ? ` (committed: ${previous.sourceVersion})` : ''}`);
 
-  const url = `${tournamentResultsUrl(FESTIVAL_TOURNAMENT_ID)}&v=${encodeURIComponent(version)}`;
+  const url = tournamentResultsUrl(FESTIVAL_TOURNAMENT_ID);
   const feed = await http.text(url, 'application/json');
   if (capture) saveCapture(capture, 'tournament-results.json', feed.body);
+  const made = lastModified.get(url) ?? null;
+  const current = feedIsCurrent(made, version);
+  if (!current) {
+    console.log(
+      `fetch-festival: the feed read is a cached copy from ${made}, older than ${version}; ` +
+        'the file keeps the committed version, so the next run reads it again',
+    );
+  }
   const file = normalizeFestival(JSON.parse(feed.body) as unknown, {
     fetchedAt: args.fetchedAt ?? new Date().toISOString(),
-    sourceVersion: version,
+    sourceVersion: current ? version : (previous?.sourceVersion ?? 'unverified'),
   });
   const validated = validateAssembled(FestivalFileSchema, file);
   if (validated === null) return 1;
