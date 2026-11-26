@@ -176,7 +176,16 @@ function loadAndJoin(
 // The VAL's middle school build lists no players and has no recruiting pages: its file is served as it is.
 const { file, rows: ROW_BY_PLAYER, listed: LISTED } = HAS_RECRUITING
   ? loadAndJoin(bundled, getAllEnrichedRosters(), getRosters().season)
-  : { file: bundled as unknown as ClubsFile, rows: new Map<string, MergedPlayer>(), listed: [] as ClubAffiliation[] };
+  : {
+      // Served as it is, but with the lists the schema would default (a file written before one existed has no key
+      // for it), so every reader of getClubsFile() can rely on each being an array.
+      file: {
+        ...(bundled as unknown as ClubsFile),
+        listedAffiliations: (bundled as unknown as Partial<ClubsFile>).listedAffiliations ?? [],
+      },
+      rows: new Map<string, MergedPlayer>(),
+      listed: [] as ClubAffiliation[],
+    };
 
 /** The varsity ties the pages list: `affiliations`, then the listed players' (asAffiliation). */
 const VARSITY: readonly ClubAffiliation[] = [...file.affiliations, ...LISTED];
