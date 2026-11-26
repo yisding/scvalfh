@@ -67,8 +67,10 @@ const raw = JSON.parse(
   readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters-enrichment.json'), 'utf8'),
 ) as RosterEnrichment;
 
-/** A claimed MaxPreps career page, linked by the 2026-10-13 sweep: the only profiles on that platform. */
-const claimed1013 = (x: { platform: string }) => x.platform === 'maxpreps';
+/** A profile the 2026-11-26 sweep of the rows no sweep had reached linked: its note says so. */
+const fromSweep1126 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-26 sweep') ?? false;
+/** A claimed MaxPreps career page, linked by the 2026-10-13 sweep: the MaxPreps pages the 2026-11-26 sweep did not add. */
+const claimed1013 = (x: { platform: string; note: string | null }) => x.platform === 'maxpreps' && !fromSweep1126(x);
 /** A profile the 2026-10-12 SportsRecruits address probe added: its note says so. */
 const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-10-12 address probe') ?? false;
 /** A profile the 2026-11-03 SportsRecruits address probe added: its note says so. */
@@ -109,7 +111,7 @@ const pre: RosterEnrichment = {
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
         profiles: p.profiles.filter(
-          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x),
+          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x) && !fromSweep1126(x),
         ),
       }))
       .filter(
@@ -335,6 +337,15 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     const one = { firstName: 'Ravyn', lastName: 'Arazi', position: null };
     expect(withList([one, one])).toMatch(/otherRosters failed validation/);
     expect(withList([{ ...one, grade: 12 }])).toMatch(/otherRosters failed validation/);
+    // A listed player may carry her own recruiting pages: one per platform and sport, on the platform's host,
+    // and never a MaxPreps page (she has no MaxPreps row).
+    const ncsa = { platform: 'ncsa', url: 'https://www.ncsasports.org/field-hockey-recruiting/x', classOf: 2028, note: null };
+    expect(withList([{ ...one, profiles: [ncsa] }])).not.toMatch(/failed validation/);
+    expect(withList([{ ...one, profiles: [ncsa, { ...ncsa, url: `${ncsa.url}2` }] }])).toMatch(/otherRosters failed validation/);
+    expect(withList([{ ...one, profiles: [{ ...ncsa, url: 'https://example.com/x' }] }])).toMatch(/otherRosters failed validation/);
+    expect(
+      withList([{ ...one, profiles: [{ platform: 'maxpreps', url: 'https://www.maxpreps.com/x', classOf: null, note: null }] }]),
+    ).toMatch(/otherRosters failed validation/);
   });
 
   it('tags every filled value with a source, a kind and a confidence', () => {
@@ -825,7 +836,7 @@ describe('recruiting profiles', () => {
     // On 2026-11-13: one page unlinked (Olivia Lynch), one record folded into another (Alexandra Schmidt into Lexie
     // Schmidt), and six JV-list players' pages moved to their varsity rows: 814 for 587.
     const all = raw.teams.flatMap((t) => t.players);
-    const before = (x: { platform: string; note: string | null }) => !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x);
+    const before = (x: { platform: string; note: string | null }) => !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x) && !fromSweep1126(x);
     expect(all.flatMap((p) => p.profiles.filter(before))).toHaveLength(814);
     expect(all.filter((p) => p.profiles.some(before))).toHaveLength(587);
     expect(all.flatMap((p) => p.profiles.filter(movedFromJv1113))).toHaveLength(6);
@@ -855,7 +866,7 @@ describe('recruiting profiles', () => {
     // 816 profiles for 588 players in all; 821 for 592 after the 2026-11-13 roster refresh (see the 2026-11-03 test),
     // before the 2026-11-13 Hudl and NCSA sweep (below).
     const all = raw.teams.flatMap((t) => t.players);
-    const by1106 = (x: { platform: string; note: string | null }) => !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x);
+    const by1106 = (x: { platform: string; note: string | null }) => !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x) && !fromSweep1126(x);
     expect(all.flatMap((p) => p.profiles.filter(by1106))).toHaveLength(821);
     expect(all.filter((p) => p.profiles.some(by1106))).toHaveLength(592);
   });
@@ -897,7 +908,7 @@ describe('recruiting profiles', () => {
     // Berkeley's Sage Murphy was on the JV list when the sweep ran and joined the varsity roster the same day.
     expect(found.some((r) => r.slug === 'berkeley' && r.p.fullName === 'Sage Murphy')).toBe(true);
     const all = raw.teams.flatMap((t) => t.players);
-    const by1113 = (x: { platform: string; note: string | null }) => !fromFour1113(x) && !fromMaxfh1116(x);
+    const by1113 = (x: { platform: string; note: string | null }) => !fromFour1113(x) && !fromMaxfh1116(x) && !fromSweep1126(x);
     expect(all.flatMap((p) => p.profiles.filter(by1113))).toHaveLength(903);
     expect(all.filter((p) => p.profiles.some(by1113))).toHaveLength(634);
   });
@@ -916,8 +927,8 @@ describe('recruiting profiles', () => {
     for (const { p, x } of found) expect(x.note, p.fullName).toMatch(/re-read by an independent refuter\.$/);
     // 909 profiles for 639 players in all, before the 2026-11-16 MAX Field Hockey sweep (below).
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles.filter((x) => !fromMaxfh1116(x)))).toHaveLength(909);
-    expect(all.filter((p) => p.profiles.some((x) => !fromMaxfh1116(x)))).toHaveLength(639);
+    expect(all.flatMap((p) => p.profiles.filter((x) => !fromMaxfh1116(x) && !fromSweep1126(x)))).toHaveLength(909);
+    expect(all.filter((p) => p.profiles.some((x) => !fromMaxfh1116(x) && !fromSweep1126(x)))).toHaveLength(639);
   });
 
   it('what the 2026-11-16 MAX Field Hockey sweep found: 51 athlete pages, each re-read', () => {
@@ -967,10 +978,41 @@ describe('recruiting profiles', () => {
       'Samantha Ippolito',
       'Sami Lee',
     ]);
-    // 960 profiles for 640 players in all: Tamalpais' Chloe Arwin had none before.
+    // 960 profiles for 640 players in all before the 2026-11-26 sweep (below): Tamalpais' Chloe Arwin had none before.
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles)).toHaveLength(960);
-    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(640);
+    expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1126(x)))).toHaveLength(960);
+    expect(all.filter((p) => p.profiles.some((x) => !fromSweep1126(x)))).toHaveLength(640);
+  });
+
+  it('what the 2026-11-26 sweep of the rows no sweep had reached found: 19 pages for 14 rows, each re-read by a refuter', () => {
+    const found = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter(fromSweep1126).map((x) => ({ slug: t.slug, p, x }))));
+    expect(found.map((r) => [r.slug, r.p.fullName, r.x.platform, r.x.sport ?? null, r.x.classOf])).toEqual([
+      ['gilroy', 'Claudia Lei', 'sportsrecruits', null, 2029],
+      ['leland', 'Alayna Wang', 'hudl', 'basketball', 2030],
+      ['hollister', 'Gabriella Sanchez', 'maxpreps', null, 2027],
+      ['stevenson', 'Mia Jose', 'hudl', 'softball', 2028],
+      ['stevenson', 'Sylvia Yao', 'hudl', 'volleyball', 2028],
+      ['university-sf', 'Stella Klein', 'hudl', null, 2029],
+      ['corning', 'Harley Slye', 'maxpreps', null, 2027],
+      ['corning', 'Shelby Peterson', 'maxpreps', null, 2028],
+      ['corning', 'Makayla Lodin', 'maxpreps', null, 2028],
+      ['corning', 'Makayla Lodin', 'sportsrecruits', 'softball', 2028],
+      ['corning', 'Makayla Lodin', 'ncsa', 'basketball', 2028],
+      ['corning', 'Aliza Thuemler', 'maxpreps', null, 2027],
+      ['corning', 'Anaya Sherrod', 'maxpreps', null, 2027],
+      ['corning', 'Belinda Loera', 'hudl', 'soccer', 2028],
+      ['lassen', 'Austan Mueller', 'maxpreps', null, 2030],
+      ['mt-carmel', 'Aashi Gauba', 'sportsrecruits', null, 2027],
+      ['mt-carmel', 'Aashi Gauba', 'ncsa', null, 2027],
+      ['mt-carmel', 'Aashi Gauba', 'fieldlevel', null, 2027],
+      ['mt-carmel', 'Aashi Gauba', 'maxpreps', null, 2027],
+    ]);
+    expect(new Set(found.map((r) => `${r.slug} ${r.p.athleteId}`)).size).toBe(14);
+    // Every claimed page is the row's own career page.
+    const rows = new Map(base.teams.flatMap((t) => t.players.map((p) => [`${t.slug} ${p.athleteId}`, p])));
+    for (const { slug, p, x } of found.filter((r) => r.x.platform === 'maxpreps')) {
+      expect(x.url, p.fullName).toBe(rows.get(`${slug} ${p.athleteId}`)!.careerUrl);
+    }
   });
 
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
@@ -985,7 +1027,7 @@ describe('recruiting profiles', () => {
     // 159 players had no other profile on 2026-10-13 (the 2026-11-03 probe has since linked more); 158 since
     // Marin Catholic's Lexie Schmidt took her deleted duplicate row's lacrosse page (2026-11-13).
     const by1013 = (x: { platform: string; note: string | null }) =>
-      !fromProbe1103(x) && !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x);
+      !fromProbe1103(x) && !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x) && !fromSweep1126(x);
     expect(claimed.filter((r) => r.p.profiles.filter(by1013).length === 1)).toHaveLength(158);
     for (const { slug, p, x } of claimed) {
       // The row's own career page, never a namesake's: it needs no name match.

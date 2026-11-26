@@ -259,7 +259,9 @@ describe('buildRosterView', () => {
     expect(platforms('pleasant-valley')).toEqual(['NCSA', 'Hudl']);
     // Bella Vista had none until the 2026-10-12 probe found Rylee Tabor's lacrosse page.
     expect(platforms('bella-vista')).toEqual(['SportsRecruits']);
-    expect(platforms('corning')).toEqual([]);
+    // Corning had none until the 2026-11-26 sweep of the rows MaxPreps added on 2026-11-13 (Makayla Lodin's NCSA
+    // basketball and SportsRecruits softball pages, Belinda Loera's Hudl soccer page).
+    expect(platforms('corning')).toEqual(['NCSA', 'SportsRecruits', 'Hudl']);
     const eal = (slug: string) => views.find((v) => v.slug === slug)!.view.rows;
     // What the 2026-10-04 sweep found: the claimed MaxPreps pages of 2026-10-13 are not counted.
     const swept = (r: RosterRow) => r.profiles.some((x) => !isMaxPreps(x));
@@ -323,8 +325,8 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    // 150 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16).
-    expect(tied).toBe(150);
+    // 150 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16); 153 with the 2026-11-26 sweep's three.
+    expect(tied).toBe(153);
   });
 
   it('words the pinned rows', () => {
@@ -502,6 +504,15 @@ describe('TeamRoster', () => {
       ['Katelyn Clark', 'Goalkeeper'],
       ['Paris Rodriguez', 'Goalkeeper'],
     ]);
+    // A listed player's own recruiting pages show on her row, as on a MaxPreps row (2026-11-26: 13 players, 15 pages).
+    const withPages = ['marina', 'newport-harbor'].flatMap((slug) =>
+      views.find((v) => v.slug === slug)!.view.listedRows.filter((r) => r.profiles.length > 0).map((r) => [slug, r.name, r.profiles.length]),
+    );
+    expect(withPages).toHaveLength(13);
+    expect(withPages.reduce((n, [, , k]) => n + (k as number), 0)).toBe(15);
+    const shepherd = nh.listedRows.find((r) => r.name === 'Kate Shepherd')!;
+    const shepherdHtml = renderToStaticMarkup(createElement(TeamRoster, { view: nh }));
+    for (const link of shepherd.profiles) expect(shepherdHtml).toContain(`href="${link.url}"`);
     // Every other team has no listed rows, and a team with MaxPreps rows never shows one.
     for (const { slug, view } of views.filter((v) => !['marina', 'newport-harbor'].includes(v.slug))) {
       expect(view.listedRows, slug).toEqual([]);

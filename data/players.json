@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15794,
+    "observations": 15837,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -14432,6 +14432,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "23",
+              "name": "M. Lieu",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -31721,6 +31726,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "R. Fossati",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -92354,6 +92364,12 @@
               "jersey": "18",
               "name": "M. Jose",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24364190"
             }
           ],
           "positions": [
@@ -94332,6 +94348,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "19",
+              "name": "C. Kroum-Bruno",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -95544,6 +95565,11 @@
                 "FORW"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "B. Borbons",
+              "src": "maxpreps-stats"
             },
             {
               "kind": "hudl",
@@ -114086,6 +114112,12 @@
               "jersey": "24",
               "name": "G. Sanchez",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/athletes/gabriella-sanchez/?careerid=tsici7f6skb22"
             }
           ],
           "positions": [],
@@ -114875,6 +114907,12 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/anaya-sherrod/?careerid=n38saa0k82p33"
             }
           ],
           "positions": [
@@ -114950,6 +114988,30 @@
               "jersey": "00",
               "name": "A. Gauba",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://nfhca.sportsrecruits.com/athlete/aashi_gauba"
+            },
+            {
+              "classOf": 2027,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/mt-carmel-high-school/aashi-gauba1"
+            },
+            {
+              "classOf": 2027,
+              "kind": "fieldlevel",
+              "src": "profile",
+              "url": "https://www.fieldlevel.com/app/profile/aashi.gauba/fieldhockeywomen"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/athletes/aashi-gauba/?careerid=ccneabaeh5aee"
             }
           ],
           "positions": [
@@ -115469,6 +115531,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "5",
+              "name": "I. Perez",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -136306,6 +136373,12 @@
             {
               "name": "S. Yao",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/24364189"
             }
           ],
           "positions": [
@@ -151744,6 +151817,12 @@
             {
               "name": "S. Klein",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2029,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/31382582"
             }
           ],
           "positions": [
@@ -160693,6 +160772,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "11",
+              "name": "N. Le",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -164003,6 +164087,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/shelby-peterson/?careerid=candh0evtuim6"
             }
           ],
           "positions": [
@@ -164565,6 +164655,11 @@
                 "STRK"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "S. Farfan",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -172510,6 +172605,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/29173980"
             }
           ],
           "positions": [
@@ -188428,6 +188529,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "25",
+              "name": "M. Dunning",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -215081,6 +215187,12 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/susanville/lassen-grizzlies/athletes/austan-mueller/?careerid=aj6g3fdtq29vf"
             }
           ],
           "positions": [
@@ -231111,6 +231223,11 @@
                 "FORW"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "2",
+              "name": "H. Borbons",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -232715,7 +232832,7 @@
     },
     {
       "aliases": [],
-      "classOf": null,
+      "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p88a2680486",
@@ -232744,6 +232861,12 @@
               "athleteId": "85b123bb-5b0f-4a92-afcd-b3d3e14959df",
               "name": "Alayna Wang",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2030,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/33080724"
             }
           ],
           "positions": [],
@@ -234601,6 +234724,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "34",
+              "name": "R. Young",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -242378,6 +242506,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "30",
+              "name": "C. McIntyre",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -259911,6 +260044,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "24",
+              "name": "N. Finuliar",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -261693,6 +261831,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "10",
+              "name": "T. Djurovic",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "ncsa",
               "src": "profile",
@@ -262156,6 +262299,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "3",
+              "name": "J. Arciaga",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -262276,6 +262424,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "9",
+              "name": "K. Fagin",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -262841,6 +262994,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "24",
+              "name": "K. Fore",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -321725,6 +321883,12 @@
                 "M"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/aliza-thuemler/?careerid=milunolhf6ko8"
             }
           ],
           "positions": [
@@ -323730,6 +323894,11 @@
                 "FORW"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "6",
+              "name": "A. Baker",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -331363,6 +331532,12 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/harley-slye/?careerid=kpmi9n738r9o8"
             }
           ],
           "positions": [
@@ -333140,6 +333315,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "10",
+              "name": "J. De Leon",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -334472,6 +334652,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "32",
+              "name": "P. Bufalini",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -342888,6 +343073,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "23",
+              "name": "M. Murdock",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -366214,6 +366404,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "42",
+              "name": "M. Smith",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2029,
@@ -389757,6 +389952,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "14",
+              "name": "W. Sparling",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -393257,6 +393457,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "50",
+              "name": "C. Dashiell",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -411155,6 +411360,12 @@
               "jersey": "32",
               "name": "Claudia Lei",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2029,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://nfhca.sportsrecruits.com/athlete/claudia_lei"
             }
           ],
           "positions": [],
@@ -417702,6 +417913,11 @@
                 "STRK"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "30",
+              "name": "K. Hernandez",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -422274,6 +422490,24 @@
                 "M"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxpreps",
+              "src": "profile",
+              "url": "https://www.maxpreps.com/ca/corning/corning-cardinals/athletes/makayla-lodin/?careerid=8mova1rp0nu99"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/makayla_lodin2"
+            },
+            {
+              "classOf": 2028,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/corning/corning-union-high-school/makayla-lodin"
             }
           ],
           "positions": [

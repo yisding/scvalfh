@@ -97,6 +97,9 @@ function allUrls(f: ClubsFile): string[] {
 /** A tie the 2026-11-16 read of MAX Field Hockey's California pages added: its basis says so. */
 const fromMaxfh1116 = (a: { basis: string }) => a.basis.endsWith('Read 2026-11-16.');
 
+/** A tie the 2026-11-26 sweep of the rows no sweep had reached added: its basis says so. */
+const fromSweep1126 = (a: { basis: string }) => a.basis.endsWith('Read 2026-11-26.');
+
 /** Beatrix Monk's tie, moved from jvAffiliations on 2026-11-16 when her Los Gatos row was moved to varsity. */
 const movedToVarsity1116 = (a: { basis: string }) => a.basis.includes('when her Los Gatos row was moved to varsity');
 
@@ -214,6 +217,18 @@ describe('data/field-hockey/clubs.json', () => {
     expect(raw.jvAffiliations.filter(fromMaxfh1116)).toEqual([]);
   });
 
+  it('ties three players from the 2026-11-26 sweep of the rows no sweep had reached, each re-read by a refuter', () => {
+    const found = raw.affiliations.filter(fromSweep1126);
+    expect(found.map((a) => [a.teamSlug, a.fullName, a.club, a.clubTeam, a.status, a.asOf, a.confidence])).toEqual([
+      ['corning', 'Aliza Thuemler', 'chico-hotshots', null, 'current', '2026-08-05', 'high'],
+      ['convent-sacred-heart', 'Alexandra Dorf', 'sf-hawks', null, 'current', null, 'medium'],
+      ['mt-carmel', 'Aashi Gauba', 'htc', 'HTC - California', 'current', '2026-08-27', 'high'],
+    ]);
+    // An NCSA page gives no date: its club season ("2024") is not one.
+    for (const a of found) for (const s of a.sources.filter((x) => x.kind === 'ncsa')) expect(s.sourceDate, a.fullName).toBeNull();
+    expect(raw.jvAffiliations.filter(fromSweep1126)).toEqual([]);
+  });
+
   describe('NorCal, as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
     // These sweeps covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL), and the counts here are
     // over them: their ties, and the 16 clubs they found (HTC among them, whose record the 2026-10-06
@@ -223,7 +238,7 @@ describe('data/field-hockey/clubs.json', () => {
     // Ties from the 2026-10-07 sweep of the rows MaxPreps added later are pinned in their own test below.
     // Beatrix Monk's tie moved here from jvAffiliations on 2026-11-16 with her row: it is pinned with the JV ties below.
     const norcal = raw.affiliations.filter(
-      (a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId) && !movedToVarsity1116(a),
+      (a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId) && !movedToVarsity1116(a) && !fromSweep1126(a),
     );
     const norcalClubs = raw.clubs.filter((c) => !SOCAL_CLUBS.has(c.slug));
     const players = new Set(norcal.map((a) => `${a.teamSlug} ${a.athleteId}`));
@@ -403,7 +418,8 @@ describe('data/field-hockey/clubs.json', () => {
     it('finds players in four of the five NorCal leagues and in every Southern California group', () => {
       const byLeague = Object.fromEntries(
         LEAGUES.map((l) => {
-          const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id);
+          // The 2026-11-26 sweep's three ties are pinned in their own test.
+          const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id && !fromSweep1126(a));
           return [
             l.id,
             [new Set(inLeague.map((a) => `${a.teamSlug} ${a.athleteId}`)).size, new Set(inLeague.map((a) => a.teamSlug)).size],
@@ -430,7 +446,7 @@ describe('data/field-hockey/clubs.json', () => {
   describe('Southern California, as researched 2026-10-06 (changes only with a new sweep)', () => {
     const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     // The 2026-11-16 MAX Field Hockey read added one SoCal tie, pinned in its own test below.
-    const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league) && !fromMaxfh1116(a));
+    const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league) && !fromMaxfh1116(a) && !fromSweep1126(a));
     const LEVY_MAXPREPS =
       'https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/eleanor-levy/bio/?careerid=nrdsamg37e6p9';
 
@@ -450,13 +466,13 @@ describe('data/field-hockey/clubs.json', () => {
       expect(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug))).toHaveLength(12);
       expect(raw.clubs).toHaveLength(28);
       expect(socal).toHaveLength(76);
-      // 170, the one 2026-10-07 tie and the one 2026-11-16 tie (both above), and Beatrix Monk's tie moved from
-      // jvAffiliations (2026-11-16).
-      expect(raw.affiliations).toHaveLength(173);
+      // 170, the one 2026-10-07 tie and the one 2026-11-16 tie (both above), Beatrix Monk's tie moved from
+      // jvAffiliations (2026-11-16), and the 2026-11-26 sweep's three.
+      expect(raw.affiliations).toHaveLength(176);
       expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
       expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
       // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.
-      expect(raw.affiliations.filter((a) => !fromMaxfh1116(a) && !movedToVarsity1116(a)).length - socal.length).toBe(95);
+      expect(raw.affiliations.filter((a) => !fromMaxfh1116(a) && !movedToVarsity1116(a) && !fromSweep1126(a)).length - socal.length).toBe(95);
     });
 
     it('counts 61 current, 6 past and 9 unknown; 63 high and 13 medium', () => {
@@ -633,7 +649,8 @@ describe('lib/players/clubs.ts', () => {
 
   it('serves each club\'s affiliations in file order, and [] for a club no tracked player is tied to', () => {
     const hawks = getClubAffiliations('sf-hawks');
-    expect(hawks).toHaveLength(32);
+    // 32, and Convent's Alexandra Dorf from the 2026-11-26 sweep.
+    expect(hawks).toHaveLength(33);
     expect(hawks).toEqual(raw.affiliations.filter((a) => a.club === 'sf-hawks'));
     expect(getClubAffiliations('pac-heights')).toEqual([]);
     expect(getClubAffiliations('nope')).toEqual([]);
