@@ -3288,6 +3288,94 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U15 GA (the GA U15 team, born 2011/2012), with class of 2030) lists a player of this name; the class year compared is the class year the Hudl roster gives (the row has no grade). Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 11/12, Hudl's AFC U15 GA), which gives its birth years."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "db659370-e688-4bb8-bd88-03201ba046ef",
+      "playerId": "p74802b757f",
+      "fullName": "Xienna De La Torre",
+      "club": "ov-toros-fc",
+      "clubTeam": "U15G Black",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/180759/ov-toros-fc/team/863864/ov-toros-fc-u15g-black/roster",
+          "kind": "league-roster",
+          "quote": "OV Toros FC U15G Black, Season 2026-2027 | Xienna De La Torre | D | #21 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's Hudl roster for the 2026-2027 season (OV Toros FC U15G Black, its NorCal Premier Fall League U15 team, born 2012; it replaces the team's GotSport Rankings roster, U15G Black, which lists 3 players) lists a player of this name with no class year, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "42a8619f-9c68-443b-b58e-a6bd0de462e7",
+      "playerId": "p513f237a67",
+      "fullName": "Alleah Guy",
+      "club": "ov-toros-fc",
+      "clubTeam": "U15G Black",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/180759/ov-toros-fc/team/863864/ov-toros-fc-u15g-black/roster",
+          "kind": "league-roster",
+          "quote": "OV Toros FC U15G Black, Season 2026-2027 | Alleah Guy | F | #23 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's Hudl roster for the 2026-2027 season (OV Toros FC U15G Black, its NorCal Premier Fall League U15 team, born 2012; it replaces the team's GotSport Rankings roster, U15G Black, which lists 3 players) lists a player of this name with no class year, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "b54d8d24-f52d-4363-9dbd-a8ddc5c13d04",
+      "playerId": "p20b051f676",
+      "fullName": "Yifan He",
+      "club": "ov-toros-fc",
+      "clubTeam": "U15G Black",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/180759/ov-toros-fc/team/863864/ov-toros-fc-u15g-black/roster",
+          "kind": "league-roster",
+          "quote": "OV Toros FC U15G Black, Season 2026-2027 | Yifan He | GK, M | #18 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's Hudl roster for the 2026-2027 season (OV Toros FC U15G Black, its NorCal Premier Fall League U15 team, born 2012; it replaces the team's GotSport Rankings roster, U15G Black, which lists 3 players) lists a player of this name with no class year, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "4093fb5c-ec4c-4ea4-b744-61ffdfe3b7c8",
+      "playerId": "pa3b1ad6d91",
+      "fullName": "Olivia Webber",
+      "club": "ov-toros-fc",
+      "clubTeam": "U15G Black",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/180759/ov-toros-fc/team/863864/ov-toros-fc-u15g-black/roster",
+          "kind": "league-roster",
+          "quote": "OV Toros FC U15G Black, Season 2026-2027 | Olivia Webber | M | #50 | Class of -",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's Hudl roster for the 2026-2027 season (OV Toros FC U15G Black, its NorCal Premier Fall League U15 team, born 2012; it replaces the team's GotSport Rankings roster, U15G Black, which lists 3 players) lists a player of this name with no class year, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
     }
   ],
   "affiliations": [
@@ -12141,6 +12229,102 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), on a Hudl roster: Hudl, 2026-11-26: the club's Girls Academy team roster on Hudl for the 2026-2027 season (AFC U16 GA (the GA U16 team, born 2010/2011), with no class year; those birth years admit the class of 2029) lists a player of this name; the class year compared is the roster grade. Read through Hudl's public GraphQL endpoint and again on each team's roster page as displayed in Chromium, 2026-11-26. Hudl's roster is the season's (Rankings lists everyone a team has carried), so it replaces the club's GotSport Rankings roster of the same team, which is no longer cited. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. Medium. Status current for 2026-27: the season's roster lists the player. The club team is named as the GotSport page names the same team (GA 10/11, Hudl's AFC U16 GA), which gives its birth years."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "ee8e3d85-a830-485b-81e8-cde2fbf5bb36",
+      "playerId": "pfeca6ed2e5",
+      "fullName": "Samantha Childers",
+      "club": "ov-toros-fc",
+      "clubTeam": "N1 G2010/11 Academy (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/103114/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2010/11 Academy (CA) | Childers | Samantha | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/93266/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Academy (CA) | Childers | Samantha | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2010/11 Academy (CA), born 2010/2011; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Academy (CA), born 2008/2009; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "sobrato",
+      "athleteId": "2cdb1aa9-7416-423e-9216-c27cc26459b1",
+      "playerId": "p166bbee482",
+      "fullName": "Marea Hayes",
+      "club": "ov-toros-fc",
+      "clubTeam": "N1 G2008/09 Academy (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/93266/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Academy (CA) | Hayes | Marea | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Academy (CA), born 2008/2009; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "248c4e85-6860-4680-983e-916f980e2197",
+      "playerId": "pbf450ccf9b",
+      "fullName": "Addison Paradiso",
+      "club": "ov-toros-fc",
+      "clubTeam": "N1 G2008/09 Academy (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/93266/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Academy (CA) | Paradiso | Addison | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Academy (CA), born 2008/2009; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "b04a2555-c66e-41d7-a9c5-63507b292845",
+      "playerId": "p57574a49d2",
+      "fullName": "Kayden Paradiso",
+      "club": "ov-toros-fc",
+      "clubTeam": "N1 G2008/09 Academy (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/93266/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 Academy (CA) | Paradiso | Kayden | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Academy (CA), born 2008/2009; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
     }
   ]
 }

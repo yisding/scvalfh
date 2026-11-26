@@ -3562,6 +3562,18 @@ assembler per sport built the files from them with a second read, and they are k
   compare-club-rosters` then listed 38 varsity rows the copy matches and `clubs.json` does not cite (33 new ties,
   5 ties another page had made), at MVLA, Bay Area Surf and De Anza Force; all 38 linked the same day (`clubs.json`
   notes), after a second script found each of the 40 cited rows on its team page's Roster dialog as displayed.
+- **Hudl club team rosters** (2026-11-26; README "Girls soccer: club rosters"). A club's Hudl organization lists its
+  teams (`teamHeadersForSchool`), each team its seasons (`teamHeader{seasons}`) and each season its roster (`roster`
+  with the team's and the season's ids), through the public GraphQL endpoint of §1.11; the roster page
+  (`fan.hudl.com/…/team/<id>/<slug>/roster`) shows the same rows, with a "Season 2026-2027" heading, a position, a
+  jersey and often a "Class of". Organizations were found with `fanSearch` (types ORGANIZATION and CLUB) under each
+  club's name, one request a second, no 403 or 429. Of the 53 clubs with a record and the eight GA Northwest clubs,
+  Almaden FC (GA U13-U18) and OV Toros FC (U8-U15) keep rosters there that hold tracked players; the ECNL clubs' current
+  Hudl teams are empty but for one. A team's GotSport Rankings roster, where the same team has one, shows only the
+  players linked to it on GotSport and everyone it has carried, so the Hudl roster replaces it (`supersededBy`).
+  GotSport Rankings' own search is an open API (`system.gotsport.com/api/v1/team_ranking_data`, with
+  `search[team_country]`, `search[age]`, `search[gender]` and `search[team_or_club_name]`), and a team's rows are
+  `api/v1/teams/<team_id>/members?role=player&public=true`, what the roster page loads.
 - **College releases.** Soccer: 1,043 athletics hosts (the NCAA directory's women's soccer member lists, D1 349, D2
   261, D3 415, read through headless Chromium since the API answers curl with 403, and 19 NAIA sites), 947 with a
   feed that parsed: 12,387 stories listed, 6,237 opened (3,236 dated 2026-11-11 or later); one names a rostered

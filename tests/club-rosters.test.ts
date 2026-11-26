@@ -75,14 +75,20 @@ describe('data/soccer/club-rosters.json', () => {
     for (const t of file.teams.filter((x) => !gotsport.has(x.league))) expect(t.birthYears).toBeUndefined();
   });
 
-  it('keeps a GA team from Hudl where the club keeps it there, and the GotSport roster it replaces as superseded (2026-11-26)', () => {
+  it('keeps a team from Hudl where the club keeps it there, and the GotSport roster it replaces as superseded (2026-11-26)', () => {
     const hudl = file.teams.filter((t) => rosterSource(t) === 'hudl');
-    expect(hudl.map((t) => t.teamName)).toEqual(['AFC U18 GA', 'AFC U17 GA', 'AFC U16 GA', 'AFC U15 GA', 'AFC U14 GA']);
+    expect(hudl.map((t) => `${t.league} ${t.teamName}`)).toEqual([
+      'ga AFC U18 GA',
+      'ga AFC U17 GA',
+      'ga AFC U16 GA',
+      'ga AFC U15 GA',
+      'ga AFC U14 GA',
+      'norcal-fall OV Toros FC U15G Black',
+    ]);
     for (const t of hudl) {
-      expect(t.league).toBe('ga');
       expect(teamTier(t)).toBe('class-year');
       expect(t.birthYears, t.teamName).toBeDefined();
-      expect(file.clubSlugs[clubKey(t)]).toBe('almaden-fc');
+      expect(file.clubSlugs[clubKey(t)]).toBe(t.clubName === 'Almaden FC' ? 'almaden-fc' : 'ov-toros-fc');
       // Each replaces the club's GotSport roster of the same age group, which says so.
       const replaced = file.teams.filter((g) => g.supersededBy === t.url);
       expect(replaced.map((g) => [rosterSource(g), g.clubName, g.division, g.birthYears]), t.teamName).toEqual([['gotsport', t.clubName, t.division, t.birthYears]]);
@@ -130,7 +136,7 @@ describe('data/soccer/club-rosters.json', () => {
       expect(s.statedSchool).toBeNull();
       if (rosterSource(team!) === 'hudl') {
         // The season's roster: its quote names the team and the season, and a row with no class year is one the team's birth years admit.
-        expect(s.quote.startsWith(`${team!.teamName} (`), label).toBe(true);
+        expect(s.quote.startsWith(team!.teamName) && s.quote.includes('Season 2026-2027 | '), label).toBe(true);
         expect(s.sourceDate, label).toBe('2026-27');
         const years = classYears.get(`${a.teamSlug} ${a.athleteId}`);
         if (s.statedClassYear === null && years !== undefined) {

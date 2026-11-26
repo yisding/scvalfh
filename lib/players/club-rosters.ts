@@ -42,11 +42,11 @@
  * or 2027). Rules 3-5 hold within each tier, so a GA row neither blocks nor is blocked by an ECNL row
  * at another club: a player's ties are per club, each with its own status.
  *
- * Hudl (added 2026-11-26). A club that keeps its GA teams on Hudl (Almaden FC) has a roster there for
- * the season ("2026-2027"), listing the players this season's team carries, most with a class year,
- * where GotSport Rankings lists everyone a team has carried. Such a team is kept from Hudl and compared
- * in the class-year tier, as an ECNL team is: a row with a class year on it, a row with none on the
- * team's birth years (`birthYears`, the GA age group's). The GotSport roster of the same team is kept
+ * Hudl (added 2026-11-26). A club that keeps a team on Hudl (Almaden FC's GA teams, OV Toros FC's U15G
+ * Black) has a roster there for the season ("2026-2027"), listing the players this season's team
+ * carries, many with a class year, where GotSport Rankings lists everyone a team has carried. Such a team
+ * is kept from Hudl and compared in the class-year tier, as an ECNL team is: a row with a class year on
+ * it, a row with none on the team's birth years (`birthYears`, its age group's). The GotSport roster of the same team is kept
  * with `supersededBy` naming the Hudl page and is no longer compared: a tie still citing it is one the
  * season's roster does not confirm.
  */
