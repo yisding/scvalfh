@@ -650,6 +650,18 @@ describe('what the reviewers broke', () => {
     expect(named(later, 'Nicolas Finuliar')[0]).toMatchObject({ id: nicolas, identifiers: [{ kind: 'name', sport: 'field-hockey', team: 'alpha', name: 'nicolasfinuliar' }] });
   });
 
+  it('a first and last name swapped on the same row keep their id, and leave no second player', () => {
+    // MaxPreps had "Decker Alina"; lib/sources/person-name.ts NAME_SPELLINGS swaps the row's names (2026-11-26).
+    const before = build([row({ name: 'Decker Alina', careerIds: ['c1'], obs: { grade: 12 } })]);
+    const after = build([row({ name: 'Alina Decker', careerIds: ['c1'], obs: { grade: 12 } })], { previous: before });
+    expect(after.players).toHaveLength(1);
+    expect(after.players[0]).toMatchObject({ id: before.players[0].id, name: 'Alina Decker', formerIds: [] });
+    expect(after.players[0].stints.some((st) => st.gone)).toBe(false);
+    // Other words are another person still: the guard above holds.
+    const other = build([row({ name: 'Alina Becker', careerIds: ['c1'], obs: { grade: 12 } })], { previous: before });
+    expect(named(other, 'Alina Becker')[0].id).not.toBe(before.players[0].id);
+  });
+
   it('a row split off two careers at once leaves both', () => {
     const before = build([row({ name: 'Old Person', careerIds: ['c1'], season: '25-26', obs: { grade: 12 } }), row({ name: 'Old Person', careerIds: ['c2'], season: '25-26', obs: { grade: 12 } })]);
     expect(before.players).toHaveLength(1);

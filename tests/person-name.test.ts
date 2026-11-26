@@ -114,6 +114,28 @@ describe('NAME_SPELLINGS', () => {
     });
   });
 
+  it('swaps a first and last name MaxPreps has the other way round, on that row only', () => {
+    expect(recaseName('Decker Alina')).toBe('Alina Decker');
+    expect(recaseNameParts({ firstName: 'Decker', lastName: 'Alina', fullName: 'Decker Alina' })).toEqual({
+      firstName: 'Alina',
+      lastName: 'Decker',
+      fullName: 'Alina Decker',
+    });
+    // Anyone else named Decker or Alina keeps her name.
+    expect(recaseNameParts({ firstName: 'Alina', lastName: 'Buckelew', fullName: 'Alina Buckelew' })).toEqual({
+      firstName: 'Alina',
+      lastName: 'Buckelew',
+      fullName: 'Alina Buckelew',
+    });
+    expect(recaseName('Israel Decker')).toBe('Israel Decker');
+    // A fixed point: a refetch of the respelled row changes nothing.
+    expect(recaseNameParts({ firstName: 'Alina', lastName: 'Decker', fullName: 'Alina Decker' })).toEqual({
+      firstName: 'Alina',
+      lastName: 'Decker',
+      fullName: 'Alina Decker',
+    });
+  });
+
   it('respells a parenthesized middle name on a roster row', () => {
     expect(
       recaseNameParts({ firstName: 'Sophie (mai Lam)', lastName: 'Vu', fullName: 'Sophie (mai Lam) Vu' }),

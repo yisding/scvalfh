@@ -788,7 +788,14 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
   const prevPlayers = previous?.players ?? [];
   const owner = new Map<string, Draft>();
   for (const d of drafts) for (const k of d.primary) owner.set(k, d);
-  const couldBe = (d: Draft, p: Player) => d.spellings.length === 0 || d.spellings.some((a) => p.names.some((b) => namesCompatible(a, b)));
+  // The same words in another order ("Decker Alina", "Alina Decker": a first and last name MaxPreps had the other way
+  // round, swapped since by lib/sources/person-name.ts NAME_SPELLINGS) could be the same person too.
+  const sameWords = (a: string, b: string) => {
+    const keys = (n: string) => n.split(/\s+/).map(nameKey).filter(Boolean).sort().join(' ');
+    return keys(a) !== '' && keys(a) === keys(b);
+  };
+  const couldBe = (d: Draft, p: Player) =>
+    d.spellings.length === 0 || d.spellings.some((a) => p.names.some((b) => namesCompatible(a, b) || sameWords(a, b)));
   const sharesName = (d: Draft, p: Player) => d.spellings.some((a) => p.names.some((b) => nameKey(a) === nameKey(b)));
   /** Each previous player → the one draft that is still her. */
   const heirOf = new Map<string, Draft>();
