@@ -1,34 +1,34 @@
 {
   "cifssCrossCheck": {
-    "agreements": 7,
+    "agreements": 6,
     "cifssOnlyScored": 0,
-    "compared": 7,
+    "compared": 6,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "4963a94631b0f5a293a5c3e81d21a1edd03084c554a9041c3cfb2950d21f811f",
+  "contentHash": "46d5a4f5ced789b579139dc239a28b1374c11179a46085a190fec7edce1ac0c9",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 13,
-        "games": 290,
+        "finals": 14,
+        "games": 291,
         "leagueGames": 131,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
         "finals": 5,
-        "games": 223,
+        "games": 222,
         "leagueGames": 110,
         "teams": 16
       },
       "pcal": {
         "backfilled": 0,
-        "finals": 10,
-        "games": 267,
-        "leagueGames": 123,
+        "finals": 11,
+        "games": 263,
+        "leagueGames": 122,
         "teams": 31
       },
       "psal": {
@@ -40,48 +40,48 @@
       },
       "sccal": {
         "backfilled": 0,
-        "finals": 2,
-        "games": 76,
+        "finals": 4,
+        "games": 75,
         "leagueGames": 25,
         "teams": 6
       },
       "scval": {
         "backfilled": 0,
-        "finals": 5,
-        "games": 196,
+        "finals": 6,
+        "games": 197,
         "leagueGames": 96,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 2,
-        "games": 118,
-        "leagueGames": 39,
+        "finals": 3,
+        "games": 119,
+        "leagueGames": 40,
         "teams": 8
       },
       "wcal": {
         "backfilled": 0,
         "finals": 2,
-        "games": 113,
+        "games": 110,
         "leagueGames": 56,
         "teams": 8
       }
     },
-    "finals": 32,
-    "games": 1294,
+    "finals": 35,
+    "games": 1292,
     "leagueGames": 683,
     "mismatches": 4,
-    "pending": 17,
+    "pending": 13,
     "teams": 133
   },
   "crossCheck": {
-    "agreements": 22,
+    "agreements": 24,
     "backfilled": 0,
-    "compared": 167,
-    "conflicts": 0,
-    "sbliveOnlyScored": 3
+    "compared": 137,
+    "conflicts": 1,
+    "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-25T15:36:37.911Z",
+  "fetchedAt": "2026-11-26T06:24:16.559Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -89,15 +89,8 @@
       "finalsDelta": 0,
       "id": "scval",
       "missingPast": 0,
-      "reasons": [
-        "MaxPreps did not answer for Homestead's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
-        "MaxPreps did not answer for Los Gatos's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
-        "MaxPreps did not answer for Milpitas's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
-        "MaxPreps did not answer for Fremont's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
-        "MaxPreps did not answer for MacDonald's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
-        "MaxPreps did not answer for Saratoga's schedule this run; its games are carried from Tue Nov 24, 10:24 PM."
-      ],
-      "state": "partial"
+      "reasons": [],
+      "state": "fresh"
     },
     {
       "backfilled": 0,
@@ -105,11 +98,8 @@
       "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
-      "reasons": [
-        "MaxPreps did not answer for Evergreen Valley's schedule this run; its games are carried from Tue Nov 24, 10:24 PM.",
-        "MaxPreps did not answer for Santa Teresa's schedule this run; its games are carried from Tue Nov 24, 10:24 PM."
-      ],
-      "state": "partial"
+      "reasons": [],
+      "state": "fresh"
     },
     {
       "backfilled": 0,
@@ -171,23 +161,23 @@
   "requests": {
     "maxpreps": 172,
     "official": 6,
-    "sblive": 46
+    "sblive": 45
   },
   "sources": [
     {
       "label": "season bootstrap",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "de-anza league metadata",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "el-camino league metadata",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "de-anza reported standings",
@@ -206,13 +196,13 @@
     },
     {
       "label": "homestead schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 27,
+      "status": "ok"
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 30,
+      "status": "ok"
     },
     {
       "label": "lynbrook schedule",
@@ -221,8 +211,8 @@
     },
     {
       "label": "milpitas schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 28,
+      "status": "ok"
     },
     {
       "label": "mountain-view schedule",
@@ -241,8 +231,8 @@
     },
     {
       "label": "fremont schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 24,
+      "status": "ok"
     },
     {
       "label": "los-altos schedule",
@@ -251,8 +241,8 @@
     },
     {
       "label": "macdonald schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 24,
+      "status": "ok"
     },
     {
       "label": "monta-vista schedule",
@@ -266,8 +256,8 @@
     },
     {
       "label": "saratoga schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 26,
+      "status": "ok"
     },
     {
       "label": "wilcox schedule",
@@ -297,7 +287,7 @@
     {
       "label": "mt-hamilton league metadata",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "santa-teresa league metadata",
@@ -341,8 +331,8 @@
     },
     {
       "label": "evergreen-valley schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 26,
+      "status": "ok"
     },
     {
       "label": "leigh schedule",
@@ -356,8 +346,8 @@
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 21,
+      "status": "ok"
     },
     {
       "label": "westmont schedule",
@@ -391,7 +381,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -436,7 +426,7 @@
     },
     {
       "label": "del-mar schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -566,7 +556,7 @@
     },
     {
       "label": "crystal-springs schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -596,7 +586,7 @@
     },
     {
       "label": "priory schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -911,7 +901,7 @@
     },
     {
       "label": "pacific-collegiate schedule",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -1105,28 +1095,28 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2125-bval-mt-hamilton scoreboard 2026-11-25",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2128-bval-west-valley scoreboard 2026-11-24",
       "rowCount": 2,
       "status": "ok"
     },
     {
-      "label": "sblive 2259-pcal-cypress scoreboard 2026-11-24",
-      "rowCount": 6,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2259-pcal-cypress scoreboard 2026-11-25",
+      "label": "sblive 2128-bval-west-valley scoreboard 2026-11-25",
       "rowCount": 0,
       "status": "ok"
     },
     {
-      "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-24",
-      "rowCount": 4,
+      "label": "sblive 2259-pcal-cypress scoreboard 2026-11-24",
+      "rowCount": 7,
       "status": "ok"
     },
     {
-      "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-25",
-      "rowCount": 1,
+      "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-24",
+      "rowCount": 3,
       "status": "ok"
     },
     {
@@ -1135,18 +1125,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2261-pcal-mission scoreboard 2026-11-25",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 2262-pcal-santa-lucia scoreboard 2026-11-24",
       "rowCount": 1,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2262-pcal-santa-lucia scoreboard 2026-11-25",
-      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -1205,17 +1185,17 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2284-sccal scoreboard 2026-11-25",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
       "label": "sblive 2326-wbal scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "sblive 2327-wcal scoreboard 2026-11-24",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2327-wcal scoreboard 2026-11-25",
       "rowCount": 1,
       "status": "ok"
     },
@@ -1235,6 +1215,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-25",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-23",
       "rowCount": 3,
       "status": "ok"
@@ -1242,6 +1227,11 @@
     {
       "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-24",
       "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 31323-bval-santa-teresa-south scoreboard 2026-11-25",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1300,23 +1290,18 @@
       "status": "ok"
     },
     {
-      "label": "sblive jefferson games",
-      "rowCount": 22,
-      "status": "ok"
-    },
-    {
       "label": "sblive los-altos games",
       "rowCount": 30,
       "status": "ok"
     },
     {
-      "label": "sblive palma games",
-      "rowCount": 29,
+      "label": "sblive palo-alto games",
+      "rowCount": 22,
       "status": "ok"
     },
     {
-      "label": "sblive palo-alto games",
-      "rowCount": 22,
+      "label": "sblive prospect games",
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -1346,12 +1331,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 1066,
+      "rowCount": 1070,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 176,
+      "rowCount": 179,
       "status": "ok"
     },
     {
@@ -1366,7 +1351,7 @@
     }
   ],
   "today": "2026-11-25",
-  "warnings": 33,
+  "warnings": 22,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",

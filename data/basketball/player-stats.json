@@ -1,12 +1,12 @@
 {
   "counts": {
-    "errors": 11,
+    "errors": 0,
     "goalkeepers": 0,
-    "players": 121,
+    "players": 135,
     "teams": 133,
-    "teamsWithStats": 13
+    "teamsWithStats": 14
   },
-  "fetchedAt": "2026-11-25T15:46:24.564Z",
+  "fetchedAt": "2026-11-26T06:32:00.926Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
       "name": "Gunn",
@@ -45,7 +45,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -66,7 +66,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -87,7 +87,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -108,7 +108,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
@@ -129,7 +129,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "09beba1b-240a-45b8-aa6e-281decefa275",
       "name": "Mountain View",
@@ -150,7 +150,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -171,7 +171,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -192,7 +192,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -213,7 +213,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -234,7 +234,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "59f44c5c-ab2f-4126-8418-4c0f03e49cfa",
@@ -669,7 +669,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
@@ -690,7 +690,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -711,7 +711,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -732,7 +732,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
       "name": "Wilcox",
@@ -753,7 +753,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
       "name": "Christopher",
@@ -774,7 +774,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
@@ -795,7 +795,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
       "name": "Leigh",
@@ -816,7 +816,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
       "name": "Pioneer",
@@ -837,7 +837,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
@@ -858,7 +858,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
       "name": "Westmont",
@@ -879,7 +879,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -900,7 +900,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
       "name": "Branham",
@@ -921,7 +921,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
@@ -942,7 +942,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
       "name": "Leland",
@@ -963,7 +963,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -984,7 +984,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -1005,7 +1005,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "name": "Ann Sobrato",
@@ -1026,7 +1026,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
       "name": "Gilroy",
@@ -1047,7 +1047,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
@@ -1068,7 +1068,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
@@ -1089,7 +1089,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
@@ -1110,28 +1110,383 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
-      "lastUpdated": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
+      "games": [
+        {
+          "contestId": "00571397-b698-4005-9ace-0e83e2ebe78f",
+          "players": [
+            {
+              "field": {
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "34",
+              "name": "Ryan Young"
+            },
+            {
+              "field": {
+                "points": 16
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Nathan Le"
+            },
+            {
+              "field": {
+                "points": 15
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Ryu Fossati"
+            },
+            {
+              "field": {
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Nicolas Finuliar"
+            },
+            {
+              "field": {
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Joshua Arciaga"
+            },
+            {
+              "field": {
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Isaiah Perez"
+            },
+            {
+              "field": {
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Theoren Djurovic"
+            },
+            {
+              "field": {
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Max Lieu"
+            },
+            {
+              "field": {
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": "42",
+              "name": "Marco Smith"
+            }
+          ],
+          "rowKey": "771aefb2",
+          "tracked": {
+            "field": [
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-25T12:58:06",
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
-      "players": [],
+      "players": [
+        {
+          "athleteId": "172e1821-80fe-4135-8cd7-6863c03ef340",
+          "careerId": "aa3m0dlsjjm44",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/ryan-young/?careerid=aa3m0dlsjjm44",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Ryan Young",
+          "goalkeeping": null,
+          "jersey": "34",
+          "onRoster": true,
+          "shortName": "R. Young"
+        },
+        {
+          "athleteId": "600080b5-a44b-440f-b905-be5ed7277e2d",
+          "careerId": "4f1ksr34g0cp9",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/nathan-le/?careerid=4f1ksr34g0cp9",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 16,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Nathan Le",
+          "goalkeeping": null,
+          "jersey": "11",
+          "onRoster": true,
+          "shortName": "N. Le"
+        },
+        {
+          "athleteId": "25632a42-61d3-44f5-8c67-55574444d689",
+          "careerId": "ijtbao9rtq7vf",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/ryu-fossati/?careerid=ijtbao9rtq7vf",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 15,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Ryu Fossati",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": true,
+          "shortName": "R. Fossati"
+        },
+        {
+          "athleteId": "909796e0-9a17-485f-a25d-42740fc6b122",
+          "careerId": "aco59i9pqajcc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/nicolas-finuliar/?careerid=aco59i9pqajcc",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 6,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Nicolas Finuliar",
+          "goalkeeping": null,
+          "jersey": "24",
+          "onRoster": true,
+          "shortName": "N. Finuliar"
+        },
+        {
+          "athleteId": "1e71f301-5987-4d5f-a569-0a45f5047d15",
+          "careerId": "r9mg0phongmff",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/joshua-arciaga/?careerid=r9mg0phongmff",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Joshua Arciaga",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": true,
+          "shortName": "J. Arciaga"
+        },
+        {
+          "athleteId": "3ea99799-0c17-48a0-bccf-fbd3f7b27fd4",
+          "careerId": "915fs3clnq4aa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/isaiah-perez/?careerid=915fs3clnq4aa",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 6,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Isaiah Perez",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "I. Perez"
+        },
+        {
+          "athleteId": "4a49fe30-e740-4c7e-8433-c4bd1118d0be",
+          "careerId": "0j1fv2idlbbee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/theoren-djurovic/?careerid=0j1fv2idlbbee",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Theoren Djurovic",
+          "goalkeeping": null,
+          "jersey": "10",
+          "onRoster": true,
+          "shortName": "T. Djurovic"
+        },
+        {
+          "athleteId": "d3651f54-288c-45bd-a5db-d5a7e23bd66f",
+          "careerId": "75se89qrln9rb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/max-lieu/?careerid=75se89qrln9rb",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 3,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Max Lieu",
+          "goalkeeping": null,
+          "jersey": "23",
+          "onRoster": true,
+          "shortName": "M. Lieu"
+        },
+        {
+          "athleteId": "a13fcdc2-3519-474f-a6a8-25460c9e1a59",
+          "careerId": "4eq2l3mjh2011",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/marco-smith/?careerid=4eq2l3mjh2011",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": null,
+            "freeThrowAttempts": null,
+            "freeThrowsMade": null,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 6,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": null,
+            "turnovers": null
+          },
+          "fullName": "Marco Smith",
+          "goalkeeping": null,
+          "jersey": "42",
+          "onRoster": true,
+          "shortName": "M. Smith"
+        }
+      ],
       "slug": "piedmont-hills",
       "statsUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/basketball/stats/",
-      "status": "none",
+      "status": "ok",
       "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "totals": {
-        "field": {},
+        "field": {
+          "gamesPlayed": 1,
+          "points": 58
+        },
         "goalkeeping": {}
       },
       "tracked": {
-        "field": [],
+        "field": [
+          "gamesPlayed",
+          "points"
+        ],
         "goalkeeping": []
       },
       "warnings": []
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
       "name": "Prospect",
@@ -1152,7 +1507,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "59f44c5c-ab2f-4126-8418-4c0f03e49cfa",
@@ -1568,7 +1923,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -1589,7 +1944,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
@@ -1610,7 +1965,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
@@ -1631,7 +1986,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
       "name": "Mt. Pleasant",
@@ -1652,7 +2007,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "7152b514-2886-4654-9b68-eb1a2443ff71",
@@ -1886,7 +2241,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
@@ -1907,7 +2262,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
@@ -1928,7 +2283,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
@@ -1949,7 +2304,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "032ce3ae-f13d-47f2-ad35-57d995127648",
       "name": "Bellarmine College Prep",
@@ -1970,7 +2325,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "16e16363-66d8-45af-b777-7820b3256850",
       "name": "Junípero Serra",
@@ -1991,7 +2346,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
@@ -2012,7 +2367,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -2033,7 +2388,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius",
@@ -2054,7 +2409,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
@@ -2075,7 +2430,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
@@ -2096,7 +2451,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aabdd1c5-8378-485d-91d3-75827048bf70",
       "name": "Eastside College Prep",
@@ -2117,7 +2472,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "0712bbeb-ed36-45fb-a5de-ef471116be86",
@@ -2260,9 +2615,77 @@
             "goalkeeping": []
           },
           "warnings": []
+        },
+        {
+          "contestId": "f5263597-148e-46d8-90e2-bcb62e480940",
+          "players": [
+            {
+              "field": {
+                "fieldGoalsMade": 5,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 0,
+                "points": 10
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Babila Mfonfu"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 3,
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 2,
+                "points": 11,
+                "threePointsMade": 3
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Stephen Gao"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Damien Wang"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Kabir Bhatia"
+            },
+            {
+              "field": {
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Mason Chang"
+            }
+          ],
+          "rowKey": "b9838ad8",
+          "tracked": {
+            "field": [
+              "points",
+              "fieldGoalsMade",
+              "threePointsMade",
+              "freeThrowsMade",
+              "freeThrowAttempts"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-23T22:45:09",
+      "lastUpdated": "2026-11-25T19:45:06",
       "maxprepsTeamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
       "name": "Harker",
       "players": [
@@ -2275,14 +2698,14 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 4,
-            "freeThrowAttempts": 5,
+            "fieldGoalsMade": 9,
+            "freeThrowAttempts": 7,
             "freeThrowsMade": 3,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 11,
+            "points": 21,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -2333,18 +2756,18 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 3,
-            "freeThrowAttempts": 0,
-            "freeThrowsMade": 0,
-            "gamesPlayed": 1,
+            "fieldGoalsMade": 6,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 2,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 6,
+            "points": 17,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
-            "threePointsMade": 0,
+            "threePointsMade": 3,
             "turnovers": null
           },
           "fullName": "Stephen Gao",
@@ -2362,14 +2785,14 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 1,
+            "fieldGoalsMade": 2,
             "freeThrowAttempts": 2,
             "freeThrowsMade": 1,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 3,
+            "points": 5,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -2478,14 +2901,14 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 4,
+            "fieldGoalsMade": 6,
             "freeThrowAttempts": 4,
             "freeThrowsMade": 3,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 12,
+            "points": 16,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -2595,13 +3018,13 @@
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
             "fieldGoalsMade": 1,
-            "freeThrowAttempts": 4,
-            "freeThrowsMade": 3,
-            "gamesPlayed": 1,
+            "freeThrowAttempts": 6,
+            "freeThrowsMade": 5,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 5,
+            "points": 7,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -2621,12 +3044,12 @@
       "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
       "totals": {
         "field": {
-          "fieldGoalsMade": 22,
-          "freeThrowAttempts": 28,
-          "freeThrowsMade": 20,
-          "gamesPlayed": 1,
-          "points": 69,
-          "threePointsMade": 5
+          "fieldGoalsMade": 33,
+          "freeThrowAttempts": 34,
+          "freeThrowsMade": 24,
+          "gamesPlayed": 2,
+          "points": 98,
+          "threePointsMade": 8
         },
         "goalkeeping": {}
       },
@@ -2645,7 +3068,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
       "name": "The King’s Academy",
@@ -2666,7 +3089,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
       "name": "Menlo School",
@@ -2687,7 +3110,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
       "name": "Pinewood",
@@ -2708,7 +3131,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
       "name": "Priory",
@@ -2729,7 +3152,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "27d82a51-2b44-492e-b2cf-114730027de3",
       "name": "Sacred Heart Prep",
@@ -2750,7 +3173,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
       "name": "Aragon",
@@ -2771,7 +3194,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
       "name": "Burlingame",
@@ -2792,7 +3215,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb",
       "name": "Carlmont",
@@ -2813,7 +3236,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "700a8b1d-c836-44f0-9b24-c255c186d926",
       "name": "Half Moon Bay",
@@ -2834,7 +3257,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6",
       "name": "Hillsdale",
@@ -2855,7 +3278,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
       "name": "Menlo-Atherton",
@@ -2876,7 +3299,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
       "name": "Sequoia",
@@ -2897,7 +3320,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a35649f4-23d3-4986-bf27-8b517521d021",
       "name": "Woodside",
@@ -2918,186 +3341,69 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "4aaad53b-7c20-449f-8f19-29f0f508cf9e",
           "players": [
             {
-              "field": {
-                "assists": 2,
-                "defensiveRebounds": 1,
-                "fieldGoalAttempts": 3,
-                "fieldGoalsMade": 2,
-                "freeThrowAttempts": 0,
-                "freeThrowsMade": 0,
-                "offensiveRebounds": 0,
-                "points": 6,
-                "rebounds": 1,
-                "threePointAttempts": 3,
-                "threePointsMade": 2,
-                "turnovers": 2
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "3",
               "name": "Santino Venezia"
             },
             {
-              "field": {
-                "assists": 1,
-                "defensiveRebounds": 3,
-                "fieldGoalAttempts": 6,
-                "fieldGoalsMade": 2,
-                "freeThrowAttempts": 4,
-                "freeThrowsMade": 2,
-                "offensiveRebounds": 1,
-                "points": 8,
-                "rebounds": 4,
-                "threePointAttempts": 4,
-                "threePointsMade": 2,
-                "turnovers": 2
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "40",
               "name": "Faiva Afeaki"
             },
             {
-              "field": {
-                "assists": 2,
-                "defensiveRebounds": 2,
-                "fieldGoalAttempts": 7,
-                "fieldGoalsMade": 2,
-                "freeThrowAttempts": 0,
-                "freeThrowsMade": 0,
-                "offensiveRebounds": 0,
-                "points": 5,
-                "rebounds": 2,
-                "threePointAttempts": 6,
-                "threePointsMade": 1,
-                "turnovers": 2
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "4",
               "name": "JJ Gardner"
             },
             {
-              "field": {
-                "assists": 0,
-                "defensiveRebounds": 2,
-                "fieldGoalAttempts": 3,
-                "fieldGoalsMade": 2,
-                "freeThrowAttempts": 2,
-                "freeThrowsMade": 2,
-                "offensiveRebounds": 0,
-                "points": 7,
-                "rebounds": 2,
-                "threePointAttempts": 2,
-                "threePointsMade": 1,
-                "turnovers": 2
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "2",
               "name": "Caleb Corpus"
             },
             {
-              "field": {
-                "assists": 4,
-                "defensiveRebounds": 1,
-                "fieldGoalAttempts": 1,
-                "fieldGoalsMade": 0,
-                "freeThrowAttempts": 0,
-                "freeThrowsMade": 0,
-                "offensiveRebounds": 0,
-                "points": 0,
-                "rebounds": 1,
-                "threePointAttempts": 1,
-                "threePointsMade": 0,
-                "turnovers": 2
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "22",
               "name": "Josiah Olmos"
             },
             {
-              "field": {
-                "assists": 2,
-                "defensiveRebounds": 3,
-                "fieldGoalAttempts": 17,
-                "fieldGoalsMade": 10,
-                "freeThrowAttempts": 0,
-                "freeThrowsMade": 0,
-                "offensiveRebounds": 0,
-                "points": 26,
-                "rebounds": 3,
-                "threePointAttempts": 11,
-                "threePointsMade": 6,
-                "turnovers": 3
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "14",
               "name": "Mason Morato"
             },
             {
-              "field": {
-                "assists": 0,
-                "defensiveRebounds": 4,
-                "fieldGoalAttempts": 2,
-                "fieldGoalsMade": 1,
-                "freeThrowAttempts": 2,
-                "freeThrowsMade": 0,
-                "offensiveRebounds": 3,
-                "points": 3,
-                "rebounds": 7,
-                "threePointAttempts": 1,
-                "threePointsMade": 1,
-                "turnovers": 2
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "23",
               "name": "Benicio Lourenco Costa"
             },
             {
-              "field": {
-                "assists": 3,
-                "defensiveRebounds": 0,
-                "fieldGoalAttempts": 1,
-                "fieldGoalsMade": 0,
-                "freeThrowAttempts": 0,
-                "freeThrowsMade": 0,
-                "offensiveRebounds": 1,
-                "points": 0,
-                "rebounds": 1,
-                "threePointAttempts": 1,
-                "threePointsMade": 0,
-                "turnovers": 1
-              },
+              "field": {},
               "goalkeeping": null,
               "jersey": "32",
               "name": "Owen Chan"
             }
           ],
-          "rowKey": "52d542a6",
+          "rowKey": "1626e967",
           "tracked": {
-            "field": [
-              "points",
-              "fieldGoalsMade",
-              "fieldGoalAttempts",
-              "threePointsMade",
-              "threePointAttempts",
-              "freeThrowsMade",
-              "freeThrowAttempts",
-              "offensiveRebounds",
-              "defensiveRebounds",
-              "rebounds",
-              "assists",
-              "turnovers"
-            ],
+            "field": [],
             "goalkeeping": []
           },
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-24T22:07:11",
+      "lastUpdated": "2026-11-25T14:50:07",
       "maxprepsTeamId": "410b7fd0-8dfd-4912-9563-468206e7e75a",
       "name": "Capuchino",
       "players": [
@@ -3119,7 +3425,7 @@
             "personalFouls": null,
             "points": 6,
             "rebounds": 1,
-            "steals": null,
+            "steals": 1,
             "threePointAttempts": 3,
             "threePointsMade": 2,
             "turnovers": 2
@@ -3148,7 +3454,7 @@
             "personalFouls": null,
             "points": 8,
             "rebounds": 4,
-            "steals": null,
+            "steals": 2,
             "threePointAttempts": 4,
             "threePointsMade": 2,
             "turnovers": 2
@@ -3177,7 +3483,7 @@
             "personalFouls": null,
             "points": 5,
             "rebounds": 2,
-            "steals": null,
+            "steals": 0,
             "threePointAttempts": 6,
             "threePointsMade": 1,
             "turnovers": 2
@@ -3206,7 +3512,7 @@
             "personalFouls": null,
             "points": 7,
             "rebounds": 2,
-            "steals": null,
+            "steals": 0,
             "threePointAttempts": 2,
             "threePointsMade": 1,
             "turnovers": 2
@@ -3235,7 +3541,7 @@
             "personalFouls": null,
             "points": 0,
             "rebounds": 1,
-            "steals": null,
+            "steals": 1,
             "threePointAttempts": 1,
             "threePointsMade": 0,
             "turnovers": 2
@@ -3264,7 +3570,7 @@
             "personalFouls": null,
             "points": 26,
             "rebounds": 3,
-            "steals": null,
+            "steals": 2,
             "threePointAttempts": 11,
             "threePointsMade": 6,
             "turnovers": 3
@@ -3293,7 +3599,7 @@
             "personalFouls": null,
             "points": 3,
             "rebounds": 7,
-            "steals": null,
+            "steals": 0,
             "threePointAttempts": 1,
             "threePointsMade": 1,
             "turnovers": 2
@@ -3322,7 +3628,7 @@
             "personalFouls": null,
             "points": 0,
             "rebounds": 1,
-            "steals": null,
+            "steals": 1,
             "threePointAttempts": 1,
             "threePointsMade": 0,
             "turnovers": 1
@@ -3350,6 +3656,7 @@
           "offensiveRebounds": 5,
           "points": 55,
           "rebounds": 21,
+          "steals": 7,
           "threePointAttempts": 29,
           "threePointsMade": 13,
           "turnovers": 16
@@ -3370,6 +3677,7 @@
           "defensiveRebounds",
           "rebounds",
           "assists",
+          "steals",
           "turnovers"
         ],
         "goalkeeping": []
@@ -3378,7 +3686,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f78ab2a3-b319-43a1-9bc4-29b19ec87189",
       "name": "El Camino",
@@ -3399,7 +3707,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c88b0d9e-48e6-4dc5-86b0-274410c5823a",
       "name": "Jefferson",
@@ -3420,7 +3728,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666",
       "name": "Mills",
@@ -3441,7 +3749,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "61a561cf-a3f6-41ab-ad4f-28ac0b49f25b",
@@ -4010,7 +4318,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3",
       "name": "South San Francisco",
@@ -4031,7 +4339,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34",
       "name": "Terra Nova",
@@ -4052,7 +4360,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d4260a64-7216-4919-8a8f-678899199df8",
       "name": "Westmoor",
@@ -4073,7 +4381,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
       "name": "Aptos",
@@ -4094,7 +4402,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
       "name": "Harbor",
@@ -4115,8 +4423,121 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
+        {
+          "contestId": "958686b7-28f6-4060-b5fd-e70d4d5dadb1",
+          "players": [
+            {
+              "field": {
+                "fieldGoalsMade": 2,
+                "points": 6,
+                "threePointsMade": 2
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Liam Fields-Rapley"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "30",
+              "name": "Caleb McIntyre"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 1,
+                "points": 3,
+                "threePointsMade": 1
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Elliot Morgan"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 1,
+                "points": 3,
+                "threePointsMade": 1
+              },
+              "goalkeeping": null,
+              "jersey": "25",
+              "name": "Michael Dunning"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Wylder Sparling"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "0",
+              "name": "Cirion Jacobs"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 3,
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Anton Nite"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 6,
+                "freeThrowAttempts": 8,
+                "freeThrowsMade": 6,
+                "points": 18
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Caleb Cox"
+            },
+            {
+              "field": {
+                "freeThrowAttempts": 2,
+                "freeThrowsMade": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "32",
+              "name": "Parker Bufalini"
+            },
+            {
+              "field": {
+                "fieldGoalsMade": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "50",
+              "name": "Chris Dashiell"
+            }
+          ],
+          "rowKey": "d68b6f3b",
+          "tracked": {
+            "field": [
+              "points",
+              "fieldGoalsMade",
+              "threePointsMade",
+              "freeThrowsMade",
+              "freeThrowAttempts"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
         {
           "contestId": "e1735d60-b97c-4dd0-a0a5-1f99b9f4faf1",
           "players": [
@@ -4208,7 +4629,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-23T18:08:10",
+      "lastUpdated": "2026-11-25T09:25:07",
       "maxprepsTeamId": "1b3a82da-476f-4a32-9652-c238da7764c7",
       "name": "San Lorenzo Valley",
       "players": [
@@ -4221,18 +4642,18 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 0,
+            "fieldGoalsMade": 2,
             "freeThrowAttempts": 2,
             "freeThrowsMade": 1,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 1,
+            "points": 7,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
-            "threePointsMade": 0,
+            "threePointsMade": 2,
             "turnovers": null
           },
           "fullName": "Liam Fields-Rapley",
@@ -4240,6 +4661,35 @@
           "jersey": "3",
           "onRoster": true,
           "shortName": "L. Fields-Rapley"
+        },
+        {
+          "athleteId": "d13130cd-056d-4fcf-a93f-edb4ba2965d5",
+          "careerId": "ko3nnblt88n33",
+          "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/caleb-mcintyre/?careerid=ko3nnblt88n33",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 2,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 4,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": 0,
+            "turnovers": null
+          },
+          "fullName": "Caleb McIntyre",
+          "goalkeeping": null,
+          "jersey": "30",
+          "onRoster": true,
+          "shortName": "C. McIntyre"
         },
         {
           "athleteId": "3b7cd7fa-c3d8-4300-9e1f-6b32339fe444",
@@ -4250,18 +4700,18 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 3,
+            "fieldGoalsMade": 4,
             "freeThrowAttempts": 2,
             "freeThrowsMade": 1,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 10,
+            "points": 13,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
-            "threePointsMade": 3,
+            "threePointsMade": 4,
             "turnovers": null
           },
           "fullName": "Elliot Morgan",
@@ -4282,7 +4732,7 @@
             "fieldGoalsMade": 1,
             "freeThrowAttempts": 0,
             "freeThrowsMade": 0,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
@@ -4300,6 +4750,35 @@
           "shortName": "E. Callender"
         },
         {
+          "athleteId": "b3cf16ab-e546-4596-8d26-0f509d295fe6",
+          "careerId": "9573r19rf82i2",
+          "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/michael-dunning/?careerid=9573r19rf82i2",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 2,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 3,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": 1,
+            "turnovers": null
+          },
+          "fullName": "Michael Dunning",
+          "goalkeeping": null,
+          "jersey": "25",
+          "onRoster": true,
+          "shortName": "M. Dunning"
+        },
+        {
           "athleteId": "3c285493-d1d3-4580-8913-45727b806bad",
           "careerId": "1be72j1mh9711",
           "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/beau-lemus/?careerid=1be72j1mh9711",
@@ -4311,7 +4790,7 @@
             "fieldGoalsMade": 2,
             "freeThrowAttempts": 0,
             "freeThrowsMade": 0,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
@@ -4329,6 +4808,35 @@
           "shortName": "B. Lemus"
         },
         {
+          "athleteId": "6ed5e9f3-fc20-4e95-b120-1fa76e8fea6f",
+          "careerId": "tm2ee57j8c2i2",
+          "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/wylder-sparling/?careerid=tm2ee57j8c2i2",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": 1,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 2,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 2,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": 0,
+            "turnovers": null
+          },
+          "fullName": "Wylder Sparling",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "W. Sparling"
+        },
+        {
           "athleteId": "d2a34ec8-96e2-49b3-a749-4179e60eaa0d",
           "careerId": "s4i78e7uojtaa",
           "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/cirion-jacobs/?careerid=s4i78e7uojtaa",
@@ -4337,14 +4845,14 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 2,
+            "fieldGoalsMade": 3,
             "freeThrowAttempts": 2,
             "freeThrowsMade": 2,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 6,
+            "points": 8,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -4366,14 +4874,14 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 3,
+            "fieldGoalsMade": 6,
             "freeThrowAttempts": 2,
             "freeThrowsMade": 1,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 7,
+            "points": 13,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -4395,14 +4903,14 @@
             "blocks": null,
             "defensiveRebounds": null,
             "fieldGoalAttempts": null,
-            "fieldGoalsMade": 4,
-            "freeThrowAttempts": 4,
-            "freeThrowsMade": 1,
-            "gamesPlayed": 1,
+            "fieldGoalsMade": 10,
+            "freeThrowAttempts": 12,
+            "freeThrowsMade": 7,
+            "gamesPlayed": 2,
             "minutes": null,
             "offensiveRebounds": null,
             "personalFouls": null,
-            "points": 9,
+            "points": 27,
             "rebounds": null,
             "steals": null,
             "threePointAttempts": null,
@@ -4414,6 +4922,64 @@
           "jersey": "5",
           "onRoster": true,
           "shortName": "C. Cox"
+        },
+        {
+          "athleteId": "1f0a4340-b7f5-425f-bcd8-e5371b59f21f",
+          "careerId": "tt0a0mj7bbvue",
+          "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/parker-bufalini/?careerid=tt0a0mj7bbvue",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": 0,
+            "freeThrowAttempts": 2,
+            "freeThrowsMade": 1,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 1,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": 0,
+            "turnovers": null
+          },
+          "fullName": "Parker Bufalini",
+          "goalkeeping": null,
+          "jersey": "32",
+          "onRoster": true,
+          "shortName": "P. Bufalini"
+        },
+        {
+          "athleteId": "e188c48c-9bd7-41c5-8fdd-333d4b3db876",
+          "careerId": "9sfme1enc19i2",
+          "careerUrl": "https://www.maxpreps.com/ca/felton/san-lorenzo-valley-cougars/athletes/chris-dashiell/?careerid=9sfme1enc19i2",
+          "field": {
+            "assists": null,
+            "blocks": null,
+            "defensiveRebounds": null,
+            "fieldGoalAttempts": null,
+            "fieldGoalsMade": 2,
+            "freeThrowAttempts": 0,
+            "freeThrowsMade": 0,
+            "gamesPlayed": 1,
+            "minutes": null,
+            "offensiveRebounds": null,
+            "personalFouls": null,
+            "points": 4,
+            "rebounds": null,
+            "steals": null,
+            "threePointAttempts": null,
+            "threePointsMade": 0,
+            "turnovers": null
+          },
+          "fullName": "Chris Dashiell",
+          "goalkeeping": null,
+          "jersey": "50",
+          "onRoster": true,
+          "shortName": "C. Dashiell"
         }
       ],
       "slug": "san-lorenzo-valley",
@@ -4422,12 +4988,12 @@
       "teamId": "1b3a82da-476f-4a32-9652-c238da7764c7",
       "totals": {
         "field": {
-          "fieldGoalsMade": 15,
-          "freeThrowAttempts": 12,
-          "freeThrowsMade": 6,
-          "gamesPlayed": 1,
-          "points": 39,
-          "threePointsMade": 3
+          "fieldGoalsMade": 34,
+          "freeThrowAttempts": 22,
+          "freeThrowsMade": 13,
+          "gamesPlayed": 2,
+          "points": 88,
+          "threePointsMade": 7
         },
         "goalkeeping": {}
       },
@@ -4446,7 +5012,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
       "name": "Santa Cruz",
@@ -4467,7 +5033,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
       "name": "Scotts Valley",
@@ -4488,7 +5054,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T06:31:49.371Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
       "name": "Soquel",
@@ -4508,15 +5074,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
       "name": "Carmel",
       "players": [],
       "slug": "carmel",
       "statsUrl": "https://www.maxpreps.com/ca/carmel/carmel-padres/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
       "totals": {
         "field": {},
@@ -4529,15 +5095,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
       "name": "Hollister",
       "players": [],
       "slug": "hollister",
       "statsUrl": "https://www.maxpreps.com/ca/hollister/hollister-haybalers/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
       "totals": {
         "field": {},
@@ -4550,15 +5116,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "name": "Monterey",
       "players": [],
       "slug": "monterey",
       "statsUrl": "https://www.maxpreps.com/ca/monterey/monterey-toreadors/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "totals": {
         "field": {},
@@ -4571,15 +5137,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "5041038f-a821-4209-90af-196b6d756e48",
       "name": "Pacific Grove",
       "players": [],
       "slug": "pacific-grove",
       "statsUrl": "https://www.maxpreps.com/ca/pacific-grove/pacific-grove-breakers/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "5041038f-a821-4209-90af-196b6d756e48",
       "totals": {
         "field": {},
@@ -4592,15 +5158,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
       "name": "Palma",
       "players": [],
       "slug": "palma",
       "statsUrl": "https://www.maxpreps.com/ca/salinas/palma-chieftains/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
       "totals": {
         "field": {},
@@ -4613,15 +5179,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "name": "Salinas",
       "players": [],
       "slug": "salinas",
       "statsUrl": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "totals": {
         "field": {},
@@ -4634,15 +5200,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047",
       "name": "Oakwood",
       "players": [],
       "slug": "oakwood",
       "statsUrl": "https://www.maxpreps.com/ca/morgan-hill/oakwood-hawks/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047",
       "totals": {
         "field": {},
@@ -4656,7 +5222,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "a8b6131e-7487-421a-845d-089c8b16866e",
@@ -5363,15 +5929,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a474e593-af4b-4140-92d5-ec9221920834",
       "name": "Marina",
       "players": [],
       "slug": "marina-mariners",
       "statsUrl": "https://www.maxpreps.com/ca/marina/marina-mariners/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "a474e593-af4b-4140-92d5-ec9221920834",
       "totals": {
         "field": {},
@@ -5385,21 +5951,28 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "59f01c86-7756-4f74-8026-3cf3a5fb5b5a",
           "players": [
             {
               "field": {
+                "assists": 0,
+                "defensiveRebounds": 1,
                 "fieldGoalAttempts": 0,
                 "fieldGoalsMade": 0,
                 "freeThrowAttempts": 2,
                 "freeThrowsMade": 1,
+                "minutes": 2,
+                "offensiveRebounds": 0,
                 "personalFouls": 0,
                 "points": 1,
+                "rebounds": 1,
+                "steals": 1,
                 "threePointAttempts": 0,
-                "threePointsMade": 0
+                "threePointsMade": 0,
+                "turnovers": 1
               },
               "goalkeeping": null,
               "jersey": "5",
@@ -5407,14 +5980,21 @@
             },
             {
               "field": {
+                "assists": 5,
+                "defensiveRebounds": 9,
                 "fieldGoalAttempts": 15,
                 "fieldGoalsMade": 8,
                 "freeThrowAttempts": 8,
                 "freeThrowsMade": 5,
+                "minutes": 32,
+                "offensiveRebounds": 2,
                 "personalFouls": 3,
                 "points": 24,
+                "rebounds": 11,
+                "steals": 2,
                 "threePointAttempts": 3,
-                "threePointsMade": 3
+                "threePointsMade": 3,
+                "turnovers": 7
               },
               "goalkeeping": null,
               "jersey": "45",
@@ -5422,13 +6002,21 @@
             },
             {
               "field": {
+                "assists": 1,
+                "defensiveRebounds": 3,
                 "fieldGoalAttempts": 1,
                 "fieldGoalsMade": 0,
                 "freeThrowAttempts": 2,
                 "freeThrowsMade": 0,
+                "minutes": 5,
+                "offensiveRebounds": 0,
+                "personalFouls": 0,
                 "points": 0,
+                "rebounds": 3,
+                "steals": 0,
                 "threePointAttempts": 0,
-                "threePointsMade": 0
+                "threePointsMade": 0,
+                "turnovers": 1
               },
               "goalkeeping": null,
               "jersey": "0",
@@ -5436,14 +6024,21 @@
             },
             {
               "field": {
+                "assists": 2,
+                "defensiveRebounds": 3,
                 "fieldGoalAttempts": 6,
                 "fieldGoalsMade": 1,
                 "freeThrowAttempts": 0,
                 "freeThrowsMade": 0,
+                "minutes": 32,
+                "offensiveRebounds": 4,
                 "personalFouls": 1,
                 "points": 2,
+                "rebounds": 7,
+                "steals": 2,
                 "threePointAttempts": 2,
-                "threePointsMade": 0
+                "threePointsMade": 0,
+                "turnovers": 5
               },
               "goalkeeping": null,
               "jersey": "3",
@@ -5451,14 +6046,21 @@
             },
             {
               "field": {
+                "assists": 3,
+                "defensiveRebounds": 3,
                 "fieldGoalAttempts": 4,
                 "fieldGoalsMade": 0,
                 "freeThrowAttempts": 0,
                 "freeThrowsMade": 0,
+                "minutes": 20,
+                "offensiveRebounds": 0,
                 "personalFouls": 4,
                 "points": 0,
+                "rebounds": 3,
+                "steals": 2,
                 "threePointAttempts": 4,
-                "threePointsMade": 0
+                "threePointsMade": 0,
+                "turnovers": 3
               },
               "goalkeeping": null,
               "jersey": "11",
@@ -5466,14 +6068,21 @@
             },
             {
               "field": {
+                "assists": 1,
+                "defensiveRebounds": 2,
                 "fieldGoalAttempts": 5,
                 "fieldGoalsMade": 4,
                 "freeThrowAttempts": 2,
                 "freeThrowsMade": 2,
+                "minutes": 24,
+                "offensiveRebounds": 2,
                 "personalFouls": 3,
                 "points": 10,
+                "rebounds": 4,
+                "steals": 0,
                 "threePointAttempts": 1,
-                "threePointsMade": 0
+                "threePointsMade": 0,
+                "turnovers": 3
               },
               "goalkeeping": null,
               "jersey": "13",
@@ -5481,14 +6090,21 @@
             },
             {
               "field": {
+                "assists": 1,
+                "defensiveRebounds": 1,
                 "fieldGoalAttempts": 9,
                 "fieldGoalsMade": 3,
                 "freeThrowAttempts": 0,
                 "freeThrowsMade": 0,
+                "minutes": 29,
+                "offensiveRebounds": 0,
                 "personalFouls": 2,
                 "points": 8,
+                "rebounds": 1,
+                "steals": 2,
                 "threePointAttempts": 4,
-                "threePointsMade": 2
+                "threePointsMade": 2,
+                "turnovers": 2
               },
               "goalkeeping": null,
               "jersey": "12",
@@ -5496,14 +6112,21 @@
             },
             {
               "field": {
+                "assists": 2,
+                "defensiveRebounds": 0,
                 "fieldGoalAttempts": 2,
                 "fieldGoalsMade": 1,
                 "freeThrowAttempts": 0,
                 "freeThrowsMade": 0,
+                "minutes": 13,
+                "offensiveRebounds": 0,
                 "personalFouls": 0,
                 "points": 3,
+                "rebounds": 0,
+                "steals": 1,
                 "threePointAttempts": 2,
-                "threePointsMade": 1
+                "threePointsMade": 1,
+                "turnovers": 0
               },
               "goalkeeping": null,
               "jersey": "14",
@@ -5511,23 +6134,31 @@
             },
             {
               "field": {
+                "assists": 0,
+                "defensiveRebounds": 0,
                 "fieldGoalAttempts": 4,
                 "fieldGoalsMade": 2,
                 "freeThrowAttempts": 0,
                 "freeThrowsMade": 0,
+                "minutes": 9,
+                "offensiveRebounds": 1,
                 "personalFouls": 0,
                 "points": 4,
+                "rebounds": 1,
+                "steals": 0,
                 "threePointAttempts": 0,
-                "threePointsMade": 0
+                "threePointsMade": 0,
+                "turnovers": 0
               },
               "goalkeeping": null,
               "jersey": "25",
               "name": "Samuel Rios"
             }
           ],
-          "rowKey": "fcc5dc7e",
+          "rowKey": "fd753d97",
           "tracked": {
             "field": [
+              "minutes",
               "points",
               "fieldGoalsMade",
               "fieldGoalAttempts",
@@ -5535,6 +6166,12 @@
               "threePointAttempts",
               "freeThrowsMade",
               "freeThrowAttempts",
+              "offensiveRebounds",
+              "defensiveRebounds",
+              "rebounds",
+              "assists",
+              "steals",
+              "turnovers",
               "personalFouls"
             ],
             "goalkeeping": []
@@ -5731,7 +6368,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-24T23:43:07",
+      "lastUpdated": "2026-11-25T18:32:06",
       "maxprepsTeamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
       "name": "Monte Vista Christian",
       "players": [
@@ -5742,21 +6379,21 @@
           "field": {
             "assists": 4,
             "blocks": 0,
-            "defensiveRebounds": 5,
+            "defensiveRebounds": 6,
             "fieldGoalAttempts": 1,
             "fieldGoalsMade": 0,
             "freeThrowAttempts": 2,
             "freeThrowsMade": 1,
             "gamesPlayed": 2,
-            "minutes": 20,
+            "minutes": 22,
             "offensiveRebounds": 1,
             "personalFouls": 2,
             "points": 1,
-            "rebounds": 6,
-            "steals": 2,
+            "rebounds": 7,
+            "steals": 3,
             "threePointAttempts": 0,
             "threePointsMade": 0,
-            "turnovers": 3
+            "turnovers": 4
           },
           "fullName": "Yuancheng Cai",
           "goalkeeping": null,
@@ -5769,23 +6406,23 @@
           "careerId": "j4udacn6unkrb",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/matteo-vidal/?careerid=j4udacn6unkrb",
           "field": {
-            "assists": 4,
+            "assists": 9,
             "blocks": 1,
-            "defensiveRebounds": 2,
+            "defensiveRebounds": 11,
             "fieldGoalAttempts": 35,
             "fieldGoalsMade": 18,
             "freeThrowAttempts": 14,
             "freeThrowsMade": 7,
             "gamesPlayed": 2,
-            "minutes": 25,
-            "offensiveRebounds": 2,
+            "minutes": 57,
+            "offensiveRebounds": 4,
             "personalFouls": 7,
             "points": 49,
-            "rebounds": 4,
-            "steals": 1,
+            "rebounds": 15,
+            "steals": 3,
             "threePointAttempts": 9,
             "threePointsMade": 6,
-            "turnovers": 1
+            "turnovers": 8
           },
           "fullName": "Matteo Vidal",
           "goalkeeping": null,
@@ -5798,23 +6435,23 @@
           "careerId": "v4rjjc5niuvg0",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/emilian-tenwinkel/?careerid=v4rjjc5niuvg0",
           "field": {
-            "assists": 1,
+            "assists": 2,
             "blocks": 0,
-            "defensiveRebounds": 3,
+            "defensiveRebounds": 6,
             "fieldGoalAttempts": 3,
             "fieldGoalsMade": 0,
             "freeThrowAttempts": 4,
             "freeThrowsMade": 2,
             "gamesPlayed": 2,
-            "minutes": 18,
+            "minutes": 23,
             "offensiveRebounds": 2,
             "personalFouls": 2,
             "points": 2,
-            "rebounds": 5,
+            "rebounds": 8,
             "steals": 0,
             "threePointAttempts": 1,
             "threePointsMade": 0,
-            "turnovers": 1
+            "turnovers": 2
           },
           "fullName": "Emilian Tenwinkel",
           "goalkeeping": null,
@@ -5827,23 +6464,23 @@
           "careerId": "ka09iehlbkpl5",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/james-tipton/?careerid=ka09iehlbkpl5",
           "field": {
-            "assists": 4,
+            "assists": 6,
             "blocks": 2,
-            "defensiveRebounds": 4,
+            "defensiveRebounds": 7,
             "fieldGoalAttempts": 21,
             "fieldGoalsMade": 4,
             "freeThrowAttempts": 6,
             "freeThrowsMade": 2,
             "gamesPlayed": 2,
-            "minutes": 30,
-            "offensiveRebounds": 7,
+            "minutes": 62,
+            "offensiveRebounds": 11,
             "personalFouls": 2,
             "points": 10,
-            "rebounds": 11,
-            "steals": 4,
+            "rebounds": 18,
+            "steals": 6,
             "threePointAttempts": 6,
             "threePointsMade": 0,
-            "turnovers": 1
+            "turnovers": 6
           },
           "fullName": "James Tipton",
           "goalkeeping": null,
@@ -5856,23 +6493,23 @@
           "careerId": "6ve0jvaq7m200",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/santino-matteucci/?careerid=6ve0jvaq7m200",
           "field": {
-            "assists": 2,
+            "assists": 5,
             "blocks": 0,
-            "defensiveRebounds": 3,
+            "defensiveRebounds": 6,
             "fieldGoalAttempts": 14,
             "fieldGoalsMade": 3,
             "freeThrowAttempts": 0,
             "freeThrowsMade": 0,
             "gamesPlayed": 2,
-            "minutes": 24,
+            "minutes": 44,
             "offensiveRebounds": 4,
             "personalFouls": 4,
             "points": 8,
-            "rebounds": 7,
-            "steals": 1,
+            "rebounds": 10,
+            "steals": 3,
             "threePointAttempts": 13,
             "threePointsMade": 2,
-            "turnovers": 1
+            "turnovers": 4
           },
           "fullName": "Santino Matteucci",
           "goalkeeping": null,
@@ -5885,23 +6522,23 @@
           "careerId": "fos8nc2nliml5",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/luke-white/?careerid=fos8nc2nliml5",
           "field": {
-            "assists": 0,
+            "assists": 1,
             "blocks": 0,
-            "defensiveRebounds": 4,
+            "defensiveRebounds": 6,
             "fieldGoalAttempts": 7,
             "fieldGoalsMade": 4,
             "freeThrowAttempts": 6,
             "freeThrowsMade": 4,
             "gamesPlayed": 2,
-            "minutes": 22,
-            "offensiveRebounds": 3,
+            "minutes": 46,
+            "offensiveRebounds": 5,
             "personalFouls": 6,
             "points": 12,
-            "rebounds": 7,
+            "rebounds": 11,
             "steals": 0,
             "threePointAttempts": 2,
             "threePointsMade": 0,
-            "turnovers": 2
+            "turnovers": 5
           },
           "fullName": "Luke White",
           "goalkeeping": null,
@@ -5914,23 +6551,23 @@
           "careerId": "69aq1bs8o1edd",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/jerry-arceo-jr/?careerid=69aq1bs8o1edd",
           "field": {
-            "assists": 1,
+            "assists": 2,
             "blocks": 0,
-            "defensiveRebounds": 7,
+            "defensiveRebounds": 8,
             "fieldGoalAttempts": 25,
             "fieldGoalsMade": 11,
             "freeThrowAttempts": 6,
             "freeThrowsMade": 4,
             "gamesPlayed": 2,
-            "minutes": 28,
+            "minutes": 57,
             "offensiveRebounds": 2,
             "personalFouls": 6,
             "points": 31,
-            "rebounds": 9,
-            "steals": 1,
+            "rebounds": 10,
+            "steals": 3,
             "threePointAttempts": 10,
             "threePointsMade": 5,
-            "turnovers": 0
+            "turnovers": 2
           },
           "fullName": "Jerry Arceo Jr.",
           "goalkeeping": null,
@@ -5943,7 +6580,7 @@
           "careerId": "8hlcq8p68am44",
           "careerUrl": "https://www.maxpreps.com/ca/watsonville/monte-vista-christian-mustangs/athletes/liam-moller/?careerid=8hlcq8p68am44",
           "field": {
-            "assists": 0,
+            "assists": 2,
             "blocks": 0,
             "defensiveRebounds": 0,
             "fieldGoalAttempts": 2,
@@ -5951,12 +6588,12 @@
             "freeThrowAttempts": 0,
             "freeThrowsMade": 0,
             "gamesPlayed": 1,
-            "minutes": 0,
+            "minutes": 13,
             "offensiveRebounds": 0,
             "personalFouls": 0,
             "points": 3,
             "rebounds": 0,
-            "steals": 0,
+            "steals": 1,
             "threePointAttempts": 2,
             "threePointsMade": 1,
             "turnovers": 0
@@ -5980,11 +6617,11 @@
             "freeThrowAttempts": 0,
             "freeThrowsMade": 0,
             "gamesPlayed": 1,
-            "minutes": 0,
-            "offensiveRebounds": 0,
+            "minutes": 9,
+            "offensiveRebounds": 1,
             "personalFouls": 0,
             "points": 4,
-            "rebounds": 0,
+            "rebounds": 1,
             "steals": 0,
             "threePointAttempts": 0,
             "threePointsMade": 0,
@@ -6003,23 +6640,23 @@
       "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
       "totals": {
         "field": {
-          "assists": 16,
+          "assists": 31,
           "blocks": 3,
-          "defensiveRebounds": 28,
+          "defensiveRebounds": 50,
           "fieldGoalAttempts": 112,
           "fieldGoalsMade": 43,
           "freeThrowAttempts": 38,
           "freeThrowsMade": 20,
           "gamesPlayed": 2,
-          "minutes": 167,
-          "offensiveRebounds": 21,
+          "minutes": 333,
+          "offensiveRebounds": 30,
           "personalFouls": 29,
           "points": 120,
-          "rebounds": 49,
-          "steals": 9,
+          "rebounds": 80,
+          "steals": 19,
           "threePointAttempts": 43,
           "threePointsMade": 14,
-          "turnovers": 9
+          "turnovers": 31
         },
         "goalkeeping": {}
       },
@@ -6049,7 +6686,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
       "name": "North Salinas",
@@ -6069,15 +6706,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
       "name": "Rancho San Juan",
       "players": [],
       "slug": "rancho-san-juan",
       "statsUrl": "https://www.maxpreps.com/ca/salinas/rancho-san-juan-trailblazers/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
       "totals": {
         "field": {},
@@ -6091,7 +6728,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971",
       "name": "Soledad",
@@ -6112,7 +6749,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
       "name": "St. Francis",
@@ -6133,7 +6770,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
       "name": "Watsonville",
@@ -6153,15 +6790,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
       "name": "Everett Alvarez",
       "players": [],
       "slug": "everett-alvarez",
       "statsUrl": "https://www.maxpreps.com/ca/salinas/everett-alvarez-eagles/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
       "totals": {
         "field": {},
@@ -6175,7 +6812,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
       "name": "Gonzales",
@@ -6196,7 +6833,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
       "name": "Greenfield",
@@ -6216,15 +6853,15 @@
       "warnings": []
     },
     {
-      "error": "HTTP 403",
-      "fetchedAt": null,
+      "error": null,
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
       "name": "King City",
       "players": [],
       "slug": "king-city",
       "statsUrl": "https://www.maxpreps.com/ca/king-city/king-city-mustangs/basketball/stats/",
-      "status": "error",
+      "status": "none",
       "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
       "totals": {
         "field": {},
@@ -6238,7 +6875,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
       "name": "North Monterey County",
@@ -6259,7 +6896,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d",
       "name": "Pajaro Valley",
@@ -6280,7 +6917,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "1c501567-6046-42f5-982e-078acb1d973c",
@@ -6949,7 +7586,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
       "name": "Stevenson",
@@ -6970,7 +7607,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "340cc25b-8dce-4532-a929-4b8358283933",
       "name": "Anzar",
@@ -6991,7 +7628,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7fc8780b-014e-4870-a43f-e2f444a853bc",
       "name": "Monterey Bay Academy",
@@ -7012,7 +7649,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
       "name": "Pacific Collegiate",
@@ -7033,7 +7670,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
       "name": "York",
@@ -7054,7 +7691,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2c2fa8ba-a22b-4979-bfa9-0321cae496cd",
       "name": "Ceiba College Preparatory Academy",
@@ -7075,7 +7712,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7183d93f-3632-41bb-8d10-f158f2eb0889",
       "name": "Chartwell",
@@ -7096,7 +7733,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0e64a76-72d8-451e-ac0f-5e8017b2c51c",
       "name": "Kirby Prep",
@@ -7117,7 +7754,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bc77f6b7-1674-4bf9-b06e-812926f746ad",
       "name": "Trinity Christian",
@@ -7138,7 +7775,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36",
       "name": "Design Tech",
@@ -7159,7 +7796,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789",
       "name": "Oceana",
@@ -7180,7 +7817,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
       "name": "Summit Shasta",
@@ -7201,7 +7838,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "3445256e-23d5-4243-b1e3-c622e17152f5",
@@ -7861,7 +8498,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "6934218c-981b-42db-97e7-887e6ea8457d",
       "name": "BASIS Independent Silicon Valley",
@@ -7882,7 +8519,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "4fdc0a18-8508-4f97-8385-ebddc0b4f3ae",
@@ -8436,7 +9073,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "49ac8af1-0277-4a5c-bb79-7da46365404e",
       "name": "Cristo Rey San Jose Jesuit",
@@ -8457,7 +9094,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3",
       "name": "KIPP San Jose Collegiate",
@@ -8478,7 +9115,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
       "name": "The Nueva School",
@@ -8499,7 +9136,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91b64650-3cb0-4ddc-ab18-5bf203734def",
       "name": "Mountain View Academy",
@@ -8520,7 +9157,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "5a1f56a0-bb6d-40b1-9965-fb377989ed00",
       "name": "North Valley Baptist",
@@ -8541,7 +9178,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "84555b97-0698-4957-af80-97c1c60762fe",
       "name": "The Kehillah School",
@@ -8562,7 +9199,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "games": [
         {
           "contestId": "3445256e-23d5-4243-b1e3-c622e17152f5",
@@ -8984,7 +9621,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fdc893f7-899d-4fef-87c7-225a20013de7",
       "name": "Summit Preparatory",
@@ -9005,7 +9642,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "66384f4b-72d0-4348-aefa-e9c9d0362ccf",
       "name": "Pacific Bay Christian",
@@ -9026,7 +9663,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7480e790-84cc-48ce-bf55-4126dac053f1",
       "name": "Pescadero",
@@ -9047,7 +9684,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "923d1847-1ccb-4125-9e0c-2a1b3cb0ce51",
       "name": "San Francisco Christian",
@@ -9068,7 +9705,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865",
       "name": "Cindy Avitia",
@@ -9089,7 +9726,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5",
       "name": "KIPP Navigate College Prep",
@@ -9110,7 +9747,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3",
       "name": "Summit Tahoma",
@@ -9131,7 +9768,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "95ced4cf-1cce-4eea-aacf-dd046216df07",
       "name": "East Palo Alto Academy",
@@ -9152,7 +9789,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2c817f3b-7c83-4413-8b33-bb4b702dac18",
       "name": "Mid-Peninsula",
@@ -9173,7 +9810,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-25T15:46:24.564Z",
+      "fetchedAt": "2026-11-26T06:32:00.926Z",
       "lastUpdated": null,
       "maxprepsTeamId": "6c1116b7-c57c-42cd-8510-57529b2fac23",
       "name": "Stratford Prep",
