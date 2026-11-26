@@ -55,10 +55,13 @@ const raw = getCommitsFile();
 const teams = getAllEnrichedRosters();
 const season = getRosters().season;
 
-/** The first varsity row (by roster order) that has an athleteId and matches `pick`. */
+/**
+ * The first varsity row (by roster order) that has an athleteId, is a person the player index knows (someone something
+ * is filed under), and matches `pick`.
+ */
 function findRow(pick: (p: MergedPlayer) => boolean): { teamSlug: string; row: MergedPlayer } {
   for (const t of teams) {
-    const row = t.players.find((p) => p.athleteId !== null && p.level !== 'jv' && pick(p));
+    const row = t.players.find((p) => p.athleteId !== null && p.level !== 'jv' && personOfRow(t.slug, p.athleteId) !== null && pick(p));
     if (row) return { teamSlug: t.slug, row };
   }
   throw new Error('no roster row matches');
@@ -640,7 +643,7 @@ describe('the join to the rosters refuses a file, or leaves a commitment out as 
 
   it('a JV row: commitments list varsity rows only, so a JV player\'s is shown nowhere here', () => {
     const jv = teams.flatMap((t) => t.players.map((row) => ({ teamSlug: t.slug, row }))).find(
-      (r) => r.row.level === 'jv' && r.row.athleteId !== null,
+      (r) => r.row.level === 'jv' && r.row.athleteId !== null && personOfRow(r.teamSlug, r.row.athleteId) !== null,
     );
     expect(jv, 'Los Gatos lists JV rows on MaxPreps').toBeDefined();
     expect(loadCommits(fileWith([commitmentFor(jv!)]), teams, season).commitments).toEqual([]);

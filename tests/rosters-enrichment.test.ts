@@ -1249,9 +1249,11 @@ describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last seas
 
   it('lets a profile one class year ahead load only with the marker, and only for MaxPreps\' own grade', () => {
     const rec = new Set(raw.teams.flatMap((t) => t.players.map((p) => `${t.slug} ${p.athleteId}`)));
+    // A row the player index knows (its person has something filed), so a page can be added for her.
+    const indexed = new Set(committedIndex.rows.flatMap(([, team, , id]) => (id === null ? [] : [`${team} ${id}`])));
     let junior: { slug: string; athleteId: string; fullName: string } | undefined;
     for (const t of base.teams) {
-      const p = t.players.find((x) => x.grade === 11 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`));
+      const p = t.players.find((x) => x.grade === 11 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`) && indexed.has(`${t.slug} ${x.athleteId}`));
       if (p) {
         junior = { slug: t.slug, athleteId: p.athleteId!, fullName: p.fullName };
         break;
@@ -1275,7 +1277,7 @@ describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last seas
     // file still loads (the refresh that brings the grade needs no hand edit).
     let senior: { slug: string; athleteId: string; fullName: string } | undefined;
     for (const t of base.teams) {
-      const p = t.players.find((x) => x.grade === 12 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`));
+      const p = t.players.find((x) => x.grade === 12 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`) && indexed.has(`${t.slug} ${x.athleteId}`));
       if (p) {
         senior = { slug: t.slug, athleteId: p.athleteId!, fullName: p.fullName };
         break;
