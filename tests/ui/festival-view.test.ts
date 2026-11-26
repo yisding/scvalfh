@@ -19,6 +19,7 @@ import {
   bracketColumns,
   buildFestivalModel,
   columnTitle,
+  finalLabel,
   festivalModel,
   gameRow,
   latestAndNext,
@@ -289,12 +290,36 @@ describe('a placement game’s sides (spec §6)', () => {
 
 describe('the bracket columns', () => {
   it('titles each column from its source pools, as TourneyMachine groups them', () => {
-    expect(columnTitle(['Pool A'])).toBe('Pool A placement');
-    expect(columnTitle(['Pool R', 'Pool S'])).toBe('Pool R and S crossovers');
+    expect(columnTitle(['Pool A'])).toBe('Pool A');
+    expect(columnTitle(['Pool R', 'Pool S'])).toBe('Pool R v Pool S');
     const u19 = FILE.divisions.find((d) => d.slug === 'u19')!;
-    expect(bracketColumns(M, u19.key).map((c) => c.title)).toEqual(['Pool R and S crossovers', 'Pool T and U crossovers']);
+    expect(bracketColumns(M, u19.key).map((c) => c.title)).toEqual(['Pool R v Pool S', 'Pool T v Pool U']);
     const u10 = FILE.divisions.find((d) => d.slug === 'u10')!;
-    expect(bracketColumns(M, u10.key).map((c) => c.title)).toEqual(['Pool A placement']);
+    expect(bracketColumns(M, u10.key).map((c) => c.title)).toEqual(['Pool A']);
+  });
+
+  // Owner decision, 2026-11-26: no knockout bracket; finals between the same places of paired pools, or by place
+  // within one pool.
+  it('names each Saturday game by the places it draws on', () => {
+    const game = (a: number, b: number) => ({ sides: [{ source: { place: a } }, { source: { place: b } }] }) as never;
+    expect(finalLabel(game(1, 1))).toBe('1st-place final');
+    expect(finalLabel(game(3, 3))).toBe('3rd-place final');
+    expect(finalLabel(game(1, 2))).toBe('Final: 1st v 2nd');
+    expect(finalLabel(game(4, 3))).toBe('3rd v 4th');
+    const u19 = FILE.divisions.find((d) => d.slug === 'u19')!;
+    expect(bracketColumns(M, u19.key)[0]!.games.map((g) => g.label)).toEqual([
+      '1st-place final', '2nd-place final', '3rd-place final', '4th-place final', '5th-place final',
+    ]);
+  });
+
+  it('says in words that there is no knockout bracket, and which pools have no finals', () => {
+    expect(buildDivisionView('u19')!.finalsSummary).toBe(
+      'No knockout bracket: on Saturday each team plays the team that finished in the same place in the paired pool (Pool R v Pool S and Pool T v Pool U). Pools P and Q have no finals.',
+    );
+    expect(buildDivisionView('u12')!.finalsSummary).toBe(
+      'No knockout bracket: on Saturday Pool D’s teams play by place: 1st v 2nd, 3rd v 4th and 4th v 5th. Pools B and C have no finals.',
+    );
+    expect(buildDivisionView('u16')!.finalsSummary).toBeNull();
   });
 
   it('puts every placement game in exactly one column, rows top to bottom', () => {

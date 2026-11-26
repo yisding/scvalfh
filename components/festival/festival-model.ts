@@ -446,7 +446,7 @@ export function gameRow(m: FestivalModel, game: FestivalGame): GameRowModel {
   const poolName = game.poolId ? m.poolById.get(game.poolId)!.name : null;
   const note = [
     division.short,
-    poolName ?? 'Placement',
+    poolName ?? finalLabel(game),
     game.number,
     isShootoutTie(game) ? SHOOTOUT_WORDS : null,
     game.exhibition ? 'Exhibition' : null,
@@ -572,7 +572,7 @@ export interface TeamGameModel {
   chip: ChipLetter | null;
   /** '2–1', own goals first, for a live or final game. */
   score: string | null;
-  /** 'Tied — shoot-out', 'Exhibition', 'Live', 'Placement · B3'. */
+  /** 'Tied — shoot-out', 'Exhibition', 'Live', '1st-place final · B3'. */
   note: string | null;
   bracketHref: string | null;
 }
@@ -589,7 +589,7 @@ export function teamGame(m: FestivalModel, game: FestivalGame, teamId: string): 
   const division = m.divisionByKey.get(game.divisionKey)!;
   const note = [
     game.status === 'live' ? 'Live' : null,
-    game.kind === 'placement' ? `Placement ${game.number}` : null,
+    game.kind === 'placement' ? `${finalLabel(game)} · ${game.number}` : null,
     isShootoutTie(game) ? SHOOTOUT_WORDS : null,
     game.exhibition ? 'Exhibition' : null,
   ]
@@ -620,6 +620,20 @@ export function teamGames(m: FestivalModel, teamId: string): TeamGameModel[] {
 
 // ---------------------------------------------------------------- placement games
 
+/**
+ * What a Saturday game decides, from the places it draws on (owner decision, 2026-11-26: there is no knockout
+ * bracket, only finals between teams that finished in the same place in paired pools, or between neighbouring
+ * places of a single pool): the same place of two pools → '1st-place final', '2nd-place final'; 1st v 2nd of one
+ * pool → 'Final: 1st v 2nd'; any other pair → '3rd v 4th'.
+ */
+export function finalLabel(game: Pick<FestivalGame, 'sides'>): string {
+  const [a, b] = game.sides.map((s) => s.source?.place ?? 0);
+  if (!a || !b) return 'Final';
+  if (a === b) return `${ordinal(a)}-place final`;
+  const [lo, hi] = a < b ? [a, b] : [b, a];
+  return lo === 1 && hi === 2 ? 'Final: 1st v 2nd' : `${ordinal(lo)} v ${ordinal(hi)}`;
+}
+
 export interface PlacementGameModel {
   key: number;
   number: string;
@@ -631,6 +645,8 @@ export interface PlacementGameModel {
   when: string;
   field: string;
   sides: [SideModel, SideModel];
+  /** '1st-place final', 'Final: 1st v 2nd' (finalLabel). */
+  label: string;
   /** 'Tied — shoot-out' for a level final. */
   note: string | null;
 }
@@ -646,27 +662,26 @@ export function placementGame(m: FestivalModel, game: FestivalGame): PlacementGa
     when: whenET(game.startUtc),
     field: fieldName(m, game.fieldId),
     sides: sidesOf(m, game),
+    label: finalLabel(game),
     note: isShootoutTie(game) ? SHOOTOUT_WORDS : game.status === 'live' ? 'Live' : null,
   };
 }
 
 export interface BracketColumnModel {
   key: number;
-  /** 'Pool R and S crossovers', 'Pool A placement'. */
+  /** 'Pool R v Pool S' (finals between the two pools' same places), 'Pool A' (finals within one pool). */
   title: string;
+  /** The pools the column's finals draw on, in the division's order. */
+  pools: string[];
   games: PlacementGameModel[];
 }
 
-/**
- * A column's title from its games' source pools (the feed's own column titles live only in TourneyMachine's
- * bracket HTML): one pool → 'Pool A placement'; several 'Pool X' pools → 'Pool R and S crossovers'.
- */
+/** A column's title from its games' source pools: two pools → 'Pool R v Pool S'; one → 'Pool A'; more → 'Pool R, S and T'. */
 export function columnTitle(poolNames: readonly string[]): string {
-  if (poolNames.length === 1) return `${poolNames[0]} placement`;
-  if (poolNames.every((n) => n.startsWith('Pool '))) {
-    return `Pool ${listWords(poolNames.map((n) => n.slice('Pool '.length)))} crossovers`;
-  }
-  return `${listWords(poolNames)} crossovers`;
+  if (poolNames.length === 2) return `${poolNames[0]} v ${poolNames[1]}`;
+  if (poolNames.length === 1) return poolNames[0]!;
+  if (poolNames.every((n) => n.startsWith('Pool '))) return `Pool ${listWords(poolNames.map((n) => n.slice('Pool '.length)))}`;
+  return listWords(poolNames);
 }
 
 /** A division's placement games as TourneyMachine draws them: columns left to right, rows top to bottom. */
@@ -686,6 +701,7 @@ export function bracketColumns(m: FestivalModel, divisionKey: number): BracketCo
       return {
         key: column,
         title: columnTitle(pools.map((id) => m.poolById.get(id)!.name)),
+        pools: pools.map((id) => m.poolById.get(id)!.name),
         games: list.map((g) => placementGame(m, g)),
       };
     });
@@ -695,6 +711,8 @@ export function bracketColumns(m: FestivalModel, divisionKey: number): BracketCo
 
 export interface PathGameModel {
   number: string;
+  /** '1st-place final' (finalLabel). */
+  label: string;
   href: string;
   when: string;
   field: string;
@@ -746,6 +764,7 @@ export function placementPath(m: FestivalModel, teamId: string): PlacementPathMo
       const opponent = sides[1 - i];
       push(byPlace, side.source.place, {
         number: g.number,
+        label: finalLabel(g),
         href: `${divisionHref(division.slug)}#${gameAnchor(g.number)}`,
         when: whenET(g.startUtc),
         field: fieldName(m, g.fieldId),

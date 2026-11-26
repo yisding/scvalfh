@@ -3,8 +3,9 @@ import Link from 'next/link';
 import type { BracketColumnModel, PlacementGameModel, SideModel } from './festival-model';
 
 /**
- * A division's Saturday placement games (DESIGN §35 §6), in TourneyMachine's own layout: one column per group of
- * crossovers ("Pool R and S crossovers"), its games top to bottom. Every game is sourced from pool places, none
+ * A division's Saturday finals (DESIGN §35 §6), in TourneyMachine's own layout: one column per pair of pools ("Pool R
+ * v Pool S": 1st v 1st, 2nd v 2nd …) or per single pool ("Pool A": 1st v 2nd, 3rd v 4th …), its games top to bottom,
+ * each headed by what it decides ("1st-place final"). Every game is sourced from pool places, none
  * from another game, so there are no connectors and no rounds: components/playoffs/Bracket.tsx (a tree with
  * round tabs) does not fit, and its cell face (`.sx-tie`) is reused instead. Columns sit side by side from
  * 1024px and stack on a phone.
@@ -37,9 +38,10 @@ export function PlacementBox({ game }: { game: PlacementGameModel }) {
   return (
     <div id={game.anchor} className="sx-tie sx-target" data-state={game.status === 'scheduled' ? undefined : game.status}>
       <div className="flex min-h-7 flex-wrap items-center gap-x-2 px-2 text-cell text-ink-2">
-        <span className="font-semibold text-ink">{game.number}</span>
+        <span className="font-semibold text-ink">{game.label}</span>
         <span>{game.when}</span>
         <span>{game.field}</span>
+        <span>{game.number}</span>
       </div>
       <Line side={game.sides[0]} />
       <Line side={game.sides[1]} />

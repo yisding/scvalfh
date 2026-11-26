@@ -5250,10 +5250,14 @@ except where this section says otherwise (§35.4 times, §35.7 the freshness pol
   every age token's `u` is capitalised ("Atlanta FHC u10" → "Atlanta FHC U10", "Norcal Wolves u16" → "Norcal
   Wolves U16"; `displayTeamName` in lib/festival/festival-names.ts), so a division's teams read alike (owner
   decision, 2026-11-26). Nothing else is restyled, and slugs and club matching are case-blind, so no URL moves.
-- **Never invent.** A placement game's sides are the feed's own labels ("Pool R 1st place v Pool S 1st place"):
-  no game is called a final or a championship unless the feed says so, and no word of the "eliminat-" family is
-  used anywhere (the copy gate). A column of the bracket is titled from its sources ("Pool R and S crossovers",
-  "Pool A placement"), computed in the view, not stored.
+- **Finals, not a bracket** (owner decision, 2026-11-26). There is no knockout bracket: every Saturday game is a
+  one-off final between pool places the feed names, and the pages say so. A game between the same place of two
+  pools is the "1st-place final", "2nd-place final" and so on; one between places of a single pool is "Final: 1st v
+  2nd", then "3rd v 4th" (`finalLabel`). The division page calls the section "Finals", heads each column with its
+  pools ("Pool R v Pool S", "Pool A"), and opens with a line built from the pairings ("No knockout bracket: on
+  Saturday each team plays the team that finished in the same place in the paired pool … Pools P and Q have no
+  finals."). Each side still reads as the feed's slot ("Pool R 1st") over the team that fills it. No game is called a
+  championship, and no word of the "eliminat-" family is used anywhere (the copy gate).
 - **Commit only on a content change.** `festivalContentKey` ignores `fetchedAt` alone, so a run that finds the
   same results writes nothing; the feed's version stamp (`sourceVersion`) is content, so a version bump with new
   results commits. TourneyMachine also moves its version about once an hour with no new result (5:01:59, 6:02:01,

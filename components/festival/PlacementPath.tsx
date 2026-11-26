@@ -3,8 +3,8 @@ import Link from 'next/link';
 import type { PlacementPathModel, SideModel } from './festival-model';
 
 /**
- * Where a team's final pool place sends it on Saturday (DESIGN §35 §6): "If 2nd in Pool K: plays Pool L 2nd ·
- * Sat 9:00 AM ET · Field 3", one line per place of its pool that feeds a placement game. The team's place now is
+ * Where a team's final pool place sends it on Saturday (DESIGN §35 §6): "If 2nd in Pool K: 2nd-place final v Pool L
+ * 2nd · Sat 9:00 AM ET · Field 3", one line per place of its pool that feeds a placement game. The team's place now is
  * marked in words ("Now 2nd") and weight, never by colour alone. Once the pool is complete with the team alone at
  * its place, or TourneyMachine names the team in a game, that game is the one it plays ("Plays …") and the other
  * places drop away. A team level with a neighbour on every figure the feed carries is "tied for 1st" and every
@@ -13,7 +13,7 @@ import type { PlacementPathModel, SideModel } from './festival-model';
  */
 export function PlacementPath({ path, teamName }: { path: PlacementPathModel; teamName: string }) {
   if (path.entries.length === 0) {
-    return <p className="sx-empty">TourneyMachine lists no placement game for {path.poolName}: its pool games are the whole schedule.</p>;
+    return <p className="sx-empty">No finals for {path.poolName}: its pool games are the whole schedule.</p>;
   }
   const settled = path.entries.flatMap((e) => e.games.filter((g) => g.settled).map((g) => ({ entry: e, game: g })));
   if (settled.length > 0) {
@@ -25,12 +25,12 @@ export function PlacementPath({ path, teamName }: { path: PlacementPathModel; te
               <span className="font-semibold">
                 {path.poolComplete ? `Finished ${entry.placeWord} in ${path.poolName}` : `${entry.placeWord} in ${path.poolName}`}:
               </span>{' '}
-              plays <Opponent side={game.opponent} />
+              {game.label} v <Opponent side={game.opponent} />
             </p>
             <p className="m-0 text-cell text-ink-2">
               {game.when} · {game.field} ·{' '}
               <Link href={game.href} prefetch={false} className="sx-link">
-                {game.number} in the bracket
+                {game.number} in the finals
               </Link>
             </p>
           </li>
@@ -54,12 +54,12 @@ export function PlacementPath({ path, teamName }: { path: PlacementPathModel; te
               <div key={game.number}>
                 <p className={['m-0 text-body text-ink', entry.current ? 'font-semibold' : null].filter(Boolean).join(' ')}>
                   {entry.nowWords ? <span className="text-accent-ink">{entry.nowWords} </span> : null}
-                  If {entry.placeWord} in {path.poolName}: plays <Opponent side={game.opponent} />
+                  If {entry.placeWord} in {path.poolName}: {game.label} v <Opponent side={game.opponent} />
                 </p>
                 <p className="m-0 text-cell text-ink-2">
                   {game.when} · {game.field} ·{' '}
                   <Link href={game.href} prefetch={false} className="sx-link">
-                    {game.number} in the bracket
+                    {game.number} in the finals
                   </Link>
                 </p>
               </div>

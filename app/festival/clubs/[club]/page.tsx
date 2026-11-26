@@ -24,7 +24,7 @@ import { HAS_FESTIVAL } from '../../../../lib/sports/current';
  *
  * One static page per club (lib/festival/festival.ts festivalClubSlugs). A club that is also a club page on this
  * site (data/field-hockey/clubs.json) links to it. Heading outline: h1 → h2 Teams → h2 Club schedule (→ h3 per
- * day → slot strips) → h2 per team (→ h3 Games, Pool, Placement). Field hockey's alone; takes the root OG card.
+ * day → slot strips) → h2 per team (→ h3 Games, Pool, Finals). Field hockey's alone; takes the root OG card.
  */
 
 export const dynamicParams = false;
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps<'/festival/clubs/[c
   // No notFound() here: the page itself 404s.
   if (!view) return { title: 'Club not found' };
   const title = `${view.name} at the National Hockey Festival`;
-  const description = `${view.name} at the ${getFestival().tournament.name}: ${plural(view.teams.length, 'team')} (${view.meta[1]}), every game by day and time, pool tables and placement games, ${view.finals} of ${plural(view.games, 'game')} final. Unofficial.`;
+  const description = `${view.name} at the ${getFestival().tournament.name}: ${plural(view.teams.length, 'team')} (${view.meta[1]}), every game by day and time, pool tables and finals, ${view.finals} of ${plural(view.games, 'game')} final. Unofficial.`;
   return {
     title,
     description,
@@ -180,7 +180,7 @@ export default async function FestivalClubPage({ params }: PageProps<'/festival/
           <h3 className="mt-4 mb-1 text-lead text-ink">{pool.name}</h3>
           <p className="m-0 mb-1 text-cell text-ink-2">{pool.status}</p>
           <FestivalPoolTable pool={pool} showClub={false} />
-          <h3 className="mt-4 mb-1 text-lead text-ink">Placement</h3>
+          <h3 className="mt-4 mb-1 text-lead text-ink">Finals</h3>
           <PlacementPath path={path} teamName={card.team.name} />
         </section>
       ))}

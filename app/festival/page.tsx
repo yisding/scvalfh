@@ -35,7 +35,7 @@ const PAGE_TITLE = 'National Hockey Festival';
 export function generateMetadata(): Metadata {
   if (!HAS_FESTIVAL) return { title: 'Page not found' };
   const view = buildHubView();
-  const description = `Scores, pool tables and placement games of the ${view.name}, ${view.place}, ${view.dates}: ${plural(view.teams, 'team')}, ${view.finals} of ${plural(view.games, 'game')} final, from TourneyMachine. Follow your teams; California teams first. Unofficial.`;
+  const description = `Scores, pool tables and finals of the ${view.name}, ${view.place}, ${view.dates}: ${plural(view.teams, 'team')}, ${view.finals} of ${plural(view.games, 'game')} final, from TourneyMachine. Follow your teams; California teams first. Unofficial.`;
   return {
     title: PAGE_TITLE,
     description,
@@ -138,7 +138,7 @@ export default function FestivalPage() {
               </span>
               {d.hasBracket ? (
                 <Link href={`${d.href}#bracket`} prefetch={false} className="sx-action ml-auto">
-                  Bracket
+                  Finals
                   <span className="sr-only"> &mdash; {d.short}</span>
                 </Link>
               ) : (
@@ -170,7 +170,7 @@ export default function FestivalPage() {
         <SectionHeader id="about" kicker="About these results" />
         <div className="flex max-w-prose flex-col gap-3 text-body text-ink-2">
           <p className="m-0">
-            Scores, pool tables and placement games come from the event’s results on{' '}
+            Scores, pool tables and finals come from the event’s results on{' '}
             <ExternalLink href={view.resultsUrl}>TourneyMachine</ExternalLink>, where USA Field Hockey posts them; the
             event itself is on <ExternalLink href={view.infoUrl}>USA Field Hockey’s site</ExternalLink>. Times are the
             venue’s, Eastern (ET), with Pacific (PT) beside each time slot. Games last {FESTIVAL_GAME_MINUTES} minutes.
@@ -179,10 +179,10 @@ export default function FestivalPage() {
             Pool tables are in TourneyMachine’s order. USA Field Hockey’s regulations give 3 points for a win, 1 for a
             tie and 0 for a loss, and break a tie on points by matches won, then goal difference, then goals for, then
             the head-to-head result, then a shoot-out (D.2); three or more teams level are ranked on the games among
-            them only (D.3). A placement game level at the end goes straight to a shoot-out (D.4); TourneyMachine does
+            them only (D.3). A final level at the end goes straight to a shoot-out (D.4); TourneyMachine does
             not post shoot-outs, so such a game shows “Tied — shoot-out” here, with no winner. TourneyMachine lists teams
             level on points, wins, goal difference and goals for alphabetically, and posts no head-to-head result or
-            shoot-out to separate them, so here they share a rank (“=1”), and the placement game their place feeds is
+            shoot-out to separate them, so here they share a rank (“=1”), and the final their place feeds is
             not settled until the event staff fill it in.
           </p>
           <p>

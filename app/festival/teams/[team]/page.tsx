@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps<'/festival/teams/[t
   const { card } = view;
   const title = `${card.team.name} (${card.team.divisionShort}) at the National Hockey Festival`;
   const standing = card.record ? `${card.record}${card.place ? `, ${card.place.words} in ${card.team.poolName}` : ''}` : `${card.team.poolName}, no result yet`;
-  const description = `${card.team.name} of ${card.team.clubName}, ${view.divisionName}, at the ${getFestival().tournament.name}: ${standing}. Every game with time and field, the pool table and the placement games. Unofficial.`;
+  const description = `${card.team.name} of ${card.team.clubName}, ${view.divisionName}, at the ${getFestival().tournament.name}: ${standing}. Every game with time and field, the pool table and the finals. Unofficial.`;
   return {
     title,
     description,
@@ -92,7 +92,7 @@ export default async function FestivalTeamPage({ params }: PageProps<'/festival/
           {card.next
             ? `${card.next.when}, ${card.next.field} v ${opponentWords(card.next.opponent)}`
             : card.placementAhead
-              ? 'A placement game, set by the final pool table (below)'
+              ? 'A Saturday final, set by its place in the pool (below)'
               : 'No more games on the schedule'}
         </dd>
       </dl>
@@ -109,7 +109,7 @@ export default async function FestivalTeamPage({ params }: PageProps<'/festival/
       </section>
 
       <section aria-labelledby="placement" className="sx-section">
-        <SectionHeader id="placement" kicker="Placement" action={view.path.entries.length > 0 ? { href: view.path.bracketHref, label: 'Bracket' } : undefined} />
+        <SectionHeader id="placement" kicker="Finals" action={view.path.entries.length > 0 ? { href: view.path.bracketHref, label: 'All finals' } : undefined} />
         <PlacementPath path={view.path} teamName={card.team.name} />
       </section>
 

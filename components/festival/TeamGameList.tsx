@@ -65,7 +65,7 @@ export function TeamGameList({
                     <>
                       {' '}
                       <Link href={g.bracketHref} prefetch={false} className="sx-link">
-                        Bracket
+                        Finals
                       </Link>
                     </>
                   ) : null}

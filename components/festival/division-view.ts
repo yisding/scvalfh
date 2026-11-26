@@ -1,5 +1,5 @@
 import { FESTIVAL_GAME_MINUTES } from '../../lib/festival/festival';
-import { plural } from '../../lib/format';
+import { listWords, plural } from '../../lib/format';
 import {
   bracketColumns,
   byDayAndSlot,
@@ -33,6 +33,12 @@ export interface DivisionViewModel {
   pools: PoolTableModel[];
   /** Null for a division with no placement games (pool play is the whole event). */
   bracket: BracketColumnModel[] | null;
+  /**
+   * What the finals are, in a sentence or two from the pairings (owner ask, 2026-11-26: make clear there is no
+   * knockout bracket): "No knockout bracket: on Saturday each team plays the team that finished in the same place in
+   * the paired pool (Pool R v Pool S, Pool T v Pool U). Pools P and Q have no finals."
+   */
+  finalsSummary: string | null;
   bracketUrl: string | null;
   days: DayModel<GameRowModel>[];
 }
@@ -63,7 +69,27 @@ export function buildDivisionView(slug: string, m: FestivalModel = festivalModel
     games: games.length,
     pools: division.pools.map((p) => poolTable(m, p.id)),
     bracket: columns.length > 0 ? columns : null,
+    finalsSummary: columns.length > 0 ? finalsSummary(columns, division.pools.map((p) => p.name)) : null,
     bracketUrl: division.bracketUrl,
     days: byDayAndSlot(games, (g) => gameRow(m, g)),
   };
+}
+
+/** The finals in words (DivisionViewModel.finalsSummary). */
+export function finalsSummary(columns: readonly BracketColumnModel[], poolNames: readonly string[]): string {
+  const paired = columns.filter((c) => c.pools.length > 1);
+  const single = columns.filter((c) => c.pools.length === 1);
+  const parts: string[] = [];
+  if (paired.length > 0) {
+    parts.push(
+      `No knockout bracket: on Saturday each team plays the team that finished in the same place in the paired pool (${listWords(paired.map((c) => c.title))}).`,
+    );
+  }
+  for (const c of single) {
+    parts.push(`${paired.length > 0 ? '' : 'No knockout bracket: '}on Saturday ${c.pools[0]}’s teams play by place: ${listWords(c.games.map((g) => g.label.replace(/^Final: /, '')))}.`);
+  }
+  const fed = new Set(columns.flatMap((c) => c.pools));
+  const none = poolNames.filter((n) => !fed.has(n));
+  if (none.length > 0) parts.push(`${none.length === 1 ? none[0] : `Pools ${listWords(none.map((n) => n.replace(/^Pool /, '')))}`} ${none.length === 1 ? 'has' : 'have'} no finals.`);
+  return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 }

@@ -79,7 +79,7 @@ export function TeamCard({
           <>
             <dt className="text-ink-2">Next</dt>
             <dd className="m-0 min-w-0 text-ink-2">
-              {card.placementAhead ? 'A placement game, set by the final pool table' : 'No more games on the schedule'}
+              {card.placementAhead ? 'A Saturday final, set by its place in the pool' : 'No more games on the schedule'}
             </dd>
           </>
         )}

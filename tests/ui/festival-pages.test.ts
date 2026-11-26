@@ -138,7 +138,9 @@ describe('a division page', () => {
   it('draws a pool table per pool, then the placement columns, then the schedule by slot', () => {
     const d = FILE.divisions.find((x) => x.slug === 'u19')!;
     expect(u19.match(/<table class="sx-table"/g)?.length).toBe(d.pools.length);
-    expect(stripTags(u19)).toContain('Pool R and S crossovers');
+    expect(stripTags(u19)).toContain('Pool R v Pool S');
+    expect(stripTags(u19)).toContain('No knockout bracket');
+    expect(stripTags(u19)).toContain('1st-place final');
     expect(u19).toContain('id="game-b1"');
     expect(u19.indexOf('id="pools"')).toBeLessThan(u19.indexOf('id="bracket"'));
     expect(u19.indexOf('id="bracket"')).toBeLessThan(u19.indexOf('id="schedule"'));
@@ -196,7 +198,7 @@ describe('a division without placement games', () => {
       expect(row(short), short).toMatch(new RegExp(`href="/festival/${slug}#pools"[^>]*>Pools<`));
       expect(row(short), short).not.toContain('#bracket');
     }
-    expect(row('U19')).toMatch(/href="\/festival\/u19#bracket"[^>]*>Bracket</);
+    expect(row('U19')).toMatch(/href="\/festival\/u19#bracket"[^>]*>Finals</);
     expect(row('U19')).not.toContain('#pools');
   });
 });
