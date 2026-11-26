@@ -228,7 +228,7 @@ describe('source labels: the kind and the host, never the path', () => {
         }
       }
     }
-    expect(checked).toBe([...file.affiliations, ...file.jvAffiliations].reduce((n, a) => n + new Set(a.sources.map((s) => s.url)).size, 0));
+    expect(checked).toBe([...file.affiliations, ...file.jvAffiliations, ...file.listedAffiliations].reduce((n, a) => n + new Set(a.sources.map((s) => s.url)).size, 0));
   });
 });
 
@@ -286,7 +286,8 @@ describe('buildClubsIndexView (/clubs)', () => {
     // 17 since Margaux Schlumberger's 2026-11-16 tie (unknown status).
     expect(line('rush')).toBe('17 players: 14 current, 3 earlier or not known to be current');
     expect(line('myto')).toBe('15 players: 13 current, 2 earlier or not known to be current');
-    expect(line('vcrd')).toBe('6 current players');
+    // 6 until the 2026-11-26 ties of two listed players, Marina's Anna Schwab and Newport Harbor's Kate Shepherd.
+    expect(line('vcrd')).toBe('8 current players');
     expect(line('bulldogs')).toBe('No player from these rosters found');
     expect(rows.find((r) => r.slug === 'htc')!.subline).toBe('HTC Field Hockey Club · La Jolla, CA (HTC California)');
     expect(rows.find((r) => r.slug === 'la-tigers')!.subline).toBe('LA Tigers Sports Club');
@@ -312,11 +313,11 @@ describe('buildClubsIndexView (/clubs)', () => {
 
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
-    // 150 varsity players and the 2 Los Gatos JV players (JV ties counted since 2026-11-25), and the 2026-11-26
-    // sweep's three (Mt. Carmel is the 49th school).
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([155, 49, 28, 15]);
+    // 150 varsity players and the 2 Los Gatos JV players (JV ties counted since 2026-11-25), the 2026-11-26
+    // sweep's three (Mt. Carmel is the 49th school), and two listed players' (Marina and Newport Harbor, 51).
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([157, 51, 28, 15]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 155 players from 49 schools are tied to 15 of these 28 clubs, the most to SF Hawks (34) and HTC (31).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 157 players from 51 schools are tied to 15 of these 28 clubs, the most to SF Hawks (34) and HTC (31).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
@@ -371,6 +372,14 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(si.slice(0, 4)).toEqual(['Clara Brunello', 'Samantha Brunsell', 'Gigi Colant', 'Scarlett Gammack']);
   });
 
+  it('lists a listed player on her club’s page, linked to her team’s roster, with no grade', () => {
+    const rows = viewOf('vcrd').groups.flatMap((g) => g.rows).filter((r) => ['marina', 'newport-harbor'].includes(r.school.slug));
+    expect(rows.map((r) => [r.name, r.school.name, r.school.href, r.facts, r.status, r.sources.map((x) => x.label)])).toEqual([
+      ['Anna Schwab', 'Marina', '/teams/marina#roster', [], 'Current', ['SportsRecruits profile']],
+      ['Kate Shepherd', 'Newport Harbor', '/teams/newport-harbor#roster', ['VCRD/Rush Devils'], 'Current', ['SportsRecruits profile']],
+    ]);
+  });
+
   it('names exactly the club’s tied players, a varsity row of that team or a JV row marked JV, by the roster’s spelling', () => {
     for (const { slug, view } of views) {
       const rows = view.groups.flatMap((g) => g.rows);
@@ -382,7 +391,8 @@ describe('buildClubPageView (/clubs/[slug])', () => {
       expect(view.playerCount, slug).toBe(ties.length + jvTies.length);
       for (const a of ties) {
         const row = rows.find((r) => r.key === `${a.teamSlug}-${a.athleteId}`)!;
-        const merged = getEnrichedTeamRoster(a.teamSlug)!.players.find((p) => p.athleteId === a.athleteId)!;
+        // A listed player's tie (clubs.json listedAffiliations) joins her listed row, not a MaxPreps one.
+        const merged = getEnrichedTeamRoster(a.teamSlug)!.players.find((p) => p.athleteId === a.athleteId) ?? getAffiliatedPlayer(a);
         expect(merged.level, `${slug} / ${a.fullName}`).not.toBe('jv');
         expect(row.name, slug).toBe(merged.fullName);
         expect(row.school.href, slug).toBe(`/teams/${a.teamSlug}#roster`);

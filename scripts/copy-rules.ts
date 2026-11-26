@@ -501,12 +501,13 @@ function squash(text: string): string {
  */
 export function affiliationLeaks(
   text: string,
-  file: { affiliations: readonly LeakAffiliation[] },
+  file: { affiliations: readonly LeakAffiliation[]; listedAffiliations?: readonly LeakAffiliation[] },
   { printsItself, publicTerms = [], restatedLines = [] }: LeakOptions = {},
 ): string[] {
   return leaks(
     squash(text),
-    file.affiliations.map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
+    // A listed player's ties (clubs.json listedAffiliations) are held to the same rule.
+    [...file.affiliations, ...(file.listedAffiliations ?? [])].map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
     printsItself,
     publicTerms,
     restatedLines,

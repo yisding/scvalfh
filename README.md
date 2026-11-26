@@ -473,7 +473,8 @@ rows MaxPreps added that day were swept for recruiting pages and clubs on 2026-1
 Sobrato's 20 having been searched on 2026-11-13): 19 pages for 14 rows and three club ties, each re-opened by an
 independent refuter; they have not been swept for commitments. The same day Marina's and Newport Harbor's 40
 listed players were searched by the same rule (a page must name the school, as they have no grade): 15 pages for 13
-players, shown on their listed rows, and two VCRD ties held in their teams' notes until they have MaxPreps rows. Every entry lists
+players, shown on their listed rows, and two VCRD ties, in `clubs.json` `listedAffiliations` (named by team and
+listed name, as these players have no MaxPreps row) and shown on their rows and VCRD's page. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list, or `listed`: a source's whole current varsity list, transcribed as
@@ -1963,7 +1964,8 @@ on 2026-11-21:
     after the 2026-11-21 round: PrepSoccer's player pages and its California list name the school, TopDrawerSoccer
     agreeing (high).
   - Alina Decker (Menlo-Atherton) to Brandeis in track and field, from the M-A Chronicle's running list of the
-    school's commitments; medium, because MaxPreps' row gives her name the other way round ("Decker Alina").
+    school's commitments; medium, because MaxPreps' row gives her name the other way round ("Decker Alina"). Since
+    2026-11-26 the site shows her as Alina Decker: NAME_SPELLINGS swaps MaxPreps' two names on her row.
   - Seven on the owner's ruling of 2026-11-25 ("club only leads are fine if they match the club"): a page that ties
     the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the
     club and not the school) counts when the row is already tied to that club (all medium): Rebecca Iffla (Mercy Burlingame) to Nevada (TopDrawerSoccer, club Bay Area Surf),

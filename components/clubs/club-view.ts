@@ -33,6 +33,7 @@ import {
   getClubsFile,
   getJvClubAffiliations,
   getPlayerClubs,
+  getVarsityClubAffiliations,
   type AffiliationSource,
   type AffiliationStatus,
   type Club,
@@ -444,7 +445,7 @@ export function buildClubsIndexView(): ClubsIndexView {
     (r) => r !== 'elsewhere' && !SEARCHED_REGIONS.includes(r) && clubs.some((c) => c.region === r),
   );
 
-  const tied = [...file.affiliations, ...file.jvAffiliations];
+  const tied = [...getVarsityClubAffiliations(), ...file.jvAffiliations];
   const playerCount = new Set(tied.map((a) => `${a.teamSlug} ${a.athleteId}`)).size;
   const schoolCount = new Set(tied.map((a) => a.teamSlug)).size;
   const withPlayers = rows

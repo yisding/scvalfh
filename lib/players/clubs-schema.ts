@@ -313,6 +313,9 @@ export const ClubAffiliationSchema = z.object({
   basis: text,
 });
 
+/** A listed player's tie: an affiliation without the MaxPreps athleteId and registry playerId she does not have. */
+export const ListedAffiliationSchema = ClubAffiliationSchema.omit({ athleteId: true, playerId: true }).strict();
+
 const ClubsFileObject = z.object({
   /** How the file was made. */
   builtBy: text,
@@ -329,6 +332,14 @@ const ClubsFileObject = z.object({
    * varsity rows only. Recorded on 2026-10-05; nothing renders them yet.
    */
   jvAffiliations: z.array(ClubAffiliationSchema).default([]),
+  /**
+   * Ties for listed players (data/<sport>/rosters-enrichment.json otherRosters `listed`: a team MaxPreps lists
+   * nobody for, whose own site lists its varsity). Such a player has no MaxPreps row, so no athleteId and no
+   * registry playerId: a tie names her by team and the listed name (`fullName`, first name then last name as
+   * the list gives them). lib/players/clubs.ts joins each to the listed row while the team page shows the list,
+   * and serves it with `affiliations`. Since 2026-11-26.
+   */
+  listedAffiliations: z.array(ListedAffiliationSchema).default([]),
 });
 
 type Ctx = z.RefinementCtx;
@@ -366,6 +377,15 @@ function checkClubsFile(f: z.infer<typeof ClubsFileObject>, ctx: Ctx): void {
       issue(ctx, ['jvAffiliations', i], `${a.teamSlug} / ${a.fullName} is also in affiliations`);
     }
   });
+  const listedTriples = new Set<string>();
+  f.listedAffiliations.forEach((a, i) => {
+    if (!slugs.has(a.club)) issue(ctx, ['listedAffiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
+    const key = `${a.teamSlug} ${a.fullName} ${a.club}`;
+    if (listedTriples.has(key)) {
+      issue(ctx, ['listedAffiliations', i], `duplicate listed affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
+    }
+    listedTriples.add(key);
+  });
 }
 
 export const ClubsFileSchema = ClubsFileObject.superRefine(checkClubsFile);
@@ -375,4 +395,5 @@ export type ClubSource = z.infer<typeof ClubSourceSchema>;
 export type Club = z.infer<typeof ClubSchema>;
 export type AffiliationSource = z.infer<typeof AffiliationSourceSchema>;
 export type ClubAffiliation = z.infer<typeof ClubAffiliationSchema>;
+export type ListedAffiliation = z.infer<typeof ListedAffiliationSchema>;
 export type ClubsFile = z.infer<typeof ClubsFileSchema>;
