@@ -7,20 +7,20 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "50fa6fb209d2d70d073ae7cc23457996d2042bc11c7841d496fa2e2ecb9f5157",
+  "contentHash": "e4e9ac403726e5e4398aaa5adb833001aa28aee0d36cb2917366e076b5fd4bbe",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 2,
-        "finals": 4,
+        "finals": 5,
         "games": 254,
         "leagueGames": 179,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
-        "finals": 4,
-        "games": 152,
+        "finals": 3,
+        "games": 151,
         "leagueGames": 96,
         "teams": 16
       },
@@ -34,7 +34,7 @@
       "psal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 110,
+        "games": 111,
         "leagueGames": 74,
         "teams": 14
       },
@@ -47,16 +47,16 @@
       },
       "scval": {
         "backfilled": 1,
-        "finals": 1,
+        "finals": 2,
         "games": 159,
         "leagueGames": 89,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 3,
-        "games": 102,
-        "leagueGames": 34,
+        "finals": 2,
+        "games": 103,
+        "leagueGames": 35,
         "teams": 13
       },
       "wcal": {
@@ -68,20 +68,20 @@
       }
     },
     "finals": 13,
-    "games": 923,
-    "leagueGames": 615,
+    "games": 924,
+    "leagueGames": 616,
     "mismatches": 4,
     "pending": 7,
     "teams": 123
   },
   "crossCheck": {
-    "agreements": 6,
+    "agreements": 7,
     "backfilled": 2,
-    "compared": 78,
+    "compared": 80,
     "conflicts": 0,
-    "sbliveOnlyScored": 5
+    "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-25T15:32:04.743Z",
+  "fetchedAt": "2026-11-26T05:37:43.226Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -89,11 +89,8 @@
       "finalsDelta": 0,
       "id": "scval",
       "missingPast": 0,
-      "reasons": [
-        "MaxPreps did not answer for Los Altos's schedule this run; its games are carried from Wed Nov 25, 6:37 AM.",
-        "MaxPreps did not answer for Los Gatos's schedule this run; its games are carried from Wed Nov 25, 6:37 AM."
-      ],
-      "state": "partial"
+      "reasons": [],
+      "state": "fresh"
     },
     {
       "backfilled": 0,
@@ -101,8 +98,10 @@
       "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
+      "reasons": [
+        "BVAL revised the Mt. Hamilton schedule after our copy (revised 10/27/26); official dates may be out of date."
+      ],
+      "state": "partial"
     },
     {
       "backfilled": 0,
@@ -170,12 +169,12 @@
     {
       "label": "season bootstrap",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "de-anza league metadata",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "el-camino league metadata",
@@ -204,13 +203,13 @@
     },
     {
       "label": "los-altos schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 24,
+      "status": "ok"
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": null,
-      "status": "stale"
+      "rowCount": 23,
+      "status": "ok"
     },
     {
       "label": "mountain-view schedule",
@@ -455,7 +454,7 @@
     {
       "label": "BVAL · Mt. Hamilton official schedule revision check",
       "rowCount": null,
-      "status": "ok"
+      "status": "stale"
     },
     {
       "label": "BVAL · Santa Teresa official schedule (bundled copy)",
@@ -544,12 +543,12 @@
     },
     {
       "label": "crystal-springs schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "kings-academy schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -594,7 +593,7 @@
     },
     {
       "label": "pinewood schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -949,7 +948,7 @@
     },
     {
       "label": "kipp-san-jose schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -1038,6 +1037,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-19",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3760-bval-west-valley scoreboard 2026-11-20",
       "rowCount": 0,
       "status": "ok"
@@ -1048,8 +1052,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3887-pal-bay scoreboard 2026-11-20",
-      "rowCount": 0,
+      "label": "sblive 3887-pal-bay scoreboard 2026-11-19",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1058,8 +1062,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3888-pal-ocean scoreboard 2026-11-20",
-      "rowCount": 0,
+      "label": "sblive 3888-pal-ocean scoreboard 2026-11-19",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1118,6 +1122,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3912-scval-de-anza scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3912-scval-de-anza scoreboard 2026-11-20",
       "rowCount": 0,
       "status": "ok"
@@ -1128,18 +1137,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3948-wbal-foothill scoreboard 2026-11-20",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3948-wbal-foothill scoreboard 2026-11-24",
       "rowCount": 1,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3949-wbal-skyline scoreboard 2026-11-20",
-      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -1239,7 +1238,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 334,
+      "rowCount": 336,
       "status": "ok"
     },
     {
@@ -1259,7 +1258,7 @@
     }
   ],
   "today": "2026-11-25",
-  "warnings": 42,
+  "warnings": 40,
   "window": {
     "firstGame": "2026-11-12T00:00:00",
     "lastGame": "2027-02-17T18:30:00",
