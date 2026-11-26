@@ -1,5 +1,5 @@
 {
- "builtBy": "pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league's own Schedules & Standings page in a local Chromium. The Girls Academy and NorCal Premier teams (leagues ga, n1, norcal-fall) are kept by hand and carried over; so is clubSlugs.",
+ "builtBy": "pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league's own Schedules & Standings page in a local Chromium. The Girls Academy and NorCal Premier teams (leagues ga, n1, norcal-fall; GotSport Rankings rosters, and Hudl's where a club keeps a team there) are kept by hand and carried over; so is clubSlugs.",
  "fetchedAt": "2026-11-24T16:21:13.413Z",
  "season": "26-27",
  "notes": [
@@ -11,7 +11,9 @@
   "Girls Academy (league ga), read 2026-11-25: the GA teams U14 through U19 of the eight clubs in GA's Northwest conference (2026-27 league, GotSport event 56497): Almaden FC, Silicon Valley SA, 1974 Newark FC, San Francisco Glens, South Valley Surf, Lamorinda SC, Sacramento United and Clovis Crossfire, 38 teams, 440 rows. Each is the team's public roster on GotSport Rankings (rankings.gotsport.com/teams/<id>/roster; teamId is the Rankings id), found with that site's own team search (Female, the age group, the club's name) and read in a local Chromium as the page displays it; the owner sent the U19 and U17 pages of Almaden, Silicon Valley SA and Newark, and the U19 rows the owner pasted are the rows read. teamName, the age group and the club are the page's heading; birthYears are read from the team name ('GA 08/09' is [2008, 2009]; South Valley Surf's 'g2012 Girls Academy' is [2012]). Not found: a GA U19 team for South Valley Surf or Lamorinda. Left out: Silicon Valley SA's '2012G GA2' and South Valley Surf's 'GU18/19', not named as GA league teams. Two pages listed no player (Newark's '1974 Newark FC 2012/2013 GA Clinton' and South Valley Surf's 'g2012 Girls Academy'). The page gives a name and a position (all 'No Position Listed', kept as null), no class year, no jersey and no date, so it is not known to be one season's roster; it reads like everyone the team has carried (Silicon Valley SA's GA 08/09 has 64 rows, Emma Velasquez twice, kept as listed, and Almaden's names a tracked class-of-2029 player). So these rows are compared on the team's birth years, not a class year (lib/players/club-rosters.ts); a U14 team (born 2012/13) is kept because its 2012 births can be freshmen. fetch-club-rosters carries the league and its teams over. GotSport club ids are keyed 'gotsport-<id>' in clubSlugs: Almaden FC, Silicon Valley SA and San Francisco Glens are mapped; South Valley Surf has no clubs.json record, and Newark, Lamorinda, Sacramento United and Clovis Crossfire are based away from the schools, so their rows are compared but never linked. GotSport's own event pages (system.gotsport.com) stop at a reCAPTCHA and were not read.",
   "NorCal Premier (leagues n1 and norcal-fall), read 2026-11-25: NorCal Premier's 2026-27 leagues are on GotSport (linked from norcalpremier.com's N1 Schedules & Standings page): the NorCal N1 League (event 54043, which replaced NPL and State Premier) and the Fall League U8-U19 (54541). Their event pages stop at a reCAPTCHA, but each event's club pages do not: they gave the club ids and the girls U14-U19 teams of Almaden FC (13017) and of the clubs.json clubs with no kept roster, Sunnyvale Alliance (11057), Milpitas YSL (10940; FC Milpitas), Peninsula Youth Soccer (8216) and ALBION SC Silicon Valley San Mateo (13012): 26 teams. Each was found on GotSport Rankings with its own team search and read as for Girls Academy. 22 matched a Rankings team of the same name; 4 of Albion's (SM N1 GU15 and GU16 Academy, SM GU14 and GU16 Premier) have only differently named Rankings teams (SM G12/G11 Academy, SM G13/G11 Premier), all with no player listed, and are not kept. 5 single-year U14 teams (born 2013, the class of 2031 or later: Almaden's Quicksilver Black and White, Albion's SM GU14 Academy, Peninsula's Hurricanes Blue and White) cannot hold a high school player and are not kept, so Albion has no team here and no clubSlugs entry. 17 teams, 89 rows. The Rankings rosters of these teams are far from full: most list 0 to 5 players (Almaden's N1 G2008/09 lists 37, Sunnyvale's U19G Red 18, Milpitas' Magic 8), as only players linked to the team on GotSport are shown. birthYears are the team name's ('N1 G2010/11', '10/11G'), else the event's age group, a single birth year in NorCal Premier (U16 is 2011). Not read: the other clubs' NorCal Premier teams (MVLA's, De Anza Force's, Bay Area Surf's and the rest).",
   "NorCal Premier, the larger clubs, read 2026-11-25: the girls U14-U19 teams in the N1 League and Fall League of MVLA (11058) and MVLA San Jose (10948; both mapped to mvla-soccer-club, 'MVLA San Jose' being an alias in its record; MVLA East, 12993, is an affiliated club in Turlock and is not mapped), Force (462; De Anza Force), Los Gatos United (10937), Burlingame (11048), Palo Alto SC (8215), San Francisco Elite (9040), Santa Cruz United (13066) and Stanford Strikers (8384): 37 event teams. Not kept: Palo Alto SC's 'SVSA GA 2009/10' and Bay Area Surf's 'ECNL RL - G2011/12' (kept under ga and ecnl-rl-golden-state already) and Bay Area Surf's single-year 'N1 U14G'. Not found on GotSport Rankings by the club's or the team's name: PASC N1 G2010/11 (CA), Palo Alto SC 12/13G Blue 2, Los Gatos United U17/U18G Black, Burlingame 2008/09G Premier, Santa Cruz United 11/12 and 09/10 Girls Navy (same-named teams found belong to other clubs). Santa Clara Sporting (8444) has no girls U14-U19 team in either event. 'De Anza Force' finds nothing on Rankings and 'Force' alone fills the result cap with other clubs: Force's teams were found by their own names. 28 teams kept, 95 rows; as before, most list 0 to 5 players (MVLA's N1 G2008/09 Gunners Green 20, Los Gatos United's U17/U18G Comp I 18, Palo Alto SC's 08/09G Blue 16, Force's G2009/10 Elite 11). 'U17/U18G' is read as born 2009/10; '2012/11G' as 2011/12.",
-  "Alum Rock FC, read 2026-11-25: Alum Rock Futbol Club (GotSport club 18476, mapped to alum-rock-fc) has one girls U14-U19 team in NorCal Premier's two events, the N1 League's 'FC N1 G2008/09 Stingrays (CA)' (U19); its Fall League girls teams are U11 to U13 (born 2013 and later). The club's own girls team list (alumrockfc.org/girls-teams) agrees: 2015/16, 2014/15, 2013/14 and 2008/09 Stingrays. The Rankings team of that name (176017, 'Alum Rock FC N1 G2008/09 Stingrays (CA)', Female U18) was found with the site's team search and read as for Girls Academy: 14 rows. No Alum Rock girls team turned up on Rankings at U14 to U17."
+  "Alum Rock FC, read 2026-11-25: Alum Rock Futbol Club (GotSport club 18476, mapped to alum-rock-fc) has one girls U14-U19 team in NorCal Premier's two events, the N1 League's 'FC N1 G2008/09 Stingrays (CA)' (U19); its Fall League girls teams are U11 to U13 (born 2013 and later). The club's own girls team list (alumrockfc.org/girls-teams) agrees: 2015/16, 2014/15, 2013/14 and 2008/09 Stingrays. The Rankings team of that name (176017, 'Alum Rock FC N1 G2008/09 Stingrays (CA)', Female U18) was found with the site's team search and read as for Girls Academy: 14 rows. No Alum Rock girls team turned up on Rankings at U14 to U17.",
+  "Hudl (read 2026-11-26): where a club keeps a team's roster on Hudl for the season (2026-2027), that roster is kept instead of the team's GotSport Rankings roster, which lists only players linked on GotSport and everyone the team has carried. Almaden FC's GA U14-U18 teams (league ga) and OV Toros FC's U15G Black (league norcal-fall), read through Hudl's public GraphQL endpoint and again on each team's roster page (fan.hudl.com/…/roster) as displayed in Chromium. teamId is Hudl's team id and clubId its organization id (clubSlugs key hudl-<id>); birthYears are the age group's, as on the GotSport roster of the same team, which is kept with supersededBy naming the Hudl page and is not compared. A row keeps Hudl's class year (\"Class of\") and positions; jersey numbers are not kept. A player with a class year after the season's freshmen is left out (tooYoung).",
+  "OV Toros FC (Morgan Hill; GotSport club 13069), read 2026-11-26: the N1 League's club page for it (event 54043) lists its four girls teams, kept from their Rankings rosters (found with GotSport's own team_ranking_data search); its Fall League U15G Black is kept from Hudl (above). U14 teams are left out: a single-year U14 is born 2013."
  ],
  "leagues": [
   {
@@ -82,13 +84,16 @@
   "gotsport-13066": "santa-cruz-united-fc",
   "gotsport-8384": "stanford-strikers-fc",
   "gotsport-18476": "alum-rock-fc",
-  "4063": "el-camino-fc-salinas"
+  "4063": "el-camino-fc-salinas",
+  "hudl-97189": "almaden-fc",
+  "gotsport-13069": "ov-toros-fc",
+  "hudl-180759": "ov-toros-fc"
  },
  "counts": {
-  "teams": 340,
-  "players": 5059,
+  "teams": 351,
+  "players": 5189,
   "hidden": 0,
-  "tooYoung": 1155,
+  "tooYoung": 1157,
   "emptyTeams": 14
  },
  "teams": [
@@ -34360,6 +34365,7 @@
     2008,
     2009
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34531,6 +34537,7 @@
     2009,
     2010
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34716,6 +34723,7 @@
     2010,
     2011
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34803,6 +34811,7 @@
     2011,
     2012
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -34890,6 +34899,7 @@
     2012,
     2013
    ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/884434/afc-u14-ga/roster",
    "hidden": 0,
    "tooYoung": 0,
    "players": [
@@ -38072,6 +38082,700 @@
    ]
   },
   {
+   "league": "ga",
+   "division": "U19",
+   "teamId": 819095,
+   "teamName": "AFC U18 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819095/afc-u18-ga/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylin",
+     "lastName": "Altinel",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amanda",
+     "lastName": "Au",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Tayanna",
+     "lastName": "Bonilla",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jazleen",
+     "lastName": "Cerda",
+     "gradYear": 2027,
+     "position": "F, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Alessia",
+     "lastName": "Costa",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Dini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Angelia",
+     "lastName": "Dominguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Gonzales",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rebecca",
+     "lastName": "Guting",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kayla",
+     "lastName": "Hellman",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Herrera",
+     "gradYear": 2027,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Rylan",
+     "lastName": "Hickey",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lilly",
+     "lastName": "Jones",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mireya",
+     "lastName": "Martinez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Perez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emmi",
+     "lastName": "Pham",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaya",
+     "lastName": "Schaefer",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U17",
+   "teamId": 819097,
+   "teamName": "AFC U17 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819097/afc-u17-ga/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Aashi",
+     "lastName": "Ahuja",
+     "gradYear": 2028,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Rylee",
+     "lastName": "Alas",
+     "gradYear": 2028,
+     "position": "F, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Tayanna",
+     "lastName": "Bonilla",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Delilah",
+     "lastName": "Cortez",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alana",
+     "lastName": "Francisco",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Rebecca",
+     "lastName": "Guting",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Natalie",
+     "lastName": "Hammer",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Kristen",
+     "lastName": "Honer",
+     "gradYear": 2028,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Sofi",
+     "lastName": "Houston",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Kang",
+     "gradYear": null,
+     "position": "M, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Markovic",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "McDougall",
+     "gradYear": 2028,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Mulcaire",
+     "gradYear": 2029,
+     "position": "D, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Emilie",
+     "lastName": "Santiago",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Alexa",
+     "lastName": "Sarabia",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jasmine",
+     "lastName": "Vemuri",
+     "gradYear": 2028,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Elah",
+     "lastName": "Vilchis-Martinez",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Natalia",
+     "lastName": "Warner",
+     "gradYear": 2028,
+     "position": "D",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U16",
+   "teamId": 819098,
+   "teamName": "AFC U16 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819098/afc-u16-ga/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Yasmeen",
+     "lastName": "Akra",
+     "gradYear": 2029,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Barajas",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Brooke",
+     "lastName": "Benak",
+     "gradYear": 2029,
+     "position": "D, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Fiona",
+     "lastName": "Benak",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hayden",
+     "lastName": "Casey",
+     "gradYear": 2029,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Elyse",
+     "lastName": "Chu",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Cameron",
+     "lastName": "Collins",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jocelyn",
+     "lastName": "Deleon",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Johanna",
+     "lastName": "Hernandez",
+     "gradYear": 2030,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Daniela",
+     "lastName": "Jimenez",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Littlewood",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ellie",
+     "lastName": "Luz Torres-Guiang",
+     "gradYear": 2029,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Giselle",
+     "lastName": "Mercado",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Caliana",
+     "lastName": "Nelson",
+     "gradYear": null,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ally",
+     "lastName": "Solano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Katara",
+     "lastName": "Sotelo",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Erin",
+     "lastName": "Tran",
+     "gradYear": null,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ella",
+     "lastName": "Uribe",
+     "gradYear": null,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Grace",
+     "lastName": "Wagner",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U15",
+   "teamId": 819099,
+   "teamName": "AFC U15 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/819099/afc-u15-ga/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Alexis",
+     "lastName": "Bonham",
+     "gradYear": null,
+     "position": "D, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Teagan",
+     "lastName": "Borges",
+     "gradYear": null,
+     "position": "M, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Alina",
+     "lastName": "Buckelew",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Jackie",
+     "lastName": "Chavez",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ashley",
+     "lastName": "Cho",
+     "gradYear": 2030,
+     "position": "F, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Isabella",
+     "lastName": "Cork",
+     "gradYear": 2030,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Samia",
+     "lastName": "Ducker",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mariah",
+     "lastName": "Enchill",
+     "gradYear": 2030,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Danica",
+     "lastName": "Garcia",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Malia",
+     "lastName": "Huynh",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Megan",
+     "lastName": "Le",
+     "gradYear": 2030,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Alys",
+     "lastName": "Myers",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Annabel",
+     "lastName": "Ross",
+     "gradYear": 2030,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Ishanvi",
+     "lastName": "Shinde",
+     "gradYear": 2030,
+     "position": "M, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Savannah",
+     "lastName": "Vo",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Alice",
+     "lastName": "Whiteside",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Woodbury",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Tamar",
+     "lastName": "Woodbury",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Stella",
+     "lastName": "Yerena",
+     "gradYear": 2030,
+     "position": "M, F",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "ga",
+   "division": "U14",
+   "teamId": 884434,
+   "teamName": "AFC U14 GA",
+   "clubId": 97189,
+   "clubName": "Almaden FC",
+   "url": "https://fan.hudl.com/usa/ca/san-jose/organization/97189/almaden-soccer-club/team/884434/afc-u14-ga/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 2,
+   "players": [
+    {
+     "firstName": "Lea",
+     "lastName": "Chinn",
+     "gradYear": 2030,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Dominguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Miller",
+     "lastName": "Gray",
+     "gradYear": 2030,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Lauren",
+     "lastName": "Huether",
+     "gradYear": 2028,
+     "position": "F, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Alia",
+     "lastName": "Jones",
+     "gradYear": 2030,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Lee",
+     "gradYear": 2030,
+     "position": "D, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Sawyer",
+     "lastName": "Milroy",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Michaela",
+     "lastName": "Palma",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Rhinehart",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Shayne",
+     "lastName": "Semore",
+     "gradYear": null,
+     "position": "M, F",
+     "playerType": null
+    },
+    {
+     "firstName": "Kyra",
+     "lastName": "Sneller",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eliana",
+     "lastName": "Yu",
+     "gradYear": null,
+     "position": "M, D",
+     "playerType": null
+    },
+    {
+     "firstName": "Xuandi",
+     "lastName": "Yuan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
    "league": "n1",
    "division": "U14",
    "teamId": 103516,
@@ -39573,6 +40277,249 @@
    ]
   },
   {
+   "league": "n1",
+   "division": "U14",
+   "teamId": 114850,
+   "teamName": "N1 G2012/13 Academy (CA)",
+   "clubId": 13069,
+   "clubName": "OV Toros FC",
+   "url": "https://rankings.gotsport.com/teams/114850/roster",
+   "birthYears": [
+    2012,
+    2013
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Amira Jane",
+     "lastName": "Al-Hakim",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alana",
+     "lastName": "Finkle",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Scarlett",
+     "lastName": "Lilleland",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U15",
+   "teamId": 93315,
+   "teamName": "N1 G2011/12 Academy (CA)",
+   "clubId": 13069,
+   "clubName": "OV Toros FC",
+   "url": "https://rankings.gotsport.com/teams/93315/roster",
+   "birthYears": [
+    2011,
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "April",
+     "lastName": "Herrera Sencion",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Scarlett",
+     "lastName": "Lilleland",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U16",
+   "teamId": 103114,
+   "teamName": "N1 G2010/11 Academy (CA)",
+   "clubId": 13069,
+   "clubName": "OV Toros FC",
+   "url": "https://rankings.gotsport.com/teams/103114/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Addison",
+     "lastName": "Beelaard",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elena",
+     "lastName": "Chavez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Samantha",
+     "lastName": "Childers",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Scarlett",
+     "lastName": "Lilleland",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kensie",
+     "lastName": "Partington",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Janae",
+     "lastName": "Telles",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U19",
+   "teamId": 93266,
+   "teamName": "N1 G2008/09 Academy (CA)",
+   "clubId": 13069,
+   "clubName": "OV Toros FC",
+   "url": "https://rankings.gotsport.com/teams/93266/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Addison",
+     "lastName": "Beelaard",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Elena",
+     "lastName": "Chavez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Samantha",
+     "lastName": "Childers",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Marea",
+     "lastName": "Hayes",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Delaney",
+     "lastName": "Heinemann",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Hostetler",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Hannah",
+     "lastName": "Mason",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Addison",
+     "lastName": "Paradiso",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kayden",
+     "lastName": "Paradiso",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kensie",
+     "lastName": "Partington",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Riley",
+     "lastName": "Rutter",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Shaw",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Janae",
+     "lastName": "Telles",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Coral",
+     "lastName": "Velasquez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
    "league": "norcal-fall",
    "division": "U14",
    "teamId": 113186,
@@ -40225,6 +41172,165 @@
    "hidden": 0,
    "tooYoung": 0,
    "players": []
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U15",
+   "teamId": 114941,
+   "teamName": "U15G Black",
+   "clubId": 13069,
+   "clubName": "OV Toros FC",
+   "url": "https://rankings.gotsport.com/teams/114941/roster",
+   "birthYears": [
+    2012
+   ],
+   "supersededBy": "https://fan.hudl.com/usa/ca/morgan-hill/organization/180759/ov-toros-fc/team/863864/ov-toros-fc-u15g-black/roster",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "April",
+     "lastName": "Herrera Sencion",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sophie",
+     "lastName": "Kerle",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Vega",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "norcal-fall",
+   "division": "U15",
+   "teamId": 863864,
+   "teamName": "OV Toros FC U15G Black",
+   "clubId": 180759,
+   "clubName": "OV Toros FC",
+   "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/180759/ov-toros-fc/team/863864/ov-toros-fc-u15g-black/roster",
+   "birthYears": [
+    2012
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Dani",
+     "lastName": "Borello",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Xienna",
+     "lastName": "De La Torre",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Gwen",
+     "lastName": "Griffiths",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Alleah",
+     "lastName": "Guy",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Yifan",
+     "lastName": "He",
+     "gradYear": null,
+     "position": "GK, M",
+     "playerType": null
+    },
+    {
+     "firstName": "Sophie",
+     "lastName": "Kerle",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Avery",
+     "lastName": "Mace",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Lola",
+     "lastName": "Owens",
+     "gradYear": null,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Brianna",
+     "lastName": "Paredes",
+     "gradYear": 2030,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Soraya",
+     "lastName": "Ramirez",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Charlotte",
+     "lastName": "Saign",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    },
+    {
+     "firstName": "Malia",
+     "lastName": "Sanchez",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Abigail",
+     "lastName": "Soto",
+     "gradYear": null,
+     "position": "D",
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Vega",
+     "gradYear": null,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Webber",
+     "gradYear": null,
+     "position": "M",
+     "playerType": null
+    }
+   ]
   }
  ]
 }

@@ -20,6 +20,12 @@ const NAMES = clubs.clubs.flatMap((c) => [c.name, ...(c.shortName !== null ? [c.
 const words = (clubTeam: string) => soccerClubTeamWords(clubTeam, NAMES);
 const rosters = JSON.parse(readFileSync('data/soccer/club-rosters.json', 'utf8')) as ClubRostersFile;
 const ROSTER_BY_URL = new Map(rosters.teams.map((t) => [t.url, t]));
+/**
+ * The names a cited roster's team goes by: its own, and, for a Hudl roster ("AFC U17 GA", whose age group
+ * is not printed), the name of the GotSport roster of the same team it supersedes ("GA 09/10").
+ */
+const TEAM_NAMES = new Map<string, string[]>(rosters.teams.map((t) => [t.url, [t.teamName]]));
+for (const t of rosters.teams) if (t.supersededBy !== undefined) TEAM_NAMES.get(t.supersededBy)?.push(t.teamName);
 // The ties a club page prints: a tie whose roster row MaxPreps no longer lists is left out as roster drift
 // (lib/players/roster-drift.ts), and its record is kept as it was, so the rules below do not read it.
 const ROSTER_ROWS = new Set(
@@ -49,12 +55,9 @@ describe('soccerClubTeamWords', () => {
       '2009G RL-ECNL': 'ECNL RL G2009',
       '2010 Juventus': 'Juventus G2010',
       '2010G ECNL-RL': 'ECNL RL G2010',
-      AFC: null,
       'AFC U13 GA': 'GA',
       'AFC U16 GA': 'GA',
-      'AFC U17 GA': 'GA',
       'AFC U18 GA': 'GA',
-      'Almaden FC 2011 Girls Academy': 'GA G2011',
       'Alum Rock FC N1 G2008/09 Stingrays (CA)': 'Stingrays N1 G2008/09',
       'Bay Area Surf - ECNL G2011/12': 'ECNL G2011/12',
       'Bay Area Surf - ECNL G2012/13': 'ECNL G2012/13',
@@ -119,8 +122,10 @@ describe('soccerClubTeamWords', () => {
       'MVLA ECNL RL G2010/11': 'ECNL RL G2010/11',
       'MVLA ECNL RL G2011/12': 'ECNL RL G2011/12',
       'MVLA ECNL RL G2012/13': 'ECNL RL G2012/13',
+      'N1 G2008/09 Academy (CA)': 'Academy N1 G2008/09',
       'N1 G2008/09 Gunners Green (CA)': 'Gunners Green N1 G2008/09',
       'N1 G2008/09 Quicksilver Green (CA)': 'Quicksilver Green N1 G2008/09',
+      'N1 G2010/11 Academy (CA)': 'Academy N1 G2010/11',
       'N1 G2010/11 Quicksilver Green (CA)': 'Quicksilver Green N1 G2010/11',
       N1NPL: 'N1',
       'National 1': 'N1',
@@ -141,6 +146,7 @@ describe('soccerClubTeamWords', () => {
       'Stanford Strikers ECNL RL G2010/11': 'ECNL RL G2010/11',
       'Sunnyvale U19G Red 08/09': 'Red G2008/09',
       Thunder: 'Thunder',
+      'U15G Black': 'Black',
       'U15G Quicksilver Black': 'Quicksilver Black',
       'U16G Quicksilver Black': 'Quicksilver Black',
       'U17/U18G Comp I': 'Comp I',
@@ -202,7 +208,7 @@ describe('soccerClubTeamWords', () => {
       if (teams.length === 0) continue;
       expect(teams.every((t) => t !== undefined), `${a.fullName}: a cited roster is not in club-rosters.json`).toBe(true);
       const printed = a.clubTeam !== null ? words(a.clubTeam) : null;
-      if (!teams.some((t) => t !== undefined && words(t.teamName) === printed)) off.push(`${a.fullName} (${a.club}): ${a.clubTeam}`);
+      if (!teams.some((t) => t !== undefined && TEAM_NAMES.get(t.url)!.some((n) => words(n) === printed))) off.push(`${a.fullName} (${a.club}): ${a.clubTeam}`);
     }
     expect(off).toEqual([]);
   });

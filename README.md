@@ -2080,7 +2080,7 @@ Northwest conference (league `ga`, below). It is there so that a high school ros
 rosters the day a school posts it, without reading the leagues' pages again. ECNL's three leagues, read on
 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL teams of 12 clubs, 139 NorCal Regional League teams of
 43, 57 Golden State teams of the 12 ECNL clubs); Golden State was added that day, the other two leagues first read on
-2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for fifteen clubs: **46 teams, 198 rows** (below). In all 340 teams, 5,059 players.
+2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for fifteen clubs: **46 teams, 198 rows** (below); Almaden FC's GA teams on Hudl, read on 2026-11-26: **5 teams, 87 rows**, which replace the club's GotSport GA rosters in the comparison, and OV Toros FC's N1 and Fall League teams the same day: **6 teams, 43 rows** (below). In all 351 teams, 5,189 players.
 
 ```bash
 pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
@@ -2224,6 +2224,48 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   ties and 3 that gain the roster and now read current for 2026-27 (15 entries on 13 team pages; a separate run
   pressed Roster on the 13 pages and found all 15 rows). In all, **172 varsity ties cite a league roster** (143 ECNL,
   29 GA, at 25 schools).
+- **Girls Academy on Hudl, 2026-11-26.** Rebecca Guting (Los Altos) is on Almaden FC's U17 GA (09/10) team, which
+  her Hudl profile shows and no kept roster did: GotSport Rankings' GA 09/10 page lists everyone the team has carried and
+  not her. A club that keeps its teams on Hudl has a roster there for the season ("2026-2027"), most rows with a class
+  year. Each GA Northwest club was looked up through Hudl's public GraphQL endpoint (DATA-SOURCES §1.15, "Hudl club team rosters"): only Almaden
+  FC has GA teams with a 2026-27 season there (U13 through U18; Silicon Valley SA and SF Glens have none, 1974 Newark's
+  last season is 2024, Sacramento United's 2022, Clovis Crossfire's 2021, and Lamorinda's, but for a U14, 2024 or 2025).
+  Almaden's U14 through U18 teams are kept, under league `ga` with the club key `hudl-97189`, as Hudl's "AFC U18 GA"
+  (the GA U19 team, 08/09), "AFC U17 GA" (09/10), "AFC U16 GA" (10/11), "AFC U15 GA" (11/12) and "AFC U14 GA"
+  (12/13): **87 rows** (2 of the class of 2031 left out), each read from the API and again on the team's roster page
+  as displayed in Chromium, all 87 alike. The pairing with the GotSport teams is by the rows they share (U18 shares 12
+  with GA 08/09 and 0 with 09/10; U17 10 with 09/10). A Hudl team keeps the GA age group's birth years and is compared
+  in the class-year tier, as an ECNL team is: a row's class year when it has one, else the team's birth years. The
+  GotSport roster of the same team stays in the file with `supersededBy` and is no longer compared; a tie still
+  citing it may not be current (`tests/club-rosters.test.ts`). The tie's `clubTeam` keeps the GotSport page's name of
+  the same team ("GA 09/10"), which gives its birth years, as Hudl's age group does not (a club page prints "GA
+  G2009/10"). **Linked:** 23 Almaden ties gain the Hudl roster and read current for 2026-27 (17 citing a GotSport GA
+  roster now cite Hudl's instead; Rebecca Guting, Kristen Honer, the Benak sisters, Hayden Casey, Aashi Ahuja and
+  Lilly Jones gain a roster for the first time), 10 of them also cite the club's N1 G2008/09, G2011/12 or G2012/13
+  roster, re-read in Chromium; 6 ties are new, medium (Caliana Nelson, Los Gatos; Daniela Jimenez, Santa Clara;
+  Maya Barajas, Silver Creek; Grace Wagner, Menlo-Atherton; Ella Uribe, Salinas; and Alys Myers, Leland JV). Jasmine
+  Vemuri (Notre Dame San Jose, class of 2027) is on U17 as the class of 2028: tied as before, the source marked
+  `classYearDiffers`. Joslyn Barajas (Silver Creek), on GotSport's GA 08/09 but on none of the club's Hudl rosters and
+  on Los Gatos United's 2026-27 ECNL RL roster, now reads **past** at Almaden FC. `compare-club-rosters` lists no match
+  `clubs.json` does not cite.
+- **The other clubs on Hudl, and OV Toros FC, 2026-11-26.** Every club with a record in `clubs.json` was looked up on
+  Hudl the same way (its organization, then its girls soccer teams with a 2026-27 season). Ten have one: MVLA, De Anza
+  Force, Santa Clara Sporting, Los Gatos United, Stanford Strikers, Burlingame, SF Elite, SF United, Marin FC and Mustang,
+  each an ECNL or ECNL RL team (most the G2011/12), kept already from the league's own page; all but De Anza Force's
+  ECNL G2011/12 list no player on Hudl, and its 17 rows add no tracked player the ECNL copy lacks. Bay Area Surf, Palo
+  Alto SC and Santa Cruz United have only past seasons there; the others are not on Hudl. The one club Hudl adds is
+  **OV Toros FC** (Morgan Hill; a record with no tie and no kept roster until now): its Hudl teams run U8 through U15,
+  and its U15G Black lists 5 Sobrato JV players. Its older teams are on GotSport: the N1 League's club page for it
+  (event 54043, club 13069) lists four girls teams, N1 G2008/09, G2010/11, G2011/12 and G2012/13 Academy, and the
+  Fall League's (54541) a U14G and a U15G Black; their Rankings rosters were found with the Rankings site's own API
+  (`system.gotsport.com/api/v1/team_ranking_data`, `search[team_or_club_name]`). **Kept:** the four N1 rosters (25
+  rows) and Hudl's U15G Black (15 rows, read from the API and again as displayed), which supersedes the Fall League's
+  GotSport roster of the team (3 rows); the U14 teams are left out (a single-year U14 is born 2013, the class of 2031
+  or later), as are 2010G Red, 2012G White and U19G Academy OLD, in neither event this season, each listing no player.
+  `clubSlugs` maps `gotsport-13069` and `hudl-180759` to `ov-toros-fc`. **Linked:** 8 new ties, medium, current for
+  2026-27: Samantha Childers and Marea Hayes (Sobrato) and Kayden and Addison Paradiso (Valley Christian) on the N1
+  rosters, and Xienna De La Torre, Alleah Guy, Yifan He and Olivia Webber (Sobrato JV) on U15G Black. Not linked:
+  Brianna Paredes (Sobrato JV, grade 10), whom Hudl lists as the class of 2030, one year off with a common name.
 - **JV ties, from 2026-11-25.** A JV row's ties go in `clubs.json`'s `jvAffiliations`, and join the school's MaxPreps
   JV roster (`data/soccer/jv-rosters.json`): every soccer JV player is on that list rather than on a JV row of the
   varsity roster, so the loader now joins a JV tie to a JV-list row whose player is not on the varsity roster

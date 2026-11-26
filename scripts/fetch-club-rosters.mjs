@@ -32,8 +32,8 @@
  *
  * `clubSlugs` (the leagues' club id → the club's slug in data/soccer/clubs.json) is hand-kept in the
  * file and carried over on every run; a club with no entry is compared but never linked. So are the
- * leagues this script does not read and their teams: Girls Academy's GotSport rosters, copied into the
- * file by hand (README, "Club rosters").
+ * leagues this script does not read and their teams: Girls Academy's and NorCal Premier's GotSport rosters, and
+ * Hudl's where a club keeps a team there, copied into the file by hand (README, "Club rosters").
  */
 
 import { spawn } from 'node:child_process';
@@ -261,7 +261,7 @@ async function main() {
     const fetchedAt = new Date().toISOString();
     const file = {
       builtBy:
-        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. The Girls Academy teams (league ga) are kept by hand and carried over; so is clubSlugs.',
+        'pnpm fetch-club-rosters (scripts/fetch-club-rosters.mjs): the public team rosters of ECNL Girls Northern Cal and of ECNL Regional League Girls NorCal and Golden State, read through each league\'s own Schedules & Standings page in a local Chromium. The Girls Academy and NorCal Premier teams (leagues ga, n1, norcal-fall; GotSport Rankings rosters, and Hudl\'s where a club keeps a team there) are kept by hand and carried over; so is clubSlugs.',
       fetchedAt,
       season: SEASON,
       notes: previous?.notes ?? [],
