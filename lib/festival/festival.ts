@@ -21,7 +21,7 @@ import { validateData } from '../data-file';
 import { getClub } from '../players/clubs';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 import { FestivalClubsFileSchema, type FestivalClubsFile } from './festival-clubs-schema';
-import { automaticClubName, clubMatchText, matchesPrefix, slugify, uniqueSlug } from './festival-names';
+import { automaticClubName, clubMatchText, displayTeamName, matchesPrefix, slugify, uniqueSlug } from './festival-names';
 import { FestivalFileSchema, type FestivalFile, type FestivalGame } from './festival-schema';
 
 export type {
@@ -189,7 +189,10 @@ export function resolveFestivalClubs(festival: FestivalFile, clubs: FestivalClub
     const club = out.get(slug)!;
     club.teamIds.push(team.id);
     clubOfTeam.set(team.id, slug);
-    const note = clubs.clubs.find((c) => c.slug === slug)?.teamNotes?.[team.name];
+    // Keys may be written as the feed spells the name ('Norcal Wolves u16') or as the pages print it; compare both
+    // as printed (displayTeamName, DESIGN §35.1).
+    const notes = clubs.clubs.find((c) => c.slug === slug)?.teamNotes ?? {};
+    const note = Object.entries(notes).find(([name]) => displayTeamName(name) === displayTeamName(team.name))?.[1];
     if (note !== undefined) club.teamNotes[team.id] = note;
   }
   const all = [...out.values()];

@@ -404,6 +404,9 @@ export function normalizeFestival(raw: unknown, opts: NormalizeOptions): Festiva
   const divisionOfGame = new Map<number, number>();
   for (const d of labels) {
     for (const gk of divisionOf(d.key).IDGames) {
+      // A listed game the dictionary lacks is a partial response: refuse it rather than publish a schedule with the
+      // game silently missing under a version the next run would then skip.
+      if (!tm.GameDictionary[String(gk)]) fail(`game ${gk} is listed by division ${d.key} but is not in GameDictionary`);
       if (divisionOfGame.has(gk)) fail(`game ${gk} is listed by two divisions`);
       divisionOfGame.set(gk, d.key);
     }

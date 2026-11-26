@@ -33,7 +33,14 @@ const count = int.min(0);
 /** A venue wall-clock time with no zone: '2026-11-26T08:00:00'. */
 const localTime = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/, 'expected YYYY-MM-DDTHH:MM:SS');
 /** A UTC instant: '2026-11-26T13:00:00Z' (fetchedAt may carry milliseconds). */
-const utcTime = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/, 'expected an ISO UTC time');
+const utcTime = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/, 'expected an ISO UTC time')
+  // The shape alone lets '2026-02-30T25:00:00Z' through; a real instant prints back as itself.
+  .refine((v) => {
+    const t = Date.parse(v);
+    return Number.isFinite(t) && new Date(t).toISOString().slice(0, 19) === v.slice(0, 19);
+  }, 'not a real UTC time');
 
 export const FestivalVenueSchema = z.object({
   name: text,

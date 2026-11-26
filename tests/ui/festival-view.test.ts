@@ -51,6 +51,9 @@ const M = festivalModel();
 /** A deep copy of the committed file, edited by `edit`, as a model (the clubs resolved again on it). */
 function edited(edit: (file: FestivalFile) => void): FestivalModel {
   const file = structuredClone(FILE) as FestivalFile;
+  // Start every edit from unfilled placement sides, as the bracket reads before the event staff fill them, so a
+  // refresh that fills them never changes what these cases test. An edit that names a team still does.
+  for (const g of file.games) if (g.kind === 'placement') for (const side of g.sides) side.teamId = null;
   edit(file);
   return buildFestivalModel(file, resolveFestivalClubs(file, getFestivalClubsFile()));
 }
@@ -356,6 +359,24 @@ describe('a team’s placement path', () => {
   // In a one-pool division (U10, U12 Pool D, U14 7v7) both sides of B1 come from the same pool: on Blue Star
   // Warriors' page, 2nd in Pool F on 2026-11-26, "If 1st: plays Pool F 2nd (now Blue Star Warriors)". The team
   // cannot hold that place and play against it, so the slot prints alone.
+  // The same once the pool is final: a pool-complete side carries the team's own name, so the slot (not the name)
+  // is what prints.
+  it('never names the team as its own opponent once the one pool is final either', () => {
+    const single = placement.find((g) => g.sides[0].source!.poolId === g.sides[1].source!.poolId)!;
+    const poolId = single.sides[0].source!.poolId;
+    const pool = FILE.divisions.flatMap((d) => d.pools).find((p) => p.id === poolId)!;
+    const m = edited((f) => {
+      separate(f, poolId);
+      poolGamesOf(f, poolId).forEach((g) => finalize(g));
+    });
+    for (const id of pool.teamIds) {
+      for (const g of placementPath(m, id).entries.flatMap((e) => e.games)) {
+        expect(g.opponent.team?.id).not.toBe(id);
+        if (g.opponent.state === 'placeholder') expect(g.opponent.name).toBe(g.opponent.slot);
+      }
+    }
+  });
+
   it('never names the team as its own opponent', () => {
     const single = placement.find((g) => g.sides[0].source!.poolId === g.sides[1].source!.poolId)!;
     const poolId = single.sides[0].source!.poolId;
@@ -386,7 +407,10 @@ describe('a team’s placement path', () => {
     const lone = FILE.teams.find((t) => !fed.has(t.poolId))!;
     expect(placementPath(M, lone.id).entries).toEqual([]);
     expect(teamCard(M, lone.id).placementAhead).toBe(false);
-    expect(teamCard(M, team.id).placementAhead).toBe(true);
+    // A team whose pool does feed one has it ahead while it is unplayed (an edited model, so the test holds after
+    // Saturday's games are played too).
+    const unplayed = edited((f) => f.games.filter((g) => g.kind === 'placement').forEach((g) => ((g.status = 'scheduled'), (g.score = null))));
+    expect(teamCard(unplayed, team.id).placementAhead).toBe(true);
   });
 });
 

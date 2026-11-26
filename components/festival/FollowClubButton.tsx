@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { plural } from '../../lib/format';
 import { FEST_FOLLOW_MAX } from './follow-script';
 import { useFestivalFollows } from './use-festival-follows';
@@ -18,6 +20,9 @@ export interface FollowClubButtonProps {
 
 export function FollowClubButton({ slugs, name, className }: FollowClubButtonProps) {
   const { follows, ready, available, set } = useFestivalFollows();
+  // A write the browser refused (storage that reads but will not save): said beside the control, which keeps its state.
+  const [failed, setFailed] = useState(false);
+  const save = (on: boolean) => setFailed(!set(slugs, on));
   if (ready && !available) {
     return (
       <span className={['inline-flex min-h-11 items-center text-meta text-ink-2', className].filter(Boolean).join(' ')}>
@@ -35,7 +40,7 @@ export function FollowClubButton({ slugs, name, className }: FollowClubButtonPro
         <span className="sx-pinstate">
           <span className="sx-pin-note" aria-hidden="true" />
           Following {teams}
-          <button type="button" onClick={() => set(slugs, false)} className="sx-link min-h-11">
+          <button type="button" onClick={() => save(false)} className="sx-link min-h-11">
             Unfollow all
             <span className="sr-only"> &mdash; {name}</span>
           </button>
@@ -43,7 +48,7 @@ export function FollowClubButton({ slugs, name, className }: FollowClubButtonPro
       ) : (
         <button
           type="button"
-          onClick={() => set(slugs, true)}
+          onClick={() => save(true)}
           disabled={tooMany}
           className={ready ? 'sx-btn min-h-11' : 'sx-btn invisible min-h-11'}
         >
@@ -51,6 +56,11 @@ export function FollowClubButton({ slugs, name, className }: FollowClubButtonPro
           <span className="sr-only"> &mdash; {name}, saved in this browser only</span>
         </button>
       )}
+      {failed ? (
+        <span role="status" className="text-meta text-ink-2">
+          This browser did not save that. Try again, or check that it allows this site to store data.
+        </span>
+      ) : null}
       {tooMany ? (
         <span className="text-meta text-ink-2">That would pass {FEST_FOLLOW_MAX} teams, the most this browser keeps.</span>
       ) : null}

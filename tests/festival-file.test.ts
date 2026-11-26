@@ -158,6 +158,8 @@ describe('a bad festival file is refused', () => {
   const placement = raw.games.findIndex((g) => g.kind === 'placement');
 
   it('names a duplicate team slug and a duplicate game key', () => {
+    expect(bad((f) => (f.fetchedAt = '2026-02-30T12:00:00Z'))).toThrow('not a real UTC time');
+    expect(bad((f) => (f.fetchedAt = '2026-11-26T25:00:00.000Z'))).toThrow('not a real UTC time');
     expect(bad((f) => (f.teams[1].slug = f.teams[0].slug))).toThrow(`duplicate team slug ${raw.teams[0].slug}`);
     expect(bad((f) => (f.games[1].key = f.games[0].key))).toThrow(`duplicate game key ${raw.games[0].key}`);
   });

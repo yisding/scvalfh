@@ -26,6 +26,7 @@ import {
   type FestivalCuratedClub,
   type FestivalFile,
 } from '../lib/festival/festival';
+import { clubMatchText, matchesPrefix } from '../lib/festival/festival-names';
 import { FestivalClubsFileSchema } from '../lib/festival/festival-clubs-schema';
 import { getClub } from '../lib/players/clubs';
 import { REPO } from './helpers';
@@ -164,12 +165,12 @@ describe('the festival’s teams resolve to their clubs', () => {
     }
   });
 
-  it('leaves no curated club empty while one of its teams of 2026-11-26 is in the file', () => {
-    const present = new Set(festival.teams.map((t) => t.name));
-    const gone = Object.entries(TEAMS_ON_2026_11_26)
-      .filter(([, names]) => !names.some((n) => present.has(n)))
-      .map(([slug]) => slug);
-    expect(resolved.unmatched).toEqual(gone);
+  it('leaves a curated club empty only when no team in the file carries one of its prefixes', () => {
+    // Derived from the roster as it is now, not from 2026-11-26's, so a team that withdraws or one that joins a
+    // curated club mid-event never fails the refresh job's tests.
+    const carried = (c: FestivalCuratedClub) =>
+      festival.teams.some((t) => c.match.some((prefix) => matchesPrefix(clubMatchText(t.name), prefix)));
+    expect(resolved.unmatched).toEqual(raw.clubs.filter((c) => !carried(c)).map((c) => c.slug));
   });
 
   it('gives every team one club, every club a unique slug, and serves them A–Z', () => {
@@ -197,14 +198,19 @@ describe('the festival’s teams resolve to their clubs', () => {
     const htc = clubBySlug.get('htc')!;
     const htcTeam = festival.teams.find((t) => t.name === 'HTC');
     if (htcTeam) expect(Object.keys(htc.teamNotes)).toEqual([htcTeam.id]);
-    expect(clubBySlug.get('san-francisco-hawks')).toMatchObject({ curated: true, california: true, norCal: true, siteClub: 'sf-hawks', region: 'San Francisco, Calif.' });
+    const facts = { california: true, norCal: true, siteClub: 'sf-hawks', region: 'San Francisco, Calif.' };
+    expect(raw.clubs.find((c) => c.slug === 'san-francisco-hawks')).toMatchObject(facts);
+    // The resolved club exists only while it has a team in the file (both Hawks teams could withdraw).
+    const hawks = clubBySlug.get('san-francisco-hawks');
+    if (hawks) expect(hawks).toMatchObject({ ...facts, curated: true });
   });
 
   it('finds the California teams of 2026-11-26 among the California clubs, and not HTC’s U16 team', () => {
     const name = new Map(festival.teams.map((t) => [t.id, t.name]));
     const california = resolved.clubs.filter((c) => c.california).flatMap((c) => c.teamIds.map((id) => name.get(id)!));
     const expected = ['Hayward Hawks', 'San Francisco Hawks U16', 'Norcal Wolves U16', 'HTC CA U19', 'San Francisco Hawks U19'];
-    expect(california.sort()).toEqual(expected.filter((n) => festival.teams.some((t) => t.name === n)).sort());
+    // Every one of them still in the file is there; a team that joins a California club mid-event may be too.
+    expect(california).toEqual(expect.arrayContaining(expected.filter((n) => festival.teams.some((t) => t.name === n))));
     expect(california).not.toContain('HTC');
   });
 });
@@ -230,6 +236,12 @@ describe('resolveFestivalClubs: the rules', () => {
     const r = resolveFestivalClubs(teamsFile(...names), clubsFile(...clubs));
     return { ...r, of: names.map((_, i) => r.clubOfTeam.get(`t${i + 1}`)) };
   };
+
+  it('finds a team note keyed by the feed’s own spelling or by the printed name', () => {
+    const wolves = { ...club('wolves', 'Wolves', ['wolves']), teamNotes: { 'Wolves u16': 'feed spelling', 'Wolves U19': 'printed' } };
+    const r = resolve(['Wolves U16', 'Wolves U19'], [wolves]);
+    expect(r.clubs[0].teamNotes).toEqual({ t1: 'feed spelling', t2: 'printed' });
+  });
 
   it('takes the longest matching prefix, whichever club the file lists first', () => {
     const windy = club('windy', 'Windy', ['windy']);

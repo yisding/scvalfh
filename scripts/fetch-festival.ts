@@ -147,6 +147,17 @@ export async function main(argv: readonly string[], fetchImpl: typeof fetch = gl
   const made = lastModified.get(url) ?? null;
   const current = feedIsCurrent(made, version);
   if (!current) {
+    // A copy older than the version may still be newer than the committed file: then it is written, under the
+    // committed version, so the next run reads the feed again. A copy no newer than the committed version cannot
+    // add anything and could take results away (a --force run would otherwise write older results under the
+    // committed version, which later runs then skip), so the committed file is kept whole.
+    if (previous && !feedIsCurrent(made, previous.sourceVersion)) {
+      console.log(
+        `fetch-festival: the feed read is a cached copy from ${made}, no newer than the committed ` +
+          `${previous.sourceVersion}; the committed file is kept as it is, and the next run reads the feed again`,
+      );
+      return 0;
+    }
     console.log(
       `fetch-festival: the feed read is a cached copy from ${made}, older than ${version}; ` +
         'the file keeps the committed version, so the next run reads it again',

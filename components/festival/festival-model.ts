@@ -750,10 +750,13 @@ export function placementPath(m: FestivalModel, teamId: string): PlacementPathMo
         when: whenET(g.startUtc),
         field: fieldName(m, g.fieldId),
         // In a one-pool division both sides can draw on the team's own pool, and the slot it would play is one it
-        // holds now ("If 1st: plays Pool F 2nd (now <itself>)"). It cannot hold that place and play against it, and
-        // who would is unknown, so the slot is printed alone.
+        // holds now ("If 1st: plays Pool F 2nd (now <itself>)"), provisionally or from the final table. It cannot
+        // hold that place and play against it, and who would is unknown, so the slot is printed alone (its name too:
+        // a resolved side carries the team's name there).
         opponent:
-          opponent.state === 'provisional' && opponent.team?.id === teamId ? { ...opponent, state: 'placeholder', team: null } : opponent,
+          opponent.team?.id === teamId
+            ? { ...opponent, state: 'placeholder', team: null, name: opponent.slot ?? opponent.name }
+            : opponent,
         settled,
       });
     });

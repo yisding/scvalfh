@@ -160,6 +160,13 @@ describe('tourneymachine: pieces', () => {
     expect(labels([...feed].reverse())).toEqual(expected);
   });
 
+  it('refuses a response whose division lists a game the dictionary lacks', () => {
+    const raw = structuredClone(capture('1535')) as unknown as { GameDictionary: Record<string, unknown> };
+    const [key] = Object.keys(raw.GameDictionary);
+    delete raw.GameDictionary[key];
+    expect(() => normalize(raw)).toThrow(`game ${key} is listed by division`);
+  });
+
   it('refuses a division with no format or no age group', () => {
     expect(() => divisionLabels([{ key: 2, name: 'U-12 Girls' }])).toThrow('names no 11v11 or 7v7 format');
     expect(() => divisionLabels([{ key: 2, name: 'Masters 11v11' }])).toThrow('names no age group');
@@ -564,6 +571,21 @@ describe('scripts/fetch-festival.ts', () => {
     const written = FestivalFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
     expect(written.sourceVersion).toBe(VERSION_1518);
     expect(festivalCounts(written).finals).toBe(10);
+  });
+
+  it('keeps the committed file whole when a forced read is a cached copy no newer than it', async () => {
+    // The committed file holds the 3:26:47 PM results; a --force run is served the 3:13:00 PM-era copy (made 15:17:21,
+    // before 3:26:47). Writing it would put the older results under the committed version, which the next ordinary
+    // run would then skip.
+    const before = commit(normalize(capture('1535')));
+    const older = upstream({ feed: body('1518'), lastModified: 'Thu, 26 Nov 2026 15:17:21 GMT' });
+    expect(await main(['--out', out, '--force', '--fetched-at', '2026-11-26T15:40:00.000Z'], older.fetchImpl)).toBe(0);
+    expect(lines.join('\n')).toContain('the committed file is kept as it is');
+    expect(readFileSync(out, 'utf8')).toBe(before);
+    // And the next ordinary run, seeing the committed version upstream, leaves it alone.
+    const again = upstream({ feed: body('1518') });
+    expect(await main(['--out', out], again.fetchImpl)).toBe(0);
+    expect(readFileSync(out, 'utf8')).toBe(before);
   });
 
   it('saves both bodies as received on --capture', async () => {
