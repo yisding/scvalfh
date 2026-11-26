@@ -243,7 +243,13 @@ export interface RosterClubGroup {
   /** The same words for the link's accessible name ("Storey Lewis’s club: SF Hawks"). */
   srLabel: 'club' | 'clubs' | 'listed club' | 'listed clubs' | 'earlier club' | 'earlier clubs';
   /** Latest `asOf` first (a range's or season's end year; undated last), then display name. */
-  clubs: ClubLink[];
+  clubs: RosterClubLink[];
+}
+
+/** A club on a roster row, with the player's team at the club when a source names it. */
+export interface RosterClubLink extends ClubLink {
+  /** The club team, worded as the club page words it (`clubTeamWords`): "ECNL G2008/09"; null when no source names one. */
+  team: string | null;
 }
 
 const GROUP_WORDS = {
@@ -307,7 +313,7 @@ function clubGroups(ties: readonly ClubAffiliation[]): RosterClubGroup[] {
           endYear(y.a.asOf) - endYear(x.a.asOf) ||
           clubDisplayName(x.club).localeCompare(clubDisplayName(y.club)),
       )
-      .map(({ club }) => clubLink(club));
+      .map(({ a, club }): RosterClubLink => ({ ...clubLink(club), team: clubTeamWords(a) }));
     if (clubs.length === 0) return [];
     const w = GROUP_WORDS[status];
     const many = clubs.length > 1;
