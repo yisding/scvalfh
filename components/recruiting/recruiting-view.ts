@@ -32,6 +32,7 @@ import { clubsResearched, getClubsFile } from '../../lib/players/clubs';
 import { isResearched } from '../../lib/schema-primitives';
 import { getCommitsFile } from '../../lib/players/commits';
 import { getJvProfilesFile } from '../../lib/jv/jv-profiles';
+import { accountCount } from '../../lib/players/player-index';
 import { getTeamsGrouped } from '../../lib/data';
 import { dateWithYear, listWords } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
@@ -257,10 +258,8 @@ export function buildRecruitingView(): RecruitingView {
     clubsCheckedOn: dateWithYear(getClubsFile().capturedAt),
     commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
     researched: {
-      profiles: isResearched(
-        getRosterEnrichment().notes,
-        getRosterEnrichment().teams.reduce((n, t) => n + t.players.reduce((m, p) => m + p.profiles.length, 0), 0),
-      ) ||
+      // The varsity rounds are told in the overlay's notes; their pages are this build's people's accounts.
+      profiles: isResearched(getRosterEnrichment().notes, accountCount()) ||
         // The JV lists' profiles are listed here too: their file holding research is research.
         isResearched(
           getJvProfilesFile().notes,

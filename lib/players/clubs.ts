@@ -12,6 +12,13 @@
  * child-process test swaps them; nothing writes clubs.json, and the tests that need a bad file
  * build one in memory and pass it to `loadClubs`. So this module reads no file of its own.
  *
+ * The file names each tie by person (`memberships`: a registry id, data/players.json). The person is found on this
+ * season's rows through data/<sport>/player-index.json (lib/players/player-index.ts), and the tie is served as that
+ * row's: an `affiliation` on her varsity row (a MaxPreps row the overlay does not mark JV), else a
+ * `listedAffiliation` on her row of a school's own varsity list (otherRosters `listed`), else a `jvAffiliation` on
+ * her JV row. A person on no row of this sport this season (she graduated, moved away, or plays another sport) has
+ * her ties kept in the file and shown nowhere: that is not drift, it is the season.
+ *
  * The join, on team slug + MaxPreps athleteId, is against the MERGED rosters
  * (`getAllEnrichedRosters`): a merged row already carries the grade the team page shows (MaxPreps',
  * else the overlay's) and the overlay's `level`, so the checks below see what a reader sees.
@@ -20,19 +27,19 @@
  *   2. not be a JV row (the overlay's `level`): clubs list varsity rows only
  *   3. agree with every class year a source states, when the row has a grade (a player with no
  *      grade anywhere has nothing to check)
- * and the file's `season` must be rosters.json's. Steps 1-3 are lib/players/roster-join.ts, shared with
+ * and the player index must be of rosters.json's season. Steps 1-3 are lib/players/roster-join.ts, shared with
  * lib/players/commits.ts, whose step 3 asks more because /commits shows a class year; a club page never does.
  * A JV affiliation (`jvAffiliations`) must pass 1 and 3 too, and must be a JV row instead: a merged row
  * the overlay marks JV (field hockey's Los Gatos), or a row of the team's MaxPreps JV roster
  * (data/<sport>/jv-rosters.json) whose player is not on the varsity roster (withJvListRows): soccer's JV
  * players are all of this second kind.
  *
- * A roster refetch can break a tie that held when it was written: `pnpm fetch-rosters` drops a tied player's
- * row, respells the name or moves it to JV. That is roster drift (lib/players/roster-drift.ts), not a load
- * failure, so one departed player no longer holds back a refresh's every roster change: the tie is left out
- * of what this module serves and reported (`pnpm roster-drift`, a warning on the refresh's run page). The
- * file itself keeps it: re-check that affiliation's sources, then edit or drop it by hand. Never prune it
- * automatically. A file of another season (a rollover) still throws at import.
+ * A roster refetch can break a tie that held when it was written: `pnpm fetch-rosters` changes a tied player's
+ * grade so that a source's class year no longer agrees. That is roster drift (lib/players/roster-drift.ts), not
+ * a load failure, so one record no longer holds back a refresh's every roster change: the tie is left out of
+ * what this module serves and reported (`pnpm roster-drift`, a warning on the refresh's run page). The file
+ * itself keeps it: re-check that membership's sources, then edit or drop it by hand. Never prune it
+ * automatically. A player index of another season (a rollover nobody rebuilt the registry for) throws at import.
  */
 
 import bundledFieldHockey from '../../data/field-hockey/clubs.json';
@@ -48,8 +55,10 @@ import {
   type ClubAffiliation,
   type ClubRegion,
   type ClubsFile,
+  type ClubsView,
   type ListedAffiliation,
 } from './clubs-schema';
+import { rowsOfPerson } from './player-index';
 import { getJvRostersFile } from '../jv/jv-rosters';
 import { nameKey } from './name-compare';
 import { joinToRoster, playerKey } from './roster-join';
@@ -81,6 +90,8 @@ export type {
   ClubSource,
   ClubSourceKind,
   ClubsFile,
+  ClubsView,
+  Membership,
   ListedAffiliation,
 } from './clubs-schema';
 
@@ -110,8 +121,36 @@ export function loadClubs(
   raw: unknown,
   teams: readonly MergedTeamRoster[] = getAllEnrichedRosters(),
   season: string = getRosters().season,
-): ClubsFile {
+): ClubsView {
   return loadAndJoin(raw, teams, season).file;
+}
+
+/**
+ * The file's memberships as the ties of this season's rows (see the header): each person on her varsity row, else
+ * her listed row, else her JV row, named as that row is; a person on none of this sport's rows this season, in none.
+ */
+function tiesOfRows(memberships: ClubsFile['memberships'], teams: readonly MergedTeamRoster[]): Pick<ClubsView, 'affiliations' | 'jvAffiliations' | 'listedAffiliations'> {
+  const named = new Map(withJvListRows(teams).flatMap((t) => t.players.flatMap((p) => (p.athleteId === null ? [] : [[playerKey(t.slug, p.athleteId), p.fullName] as const]))));
+  const out: Pick<ClubsView, 'affiliations' | 'jvAffiliations' | 'listedAffiliations'> = { affiliations: [], jvAffiliations: [], listedAffiliations: [] };
+  for (const m of memberships) {
+    const { playerId } = m;
+    const tie = { club: m.club, clubTeam: m.clubTeam, status: m.status, asOf: m.asOf, confidence: m.confidence, sources: m.sources, basis: m.basis };
+    const rows = rowsOfPerson(playerId);
+    const varsity = rows.find((r) => r.athleteId !== null && r.level === 'varsity');
+    const listed = rows.find((r) => r.athleteId === null && r.level === 'varsity');
+    const jv = rows.find((r) => r.athleteId !== null && r.level === 'jv');
+    const at = (r: { team: string; athleteId: string | null; name: string }): ClubAffiliation => ({
+      teamSlug: r.team,
+      athleteId: r.athleteId as string,
+      playerId,
+      fullName: named.get(playerKey(r.team, r.athleteId as string)) ?? r.name,
+      ...tie,
+    });
+    if (varsity) out.affiliations.push(at(varsity));
+    else if (listed) out.listedAffiliations.push({ teamSlug: listed.team, playerId, fullName: listed.name, ...tie });
+    else if (jv) out.jvAffiliations.push(at(jv));
+  }
+  return out;
 }
 
 /**
@@ -139,11 +178,9 @@ function loadAndJoin(
   raw: unknown,
   teams: readonly MergedTeamRoster[],
   season: string,
-): { file: ClubsFile; rows: Map<string, MergedPlayer>; listed: ClubAffiliation[] } {
-  const file = validateData('clubs', ClubsFileSchema, raw);
-  if (file.season !== season) {
-    throw new Error(`clubs.json is for season ${file.season}, rosters for ${season}`);
-  }
+): { file: ClubsView; rows: Map<string, MergedPlayer>; listed: ClubAffiliation[] } {
+  const { memberships, ...disk } = validateData('clubs', ClubsFileSchema, raw);
+  const file: ClubsView = { ...disk, season, ...tiesOfRows(memberships, teams) };
   // A tie the roster no longer supports is left out of the file this module serves (lib/players/roster-drift.ts).
   const varsity = joinToRoster(file.affiliations, teams, season, { label: 'clubs', noun: 'clubs', subject: (a) => a.club });
   const jv = joinToRoster(file.jvAffiliations, withJvListRows(teams), season, {
@@ -177,12 +214,17 @@ function loadAndJoin(
 const { file, rows: ROW_BY_PLAYER, listed: LISTED } = HAS_RECRUITING
   ? loadAndJoin(bundled, getAllEnrichedRosters(), getRosters().season)
   : {
-      // Served as it is, but with the lists the schema would default (a file written before one existed has no key
-      // for it), so every reader of getClubsFile() can rely on each being an array.
+      // Served as it is, with no ties: the build lists no players, so no row is anybody.
       file: {
-        ...(bundled as unknown as ClubsFile),
-        listedAffiliations: (bundled as unknown as Partial<ClubsFile>).listedAffiliations ?? [],
-      },
+        builtBy: (bundled as unknown as ClubsFile).builtBy,
+        capturedAt: (bundled as unknown as ClubsFile).capturedAt,
+        notes: (bundled as unknown as ClubsFile).notes,
+        clubs: (bundled as unknown as ClubsFile).clubs,
+        season: getRosters().season,
+        affiliations: [],
+        jvAffiliations: [],
+        listedAffiliations: [],
+      } satisfies ClubsView,
       rows: new Map<string, MergedPlayer>(),
       listed: [] as ClubAffiliation[],
     };
@@ -231,8 +273,8 @@ const ORDERED: readonly Club[] = [...file.clubs].sort(
     clubDisplayName(a).localeCompare(clubDisplayName(b)),
 );
 
-/** The whole file: capturedAt, notes and builtBy, as well as the records. */
-export function getClubsFile(): ClubsFile {
+/** The file as the pages read it: capturedAt, notes and builtBy, the clubs, and the ties of this season's rows. */
+export function getClubsFile(): ClubsView {
   return file;
 }
 

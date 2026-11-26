@@ -375,7 +375,7 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
       expect(m.commitView.playerCommitLine(c.teamSlug, c.athleteId)!.sport).toBe(c.sport === 'soccer' ? null : m.commitView.SPORT_WORDS[c.sport]);
     }
     const profiles = [
-      ...m.rosters.getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+      ...m.rosters.getAllEnrichedRosters().flatMap((t) => t.players.flatMap((p) => p.profiles)),
       ...m.jvProfiles.getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
     ];
     expect(profiles.every((p) => p.sport !== 'soccer')).toBe(true);

@@ -1,9 +1,10 @@
 /**
  * Roster drift: what a hand-curated overlay says that the MaxPreps roster no longer supports.
  *
- * data/<sport>/rosters-enrichment.json, clubs.json and commits.json join to the roster rows by team slug and
- * MaxPreps athleteId, and jv-profiles.json to the team page's JV list by name; their loaders check every record
- * against the row it joins to. data/player-identity.json names MaxPreps careers and players' names, which the
+ * data/<sport>/rosters-enrichment.json joins to the roster rows by team slug and MaxPreps athleteId;
+ * data/player-accounts.json, data/<sport>/clubs.json and data/commitments.json name a person, whom
+ * data/<sport>/player-index.json finds on this season's rows. Their loaders check every record against the row it
+ * joins to (a class year a page states against the row's grade, above all). data/player-identity.json names MaxPreps careers and players' names, which the
  * registry build (lib/players/registry-build.ts) checks against every source the same way. The rows are rewritten
  * by every roster refresh: a coach drops a player, re-enters the roster under new athleteIds, corrects a spelling,
  * or fills in a grade the overlay had filled. Each of those makes a record that was right when it was written wrong
@@ -24,7 +25,20 @@
  */
 
 /** The overlay files a drift is in, as data/<sport>/<file>.json. */
-export type DriftFile = 'rosters-enrichment' | 'clubs' | 'commits' | 'jv-profiles' | 'player-identity';
+export type DriftFile = 'rosters-enrichment' | 'clubs' | 'commitments' | 'player-accounts' | 'player-identity';
+
+/**
+ * Where a drift's file is, from the repository: a sport's own (data/<sport>/<file>.json), or one of the files
+ * filed by person across every sport (data/player-accounts.json, data/commitments.json, data/player-identity.json).
+ */
+export function driftFilePath(file: DriftFile, dataDir: string): string {
+  return file === 'player-accounts' || file === 'commitments' || file === 'player-identity' ? `data/${file}.json` : `${dataDir}/${file}.json`;
+}
+
+/** Whether a drift's file names a person by registry id (its RosterDrift.key is the id), not by a roster row. */
+export function isPersonKeyed(file: DriftFile): boolean {
+  return file === 'player-accounts' || file === 'commitments' || file === 'clubs';
+}
 
 export interface RosterDrift {
   file: DriftFile;
@@ -32,8 +46,9 @@ export interface RosterDrift {
   /** The player as the record names them, and for a club tie or a commitment the club or college: `Ann Lee (sf-hawks)`. */
   who: string;
   /**
-   * What the record joins on: the MaxPreps athleteId; for jv-profiles the JV list's name (as `nameKey` folds it);
-   * for player-identity the entry's list, sport and name (lib/players/registry-build.ts identityDriftKey).
+   * What the record joins on: for rosters-enrichment the MaxPreps athleteId; for the files filed by person
+   * (player-accounts, clubs, commitments) the person's registry id; for player-identity the entry's list, sport
+   * and name (lib/players/registry-build.ts identityDriftKey).
    */
   key: string;
   /** What the roster now says that the record does not agree with. */

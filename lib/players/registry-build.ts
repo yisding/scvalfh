@@ -171,9 +171,21 @@ export interface Sighting {
   observations: Observation[];
 }
 
+/** A person's recruiting pages, as data/player-accounts.json files them: under an id of the previous registry. */
+export interface AccountsInput {
+  playerId: string;
+  accounts: ReadonlyArray<{ platform: string; url: string; sports?: readonly string[]; classOf: number | null }>;
+}
+
 export interface BuildInput {
   previous: PlayersFile | null;
   identity: PlayerIdentity;
+  /**
+   * Each person's recruiting pages (data/player-accounts.json), by the id the previous registry gave her (or a
+   * former one): each page's class year is a statement about her, added to her latest stint, in the page's
+   * sport where she has one. Absent or empty: none.
+   */
+  accounts?: readonly AccountsInput[];
   /**
    * The (sport, season) pairs `sightings` covers: in full, or, with `sources`, only for those
    * sources (every other observation of the pair is carried forward from `previous`).
@@ -441,7 +453,8 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
       const pair = pairKey(stint.sport, stint.season);
       const afresh = toppedUp.get(pair);
       if (builtPairs.has(pair) && !afresh) continue;
-      const observations = afresh ? stint.observations.filter((o) => !afresh.has(o.src)) : stint.observations;
+      // A recruiting page is no row's: it is added to the player afresh every build (5a, below).
+      const observations = (afresh ? stint.observations.filter((o) => !afresh.has(o.src)) : stint.observations).filter((o) => o.src !== 'profile');
       if (observations.length === 0) continue;
       const own = names.filter((n) => n.sport === stint.sport && n.team === stint.team).map((n) => n.name);
       const spelled = observations.flatMap((o) => (o.name && !isShortName(o.name) ? [nameKey(o.name)] : []));
@@ -882,6 +895,29 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     const id = mintId(d.primary[0], taken);
     taken.add(id);
     idOf.set(d, id);
+  }
+
+  // ---- 5a. each person's recruiting pages, filed under her id: their class years are statements about her
+  // A page goes on her latest stint (in the page's sport where she has one there, varsity first), so that it
+  // speaks for the season it was read in; an id no previous player had or retired is somebody nobody knows.
+  const prevById = new Map(prevPlayers.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p] as const)));
+  for (const person of input.accounts ?? []) {
+    const prev = prevById.get(person.playerId);
+    if (!prev) throw new Error(`registry: data/player-accounts.json files pages under ${person.playerId}, which is no player of the registry`);
+    const d = heirOf.get(prev.id);
+    if (!d || d.stints.length === 0) continue;
+    for (const a of person.accounts) {
+      const order = [...d.stints].sort(
+        (x, y) =>
+          byText(y.season, x.season) ||
+          Number(!(a.sports ?? []).includes(x.sport)) - Number(!(a.sports ?? []).includes(y.sport)) ||
+          byLevel(x.level, y.level) || byText(x.sport, y.sport) || byText(x.team, y.team),
+      );
+      const at = d.stints.indexOf(order[0]);
+      const st = d.stints[at];
+      const said: Observation = { src: 'profile', kind: a.platform, url: a.url, ...(a.classOf !== null && a.classOf >= 2020 && a.classOf <= 2040 ? { classOf: a.classOf } : {}) };
+      d.stints[at] = { ...resolveStint({ season: st.season, sport: st.sport, team: st.team, level: st.level }, [...st.observations, said]), ...(st.gone ? { gone: true as const } : {}) };
+    }
   }
 
   // ---- 5b. a season being rebuilt does not forget who was in it

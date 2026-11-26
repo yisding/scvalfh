@@ -87,8 +87,7 @@ import path from 'node:path';
 
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/players/clubs';
-import { getRosterEnrichment } from '../lib/players/rosters';
-import { getJvProfilesFile } from '../lib/jv/jv-profiles';
+import { everyAccount } from '../lib/players/player-index';
 import { profileLabel } from '../components/teams/roster-view';
 import { SPORT_WORDS } from '../components/commits/commit-view';
 import { getCommitsFile } from '../lib/players/commits';
@@ -211,12 +210,9 @@ const PROPER_NOUNS: string[] = [
     ...c.programs.flatMap((p) => [p.name, p.detail]),
     ...c.sources.map((s) => s.what),
   ]).filter((s): s is string => typeof s === 'string' && s.length > 0),
-  // A player's own profile in another sport ("NCSA basketball profile", rosters-enrichment.json and
-  // jv-profiles.json `sport`) is a fact about the player, not this site naming another build's program.
-  ...[
-    ...getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
-    ...getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
-  ]
+  // A player's own profile in another sport ("NCSA basketball profile", data/player-accounts.json `sports`) is a fact
+  // about the player, not this site naming another build's program.
+  ...everyAccount()
     .filter((x) => x.sport !== undefined)
     .map((x) => profileLabel(x)),
   // A player's commitment in another sport (commits.json `sport`: a basketball player's soccer commitment) is a fact

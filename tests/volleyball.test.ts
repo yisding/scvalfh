@@ -592,7 +592,7 @@ describe('the volleyball recruiting research (data/volleyball/{clubs,commits,ros
   });
 
   it('links recruiting pages on the varsity overlay and the JV lists, a volleyball profile naming no sport', () => {
-    const profiles = m.rosters.getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles));
+    const profiles = m.rosters.getAllEnrichedRosters().flatMap((t) => t.players.flatMap((p) => p.profiles));
     expect(profiles.length).toBeGreaterThanOrEqual(440);
     expect(profiles.every((p) => p.sport !== 'volleyball')).toBe(true);
     expect(new Set(profiles.map((p) => p.platform))).toEqual(new Set(['hudl', 'maxpreps', 'ncsa', 'sportsrecruits']));

@@ -1,12 +1,18 @@
 /**
- * The Zod contract for data/field-hockey/commits.json — which players on the tracked varsity rosters a public
- * page says have committed to play a sport in college (field hockey or any other), and the colleges
- * they committed to (SPEC §1.1j3, DESIGN §21).
+ * The Zod contract for data/commitments.json — which players a public page says have committed to play a sport in
+ * college (their high school sport or any other), and the colleges they committed to (SPEC §1.1j3, DESIGN §21).
  *
- * The file is research, not a script's output, like data/field-hockey/clubs.json: it was written by hand on its
- * `capturedAt` date, every commitment checked twice (a checker re-opened each source, then an
- * independent refuter tried to break it), and nothing rebuilds it. This contract only says what
- * shape its facts must have.
+ * One file for every build since 2026-11-26: a commitment is a fact about a person, filed under her registry id
+ * (data/players.json), and each build shows the commitments of the people on its own varsity rosters this season
+ * (data/<sport>/player-index.json finds them). Before, each build kept its own data/<sport>/commits.json naming a
+ * roster row by MaxPreps' per-season athleteId, so a two-sport player's commitment was kept twice and a new
+ * season's rows lost them all. Each build's research round is kept as it recorded itself (`rounds`), and the
+ * pages print its date and notes.
+ *
+ * The file is research, not a script's output, like data/<sport>/clubs.json: written by hand, every commitment
+ * checked twice (a checker re-opened each source, then an independent refuter tried to break it), and nothing
+ * rebuilds it. `pnpm build-players` keeps it keyed: an id the registry retires is rewritten to the one that
+ * stays, and `name` to the person's official name. This contract only says what shape its facts must have.
  *
  * Separate from lib/players/commits.ts (the read API, which imports the file) so tests and scripts can
  * parse a file without loading one — the split lib/players/clubs-schema.ts / lib/players/clubs.ts uses.
@@ -15,7 +21,7 @@
  *   1. college slugs are unique, and a college has at most one program per sport
  *   2. every commitment's `college` names a college in colleges[], and that college has a program
  *      in the commitment's `sport` (its division and conference are the sport's, not the college's)
- *   3. (teamSlug, athleteId) is unique: a player has at most one commitment
+ *   3. `playerId` is unique: a player has at most one commitment
  *   4. every college, and every program of it, has at least one commitment: the file holds no
  *      college or program nobody committed to, and no `asOf` is after `capturedAt` (it is the
  *      earliest date a source gave by then)
@@ -30,9 +36,9 @@
  *   7. a quote is 1-300 characters (kept for maintainers, never rendered)
  *   8. `asOf` is a day, a month or a year (isCommitDate): a commitment happens on a date, never
  *      over a season or a range
- *   9. the join to data/field-hockey/rosters.json — the row exists, carries the same fullName, is not JV, and
- *      agrees with every stated class year — lives in lib/players/commits.ts: this file cannot see the
- *      rosters
+ *   9. the join to a build's rows — the person has a varsity row this season, and every stated class year
+ *      agrees with its grade — lives in lib/players/commits.ts: this file cannot see the rosters; that every
+ *      id is a registry player's, and `name` one of hers, is tests/commits-file.test.ts's
  * 1-4 are one file-level `superRefine(checkCommitsFile)`, each failure a named issue with a path
  * (the lib/snapshot/snapshot-schema.ts idiom).
  */
@@ -41,6 +47,7 @@ import { z } from 'zod';
 
 import { isBannedHost, sourceUrl } from './clubs-schema';
 import { calendarDateKey, isCalendarDate, isHttpsUrl, playerId, slugId } from '../schema-primitives';
+import { SPORT_IDS } from '../sports/current';
 import { TEAMS } from '../teams';
 
 /**
@@ -292,16 +299,37 @@ export const CommitSourceSchema = z.object({
   account: OfficialAccountSchema.optional(),
 }).superRefine(checkSource);
 
+/** A commitment as the file records it: under the person's registry id. */
+export const PersonCommitmentSchema = z
+  .object({
+    /** The person's registry id: data/<sport>/player-index.json finds her on a build's rows. */
+    playerId,
+    /** Her official name in the registry, for whoever reads the file: `pnpm build-players` keeps it so. */
+    name: text,
+    college: slugId,
+    /** The sport the player committed to play at `college`; that college has a program in it. */
+    sport: z.enum(COMMIT_SPORTS),
+    status: z.enum(COMMIT_STATUSES),
+    /** The earliest date a source gives for the commitment (isCommitDate), when one does. */
+    asOf: z.string().refine(isCommitDate, 'expected YYYY-MM-DD, YYYY-MM or YYYY').nullable(),
+    confidence: z.enum(COMMIT_CONFIDENCES),
+    sources: z.array(CommitSourceSchema).min(1, 'a commitment needs at least one source'),
+    /** What the match rests on, for maintainers. Never rendered: it can name people who are not players. */
+    basis: text,
+  })
+  .strict();
+
+/**
+ * A commitment as a build's pages read it (lib/players/commits.ts): the person's, found on her varsity row of this
+ * season and named by the row (team slug, MaxPreps athleteId, the name the row shows). Never written to a file.
+ */
 export const CommitmentSchema = z.object({
   teamSlug,
-  /** The MaxPreps per-season athlete GUID: the join key to data/field-hockey/rosters.json. */
+  /** The MaxPreps per-season athlete GUID of the row the person was found on. */
   athleteId: text,
-  /**
-   * The player's id in the player registry (data/players.json), written by `pnpm build-players`. It
-   * outlasts `athleteId`, which MaxPreps reissues every season. Never read by the site.
-   */
+  /** The person's registry id (data/players.json). */
   playerId: playerId.optional(),
-  /** As MaxPreps spells it; lib/players/commits.ts refuses any other spelling. */
+  /** As the row spells it. */
   fullName: text,
   college: slugId,
   /** The sport the player committed to play at `college`; that college has a program in it. */
@@ -315,17 +343,42 @@ export const CommitmentSchema = z.object({
   basis: text,
 });
 
-const CommitsFileObject = z.object({
-  /** How the file was made. */
-  builtBy: text,
-  capturedAt: calendarDateKey,
-  /** The roster season the commitments join to ("26-27"); lib/players/commits.ts checks it is rosters.json's. */
-  season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
-  /** Method, rules and recall, in words. */
-  notes: z.array(text),
-  colleges: z.array(CollegeSchema),
-  commitments: z.array(CommitmentSchema),
-});
+/** One build's research round, as it recorded itself: what its pages print the date and the method of. */
+export const CommitRoundSchema = z
+  .object({
+    /** How the round was made. */
+    builtBy: text,
+    capturedAt: calendarDateKey,
+    /** Method, rules and recall, in words. */
+    notes: z.array(text),
+  })
+  .strict();
+export type CommitRound = z.infer<typeof CommitRoundSchema>;
+
+const CommitsFileObject = z
+  .object({
+    /** How the file was made. */
+    builtBy: text,
+    /** The latest round's date: no `asOf` is after it. */
+    capturedAt: calendarDateKey,
+    notes: z.array(text),
+    /** Each build's round of looking for its players' commitments (a build with none has none). */
+    rounds: z.partialRecord(z.enum(SPORT_IDS), CommitRoundSchema),
+    colleges: z.array(CollegeSchema),
+    commitments: z.array(PersonCommitmentSchema),
+  })
+  .strict();
+
+/**
+ * The file as one build's pages read it (lib/players/commits.ts getCommitsFile): its round's record, the
+ * commitments of the people on its varsity rows this season, and the colleges (with only the programs) they name.
+ */
+export interface CommitsView extends CommitRound {
+  /** The season of the rows the commitments were found on: rosters.json's. */
+  season: string;
+  colleges: College[];
+  commitments: Commitment[];
+}
 
 type Ctx = z.RefinementCtx;
 
@@ -360,11 +413,10 @@ function checkCommitsFile(f: z.infer<typeof CommitsFileObject>, ctx: Ctx): void 
     if (c.asOf !== null && c.asOf > f.capturedAt.slice(0, c.asOf.length)) {
       issue(ctx, ['commitments', i, 'asOf'], `${c.asOf} is after the research date ${f.capturedAt}`);
     }
-    const key = `${c.teamSlug} ${c.athleteId}`;
-    if (players.has(key)) {
-      issue(ctx, ['commitments', i], `a second commitment for ${c.teamSlug} / ${c.fullName}: a player has one`);
+    if (players.has(c.playerId)) {
+      issue(ctx, ['commitments', i], `a second commitment for ${c.name} (${c.playerId}): a player has one`);
     }
-    players.add(key);
+    players.add(c.playerId);
   });
   f.colleges.forEach((c, i) => {
     if (!committedTo.has(c.slug)) {
@@ -386,4 +438,5 @@ export type CollegeProgram = z.infer<typeof CollegeProgramSchema>;
 export type College = z.infer<typeof CollegeSchema>;
 export type CommitSource = z.infer<typeof CommitSourceSchema>;
 export type Commitment = z.infer<typeof CommitmentSchema>;
+export type PersonCommitment = z.infer<typeof PersonCommitmentSchema>;
 export type CommitsFile = z.infer<typeof CommitsFileSchema>;

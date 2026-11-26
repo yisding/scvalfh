@@ -1,8 +1,8 @@
 /**
- * data/field-hockey/commits.json (SPEC §1.1j3, DESIGN §21): the committed file validates and holds every
- * load-time invariant; lib/players/commits.ts serves it in display order (DESIGN §21.1); and a bad file —
- * built in memory, never written to disk — is refused at load with a message that names what is
- * wrong (the path, or the team, player and college).
+ * data/commitments.json (SPEC §1.1j3, DESIGN §21), as the field hockey build serves it: the committed file
+ * validates and holds every load-time invariant; lib/players/commits.ts serves the commitments of the people on this
+ * build's varsity rows in display order (DESIGN §21.1); and a bad file — built in memory, never written to disk —
+ * is refused at load with a message that names what is wrong (the path, or the team, player and college).
  *
  * The file is research, not a script's output. The cases below that need a commitment build one
  * from real roster rows, so they hold whatever the committed file holds; the counts pinned against
@@ -25,7 +25,9 @@ import {
   type College,
   type Commitment,
   type CommitsFile,
+  type PersonCommitment,
 } from '../lib/players/commits-schema';
+import { personOfRow, rowsOfPerson } from '../lib/players/player-index';
 import {
   collegeDisplayName,
   commitClassOf,
@@ -46,7 +48,10 @@ import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type Ros
 import { getTeamBySlug } from '../lib/teams';
 import { loadProblems, REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'commits.json'), 'utf8')) as CommitsFile;
+/** The file as committed: every build's commitments, each under its person. */
+const disk = JSON.parse(readFileSync(path.join(REPO, 'data', 'commitments.json'), 'utf8')) as CommitsFile;
+/** The file as this build's pages read it: its round's record, its varsity rows' commitments and their colleges. */
+const raw = getCommitsFile();
 const teams = getAllEnrichedRosters();
 const season = getRosters().season;
 
@@ -76,11 +81,11 @@ const COLLEGE: College = {
   checkedOn: '2026-10-03',
 };
 
-function commitmentFor(r: { teamSlug: string; row: MergedPlayer }, over: Partial<Commitment> = {}): Commitment {
+/** A commitment of the person on `r`'s row (data/field-hockey/player-index.json says who she is). */
+function commitmentFor(r: { teamSlug: string; row: MergedPlayer }, over: Partial<PersonCommitment> = {}): PersonCommitment {
   return {
-    teamSlug: r.teamSlug,
-    athleteId: r.row.athleteId!,
-    fullName: r.row.fullName,
+    playerId: personOfRow(r.teamSlug, r.row.athleteId)!,
+    name: r.row.fullName,
     college: COLLEGE.slug,
     sport: 'field-hockey',
     status: 'committed',
@@ -101,9 +106,22 @@ function commitmentFor(r: { teamSlug: string; row: MergedPlayer }, over: Partial
   };
 }
 
+/** A commitment as the pages read it, on `r`'s row. */
+function served(c: PersonCommitment, r: { teamSlug: string; row: MergedPlayer }): Commitment {
+  const { name, ...rest } = c;
+  return { ...rest, teamSlug: r.teamSlug, athleteId: r.row.athleteId!, fullName: name };
+}
+
 /** A valid file with one commitment per given row, all to COLLEGE. */
-function fileWith(commitments: Commitment[], colleges: College[] = [COLLEGE]): CommitsFile {
-  return { builtBy: 'test', capturedAt: '2026-10-03', season, notes: ['test'], colleges, commitments };
+function fileWith(commitments: PersonCommitment[], colleges: College[] = [COLLEGE]): CommitsFile {
+  return {
+    builtBy: 'test',
+    capturedAt: '2026-10-03',
+    notes: ['test'],
+    rounds: { 'field-hockey': { builtBy: 'test', capturedAt: '2026-10-03', notes: ['test'] } },
+    colleges,
+    commitments,
+  };
 }
 
 /** What the schema says about `f`, as `path: message` lines; [] when it passes. */
@@ -116,13 +134,26 @@ const load = (f: unknown) => () => loadCommits(f, teams, season);
 /** The error loadCommits throws on `f`, else the roster drift it reports, else '' (tests/helpers.ts loadProblems). */
 const problems = (f: unknown) => loadProblems(load(f));
 
-describe('the committed data/field-hockey/commits.json', () => {
+describe('the committed data/commitments.json', () => {
   it('validates and loads against the rosters', () => {
-    expect(schemaIssues(raw)).toEqual([]);
-    // Zod strips unknown keys, so equality proves the contract covers every key the file has.
-    expect(loadCommits(raw, teams, season)).toEqual(raw);
-    expect(getCommitsFile()).toEqual(raw);
+    expect(schemaIssues(disk)).toEqual([]);
+    // The contract is strict: a key it does not know is refused, so the parse is the file.
+    expect(CommitsFileSchema.parse(disk)).toEqual(disk);
+    expect(loadCommits(disk, teams, season)).toEqual(raw);
     expect(raw.season).toBe(season);
+    // This build's round's record is what its pages date and explain.
+    expect([raw.builtBy, raw.capturedAt, raw.notes]).toEqual([disk.rounds['field-hockey']!.builtBy, disk.rounds['field-hockey']!.capturedAt, disk.rounds['field-hockey']!.notes]);
+  });
+
+  it('serves the commitment of every person on a varsity row here, and keeps the rest for the builds they play in', () => {
+    const shown = new Set(raw.commitments.map((c) => c.playerId));
+    for (const c of disk.commitments) {
+      const varsity = rowsOfPerson(c.playerId).some((r) => r.athleteId !== null && r.level === 'varsity');
+      expect(shown.has(c.playerId), `${c.name} (${c.college})`).toBe(varsity);
+    }
+    // Katarina Smith's, one record since 2026-11-26, is on both her field hockey and her soccer row.
+    expect(disk.commitments.filter((c) => c.name === 'Katarina Smith')).toHaveLength(1);
+    expect(raw.commitments.find((c) => c.fullName === 'Katarina Smith')?.college).toBe('ithaca');
   });
 
   it('cites only https pages, social media only as an official account\'s post', () => {
@@ -221,7 +252,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect(socal).toHaveLength(16);
     // Phoebe Miller (Redwood, San Diego State lacrosse) signed on 2026-11-11: SDSU's own release of that day.
     expect(raw.commitments.filter((c) => c.status === 'signed').map((c) => [c.fullName, c.college, c.sport])).toEqual([['Phoebe Miller', 'san-diego-state', 'lacrosse']]);
-    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Reese Roldan', 'Sami Lee', 'Shyla Paredes']);
+    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName).sort()).toEqual(['Reese Roldan', 'Sami Lee', 'Shyla Paredes']);
     // Kendall Gann (Temecula Valley, Barton) is high since 2026-11-25: her own FieldLevel page names the school.
     // Frankie Lemieux's and Clara Froemming's (both 2026-11-03, medium) went to high on 2026-11-06: Stick Together's
     // Nov 5 issue names each one's school. That issue also added Hailey Moncada (Gilroy, Mercyhurst) and Evie Ferrini
@@ -596,30 +627,23 @@ describe('the schema refuses a bad file, naming the path', () => {
 });
 
 describe('the join to the rosters refuses a file, or leaves a commitment out as roster drift, naming team, player and college', () => {
-  it('another season', () => {
-    expect(() => loadCommits(fileWith([commitmentFor(senior)]), teams, '27-28')).toThrow(
-      `commits.json is for season ${season}, rosters for 27-28`,
-    );
-  });
-
-  it('an athleteId that is not a row of the team', () => {
-    const f = fileWith([commitmentFor(senior, { athleteId: '00000000-0000-0000-0000-000000000000' })]);
-    expect(problems(f)).toContain(`commits: ${senior.teamSlug} / ${senior.row.fullName} (example-college): athleteId`);
-    // Left out of what the module serves, not thrown: a roster refresh that drops a player must not fail the build.
+  it('a person on no varsity row of this build: kept in the file, shown nowhere here, and no drift', () => {
+    const f = fileWith([commitmentFor(senior, { playerId: 'p0000000000' })]);
+    expect(problems(f)).toBe('');
     expect(loadCommits(f, teams, season).commitments).toEqual([]);
   });
 
-  it('another spelling of the name', () => {
-    const f = fileWith([commitmentFor(senior, { fullName: `${senior.row.fullName}x` })]);
-    expect(problems(f)).toContain(`MaxPreps spells this player "${senior.row.fullName}"`);
+  it('shows the row\'s own name, whatever the record calls her (pnpm build-players keeps it the registry\'s)', () => {
+    const f = fileWith([commitmentFor(senior, { name: `${senior.row.fullName}x` })]);
+    expect(loadCommits(f, teams, season).commitments.map((c) => c.fullName)).toEqual([senior.row.fullName]);
   });
 
-  it('a JV row', () => {
+  it('a JV row: commitments list varsity rows only, so a JV player\'s is shown nowhere here', () => {
     const jv = teams.flatMap((t) => t.players.map((row) => ({ teamSlug: t.slug, row }))).find(
       (r) => r.row.level === 'jv' && r.row.athleteId !== null,
     );
     expect(jv, 'Los Gatos lists JV rows on MaxPreps').toBeDefined();
-    expect(problems(fileWith([commitmentFor(jv!)]))).toContain('a JV row: commitments list varsity rows only');
+    expect(loadCommits(fileWith([commitmentFor(jv!)]), teams, season).commitments).toEqual([]);
   });
 
   it('a stated class year that disagrees with the grade', () => {
@@ -706,7 +730,7 @@ describe('a roster row whose MaxPreps grade is last season\'s (a rosterBehind gr
   });
 
   it('lists the player under the corrected class: commitClassOf reads the grade the conflict gives', () => {
-    const c = commitmentFor(junior);
+    const c = served(commitmentFor(junior), junior);
     const row = (t: typeof teams) => t.find((x) => x.slug === junior.teamSlug)!.players.find((p) => p.athleteId === junior.row.athleteId)!;
     expect(commitClassOf(c, row(marked))).toBe(classOf(season, 12));
     expect(commitClassOf(c, row(unmarked))).toBe(classOf(season, 11));

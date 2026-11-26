@@ -14,7 +14,18 @@ import { describe, expect, it } from 'vitest';
 import { REPO as ROOT, runScript } from './helpers';
 import { bannedChain, repoPath, resolveFile, sourceFiles, specifierBase, type Target } from './import-graph';
 import { buildRegistry, classOfFor, isShortName, nameKey, namesCompatible, positionCodes, type BuildInput, type Sighting } from '../lib/players/registry-build';
-import { readBuildInput, readPlayerIdentity, readPlayersFile, sportDataDir } from '../lib/players/registry-file';
+import {
+  COMMITMENTS_FILE,
+  PLAYER_ACCOUNTS_FILE,
+  playerIndexFile,
+  readAccountsFile,
+  readBuildInput,
+  readPlayerIdentity,
+  readPlayersFile,
+  sportDataDir,
+} from '../lib/players/registry-file';
+import { maxPrepsCareerId } from '../lib/players/accounts-schema';
+import { buildPlayerIndex, formatPlayerIndex } from '../lib/players/player-index-schema';
 import {
   PlayersFileSchema,
   identifierKey,
@@ -27,7 +38,6 @@ import { currentSeasonSightings, pastSeasonSightings } from '../lib/players/regi
 import { SPORT_IDS, SPORT_LISTS_PLAYERS } from '../lib/sports/current';
 import { stampCuratedFiles, stampIndex } from '../scripts/build-players';
 import type { RosterDrift } from '../lib/players/roster-drift';
-import { nameKey as jvNameKey } from '../lib/jv/jv-rosters';
 
 const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [], names: [] };
 
@@ -965,6 +975,47 @@ describe('what the reviewers broke', () => {
   });
 });
 
+describe('what is filed by person', () => {
+  it("a person's recruiting pages speak for her latest stint, in their own sport where she has one", () => {
+    const first = build([
+      row({ name: 'Ada Ng', careerIds: ['c1'], season: '25-26', obs: { grade: 10 } }),
+      row({ name: 'Ada Ng', careerIds: ['c1'], sport: 'soccer', level: 'jv' }),
+      row({ name: 'Ada Ng', careerIds: ['c1'] }),
+    ]);
+    const id = first.players[0].id;
+    const again = build(
+      [row({ name: 'Ada Ng', careerIds: ['c1'], season: '25-26', obs: { grade: 10 } }), row({ name: 'Ada Ng', careerIds: ['c1'], sport: 'soccer', level: 'jv' }), row({ name: 'Ada Ng', careerIds: ['c1'] })],
+      {
+        previous: first,
+        accounts: [
+          {
+            playerId: id,
+            accounts: [
+              { platform: 'hudl', url: 'https://www.hudl.com/profile/1', sports: ['soccer'], classOf: 2028 },
+              { platform: 'ncsa', url: 'https://www.ncsasports.org/x', sports: ['lacrosse'], classOf: 2029 },
+            ],
+          },
+        ],
+      },
+    );
+    const [p] = again.players;
+    expect(p.id).toBe(id);
+    const where = (url: string) => p.stints.filter((s) => s.observations.some((o) => o.url === url)).map((s) => `${s.season} ${s.sport} ${s.level}`);
+    expect(where('https://www.hudl.com/profile/1')).toEqual(['26-27 soccer jv']);
+    // No stint in its sport: the latest season's varsity one.
+    expect(where('https://www.ncsasports.org/x')).toEqual(['26-27 field-hockey varsity']);
+    expect(p.classOfConflicts.map((c) => `${c.classOf} ${c.src}`)).toEqual(['2029 profile']);
+    // A page is added afresh every build, never carried twice.
+    const third = build([row({ name: 'Ada Ng', careerIds: ['c1'], season: '25-26', obs: { grade: 10 } })], { previous: again, accounts: [] });
+    expect(third.players[0].stints.flatMap((s) => s.observations).some((o) => o.src === 'profile')).toBe(false);
+  });
+
+  it('pages filed under an id the registry never gave are refused', () => {
+    const first = build([row({ name: 'Ada Ng', careerIds: ['c1'] })]);
+    expect(() => build([row({ name: 'Ada Ng', careerIds: ['c1'] })], { previous: first, accounts: [{ playerId: 'p0000000000', accounts: [] }] })).toThrow(/no player of the registry/);
+  });
+});
+
 describe('the sources as sightings', () => {
   const rosterRow = (over: Record<string, unknown>) => ({
     athleteId: 'a1', careerProfileId: 'guid-1', careerId: 'c1', firstName: 'Xia', lastName: 'Lam', fullName: 'Xia Lam',
@@ -988,7 +1039,6 @@ describe('the sources as sightings', () => {
                   grade: { value: 10, derived: true, kind: 'maxpreps-career', source: 'https://m.test/c' },
                   positions: null, jersey: null, height: null,
                   conflicts: [{ field: 'jersey', other: '4', kind: 'school-site', source: 'https://s.test/r' }, { field: 'grade', other: 'Jr.', kind: 'news', source: 'https://n.test' }],
-                  profiles: [{ platform: 'ncsa', url: 'https://ncsasports.org/x', classOf: 2029 }],
                 },
               ],
             },
@@ -996,7 +1046,6 @@ describe('the sources as sightings', () => {
         },
         playerStats: { season: '26-27', teams: [{ slug: 'alpha', players: [{ careerId: 'c1', fullName: 'Xia Lam', shortName: 'X. Lam', jersey: '6', onRoster: true }, { careerId: null, fullName: 'Z. Nobody', shortName: 'Z. Nobody', jersey: null, onRoster: false }] }] },
         jvSchoolSites: null,
-        jvProfiles: null,
       },
       NO_IDENTITY,
     );
@@ -1008,7 +1057,6 @@ describe('the sources as sightings', () => {
       { src: 'enrichment', name: 'Alexia Lam' },
       { src: 'enrichment', kind: 'maxpreps-career', url: 'https://m.test/c', grade: 10, derived: true },
       { src: 'enrichment', kind: 'school-site', url: 'https://s.test/r', jersey: '4', rejected: true },
-      { src: 'profile', kind: 'ncsa', url: 'https://ncsasports.org/x', classOf: 2029 },
     ]);
     expect(sightings[1]).toMatchObject({ softLevel: true, careerIds: ['c1'], nameKeys: [] });
     const [p] = build(sightings).players;
@@ -1033,7 +1081,7 @@ describe('the sources as sightings', () => {
           rosters: { season: '26-27', teams: [{ slug: 'alpha', players }] },
           jvRosters: null,
           enrichment: { season: '26-27', teams: [{ slug: 'alpha', players: [], otherRosters: listed }] },
-          playerStats: null, jvSchoolSites: null, jvProfiles: null,
+          playerStats: null, jvSchoolSites: null,
         },
         NO_IDENTITY,
       ).sightings;
@@ -1055,7 +1103,7 @@ describe('the sources as sightings', () => {
         sport: 'field-hockey',
         rosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({ fullName: 'Adriana Yam', firstName: 'Adriana', lastName: 'Yam' })] }] },
         jvRosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({ athleteId: 'a2', fullName: 'Ayva Garcia', firstName: 'Ayva', lastName: 'Garcia' })] }] },
-        enrichment: null, playerStats: null, jvSchoolSites: null, jvProfiles: null,
+        enrichment: null, playerStats: null, jvSchoolSites: null,
       },
       { ...NO_IDENTITY, rowSplits: [{ sport: 'field-hockey', team: 'alpha', page: 'jv', name: 'Ayva Garcia', careerId: 'c1', basis: 'two names, one id' }] },
     );
@@ -1073,7 +1121,7 @@ describe('the sources as sightings', () => {
         sport: 'soccer',
         rosters: { season: '27-28', teams: [{ slug: 'alpha', players: [rosterRow({})] }] },
         jvRosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({ athleteId: 'a2', careerId: 'c2' })] }] },
-        enrichment: null, playerStats: null, jvSchoolSites: null, jvProfiles: null,
+        enrichment: null, playerStats: null, jvSchoolSites: null,
       },
       NO_IDENTITY,
     );
@@ -1114,7 +1162,6 @@ describe('the sources as sightings', () => {
           ],
         },
         jvSchoolSites: null,
-        jvProfiles: null,
       },
       NO_IDENTITY,
     );
@@ -1139,7 +1186,7 @@ describe('the sources as sightings', () => {
                 {
                   athleteId: 'a12', fullName: 'Player #12', sourceName: null, level: null,
                   name: { value: 'Grace Gnagne', firstName: 'Grace', lastName: 'Gnagne', kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
-                  grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                  grade: null, positions: null, jersey: null, height: null, conflicts: [],
                 },
               ],
             },
@@ -1147,7 +1194,6 @@ describe('the sources as sightings', () => {
         },
         playerStats: null,
         jvSchoolSites: null,
-        jvProfiles: null,
       },
       NO_IDENTITY,
     );
@@ -1175,7 +1221,7 @@ describe('the sources as sightings', () => {
                 {
                   athleteId: 'a1', fullName: 'Xia Lam', sourceName: null, level: null,
                   name: { value: 'Ann Other', firstName: 'Ann', lastName: 'Other', kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
-                  grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                  grade: null, positions: null, jersey: null, height: null, conflicts: [],
                 },
               ],
             },
@@ -1183,7 +1229,6 @@ describe('the sources as sightings', () => {
         },
         playerStats: null,
         jvSchoolSites: null,
-        jvProfiles: null,
       },
       NO_IDENTITY,
     );
@@ -1207,7 +1252,7 @@ describe('the sources as sightings', () => {
                 {
                   athleteId: 'a1', fullName: 'Player #6', sourceName: 'Ann Other', level: null,
                   grade: { value: 11, derived: false, kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
-                  positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                  positions: null, jersey: null, height: null, conflicts: [],
                 },
               ],
             },
@@ -1215,7 +1260,6 @@ describe('the sources as sightings', () => {
         },
         playerStats: null,
         jvSchoolSites: null,
-        jvProfiles: null,
       },
       NO_IDENTITY,
     );
@@ -1318,108 +1362,108 @@ describe('data/players.json', () => {
     for (const id of missing) expect(reported.some((w) => w.includes(`career ${id},`)), `career ${id}`).toBe(true);
   });
 
-  describe('the curated files carry each player\'s id', () => {
+  describe('the files filed by person name the registry\'s players', () => {
+    type Rec = Record<string, unknown>;
+    const read = (rel: string): Rec | null => (existsSync(path.join(ROOT, rel)) ? (JSON.parse(readFileSync(path.join(ROOT, rel), 'utf8')) as Rec) : null);
+    const byId = new Map(file.players.map((p) => [p.id, p]));
+    const accounts = readAccountsFile(ROOT);
+    const persons: Array<{ where: string; playerId: string; name: string }> = [
+      ...(accounts?.players ?? []).map((p) => ({ where: `${PLAYER_ACCOUNTS_FILE} ${p.name}`, playerId: p.playerId, name: p.name })),
+      ...SPORT_IDS.flatMap((sport) =>
+        (((read(`${sportDataDir(sport)}/clubs.json`)?.memberships ?? []) as Array<{ playerId: string; name: string; club: string }>).map((m) => ({
+          where: `${sportDataDir(sport)}/clubs.json ${m.name} (${m.club})`,
+          playerId: m.playerId,
+          name: m.name,
+        }))),
+      ),
+      ...(((read(COMMITMENTS_FILE)?.commitments ?? []) as Array<{ playerId: string; name: string }>).map((c) => ({ where: `${COMMITMENTS_FILE} ${c.name}`, playerId: c.playerId, name: c.name }))),
+    ];
+
+    it('every record names a player by her current id and her official name (pnpm build-players keeps them so)', () => {
+      expect(persons.length).toBeGreaterThan(3000);
+      for (const r of persons) {
+        const p = byId.get(r.playerId);
+        expect(p, `${r.where}: ${r.playerId} is no current id: run pnpm build-players`).toBeDefined();
+        expect(r.name, r.where).toBe(p?.name);
+      }
+    });
+
+    it('a MaxPreps career page is one of its person\'s careers', () => {
+      for (const person of accounts?.players ?? []) {
+        const careers = (byId.get(person.playerId)?.identifiers ?? []).flatMap((i) => (i.kind === 'maxpreps-career' ? [i.careerId] : []));
+        for (const a of person.accounts.filter((x) => x.platform === 'maxpreps')) {
+          expect(careers, `${person.name}: ${a.url}`).toContain(maxPrepsCareerId(a.url));
+        }
+      }
+    });
+
+    for (const sport of SPORT_IDS) {
+      it(`${sport}: the player index is what pnpm build-players writes from the committed registry`, () => {
+        const rel = playerIndexFile(sport);
+        expect(readFileSync(path.join(ROOT, rel), 'utf8'), `${rel} is stale: run pnpm build-players`).toBe(
+          formatPlayerIndex(buildPlayerIndex(file, sport, 'scripts/build-players.ts', accounts)),
+        );
+      });
+    }
+  });
+
+  describe('the roster overlays carry each row\'s player id', () => {
     const index = stampIndex(file);
     const byId = new Map(file.players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p] as const)));
     type Rec = Record<string, unknown>;
     const read = (rel: string): Rec | null => (existsSync(path.join(ROOT, rel)) ? (JSON.parse(readFileSync(path.join(ROOT, rel), 'utf8')) as Rec) : null);
 
     /**
-     * The curated records of `sport` that roster drift leaves out (lib/players/roster-drift.ts), as
-     * `<file> <team> <key>`. After a refresh dropped or respelled their rows the registry cannot place them, and a
-     * refresh may not stamp the curated files (scripts/refresh-player-registry.sh, --no-stamp): they wait for a
-     * person, as `pnpm roster-drift` says, and are not held to their ids here.
+     * The overlay records of `sport` that roster drift leaves out (lib/players/roster-drift.ts), as
+     * `<team> <athleteId>`. After a refresh dropped or respelled their rows the registry cannot place them, and a
+     * refresh may not stamp the overlays (--no-stamp): they wait for a person, as `pnpm roster-drift` says, and are
+     * not held to their ids here.
      */
     const driftOf = (sport: string): Set<string> => {
       const run = runScript('scripts/roster-drift.ts', ['--json'], { env: { ...process.env, SCVAL_SPORT: sport } });
       if (run.status !== 0) throw new Error(run.output);
       const drift = JSON.parse(run.stdout.trim().split('\n').at(-1)!) as RosterDrift[];
-      return new Set(drift.filter((d) => d.leftOut === 'record').map((d) => `${d.file} ${d.teamSlug} ${d.key}`));
+      return new Set(drift.filter((d) => d.leftOut === 'record' && d.file === 'rosters-enrichment').map((d) => `${d.teamSlug} ${d.key}`));
     };
     const SPORTS_WITH_PLAYERS = SPORT_IDS.filter((s) => SPORT_LISTS_PLAYERS[s]);
 
     for (const sport of SPORT_IDS) {
       const dir = sportDataDir(sport);
       const drifted = SPORTS_WITH_PLAYERS.includes(sport) ? driftOf(sport) : new Set<string>();
-      it(`${sport}: every record that names a player has a playerId, and it is that row's player`, () => {
-        const records: Array<{ where: string; season: unknown; team: unknown; athleteId: unknown; playerId: unknown }> = [];
-        for (const [name, lists] of [['clubs.json', ['affiliations', 'jvAffiliations']], ['commits.json', ['commitments']]] as const) {
-          const f = read(`${dir}/${name}`);
-          for (const list of lists) {
-            for (const r of ((f?.[list] as Rec[] | undefined) ?? [])) {
-              if (drifted.has(`${name.replace('.json', '')} ${String(r.teamSlug)} ${String(r.athleteId)}`)) continue;
-              records.push({ where: `${name} ${String(r.teamSlug)} / ${String(r.fullName)}`, season: f?.season, team: r.teamSlug, athleteId: r.athleteId, playerId: r.playerId });
-            }
-          }
-        }
+      it(`${sport}: every overlay record has a playerId, and it is that row's player`, () => {
         const overlay = read(`${dir}/rosters-enrichment.json`);
         for (const t of ((overlay?.teams as Rec[] | undefined) ?? [])) {
           for (const r of ((t.players as Rec[] | undefined) ?? [])) {
-            if (drifted.has(`rosters-enrichment ${String(t.slug)} ${String(r.athleteId)}`)) continue;
-            records.push({ where: `rosters-enrichment.json ${String(t.slug)} / ${String(r.fullName)}`, season: overlay?.season, team: t.slug, athleteId: r.athleteId, playerId: r.playerId });
-          }
-        }
-        for (const r of records) {
-          expect(r.playerId, `${r.where} has no playerId: run pnpm build-players`).toBeTypeOf('string');
-          const expected = index.byAthlete.get(`${sport} ${String(r.season)} ${String(r.team)} ${String(r.athleteId)}`);
-          // A row the registry has not seen yet (it lags a roster refresh) is not a failure; a row it
-          // has seen under another player is.
-          if (expected !== undefined) expect(byId.get(r.playerId as string)?.id, r.where).toBe(expected);
-          else expect(byId.has(r.playerId as string), `${r.where}: ${String(r.playerId)} is not a player`).toBe(true);
-        }
-
-        const profiles = read(`${dir}/jv-profiles.json`);
-        for (const t of ((profiles?.teams as Rec[] | undefined) ?? [])) {
-          for (const r of ((t.players as Rec[] | undefined) ?? [])) {
-            if (drifted.has(`jv-profiles ${String(t.slug)} ${jvNameKey(String(r.name))}`)) continue;
-            const where = `jv-profiles.json ${String(t.slug)} / ${String(r.name)}`;
+            if (drifted.has(`${String(t.slug)} ${String(r.athleteId)}`)) continue;
+            const where = `rosters-enrichment.json ${String(t.slug)} / ${String(r.fullName)}`;
             expect(r.playerId, `${where} has no playerId: run pnpm build-players`).toBeTypeOf('string');
-            const player = byId.get(r.playerId as string);
-            expect(player, `${where}: ${String(r.playerId)} is not a player`).toBeDefined();
-            expect(player?.names.map(nameKey), where).toContain(nameKey(String(r.name)));
+            const expected = index.byAthlete.get(`${sport} ${String(overlay?.season)} ${String(t.slug)} ${String(r.athleteId)}`);
+            // A row the registry has not seen yet (it lags a roster refresh) is not a failure; a row it
+            // has seen under another player is.
+            if (expected !== undefined) expect(byId.get(r.playerId as string)?.id, where).toBe(expected);
+            else expect(byId.has(r.playerId as string), `${where}: ${String(r.playerId)} is not a player`).toBe(true);
           }
         }
       });
 
       it(`${sport}: stamping again changes nothing`, () => {
         const { changed, unplaced } = stampCuratedFiles(ROOT, sport, index);
-        // What stamping would change, record by record, outside the records roster drift leaves out.
         const restamped: string[] = [];
         for (const [rel, text] of changed) {
-          const file = rel.split('/').at(-1)!.replace('.json', '');
           const before = read(rel)!;
           const after = JSON.parse(text) as Rec;
-          const lists = file === 'clubs' ? ['affiliations', 'jvAffiliations'] : file === 'commits' ? ['commitments'] : [];
-          for (const list of lists) {
-            ((before[list] as Rec[] | undefined) ?? []).forEach((r, i) => {
-              if (JSON.stringify(r) === JSON.stringify((after[list] as Rec[])[i])) return;
-              if (!drifted.has(`${file} ${String(r.teamSlug)} ${String(r.athleteId)}`)) restamped.push(`${rel} ${String(r.teamSlug)} / ${String(r.fullName)}`);
-            });
-          }
           ((before.teams as Rec[] | undefined) ?? []).forEach((t, i) => {
             ((t.players as Rec[] | undefined) ?? []).forEach((r, j) => {
               if (JSON.stringify(r) === JSON.stringify(((after.teams as Rec[])[i].players as Rec[])[j])) return;
-              const key = file === 'jv-profiles' ? jvNameKey(String(r.name)) : String(r.athleteId);
-              if (!drifted.has(`${file} ${String(t.slug)} ${key}`)) restamped.push(`${rel} ${String(t.slug)} / ${String(r.fullName ?? r.name)}`);
+              if (!drifted.has(`${String(t.slug)} ${String(r.athleteId)}`)) restamped.push(`${rel} ${String(t.slug)} / ${String(r.fullName)}`);
             });
           });
         }
         expect(restamped).toEqual([]);
-        // The labels stampCuratedFiles gives the drifted records, which may stay unplaced.
         const waiting = new Set<string>();
-        for (const [name, lists] of [['clubs', ['affiliations', 'jvAffiliations']], ['commits', ['commitments']]] as const) {
-          const f = read(`${dir}/${name}.json`);
-          for (const list of lists) {
-            for (const r of ((f?.[list] as Rec[] | undefined) ?? [])) {
-              if (drifted.has(`${name} ${String(r.teamSlug)} ${String(r.athleteId)}`)) waiting.add(`${dir}/${name}.json ${list}: ${String(r.teamSlug)} / ${String(r.fullName)}`);
-            }
-          }
-        }
-        for (const [name, key, who] of [['rosters-enrichment', (r: Rec) => String(r.athleteId), 'fullName'], ['jv-profiles', (r: Rec) => jvNameKey(String(r.name)), 'name']] as const) {
-          for (const t of ((read(`${dir}/${name}.json`)?.teams as Rec[] | undefined) ?? [])) {
-            for (const r of ((t.players as Rec[] | undefined) ?? [])) {
-              if (drifted.has(`${name} ${String(t.slug)} ${key(r)}`)) waiting.add(`${dir}/${name}.json: ${String(t.slug)} / ${String(r[who])}`);
-            }
+        for (const t of ((read(`${dir}/rosters-enrichment.json`)?.teams as Rec[] | undefined) ?? [])) {
+          for (const r of ((t.players as Rec[] | undefined) ?? [])) {
+            if (drifted.has(`${String(t.slug)} ${String(r.athleteId)}`)) waiting.add(`${dir}/rosters-enrichment.json: ${String(t.slug)} / ${String(r.fullName)}`);
           }
         }
         expect(unplaced.filter((label) => !waiting.has(label))).toEqual([]);

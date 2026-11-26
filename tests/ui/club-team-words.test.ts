@@ -1,6 +1,6 @@
 /**
  * components/words/club-team-words.ts: one shape for the club team a soccer club page prints, over
- * every `clubTeam` in data/soccer/clubs.json (read from disk, whatever sport the run is for).
+ * every `clubTeam` in data/soccer/clubs.json's memberships (read from disk, whatever sport the run is for).
  *
  * The table below is every distinct value in the file and what a page prints for it. A tie added by
  * hand in a shape the rules miss shows up here as a new row: read it, and if it reads wrong, fix the
@@ -26,20 +26,18 @@ const ROSTER_BY_URL = new Map(rosters.teams.map((t) => [t.url, t]));
  */
 const TEAM_NAMES = new Map<string, string[]>(rosters.teams.map((t) => [t.url, [t.teamName]]));
 for (const t of rosters.teams) if (t.supersededBy !== undefined) TEAM_NAMES.get(t.supersededBy)?.push(t.teamName);
-// The ties a club page prints: a tie whose roster row MaxPreps no longer lists is left out as roster drift
-// (lib/players/roster-drift.ts), and its record is kept as it was, so the rules below do not read it.
-const ROSTER_ROWS = new Set(
-  ['data/soccer/rosters.json', 'data/soccer/jv-rosters.json'].flatMap((f) =>
-    (JSON.parse(readFileSync(f, 'utf8')) as { teams: Array<{ slug: string; players?: Array<{ athleteId: string }> }> }).teams.flatMap((t) =>
-      (t.players ?? []).map((p) => `${t.slug} ${p.athleteId}`),
-    ),
-  ),
+// The ties a club page prints: a membership whose person is on no soccer row this season is kept and shown nowhere
+// (data/soccer/player-index.json), so the rules below do not read it.
+const ON_A_ROW = new Set(
+  (JSON.parse(readFileSync('data/soccer/player-index.json', 'utf8')) as { rows: Array<[string, string, string, string | null, string]> }).rows
+    .filter((r) => r[3] !== null)
+    .map((r) => r[0]),
 );
-const TIES = [...clubs.affiliations, ...clubs.jvAffiliations].filter((a) => ROSTER_ROWS.has(`${a.teamSlug} ${a.athleteId}`));
+const TIES = clubs.memberships.filter((m) => ON_A_ROW.has(m.playerId));
 
 describe('soccerClubTeamWords', () => {
   it('prints every club team in data/soccer/clubs.json in one shape', () => {
-    const values = [...new Set([...clubs.affiliations, ...clubs.jvAffiliations].flatMap((a) => (a.clubTeam !== null ? [a.clubTeam] : [])))];
+    const values = [...new Set(clubs.memberships.flatMap((a) => (a.clubTeam !== null ? [a.clubTeam] : [])))];
     const table = Object.fromEntries(values.sort((x, y) => x.localeCompare(y)).map((v) => [v, words(v)]));
     expect(table).toEqual({
       "'07 ECNL RL": 'ECNL RL G2007',
@@ -166,7 +164,7 @@ describe('soccerClubTeamWords', () => {
   });
 
   it('never prints a club name or an age group, and writes every birth year one way, last', () => {
-    const printed = [...clubs.affiliations, ...clubs.jvAffiliations].flatMap((a) => {
+    const printed = clubs.memberships.flatMap((a) => {
       const w = a.clubTeam !== null ? words(a.clubTeam) : null;
       return w !== null ? [w] : [];
     });
@@ -218,9 +216,9 @@ describe('soccerClubTeamWords', () => {
     for (const a of TIES) {
       const teams = a.sources.filter((s) => s.kind === LEAGUE_ROSTER_KIND).map((s) => ROSTER_BY_URL.get(s.url));
       if (teams.length === 0) continue;
-      expect(teams.every((t) => t !== undefined), `${a.fullName}: a cited roster is not in club-rosters.json`).toBe(true);
+      expect(teams.every((t) => t !== undefined), `${a.name}: a cited roster is not in club-rosters.json`).toBe(true);
       const printed = a.clubTeam !== null ? words(a.clubTeam) : null;
-      if (!teams.some((t) => t !== undefined && TEAM_NAMES.get(t.url)!.some((n) => words(n) === printed))) off.push(`${a.fullName} (${a.club}): ${a.clubTeam}`);
+      if (!teams.some((t) => t !== undefined && TEAM_NAMES.get(t.url)!.some((n) => words(n) === printed))) off.push(`${a.name} (${a.club}): ${a.clubTeam}`);
     }
     expect(off).toEqual([]);
   });
@@ -238,7 +236,7 @@ describe('soccerClubTeamWords', () => {
       ];
       if (first.length !== 1 || first[0] === undefined) continue;
       const printed = a.clubTeam !== null ? words(a.clubTeam) : null;
-      if (printed !== words(first[0])) off.push(`${a.fullName} (${a.club}): ${a.clubTeam}, First Team on ${first[0]}`);
+      if (printed !== words(first[0])) off.push(`${a.name} (${a.club}): ${a.clubTeam}, First Team on ${first[0]}`);
     }
     expect(off).toEqual([]);
   });
@@ -258,7 +256,7 @@ describe('soccerClubTeamWords', () => {
       const has = ecnlLeagues.get(a.club);
       const printed = a.clubTeam !== null ? words(a.clubTeam) : null;
       if (a.status !== 'current' || has === undefined || printed === null) continue;
-      for (const league of printed.match(/\bECNL(?: RL)?\b/g) ?? []) if (!has.has(league)) off.push(`${a.fullName} (${a.club}): ${printed}`);
+      for (const league of printed.match(/\bECNL(?: RL)?\b/g) ?? []) if (!has.has(league)) off.push(`${a.name} (${a.club}): ${printed}`);
     }
     expect(off).toEqual([]);
   });

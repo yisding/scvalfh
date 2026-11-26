@@ -16,29 +16,38 @@
  *                                  write a draft answer for each question and tie to <file>, as
  *                                  data/player-identity.json entries whose basis says "DRAFT": check
  *                                  each, rewrite its basis, and move it into the curation file
- *   pnpm build-players --no-stamp  leave the curated files alone
+ *   pnpm build-players --no-stamp  leave data/<sport>/rosters-enrichment.json alone (below)
  *
  * One run covers every sport whatever SCVAL_SPORT is: a player is one person in every sport.
  * It reads only files in the repository and fetches nothing, so it is safe to run at any time; run
- * it after `pnpm fetch-rosters`, after editing an overlay or data/player-identity.json, and BEFORE a
- * season rollover overwrites the rosters (a season this file has seen stays in it; one it has not
- * is gone with the files).
+ * it after `pnpm fetch-rosters`, after editing an overlay, data/player-identity.json or a file filed by
+ * person, and BEFORE a season rollover overwrites the rosters (a season this file has seen stays in it; one
+ * it has not is gone with the files).
  *
  * Ids are stable: a rebuild keeps every id the previous file gave (lib/players/registry-build.ts).
  *
- * STAMPING. data/field-hockey/clubs.json, data/field-hockey/commits.json, data/field-hockey/rosters-enrichment.json and data/field-hockey/jv-profiles.json
- * name a player by team and MaxPreps' per-season athlete id (or, for JV profiles, by team and name),
- * which a new season makes meaningless. Each record gains a `playerId`, written beside that key and
- * never read by the site: the durable half of the join, which is what a rollover re-keys from.
- * Nothing else in those files is touched. A file is rewritten only when an id in it changes, and then
- * as JSON.stringify writes it (two-space indent, a final newline), which is how all four are kept.
+ * WHAT IT WRITES beside the registry, every run:
+ *   - data/<sport>/player-index.json, each sport's row → person index (lib/players/player-index-schema.ts):
+ *     what a page finds a person's recruiting pages, club ties and commitment through, and the pages
+ *     themselves as the build shows them;
+ *   - the files filed by person, keyed to the registry as it now is: data/player-accounts.json, each sport's
+ *     clubs.json `memberships` and data/commitments.json. An id the registry has retired (two records found to
+ *     be one person) becomes the id that stayed, and every `name` the person's official one. Nothing else in
+ *     them is touched.
+ *
+ * STAMPING (not with --no-stamp). data/<sport>/rosters-enrichment.json names a roster row by team and MaxPreps'
+ * per-season athlete id, which a new season makes meaningless. Each record gains a `playerId`, written beside
+ * that key and never read by the site. A file is rewritten only when an id in it changes, and then as
+ * JSON.stringify writes it (two-space indent, a final newline).
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { AccountsFileSchema, type AccountsFile } from '../lib/players/accounts-schema';
+import { buildPlayerIndex, formatPlayerIndex } from '../lib/players/player-index-schema';
 import { buildRegistry } from '../lib/players/registry-build';
-import { PLAYERS_FILE, readBuildInput, readCareerUrls, sportDataDir } from '../lib/players/registry-file';
+import { COMMITMENTS_FILE, PLAYER_ACCOUNTS_FILE, PLAYERS_FILE, playerIndexFile, readAccountsFile, readBuildInput, readCareerUrls, sportDataDir } from '../lib/players/registry-file';
 import { buildReviewReport, formatReviewReport } from '../lib/players/review-report';
 import type { PlayersFile } from '../lib/players/registry-schema';
 import { SPORT_IDS, type SportId } from '../lib/sports/current';
@@ -88,25 +97,79 @@ function withPlayerId(record: Json, after: string, id: string): Json {
   return out;
 }
 
+/** Every id the registry has given a player, current or former → the player now. */
+export function currentPlayers(file: PlayersFile): Map<string, PlayersFile['players'][number]> {
+  return new Map(file.players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p] as const)));
+}
+
+type PersonRecord = { playerId: string; name: string };
+
+/**
+ * Records filed by person (a club membership, a commitment) keyed to the registry as it now is: an id the registry
+ * has since retired becomes the id that stayed, and `name` the person's official name. Two records that become one
+ * person's under one `same` key (one club; a commitment) are one: the first, with the other's sources it lacks.
+ * Throws on an id the registry never gave, and on two that cannot be one (two colleges for one person).
+ */
+export function rekeyRecords<R extends PersonRecord & { sources: ReadonlyArray<{ url: string }> }>(
+  records: readonly R[],
+  file: PlayersFile,
+  label: string,
+  same: (r: R) => string,
+): R[] {
+  const now = currentPlayers(file);
+  const out = new Map<string, R>();
+  for (const r of records) {
+    const p = now.get(r.playerId);
+    if (!p) throw new Error(`${label}: ${r.playerId} (${r.name}) is no player of the registry`);
+    const rec = { ...r, playerId: p.id, name: p.name };
+    const key = `${p.id} ${same(rec)}`;
+    const had = out.get(key);
+    if (!had) {
+      out.set(key, rec);
+      continue;
+    }
+    out.set(key, { ...had, sources: [...had.sources, ...rec.sources.filter((x) => !had.sources.some((y) => y.url === x.url))] });
+  }
+  return [...out.values()];
+}
+
+/**
+ * data/player-accounts.json keyed to the registry as it now is: a person filed under an id the registry has
+ * since retired is filed under the id that stayed (her pages merged with any already there, a page once), and
+ * every `name` is the person's official one. Throws on an id the registry never gave.
+ */
+export function rekeyAccounts(accounts: AccountsFile, file: PlayersFile): AccountsFile {
+  const now = currentPlayers(file);
+  const merged = new Map<string, AccountsFile['players'][number]>();
+  for (const person of accounts.players) {
+    const p = now.get(person.playerId);
+    if (!p) throw new Error(`${PLAYER_ACCOUNTS_FILE}: ${person.playerId} (${person.name}) is no player of the registry`);
+    const had = merged.get(p.id);
+    const list = had ? [...had.accounts, ...person.accounts.filter((a) => !had.accounts.some((b) => b.url === a.url))] : person.accounts;
+    merged.set(p.id, { playerId: p.id, name: p.name, accounts: list });
+  }
+  const out = { ...accounts, players: [...merged.values()].sort((a, b) => (a.playerId < b.playerId ? -1 : 1)) };
+  return AccountsFileSchema.parse(out);
+}
+
 export interface StampIndex {
   /** `<sport> <season> <team> <athleteId>` → player id. */
   byAthlete: Map<string, string>;
-  /** `<sport> <season> <team> <profile url>` → player id. */
-  byProfile: Map<string, string>;
 }
 
 export function stampIndex(file: PlayersFile): StampIndex {
   const byAthlete = new Map<string, string>();
-  const byProfile = new Map<string, string>();
   for (const p of file.players) {
     for (const s of p.stints) {
+      // A stint no source lists any more is a row somebody else's now (a career passed on, a row respelled): the
+      // row's player is the one a source still lists it under.
+      if (s.gone) continue;
       for (const o of s.observations) {
         if (o.athleteId) byAthlete.set(`${s.sport} ${s.season} ${s.team} ${o.athleteId}`, p.id);
-        if (o.src === 'profile' && o.url) byProfile.set(`${s.sport} ${s.season} ${s.team} ${o.url}`, p.id);
       }
     }
   }
-  return { byAthlete, byProfile };
+  return { byAthlete };
 }
 
 /**
@@ -135,20 +198,6 @@ export function stampCuratedFiles(root: string, sport: SportId, index: StampInde
     return id ?? null;
   };
 
-  for (const [name, lists] of [['clubs.json', ['affiliations', 'jvAffiliations']], ['commits.json', ['commitments']]] as const) {
-    const f = load(name);
-    if (!f) continue;
-    const json = { ...f.json };
-    for (const list of lists) {
-      if (!Array.isArray(json[list])) continue;
-      json[list] = (json[list] as Json[]).map((r) => {
-        const id = byAthlete(json.season, r.teamSlug, r.athleteId, `${f.rel} ${list}: ${String(r.teamSlug)} / ${String(r.fullName)}`);
-        return id ? withPlayerId(r, 'athleteId', id) : r;
-      });
-    }
-    finish(f, json);
-  }
-
   const overlay = load('rosters-enrichment.json');
   if (overlay && Array.isArray(overlay.json.teams)) {
     const json = {
@@ -164,25 +213,6 @@ export function stampCuratedFiles(root: string, sport: SportId, index: StampInde
     finish(overlay, json);
   }
 
-  const profiles = load('jv-profiles.json');
-  if (profiles && Array.isArray(profiles.json.teams)) {
-    const json = {
-      ...profiles.json,
-      teams: (profiles.json.teams as Json[]).map((t) => ({
-        ...t,
-        players: ((t.players as Json[] | undefined) ?? []).map((r) => {
-          const urls = ((r.profiles as Json[] | undefined) ?? []).map((x) => String(x.url));
-          const ids = new Set(urls.flatMap((u) => index.byProfile.get(`${sport} ${String(profiles.json.season)} ${String(t.slug)} ${u}`) ?? []));
-          if (ids.size !== 1) {
-            unplaced.push(`${profiles.rel}: ${String(t.slug)} / ${String(r.name)}`);
-            return r;
-          }
-          return withPlayerId(r, 'name', [...ids][0]);
-        }),
-      })),
-    };
-    finish(profiles, json);
-  }
   return { changed, unplaced };
 }
 
@@ -229,6 +259,42 @@ export function main(argv: readonly string[]): number {
 
   const writes = new Map<string, string>();
   if (text !== before) writes.set(PLAYERS_FILE, text);
+  // The person-keyed files follow the registry's ids and official names. Part of the registry, so written with
+  // it, --no-stamp or not: an id a merge retired would otherwise name nobody.
+  const accountsBefore = readAccountsFile(root);
+  const accounts = accountsBefore ? rekeyAccounts(accountsBefore, file) : null;
+  if (accounts && accountsBefore && JSON.stringify(accounts) !== JSON.stringify(accountsBefore)) {
+    writes.set(PLAYER_ACCOUNTS_FILE, `${JSON.stringify(accounts, null, 2)}\n`);
+  }
+  // Each sport's club memberships and the commitments, the same way (lib/players/clubs-schema.ts, commits-schema.ts).
+  const rekeyFile = <R extends PersonRecord & { sources: ReadonlyArray<{ url: string }> }>(rel: string, list: string, same: (r: R) => string, check?: (records: R[]) => void) => {
+    const at = path.join(root, rel);
+    if (!existsSync(at)) return;
+    const raw = readFileSync(at, 'utf8');
+    const json = JSON.parse(raw) as Json;
+    const records = rekeyRecords(json[list] as R[], file, rel, same);
+    check?.(records);
+    const next = { ...json, [list]: records };
+    if (JSON.stringify(next) !== JSON.stringify(json)) writes.set(rel, `${JSON.stringify(next, null, 2)}\n`);
+  };
+  for (const sport of SPORT_IDS) rekeyFile<PersonRecord & { club: string; sources: { url: string }[] }>(`${sportDataDir(sport)}/clubs.json`, 'memberships', (r) => r.club);
+  rekeyFile<PersonRecord & { college: string; sport: string; sources: { url: string }[] }>(COMMITMENTS_FILE, 'commitments', () => 'commitment', (records) => {
+    // A person has one commitment: two records that became one person's must already agree on it.
+    const seen = new Map<string, string>();
+    for (const r of records) {
+      const what = `${r.college} ${r.sport}`;
+      if (seen.has(r.playerId) && seen.get(r.playerId) !== what) throw new Error(`${COMMITMENTS_FILE}: ${r.name} (${r.playerId}) would have two commitments`);
+      seen.set(r.playerId, what);
+    }
+  });
+  // Each sport's row → person index (lib/players/player-index-schema.ts): what the pages find a person's
+  // accounts, club ties and commitment through.
+  for (const sport of SPORT_IDS) {
+    const rel = playerIndexFile(sport);
+    const body = formatPlayerIndex(buildPlayerIndex(file, sport, 'scripts/build-players.ts', accounts));
+    const had = existsSync(path.join(root, rel)) ? readFileSync(path.join(root, rel), 'utf8') : null;
+    if (body !== had) writes.set(rel, body);
+  }
   if (args.stamp) {
     const index = stampIndex(file);
     for (const sport of SPORT_IDS) {

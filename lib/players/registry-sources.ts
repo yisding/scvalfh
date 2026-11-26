@@ -25,8 +25,10 @@
  *   prior-players.json               a past season's stat sheet: career id, rebuilt name, class,
  *                                    number
  *   jv-rosters-school-sites.json     one sighting per listed name, with no id
- *   jv-profiles.json                 a class-year statement for a JV player, by name
  *   history-<season>.json            one sighting per all-league row, by name, in that season
+ *
+ * A person's recruiting pages (data/player-accounts.json) are filed under her registry id, not under a row:
+ * lib/players/registry-build.ts adds each page's class year to her record once the rows are resolved.
  */
 
 import { z } from 'zod';
@@ -86,7 +88,6 @@ export const EnrichmentInput = z.looseObject({
           jersey: z.looseObject({ value: text, ...sourced }).nullable(),
           height: z.looseObject({ value: text, ...sourced }).nullable(),
           conflicts: z.array(z.looseObject({ field: z.enum(['jersey', 'grade', 'position', 'height']), other: text, ...sourced })),
-          profiles: z.array(z.looseObject({ platform: text, url: text, classOf: z.number().int().nullable() })),
         }),
       ),
     }),
@@ -119,18 +120,6 @@ export const JvSchoolSitesInput = z.looseObject({
           height: z.string().nullable(),
           captain: z.boolean(),
         }),
-      ),
-    }),
-  ),
-});
-
-export const JvProfilesInput = z.looseObject({
-  season: text,
-  teams: z.array(
-    z.looseObject({
-      slug: text,
-      players: z.array(
-        z.looseObject({ name: text, profiles: z.array(z.looseObject({ platform: text, url: text, classOf: z.number().int().nullable() })) }),
       ),
     }),
   ),
@@ -169,8 +158,6 @@ export function seasonYearOf(label: string): string {
 }
 
 const HEIGHT = /^\d'\d{1,2}"$/;
-/** A graduation year the registry can hold; a profile stating one outside it states none. */
-const classYear = (y: number | null): { classOf?: number } => (y !== null && y >= 2020 && y <= 2040 ? { classOf: y } : {});
 
 // ---------------------------------------------------------------- one season's current files
 
@@ -181,7 +168,6 @@ export interface CurrentSeasonFiles {
   enrichment: z.infer<typeof EnrichmentInput> | null;
   playerStats: z.infer<typeof PlayerStatsInput> | null;
   jvSchoolSites: z.infer<typeof JvSchoolSitesInput> | null;
-  jvProfiles: z.infer<typeof JvProfilesInput> | null;
 }
 
 type Row = z.infer<typeof RosterRow>;
@@ -221,7 +207,6 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
     jvRosters: same('jv-rosters', given.jvRosters),
     enrichment: same('rosters-enrichment', given.enrichment),
     playerStats: same('player-stats', given.playerStats),
-    jvProfiles: same('jv-profiles', given.jvProfiles),
   };
 
   const split = new Set(identity.rowSplits.filter((r) => r.sport === sport).map((r) => `${r.team} ${r.page} ${r.careerId} ${nameKey(r.name)}`));
@@ -268,9 +253,6 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
               : HEIGHT.test(c.other) ? { height: c.other } : null;
             // A statement the registry cannot hold (a grade of "13", a position of ",") is left out.
             if (said && !(said.positions !== undefined && said.positions.length === 0)) observations.push({ ...cite(c), ...said, rejected: true });
-          }
-          for (const p of extra.profiles) {
-            observations.push({ src: 'profile', kind: p.platform, url: p.url, ...classYear(p.classOf) });
           }
         }
         const isSplit = row.careerId !== null && split.has(`${team.slug} ${page} ${row.careerId} ${nameKey(asRow.fullName)}`);
@@ -354,18 +336,6 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
             ...(p.captain ? { captain: true as const } : {}),
           },
         ],
-      });
-    }
-  }
-
-  for (const team of files.jvProfiles?.teams ?? []) {
-    for (const p of team.players) {
-      if (p.profiles.length === 0) continue;
-      sightings.push({
-        ...base(team.slug, 'jv'),
-        careerIds: [],
-        nameKeys: [nameKey(p.name)],
-        observations: p.profiles.map((x) => ({ src: 'profile' as const, kind: x.platform, url: x.url, name: p.name, ...classYear(x.classOf) })),
       });
     }
   }

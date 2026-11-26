@@ -31,6 +31,7 @@ import {
   getEnrichedTeamRoster,
   getRosters,
   listedPlayerKey,
+  listedPlayerProfiles,
   sortedPlayers,
   type EnrichmentSource,
   type MergedPlayer,
@@ -618,7 +619,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
             key: `${p.firstName}-${p.lastName}-${i}`,
             name: `${p.firstName} ${p.lastName}`,
             position: positionFromText(p.position),
-            profiles: profileLinks(p.profiles ?? []),
+            profiles: profileLinks(listedPlayerProfiles(slug, `${p.firstName} ${p.lastName}`)),
             // A listed player's ties (data/<sport>/clubs.json listedAffiliations), found by her listed name.
             clubs: playerClubGroups(slug, listedPlayerKey(`${p.firstName} ${p.lastName}`)),
           }))

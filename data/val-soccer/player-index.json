@@ -1,0 +1,25 @@
+{
+  "builtBy": "scripts/build-players.ts",
+  "sport": "val-soccer",
+  "season": null,
+  "notes": [
+    "Which person (data/players.json id) each of this season's roster rows is, for this sport: a MaxPreps row by its athleteId, a school's own varsity or JV list by its name (athleteId null). Written by pnpm build-players from the registry; never edited by hand.",
+    "What is known about a person (recruiting pages, club ties, a college commitment) is filed under her id; a page finds it for a row through this file. A roster refresh or a new season rewrites the rows, and nothing filed under a person moves."
+  ],
+  "columns": [
+    "playerId",
+    "team",
+    "level",
+    "athleteId",
+    "name"
+  ],
+  "jvResearch": null,
+  "accountColumns": [
+    "platform",
+    "url",
+    "sports",
+    "classOf"
+  ],
+  "rows": [],
+  "accounts": {}
+}

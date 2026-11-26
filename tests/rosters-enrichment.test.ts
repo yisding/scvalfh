@@ -35,6 +35,8 @@ import {
 import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { describeDrift, type RosterDrift } from '../lib/players/roster-drift';
 import { REPO, runScript } from './helpers';
+import { readAccountsFile } from '../lib/players/registry-file';
+import type { IndexAccountTuple, PlayerIndexFile } from '../lib/players/player-index-schema';
 
 /**
  * The numbers pinned below are what the 2026-10-02 research found for SCVAL, the one league
@@ -63,9 +65,58 @@ const DERIVED_FROM_OTHER: Record<string, readonly string[]> = {
 };
 
 const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters.json'), 'utf8')) as Rosters;
-const raw = JSON.parse(
+const overlayFile = JSON.parse(
   readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters-enrichment.json'), 'utf8'),
 ) as RosterEnrichment;
+
+/** A row's recruiting pages as the overlay once held them: what the research rounds below are counted over. */
+type RowProfile = { platform: string; url: string; classOf: number | null; note: string | null; sport?: string };
+type OverlayRecord = RosterEnrichment['teams'][number]['players'][number] & { profiles: RowProfile[] };
+
+/**
+ * The overlay as it was until 2026-11-26, when the recruiting pages moved to data/player-accounts.json, filed by
+ * person: each MaxPreps row's record with the pages field hockey's rounds linked for its person
+ * (data/field-hockey/player-index.json says which person a row is), and a record for a row that has pages and
+ * nothing else. A page that shows the player in field hockey names no sport, as the overlay's never did. The research
+ * rounds' counts below read this.
+ */
+const raw: Omit<RosterEnrichment, 'teams'> & { teams: Array<Omit<RosterEnrichment['teams'][number], 'players'> & { players: OverlayRecord[] }> } = (() => {
+  const accounts = readAccountsFile(REPO);
+  const pagesOf = new Map((accounts?.players ?? []).map((p) => [p.playerId, p.accounts]));
+  const index = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'player-index.json'), 'utf8')) as { rows: Array<[string, string, string, string | null, string]> };
+  const personOf = new Map(index.rows.flatMap(([id, team, , athleteId]) => (athleteId === null ? [] : [[`${team} ${athleteId}`, id] as const])));
+  const rows = new Map(base.teams.map((t) => [t.slug, t.players]));
+  return {
+    ...overlayFile,
+    teams: overlayFile.teams.map((t) => {
+      const records = new Map<string, OverlayRecord>(t.players.map((p) => [p.athleteId, { ...p, profiles: [] }]));
+      // A person the roster lists twice (Hollister's, Harvard-Westlake's Téa Hunnius) had each page on one row.
+      const seen = new Set<string>();
+      for (const row of rows.get(t.slug) ?? []) {
+        if (row.athleteId === null) continue;
+        const person = personOf.get(`${t.slug} ${row.athleteId}`);
+        if (person === undefined) continue;
+        // The pages field hockey's own varsity rounds linked (`linkedBy`): a JV round's, or another build's round's, page
+        // of the same person shows on the row too, but was not what these rounds found.
+        const pages = (pagesOf.get(person) ?? []).filter(
+          (a) => a.linkedBy.some((r) => r.build === 'field-hockey' && r.list === 'varsity') && (a.platform !== 'maxpreps' || a.url.includes(`careerid=${row.careerId}`)) && !seen.has(a.url),
+        );
+        for (const a of pages) seen.add(a.url);
+        if (pages.length === 0) continue;
+        const record = records.get(row.athleteId) ?? {
+          athleteId: row.athleteId, fullName: row.fullName, sourceName: null, level: null, levelSource: null, grade: null,
+          positions: null, jersey: null, height: null, conflicts: [], note: null, profiles: [],
+        };
+        record.profiles = pages.map((a) => ({
+          platform: a.platform, url: a.url, classOf: a.classOf, note: a.note,
+          ...(a.sports && !a.sports.includes('field-hockey') ? { sport: a.sports[0] } : {}),
+        }));
+        records.set(row.athleteId, record);
+      }
+      return { ...t, players: [...records.values()] };
+    }),
+  };
+})();
 
 /** A profile the 2026-11-26 sweep of the rows no sweep had reached linked: its note says so. */
 const fromSweep1126 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-26 sweep') ?? false;
@@ -101,7 +152,7 @@ const from1012 = (note: string | null | undefined) => (note ?? '').includes('Add
  * records that hold nothing else. The tests that pin what each
  * earlier capture found read this.
  */
-const pre: RosterEnrichment = {
+const pre: typeof raw = {
   ...raw,
   teams: raw.teams.map((t) => ({
     ...t,
@@ -130,7 +181,7 @@ const pre: RosterEnrichment = {
  * (lib/players/roster-drift.ts: a record or field the roster no longer supports is left out, not thrown), one line
  * each; '' when it loaded clean. The load-time checks need both files, so only a real load shows them.
  */
-function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
+function loadError(enrichment: RosterEnrichment, rosters?: Rosters, index?: PlayerIndexFile): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-enrich-'));
   const file = path.join(dir, 'bad.json');
   writeFileSync(file, JSON.stringify(enrichment));
@@ -139,10 +190,24 @@ function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
     env.SCVAL_ROSTERS = path.join(dir, 'rosters.json');
     writeFileSync(env.SCVAL_ROSTERS, JSON.stringify(rosters));
   }
+  if (index) {
+    env.SCVAL_PLAYER_INDEX = path.join(dir, 'player-index.json');
+    writeFileSync(env.SCVAL_PLAYER_INDEX, JSON.stringify(index));
+  }
   const run = runScript('scripts/roster-drift.ts', ['--json'], { env });
   if (run.status !== 0) return run.stderr;
   const drift = JSON.parse(run.stdout.trim().split('\n').at(-1)!) as RosterDrift[];
-  return drift.filter((d) => d.file === 'rosters-enrichment').map(describeDrift).join('\n');
+  return drift.filter((d) => d.file === 'rosters-enrichment' || d.file === 'player-accounts').map(describeDrift).join('\n');
+}
+
+const committedIndex = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'player-index.json'), 'utf8')) as PlayerIndexFile;
+
+/** The committed player index with one more recruiting page for the person on a team's MaxPreps row. */
+function indexWithPage(slug: string, athleteId: string, page: IndexAccountTuple): PlayerIndexFile {
+  const index = structuredClone(committedIndex);
+  const person = index.rows.find(([, team, , id]) => team === slug && id === athleteId)![0];
+  index.accounts[person] = [...(index.accounts[person] ?? []), page];
+  return index;
 }
 
 /** A team's enrichment record for a MaxPreps row, created empty if the file has none yet. */
@@ -152,7 +217,7 @@ function recordFor(file: RosterEnrichment, slug: string, athleteId: string, full
   if (!record) {
     record = {
       athleteId, fullName, sourceName: null, level: null, levelSource: null, grade: null,
-      positions: null, jersey: null, height: null, conflicts: [], profiles: [], note: null,
+      positions: null, jersey: null, height: null, conflicts: [], note: null,
     };
     team.players.push(record);
   }
@@ -161,18 +226,18 @@ function recordFor(file: RosterEnrichment, slug: string, athleteId: string, full
 
 describe('data/field-hockey/rosters-enrichment.json', () => {
   it('validates against the contract', () => {
-    const parsed = RosterEnrichmentSchema.safeParse(raw);
+    const parsed = RosterEnrichmentSchema.safeParse(overlayFile);
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
   it('refuses a slug that is not a registry team, a duplicate, and a missing team', () => {
-    const stranger = structuredClone(raw);
+    const stranger = structuredClone(overlayFile);
     stranger.teams[0].slug = 'not-a-school';
     expect(RosterEnrichmentSchema.safeParse(stranger).success).toBe(false);
-    const duplicate = structuredClone(raw);
+    const duplicate = structuredClone(overlayFile);
     duplicate.teams[0].slug = duplicate.teams[1].slug;
     expect(RosterEnrichmentSchema.safeParse(duplicate).success).toBe(false);
-    const short = structuredClone(raw);
+    const short = structuredClone(overlayFile);
     short.teams.pop();
     expect(RosterEnrichmentSchema.safeParse(short).success).toBe(false);
   });
@@ -182,7 +247,7 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
     // A BVAL, PCAL or MCAL team takes a record exactly as an SCVAL one does.
     for (const slug of ['leigh', 'del-mar', 'redwood']) {
-      const withRecord = structuredClone(raw);
+      const withRecord = structuredClone(overlayFile);
       const team = withRecord.teams.find((t) => t.slug === slug)!;
       team.notes.push('checked the school site');
       expect(RosterEnrichmentSchema.safeParse(withRecord).success, slug).toBe(true);
@@ -311,7 +376,7 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     // A team the file says nothing about has not been checked, and its view says so.
     expect(getEnrichedTeamRoster('cupertino')!.otherRosters).toEqual({ status: 'not-checked' });
     // A partial list must say what it lists and link it.
-    const bad = structuredClone(raw) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
+    const bad = structuredClone(overlayFile) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
     bad.teams.find((t) => t.slug === 'marin-academy')!.otherRosters = { status: 'partial', checkedOn: '2026-10-03' };
     expect(loadError(bad as unknown as RosterEnrichment)).toMatch(/otherRosters failed validation/);
   });
@@ -330,7 +395,7 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     expect(nh.players.filter((p) => p.position === 'GK').map((p) => p.lastName)).toEqual(['Clark', 'Rodriguez']);
 
     const withList = (players: unknown) => {
-      const bad = structuredClone(raw) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
+      const bad = structuredClone(overlayFile) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
       const t = bad.teams.find((x) => x.slug === 'marina')!;
       t.otherRosters = { ...(t.otherRosters as object), players };
       return loadError(bad as unknown as RosterEnrichment);
@@ -339,15 +404,8 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     const one = { firstName: 'Ravyn', lastName: 'Arazi', position: null };
     expect(withList([one, one])).toMatch(/otherRosters failed validation/);
     expect(withList([{ ...one, grade: 12 }])).toMatch(/otherRosters failed validation/);
-    // A listed player may carry her own recruiting pages: one per platform and sport, on the platform's host,
-    // and never a MaxPreps page (she has no MaxPreps row).
-    const ncsa = { platform: 'ncsa', url: 'https://www.ncsasports.org/field-hockey-recruiting/x', classOf: 2028, note: null };
-    expect(withList([{ ...one, profiles: [ncsa] }])).not.toMatch(/failed validation/);
-    expect(withList([{ ...one, profiles: [ncsa, { ...ncsa, url: `${ncsa.url}2` }] }])).toMatch(/otherRosters failed validation/);
-    expect(withList([{ ...one, profiles: [{ ...ncsa, url: 'https://example.com/x' }] }])).toMatch(/otherRosters failed validation/);
-    expect(
-      withList([{ ...one, profiles: [{ platform: 'maxpreps', url: 'https://www.maxpreps.com/x', classOf: null, note: null }] }]),
-    ).toMatch(/otherRosters failed validation/);
+    // A listed player's recruiting pages are her person's (data/player-accounts.json), never the list's.
+    expect(withList([{ ...one, profiles: [] }])).toMatch(/otherRosters failed validation/);
   });
 
   it('tags every filled value with a source, a kind and a confidence', () => {
@@ -393,7 +451,7 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
   });
 
   it('refuses a record that would overwrite MaxPreps (asserted at load, not just by the schema)', () => {
-    const bad = structuredClone(raw);
+    const bad = structuredClone(overlayFile);
     const si = bad.teams.find((t) => t.slug === 'st-ignatius')!;
     // Storey Lewis has a MaxPreps grade (12); her existing record (a height) must not add one.
     const storey = base.teams.find((t) => t.slug === 'st-ignatius')!.players[0];
@@ -414,7 +472,7 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     };
     expect(EnrichedNameSchema.safeParse(name).success).toBe(true);
     expect(EnrichedNameSchema.safeParse({ ...name, value: 'Ann  Other' }).success).toBe(false);
-    const bad = structuredClone(raw);
+    const bad = structuredClone(overlayFile);
     const storey = base.teams.find((t) => t.slug === 'st-ignatius')!.players[0];
     bad.teams.find((t) => t.slug === 'st-ignatius')!.players.find((p) => p.athleteId === storey.athleteId)!.name = name;
     expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
@@ -423,10 +481,6 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
 });
 
 describe('recruiting profiles', () => {
-  const storey = base.teams.find((t) => t.slug === 'st-ignatius')!.players[0];
-  const ncsa = (url: string, classOf: number | null) =>
-    ({ platform: 'ncsa', url, classOf, note: null }) as const;
-
   it('links each profile once, over https, on the platform it names', () => {
     const profiles = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles));
     const urls = profiles.map((p) => p.url);
@@ -459,74 +513,6 @@ describe('recruiting profiles', () => {
     expect(classOf('26-27', 12)).toBe(2027);
     expect(classOf('26-27', 9)).toBe(2030);
     expect(classOf('27-28', 11)).toBe(2029);
-  });
-
-  it('refuses a profile on the wrong host, a second profile on one platform, and a URL shared by two players', () => {
-    const wrongHost = structuredClone(raw);
-    recordFor(wrongHost, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      ncsa('https://my.sportsrecruits.com/athlete/storey_lewis', null),
-    ];
-    expect(RosterEnrichmentSchema.safeParse(wrongHost).success).toBe(false);
-
-    const unparsable = structuredClone(raw);
-    recordFor(unparsable, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      { platform: 'personal', url: 'https://?broken', classOf: null, note: null },
-    ];
-    expect(RosterEnrichmentSchema.safeParse(unparsable).success).toBe(false);
-
-    const twice = structuredClone(raw);
-    recordFor(twice, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      ncsa('https://www.ncsasports.org/a', null),
-      ncsa('https://www.ncsasports.org/b', null),
-    ];
-    expect(RosterEnrichmentSchema.safeParse(twice).success).toBe(false);
-
-    const shared = structuredClone(raw);
-    const other = base.teams.find((t) => t.slug === 'st-ignatius')!.players[1];
-    recordFor(shared, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      ncsa('https://www.ncsasports.org/same', null),
-    ];
-    recordFor(shared, 'st-ignatius', other.athleteId!, other.fullName).profiles = [
-      ncsa('https://www.ncsasports.org/same', null),
-    ];
-    expect(RosterEnrichmentSchema.safeParse(shared).success).toBe(false);
-  });
-
-  it('takes one profile per platform in each sport, and never a field hockey profile that says so', () => {
-    const sportsrecruits = (url: string, sport?: 'lacrosse' | 'softball') =>
-      ({ platform: 'sportsrecruits', url, classOf: null, note: null, ...(sport ? { sport } : {}) }) as const;
-    const two = structuredClone(raw);
-    recordFor(two, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      sportsrecruits('https://nfhca.sportsrecruits.com/athlete/a'),
-      sportsrecruits('https://iwlca.sportsrecruits.com/athlete/a', 'lacrosse'),
-      sportsrecruits('https://sportsrecruits.com/athlete/a', 'softball'),
-    ];
-    expect(RosterEnrichmentSchema.safeParse(two).success).toBe(true);
-
-    const twiceInOneSport = structuredClone(raw);
-    recordFor(twiceInOneSport, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      sportsrecruits('https://iwlca.sportsrecruits.com/athlete/a', 'lacrosse'),
-      sportsrecruits('https://iwlca.sportsrecruits.com/athlete/b', 'lacrosse'),
-    ];
-    expect(RosterEnrichmentSchema.safeParse(twiceInOneSport).success).toBe(false);
-
-    // Field hockey is the default, never written out, so a profile's sport is never redundant.
-    const explicit = structuredClone(raw);
-    recordFor(explicit, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      { ...sportsrecruits('https://nfhca.sportsrecruits.com/athlete/a'), sport: 'field-hockey' } as never,
-    ];
-    expect(RosterEnrichmentSchema.safeParse(explicit).success).toBe(false);
-  });
-
-  it('refuses, at load, a profile whose class year disagrees with the roster', () => {
-    // Storey Lewis is a senior on MaxPreps: class of 2027, never 2028.
-    expect(storey.grade).toBe(12);
-    const bad = structuredClone(raw);
-    recordFor(bad, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
-      ncsa('https://www.ncsasports.org/field-hockey-recruiting/california/x/y/storey-lewis', 2028),
-    ];
-    expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
-    expect(loadError(bad)).toMatch(/ncsa profile says class of 2028, the roster shows grade 12/);
   });
 
   it('what was found for SCVAL, as captured on 2026-10-02', () => {
@@ -903,7 +889,8 @@ describe('recruiting profiles', () => {
     ]);
     for (const { p, x } of found) {
       expect(x.sport, p.fullName).toBeUndefined();
-      expect(x.note, p.fullName).toMatch(/re-read by an independent refuter\.$/);
+      // A page another round linked too keeps both rounds' notes, this one's first (Lilly Jones' Hudl page, soccer's).
+      expect(x.note, p.fullName).toMatch(/re-read by an independent refuter\.( |$)/);
     }
     // One page gives no class year (Christopher's Johanna Canseco): it names the school, which carries the link.
     expect(found.filter((r) => r.x.classOf === null).map((r) => r.p.fullName)).toEqual(['Johanna Canseco']);
@@ -1002,12 +989,12 @@ describe('recruiting profiles', () => {
       ['university-sf', 'Stella Klein', 'hudl', null, 2029],
       ['corning', 'Harley Slye', 'maxpreps', null, 2027],
       ['corning', 'Shelby Peterson', 'maxpreps', null, 2028],
+      ['corning', 'Belinda Loera', 'hudl', 'soccer', 2028],
       ['corning', 'Makayla Lodin', 'maxpreps', null, 2028],
       ['corning', 'Makayla Lodin', 'sportsrecruits', 'softball', 2028],
       ['corning', 'Makayla Lodin', 'ncsa', 'basketball', 2028],
       ['corning', 'Aliza Thuemler', 'maxpreps', null, 2027],
       ['corning', 'Anaya Sherrod', 'maxpreps', null, 2027],
-      ['corning', 'Belinda Loera', 'hudl', 'soccer', 2028],
       ['lassen', 'Austan Mueller', 'maxpreps', null, 2030],
       ['mt-carmel', 'Aashi Gauba', 'sportsrecruits', null, 2027],
       ['mt-carmel', 'Aashi Gauba', 'ncsa', null, 2027],
@@ -1049,34 +1036,20 @@ describe('recruiting profiles', () => {
     expect(names('marin-catholic')).not.toContain('Alexandra Schmidt');
   });
 
-  it("refuses a MaxPreps profile that is not the row's own career page, or that names a sport", () => {
-    const [mine, other] = base.teams.find((t) => t.slug === 'st-ignatius')!.players;
-    const maxpreps = (url: string) => ({ platform: 'maxpreps', url, classOf: null, note: null }) as const;
-
-    const ok = structuredClone(raw);
-    recordFor(ok, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps(mine.careerUrl!)];
-    expect(loadError(ok)).toBe('');
-
-    const namesake = structuredClone(raw);
-    recordFor(namesake, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps(other.careerUrl!)];
-    expect(RosterEnrichmentSchema.safeParse(namesake).success).toBe(true);
-    expect(loadError(namesake)).toMatch(/maxpreps profile .* is not this row's career page/);
-
-    const withSport = structuredClone(raw);
-    recordFor(withSport, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [
-      { ...maxpreps(mine.careerUrl!), sport: 'lacrosse' },
-    ];
-    expect(RosterEnrichmentSchema.safeParse(withSport).success).toBe(false);
-
-    const offHost = structuredClone(raw);
-    recordFor(offHost, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps('https://www.ncsasports.org/x')];
-    expect(RosterEnrichmentSchema.safeParse(offHost).success).toBe(false);
-  });
-
-  it('reaches the merged view', () => {
+  it('reaches the merged view: each row shows its person\'s pages, less one whose class year the roster contradicts', () => {
     for (const t of raw.teams) {
       const merged = new Map(getEnrichedTeamRoster(t.slug)!.players.map((p) => [p.athleteId, p]));
-      for (const e of t.players) expect(merged.get(e.athleteId)!.profiles).toEqual(e.profiles);
+      for (const e of t.players) {
+        const row = merged.get(e.athleteId)!;
+        const kept = e.profiles.filter((x) => x.classOf === null || row.grade === null || classYearAgrees(base.season, row, x.classOf));
+        // Field hockey's rounds' pages, and any page another build's round linked for the same person.
+        expect(row.profiles.map((x) => [x.platform, x.url, x.classOf, x.sport]), `${t.slug} / ${e.fullName}`).toEqual(
+          expect.arrayContaining(kept.map((x) => [x.platform, x.url, x.classOf, x.sport])),
+        );
+        for (const x of row.profiles) {
+          expect(x.classOf === null || row.grade === null || classYearAgrees(base.season, row, x.classOf), `${t.slug} / ${e.fullName}: ${x.url}`).toBe(true);
+        }
+      }
     }
   });
 });
@@ -1085,7 +1058,7 @@ describe('the load-time rules hold for every league, not just SCVAL', () => {
   // A rosters file in which a BVAL, a PCAL and an MCAL team carry rows (copied from SCVAL's), so
   // the overlay's join, blank-only and conflict rules can be exercised on them.
   // Their real overlay records are cleared first: the copied rows carry other athlete ids.
-  const cleanRaw = structuredClone(raw);
+  const cleanRaw = structuredClone(overlayFile);
   for (const slug of ['leigh', 'del-mar', 'redwood']) cleanRaw.teams.find((t) => t.slug === slug)!.players = [];
   const donor = base.teams.find((t) => t.slug === 'cupertino')!;
   const blank = donor.players.find((p) => p.grade === null && p.athleteId !== null)!;
@@ -1109,7 +1082,7 @@ describe('the load-time rules hold for every league, not just SCVAL', () => {
   const sourced = { kind: 'school-site', source: 'https://example.com/roster', confidence: 'high', note: null } as const;
   const record = (grade: unknown) => ({
     athleteId: blank.athleteId!, fullName: blank.fullName, sourceName: null, level: null, levelSource: null,
-    grade, positions: null, jersey: null, height: null, conflicts: [], profiles: [], note: null,
+    grade, positions: null, jersey: null, height: null, conflicts: [], note: null,
   });
 
   it('loads a record that fills a blank on a team of any league', () => {
@@ -1247,7 +1220,7 @@ describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last seas
   it('is recorded at most once per player', () => {
     const record = {
       athleteId: 'x', fullName: 'Jane Doe', sourceName: null, level: null, levelSource: null, grade: null,
-      positions: null, jersey: null, height: null, profiles: [], note: null,
+      positions: null, jersey: null, height: null, note: null,
     };
     expect(EnrichedPlayerSchema.safeParse({ ...record, conflicts: [behind()] }).success).toBe(true);
     expect(EnrichedPlayerSchema.safeParse({ ...record, conflicts: [behind(), behind({ kind: 'news' })] }).success).toBe(false);
@@ -1286,18 +1259,17 @@ describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last seas
     }
     expect(junior).toBeDefined();
     const url = 'https://www.ncsasports.org/field-hockey-recruiting/california/x/y/behind-test';
+    // The page is the person's (data/player-accounts.json, through the player index); the marker is the overlay's.
     const withProfile = (classYear: number, marked: boolean) => {
-      const f = structuredClone(raw);
-      const r = recordFor(f, junior!.slug, junior!.athleteId, junior!.fullName);
-      r.profiles.push({ platform: 'ncsa', url, classOf: classYear, note: null });
-      if (marked) r.conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
-      return f;
+      const f = structuredClone(overlayFile);
+      if (marked) recordFor(f, junior!.slug, junior!.athleteId, junior!.fullName).conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
+      return loadError(f, undefined, indexWithPage(junior!.slug, junior!.athleteId, ['ncsa', url, ['field-hockey'], classYear]));
     };
     // One class year ahead (a senior on a roster still showing grade 11): refused without the marker,
     // accepted with it; two ahead is refused either way.
-    expect(loadError(withProfile(classOf(base.season, 12), false))).toMatch(/ncsa profile says class of 2027, the roster shows grade 11/);
-    expect(loadError(withProfile(classOf(base.season, 12), true))).toBe('');
-    expect(loadError(withProfile(classOf(base.season, 13), true))).toMatch(/ncsa profile says class of 2026, the roster shows grade 11/);
+    expect(withProfile(classOf(base.season, 12), false)).toMatch(/ncsa profile says class of 2027, the roster shows grade 11/);
+    expect(withProfile(classOf(base.season, 12), true)).toBe('');
+    expect(withProfile(classOf(base.season, 13), true)).toMatch(/ncsa profile says class of 2026, the roster shows grade 11/);
 
     // MaxPreps catching up: on a row that now shows the conflict's corrected grade, the conflict is settled and the
     // file still loads (the refresh that brings the grade needs no hand edit).
@@ -1310,14 +1282,12 @@ describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last seas
       }
     }
     expect(senior).toBeDefined();
-    const caughtUp = structuredClone(raw);
-    const settled = recordFor(caughtUp, senior!.slug, senior!.athleteId, senior!.fullName);
-    settled.profiles.push({ platform: 'ncsa', url, classOf: classOf(base.season, 12), note: null });
-    settled.conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
-    expect(loadError(caughtUp)).toBe('');
+    const caughtUp = structuredClone(overlayFile);
+    recordFor(caughtUp, senior!.slug, senior!.athleteId, senior!.fullName).conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
+    expect(loadError(caughtUp, undefined, indexWithPage(senior!.slug, senior!.athleteId, ['ncsa', url, ['field-hockey'], classOf(base.season, 12)]))).toBe('');
 
     // A grade the overlay filled is not MaxPreps' stale grade.
-    const filled = structuredClone(raw);
+    const filled = structuredClone(overlayFile);
     const team = filled.teams.find((t) => t.players.some((p) => p.grade !== null && p.grade.value < 12))!;
     const p = team.players.find((x) => x.grade !== null && x.grade.value < 12)!;
     p.conflicts.push(RosterConflictSchema.parse(behind({ kept: String(p.grade!.value), other: String(p.grade!.value + 1) })));

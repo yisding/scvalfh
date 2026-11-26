@@ -1,8 +1,9 @@
 #!/usr/bin/env tsx
 /**
- * Prints the roster drift of one sport's overlay files (lib/players/roster-drift.ts): the records of
- * rosters-enrichment.json, clubs.json, commits.json and jv-profiles.json the current MaxPreps rosters no longer
- * support, which the loaders leave out of the build instead of failing it.
+ * Prints the roster drift of one sport's overlay files (lib/players/roster-drift.ts): the records of its
+ * rosters-enrichment.json and clubs.json, and of data/player-accounts.json and data/commitments.json as its rows
+ * show them, that the current MaxPreps rosters no longer support, which the loaders leave out of the build instead
+ * of failing it.
  *
  *   SCVAL_SPORT=soccer pnpm roster-drift              one line per drift; exit 0
  *   pnpm roster-drift --all                           every sport that lists players, one after another, then
@@ -24,7 +25,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { runCliIfMain } from './cli';
-import type { DriftFile, RosterDrift } from '../lib/players/roster-drift';
+import { driftFilePath, isPersonKeyed, type DriftFile, type RosterDrift } from '../lib/players/roster-drift';
 
 interface Options {
   all: boolean;
@@ -63,25 +64,22 @@ function stable(v: unknown): string {
   return JSON.stringify(v);
 }
 
-type Raw = { teams?: { slug: string; players: { athleteId?: string; name?: string }[] }[] } & Record<string, unknown>;
+type Raw = Record<string, unknown>;
 
-/** Each player's records in one overlay file, as stable JSON, keyed `<team> <join key>` (RosterDrift.key). */
-function recordsByPlayer(file: DriftFile, raw: Raw | null, nameKey: (name: string) => string): Map<string, string[]> {
+/**
+ * Each player's records in one overlay file, as stable JSON, keyed as RosterDrift.key is: `<team> <athleteId>` for
+ * the roster overlay, which names rows; the person's registry id for the files filed by person (isPersonKeyed).
+ */
+function recordsByPlayer(file: DriftFile, raw: Raw | null): Map<string, string[]> {
   const out = new Map<string, string[]>();
-  const add = (team: string, joinKey: string, r: unknown) => {
-    const key = `${team} ${joinKey}`;
-    out.set(key, [...(out.get(key) ?? []), stable(r)]);
-  };
+  const add = (key: string, r: unknown) => out.set(key, [...(out.get(key) ?? []), stable(r)]);
   if (raw === null) return out;
+  const list = (name: string) => (Array.isArray(raw[name]) ? (raw[name] as Array<Record<string, unknown>>) : []);
   if (file === 'rosters-enrichment') {
-    for (const t of raw.teams ?? []) for (const p of t.players) add(t.slug, p.athleteId ?? '', p);
-  } else if (file === 'jv-profiles') {
-    for (const t of raw.teams ?? []) for (const p of t.players) add(t.slug, nameKey(p.name ?? ''), p);
+    for (const t of list('teams')) for (const p of (t.players ?? []) as Array<{ athleteId?: string }>) add(`${String(t.slug)} ${p.athleteId ?? ''}`, p);
   } else {
-    const lists = file === 'clubs' ? ['affiliations', 'jvAffiliations'] : ['commitments'];
-    for (const list of lists) {
-      for (const r of (raw[list] ?? []) as { teamSlug: string; athleteId: string }[]) add(r.teamSlug, r.athleteId, r);
-    }
+    const records = file === 'player-accounts' ? list('players') : file === 'clubs' ? list('memberships') : list('commitments');
+    for (const r of records) add(String(r.playerId), r);
   }
   return out;
 }
@@ -97,13 +95,13 @@ function readAt(ref: string | null, rel: string): Raw | null {
 }
 
 /** Whether `d` is on a player whose records in its file are as `base` has them. */
-function inherited(d: RosterDrift, dataDir: string, base: string, nameKey: (name: string) => string): boolean {
-  const rel = `${dataDir}/${d.file}.json`;
-  const key = `${d.teamSlug} ${d.key}`;
+function inherited(d: RosterDrift, dataDir: string, base: string): boolean {
+  const rel = driftFilePath(d.file, dataDir);
+  const key = isPersonKeyed(d.file) ? d.key : `${d.teamSlug} ${d.key}`;
   // The overlay the loader read: lib/players/rosters.ts honours SCVAL_ROSTERS_ENRICHMENT (the tests swap a file in).
   const current = d.file === 'rosters-enrichment' && process.env.SCVAL_ROSTERS_ENRICHMENT ? process.env.SCVAL_ROSTERS_ENRICHMENT : rel;
-  const now = recordsByPlayer(d.file, readAt(null, current), nameKey).get(key) ?? [];
-  const then = recordsByPlayer(d.file, readAt(base, rel), nameKey).get(key) ?? [];
+  const now = recordsByPlayer(d.file, readAt(null, current)).get(key) ?? [];
+  const then = recordsByPlayer(d.file, readAt(base, rel)).get(key) ?? [];
   return now.length === then.length && [...now].sort().join('\n') === [...then].sort().join('\n');
 }
 
@@ -182,11 +180,10 @@ export async function main(argv: readonly string[]): Promise<number> {
     await import('../lib/players/commits');
   }
   await import('../lib/jv/jv-profiles');
-  const { nameKey } = await import('../lib/jv/jv-rosters');
   const { describeDrift, getRosterDrift } = await import('../lib/players/roster-drift');
   const drift = getRosterDrift();
   // The verdict does not depend on the output: --json --base still fails on drift the change made.
-  const made = drift.map((d) => o.base !== null && !inherited(d, DATA_DIR, o.base, nameKey));
+  const made = drift.map((d) => o.base !== null && !inherited(d, DATA_DIR, o.base));
   if (o.json) {
     process.stdout.write(`${JSON.stringify(drift)}\n`);
     return made.some(Boolean) ? 1 : 0;

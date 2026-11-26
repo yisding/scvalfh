@@ -4,19 +4,23 @@
  * row with no grade has nothing to check it by, so since 2026-11-25 (owner's decision) such a row may take a page
  * on a class year with no grade to confirm it. What still holds, read from the files of every sport whatever
  * the run is for: the class year the page states is one a high school roster has this season (class of 2027 to
- * 2030 in 26-27), never a graduate's or a middle schooler's.
+ * 2030 in 26-27), never a graduate's or a middle schooler's. The pages are the person's (data/player-accounts.json),
+ * found on her rows through each sport's data/<sport>/player-index.json.
  */
 
 import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 
-type Row = { athleteId: string; grade: number | null; fullName: string };
+type Row = { athleteId: string | null; grade: number | null; fullName: string };
 type Team = { slug: string; players?: Row[] };
-type Profile = { platform: string; url: string; classOf: number | null };
+type Account = { platform: string; url: string; classOf: number | null };
 
 const read = <T,>(path: string): T => JSON.parse(readFileSync(path, 'utf8')) as T;
 const SPORTS = ['field-hockey', 'soccer', 'basketball', 'volleyball'] as const;
+const accounts = new Map(
+  read<{ players: Array<{ playerId: string; accounts: Account[] }> }>('data/player-accounts.json').players.map((p) => [p.playerId, p.accounts]),
+);
 
 describe('profiles on rows with no grade', () => {
   for (const sport of SPORTS) {
@@ -24,24 +28,22 @@ describe('profiles on rows with no grade', () => {
       const rosters = read<{ season: string; teams: Team[] }>(`data/${sport}/rosters.json`);
       const senior = 2000 + Number(rosters.season.slice(3));
       const inSchool = (y: number) => y >= senior && y <= senior + 3;
-      const grade = new Map(rosters.teams.flatMap((t) => (t.players ?? []).map((p) => [`${t.slug} ${p.athleteId}`, p.grade])));
-      const enrichment = read<{ teams: Array<{ slug: string; players: Array<{ athleteId: string; fullName: string; grade: { value: number } | null; profiles: Profile[] }> }> }>(
+      const jvRosters = read<{ teams: Team[] }>(`data/${sport}/jv-rosters.json`);
+      const grade = new Map(
+        [...rosters.teams, ...jvRosters.teams].flatMap((t) => (t.players ?? []).flatMap((p) => (p.athleteId === null ? [] : [[`${t.slug} ${p.athleteId}`, p.grade] as const]))),
+      );
+      const enrichment = read<{ teams: Array<{ slug: string; players: Array<{ athleteId: string; grade: { value: number } | null }> }> }>(
         `data/${sport}/rosters-enrichment.json`,
       );
+      const filled = new Set(enrichment.teams.flatMap((t) => t.players.filter((p) => p.grade !== null).map((p) => `${t.slug} ${p.athleteId}`)));
+      // Every row of this season a person is found on (data/<sport>/player-index.json), and her pages.
+      const index = read<{ rows: Array<[string, string, string, string | null, string]> }>(`data/${sport}/player-index.json`);
       const off: string[] = [];
-      for (const t of enrichment.teams) {
-        for (const p of t.players) {
-          if (typeof grade.get(`${t.slug} ${p.athleteId}`) === 'number' || p.grade !== null) continue; // a graded row: lib/players/rosters.ts checks it
-          for (const x of p.profiles) if (x.classOf !== null && !inSchool(x.classOf)) off.push(`${t.slug} / ${p.fullName}: ${x.platform} says ${x.classOf}`);
-        }
-      }
-      const jvRosters = read<{ teams: Team[] }>(`data/${sport}/jv-rosters.json`);
-      const jvGrade = new Map(jvRosters.teams.flatMap((t) => (t.players ?? []).map((p) => [`${t.slug} ${p.fullName}`, p.grade])));
-      const jv = read<{ teams: Array<{ slug: string; players: Array<{ name: string; profiles: Profile[] }> }> }>(`data/${sport}/jv-profiles.json`);
-      for (const t of jv.teams) {
-        for (const p of t.players) {
-          if (typeof jvGrade.get(`${t.slug} ${p.name}`) === 'number') continue;
-          for (const x of p.profiles) if (x.classOf !== null && !inSchool(x.classOf)) off.push(`JV ${t.slug} / ${p.name}: ${x.platform} says ${x.classOf}`);
+      for (const [id, team, level, athleteId, name] of index.rows) {
+        // A graded row: lib/players/rosters.ts (or, on a JV list, lib/jv/jv-profiles.ts) checks it.
+        if (athleteId !== null && (typeof grade.get(`${team} ${athleteId}`) === 'number' || filled.has(`${team} ${athleteId}`))) continue;
+        for (const x of accounts.get(id) ?? []) {
+          if (x.classOf !== null && !inSchool(x.classOf)) off.push(`${level} ${team} / ${name}: ${x.platform} says ${x.classOf}`);
         }
       }
       expect(off).toEqual([]);

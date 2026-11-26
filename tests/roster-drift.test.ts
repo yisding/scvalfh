@@ -76,7 +76,7 @@ describe('roster drift', () => {
     const e = structuredClone(enrichment);
     e.teams.find((t) => t.slug === team.slug)!.players.push({
       athleteId: '00000000-0000-0000-0000-000000000000', fullName: player.fullName, sourceName: 'Typo', level: null, levelSource: null,
-      grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [], note: null,
+      grade: null, positions: null, jersey: null, height: null, conflicts: [], note: null,
     });
     const run = drift(['--github', '--base', 'HEAD'], { enrichment: e });
     expect(run.status, run.output).toBe(1);
