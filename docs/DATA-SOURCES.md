@@ -300,7 +300,12 @@ athletics page links, http only: "2026 Varsity Team", 20 names as "Last, First",
 2026-08-01 as the preseason list). The same day's search found nothing current outside MaxPreps for the
 other ten empty field hockey teams (school sites, Hudl, league all-league lists, local and school papers),
 and school-paper game stories naming 14 Fountain Valley and 3 Bonita Vista players, too few to stand for a
-roster and not recorded; those ten entries are unchanged. The
+roster and not recorded; those ten entries are unchanged. A `listed` player may carry `profiles` (the same
+PlayerProfileSchema, at most one per platform and sport, never a MaxPreps page). With no grade to check a class
+year against, a page is linked only when it names the player and the school; the 2026-11-26 sweep linked 15 for
+13 of the 40 (rosters-enrichment.json, its last file note). A club tie cannot be stored for a listed player:
+`affiliations` join on a MaxPreps athleteId, so the two ties found (Anna Schwab and Kate Shepherd, VCRD) are kept
+in their teams' notes. The
 coaches and sources found for such a team still show under its empty state. Where a coach left
 MaxPreps blank, the school's own public roster often is not. A one-off sweep on 2026-10-02 (16
 teams; official athletics sites, one roster PDF, two school papers, MaxPreps career and JV pages)
