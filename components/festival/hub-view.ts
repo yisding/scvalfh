@@ -1,5 +1,5 @@
 import { plural } from '../../lib/format';
-import type { FestivalClub } from '../../lib/festival/festival';
+import { festivalResultsStamp, type FestivalClub } from '../../lib/festival/festival';
 import {
   byDayAndSlot,
   clubHref,
@@ -211,8 +211,10 @@ export interface FestivalChromeModel {
   place: string;
   dates: string;
   stamp: string;
-  /** The committed file's fetchedAt, printed as `data-fest-stamp` for the freshness poll (freshness-poll.ts). */
+  /** The committed file's fetchedAt: when the scores were last checked. */
   fetchedAt: string;
+  /** A stamp of the results alone (festivalResultsStamp), printed as `data-fest-stamp` for the freshness poll. */
+  resultsStamp: string;
   resultsUrl: string;
   complete: boolean;
   tabs: { id: string; href: string; label: string }[];
@@ -226,6 +228,7 @@ export function buildChrome(m: FestivalModel = festivalModel()): FestivalChromeM
     dates: eventDates(tournament.startDate, tournament.endDate),
     stamp: stampWords(fetchedAt),
     fetchedAt,
+    resultsStamp: festivalResultsStamp(m.file),
     resultsUrl: tournament.resultsUrl,
     complete: statusLine(m).complete,
     tabs: [

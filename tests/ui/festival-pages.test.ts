@@ -4,6 +4,9 @@
  * (no "eliminat…", no missing score printed as a zero, nothing undefined).
  */
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import type { Metadata } from 'next';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -19,6 +22,7 @@ import TeamPage, { generateMetadata as teamMetadata, generateStaticParams as tea
 import FestivalPoolTable from '../../components/festival/FestivalPoolTable';
 import { festivalModel, poolTable } from '../../components/festival/festival-model';
 import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs, getFestival } from '../../lib/festival/festival';
+import { REPO } from '../helpers';
 import { stripTags } from './html-text';
 
 const FILE = getFestival();
@@ -140,6 +144,44 @@ describe('a division page', () => {
     expect(u19.indexOf('id="bracket"')).toBeLessThan(u19.indexOf('id="schedule"'));
     expect(u16).not.toContain('id="bracket"');
     expect(u19).toContain('aria-current="page"');
+  });
+});
+
+describe('team names in matches (owner ask, 2026-11-26: tapping a name opens the team)', () => {
+  it('every game list is a festival list, whose team names are links to team pages', () => {
+    for (const [name, html] of Object.entries({ hub, schedule, u19, u16 })) {
+      const lists = html.match(/<div class="sx-gamelist[^"]*"/g) ?? [];
+      expect(lists.length, name).toBeGreaterThan(0);
+      for (const l of lists) expect(l, name).toContain('sx-fest-games');
+      expect(html, name).toMatch(/<a class="sx-game-name" href="\/festival\/teams\/[a-z0-9-]+"/);
+    }
+  });
+
+  it('keeps those links tappable on a touch screen, where the site’s other game rows send a tap to the game', () => {
+    const css = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
+    expect(css).toContain('@media (hover: none), (pointer: coarse) { .sx-fest-games a.sx-game-name { pointer-events: auto; } }');
+  });
+
+  it('underlines the "Now:" team of an open placement side, so it reads as a link without relying on colour', () => {
+    const now = u19.match(/ · Now: <\/?[^>]*>?<a [^>]*>/g) ?? u19.match(/Now: <a [^>]*>/g) ?? [];
+    expect(now.length).toBeGreaterThan(0);
+    for (const a of now) expect(a).toContain('class="sx-link"');
+  });
+});
+
+describe('a division without placement games', () => {
+  it('says "Pool play only" in its header, and the hub’s division list links its pools where others link a bracket', () => {
+    expect(stripTags(u16)).toContain('Pool play only');
+    expect(stripTags(u19)).not.toContain('Pool play only');
+    expect(u16).toContain('id="pools"');
+    const list = hub.split('aria-labelledby="divisions"')[1]!.split('</section>')[0]!;
+    const row = (short: string) => list.split('<li').find((li) => li.includes(`>${short}</a>`)) ?? '';
+    for (const [short, slug] of [['U16', 'u16'], ['U14 Co-Ed', 'u14-coed'], ['Adult', 'adult']]) {
+      expect(row(short), short).toMatch(new RegExp(`href="/festival/${slug}#pools"[^>]*>Pools<`));
+      expect(row(short), short).not.toContain('#bracket');
+    }
+    expect(row('U19')).toMatch(/href="\/festival\/u19#bracket"[^>]*>Bracket</);
+    expect(row('U19')).not.toContain('#pools');
   });
 });
 

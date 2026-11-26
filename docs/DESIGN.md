@@ -5256,8 +5256,10 @@ except where this section says otherwise (§35.4 times, §35.7 the freshness pol
   "Pool A placement"), computed in the view, not stored.
 - **Commit only on a content change.** `festivalContentKey` ignores `fetchedAt` alone, so a run that finds the
   same results writes nothing; the feed's version stamp (`sourceVersion`) is content, so a version bump with new
-  results commits. `fetchedAt` therefore moves only with the results, and the sitemap's `lastModified` for every
-  festival page is that stamp (the club pages the later of it and the curated clubs file's `checkedOn`), never
+  results commits. TourneyMachine also moves its version about once an hour with no new result (5:01:59, 6:02:01,
+  7:02:03 PM UTC on 2026-11-26); that commits too, by design, so the next checks stop at the 30-byte read instead
+  of downloading the whole feed each time. `fetchedAt` therefore moves with the results and with those hourly
+  bumps, and the sitemap's `lastModified` for every festival page is that stamp (the club pages the later of it and the curated clubs file's `checkedOn`), never
   `Date.now()`.
 
 ### 35.2 Clubs
@@ -5381,10 +5383,11 @@ after the check that finds it; score entry itself lags the games by 10–30 minu
   bold name. The attributes are `data-fest-*`, never `data-team-slug`, so the site's pinned-team marks never pick
   them up. With no JavaScript the hub explains how following works and shows every other section unchanged.
 - **The freshness notice: the one network request.** ncfh.net sends no ETag or Last-Modified (vinext on Cloudflare
-  Workers; checked 2026-11-26), so the notice compares content, not headers. Every festival page prints the
-  committed file's `fetchedAt` as `data-fest-stamp` on its "Scores as of" line; the refresh commits only on a
-  content change, so the stamp moves with the scores and nothing else (another sport's deploy changes the bytes and
-  the build id, not the stamp). While a festival tab is visible, a small client component GETs one small festival
+  Workers; checked 2026-11-26), so the notice compares content, not headers. Every festival page prints a stamp of
+  the results alone (`festivalResultsStamp`: each game's status, score and teams, each pool's order and each team's
+  record, hashed) as `data-fest-stamp` on its "Scores as of" line, so the stamp moves with the scores and nothing
+  else: not with TourneyMachine's hourly version bumps, which move `fetchedAt` (§35.1), and not with another sport's
+  deploy, which changes the bytes and the build id. While a festival tab is visible, a small client component GETs one small festival
   page, `/festival/clubs`, with `cache: 'no-store'` every three minutes (and once when a hidden tab comes back),
   reads its stamp and compares it with its own page's; when they differ it shows "New scores are in. Reload" and
   stops (components/festival/freshness-poll.ts). It does not poll at all without a stamp of its own, stops when a

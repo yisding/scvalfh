@@ -20,7 +20,7 @@ import {
   stampIn,
   type FreshnessEnv,
 } from '../../components/festival/freshness-poll';
-import { getFestival } from '../../lib/festival/festival';
+import { festivalResultsStamp, getFestival } from '../../lib/festival/festival';
 
 const FILE = getFestival();
 const OWN = '2026-11-26T17:08:00.000Z';
@@ -75,13 +75,37 @@ function fakeBrowser(bodies: Array<string | Error>, visible = true) {
 }
 
 describe('the scores stamp on the pages', () => {
-  it('every festival page prints the committed file’s fetchedAt, the polled page included', () => {
+  it('every festival page prints the stamp of the results, the polled page included', () => {
     expect(FRESHNESS_URL).toBe('/festival/clubs');
     const clubs = renderToStaticMarkup(createElement(ClubsPage));
     const hub = renderToStaticMarkup(createElement(FestivalPage));
-    expect(stampIn(clubs)).toBe(FILE.fetchedAt);
-    expect(stampIn(hub)).toBe(FILE.fetchedAt);
-    expect(freshnessVerdict(FILE.fetchedAt, clubs)).toBe('same');
+    const stamp = festivalResultsStamp(FILE);
+    expect(stamp).toMatch(/^[0-9a-f]{8}$/);
+    expect(stampIn(clubs)).toBe(stamp);
+    expect(stampIn(hub)).toBe(stamp);
+    expect(freshnessVerdict(stamp, clubs)).toBe('same');
+  });
+
+  // TourneyMachine moves its version about once an hour with no new result (5:01:59, 6:02:01, 7:02:03 PM on
+  // 2026-11-26), and the refresh commits it with a new fetchedAt: an open page must not be told of new scores then.
+  it('stays the same when only the version and fetch time move, and changes with a score, a pool order or a placement team', () => {
+    const stamp = festivalResultsStamp(FILE);
+    const bumped = { ...structuredClone(FILE), fetchedAt: '2026-11-26T20:14:00.000Z', sourceVersion: 'v6_11/26/2026 8:02:00 PM' };
+    expect(festivalResultsStamp(bumped)).toBe(stamp);
+    // Each edit changes what the committed file holds, whatever state the event is in.
+    const scored = structuredClone(FILE);
+    const game = scored.games[0];
+    game.status = 'final';
+    game.score = game.score?.[0] === 9 ? [8, 0] : [9, 0];
+    expect(festivalResultsStamp(scored)).not.toBe(stamp);
+    const reordered = structuredClone(FILE);
+    const pool = reordered.divisions[0].pools[0];
+    pool.teamIds = [...pool.teamIds].reverse();
+    expect(festivalResultsStamp(reordered)).not.toBe(stamp);
+    const filled = structuredClone(FILE);
+    const side = filled.games.find((g) => g.kind === 'placement')!.sides[0];
+    side.teamId = side.teamId === filled.teams[0].id ? filled.teams[1].id : filled.teams[0].id;
+    expect(festivalResultsStamp(filled)).not.toBe(stamp);
   });
 
   it('reads the verdict: same, changed, or unknown with no stamp', () => {

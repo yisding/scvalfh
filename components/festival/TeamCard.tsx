@@ -96,7 +96,17 @@ function Opponent({ side }: { side: SideModel }) {
       </Link>
     );
   }
-  return <>{side.state === 'provisional' ? `${side.slot} (now ${side.team!.name})` : side.slot}</>;
+  if (side.state !== 'provisional') return <>{side.slot}</>;
+  return (
+    <>
+      {side.slot}
+      {' (now '}
+      <Link href={side.team!.href} prefetch={false} className="sx-link">
+        {side.team!.name}
+      </Link>
+      {')'}
+    </>
+  );
 }
 
 export default TeamCard;

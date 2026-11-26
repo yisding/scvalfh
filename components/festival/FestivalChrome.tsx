@@ -46,15 +46,16 @@ export function FestivalChrome({ title, meta, current, exact = true, children }:
         </nav>
       </PageHeader>
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-        {/* The stamp FestivalFreshness polls for (FEST_STAMP_ATTR in freshness-poll.ts): the committed file's
-            fetchedAt, which moves only when the scores do. */}
-        <p className="m-0 text-cell text-ink-2" data-fest-stamp={chrome.fetchedAt}>
+        {/* The stamp FestivalFreshness polls for (FEST_STAMP_ATTR in freshness-poll.ts): a stamp of the results
+            alone, which moves only when a score, a pool order or a placement team does (not with TourneyMachine's
+            hourly version bumps, which change fetchedAt). */}
+        <p className="m-0 text-cell text-ink-2" data-fest-stamp={chrome.resultsStamp}>
           Scores as of {chrome.stamp}, from{' '}
           <ExternalLink href={chrome.resultsUrl} arrow={false}>
             TourneyMachine
           </ExternalLink>
         </p>
-        <FestivalFreshness complete={chrome.complete} stamp={chrome.fetchedAt} />
+        <FestivalFreshness complete={chrome.complete} stamp={chrome.resultsStamp} />
       </div>
       {children}
     </>

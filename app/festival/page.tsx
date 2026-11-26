@@ -141,7 +141,12 @@ export default function FestivalPage() {
                   Bracket
                   <span className="sr-only"> &mdash; {d.short}</span>
                 </Link>
-              ) : null}
+              ) : (
+                <Link href={`${d.href}#pools`} prefetch={false} className="sx-action ml-auto">
+                  Pools
+                  <span className="sr-only"> &mdash; {d.short}</span>
+                </Link>
+              )}
             </li>
           ))}
         </ul>

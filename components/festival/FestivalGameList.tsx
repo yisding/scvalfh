@@ -13,11 +13,13 @@ import type { GameRowModel, SideModel } from './festival-model';
  * holds that place now ("Now: …") when its pool is under way; once the pool is complete, the team itself.
  *
  * Each row carries its teams' slugs (`data-fest-game`) for the schedule's "Only my teams" filter. Team names link
- * to the team pages; there is no game page, so the row itself is not a link.
+ * to the team pages, the "Now:" team of an open placement side too; there is no game page, so the row itself is
+ * not a link, and on a touch screen the names stay tappable (`.sx-fest-games`), unlike the site's other game rows,
+ * where a tap opens the game.
  */
 export function FestivalGameList({ games, id }: { games: readonly GameRowModel[]; id?: string }) {
   return (
-    <div className="sx-gamelist" id={id}>
+    <div className="sx-gamelist sx-fest-games" id={id}>
       <ul className="sx-games">
         {games.map((g) => (
           <li key={g.key} className="sx-game" data-fest-game={g.teamSlugs.join(' ')}>
@@ -70,7 +72,14 @@ function Side({ side, at }: { side: SideModel; at: 'away' | 'home' }) {
         ) : (
           <span className="sx-game-name">
             {side.slot}
-            {side.state === 'provisional' ? <span className="text-ink-3"> · Now: {side.team!.name}</span> : null}
+            {side.state === 'provisional' ? (
+              <span className="text-ink-3">
+                {' · Now: '}
+                <Link href={side.team!.href} prefetch={false} className="sx-link">
+                  {side.team!.name}
+                </Link>
+              </span>
+            ) : null}
           </span>
         )}
       </div>

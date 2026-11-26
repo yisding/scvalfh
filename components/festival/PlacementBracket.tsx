@@ -68,7 +68,12 @@ function Line({ side }: { side: SideModel }) {
             </span>
           </span>
         ) : side.state === 'provisional' ? (
-          <span className="text-cell font-normal text-ink-2">Now: {side.team!.name}</span>
+          <span className="text-cell font-normal text-ink-2">
+            Now:{' '}
+            <Link href={side.team!.href} prefetch={false} className="sx-link">
+              {side.team!.name}
+            </Link>
+          </span>
         ) : (
           <span className="text-cell font-normal text-ink-3">To be decided</span>
         )}
