@@ -272,7 +272,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([25, 3, 11, 0]);
   });
 
-  it('rests on 132 source entries on 98 distinct URLs (SoCal: 60 on 51), and 21 commitments carry a date', () => {
+  it('rests on 132 source entries on 98 distinct URLs (SoCal: 60 on 51), and 23 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
     expect(entries).toHaveLength(132);
     expect(new Set(entries.map((s) => s.url)).size).toBe(98);
@@ -306,6 +306,9 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       '2026-11-11',
       // Abby Feldman: TopDrawerSoccer's Recruiting Roundup.
       '2026-11-16',
+      // Lola Conway and Emerson Davis: The Tower's story of Nov 23 (the 2026-11-25 round).
+      '2026-11-23',
+      '2026-11-23',
     ]);
   });
 

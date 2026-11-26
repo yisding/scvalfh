@@ -3608,7 +3608,8 @@ assembler per sport built the files from them with a second read, and they are k
   `api/v1/teams/<team_id>/members?role=player&public=true`, what the roster page loads.
 - **Monterey Surf Soccer Club** (2026-11-26; README "Girls soccer: club rosters"). `montereysurf.com` (a Byga site)
   answers a plain request; it has no team or roster pages, only a Coaches page that lists the teams by age group and
-  league, and a home page feed of the club's social media posts (never a source). Its GotSport club id is 13007: the
+  league, and a home page feed of the club's social media posts (no source for a club tie; cited in `commits.json` as the club's
+  own commitment announcements, §1.15). Its GotSport club id is 13007: the
   N1 League's and the Fall League's club pages (`system.gotsport.com/org_event/events/54043/clubs/13007`,
   `…/54541/clubs/13007`) answer a plain request and list its teams; `team_ranking_data` under "Monterey Surf",
   Female, ages 13 to 19, finds five teams (N1 G2013/14, ECNL RL G2012/13, N1 G2010/11, G2009/10 and G2008/09) and no
@@ -3719,8 +3720,12 @@ assembler per sport built the files from them with a second read, and they are k
   names, volleyball 876 and 473, soccer 876 and 815, basketball 1,212 and 320; the PCAL and PSAL soccer and
   basketball teams, added that day, had never had a commitment round. Seven passes, each on one source family, every
   kept page read twice and re-read at assembly; refusing sites read in headless Chromium, stopping at any challenge,
-  login or paywall. *Rule change (owner, 2026-11-25):* a club's own commitment announcement counts when the roster row
-  is already tied to that club in `clubs.json`; such commitments are medium.
+  login or paywall. *Rule change (owner, 2026-11-25: "club only leads are fine if they match the club"):* a page that ties
+  a commitment to the player through her club alone (the club's own announcement, or a list or profile naming the
+  club and not the school) counts when the roster row is already tied to that club in `clubs.json`; such commitments
+  are medium. Monterey Surf's and MVLA's announcements are the clubs' own posts, shown on their own sites from their
+  own accounts. Two colleges' levels come from their own news, not the page metadata, which is a season behind:
+  Menlo College (NCAA Division II, CCAA, since 2026-27) and Azusa Pacific (moving to Division III and the SCIAC).
   *College releases:* 1,083 athletics hosts; classic Sidearm sites answer
   `/services/archives.ashx/stories?index=1&page_size=200&sport=0&season=0&search=` with their latest 200 stories of
   every sport (924 hosts answered); WMT sites (Stanford, SJSU, UCLA, SDSU and others) through `/sitemap.xml`. 8,036

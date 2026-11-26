@@ -8,7 +8,7 @@
     "Read: TopDrawerSoccer's California girls commitment search for 2027 (225) and 2028 (128) and its player profiles, SoccerWire's commitment tracker (2027 and 2028), PrepSoccer's California list and 1,704 posts since 2025-11-01, 1,043 college athletics sites' news feeds (NCAA Division I, II and III women's soccer members and 19 NAIA; 6,237 stories opened, 3,236 dated 2026-11-11 or later), 12 student papers and 8 local papers, the clubs' commitment pages (MVLA, De Anza Force, SVSA, Bay Area Surf, Valley Surf, Los Gatos United), and the players' own SportsRecruits pages (\"Committed to …\", dated by the entry on the profile). Every quote was read twice by the pass and re-read at assembly by a separate script on 2026-11-21.",
     "Recall is partial: no name-by-name search of every senior, junior or ungraded row; no student paper was found for 20 of the schools; the San Mateo Daily Journal, the Los Altos Town Crier and the Half Moon Bay Review were not read; 96 college sites gave no feed; community-college sites were not retried; MVLA's and SF Elite's commitment widgets are drawn by script. Leads left out because no page meets the rule: four players named with a college but no school, hometown or agreeing class year (a Mercy Burlingame, a Soquel and two Valley Christian players).",
     "Removed 2026-11-25: Zuri Brandt's (Mitty) commitment to Washington, and Washington's college record with it. MaxPreps' Mitty roster of 2026-11-24 no longer lists Zuri Brandt (#20, grade 12) or Scarlett Martinez (#4, grade 11): 26 players on 2026-11-21, 24 on 2026-11-24, no other change. Hudl's 2026 Mitty varsity roster, read 2026-11-25, still lists both. The site shows only players on the MaxPreps rosters, so the record had been left out as roster drift; the owner decided to drop it (git history keeps it).",
-    "On 2026-11-25 a commitment round over all four builds (field hockey, volleyball, soccer, basketball), every row as it stood that day, varsity and JV, by the same rules; docs/DATA-SOURCES.md §1.15 says what it read and did not. It added ten. Caelyn Dyer (William & Mary) and Jasmine Vemuri (Whitman), Notre Dame San Jose, whose roster was posted after the 2026-11-21 round: PrepSoccer's player pages name the school (high). Alina Decker (Menlo-Atherton, listed by MaxPreps as 'Decker Alina') to Brandeis in track and field, from the M-A Chronicle (medium, for the swapped name). Seven on the owner's ruling of 2026-11-25 that a club's own commitment announcement counts when the row is already tied to that club in clubs.json (all medium, the basis of each naming the tie): Rebecca Iffla, Audrey Pfeiffer, Kenzie Willerer and Kaitlyn Gray, the leads left out on 2026-11-21, and Bailey Portillo, Samantha Torres and Sherlyn Farfan, from Monterey Surf's own page, tied once Monterey Surf's N1 rosters were kept the same day. New sources: the M-A Chronicle for Juliana Pandolfo (dated Nov 9), TopDrawerSoccer's roundups of Nov 16 and 23 for Kailani Bock and Delaney Kumer. Leads left out: three Saint Francis and one Menlo-Atherton signee and others named in college releases whose schools' rosters do not list them (Saint Francis' roster is empty)."
+    "On 2026-11-25 a commitment round over all four builds (field hockey, volleyball, soccer, basketball), every row as it stood that day, varsity and JV, by the same rules; docs/DATA-SOURCES.md §1.15 says what it read and did not. It added ten. Caelyn Dyer (William & Mary) and Jasmine Vemuri (Whitman), Notre Dame San Jose, whose roster was posted after the 2026-11-21 round: PrepSoccer's player pages name the school (high). Alina Decker (Menlo-Atherton, listed by MaxPreps as 'Decker Alina') to Brandeis in track and field, from the M-A Chronicle (medium, for the swapped name). Seven on the owner's ruling of 2026-11-25 that a page that ties a commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the row is already tied to that club in clubs.json; the Monterey Surf and MVLA pages cited are the clubs' own announcements, shown on their own sites from their own accounts (all medium, the basis of each naming the tie): Rebecca Iffla, Audrey Pfeiffer, Kenzie Willerer and Kaitlyn Gray, the leads left out on 2026-11-21, and Bailey Portillo, Samantha Torres and Sherlyn Farfan, from Monterey Surf's own page, tied once Monterey Surf's N1 rosters were kept the same day. New sources: the M-A Chronicle for Juliana Pandolfo (dated Nov 9), TopDrawerSoccer's roundups of Nov 16 and 23 for Kailani Bock and Delaney Kumer. Leads left out: three Saint Francis and one Menlo-Atherton signee and others named in college releases whose schools' rosters do not list them (Saint Francis' roster is empty)."
   ],
   "colleges": [
     {
@@ -364,18 +364,22 @@
       "programs": [
         {
           "sport": "soccer",
-          "division": "ncaa-d2",
-          "conference": "Pacific West Conference",
+          "division": "ncaa-d3",
+          "conference": "Southern California Intercollegiate Athletic Conference",
           "url": "https://athletics.apu.edu/sports/womens-soccer"
         }
       ],
       "sources": [
         {
-          "url": "https://athletics.apu.edu/sports/womens-soccer",
-          "what": "Azusa Pacific University Athletics' women's soccer page (HTTP 200, read 2026-11-25). Embedded Sidearm metadata reads school_division DII and school_conference PacWest; both are the school's values. The university is in Azusa, California."
+          "url": "https://catalog.apu.edu/student-resources/university/intercollegiate-athletics/",
+          "what": "Azusa Pacific University's catalog, Intercollegiate Athletics (read 2026-11-26): 'Beginning in the 2026-27 academic year, the university's 19-sport Cougar athletics program will transition to NCAA Division III and join the Southern California Intercollegiate Athletic Conference (SCIAC)'; full SCIAC membership in 2027-28."
+        },
+        {
+          "url": "https://athletics.apu.edu/story.aspx?file_date=9-1-2026&filename=womens-soccer-hits-the-ground-running",
+          "what": "Azusa Pacific Athletics, women's soccer opener of Sep 1, 2026: 'its adjustment to Division III, defeating new SCIAC rival La Verne'. The women's soccer page's embedded Sidearm metadata still reads DII and PacWest, the former classification."
         }
       ],
-      "checkedOn": "2026-11-25"
+      "checkedOn": "2026-11-26"
     },
     {
       "slug": "cal-lutheran",
@@ -408,18 +412,18 @@
       "programs": [
         {
           "sport": "soccer",
-          "division": "naia",
-          "conference": "Golden State Athletic Conference",
+          "division": "ncaa-d2",
+          "conference": "California Collegiate Athletic Association",
           "url": "https://menloathletics.com/sports/womens-soccer"
         }
       ],
       "sources": [
         {
-          "url": "https://menloathletics.com/sports/womens-soccer",
-          "what": "Menlo College Athletics' women's soccer page (HTTP 200, read 2026-11-25). Embedded Sidearm metadata reads school_division NAIA and school_conference Golden State Athletic Conference; both are the school's values. The college is in Atherton, California. (Monterey Surf's reposted player text speaks of 'Division 2 soccer at Menlo College'; the college's own site gives the NAIA, which is what is recorded.)"
+          "url": "https://menloathletics.com/news/2026/9/14/menlo-college-achieves-full-ncaa-division-ii-membership.aspx",
+          "what": "Menlo College Athletics, 'Menlo College Achieves Full NCAA Division II Membership' (Sep 14, 2026; read 2026-11-26): full Division II membership, and from 2026-27 'Menlo now competes as a full member of the California Collegiate Athletic Association (CCAA) in most of its NCAA-sponsored sports' (the exceptions it names are tennis, men's volleyball and wrestling). The women's soccer page's embedded Sidearm metadata still reads NAIA and the Golden State Athletic Conference, the former classification."
         }
       ],
-      "checkedOn": "2026-11-25"
+      "checkedOn": "2026-11-26"
     },
     {
       "slug": "stanislaus-state",
@@ -1067,7 +1071,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Medium: no page names her school or a hometown. TopDrawerSoccer's profile gives defender, class of 2028 (the roster's), Nevada and the club Bay Area Surf, 'High School: N/A'; its Nevada commitment list and its roundup of Oct 5, 2026 (hence the date) name only the club. The match rests on the name, the class year and the club: clubs.json ties this Mercy Burlingame row to Bay Area Surf's ECNL G2009/10 team by the league's own roster. Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly."
+      "basis": "Medium: no page names her school or a hometown. TopDrawerSoccer's profile gives defender, class of 2028 (the roster's), Nevada and the club Bay Area Surf, 'High School: N/A'; its Nevada commitment list and its roundup of Oct 5, 2026 (hence the date) name only the club. The match rests on the name, the class year and the club: clubs.json ties this Mercy Burlingame row to Bay Area Surf's ECNL G2009/10 team by the league's own roster. Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly."
     },
     {
       "teamSlug": "valley-christian",
@@ -1089,7 +1093,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Medium: one page, which names no school, class year or hometown. MVLA's own commitments page (the club's feed, shown on its site) congratulates 'Audrey Pfeiffer from our 10G ECNL team on her commitment to UC San Diego'. The match rests on the name and the club team: clubs.json ties this Valley Christian row (class of 2028) to MVLA ECNL G2009/10 by the league's own roster, the '10G ECNL' team of the post. She is on none of TopDrawerSoccer's, SoccerWire's or PrepSoccer's lists. Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly. No date on the page."
+      "basis": "Medium: one page, which names no school, class year or hometown. MVLA's own commitments page (the club's feed, shown on its site) congratulates 'Audrey Pfeiffer from our 10G ECNL team on her commitment to UC San Diego'. The match rests on the name and the club team: clubs.json ties this Valley Christian row (class of 2028) to MVLA ECNL G2009/10 by the league's own roster, the '10G ECNL' team of the post. She is on none of TopDrawerSoccer's, SoccerWire's or PrepSoccer's lists. Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly. No date on the page."
     },
     {
       "teamSlug": "valley-christian",
@@ -1111,7 +1115,7 @@
           "sourceDate": "2026-09-19"
         }
       ],
-      "basis": "Medium: the page names no school or hometown. Los Gatos United's own post of Sep 19, 2026 ('Kenzie Willerer Commits to Azusa Pacific') gives 'Kenzie Willerer Azusa Pacific University Class of 2027'; the class year is the roster's. The match rests on the name, the class year and the club: clubs.json ties this Valley Christian row to Los Gatos United's ECNL RL G2008/09 team by the league's own roster. (An NCSA soccer page under her name gives Los Gatos High School, class of 2027, club Los Gatos United; it names another school than the roster's, so it is not linked as her profile.) Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly."
+      "basis": "Medium: the page names no school or hometown. Los Gatos United's own post of Sep 19, 2026 ('Kenzie Willerer Commits to Azusa Pacific') gives 'Kenzie Willerer Azusa Pacific University Class of 2027'; the class year is the roster's. The match rests on the name, the class year and the club: clubs.json ties this Valley Christian row to Los Gatos United's ECNL RL G2008/09 team by the league's own roster. (An NCSA soccer page under her name gives Los Gatos High School, class of 2027, club Los Gatos United; it names another school than the roster's, so it is not linked as her profile.) Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly."
     },
     {
       "teamSlug": "soquel",
@@ -1133,7 +1137,7 @@
           "sourceDate": "2026-09-23"
         }
       ],
-      "basis": "Medium: the page names no school or hometown, and the name is not rare. Los Gatos United's own post of Sep 23, 2026 says she 'represents Los Gatos United's 2009/08 ECNL RL team and is part of the Class of 2027'; the class year is the roster's. The match rests on the name, the class year and the club team: clubs.json ties this Soquel row to Los Gatos United's ECNL RL G2008/09 team by the league's own roster, and no other tracked school has a row under the name. Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly."
+      "basis": "Medium: the page names no school or hometown, and the name is not rare. Los Gatos United's own post of Sep 23, 2026 says she 'represents Los Gatos United's 2009/08 ECNL RL team and is part of the Class of 2027'; the class year is the roster's. The match rests on the name, the class year and the club team: clubs.json ties this Soquel row to Los Gatos United's ECNL RL G2008/09 team by the league's own roster, and no other tracked school has a row under the name. Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Left out as a near miss on 2026-11-21 and re-read unchanged on 2026-11-25 and at assembly."
     },
     {
       "teamSlug": "salinas",
@@ -1155,7 +1159,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Medium: one page, which names no school, class year or hometown. Monterey Surf's own home page shows the club's feed, where the club congratulates Bailey Portillo 'on her verbal commitment to continue her academic and soccer career at Menlo College'. The match rests on the name and the club: clubs.json ties this row to Monterey Surf's N1 G2008/09 team by the team's GotSport roster (added 2026-11-25 with the club's record), and no other tracked school has a row under the name. The roster row is a Salinas senior.  Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Found by the 2026-11-25 list pass, read twice, and again at assembly. No date on the page; the college's women's soccer feed had no signing story on 2026-11-25."
+      "basis": "Medium: one page, which names no school, class year or hometown. Monterey Surf's own home page shows the club's feed, where the club congratulates Bailey Portillo 'on her verbal commitment to continue her academic and soccer career at Menlo College'. The match rests on the name and the club: clubs.json ties this row to Monterey Surf's N1 G2008/09 team by the team's GotSport roster (added 2026-11-25 with the club's record), and no other tracked school has a row under the name. The roster row is a Salinas senior.  Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Found by the 2026-11-25 list pass, read twice, and again at assembly. No date on the page; the college's women's soccer feed had no signing story on 2026-11-25."
     },
     {
       "teamSlug": "salinas",
@@ -1177,7 +1181,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Medium: one page, which names no school, class year or hometown. Monterey Surf's own home page shows the club's feed, where the club congratulates Samantha Torres 'on her verbal commitment to continue her academic and athletic career at Menlo College'. The match rests on the name and the club: clubs.json ties this row to Monterey Surf's N1 G2008/09 team by the team's GotSport roster (added 2026-11-25 with the club's record), and no other tracked school has a row under the name. The name is common: PrepSoccer's page under it is a 2024 graduate, someone else. The roster row is a Salinas junior (class of 2028); an earlier post of the club's calls her '09G', a birth year a junior can have.  Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Found by the 2026-11-25 list pass, read twice, and again at assembly. No date on the page; the college's women's soccer feed had no signing story on 2026-11-25."
+      "basis": "Medium: one page, which names no school, class year or hometown. Monterey Surf's own home page shows the club's feed, where the club congratulates Samantha Torres 'on her verbal commitment to continue her academic and athletic career at Menlo College'. The match rests on the name and the club: clubs.json ties this row to Monterey Surf's N1 G2008/09 team by the team's GotSport roster (added 2026-11-25 with the club's record), and no other tracked school has a row under the name. The name is common: PrepSoccer's page under it is a 2024 graduate, someone else. The roster row is a Salinas junior (class of 2028); an earlier post of the club's calls her '09G', a birth year a junior can have.  Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Found by the 2026-11-25 list pass, read twice, and again at assembly. No date on the page; the college's women's soccer feed had no signing story on 2026-11-25."
     },
     {
       "teamSlug": "rancho-san-juan",
@@ -1199,7 +1203,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Medium: one page, which names no school, class year or hometown. Monterey Surf's own home page shows the club's feed, where the club congratulates 'Monterey Surf's Sherlynn Farfan on her verbal commitment to continue her academic and soccer career at California State University Stanislaus'. The match rests on the name and the club: clubs.json ties this row to Monterey Surf's N1 G2008/09 team by the team's GotSport roster (added 2026-11-25 with the club's record), and no other tracked school has a row under the name. The post spells her Sherlynn; MaxPreps and the club's GotSport roster both spell her Sherlyn. The roster row is a Rancho San Juan (Salinas) senior.  Listed on the owner's ruling of 2026-11-25: a club's own announcement counts when the roster row is already tied to that club. Found by the 2026-11-25 list pass, read twice, and again at assembly. No date on the page; the college's women's soccer feed had no signing story on 2026-11-25."
+      "basis": "Medium: one page, which names no school, class year or hometown. Monterey Surf's own home page shows the club's feed, where the club congratulates 'Monterey Surf's Sherlynn Farfan on her verbal commitment to continue her academic and soccer career at California State University Stanislaus'. The match rests on the name and the club: clubs.json ties this row to Monterey Surf's N1 G2008/09 team by the team's GotSport roster (added 2026-11-25 with the club's record), and no other tracked school has a row under the name. The post spells her Sherlynn; MaxPreps and the club's GotSport roster both spell her Sherlyn. The roster row is a Rancho San Juan (Salinas) senior.  Listed on the owner's ruling of 2026-11-25: a page that ties the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the club and not the school) counts when the roster row is already tied to that club. Found by the 2026-11-25 list pass, read twice, and again at assembly. No date on the page; the college's women's soccer feed had no signing story on 2026-11-25."
     }
   ]
 }

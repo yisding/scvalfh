@@ -1956,15 +1956,17 @@ on 2026-11-21:
   not claim it. **33 JV ties** for 33 JV players at 11 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
   Mountain View 5, Branham, Pacific Collegiate and Sobrato 4 each, Willow Glen 3), shown marked JV.
 - **College commitments** (`commits.json`): **22 players at 12 schools, to 19 colleges** (counted 2026-11-25), 19 in
-  soccer, 1 each in field hockey, softball and track and field; 11 to NCAA Division I programs, 2 to Division II, 7 to
-  Division III and 2 to the NAIA; 9 high and 13 medium. The commitment round of 2026-11-25 added ten:
+  soccer, 1 each in field hockey, softball and track and field; 11 to NCAA Division I programs, 3 to Division II and
+  8 to Division III (Menlo College is Division II and in the CCAA since 2026-27, Azusa Pacific moving to Division III
+  and the SCIAC; their sites' page metadata still gives the old levels); 9 high and 13 medium. The commitment round of 2026-11-25 added ten:
   - Caelyn Dyer to William & Mary and Jasmine Vemuri to Whitman, both Notre Dame San Jose, whose roster was posted
     after the 2026-11-21 round: PrepSoccer's player pages and its California list name the school, TopDrawerSoccer
     agreeing (high).
   - Alina Decker (Menlo-Atherton) to Brandeis in track and field, from the M-A Chronicle's running list of the
     school's commitments; medium, because MaxPreps' row gives her name the other way round ("Decker Alina").
-  - Seven on the owner's ruling of 2026-11-25 that a club's own announcement counts when the row is already tied to
-    that club (all medium): Rebecca Iffla (Mercy Burlingame) to Nevada (TopDrawerSoccer, club Bay Area Surf),
+  - Seven on the owner's ruling of 2026-11-25 ("club only leads are fine if they match the club"): a page that ties
+    the commitment to the player through her club alone (the club's own announcement, or a list or profile naming the
+    club and not the school) counts when the row is already tied to that club (all medium): Rebecca Iffla (Mercy Burlingame) to Nevada (TopDrawerSoccer, club Bay Area Surf),
     Audrey Pfeiffer (Valley Christian) to UC San Diego (MVLA's commitments page), Kenzie Willerer (Valley Christian)
     to Azusa Pacific and Kaitlyn Gray (Soquel) to Cal Lutheran (Los Gatos United's posts), and, from Monterey Surf's
     own page, Bailey Portillo and Samantha Torres (Salinas) to Menlo College and Sherlyn Farfan (Rancho San Juan) to
@@ -2421,8 +2423,9 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   the G2008/09 roster but Giovanna Rodriguez (G2009/10); Jenssy Torres is on all three and is named on the G2009/10,
   whose birth years best fit the class of 2028. No Monterey Surf row was left for a class year, a second school or a
   second club; the other 24 names on the rosters are on no tracked roster. The club's site announces three of the
-  seven's college commitments (it spells Farfan's first name Sherlynn); those are reposts of social media posts and
-  are not a club source here. `compare-club-rosters` lists no match `clubs.json` does not cite.
+  seven's college commitments (it spells Farfan's first name Sherlynn), in a feed of the club's own social media
+  posts; the ties do not rest on them, but they are cited in `commits.json` as the club's own announcements (a club's
+  official account counts there; "College commitments"). `compare-club-rosters` lists no match `clubs.json` does not cite.
 - **The clubs an audit found, 2026-11-26.** After Monterey Surf the owner asked whether other clubs were missing. An
   audit read the club lists of NorCal Premier's two GotSport events (281 clubs) and searched GotSport Rankings by club
   and by place name; what it found was added the same day, each kept roster read twice (the data the roster page

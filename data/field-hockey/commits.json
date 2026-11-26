@@ -1014,7 +1014,7 @@
       "college": "michigan",
       "sport": "field-hockey",
       "status": "committed",
-      "asOf": null,
+      "asOf": "2026-11-23",
       "confidence": "high",
       "sources": [
         {
@@ -1058,7 +1058,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits field hockey profile (class of 2028, San Diego, CA hometown, club HTC CA) shows 'Committed to University of Michigan'; its TEAMS block, drawn by script, lists the school as 'Bishop's, La Jolla, CA' (The Bishop's School), so the school is named on the profile itself. FH College Path's class of 2028 list (under University of Michigan: 'Lola Conway CA Mid HTC-CA') and SportsRecruits' Michigan page (whose own address slug is university_ofichigan; it lists her and describes her highlight video as 'from Bishop's in La Jolla, CA') agree; the latter repeats the profile and is not independent. MAX Field Hockey also lists her but is not cited. No dated page found: the profile's script-drawn tooltip reads 'on 7/17/2026', which is not used, and the school newspaper and San Diego Union-Tribune stories on her name no college, so asOf is null. Roster row grade 11 = 2028, which agrees. No signing wording. Since 2026-11-25: The Tower, The Bishop's School's student paper, reports the commitment in its story of Nov 23, 2026 on the school's recruited athletes ('The Road to Recruitment'), with her class, '28: the first school-side source. The story is cited, not the post it describes. Since 2026-11-25: MAX Field Hockey's own page for her, already linked on her row as her profile, shows 'Committed to' this college with her high school (Bishop's School) and class of 2028 (read twice in a browser; MAX takes the commitments its users report)."
+      "basis": "Her own SportsRecruits field hockey profile (class of 2028, San Diego, CA hometown, club HTC CA) shows 'Committed to University of Michigan'; its TEAMS block, drawn by script, lists the school as 'Bishop's, La Jolla, CA' (The Bishop's School), so the school is named on the profile itself. FH College Path's class of 2028 list (under University of Michigan: 'Lola Conway CA Mid HTC-CA') and SportsRecruits' Michigan page (whose own address slug is university_ofichigan; it lists her and describes her highlight video as 'from Bishop's in La Jolla, CA') agree; the latter repeats the profile and is not independent. MAX Field Hockey also lists her but is not cited. No dated page was found before 2026-11-25: the profile's script-drawn tooltip reads 'on 7/17/2026', which is not used, and the school newspaper and San Diego Union-Tribune stories on her name no college. Roster row grade 11 = 2028, which agrees. No signing wording. Since 2026-11-25: The Tower, The Bishop's School's student paper, reports the commitment in its story of Nov 23, 2026 on the school's recruited athletes ('The Road to Recruitment'), with her class, '28: the first school-side source. The story is cited, not the post it describes. Since 2026-11-25: MAX Field Hockey's own page for her, already linked on her row as her profile, shows 'Committed to' this college with her high school (Bishop's School) and class of 2028 (read twice in a browser; MAX takes the commitments its users report). The story's date, Nov 23, 2026, is the earliest a kept source gives, so it is the date here (the file's rule for asOf)."
     },
     {
       "teamSlug": "bishops",
@@ -1068,7 +1068,7 @@
       "college": "harvard",
       "sport": "lacrosse",
       "status": "committed",
-      "asOf": null,
+      "asOf": "2026-11-23",
       "confidence": "high",
       "sources": [
         {
@@ -1096,7 +1096,7 @@
           "sourceDate": "2026-11-23"
         }
       ],
-      "basis": "Her own SportsRecruits lacrosse profile (iwlca. subdomain, address emerson_davis8; the other Emerson Davis profiles at addresses 1-10 are other people): class of 2028, Midfield/Defense/Draw Specialist/Attack, Mad Dog Girls Lacrosse - West Elite, San Diego, CA, 'Committed to Harvard University'. Its TEAMS block, drawn by script, lists The Bishops School, San Diego, CA, so the school is named; the roster row (Bishop's, grade 11 = 2028) agrees. SportsRecruits' Harvard women's lacrosse page lists her (repeats the profile, not independent). The commitment is for lacrosse, not field hockey. No dated source: the profile's script-drawn tooltip reads 'on 9/15/2026', which is not used, so asOf is null; a class of 2028 could first commit on 2026-09-01. No signing wording. Since 2026-11-25: The Tower, The Bishop's School's student paper, reports the commitment in its story of Nov 23, 2026 on the school's recruited athletes ('The Road to Recruitment'), with her class, '28: the first school-side source."
+      "basis": "Her own SportsRecruits lacrosse profile (iwlca. subdomain, address emerson_davis8; the other Emerson Davis profiles at addresses 1-10 are other people): class of 2028, Midfield/Defense/Draw Specialist/Attack, Mad Dog Girls Lacrosse - West Elite, San Diego, CA, 'Committed to Harvard University'. Its TEAMS block, drawn by script, lists The Bishops School, San Diego, CA, so the school is named; the roster row (Bishop's, grade 11 = 2028) agrees. SportsRecruits' Harvard women's lacrosse page lists her (repeats the profile, not independent). The commitment is for lacrosse, not field hockey. The profile's script-drawn tooltip reads 'on 9/15/2026', which is not used; a class of 2028 could first commit on 2026-09-01. No signing wording. Since 2026-11-25: The Tower, The Bishop's School's student paper, reports the commitment in its story of Nov 23, 2026 on the school's recruited athletes ('The Road to Recruitment'), with her class, '28: the first school-side source. The story's date, Nov 23, 2026, is the earliest a kept source gives, so it is the date here (the file's rule for asOf)."
     },
     {
       "teamSlug": "canyon-hills",
