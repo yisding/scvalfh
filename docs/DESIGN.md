@@ -5448,4 +5448,5 @@ its header (under the recruiting family's tabs on the first three), the §21.8 a
 again. One tab row a page still holds: the switch is the region control, not a tab row. `/commits`
 draws it only when there is a commitment and `/clubs` only when there is a club (nothing to switch
 otherwise). A one-region build draws nothing (`SINGLE_REGION`). The footer and the More sheet keep
-their text button. Everything in §1-§35 still stands.
+their text button. This supersedes §33's "the footer and the More sheet carry it" for these four pages;
+everything else in §1-§35 still stands.
