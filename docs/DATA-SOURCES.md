@@ -3738,8 +3738,15 @@ assembler per sport built the files from them with a second read, and they are k
   *SportsRecruits and linked profiles:* every linked SportsRecruits, MAX Field Hockey, FieldLevel and NCSA profile
   re-read for a commitment line; eleven field hockey players' own MAX pages and Kendall Gann's FieldLevel page cited
   (MAX answers curl with 403 and was read in Chromium); an address probe of rows new since the earlier probes linked
-  two soccer pages (Mills). SportsRecruits' commits feed was read for program ids 113 to about 480 by the time of
-  assembly: the host answered with repeated 502s and the rest of the feed (to 1,044) is unread.
+  two soccer pages (Mills). SportsRecruits' commits feed was then read whole, every program id from 1 to 2,270
+  (64,254 records in the ids the 2026-11-22 round had skipped, 113 to 453 and 475 to 1,044; 24,188 re-read, 41 of
+  them new since that round); the records carry no state, date or gender, so every record of the class of 2027 or
+  later was matched by name against all four builds and each class-agreeing match opened (291 profiles). It found
+  Sophia Giles' own softball page ("Sophie Giles", The King's Academy, "Committed to Santa Clara University on
+  7/6/2026"), a second source for the commitment Santa Clara's release had given (added 2026-11-26, after the round's
+  merge), and Kaia Gurdak's (Pacific Collegiate) to Carleton in soccer, a lead only, her school's rows being JV.
+  Eight 502s were retried and read. Two linked pages are dead (Mission Vista's `lauren_bailey10`, Leland JV's
+  `jenna_yiseer`).
   *Lists and clubs:* field hockey and volleyball as on 2026-11-22 (MAX's table, now 1,759 rows; FH College Path 2027
   348 and 2028 209; Prep Dig's California list 166; PrepVolleyball 837; all 36 volleyball and 27 field hockey club
   sites), with nothing new for a rostered player; two new MAX player pages linked as profiles (Grace Moniak,
