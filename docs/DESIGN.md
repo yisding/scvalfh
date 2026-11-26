@@ -5438,3 +5438,14 @@ after the check that finds it; score entry itself lags the games by 10–30 minu
 
 - **Not built.** No per-page OG card, no live scores in the browser, no push notification, no account, no
   calendar export, no pages for another USA Field Hockey event. The pages stay after the event as its record.
+
+## 36. The region switch on every region-scoped page (2026-11-26)
+
+Owner request: a page whose content is split by region shows the NorCal/SoCal switch at its top, as
+`/leaders` does. `/commits`, `/clubs`, `/recruiting` and `/about` had none of their own (only the footer
+and the More sheet switched them); each now renders a `ScopeBar` with no league row and no stamp under
+its header (under the recruiting family's tabs on the first three), the §21.8 and §25.1 placement
+again. One tab row a page still holds: the switch is the region control, not a tab row. `/commits`
+draws it only when there is a commitment and `/clubs` only when there is a club (nothing to switch
+otherwise). A one-region build draws nothing (`SINGLE_REGION`). The footer and the More sheet keep
+their text button. Everything in §1-§35 still stands.

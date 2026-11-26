@@ -140,9 +140,8 @@ describe('/recruiting, rendered', () => {
         for (const s of l.schools) expect(html.indexOf(`id="${s.id}"`), s.slug).toBeGreaterThan(at);
       }
     }
-    // No region control and no league row of its own (DESIGN §33: one tab row a page; the footer and
-    // the More sheet carry the region).
-    expect(html).not.toContain('data-region-option');
+    // The region switch under the tabs, but no league row of its own (DESIGN §33: one tab row a page).
+    expect(html).toMatch(/<span class="sx-scope-util">[\s\S]*?data-region-option="socal"/);
     expect(html).not.toContain('data-league-option');
   });
 

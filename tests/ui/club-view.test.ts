@@ -579,9 +579,8 @@ describe('the clubs routes, rendered', () => {
     // One h2 per region with a club; the method is on /about, not a section here.
     expect(levels).toEqual([1, ...Array(10).fill(2)]);
     expect(index).toContain('<a class="sx-tab" aria-current="page" href="/clubs">Clubs</a>');
-    // Each region's section carries its half of the site's scope. The page has no region control of
-    // its own (DESIGN §33): the footer and the More sheet carry it.
-    expect(index).not.toContain('data-region-option');
+    // Each region's section carries its half of the site's scope, under the region switch.
+    expect(index).toMatch(/<span class="sx-scope-util">[\s\S]*?data-region-option="socal"[\s\S]*<section aria-labelledby="san-francisco"/);
     expect(index).toMatch(/<section aria-labelledby="san-francisco" data-region-scope="norcal"/);
     expect(index).toMatch(/<section aria-labelledby="san-diego" data-region-scope="socal"/);
     expect(index).not.toContain('how-matched');

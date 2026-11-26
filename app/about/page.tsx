@@ -18,6 +18,7 @@ import RecruitingSection from '../../components/about/sections/RecruitingSection
 import SourcesSection from '../../components/about/sections/SourcesSection';
 import StandingsSection from '../../components/about/sections/StandingsSection';
 import PageHeader from '../../components/layout/PageHeader';
+import ScopeBar from '../../components/prefs/ScopeBar';
 import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import ExternalLink from '../../components/ui/ExternalLink';
 import { HAS_MAXPREPS, SPORT_AUDIENCE } from '../../lib/sports/current';
@@ -58,9 +59,9 @@ import LeagueSiteAbout from '../../components/about/LeagueSiteAbout';
  * Layout (DESIGN §33): the title with the long Updated line under it (the one page that shows it
  * there), a three-sentence summary, then, from 1024, the sections beside a rail that holds the
  * section index; below 1024 the index is a row of links between the summary and the first section.
- * One index in the DOM, placed by the grid. Prose is capped at the reading measure. The page has no
- * region control of its own: each league's source, rules, health and cross-check block carries its
- * region's `data-region-scope`, and the footer and the More sheet switch it.
+ * One index in the DOM, placed by the grid. Prose is capped at the reading measure. Under the title,
+ * the region switch (`ScopeBar` with no league row and no stamp, as on /leaders): each league's
+ * source, rules, health and cross-check block carries its region's `data-region-scope`.
  */
 
 const DESCRIPTION =
@@ -85,9 +86,11 @@ export default function AboutPage() {
   return (
     <div className="pb-section-lg">
       <PageHeader title="About" stamp />
+      {/* The region switch, as on /leaders: each league's blocks below are one region's. */}
+      <ScopeBar />
 
       {/* What it is, where the scores come from, how to report a mistake. */}
-      <p className="mt-2 mb-0 max-w-prose text-body text-ink">
+      <p className="mt-4 mb-0 max-w-prose text-body text-ink">
         This is an unofficial, fan-built scoreboard for the {teams} {SPORT_AUDIENCE} teams in {leagueWords}. Scores,
         schedules and rosters come from MaxPreps, checked against si.com, cifsshome.org and each league&rsquo;s own
         documents, and every disagreement between them is published below. To report a mistake, post it in the{' '}

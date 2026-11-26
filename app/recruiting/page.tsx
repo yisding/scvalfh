@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '../../components/layout/PageHeader';
+import ScopeBar from '../../components/prefs/ScopeBar';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import RecruitingList from '../../components/recruiting/RecruitingList';
 import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
@@ -27,8 +28,8 @@ const PAGE_TITLE = 'Recruiting';
  *
  * Regions (DESIGN-socal §2.4): each region's leagues sit in one `<div id="norcal|socal"
  * data-region-scope>`, so a reader sees their own half; without JavaScript both render, NorCal
- * first. The page has no region control and no league row of its own (DESIGN §33: one tab row a
- * page; the footer and the More sheet carry the region).
+ * first. Under the tabs, the region switch (`ScopeBar` with no league row and no stamp, as on
+ * /leaders); the page has no league row of its own (DESIGN §33: one tab row a page).
  *
  * Heading outline: the h1, then one h2 per league (`id=<league>`, as on /teams), and under it one
  * group strip per school with a listed player (an h3; `id=<team slug>`, its link the school's
@@ -56,6 +57,8 @@ export default function RecruitingPage() {
       <PageHeader title="Recruiting">
         <RecruitingTabs current="recruiting" />
       </PageHeader>
+      {/* The region switch, as on /leaders: each region's leagues are their own block below. */}
+      <ScopeBar />
 
       {view.regions.map((region) => (
         <div key={region.id} id={region.id} data-region-scope={region.id}>

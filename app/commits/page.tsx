@@ -5,6 +5,7 @@ import CollegeList from '../../components/commits/CollegeList';
 import CommitList from '../../components/commits/CommitList';
 import { buildCommitsView } from '../../components/commits/commit-view';
 import PageHeader from '../../components/layout/PageHeader';
+import ScopeBar from '../../components/prefs/ScopeBar';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import { plural } from '../../components/words/plural';
 import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
@@ -26,8 +27,8 @@ const PAGE_TITLE = 'College commitments';
  *
  * Regions (DESIGN §21.8): each region's commitments sit in one `<div id="norcal|socal"
  * data-region-scope>`, so a reader sees their own half; without JavaScript both render, NorCal
- * first. Each block opens with the region's count sentence. The page has no region control of its
- * own (DESIGN §33): the footer and the More sheet carry it.
+ * first. Each block opens with the region's count sentence. Under the tabs, the region switch
+ * (`ScopeBar` with no league row and no stamp, as on /leaders); the footer and the More sheet carry it too.
  *
  * Heading outline: the h1, then, in each region's block, one h2 per class year
  * (`#norcal-class-2027`, the earliest class first) and the h2 "Colleges" (`#norcal-colleges`, one row
@@ -59,6 +60,9 @@ export default function CommitsPage() {
       <PageHeader title="College commitments">
         <RecruitingTabs current="commits" />
       </PageHeader>
+      {/* The region switch, as on /leaders: each region's commitments are their own block below.
+          With no commitment there is no region block, so nothing to switch. */}
+      {view.playerCount > 0 ? <ScopeBar /> : null}
 
       {view.playerCount === 0 ? (
         <p className="sx-empty mt-4">No commitment found yet.</p>
