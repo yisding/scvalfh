@@ -259,7 +259,9 @@ describe('buildRosterView', () => {
     expect(platforms('pleasant-valley')).toEqual(['NCSA', 'Hudl']);
     // Bella Vista had none until the 2026-10-12 probe found Rylee Tabor's lacrosse page.
     expect(platforms('bella-vista')).toEqual(['SportsRecruits']);
-    expect(platforms('corning')).toEqual([]);
+    // Corning had none until the 2026-11-26 sweep of the rows MaxPreps added on 2026-11-13 (Makayla Lodin's NCSA
+    // basketball and SportsRecruits softball pages, Belinda Loera's Hudl soccer page).
+    expect(platforms('corning')).toEqual(['NCSA', 'SportsRecruits', 'Hudl']);
     const eal = (slug: string) => views.find((v) => v.slug === slug)!.view.rows;
     // What the 2026-10-04 sweep found: the claimed MaxPreps pages of 2026-10-13 are not counted.
     const swept = (r: RosterRow) => r.profiles.some((x) => !isMaxPreps(x));
@@ -323,8 +325,8 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    // 150 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16).
-    expect(tied).toBe(150);
+    // 150 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16); 153 with the 2026-11-26 sweep's three.
+    expect(tied).toBe(153);
   });
 
   it('words the pinned rows', () => {
