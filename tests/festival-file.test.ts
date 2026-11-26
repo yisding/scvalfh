@@ -230,7 +230,7 @@ describe('a bad festival file is refused', () => {
 describe('team names as printed (DESIGN §35.1)', () => {
   it('capitalises the u of an age token and changes nothing else', () => {
     expect(displayTeamName('Atlanta FHC u10')).toBe('Atlanta FHC U10');
-    expect(displayTeamName(' Norcal Wolves u16 ')).toBe('Norcal Wolves U16');
+    expect(displayTeamName(' Norcal Wolves u16 ')).toBe('NorCal Wolves U16');
     expect(displayTeamName('U14 Gateway Red Stars')).toBe('U14 Gateway Red Stars');
     expect(displayTeamName('Florida United white')).toBe('Florida United white');
     expect(displayTeamName('Pool T 3rd Place')).toBe('Pool T 3rd Place');
@@ -246,6 +246,12 @@ describe('team names as printed (DESIGN §35.1)', () => {
     // Only a whole word in capitals: a word that merely contains one, or is written as a word already, is kept.
     expect(displayTeamName('Robins Academy')).toBe('Robins Academy');
     expect(displayTeamName('Spirit of USA')).toBe('Spirit of USA');
+  });
+
+  it('writes Norcal as NorCal, as the site writes Northern California (owner ask)', () => {
+    expect(displayTeamName('Norcal Wolves U16')).toBe('NorCal Wolves U16');
+    expect(displayTeamName('NorCal Wolves U16')).toBe('NorCal Wolves U16');
+    expect(displayTeamName('Norcalia')).toBe('Norcalia');
   });
 
   it('the committed file prints no lower-case age token in a team name or a bracket side', () => {

@@ -497,7 +497,7 @@ describe('clubs and California', () => {
     const groups = californiaGroups(M, site);
     expect(groups.map((g) => g.heading)).toEqual(['Northern California', 'Southern California']);
     const names = (i: number) => groups[i].clubs.flatMap((c) => c.teams.map((t) => t.team.name));
-    expect(names(0)).toEqual(expect.arrayContaining(['San Francisco Hawks U16', 'San Francisco Hawks U19', 'Norcal Wolves U16', 'Hayward Hawks']));
+    expect(names(0)).toEqual(expect.arrayContaining(['San Francisco Hawks U16', 'San Francisco Hawks U19', 'NorCal Wolves U16', 'Hayward Hawks']));
     expect(names(1)).toEqual(['HTC CA U19']);
     expect([...names(0), ...names(1)]).not.toContain('HTC');
     expect(groups[1].clubs[0].region).toBe('San Diego');

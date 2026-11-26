@@ -81,7 +81,7 @@ const TEAMS_ON_2026_11_26: Record<string, readonly string[]> = {
   'new-heights': ['New Heights U12 Gold', 'New Heights U14 Pink', 'New Heights U16 Black', 'New Heights U16 Blue', 'New Heights U19 Red'],
   'new-york-elite': ['New York Elite U16'],
   'new-york-hc': ['New York H.C.'],
-  'norcal-wolves': ['Norcal Wolves U16'],
+  'norcal-wolves': ['NorCal Wolves U16'],
   'peak-fh': ['Peak FH U19'],
   'pinnacle-field-hockey': ['Pinnacle White', 'Pinnacle Ivory', 'Pinnacle Blue', 'Pinnacle Sky', 'Pinnacle Black', 'Pinnacle Graphite'],
   'polar-bears': ['Polar Bears U14'],
@@ -218,7 +218,7 @@ describe('the festival’s teams resolve to their clubs', () => {
   it('finds the California teams of 2026-11-26 among the California clubs, and not HTC’s U16 team', () => {
     const name = new Map(festival.teams.map((t) => [t.id, t.name]));
     const california = resolved.clubs.filter((c) => c.california).flatMap((c) => c.teamIds.map((id) => name.get(id)!));
-    const expected = ['Hayward Hawks', 'San Francisco Hawks U16', 'Norcal Wolves U16', 'HTC CA U19', 'San Francisco Hawks U19'];
+    const expected = ['Hayward Hawks', 'San Francisco Hawks U16', 'NorCal Wolves U16', 'HTC CA U19', 'San Francisco Hawks U19'];
     // Every one of them still in the file is there; a team that joins a California club mid-event may be too.
     expect(california).toEqual(expect.arrayContaining(expected.filter((n) => festival.teams.some((t) => t.name === n))));
     expect(california).not.toContain('HTC');

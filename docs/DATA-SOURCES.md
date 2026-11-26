@@ -3893,7 +3893,7 @@ automatic clubs of their own names; a team added mid-event does the same and nev
 California flag and link to a club on this site cites a page and its words (`evidence`):
 
 - **California**: San Francisco Hawks U16 and U19 (SF Hawks' tournaments page lists the festival, U16 and U19), Hayward
-  Hawks (U12; matched to the Fremont club by its name and its U12 program), Norcal Wolves U16
+  Hawks (U12; matched to the Fremont club by its name and its U12 program), NorCal Wolves U16
   ("likely" NorCal Impact's Wolves: players' recruiting profiles name the team "NorCal Wolves, NorCal Impact"; the
   club's own pages do not mention the festival), and HTC CA U19 (HTC's West Coast page). HTC is two clubs in the
   file: HTC's festival pages offer "HTC – U16" (its East Coast team) and "HTC CA – U19", so only HTC CA is Californian.

@@ -116,7 +116,7 @@ describe('the hub', () => {
     const text = stripTags(hub);
     const cal = text.slice(text.indexOf('California teams'), text.indexOf('Latest results') > 0 ? text.indexOf('Latest results') : text.indexOf('Divisions'));
     expect(cal.indexOf('Northern California')).toBeLessThan(cal.indexOf('Southern California'));
-    for (const name of ['San Francisco Hawks U16', 'San Francisco Hawks U19', 'Norcal Wolves U16', 'Hayward Hawks', 'HTC CA U19']) {
+    for (const name of ['San Francisco Hawks U16', 'San Francisco Hawks U19', 'NorCal Wolves U16', 'Hayward Hawks', 'HTC CA U19']) {
       expect(cal).toContain(name);
     }
     // HTC's U16 team is its East Coast team: no card for it in this section.

@@ -908,7 +908,7 @@
           "teamId": "h2026103014374221209296f4e95024a"
         },
         {
-          "label": "Norcal Wolves U16",
+          "label": "NorCal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -3291,7 +3291,7 @@
           "teamId": "h202610301437422118fd47143b23d43"
         },
         {
-          "label": "Norcal Wolves U16",
+          "label": "NorCal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -4253,7 +4253,7 @@
           "teamId": "h20261030143742211c58286bf58cc47"
         },
         {
-          "label": "Norcal Wolves U16",
+          "label": "NorCal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -7143,7 +7143,7 @@
           "teamId": "h20261030143742211e6b874a3b6594e"
         },
         {
-          "label": "Norcal Wolves U16",
+          "label": "NorCal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         }
@@ -8303,7 +8303,7 @@
       "score": null,
       "sides": [
         {
-          "label": "Norcal Wolves U16",
+          "label": "NorCal Wolves U16",
           "source": null,
           "teamId": "h20261030143742211fdeddb98b98947"
         },
@@ -9747,7 +9747,7 @@
     {
       "divisionKey": 16,
       "id": "h20261030143742211fdeddb98b98947",
-      "name": "Norcal Wolves U16",
+      "name": "NorCal Wolves U16",
       "poolId": "h20261030143742211796f627a781e47",
       "record": {
         "ga": 3,
