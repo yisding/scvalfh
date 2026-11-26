@@ -138,7 +138,9 @@ describe('a division page', () => {
   it('draws a pool table per pool, then the placement columns, then the schedule by slot', () => {
     const d = FILE.divisions.find((x) => x.slug === 'u19')!;
     expect(u19.match(/<table class="sx-table"/g)?.length).toBe(d.pools.length);
-    expect(stripTags(u19)).toContain('Pool R and S crossovers');
+    expect(stripTags(u19)).toContain('Pool R v Pool S');
+    expect(stripTags(u19)).toContain('No knockout bracket');
+    expect(stripTags(u19)).toContain('1st-place final');
     expect(u19).toContain('id="game-b1"');
     expect(u19.indexOf('id="pools"')).toBeLessThan(u19.indexOf('id="bracket"'));
     expect(u19.indexOf('id="bracket"')).toBeLessThan(u19.indexOf('id="schedule"'));
@@ -169,6 +171,23 @@ describe('team names in matches (owner ask, 2026-11-26: tapping a name opens the
   });
 });
 
+describe('a club page’s profile (owner ask, 2026-11-26: hometown, a brief description and the club’s website)', () => {
+  it('prints the hometown in its header, its one-line description and a "Club website" link', async () => {
+    const page = render(await ClubPage(params({ club: 'san-francisco-hawks' })));
+    const text = stripTags(page);
+    expect(text).toContain('San Francisco, Calif.');
+    // SF Hawks' description is its festival entry's own (festival-clubs.json); its website comes from its page on
+    // this site (data/field-hockey/clubs.json).
+    expect(text).toContain('A San Francisco youth club with fall, winter and spring seasons');
+    expect(page).toMatch(/href="https:\/\/sfyouthfieldhockey\.com\/"[^>]*>Club website/);
+  });
+
+  it('prints neither when a club has none (the adult "Stars" team’s automatic club)', async () => {
+    const page = render(await ClubPage(params({ club: 'stars' })));
+    expect(page).not.toContain('Club website');
+  });
+});
+
 describe('a division without placement games', () => {
   it('says "Pool play only" in its header, and the hub’s division list links its pools where others link a bracket', () => {
     expect(stripTags(u16)).toContain('Pool play only');
@@ -180,7 +199,7 @@ describe('a division without placement games', () => {
       expect(row(short), short).toMatch(new RegExp(`href="/festival/${slug}#pools"[^>]*>Pools<`));
       expect(row(short), short).not.toContain('#bracket');
     }
-    expect(row('U19')).toMatch(/href="\/festival\/u19#bracket"[^>]*>Bracket</);
+    expect(row('U19')).toMatch(/href="\/festival\/u19#bracket"[^>]*>Finals</);
     expect(row('U19')).not.toContain('#pools');
   });
 });
@@ -238,5 +257,11 @@ describe('the layout', () => {
     const html = render(createElement(FestivalLayout as never, { children: createElement('p', null, 'child') } as never));
     expect(html).toContain('@layer base{[data-fest-team]{--sx-fest-pin:none}');
     expect(html).toContain('<p>child</p>');
+  });
+
+  it('hides the tab bar and footer below the 48rem breakpoint (owner ask: on a phone they read as the festival’s)', () => {
+    const html = render(createElement(FestivalLayout as never, { children: null } as never));
+    expect(html).toContain('@media not all and (min-width:48rem){.sx-tabbar,.sx-foot{display:none}');
+    expect(html).toContain('body{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}');
   });
 });

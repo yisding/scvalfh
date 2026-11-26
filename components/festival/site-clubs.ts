@@ -16,6 +16,9 @@ export interface SiteClubInfo {
   /** 'San Francisco', 'San Diego'. */
   regionLabel: string;
   siteRegion: 'norcal' | 'socal' | null;
+  /** The club's website and its one-line description on its page on this site (data/field-hockey/clubs.json). */
+  website: string | null;
+  description: string | null;
 }
 
 export type SiteClubLookup = (slug: string) => SiteClubInfo | null;
@@ -29,5 +32,7 @@ export const siteClubInfo: SiteClubLookup = (slug) => {
     href: `/clubs/${club.slug}`,
     regionLabel: REGION_WORDS[club.region].label,
     siteRegion: CLUB_REGION_SITE_REGION[club.region],
+    website: club.website ?? null,
+    description: club.description ?? null,
   };
 };

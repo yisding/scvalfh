@@ -323,11 +323,24 @@ describe('a bad clubs file is refused', () => {
     expect(bad((f) => (at('san-francisco-hawks')(f).california = false))).toThrow('a Northern California club is a California club');
   });
 
-  it('refuses a region, a California flag or a siteClub with no evidence', () => {
-    const claim = 'a region, California flag or siteClub cites its evidence';
-    expect(bad((f) => (at('agh')(f).region = 'Somewhere, Pa.'))).toThrow(claim);
-    expect(bad((f) => (at('agh')(f).california = true))).toThrow(claim);
-    expect(bad((f) => (at('agh')(f).siteClub = 'htc'))).toThrow(claim);
+  it('refuses a region, a California flag, a siteClub, a website or a description with no evidence', () => {
+    const claim = 'a region, California flag, siteClub, website or description cites its evidence';
+    // Start from a club with no claim and no evidence, then make one claim.
+    const bare = (f: FestivalClubsFile) => {
+      const c = at('agh')(f);
+      Object.assign(c, { region: null, california: false, norCal: false, siteClub: null, website: null, description: null, evidence: [] });
+      return c;
+    };
+    expect(bad((f) => (bare(f).region = 'Somewhere, Pa.'))).toThrow(claim);
+    expect(bad((f) => (bare(f).california = true))).toThrow(claim);
+    expect(bad((f) => (bare(f).siteClub = 'htc'))).toThrow(claim);
+    expect(bad((f) => (bare(f).website = 'https://example.org/'))).toThrow(claim);
+    expect(bad((f) => (bare(f).description = 'A youth field hockey club.'))).toThrow(claim);
+  });
+
+  it('refuses a club description longer than 25 words', () => {
+    const long = Array.from({ length: 26 }, () => 'word').join(' ');
+    expect(bad((f) => (at('agh')(f).description = long))).toThrow('a club description is one sentence of at most 25 words');
   });
 
   it('names a siteClub that is not a club on this site', () => {

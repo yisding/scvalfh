@@ -34,7 +34,7 @@ export function FestivalGameList({ games, id }: { games: readonly GameRowModel[]
                 {g.note}
                 {g.bracketHref ? (
                   <Link href={g.bracketHref} prefetch={false} className="sx-link">
-                    Bracket
+                    Finals
                   </Link>
                 ) : null}
               </div>

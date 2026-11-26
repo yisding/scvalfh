@@ -24,7 +24,7 @@ const PAGE_TITLE = 'National Hockey Festival schedule';
 export function generateMetadata(): Metadata {
   if (!HAS_FESTIVAL) return { title: 'Page not found' };
   const view = buildScheduleView();
-  const description = `Every game of the ${getFestival().tournament.name} by day and time slot, in Eastern and Pacific time, with field, score and placement games: ${view.facts}. Show only the teams you follow. Unofficial.`;
+  const description = `Every game of the ${getFestival().tournament.name} by day and time slot, in Eastern and Pacific time, with field, score and Saturday finals: ${view.facts}. Show only the teams you follow. Unofficial.`;
   return {
     title: PAGE_TITLE,
     description,

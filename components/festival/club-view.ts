@@ -37,7 +37,12 @@ export interface ClubTeamSectionModel {
 export interface ClubViewModel {
   slug: string;
   name: string;
+  /** Its hometown ('Fremont, Calif.'), else this site's region for it ('San Francisco'). */
   region: string | null;
+  /** One sentence on the club: festival-clubs.json's, else its page's on this site. */
+  description: string | null;
+  /** Its own website: festival-clubs.json's, else its page's on this site. */
+  website: string | null;
   california: boolean;
   curated: boolean;
   site: { name: string; href: string } | null;
@@ -82,7 +87,9 @@ export function buildClubView(slug: string, m: FestivalModel = festivalModel(), 
   return {
     slug,
     name: club.name,
-    region: info?.regionLabel ?? club.region,
+    region: club.region ?? info?.regionLabel ?? null,
+    description: club.description ?? info?.description ?? null,
+    website: club.website ?? info?.website ?? null,
     california: club.california,
     curated: club.curated,
     site: info ? { name: info.name, href: info.href } : null,

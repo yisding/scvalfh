@@ -19,6 +19,7 @@ import {
   bracketColumns,
   buildFestivalModel,
   columnTitle,
+  finalLabel,
   festivalModel,
   gameRow,
   latestAndNext,
@@ -289,12 +290,43 @@ describe('a placement game’s sides (spec §6)', () => {
 
 describe('the bracket columns', () => {
   it('titles each column from its source pools, as TourneyMachine groups them', () => {
-    expect(columnTitle(['Pool A'])).toBe('Pool A placement');
-    expect(columnTitle(['Pool R', 'Pool S'])).toBe('Pool R and S crossovers');
+    expect(columnTitle(['Pool A'])).toBe('Pool A');
+    expect(columnTitle(['Pool R', 'Pool S'])).toBe('Pool R v Pool S');
     const u19 = FILE.divisions.find((d) => d.slug === 'u19')!;
-    expect(bracketColumns(M, u19.key).map((c) => c.title)).toEqual(['Pool R and S crossovers', 'Pool T and U crossovers']);
+    expect(bracketColumns(M, u19.key).map((c) => c.title)).toEqual(['Pool R v Pool S', 'Pool T v Pool U']);
     const u10 = FILE.divisions.find((d) => d.slug === 'u10')!;
-    expect(bracketColumns(M, u10.key).map((c) => c.title)).toEqual(['Pool A placement']);
+    expect(bracketColumns(M, u10.key).map((c) => c.title)).toEqual(['Pool A']);
+  });
+
+  // Owner decision, 2026-11-26: no knockout bracket; finals between the same places of paired pools, or by place
+  // within one pool.
+  it('names each Saturday game by the places it draws on', () => {
+    const game = (a: number, b: number) => ({ sides: [{ source: { place: a } }, { source: { place: b } }] }) as never;
+    expect(finalLabel(game(1, 1))).toBe('1st-place final');
+    expect(finalLabel(game(3, 3))).toBe('3rd-place final');
+    expect(finalLabel(game(1, 2))).toBe('Final: 1st v 2nd');
+    expect(finalLabel(game(4, 3))).toBe('3rd v 4th');
+    const u19 = FILE.divisions.find((d) => d.slug === 'u19')!;
+    expect(bracketColumns(M, u19.key)[0]!.games.map((g) => g.label)).toEqual([
+      '1st-place final', '2nd-place final', '3rd-place final', '4th-place final', '5th-place final',
+    ]);
+  });
+
+  // Checked against USA Field Hockey, not only TourneyMachine (owner ask, 2026-11-26): the regulations' "crossover
+  // competition" and shoot-out (D.4), and Pool Champion medals per pool or per pair of pools (the 2024 recap).
+  it('says in words that there is no knockout bracket, what decides a champion, and which pools have no finals', () => {
+    expect(buildDivisionView('u19')!.finalsSummary).toBe(
+      'No knockout bracket. On Saturday paired pools play crossover finals, 1st v 1st, 2nd v 2nd and so on (Pool R v Pool S and Pool T v Pool U); the 1st-place final decides the pool champion (Pool R/S and Pool T/U). A tied final goes straight to a shoot-out. Pools P and Q have no finals: each one’s table winner is its champion.',
+    );
+    expect(buildDivisionView('u12')!.finalsSummary).toBe(
+      'No knockout bracket. On Saturday Pool D’s teams play by place: 1st v 2nd, 3rd v 4th and 4th v 5th. A tied final goes straight to a shoot-out. Pools B and C have no finals: each one’s table winner is its champion.',
+    );
+    // A single pool's 1st v 2nd game is not said to decide its champion: no source says so.
+    expect(buildDivisionView('u10')!.finalsSummary).not.toContain('champion');
+    expect(buildDivisionView('u16')!.finalsSummary).toBeNull();
+    expect(buildDivisionView('u16')!.poolsOnlyNote).toBe('No finals in this division: each pool’s table winner is its champion.');
+    expect(buildDivisionView('u14-coed')!.poolsOnlyNote).toBe('No finals in this division: the pool’s table winner is its champion.');
+    expect(buildDivisionView('u19')!.poolsOnlyNote).toBeNull();
   });
 
   it('puts every placement game in exactly one column, rows top to bottom', () => {
@@ -455,10 +487,10 @@ describe('latest results and up next (statuses, never the clock)', () => {
 describe('clubs and California', () => {
   const site: SiteClubLookup = (slug) =>
     ({
-      'sf-hawks': { slug, name: 'SF Hawks', href: `/clubs/${slug}`, regionLabel: 'San Francisco', siteRegion: 'norcal' as const },
-      'hayward-hawks': { slug, name: 'Hayward Hawks', href: `/clubs/${slug}`, regionLabel: 'East Bay', siteRegion: 'norcal' as const },
-      'norcal-impact': { slug, name: 'NorCal Impact', href: `/clubs/${slug}`, regionLabel: 'South Bay', siteRegion: 'norcal' as const },
-      htc: { slug, name: 'HTC', href: `/clubs/${slug}`, regionLabel: 'San Diego', siteRegion: 'socal' as const },
+      'sf-hawks': { slug, name: 'SF Hawks', href: `/clubs/${slug}`, regionLabel: 'San Francisco', siteRegion: 'norcal' as const, website: null, description: null },
+      'hayward-hawks': { slug, name: 'Hayward Hawks', href: `/clubs/${slug}`, regionLabel: 'East Bay', siteRegion: 'norcal' as const, website: null, description: null },
+      'norcal-impact': { slug, name: 'NorCal Impact', href: `/clubs/${slug}`, regionLabel: 'South Bay', siteRegion: 'norcal' as const, website: null, description: null },
+      htc: { slug, name: 'HTC', href: `/clubs/${slug}`, regionLabel: 'San Diego', siteRegion: 'socal' as const, website: null, description: null },
     })[slug] ?? null;
 
   it('groups the California clubs Northern then Southern by this site’s club region; HTC’s East Coast team is not one', () => {
@@ -514,6 +546,17 @@ describe('clubs and California', () => {
     expect(htc.siblings).toEqual([{ slug: 'htc-ca', name: 'HTC CA', href: '/festival/clubs/htc-ca', divisions: 'U19' }]);
     expect(ca.siblings).toEqual([{ slug: 'htc', name: 'HTC', href: '/festival/clubs/htc', divisions: 'U16' }]);
     expect(buildClubView('gateway', M, site)!.siblings).toEqual([]);
+  });
+});
+
+describe('a club page’s description (DESIGN §35: one sentence of at most 25 words)', () => {
+  it('holds for the description each page prints, curated or inherited from this site’s club page', () => {
+    // The schema caps festival-clubs.json's own descriptions; a club without one falls back to its page on this
+    // site (data/field-hockey/clubs.json), which the schema never sees, so the cap is checked on what renders.
+    for (const club of M.clubs) {
+      const { description } = buildClubView(club.slug, M)!;
+      if (description) expect(description.split(/\s+/).length, club.slug).toBeLessThanOrEqual(25);
+    }
   });
 });
 

@@ -11,6 +11,7 @@ import TeamGameList from '../../../../components/festival/TeamGameList';
 import { buildClubView } from '../../../../components/festival/club-view';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../../components/layout/site';
 import SectionHeader from '../../../../components/ui/SectionHeader';
+import ExternalLink from '../../../../components/ui/ExternalLink';
 import { plural } from '../../../../components/words/plural';
 import { festivalClubSlugs, getFestival } from '../../../../lib/festival/festival';
 import { HAS_FESTIVAL } from '../../../../lib/sports/current';
@@ -23,7 +24,7 @@ import { HAS_FESTIVAL } from '../../../../lib/sports/current';
  *
  * One static page per club (lib/festival/festival.ts festivalClubSlugs). A club that is also a club page on this
  * site (data/field-hockey/clubs.json) links to it. Heading outline: h1 → h2 Teams → h2 Club schedule (→ h3 per
- * day → slot strips) → h2 per team (→ h3 Games, Pool, Placement). Field hockey's alone; takes the root OG card.
+ * day → slot strips) → h2 per team (→ h3 Games, Pool, Finals). Field hockey's alone; takes the root OG card.
  */
 
 export const dynamicParams = false;
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: PageProps<'/festival/clubs/[c
   // No notFound() here: the page itself 404s.
   if (!view) return { title: 'Club not found' };
   const title = `${view.name} at the National Hockey Festival`;
-  const description = `${view.name} at the ${getFestival().tournament.name}: ${plural(view.teams.length, 'team')} (${view.meta[1]}), every game by day and time, pool tables and placement games, ${view.finals} of ${plural(view.games, 'game')} final. Unofficial.`;
+  const description = `${view.name} at the ${getFestival().tournament.name}: ${plural(view.teams.length, 'team')} (${view.meta[1]}), every game by day and time, pool tables and finals, ${view.finals} of ${plural(view.games, 'game')} final. Unofficial.`;
   return {
     title,
     description,
@@ -67,8 +68,14 @@ export default async function FestivalClubPage({ params }: PageProps<'/festival/
           </>
         }
       />
+      {view.description ? <p className="mt-3 mb-0 max-w-prose text-body text-ink-2">{view.description}</p> : null}
       <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1">
         <FollowClubButton slugs={view.slugs} name={view.name} />
+        {view.website ? (
+          <ExternalLink href={view.website} className="sx-action">
+            Club website
+          </ExternalLink>
+        ) : null}
         {view.site ? (
           <Link href={view.site.href} prefetch={false} className="sx-action">
             Club page on this site
@@ -173,7 +180,7 @@ export default async function FestivalClubPage({ params }: PageProps<'/festival/
           <h3 className="mt-4 mb-1 text-lead text-ink">{pool.name}</h3>
           <p className="m-0 mb-1 text-cell text-ink-2">{pool.status}</p>
           <FestivalPoolTable pool={pool} showClub={false} />
-          <h3 className="mt-4 mb-1 text-lead text-ink">Placement</h3>
+          <h3 className="mt-4 mb-1 text-lead text-ink">Finals</h3>
           <PlacementPath path={path} teamName={card.team.name} />
         </section>
       ))}

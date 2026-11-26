@@ -22,7 +22,7 @@ import { HAS_FESTIVAL } from '../../../lib/sports/current';
  * take precedence, and the schema refuses those words as division slugs. Another sport's build has no params and
  * `dynamicParams = false` makes every segment a 404.
  *
- * Heading outline: h1 (the division's feed name) → h2 Pools (→ h3 per pool strip) → h2 Placement games (→ h3 per
+ * Heading outline: h1 (the division's feed name) → h2 Pools (→ h3 per pool strip) → h2 Finals (→ h3 per
  * column) → h2 Schedule (→ h3 per day → slot strips). Takes the root OG card.
  */
 
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps<'/festival/[divisio
   // No notFound() here: the page itself 404s (the club page's pattern).
   if (!view) return { title: 'Division not found' };
   const title = `${view.name} at the National Hockey Festival`;
-  const description = `${view.name} at the ${getFestival().tournament.name}: ${plural(view.teams, 'team')} in ${plural(view.pools.length, 'pool')}, pool tables, ${view.bracket ? 'placement games, ' : ''}and every game by time slot, ${view.finals} of ${plural(view.games, 'game')} final. Unofficial.`;
+  const description = `${view.name} at the ${getFestival().tournament.name}: ${plural(view.teams, 'team')} in ${plural(view.pools.length, 'pool')}, pool tables, ${view.bracket ? 'finals, ' : ''}and every game by time slot, ${view.finals} of ${plural(view.games, 'game')} final. Unofficial.`;
   return {
     title,
     description,
@@ -71,7 +71,7 @@ export default async function FestivalDivisionPage({ params }: PageProps<'/festi
           {view.bracket ? (
             <li>
               <a href="#bracket" className="sx-action">
-                Placement games
+                Finals
               </a>
             </li>
           ) : null}
@@ -85,6 +85,7 @@ export default async function FestivalDivisionPage({ params }: PageProps<'/festi
 
       <section aria-labelledby="pools" className="sx-section">
         <SectionHeader id="pools" kicker="Pools" meta={plural(view.pools.length, 'pool')} />
+        {view.poolsOnlyNote ? <p className="mt-0 mb-4 max-w-prose text-body text-ink-2">{view.poolsOnlyNote}</p> : null}
         {view.pools.map((pool) => (
           <div key={pool.id} className="mt-4">
             <SectionHeader strip id={pool.anchor} kicker={pool.name} meta={pool.status} />
@@ -103,8 +104,9 @@ export default async function FestivalDivisionPage({ params }: PageProps<'/festi
 
       {view.bracket ? (
         <section aria-labelledby="bracket" className="sx-section">
-          <SectionHeader id="bracket" kicker="Placement games" meta={plural(view.bracket.reduce((n, c) => n + c.games.length, 0), 'game')} />
-          <PlacementBracket columns={view.bracket} label={`${view.short} placement games`} />
+          <SectionHeader id="bracket" kicker="Finals" meta={plural(view.bracket.reduce((n, c) => n + c.games.length, 0), 'game')} />
+          {view.finalsSummary ? <p className="mt-0 mb-4 max-w-prose text-body text-ink-2">{view.finalsSummary}</p> : null}
+          <PlacementBracket columns={view.bracket} label={`${view.short} finals`} />
           {view.bracketUrl ? (
             <p className="sx-note">
               The same games on{' '}
