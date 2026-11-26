@@ -36,10 +36,11 @@ import {
   getJvClubAffiliations,
   getPlayerClubs,
   getTeamClubAffiliations,
+  getVarsityClubAffiliations,
   loadClubs,
 } from '../lib/players/clubs';
 import { LEAGUES } from '../lib/leagues';
-import { classOf, classYearAgrees, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
+import { classOf, classYearAgrees, getAllEnrichedRosters, getEnrichedTeamRoster, getRosters, listedPlayerKey } from '../lib/players/rosters';
 import { isHttpsUrl, isResearched } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
 import { loadProblems, REPO } from './helpers';
@@ -547,6 +548,53 @@ describe('data/field-hockey/clubs.json', () => {
 
 });
 
+describe('data/field-hockey/clubs.json: listedAffiliations', () => {
+  it('ties two listed players to VCRD, each by team and listed name, from her own page (2026-11-26)', () => {
+    expect(raw.listedAffiliations.map((a) => [a.teamSlug, a.fullName, a.club, a.clubTeam, a.status, a.asOf, a.confidence])).toEqual([
+      ['marina', 'Anna Schwab', 'vcrd', null, 'current', null, 'high'],
+      ['newport-harbor', 'Kate Shepherd', 'vcrd', 'VCRD/Rush Devils', 'current', null, 'high'],
+    ]);
+    for (const a of raw.listedAffiliations) {
+      // A listed player has no MaxPreps row: no athleteId, no registry playerId.
+      expect(Object.keys(a), a.fullName).not.toContain('athleteId');
+      expect(Object.keys(a), a.fullName).not.toContain('playerId');
+      // She is on her team's listed roster, under that name.
+      const other = getEnrichedTeamRoster(a.teamSlug)!.otherRosters;
+      expect(other.status, a.fullName).toBe('listed');
+      if (other.status === 'listed') expect(other.players.map((p) => `${p.firstName} ${p.lastName}`), a.fullName).toContain(a.fullName);
+      expect(a.sources.map((s) => [s.kind, s.statedSchool, s.statedClassYear]), a.fullName).toEqual([
+        ['sportsrecruits', a.teamSlug === 'marina' ? 'Marina High School' : 'Newport Harbor High School', 2028],
+      ]);
+      expect(a.basis, a.fullName).toMatch(/Read 2026-11-26\.$/);
+    }
+  });
+
+  it('serves them with the varsity ties, keyed as the listed rows are, and joined to those rows', () => {
+    const listed = getVarsityClubAffiliations().filter((a) => a.athleteId.startsWith('listed:'));
+    expect(listed.map((a) => [a.teamSlug, a.athleteId, a.club])).toEqual([
+      ['marina', listedPlayerKey('Anna Schwab'), 'vcrd'],
+      ['newport-harbor', listedPlayerKey('Kate Shepherd'), 'vcrd'],
+    ]);
+    for (const a of listed) {
+      expect(getAffiliatedPlayer(a)).toMatchObject({ fullName: a.fullName, grade: null, careerUrl: null, level: null });
+      expect(getPlayerClubs(a.teamSlug, a.athleteId)).toEqual([a]);
+      expect(getTeamClubAffiliations(a.teamSlug)).toEqual([a]);
+    }
+    expect(getClubAffiliations('vcrd').filter((a) => a.athleteId.startsWith('listed:'))).toEqual(listed);
+  });
+
+  it('refuses an athleteId, an unknown club and a tie given twice; a name not on the list is drift', () => {
+    const withListed = (listedAffiliations: unknown[]) => ({ ...structuredClone(raw), listedAffiliations });
+    const anna = structuredClone(raw.listedAffiliations[0]);
+    expect(loadError(withListed([{ ...anna, athleteId: 'x' }]))).toMatch(/listedAffiliations/);
+    expect(loadError(withListed([{ ...anna, club: 'nope' }]))).toMatch(/listedAffiliations\.0\.club: nope is not a club/);
+    expect(loadError(withListed([anna, anna]))).toMatch(/duplicate listed affiliation: marina \/ Anna Schwab \/ vcrd/);
+    // A name the list does not give (or a team whose page shows MaxPreps' rows) joins nothing: left out, reported.
+    expect(loadError(withListed([{ ...anna, fullName: 'Anna Schwabb' }]))).toMatch(/Anna Schwabb \(vcrd\)/);
+    expect(loadError(withListed([{ ...anna, teamSlug: 'saratoga' }]))).toMatch(/saratoga \/ Anna Schwab \(vcrd\)/);
+  });
+});
+
 describe('data/field-hockey/clubs.json: jvAffiliations', () => {
   it('holds 3 ties for 2 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
     expect(raw.jvAffiliations.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
@@ -581,7 +629,8 @@ describe('data/field-hockey/clubs.json: jvAffiliations', () => {
     expect(getJvClubAffiliations()).toEqual(raw.jvAffiliations);
     const jvPlayers = new Set(raw.jvAffiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const served = getClubSlugs().flatMap((slug) => getClubAffiliations(slug));
-    expect(served).toHaveLength(raw.affiliations.length);
+    // The varsity ties and the listed players' (listedAffiliations), which are varsity players too.
+    expect(served).toHaveLength(raw.affiliations.length + raw.listedAffiliations.length);
     expect(served.filter((a) => jvPlayers.has(`${a.teamSlug} ${a.athleteId}`))).toEqual([]);
     for (const a of raw.jvAffiliations) {
       expect(getPlayerClubs(a.teamSlug, a.athleteId)).toEqual([]);
@@ -655,7 +704,7 @@ describe('lib/players/clubs.ts', () => {
     expect(getClubAffiliations('pac-heights')).toEqual([]);
     expect(getClubAffiliations('nope')).toEqual([]);
     const total = getClubSlugs().reduce((n, slug) => n + getClubAffiliations(slug).length, 0);
-    expect(total).toBe(raw.affiliations.length);
+    expect(total).toBe(raw.affiliations.length + raw.listedAffiliations.length);
   });
 
   it('serves a team\'s affiliations', () => {
@@ -754,7 +803,7 @@ describe('a bad file is refused at load', () => {
   });
 
   it('loads a placeholder with no club, which isResearched reads as no research (a recruiting build before its first round)', () => {
-    const placeholder = { ...structuredClone(raw), notes: [], clubs: [], affiliations: [], jvAffiliations: [] };
+    const placeholder = { ...structuredClone(raw), notes: [], clubs: [], affiliations: [], jvAffiliations: [], listedAffiliations: [] };
     expect(loadError(placeholder)).toBe('');
     expect(isResearched(placeholder.notes, placeholder.clubs.length)).toBe(false);
     expect(isResearched(raw.notes, raw.clubs.length)).toBe(true);

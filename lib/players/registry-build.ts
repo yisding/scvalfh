@@ -104,6 +104,16 @@ export function namesCompatible(a: string, b: string): boolean {
 }
 
 /**
+ * The same name words in another order ("Decker Alina", "Alina Decker"): a first and last name MaxPreps had the
+ * other way round, swapped since by lib/sources/person-name.ts NAME_SPELLINGS. Could be one person, as
+ * namesCompatible's names could: it keeps one career's rows together and lets an id pass; it never joins anything.
+ */
+export function sameWords(a: string, b: string): boolean {
+  const keys = (n: string) => n.split(/\s+/).map(nameKey).filter(Boolean).sort().join(' ');
+  return keys(a) !== '' && keys(a) === keys(b);
+}
+
+/**
  * Whether two spellings LOOK like one person's, for the review list only: more generous than
  * `namesCompatible`. The same words in another order, one name inside the other ("Paula Neira",
  * "Paula Neira Munoz"; "Wenhe (Angela) Zhang", "Wenhe Zhang"), a shared last name under first names
@@ -512,7 +522,7 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     // Rows whose names could be one person's are one group.
     const groups: number[][] = [];
     for (const i of namedRows) {
-      const joins = groups.filter((g) => g.some((j) => fullNames(all[i]).some((a) => fullNames(all[j]).some((b) => namesCompatible(a, b)))));
+      const joins = groups.filter((g) => g.some((j) => fullNames(all[i]).some((a) => fullNames(all[j]).some((b) => namesCompatible(a, b) || sameWords(a, b)))));
       const merged = [...joins.flat(), i].sort((p, q) => p - q);
       for (const g of joins) groups.splice(groups.indexOf(g), 1);
       groups.push(merged);
@@ -788,7 +798,9 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
   const prevPlayers = previous?.players ?? [];
   const owner = new Map<string, Draft>();
   for (const d of drafts) for (const k of d.primary) owner.set(k, d);
-  const couldBe = (d: Draft, p: Player) => d.spellings.length === 0 || d.spellings.some((a) => p.names.some((b) => namesCompatible(a, b)));
+  // The same words in another order could be the same person too (sameWords).
+  const couldBe = (d: Draft, p: Player) =>
+    d.spellings.length === 0 || d.spellings.some((a) => p.names.some((b) => namesCompatible(a, b) || sameWords(a, b)));
   const sharesName = (d: Draft, p: Player) => d.spellings.some((a) => p.names.some((b) => nameKey(a) === nameKey(b)));
   /** Each previous player → the one draft that is still her. */
   const heirOf = new Map<string, Draft>();

@@ -423,6 +423,48 @@ export function mergedJvListRow(p: RosterPlayer): MergedPlayer {
   return { ...mergePlayer(p, undefined), level: 'jv' };
 }
 
+/**
+ * The key a listed player (otherRosters `listed`) is joined by where a MaxPreps row would give an athleteId:
+ * "listed:Anna Schwab". Never a MaxPreps id, never written to a file: lib/players/clubs.ts gives it to the ties
+ * in data/<sport>/clubs.json `listedAffiliations`, which name the player by team and name.
+ */
+export function listedPlayerKey(fullName: string): string {
+  return `listed:${fullName}`;
+}
+
+/**
+ * A team's listed players as merged rows, while the page shows them (the team's otherRosters is `listed` and
+ * MaxPreps lists no varsity player): what a listed player's club tie joins (lib/players/clubs.ts). Each has
+ * the source's name, no grade and no MaxPreps id ([] for any other team).
+ */
+export function mergedListedRows(team: Pick<MergedTeamRoster, 'players' | 'otherRosters'>): MergedPlayer[] {
+  const other = team.otherRosters;
+  if (other.status !== 'listed' || team.players.some((p) => p.level !== 'jv')) return [];
+  return other.players.map((l) => {
+    const fullName = `${l.firstName} ${l.lastName}`;
+    const row: RosterPlayer = {
+      athleteId: listedPlayerKey(fullName),
+      rosterId: null,
+      careerProfileId: null,
+      careerId: null,
+      firstName: l.firstName,
+      lastName: l.lastName,
+      fullName,
+      jersey: null,
+      grade: null,
+      gradeClass: null,
+      positions: [],
+      position: null,
+      height: null,
+      heightInches: null,
+      isCaptain: false,
+      careerUrl: null,
+      createdOn: null,
+    };
+    return { ...mergePlayer(row, undefined), provenance: { name: null, grade: null, positions: null, jersey: null, height: null }, profiles: l.profiles ?? [] };
+  });
+}
+
 /** The MaxPreps roster with every blank the enrichment file can fill, each value tagged. */
 export function getEnrichedTeamRoster(slug: TeamSlug): MergedTeamRoster | undefined {
   const team = BASE_BY_SLUG.get(slug);

@@ -209276,9 +209276,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Decker Alina",
+      "name": "Alina Decker",
       "names": [
-        "Decker Alina"
+        "Alina Decker"
       ],
       "stints": [
         {
@@ -209288,12 +209288,12 @@
           "height": null,
           "jersey": null,
           "level": "varsity",
-          "name": "Decker Alina",
+          "name": "Alina Decker",
           "observations": [
             {
               "athleteId": "7194cbdc-78b0-48fa-a9f4-0b942b38095c",
               "grade": 12,
-              "name": "Decker Alina",
+              "name": "Alina Decker",
               "src": "maxpreps-roster"
             }
           ],

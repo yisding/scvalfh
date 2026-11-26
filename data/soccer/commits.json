@@ -909,7 +909,7 @@
       "teamSlug": "menlo-atherton",
       "athleteId": "7194cbdc-78b0-48fa-a9f4-0b942b38095c",
       "playerId": "p7acd9a1316",
-      "fullName": "Decker Alina",
+      "fullName": "Alina Decker",
       "college": "brandeis",
       "sport": "track-and-field",
       "status": "committed",
@@ -933,7 +933,7 @@
           "sourceDate": "2026-11-22"
         }
       ],
-      "basis": "The M-A Chronicle, Menlo-Atherton's student paper, in its running list \"Signed and Sealed: M-A's College Commits\" (dated Nov 22, 2026), names senior Alina Decker, Brandeis University and track and field, and says she played soccer her whole life. Medium because of the name: MaxPreps' roster row has the two names the other way round (\"Decker Alina\": first name Decker, last name Alina, a senior on the soccer team), read here as MaxPreps' swap of first and last name: same school, same class, a soccer player, and no other Decker or Alina on Menlo-Atherton's rows. The page says committed; Brandeis is Division III. Found by the 2026-11-25 news pass; the quotes were found again on the public page at assembly."
+      "basis": "The M-A Chronicle, Menlo-Atherton's student paper, in its running list \"Signed and Sealed: M-A's College Commits\" (dated Nov 22, 2026), names senior Alina Decker, Brandeis University and track and field, and says she played soccer her whole life. Medium because of the name: MaxPreps' roster row has the two names the other way round (\"Decker Alina\": first name Decker, last name Alina, a senior on the soccer team), read here as MaxPreps' swap of first and last name: same school, same class, a soccer player, and no other Decker or Alina on Menlo-Atherton's rows. The page says committed; Brandeis is Division III. Found by the 2026-11-25 news pass; the quotes were found again on the public page at assembly. Since 2026-11-26 the site shows her as Alina Decker (lib/sources/person-name.ts NAME_SPELLINGS swaps MaxPreps' two names, at the site owner's request)."
     },
     {
       "teamSlug": "notre-dame-san-jose",

@@ -177,7 +177,7 @@ const builtFromClubs = (file: string) =>
   file.startsWith('teams/') ||
   file === 'recruiting.html' ||
   file === 'about.html';
-const clubSourceUrls = [...new Set(clubsFile.affiliations.flatMap((a) => a.sources.map((s) => s.url)))];
+const clubSourceUrls = [...new Set([...clubsFile.affiliations, ...clubsFile.listedAffiliations].flatMap((a) => a.sources.map((s) => s.url)))];
 /** The clubs file's source documents a page links (an href is HTML-escaped: `&` is `&amp;`). */
 const citedBy = (html: string) =>
   new Set(clubSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
@@ -505,7 +505,7 @@ console.log(
     `${nonCcsPages.length} non-CCS pages checked inside <main>; ${CARD_LEAGUE_IDS.length} /playoffs card(s) ` +
     `and ${cardLeaguePages} pages of their leagues checked for seed words; ` +
     `${siteOrderedPages} pages of the ${siteOrderedLeagues.length} site-ordered leagues checked for "rules require"; ` +
-    `the quotes and bases of ${clubsFile.affiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
+    `the quotes and bases of ${clubsFile.affiliations.length + clubsFile.listedAffiliations.length} club affiliations and ${commitsFile.commitments.length} ` +
     `college commitments looked for on every page`,
 );
 if (problems.length) {

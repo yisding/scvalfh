@@ -513,6 +513,17 @@ describe('TeamRoster', () => {
     const shepherd = nh.listedRows.find((r) => r.name === 'Kate Shepherd')!;
     const shepherdHtml = renderToStaticMarkup(createElement(TeamRoster, { view: nh }));
     for (const link of shepherd.profiles) expect(shepherdHtml).toContain(`href="${link.url}"`);
+    // A listed player's club tie (clubs.json listedAffiliations) shows on her row, linked to the club's page.
+    const tiedRows = ['marina', 'newport-harbor'].flatMap((slug) =>
+      views.find((v) => v.slug === slug)!.view.listedRows.filter((r) => r.clubs.length > 0).map((r) => [slug, r.name, r.clubs.map((g) => `${g.label}: ${g.clubs.map((c) => `${c.name} ${c.team ?? ''}`.trim()).join(', ')}`)]),
+    );
+    expect(tiedRows).toEqual([
+      ['marina', 'Anna Schwab', ['Club: VCRD']],
+      ['newport-harbor', 'Kate Shepherd', ['Club: VCRD VCRD/Rush Devils']],
+    ]);
+    const marinaHtml = renderToStaticMarkup(createElement(TeamRoster, { view: views.find((v) => v.slug === 'marina')!.view }));
+    expect(marinaHtml).toContain('href="/clubs/vcrd"');
+    expect(marinaHtml).toContain('Anna Schwab’s club: ');
     // Every other team has no listed rows, and a team with MaxPreps rows never shows one.
     for (const { slug, view } of views.filter((v) => !['marina', 'newport-harbor'].includes(v.slug))) {
       expect(view.listedRows, slug).toEqual([]);

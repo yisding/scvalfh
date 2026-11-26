@@ -15,7 +15,7 @@
     "On 2026-10-07 the 21 rows MaxPreps had added since the sweeps (Marin Academy's 18, Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept with the same rule: all 21 MaxPreps career pages (no club-teams block lists a club), SportsRecruits addresses in every sport (suffixes to 29, nicknames; live pages rendered for their CLUB and TEAMS blocks), NCSA field hockey addresses, MAX Field Hockey's Marin Academy and Westmont school pages and California club pages, the NFHCA 2025 and 2026 watchlists, one level of every NorCal club's site (Fly's behind a captcha), Stick Together, the Marin IJ, and a web search for every junior and senior. One tie was found: Kaylee True to Fly FHC, from her own NCSA profile (unknown, 2025), re-read by an independent refuter. Lexi True's NCSA page lists no club; the Marin Academy players' SportsRecruits pages are lacrosse (ADVNC, STEPS California, BAE), water polo or volleyball, which do not count.",
     "On 2026-10-13 the club-teams block on the bio page of every MaxPreps career page the player or a parent has claimed (260, listed as MaxPreps profiles in data/rosters-enrichment.json) was read. 32 players list 33 clubs: 22 field hockey ties, every one already in this file (21 already citing the same block), and 11 clubs in other sports (softball, lacrosse, soccer) for 10 players, which are not linked: this file holds field hockey clubs only. One source was added: Eleanor Levy's VCRD entry, made 2026-10-08, after the Southern California sweep, now a second source on her tie, which it dates (asOf 2026-10-09).",
     "2026-11-13, a search of four schools (Sobrato, Cupertino, Lynbrook and Homestead; 116 players, 72 varsity and 44 JV) for field hockey club ties: each varsity row's MaxPreps club-teams block (all 72), the players' recruiting profiles, rendered where the club block is drawn by script, NCSA's school pages, the NorCal clubs' sites (Lightning, NorCal Impact, Infinity, SF Hawks, Fly, Pac Heights, Performance, SJ Khalsa, Stryker, Lions, Hayward Hawks, Golden Gate Rippers), MAX Field Hockey's club pages, the NFHCA watchlists and academic squad, USA Field Hockey's 2026 club championship all-stars, Stick Together, the SCVAL all-league PDF, the schools' papers and local papers, the NCFHA and BAFHA directories and about 25 web searches. No new tie: Junali Dutta's NorCal Impact tie gained her two SportsRecruits profiles (read rendered, twice). Not linked: Lightning's 2025 rosters, which list ten of these players (Cupertino's Allenah Watkins, Bailey Watson and Elizabeth Klinefelter, Lynbrook's Aashvi Gireesh, and Homestead's Sanae Nambu, Elle Correia, Emry Borges, Olivia Leyton Bravo, Aayati Vijayakar and JV Manreet Kaur) by name only, with no school or class year; Lightning's player pages answer with a verification check. Gabrielle Moll's SportsRecruits page also names Cowtown Field Hockey (Fort Worth, Texas), not a California club. No South Bay or Morgan Hill club missing from this file turned up. Not reached: Fly FHC's team rosters (a captcha), Cal Cup's 2026 rosters.",
-    "2026-11-26, club ties for the players no sweep had reached (the 75 varsity rows MaxPreps added on 2026-11-13, and Marina’s and Newport Harbor’s 40 listed players): each row’s MaxPreps club-teams block (none lists a club), the players’ recruiting profiles’ club blocks, the clubs’ own roster pages (SF Hawks, NorCal Impact, RUSH’s player directory, HTC, Myto; Fly FHC publishes none), the NFHCA 2025 and 2026 watchlists, MAX Field Hockey, the federation sites and local news. Three ties, each re-opened by an independent refuter: Corning’s Aliza Thuemler to the Chico Hotshots (an Action News Now story, Aug 5, 2026), Convent’s Alexandra Dorf to SF Hawks (its current-players page, Class of 2029) and Mt. Carmel’s Aashi Gauba to HTC (the NFHCA 2026 watchlist and four of her own pages). Two more, Marina’s Anna Schwab and Newport Harbor’s Kate Shepherd to VCRD (each her own SportsRecruits page), are not in affiliations: neither player has a MaxPreps row to join on; each is recorded in her team’s note in data/field-hockey/rosters-enrichment.json."
+    "2026-11-26, club ties for the players no sweep had reached (the 75 varsity rows MaxPreps added on 2026-11-13, and Marina’s and Newport Harbor’s 40 listed players): each row’s MaxPreps club-teams block (none lists a club), the players’ recruiting profiles’ club blocks, the clubs’ own roster pages (SF Hawks, NorCal Impact, RUSH’s player directory, HTC, Myto; Fly FHC publishes none), the NFHCA 2025 and 2026 watchlists, MAX Field Hockey, the federation sites and local news. Three ties, each re-opened by an independent refuter: Corning’s Aliza Thuemler to the Chico Hotshots (an Action News Now story, Aug 5, 2026), Convent’s Alexandra Dorf to SF Hawks (its current-players page, Class of 2029) and Mt. Carmel’s Aashi Gauba to HTC (the NFHCA 2026 watchlist and four of her own pages). Two more, Marina’s Anna Schwab and Newport Harbor’s Kate Shepherd to VCRD (each her own SportsRecruits page), are listed players with no MaxPreps row: they are in listedAffiliations (since 2026-11-26), named by team and listed name."
   ],
   "clubs": [
     {
@@ -7946,6 +7946,48 @@
         }
       ],
       "basis": "The NFHCA 2026 high school watchlist (published 2026-08-27) lists her under Mt. Carmel High School with club HTC and Class Senior (class of 2027, the roster's grade 12). Her own live SportsRecruits field hockey profile (aashi_gauba) gives class 2027, hometown Poway, CA, club \"HTC - California, HTC Field Hockey Club\", and its TEAMS block names Mt. Carmel High. SportsRecruits' team page \"HTC - California\" lists her (2027, Goalie). Her FieldLevel profile lists Mt. Carmel High School and \"HTC CA, Club/Travel in San Diego, CA\", both Active. Her NCSA profile (Mt. Carmel, '27) lists one club season, 2024 \"HTC Field Hockey MA (High performance (U16))\", read as HTC's High Performance program (alias \"HTC High Performance\"). Rule (a): pages name the player, HTC and the school; every stated class year is 2027. Status current: the watchlist is dated after August 2025 and the live profiles list the club. Not used: USA Field Hockey's 2026 National Club Championship all-star list (2026-07-13) prints \"Aashi Gauba IFHCK\" in the U-19 list, with no school or class year and no club record for IFHCK (a guest or event squad); the newer watchlist names HTC, so HTC stays current. Her MaxPreps club-teams block is empty. Read 2026-11-26."
+    }
+  ],
+  "listedAffiliations": [
+    {
+      "teamSlug": "marina",
+      "fullName": "Anna Schwab",
+      "club": "vcrd",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/anna_schwab",
+          "kind": "sportsrecruits",
+          "quote": "2028 GRAD YR Huntington Beach, 11v11 Roster Member HOMETOWN VCRD, VCRD CLUB … I attend Marina High School … TEAMS VCRD, VCRD 27 Marina High School Huntington Beach , CA LOCATION",
+          "statedSchool": "Marina High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits field hockey profile (anna_schwab) gives class 2028 and hometown Huntington Beach, its CLUB block reads \"VCRD, VCRD\" and its TEAMS block lists VCRD (#27) and Marina High School. The page names the player, Ventura County Red Devils (VCRD) and the school, so it meets the rule; high, as her own profile naming the school. Current under the live-profile rule (videos dated 2025-08 and 2026-03, events through June 2026; the page itself is undated, so no asOf). A third TEAMS card, \"Bull Dogs\" (#75), has no club label or date and is not tied (the bare-team-card rule). No grade exists to check 2028 against (MaxPreps lists no Marina players); her statement (10th grade in fall 2025) agrees. clubTeam is none: the block repeats the club name, as for Eleanor Levy’s VCRD tie. A listed player (Marina’s athletics site’s 2026 varsity list; MaxPreps lists nobody for the team): no MaxPreps row, so named by team and listed name. Re-opened by an independent refuter. Read 2026-11-26."
+    },
+    {
+      "teamSlug": "newport-harbor",
+      "fullName": "Kate Shepherd",
+      "club": "vcrd",
+      "clubTeam": "VCRD/Rush Devils",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/kate_shepherd",
+          "kind": "sportsrecruits",
+          "quote": "2028 GRAD YR Costa Mesa, CA HOMETOWN VCRD/Rush Devils, Ventura County Red Devils High Performance CLUB … I play for Newport Harbor High School and VCRD High Performance … TEAMS VCRD/Rush Devils, Ventura County Red Devils High Performance 11 Newport Harbor High School Newport Beach , CA LOCATION",
+          "statedSchool": "Newport Harbor High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own live SportsRecruits field hockey profile (kate_shepherd) gives class 2028, hometown Costa Mesa, CA, club \"VCRD/Rush Devils, Ventura County Red Devils High Performance\"; the personal statement says she plays for Newport Harbor High School and VCRD High Performance, and the TEAMS block lists Newport Harbor High School and a \"Rush Devils/VCRD U19\" card. The page names VCRD explicitly, so by the Rush Devils rule this is a VCRD tie (as with Sarah Moniak), not RUSH. High (own profile naming the school); current (live profile; highlight reel dated 2026-04-28; events list Cal Cup 2026 and the 2026 National Club Championship with the U16 Rush Devils). Her Hudl page (27299515) gives the same class year. clubTeam is the CLUB block’s team part, “VCRD/Rush Devils” (Sarah Moniak’s “VCRD Devils / Rush Devils”); “VCRD High Performance” is one of the club’s own names. A listed player (Newport Harbor’s team site’s 2026 varsity list; MaxPreps lists nobody for the team): no MaxPreps row, so named by team and listed name. Re-opened by an independent refuter. Read 2026-11-26."
     }
   ]
 }

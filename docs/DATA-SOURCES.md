@@ -303,9 +303,8 @@ and school-paper game stories naming 14 Fountain Valley and 3 Bonita Vista playe
 roster and not recorded; those ten entries are unchanged. A `listed` player may carry `profiles` (the same
 PlayerProfileSchema, at most one per platform and sport, never a MaxPreps page). With no grade to check a class
 year against, a page is linked only when it names the player and the school; the 2026-11-26 sweep linked 15 for
-13 of the 40 (rosters-enrichment.json, its last file note). A club tie cannot be stored for a listed player:
-`affiliations` join on a MaxPreps athleteId, so the two ties found (Anna Schwab and Kate Shepherd, VCRD) are kept
-in their teams' notes. The
+13 of the 40 (rosters-enrichment.json, its last file note). A listed player's club tie is in `clubs.json`
+`listedAffiliations` (§1.1j2, "Listed players' ties"): Anna Schwab and Kate Shepherd, both VCRD. The
 coaches and sources found for such a team still show under its empty state. Where a coach left
 MaxPreps blank, the school's own public roster often is not. A one-off sweep on 2026-10-02 (16
 teams; official athletics sites, one roster PDF, two school papers, MaxPreps career and JV pages)
@@ -1160,6 +1159,18 @@ failure only on a pull request that added or edited the record). A season rollov
 `data/field-hockey/rosters.json` to a season `data/field-hockey/clubs.json` is not for still throws at import.
 Re-check a drifting affiliation's sources and edit or drop it by hand (on a rollover, redo the research for the
 new season). It is never pruned automatically.
+
+*Listed players' ties.* `listedAffiliations` (since 2026-11-26) holds ties for players on a team's `listed`
+roster (`rosters-enrichment.json` otherRosters: a team MaxPreps lists nobody for, whose own site lists its
+varsity). Such a player has no MaxPreps row, so a tie names her by `teamSlug` and the listed name (`fullName`,
+first name then last name as the list gives them), with no `athleteId` or `playerId`; the rest of the record,
+and the rule, are an affiliation's. `lib/players/clubs.ts` keys each as her listed row is
+(`listedPlayerKey`, "listed:Anna Schwab", never written to a file), joins it to that row while the team page
+shows the list, and serves it with `affiliations`: the club pages and counts list her, and her listed row shows
+the club line. Once MaxPreps lists the team, the listed rows give way to MaxPreps' and the tie is roster drift:
+move it to `affiliations` under her MaxPreps row by hand. The player registry (`data/players.json`) does not
+hold listed players, so these ties carry no `playerId`. Two: Marina's Anna Schwab and Newport Harbor's Kate
+Shepherd, both VCRD, each from her own SportsRecruits page, re-opened by an independent refuter (2026-11-26).
 
 *JV ties.* `jvAffiliations` holds ties for players on JV rows, kept apart from `affiliations`, which
 list varsity rows only and are all the club pages, the club counts and the roster's club lines
