@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15837,
+    "observations": 15842,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -1606,6 +1606,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/arshpreet-ruprah/?careerid=s9pnrvqc7ljee"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2028-arshpreet-ruprah/"
             }
           ],
           "positions": [
@@ -22909,6 +22915,12 @@
               "jersey": "7",
               "name": "Jasmine Vemuri",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/notre-dame-high-school-san-jose/jasmine-vemuri"
             }
           ],
           "positions": [],
@@ -88947,6 +88959,12 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/hannah_yeung"
             }
           ],
           "positions": [
@@ -186590,6 +186608,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/grace-moniak/?careerid=bvi9id0rpkaff"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2029-grace-moniak/"
             }
           ],
           "positions": [
@@ -342338,6 +342362,12 @@
                 "MF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/citlaly_gerardo_hernandez"
             }
           ],
           "positions": [

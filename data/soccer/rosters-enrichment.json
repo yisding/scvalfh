@@ -6483,6 +6483,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "d0c9eca0-6601-4897-baee-d8b9975aeec6",
+          "playerId": "p0e243c7172",
+          "conflicts": [],
+          "fullName": "Jasmine Vemuri",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA Women's Soccer profile naming Notre Dame High School (San Jose), San Jose, CA; class of 2027 agrees with the roster. Found by the 2026-11-25 commitment round's list pass; two separate loads agree.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/notre-dame-high-school-san-jose/jasmine-vemuri"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "notre-dame-san-jose",
@@ -7420,7 +7442,52 @@
       "notes": [
         "No roster is enriched by hand for the soccer build yet (PAL and SCCAL teams added 2026-11-21)."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "199da1d2-ccfe-4d08-bb42-8335adfd808d",
+          "playerId": "p34be75d376",
+          "conflicts": [],
+          "fullName": "Hannah Yeung",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits soccer profile: it names no school; hometown Millbrae, CA, the school's own city, and class of 2028 agrees with the roster. Found by the 2026-11-25 commitment round's SportsRecruits probe of rows new since the earlier probes; read twice through the page's own profile JSON (served without login), agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/hannah_yeung"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1a45a5cb-b8f0-4cbe-bed8-b840489c6236",
+          "playerId": "pcc1960b21f",
+          "conflicts": [],
+          "fullName": "Citlaly Gerardo Hernandez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits soccer profile: it names Mills High School (Millbrae, CA), and class of 2028 agrees with the roster. Found by the 2026-11-25 commitment round's SportsRecruits probe of rows new since the earlier probes; read twice through the page's own profile JSON (served without login), agreeing.",
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/citlaly_gerardo_hernandez"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "mills",
       "sources": []
     },

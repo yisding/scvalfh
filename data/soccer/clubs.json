@@ -23,7 +23,9 @@
     "Owner's judgment asked for, 2026-11-25, on the three one-off rows left the same day: Grace Badawi (Menlo-Atherton) is tied to Stanford Strikers (the same G2009/10 team lists an Ella Badawi, the name of the school's senior, who is tied to the club already, though no page says the two are related; the club is beside the school; and her grade's class of 2029 fits a 2009/10 birth-year team where the roster's 2030 does not). Jocelyn Rocha (Overfelt; Santa Clara Sporting) and Sofia Nguyen (Menlo-Atherton; Bay Area Surf) are left: common names, one year off, and no other page or teammate pattern backs them (a SportsRecruits address probe of all three found only another Sofia Nguyen, a Fountain Valley volleyball player).",
     "Club team names, 2026-11-25 (owner's request: one shape wherever a current roster shows the actual team). Every tie that cites a league roster now names, in `clubTeam`, a team on one of the rosters it cites, as the league writes it, rather than whatever an older profile wrote (\"ECNL\", \"2010G ECNL\", \"Juventus ECNL\", \"AFC U18 GA\"); /clubs prints it in the one shape of components/words/club-team-words.ts. Where a player is on two or more of the cited rosters, the team is the one the league marks her First Team Player on; failing that (GotSport rosters carry no label, and some players are in two teams' Club Player Pool only), the team whose birth years best fit her class year (the class of 2028 to G2009/10 over G2008/09), then the one whose birth years the old wording named. 55 ties changed (Scarlett Martinez's De Anza Force tie is left as it was, a record kept unchanged while MaxPreps' Mitty roster does not list her), among them Santa Cruz United's Leala Bennett (\"ECNL\" to ECNL RL G2010/11: the club has no ECNL team, only the Regional League), Palo Alto SC's Gianna Armanini (whose tie had carried her SVSA team's name) and Almaden's Mahi Nanda (\"AFC U18 GA\" to the N1 Quicksilver Green team her roster lists). Two ties gained the roster that names their team: Marissa Garcia (Soquel; Santa Cruz United FC ECNL RL G2008/09) and Quinn Murphy (Leland; Almaden's N1 G2008/09 Quicksilver Green). Ties with no league roster keep their source's wording. tests/ui/club-team-words.test.ts holds the rule: a tie that cites a league roster prints one of its teams.",
     "League rosters, 2026-11-26 (README, 'Club rosters'): two extensions of the league-roster rule (lib/players/club-rosters.ts). (1) Rule 4: when the agreeing ECNL rows are at several clubs, the match is the one club a page other than a league roster already ties the row to, if exactly one is; the other clubs' rows are set aside, never linked. Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, and on MVLA's ECNL G2009/10 and G2008/09 under the same Athlete One account; her Bay Area Surf tie now cites the roster and is current for 2026-27, and MVLA is not linked. (2) An ECNL roster row with no class year is compared on the birth years its team's name gives, as a Girls Academy row is: 11 new ties, medium, current for 2026-27, resting on the roster alone (Bay Area Surf 7, Palo Alto SC 2, Santa Cruz United 1, De Anza Force 1 JV), every cited row re-read from the live team pages the same day. Also: the 11 ties to De Anza Force, whose record has no city, said the club was 'based in None'; they now say the South Bay.",
-    "El Camino FC Salinas, 2026-11-26: a record (el-camino-fc-salinas, Salinas, Central Coast) written from the club's own site (ecfcsalinas.com: home, history, tryouts and girls teams pages), the first club record in Monterey County, and its ECNL Regional League club id (4063) mapped in club-rosters.json's clubSlugs. Its NorCal RL G2009/10 roster then matches 5 varsity rows under the league-roster rule: Lucia Mariscal (Salinas), Izabella Mandujano (Gonzales), Myah De Leon (Soledad), Kathryn Dill (Palma) and Annalyse Bottazzo (Notre Dame San Jose), each new, medium, current for 2026-27, each row re-read from the team page's own data the same day. Not tied: Emily Garcia (Rancho San Juan; the roster's class year is one off and the name is common) and Kaylee Hernandez (the name is on Rancho San Juan's and Gunn's rosters). Lauren Crowell (Sobrato), whose MaxPreps career page lists \"U16 El Camino FC\" (the note of clubs with no record had named her), is tied as earlier on the owner's reading: U16 is her 2024-25 age group, and no 2026-27 roster kept lists her; El Camino's two ECNL RL teams were re-read in full the same day (5 and 26 high-school-age players, as kept)."
+    "El Camino FC Salinas, 2026-11-26: a record (el-camino-fc-salinas, Salinas, Central Coast) written from the club's own site (ecfcsalinas.com: home, history, tryouts and girls teams pages), the first club record in Monterey County, and its ECNL Regional League club id (4063) mapped in club-rosters.json's clubSlugs. Its NorCal RL G2009/10 roster then matches 5 varsity rows under the league-roster rule: Lucia Mariscal (Salinas), Izabella Mandujano (Gonzales), Myah De Leon (Soledad), Kathryn Dill (Palma) and Annalyse Bottazzo (Notre Dame San Jose), each new, medium, current for 2026-27, each row re-read from the team page's own data the same day. Not tied: Emily Garcia (Rancho San Juan; the roster's class year is one off and the name is common) and Kaylee Hernandez (the name is on Rancho San Juan's and Gunn's rosters). Lauren Crowell (Sobrato), whose MaxPreps career page lists \"U16 El Camino FC\" (the note of clubs with no record had named her), is tied as earlier on the owner's reading: U16 is her 2024-25 age group, and no 2026-27 roster kept lists her; El Camino's two ECNL RL teams were re-read in full the same day (5 and 26 high-school-age players, as kept).",
+    "Monterey Surf Soccer Club, 2026-11-26 (the owner's pointer: the club was missing): a record (monterey-surf-soccer-club, Monterey, Central Coast) written from the club's own site (montereysurf.com: home, about, coaches and competitive program pages), the second club record in Monterey County, with its GotSport club id (13007) and its ECNL Regional League club id (4178) mapped in club-rosters.json's clubSlugs. Its older girls play in NorCal Premier's N1 League in 2026-27 (N1 G2008/09, G2009/10 and G2010/11; its one ECNL RL girls team of U14 and up, G2012/13, holds no player of high school age), and the three N1 rosters on GotSport Rankings (25, 9 and 4 rows) match 7 varsity rows under the league-roster rule's birth-year tier: Bailey Portillo, Samantha Torres and Xochitl Tovar (Salinas), Sherlyn Farfan, Giovanna Rodriguez and Jenssy Torres (Rancho San Juan) and Amaya Eubanks (North Monterey County), each new, medium, current for 2026-27 (the owner's decision of 2026-11-25 for a club roster read this season), each row read in the data the roster page loads and again on the page as displayed in Chromium the same day. Jenssy Torres is on all three rosters and cites all three; her team is the G2009/10, whose birth years best fit the class of 2028. No Monterey Surf row was left unlinked for a class year, a second school or a second club. The club's site announces college commitments for three of them (Bailey Portillo, Samantha Torres and 'Sherlynn' Farfan, as it spells her); those posts are reposts from social media and are not cited here. Not read: its Fall League 'U16G Academy I' (no Rankings team under the club's name); its Hudl teams list no player.",
+    "More clubs, 2026-11-26 (an audit of the clubs still missing, the owner's request; README, 'Club rosters'). (1) Clubs with a record whose NorCal Premier teams had not been read: the girls U14-U19 N1 and Fall League teams of 23 of them, 77 rosters on GotSport Rankings (162 rows), kept in club-rosters.json with their GotSport club ids in clubSlugs, each read from the data the roster page loads and again on the page as displayed in Chromium. Under the league-roster rule's birth-year tier they match 10 varsity and 2 JV rows with no tie to the club: Taylor Ramirez and Nathalie Sanchez (Salinas) to El Camino FC Salinas (N1 G2008/09); Mia Barton and Milana Flores (Soquel) and Ava Coniglio (Palma) to SVSLV, as Valley United FC (N1 G2008 White); Makayla George (Mercy Burlingame) and Camille Fox-Lucero (Capuchino) to San Bruno Lowen (Panthers Black and White U17G); Alisa Erbay (Saratoga; no grade, class year from her own linked page) to Allstars SC (High School Girls, a U19 team whose birth years are the age group's); and, JV, Aaliyah Ortega (Branham) and Olivia Herrera (Willow Glen) to Central Valley San Jose; with the two at the new clubs below, each new, medium, current for 2026-27. Two El Camino ties gain its N1 G2008/09 roster: Lucia Mariscal (Salinas), and Lauren Crowell (Sobrato), whose tie the owner had set to earlier because no 2026-27 roster listed her; one now does, so it reads current, for the owner to confirm. Not linked: Kaylee Hernandez (a name at two schools), Eva Erbay (Saratoga) and Kaia Stinson (Pacific Collegiate JV), rows with no grade and no page that states a class year. San Jose Rush has no girls U14-U19 team in either 2026-27 event, so its Rankings rosters are not kept and Laya Balamurugan (Notre Dame San Jose), on its 08/09G Elite, is not linked. (2) Five new records, each written from the club's own site, with its rosters kept: Hollister Tremors (Hollister; the first in San Benito County, no match yet: Hollister and Anzar have posted no roster), North Valley Youth Soccer League (San Jose; NV/SJ United: Jazmine Carballido, Overfelt), Silicon Valley Eagles (Santa Clara County: Sophia Espinoza, Silver Creek), Pacifica United Soccer Club (Mikaela Donnelly, Terra Nova JV) and San Mateo County FC (the San Mateo County Seals, an affiliate of the SF Seals since April 2025 and a club of its own, so not the San Francisco Seals record; no match). No record was written for East San Jose FC, Central Coast FC, San Juan Bautista SC, Real Salinas or Lobitos: no roster row and no usable site. (3) Pleasanton RAGE (Pleasanton, East Bay) has a record because Caelyn Dyer (Notre Dame San Jose) is tied to it: her PrepSoccer page names the school and the club (high), and the club's ECNL G2008/09 roster lists her with the class of 2027 (current for 2026-27). Tanisha Rameshkumar (Valley Christian), on its ECNL G2009/10 roster alone, is not linked: the club is outside the regions where a roster alone links. 1974 Newark FC and Reno APEX still have no record: no page other than a league roster was read that ties a tracked player to either beyond the NCSA lines already noted above."
   ],
   "clubs": [
     {
@@ -2532,6 +2534,287 @@
       "checkedOn": "2026-11-26"
     },
     {
+      "slug": "monterey-surf-soccer-club",
+      "name": "Monterey Surf Soccer Club",
+      "shortName": "Monterey Surf",
+      "aliases": [
+        "Monterey Surf",
+        "Monterey Surf SC"
+      ],
+      "website": "https://www.montereysurf.com/",
+      "city": "Monterey",
+      "region": "central-coast",
+      "youth": true,
+      "description": "Monterey Surf Soccer Club is a Monterey youth soccer club, a Surf Cup Sports and Surf Nation partner, with boys and girls competitive teams from Under-7 through Under-19 in the ECNL Regional League, the NorCal N1 League and the NorCal Premier League, plus a Junior Academy, recreational leagues, camps and clinics; its girls list runs from U7/U8 to U13 and U14 ECNL RL teams and U16, U17 and U19 N1 teams.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Girls teams",
+          "detail": "Coaches page lists the girls teams: U7/U8 through U12 Girls Academy I, U13 Girls ECNL RL, U14 Girls ECNL RL, U16 Girls Academy I, U16 Girls N1, U17 Girls N1 and U19 Girls N1",
+          "source": "https://www.montereysurf.com/coaches"
+        },
+        {
+          "name": "NorCal N1 League 2026-27: N1 G2008/09, G2009/10 and G2010/11",
+          "detail": "Monterey Surf Soccer Club's club page in the N1 League event lists four girls teams: N1 G2013/14 (U13), N1 G2010/11 (U16), N1 G2009/10 (U17) and N1 G2008/09 (U18/U19 Girls South)",
+          "source": "https://system.gotsport.com/org_event/events/54043/clubs/13007"
+        },
+        {
+          "name": "ECNL Regional League 2026-27: Monterey Surf ECNL RL G2012/13",
+          "detail": "ECNL RL Girls NorCal 2026-27 team page for the club's G2012/13 team, its one team in the three Northern California ECNL girls leagues",
+          "source": "https://app.athleteone.com/public/event/4307/schedules-standings/team/95832/41209"
+        },
+        {
+          "name": "Competitive program",
+          "detail": "Age matrix for 2026/27, U6 through U19 (\"Going into the 2026/27 season the leagues will be changing from birth year to school year\")",
+          "source": "https://www.montereysurf.com/competitive-program"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.montereysurf.com/",
+          "what": "Home page: \"Monterey Surf competes in the NorCal Premier League, N1, and ECNL RL. We are also proud partners with Surf Cup Sports and Surf Nation\"; \"a player development focused club with the goal of giving local youth the tools and opportunities to succeed\""
+        },
+        {
+          "url": "https://www.montereysurf.com/about",
+          "what": "\"Monterey Surf is proud to be the hub for elite soccer in Monterey County, as well as a gateway for those players just beginning their soccer journey.\" Address in the footer: 950 Casanova Ave, Monterey, CA 93940"
+        },
+        {
+          "url": "https://www.montereysurf.com/coaches",
+          "what": "Girls Teams and Boys Teams lists, by age group and league (Academy I, ECNL RL, N1)"
+        },
+        {
+          "url": "https://system.gotsport.com/org_event/events/54541/clubs/13007",
+          "what": "NorCal Premier Fall League 2026-27 club page: Monterey Surf Soccer Club's teams (girls U8 to U12 and U16G Academy I there), with the club's site, www.montereysurf.com"
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
+      "slug": "hollister-tremors",
+      "name": "Hollister Tremors Youth Soccer Club",
+      "shortName": "Hollister Tremors",
+      "aliases": [
+        "Hollister Tremors",
+        "Tremors"
+      ],
+      "website": "https://hollistertremors.org/",
+      "city": "Hollister",
+      "region": "central-coast",
+      "youth": true,
+      "description": "Hollister Tremors Youth Soccer Club is a nonprofit Hollister club with recreational (Cal North), competitive (NorCal Premier) and unified programs; its traveling teams run from U7 to U19, and its 2026-27 girls competitive list goes from 2019G to 2012G Black, 2011G Blue, an N1 G2010/2011 team and 2007G Black.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Girls competitive teams 2026-27",
+          "detail": "Comp Soccer page, \"Girls Comp Teams\": 2019G Black through 2013G Black & Blue, 2012G Black (age 15), 2011G Blue and N1 G2010/2011 (age 16) and 2007G Black (age 19)",
+          "source": "https://hollistertremors.org/comp-soccer"
+        },
+        {
+          "name": "NorCal N1 League 2026-27: N1 G2010/11 Black",
+          "detail": "Hollister Tremors' club page in the N1 League event lists 'N1 G2010/11 Black CA', Female U16",
+          "source": "https://system.gotsport.com/org_event/events/54043/clubs/11059"
+        },
+        {
+          "name": "NorCal Premier Fall League 2026-27",
+          "detail": "Hollister Tremors' club page in the Fall League event: girls 2013G Black and Blue (U14), 2012G Black (U15), 2011G Blue (U16) and 2007G Black (U19) among its teams",
+          "source": "https://system.gotsport.com/org_event/events/54541/clubs/11059"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://hollistertremors.org/",
+          "what": "Home page titled \"Join Our Youth Soccer Club – Hollister Tremors\": \"We are a non-profit youth organization offering recreational (Cal North), competitive (NorCal) and unified soccer clubs.\" \"The Hollister Tremors are a proud member of NorCal Premier Soccer League. Our traveling teams range from U7 – U19\". Address in the footer: 1221 Memorial Dr, Hollister, CA 95023"
+        },
+        {
+          "url": "https://hollistertremors.org/comp-soccer",
+          "what": "Page headed \"Hollister Tremors Competitive Soccer\", with the 2026-27 age groups and the Girls Comp Teams and Boys Comp Teams lists"
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
+      "slug": "north-valley-youth-soccer-league",
+      "name": "North Valley Youth Soccer League",
+      "shortName": "NV/SJ United",
+      "aliases": [
+        "NVYSL",
+        "North Valley United",
+        "NV/SJ United",
+        "North Valley YSL"
+      ],
+      "website": "https://www.nvysl.net/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "North Valley Youth Soccer League (NVYSL) runs recreational soccer for North San Jose, Alviso and the East Foothill neighborhoods, and competitive teams under the name North Valley United, entered in NorCal Premier as NV/SJ United; its 2026-27 Fall League girls teams run to a 2009/10G team.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Competitive teams (North Valley United)",
+          "detail": "\"Competitive and select soccer is played under North Valley United\"; teams are formed after tryouts",
+          "source": "https://www.nvysl.net/competitive/"
+        },
+        {
+          "name": "NorCal Premier Fall League 2026-27: NV/SJ United",
+          "detail": "North Valley Youth Soccer League's club page in the Fall League event: girls NV/SJ United 2012/13G Aces and Aztecas (U14), 2011/12G Sirens (U15) and 2009/10G Storm (U17) among its teams",
+          "source": "https://system.gotsport.com/org_event/events/54541/clubs/10935"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.nvysl.net/",
+          "what": "Home page titled \"NVYSL – Youth Soccer\": \"North Valley Youth Soccer League (NVYSL) provides recreational soccer for children living in North San Jose, Milpitas, Alviso, and East Foothill Neighborhoods. North Valley United provides Competitive soccer for teams comprised of children living anywhere in the SF Bay Area.\""
+        },
+        {
+          "url": "https://www.nvysl.net/about/",
+          "what": "\"North Valley Youth Soccer League (NVYSL) provides both recreational and competitive soccer for the North and East Foothill areas of San Jose and Alviso, California.\" \"Competitive and select soccer is played under North Valley United.\""
+        },
+        {
+          "url": "https://www.nvysl.net/competitive/",
+          "what": "\"North Valley United has a strong tradition of developing teams and individuals ... under the recognizable green and black North Valley jerseys.\" (the page still names the CYSA Cal Soccer League as its league; its 2026-27 teams are in NorCal Premier's Fall League)"
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
+      "slug": "silicon-valley-eagles",
+      "name": "Silicon Valley Eagles Youth Soccer Academy",
+      "shortName": "Silicon Valley Eagles",
+      "aliases": [
+        "Silicon Valley Eagles",
+        "SV Eagles",
+        "SV Eagles YSA",
+        "Silicon Valley Eagles Soccer Academy"
+      ],
+      "website": "https://www.siliconvalleyeagles.com/",
+      "city": null,
+      "region": "south-bay",
+      "youth": true,
+      "description": "Silicon Valley Eagles Youth Soccer Academy (SV Eagles) is a Santa Clara County club with year-round semi-competitive and competitive boys and girls programs, Under-6 through Under-19; in 2026-27 it has a girls N1 G2009/2010 team and two girls U16 teams in NorCal Premier's Fall League. It is not Silicon Valley Soccer Academy (SVSA, Palo Alto), though its site also uses those words.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys and girls teams U6-U19",
+          "detail": "\"Currently SV Eagles YSA will form a boys team and a girls team in the age groups including Under-6 through Under-19\"; semi-competitive and competitive registration for girls U9-U18",
+          "source": "https://www.siliconvalleyeagles.com/academy/about-sv-eagles-youth-soccer-academy"
+        },
+        {
+          "name": "NorCal N1 League 2026-27: N1 G2009/2010",
+          "detail": "Silicon Valley Eagles' club page in the N1 League event lists 'N1 G2009/2010 (CA)', Female U17",
+          "source": "https://system.gotsport.com/org_event/events/54043/clubs/13612"
+        },
+        {
+          "name": "NorCal Premier Fall League 2026-27",
+          "detail": "Silicon Valley Eagles' club page in the Fall League event: girls '10-11G- PSG' and '11-10G - PSG' (U16)",
+          "source": "https://system.gotsport.com/org_event/events/54541/clubs/13612"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.siliconvalleyeagles.com/",
+          "what": "Home page: \"Silicon Valley Eagles Youth Soccer Academy offers an abundance of year round soccer programs\"; \"We are serving Santa Clara County residents\"; footer \"Copyright © 2026 Silicon Valley Eagles Youth Soccer Academy\" (the page title begins \"Silicon Valley Soccer Academy\", a phrase the site uses for itself)"
+        },
+        {
+          "url": "https://www.siliconvalleyeagles.com/academy/about-sv-eagles-youth-soccer-academy",
+          "what": "Page titled \"About Silicon Valley Eagles Soccer Academy\": \"The objective of the Silicon Valley Eagles YSA is to provide a year-round soccer training (semi-competitive and highly competitive) programs\""
+        },
+        {
+          "url": "https://www.siliconvalleyeagles.com/academy/contact-sv-eagles-sa",
+          "what": "Contact page: \"Silicon Valley Eagles Youth Soccer Academy\", address given only as \"South Bay Area - Silicon Valley\" (no city, so the record has none)"
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
+      "slug": "pacifica-united-soccer-club",
+      "name": "Pacifica United Soccer Club",
+      "shortName": "Pacifica United",
+      "aliases": [
+        "PUSC",
+        "Pacifica United SC",
+        "Pacifica United"
+      ],
+      "website": "https://pacificaunited.org/",
+      "city": "Pacifica",
+      "region": "peninsula",
+      "youth": true,
+      "description": "Pacifica United Soccer Club (PUSC) is a nonprofit, volunteer-based youth club in Pacifica with over 400 players, whose teams play in NorCal Premier with home fields at Oceana; its girls list runs from 2017G to 2010G and 2007G teams.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Girls teams",
+          "detail": "Teams page, \"GIRLS TEAMS\": 2007G, 2010G Blue and White, 2011G Blue and White, 2012 Girls Pool, 2012G White, and 2013G through 2017G teams",
+          "source": "https://pacificaunited.org/club/teams"
+        },
+        {
+          "name": "NorCal Premier Fall League 2026-27",
+          "detail": "Pacifica United Soccer Club's club page in the Fall League event: one girls team of U14 and up, '2011/2012 Girls Blue' (U15)",
+          "source": "https://system.gotsport.com/org_event/events/54541/clubs/11047"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://pacificaunited.org/",
+          "what": "Home page titled \"Pacifica United SC | Home - Pacifica United Soccer Club\" (drawn by script; read in headless Chromium): \"Pacifica United Soccer Club (PUSC) is a premier youth soccer organization in Pacifica, CA. We are a registered 501(c)(3) nonprofit, volunteer-based organization that supports over 400 youth players in Pacifica and surrounding communities.\""
+        },
+        {
+          "url": "https://pacificaunited.org/club/about",
+          "what": "\"Our teams participate in the NorCal Premier Soccer league www.norcalpremier.com, with travel usually within San Mateo and San Francisco counties.\""
+        },
+        {
+          "url": "https://pacificaunited.org/club/teams",
+          "what": "Boys and girls team lists by birth year"
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
+      "slug": "san-mateo-county-fc",
+      "name": "San Mateo County FC",
+      "shortName": "San Mateo County Seals",
+      "aliases": [
+        "San Mateo County Seals",
+        "SMC Seals",
+        "SMC FC",
+        "San Mateo County Athletic Club"
+      ],
+      "website": "https://www.smcfootball.club/",
+      "city": null,
+      "region": "peninsula",
+      "youth": true,
+      "description": "San Mateo County FC (the San Mateo County Athletic Club) is a San Mateo County youth soccer club that rebranded as San Mateo County Seals in April 2025, when it became the first affiliate club of the SF Seals network; it remains its own club, apart from the San Francisco Seals, and enters NorCal Premier as San Mateo County FC, with girls \"Seals\" G10/11 and G08/09 teams in the 2026-27 Fall League.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "NorCal Premier Fall League 2026-27: Seals G10/11 Red and G08/09 Red",
+          "detail": "San Mateo County FC's club page in the Fall League event: girls 'Seals G10/11 Red' (U16) and 'Seals G08/09 Red' (U19) among its teams",
+          "source": "https://system.gotsport.com/org_event/events/54541/clubs/13054"
+        },
+        {
+          "name": "SF Seals affiliation",
+          "detail": "\"San Mateo County FC will rebrand as San Mateo County Seals, the first club in the Bay Area to affiliate with the SF Seals youth soccer network\" (April 4, 2025)",
+          "source": "https://www.smcfootball.club/news_article/show/1335189"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.smcfootball.club/",
+          "what": "Home page titled \"SAN MATEO COUNTY ATHLETIC CLUB\": 2026-2027 SMC tryouts, \"Co-Sponsored by the South San Francisco Parks & Recreation Department\", and the news item \"San Mateo County FC rebrands as San Mateo County Seals with new local partnership\" (no address or city of its own on the page, so the record has none)"
+        },
+        {
+          "url": "https://www.smcfootball.club/news_article/show/1335189",
+          "what": "\"the San Mateo County youth soccer club is joining the new SF Seals network of clubs\"; \"We are excited and honored to become an SF Seals affiliate club member\"; \"both SF Seals and SMC Seals are Full NPL Boys Clubs that compete in the NorCal Premier League\""
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
       "slug": "mustang-soccer-league",
       "name": "Mustang Soccer League",
       "shortName": "Mustang SC",
@@ -2570,6 +2853,50 @@
         }
       ],
       "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "pleasanton-rage",
+      "name": "Pleasanton RAGE",
+      "shortName": "Pleasanton Rage",
+      "aliases": [
+        "Pleasanton Rage",
+        "RAGE",
+        "Pleasanton RAGE ECNL"
+      ],
+      "website": "https://pleasantonrage.org/",
+      "city": "Pleasanton",
+      "region": "east-bay",
+      "youth": true,
+      "description": "Pleasanton RAGE is an all-girls soccer club in Pleasanton with recreational, select and competitive programs for ages 4 to 18; its top U13-U19 teams compete in the ECNL, with ECNL Regional League teams below them.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Competitive program: ECNL (U13-U19)",
+          "detail": "\"Our top teams in the U13-U19 age groups compete in the Elite Clubs National League (ECNL)\"; \"Comp Top Tier: ECNL (U13-U19) / Pre-ECNL (U11-U12) / Elite (U8-U10)\"; ECNL Regional League teams U13-U19 as well",
+          "source": "https://pleasantonrage.org/programs/competitive/"
+        },
+        {
+          "name": "ECNL Girls Northern Cal 2026-27: Pleasanton RAGE ECNL G2008/09",
+          "detail": "ECNL Girls Northern Cal 2026-27 team page for the club's G2008/09 team (it has teams in each age group of the league and in the Regional League's Golden State conference)",
+          "source": "https://app.athleteone.com/public/event/4267/schedules-standings/team/39256/40580"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://pleasantonrage.org/",
+          "what": "Home page titled \"Pleasanton RAGE – Competitive and Recreational Youth Soccer\""
+        },
+        {
+          "url": "https://pleasantonrage.org/about-us/",
+          "what": "\"Pleasanton RAGE is an all-girls soccer club that empowers its players to reach their full potential through soccer, service, and leadership programming for all ages and abilities.\" \"Programs are provided for all levels of play from recreational to elite competitive, ages 4 to 18.\" Address: 173 Spring St #100, Pleasanton, CA 94566"
+        },
+        {
+          "url": "https://pleasantonrage.org/programs/competitive/",
+          "what": "Competitive program page: tryouts for the 2026-2027 season at Val Vista Community Park, Pleasanton; the ECNL, ECNL Regional League and NorCal tiers"
+        }
+      ],
+      "checkedOn": "2026-11-26"
     },
     {
       "slug": "marin-fc",
@@ -3376,6 +3703,88 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's Hudl roster for the 2026-2027 season (OV Toros FC U15G Black, its NorCal Premier Fall League U15 team, born 2012; it replaces the team's GotSport Rankings roster, U15G Black, which lists 3 players) lists a player of this name with no class year, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "branham",
+      "athleteId": "ffe5b9b3-0750-4d82-8ddc-658d2bf6fe0e",
+      "playerId": "pc41161e35d",
+      "fullName": "Aaliyah Ortega",
+      "club": "central-valley-san-jose-youth-soccer-league",
+      "clubTeam": "Central Valley San Jose N1 G2011/12 Cobras (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/200094/roster",
+          "kind": "league-roster",
+          "quote": "Central Valley San Jose N1 G2011/12 Cobras (CA) | Ortega | Aaliyah | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/120679/roster",
+          "kind": "league-roster",
+          "quote": "Central Valley San Jose N1 G2010/11 Strikers(CA) | Ortega | Aaliyah | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Central Valley San Jose N1 G2011/12 Cobras (CA), born 2011/2012; the team is on the N1 League's club page for Central Valley San Jose SC, event 54043, club 13006) lists a player of this name, and those birth years admit the class of 2030; the club's NorCal N1 League roster on GotSport Rankings (Central Valley San Jose N1 G2010/11 Strikers(CA), born 2010/2011; the team is on the N1 League's club page for Central Valley San Jose SC, event 54043, club 13006) lists a player of this name, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "willow-glen",
+      "athleteId": "c1ae9b86-12d1-4920-af54-c2ec695cd3fe",
+      "playerId": "p62334e373f",
+      "fullName": "Olivia Herrera",
+      "club": "central-valley-san-jose-youth-soccer-league",
+      "clubTeam": "Cosmos 11/12G",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/459050/roster",
+          "kind": "league-roster",
+          "quote": "Cosmos 11/12G | Herrera | Olivia | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/700541/roster",
+          "kind": "league-roster",
+          "quote": "Thorns 11/12G | Herrera | Olivia | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (Cosmos 11/12G, born 2011/2012; the team is on the Fall League's club page for Central Valley San Jose SC, event 54541, club 13006) lists a player of this name, and those birth years admit the class of 2030; the club's NorCal Premier Fall League roster on GotSport Rankings (Thorns 11/12G, born 2011/2012; the team is on the Fall League's club page for Central Valley San Jose SC, event 54541, club 13006) lists a player of this name, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "terra-nova",
+      "athleteId": "c2266e1d-0e34-4ffa-a38a-756c858b4af9",
+      "playerId": "p3192f1b5a9",
+      "fullName": "Mikaela Donnelly",
+      "club": "pacifica-united-soccer-club",
+      "clubTeam": "2011/2012 Girls Blue",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/95960/roster",
+          "kind": "league-roster",
+          "quote": "2011/2012 Girls Blue | donnelly | mikaela | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (2011/2012 Girls Blue, born 2011/2012; the team is on the Fall League's club page for Pacifica United Soccer Club, event 54541, club 11047) lists a player of this name, and those birth years admit the class of 2030. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Peninsula (Pacifica). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
     }
   ],
   "affiliations": [
@@ -10380,9 +10789,9 @@
       "playerId": "p4d0e20659d",
       "fullName": "Lauren Crowell",
       "club": "el-camino-fc-salinas",
-      "clubTeam": null,
-      "status": "past",
-      "asOf": "2024-25",
+      "clubTeam": "N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
       "confidence": "medium",
       "sources": [
         {
@@ -10392,9 +10801,17 @@
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/71089/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 (CA) | Crowell | Lauren | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
         }
       ],
-      "basis": "The club-teams block of the player's own MaxPreps career bio page, the page her Sobrato roster row links, lists \"U16 El Camino FC\" (found in the 2026-11-21 sweep; MaxPreps refuses automated reads from this environment since, so the entry is quoted as the owner read it on 2026-11-26, and its city and dates were not read here). Read as El Camino FC Salinas (owner's reading, 2026-11-26): no other El Camino FC is known in Northern California, and Salinas is about 40 miles from Morgan Hill. Status past (owner decision): U16 is the age group of her birth years (class of 2027) in the 2024-25 club season, and she is on no 2026-27 roster kept from the ECNL, ECNL Regional League, Girls Academy or NorCal Premier leagues; El Camino FC Salinas's two ECNL RL teams were re-read in full from the league's page data on 2026-11-26 and do not list her. Medium: the page names the club without a city that was read here."
+      "basis": "The club-teams block of the player's own MaxPreps career bio page, the page her Sobrato roster row links, lists \"U16 El Camino FC\" (found in the 2026-11-21 sweep; MaxPreps refuses automated reads from this environment since, so the entry is quoted as the owner read it on 2026-11-26, and its city and dates were not read here). Read as El Camino FC Salinas (owner's reading, 2026-11-26): no other El Camino FC is known in Northern California, and Salinas is about 40 miles from Morgan Hill. Status past (owner decision): U16 is the age group of her birth years (class of 2027) in the 2024-25 club season, and she is on no 2026-27 roster kept from the ECNL, ECNL Regional League, Girls Academy or NorCal Premier leagues; El Camino FC Salinas's two ECNL RL teams were re-read in full from the league's page data on 2026-11-26 and do not list her. Medium: the page names the club without a city that was read here. Since then (2026-11-26) El Camino's NorCal Premier rosters, which had not been read, were: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 (CA), born 2008/2009; on the N1 League's club page for El Camino FC Salinas, event 54043, club 12980) lists a player of this name, those birth years admit her class of 2027, no other tracked school has the name and no other club's roster does (the league-roster rule's birth-year tier, lib/players/club-rosters.ts); read from the data the roster page loads and again on the page as displayed in Chromium. So the premise of the earlier status, that no 2026-27 roster lists her, no longer holds, and the tie reads current for 2026-27 under the owner's decision of 2026-11-25 (a club roster read this season lists the player); the page itself gives no date, and the owner may set it back."
     },
     {
       "teamSlug": "mitty",
@@ -10943,9 +11360,17 @@
           "statedSchool": null,
           "statedClassYear": 2028,
           "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/71089/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 (CA) | Mariscal | Lucia | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
         }
       ],
-      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26. The club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 (CA), born 2008/2009; on the N1 League's club page for El Camino FC Salinas, event 54043, club 12980) lists a player of this name too, and those birth years admit the class of 2028: read from the data the roster page loads and again on the page as displayed in Chromium, 2026-11-26. Her team stays the ECNL RL G2009/10, where the league marks her First Team Player."
     },
     {
       "teamSlug": "palma",
@@ -12325,6 +12750,450 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Academy (CA), born 2008/2009; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "887b8b39-1b38-4e35-be45-7ad3b8b8d852",
+      "playerId": "p94a70c2b5d",
+      "fullName": "Bailey Portillo",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Portillo | Bailey | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "8a40ffbb-1a17-4dc0-ba59-c29b0945fc06",
+      "playerId": "pf94702f8a4",
+      "fullName": "Samantha Torres",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Torres | Samantha | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "60a635a7-54d3-4771-a83b-f941517d8f3e",
+      "playerId": "p5abbf4c526",
+      "fullName": "Xochitl Tovar",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Tovar | Xochitl | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "rancho-san-juan",
+      "athleteId": "e4e2ba18-d349-4ea1-b1b3-1a49890a1dab",
+      "playerId": "p5fb9ab4853",
+      "fullName": "Sherlyn Farfan",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Farfan | Sherlyn | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "rancho-san-juan",
+      "athleteId": "8d0528bf-c544-49df-9771-cfd2a2a0ed64",
+      "playerId": "p9841b3816a",
+      "fullName": "Giovanna Rodriguez",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2009/10 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91458/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2009/10 (CA) | Rodriguez | Giovanna | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2009/10 (CA), born 2009/2010; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "rancho-san-juan",
+      "athleteId": "690692f9-0b1b-4f3e-8a4c-f95643661faa",
+      "playerId": "p5ed1e7e6c5",
+      "fullName": "Jenssy Torres",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2009/10 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91458/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2009/10 (CA) | Torres | Jenssy | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Torres | Jenssy | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/135148/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2010/11 (CA) | Torres | Jenssy | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2009/10 (CA), born 2009/2010; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2010/11 (CA), born 2010/2011; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "north-monterey-county",
+      "athleteId": "5503be87-cf0c-44ae-a27e-66b0debbb50e",
+      "playerId": "p0c66258c79",
+      "fullName": "Amaya Eubanks",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Eubanks | Amaya | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "notre-dame-san-jose",
+      "athleteId": "1efdcfdd-1e9f-476d-9719-7bb3c85156ad",
+      "playerId": "pf9fcbe0094",
+      "fullName": "Caelyn Dyer",
+      "club": "pleasanton-rage",
+      "clubTeam": "Pleasanton RAGE ECNL G2008/09",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepsoccer.com/player/caelyn-dyer/",
+          "kind": "other",
+          "quote": "Caelyn Dyer is a 5'10\" Defender/Midfielder in the 2027 class. Dyer attends Notre Dame-San Jose in California and plays club soccer for Pleasanton Rage. Dyer's Player Profile was created on August 4, 2021.",
+          "statedSchool": "Notre Dame-San Jose",
+          "statedClassYear": 2027,
+          "sourceDate": "2025-04-08"
+        },
+        {
+          "url": "https://prepsoccer.com/program/pleasanton-rage/",
+          "kind": "other",
+          "quote": "Class of 2027 ... Caelyn Dyer 5'10\" D/M Notre Dame-San Jose",
+          "statedSchool": "Notre Dame-San Jose",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://app.athleteone.com/public/event/4267/schedules-standings/team/39256/40580",
+          "kind": "league-roster",
+          "quote": "Pleasanton RAGE ECNL G2008/09 | Dyer, Caelyn | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "PrepSoccer (the Prep Dig network's soccer site) player page (the owner's pointer, 2026-11-26; re-read the same day): names her, club soccer, the club \"Pleasanton Rage\" (linked to https://prepsoccer.com/program/pleasanton-rage/) and her school \"Notre Dame-San Jose\", linked to the team page titled \"Notre Dame-San Jose High School Soccer | San Jose, CA | Prep Soccer\"; class 2027 equals the roster. Server-rendered HTML; profile created 2021-08-04, modified 2025-04-08. PrepSoccer's program page for the club lists her under Class of 2027 with high school Notre Dame-San Jose (same site; agrees). A page that names player, club and school: high confidence, under the ordinary linking rule (README, \"Clubs\"); the club is in Pleasanton (East Bay), outside the regions where a league roster alone links, and has a record because of this tie. The league's own 2026-27 roster (ECNL Girls Northern Cal 2026-27: Pleasanton RAGE ECNL G2008/09) also lists a player of this name with class year 2027, which agrees with the roster grade: read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data, 2026-11-26; the tie is current on that roster."
+    },
+    {
+      "teamSlug": "saratoga",
+      "athleteId": "5154a643-e83e-4b28-8743-4aa9bebbe9fb",
+      "playerId": "p12ff03df72",
+      "fullName": "Alisa Erbay",
+      "club": "allstars-sc",
+      "clubTeam": "High School Girls",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/61457/roster",
+          "kind": "league-roster",
+          "quote": "High School Girls | Erbay | Alisa | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (High School Girls, born 2008/2009; the team is on the Fall League's club page for Allstars SC, event 54541, club 13083) lists a player of this name, and those birth years admit the class of 2027. The row has no grade: the class year compared is the one her own linked recruiting pages state (2027). No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Saratoga). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "silver-creek",
+      "athleteId": "0fa320b5-9c49-432c-8be1-055367f6425e",
+      "playerId": "p8326806bff",
+      "fullName": "Sophia Espinoza",
+      "club": "silicon-valley-eagles",
+      "clubTeam": "11-10G - PSG",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/217465/roster",
+          "kind": "league-roster",
+          "quote": "11-10G - PSG | Espinoza | Sophia | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (11-10G - PSG, born 2010/2011; the team is on the Fall League's club page for Silicon Valley Eagles, event 54541, club 13612) lists a player of this name, and those birth years admit the class of 2029. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay. No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "overfelt",
+      "athleteId": "fc7b828a-6ef6-469a-92c2-c74de0e6b25b",
+      "playerId": "pbbb378cc0e",
+      "fullName": "Jazmine Carballido",
+      "club": "north-valley-youth-soccer-league",
+      "clubTeam": "NV/SJ United 2009/10G Storm",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/457448/roster",
+          "kind": "league-roster",
+          "quote": "NV/SJ United 2009/10G Storm | Carballido | Jazmine | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (NV/SJ United 2009/10G Storm, born 2009/2010; the team is on the Fall League's club page for North Valley Youth Soccer League, event 54541, club 10935) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (San Jose). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "mercy-burlingame",
+      "athleteId": "cd7ab0c3-10fd-4492-bc8b-c2ea7ad138fc",
+      "playerId": "pe6893b1b34",
+      "fullName": "Makayla George",
+      "club": "san-bruno-lowen-83",
+      "clubTeam": "Panthers Black U17G",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/107168/roster",
+          "kind": "league-roster",
+          "quote": "Panthers Black U17G | George | Makayla | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/107171/roster",
+          "kind": "league-roster",
+          "quote": "Panthers White U17G | George | Makayla | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (Panthers Black U17G, born 2010; the team is on the Fall League's club page for San Bruno Lowen 83, event 54541, club 13062) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal Premier Fall League roster on GotSport Rankings (Panthers White U17G, born 2010; the team is on the Fall League's club page for San Bruno Lowen 83, event 54541, club 13062) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Peninsula (San Bruno). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "capuchino",
+      "athleteId": "c88268bf-fa4c-4c60-b9aa-86fe85a319c2",
+      "playerId": "p8066306c0e",
+      "fullName": "Camille Fox-Lucero",
+      "club": "san-bruno-lowen-83",
+      "clubTeam": "Panthers Black U17G",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/107168/roster",
+          "kind": "league-roster",
+          "quote": "Panthers Black U17G | Fox-Lucero | Camille | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/107171/roster",
+          "kind": "league-roster",
+          "quote": "Panthers White U17G | Fox-Lucero | Camille | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal Premier Fall League roster on GotSport Rankings (Panthers Black U17G, born 2010; the team is on the Fall League's club page for San Bruno Lowen 83, event 54541, club 13062) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal Premier Fall League roster on GotSport Rankings (Panthers White U17G, born 2010; the team is on the Fall League's club page for San Bruno Lowen 83, event 54541, club 13062) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Peninsula (San Bruno). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "950c100f-0115-4a7d-9342-334ddda14578",
+      "playerId": "p23c37336a9",
+      "fullName": "Mia Barton",
+      "club": "svslv-soccer-club",
+      "clubTeam": "N1 G2008 White (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/119551/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008 White (CA) | Barton | Mia | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008 White (CA), born 2008; the team is on the N1 League's club page for Valley United FC, event 54043, club 10946) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Central Coast (Scotts Valley). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "0171c890-156c-48c8-877f-54ba2772fe1f",
+      "playerId": "pe1efb1ab0a",
+      "fullName": "Milana Flores",
+      "club": "svslv-soccer-club",
+      "clubTeam": "N1 G2008 White (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/119551/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008 White (CA) | Flores | Milana | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008 White (CA), born 2008; the team is on the N1 League's club page for Valley United FC, event 54043, club 10946) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Central Coast (Scotts Valley). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "0df48f6b-30d1-4781-8019-21a19b3686d4",
+      "playerId": "p2aa2f1017c",
+      "fullName": "Taylor Ramirez",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/71089/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 (CA) | Ramirez | Taylor | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for El Camino FC Salinas, event 54043, club 12980) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Central Coast (Salinas). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "21fc2bfa-b57e-4baa-81c0-40f57589fd7a",
+      "playerId": "pbaf3be614a",
+      "fullName": "Nathalie Sanchez",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/71089/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008/09 (CA) | Sanchez | Nathalie | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for El Camino FC Salinas, event 54043, club 12980) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Central Coast (Salinas). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "palma",
+      "athleteId": "465d9e2a-1437-4a8a-a7d1-75ba371d869e",
+      "playerId": "p4a6e1ebec6",
+      "fullName": "Ava Coniglio",
+      "club": "svslv-soccer-club",
+      "clubTeam": "N1 G2008 White (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/119551/roster",
+          "kind": "league-roster",
+          "quote": "N1 G2008 White (CA) | Coniglio | Ava | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008 White (CA), born 2008; the team is on the N1 League's club page for Valley United FC, event 54043, club 10946) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the Central Coast (Scotts Valley). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
     }
   ]
 }

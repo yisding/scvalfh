@@ -1,11 +1,12 @@
 {
-  "builtBy": "Research by hand, 2026-11-21, for the boys basketball build: Prep Hoops' and Prep Redzone's commitment lists and player pages, On3/Rivals class rankings, Prep Baseball Report's California list, 304 college men's basketball news feeds, school athletics sites and student and local papers, and the players' own recruiting pages. Every quote was re-read at assembly on 2026-11-21.",
-  "capturedAt": "2026-11-21",
+  "builtBy": "Research by hand, 2026-11-21, for the boys basketball build: Prep Hoops' and Prep Redzone's commitment lists and player pages, On3/Rivals class rankings, Prep Baseball Report's California list, 304 college men's basketball news feeds, school athletics sites and student and local papers, and the players' own recruiting pages. Every quote was re-read at assembly on 2026-11-21. A further round on 2026-11-25 over all four builds (README and DATA-SOURCES §1.15).",
+  "capturedAt": "2026-11-25",
   "season": "26-27",
   "notes": [
     "Players on the 58 boys basketball rosters MaxPreps lists so far whom a public page says have committed to, or signed with, a college team, in basketball or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names his high school or gives the roster's class year with a hometown in the school's own area; offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
     "5 commitments. Emmanuel Ahamefule (Archbishop Riordan) signed with Oregon State: its release of 2026-11-12 names him with his school. Adrian Barnett (The King's Academy) committed to Washington State football (On3/Rivals and the Spokesman-Review). Three rest on pages that put the player a class above the grade MaxPreps' 2026-27 roster still shows, which is last season's (each row carries a grade conflict in data/basketball/rosters-enrichment.json): Rocco Smith (Palo Alto, Linfield, Prep Hoops' page and commitments list), Jace Cannon (Serra, USC football, On3/Rivals and Cal-Hi Sports) and Brady Clugage (Archbishop Mitty, Chapman, medium: one row of Prep Hoops' commitments list).",
-    "Recall is partial. The signing period had just opened; Prep Hoops' article bodies and On3's NorCal pages are paywalled; 247Sports, VerbalCommits and Perfect Game refuse automated reads or draw their pages by script; most seniors and every junior were not searched name by name, and the community colleges' sites were not read. Wyatt Vonblanco (Serra), whose Prep Hoops page says Cal State San Marcos, is not listed: the page puts him in the class of 2026, a class above a roster grade 12."
+    "Recall is partial. The signing period had just opened; Prep Hoops' article bodies and On3's NorCal pages are paywalled; 247Sports, VerbalCommits and Perfect Game refuse automated reads or draw their pages by script; most seniors and every junior were not searched name by name, and the community colleges' sites were not read. Wyatt Vonblanco (Serra), whose Prep Hoops page says Cal State San Marcos, is not listed: the page puts him in the class of 2026, a class above a roster grade 12.",
+    "On 2026-11-25 a commitment round over all four builds (field hockey, volleyball, soccer, basketball), every row as it stood that day, varsity and JV, by the same rules; docs/DATA-SOURCES.md §1.15 says what it read and did not. For basketball, 1,212 varsity rows (466 new since 2026-11-21, the PCAL and PSAL teams among them) and 320 JV: no new commitment in any sport. Brady Clugage's is high since then: Prep Hoops' second page for him (/player/brady-kulage/, the one its list links) names Archbishop Mitty. VerbalCommits' page (readable in a browser this time) is a further source for Emmanuel Ahamefule's signing. Perfect Game was read by eye and is not cited; 247Sports showed a CAPTCHA."
   ],
   "colleges": [
     {
@@ -171,7 +172,7 @@
       "sport": "basketball",
       "status": "committed",
       "asOf": "2026-10-13",
-      "confidence": "medium",
+      "confidence": "high",
       "sources": [
         {
           "url": "https://prephoops.com/commitments/?state=Northern+California",
@@ -180,9 +181,17 @@
           "statedSchool": "Archbishop Mitty",
           "statedClassYear": 2027,
           "sourceDate": "10/13/26"
+        },
+        {
+          "url": "https://prephoops.com/player/brady-kulage/",
+          "kind": "other",
+          "quote": "Brady Clugage is a 6'4\" Shooting Guard/Combo Guard in the 2027 class. Clugage attends Archbishop Mitty in Northern California and plays club basketball for Team Esface … Recruiting School Offer? Visit Offer graphic Chapman (CA) Committed",
+          "statedSchool": "Archbishop Mitty (the page links Prep Hoops' Archbishop Mitty team page, San Jose, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "One source: Prep Hoops' Northern California commitments list, entry of 10/13/26, names Brady Clugage of Archbishop Mitty, class 2027, committed to Chapman (the row's college cell is a logo with no text: a link to prephoops.com/college/chapman-ca/ titled \"Chapman (CA)\", so the quote cannot carry the name). His own Prep Hoops page (Archbishop Mitty, linking the school's San Jose team page, class 2027) shows no recruiting block. Class 2027 is a grade above the one MaxPreps' 2026-27 roster still shows: accepted on the row's stale-grade conflict; re-fetched at assembly on 2026-11-21. Medium: a single list row."
+      "basis": "One source: Prep Hoops' Northern California commitments list, entry of 10/13/26, names Brady Clugage of Archbishop Mitty, class 2027, committed to Chapman (the row's college cell is a logo with no text: a link to prephoops.com/college/chapman-ca/ titled \"Chapman (CA)\", so the quote cannot carry the name). His own Prep Hoops page (Archbishop Mitty, linking the school's San Jose team page, class 2027) shows no recruiting block. Class 2027 is a grade above the one MaxPreps' 2026-27 roster still shows: accepted on the row's stale-grade conflict; re-fetched at assembly on 2026-11-21. Medium: a single list row. High since 2026-11-25: Prep Hoops has a second page for him, the one its commitments list links (its address misspells the surname, 'brady-kulage'; the page is titled Brady Clugage), which names Archbishop Mitty, class 2027 and Team Esface and carries the recruiting block 'Chapman (CA) Committed'. With a player page naming the school beside the list row, the match no longer rests on one line. The page's class is still one above the roster's grade, the stale MaxPreps grade already recorded as a conflict on the row. Fetched twice by the list pass and again at assembly."
     },
     {
       "teamSlug": "riordan",
@@ -234,9 +243,17 @@
           "statedSchool": "Archbishop Riordan (page links prephoops.com/team/ca/archbishop-riordan/, titled 'Archbishop Riordan High School Basketball | San Francisco, CA')",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.verbalcommits.com/players/emmanuel-ahamefule",
+          "kind": "other",
+          "quote": "CLASS 2027 | HS Senior HOMETOWN San Francisco , CA HIGH SCHOOL Archbishop Riordan High School",
+          "statedSchool": "Archbishop Riordan High School, San Francisco, CA",
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "Oregon State's own men's basketball release of 2026-11-12 says he signed and is 'currently playing at Archbishop Riordan High School in San Francisco, Calif.' (rule (a), school with city). On3/Rivals (server-rendered) gives Archbishop Riordan, San Francisco, class 2027 (the roster's class) and 'Signed'; Prep Hoops lists the Oregon State commitment on a page that names Archbishop Riordan and links its San Francisco team page. On3's '9/23/2026' is its commitment date, not the signing date; asOf is the release's date."
+      "basis": "Oregon State's own men's basketball release of 2026-11-12 says he signed and is 'currently playing at Archbishop Riordan High School in San Francisco, Calif.' (rule (a), school with city). On3/Rivals (server-rendered) gives Archbishop Riordan, San Francisco, class 2027 (the roster's class) and 'Signed'; Prep Hoops lists the Oregon State commitment on a page that names Archbishop Riordan and links its San Francisco team page. On3's '9/23/2026' is its commitment date, not the signing date; asOf is the release's date. Since 2026-11-25: VerbalCommits' player page names Archbishop Riordan High School, San Francisco, class 2027, and lists Oregon State as committed on Sep 23, 2026 and signed on Nov 11, 2026 (the page is drawn by script; two separate browser reads agree). The date here stays that of Oregon State's release."
     },
     {
       "teamSlug": "serra",
