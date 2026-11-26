@@ -39,7 +39,7 @@
     "multiSeason": 1201,
     "multiSport": 87,
     "nameOnly": 568,
-    "observations": 15794,
+    "observations": 15823,
     "players": 7666,
     "review": 64,
     "stintConflicts": 186,
@@ -1606,6 +1606,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/arshpreet-ruprah/?careerid=s9pnrvqc7ljee"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2028-arshpreet-ruprah/"
             }
           ],
           "positions": [
@@ -14434,6 +14440,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "23",
+              "name": "M. Lieu",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -22904,6 +22915,12 @@
               "jersey": "7",
               "name": "Jasmine Vemuri",
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2027,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/notre-dame-high-school-san-jose/jasmine-vemuri"
             }
           ],
           "positions": [],
@@ -31721,6 +31738,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "R. Fossati",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -88937,6 +88959,12 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/hannah_yeung"
             }
           ],
           "positions": [
@@ -94332,6 +94360,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "19",
+              "name": "C. Kroum-Bruno",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -95544,6 +95577,11 @@
                 "FORW"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "B. Borbons",
+              "src": "maxpreps-stats"
             },
             {
               "kind": "hudl",
@@ -115469,6 +115507,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "5",
+              "name": "I. Perez",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -160693,6 +160736,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "11",
+              "name": "N. Le",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -164565,6 +164613,11 @@
                 "STRK"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "S. Farfan",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -186489,6 +186542,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/grace-moniak/?careerid=bvi9id0rpkaff"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2029-grace-moniak/"
             }
           ],
           "positions": [
@@ -188428,6 +188487,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "25",
+              "name": "M. Dunning",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -231111,6 +231175,11 @@
                 "FORW"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "2",
+              "name": "H. Borbons",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -234601,6 +234670,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "34",
+              "name": "R. Young",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -242378,6 +242452,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "30",
+              "name": "C. McIntyre",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -259911,6 +259990,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "24",
+              "name": "N. Finuliar",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -261693,6 +261777,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "10",
+              "name": "T. Djurovic",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "ncsa",
               "src": "profile",
@@ -262156,6 +262245,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "3",
+              "name": "J. Arciaga",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -262276,6 +262370,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "9",
+              "name": "K. Fagin",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -262841,6 +262940,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "24",
+              "name": "K. Fore",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -323732,6 +323836,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "6",
+              "name": "A. Baker",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "sportsrecruits",
               "src": "profile",
@@ -333140,6 +333249,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "10",
+              "name": "J. De Leon",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -334472,6 +334586,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "32",
+              "name": "P. Bufalini",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -342153,6 +342272,12 @@
                 "MF"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "classOf": 2028,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/citlaly_gerardo_hernandez"
             }
           ],
           "positions": [
@@ -342888,6 +343013,11 @@
                 "D"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "23",
+              "name": "M. Murdock",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -366214,6 +366344,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "42",
+              "name": "M. Smith",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2029,
@@ -389757,6 +389892,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "14",
+              "name": "W. Sparling",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -393257,6 +393397,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "50",
+              "name": "C. Dashiell",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -417702,6 +417847,11 @@
                 "STRK"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "30",
+              "name": "K. Hernandez",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [

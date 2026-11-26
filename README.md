@@ -1147,8 +1147,13 @@ program has a commitment, a college has one program per sport, one commitment pe
 `rosterBehind`), or, for a row with no grade, the sources agree with each other on a class a high school roster of
 the season can hold.
 
-Coverage on 2026-11-22, counted from the file: **39 commitments, 39 players at 23 of the 102 schools, to
-30 colleges (33 programs); one, Phoebe Miller's, signed.** The 2026-11-22 round (see below) added one, Abby
+Coverage on 2026-11-25, counted from the file: **39 commitments, 39 players at 23 of the 102 schools, to
+30 colleges (33 programs); one, Phoebe Miller's, signed.** The 2026-11-25 round, over all four builds (see below),
+added no field hockey row; it gave Lola Conway's (Michigan) and Emerson Davis's (Harvard lacrosse) commitments their
+first school-side source, The Tower, Bishop's student paper (Nov 23, with each one's class, '28); cited eleven
+players' own MAX Field Hockey pages, already linked as their profiles, which show the commitment with the high
+school; raised Kendall Gann's (Temecula Valley, Barton) to high, her own FieldLevel page now showing it with her
+school; and follows FH College Path's UC Davis count (now 4 commits) in Ryan Hemeon's quote. Now 36 high, 3 medium. The 2026-11-22 round (see below) added one, Abby
 Feldman, Torrey Pines, class of 2027, to Macalester in soccer (NCAA Division III, MIAC; high: TopDrawerSoccer's
 own profile page names her high school, and its Recruiting Roundup of Nov 16, 2026 lists the commitment). It also
 gave eight commitments another source: St. Ignatius' athletics site (Nov 19) names Storey Lewis, Maggie Magnano,
@@ -1840,7 +1845,10 @@ by source. Counted from the files on 2026-11-14:
   roster match counts only with a second page that names the player, the club and her school. Only the Peninsula
   and the South Bay were searched for every club (`SEARCHED_REGIONS`); /clubs says so of the others. JV players'
   clubs are not listed.
-- **College commitments** (`commits.json`): **11 players at 9 schools, to 11 colleges** (counted 2026-11-22). From 2026-11-13: Maura
+- **College commitments** (`commits.json`): **12 players at 10 schools, to 12 colleges** (counted 2026-11-25). From the
+  commitment round of 2026-11-25: Sophia Giles (The King's Academy) signed with Santa Clara in softball (Santa Clara's
+  own release of 2026-11-11 names "Sophie Giles" with The King's Academy and her First Team All-WBAL volleyball season;
+  the 2026-11-22 round, matching exact first names, missed it). From 2026-11-13: Maura
   Hambly (Palo Alto) signed with Cal on 2026-11-11 (Cal's own release names her with Palo Alto High School); Aanya
   Hotha (Saratoga) to Penn, Kylee Mark (Monta Vista) to Cal Poly and Katie Hamburger (Homestead) to Tulane in beach
   volleyball, each from her school's student paper; Emi Yu-Yang (Palo Alto) to Hamilton, medium confidence, from
@@ -1942,7 +1950,24 @@ on 2026-11-21:
   every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does
   not claim it. **30 JV ties** for 30 JV players at 10 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
   Mountain View 5, Pacific Collegiate and Sobrato 4 each, Branham 3), shown marked JV.
-- **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
+- **College commitments** (`commits.json`): **22 players at 12 schools, to 19 colleges** (counted 2026-11-25), 19 in
+  soccer, 1 each in field hockey, softball and track and field; 11 to NCAA Division I programs, 2 to Division II, 7 to
+  Division III and 2 to the NAIA; 9 high and 13 medium. The commitment round of 2026-11-25 added ten:
+  - Caelyn Dyer to William & Mary and Jasmine Vemuri to Whitman, both Notre Dame San Jose, whose roster was posted
+    after the 2026-11-21 round: PrepSoccer's player pages and its California list name the school, TopDrawerSoccer
+    agreeing (high).
+  - Alina Decker (Menlo-Atherton) to Brandeis in track and field, from the M-A Chronicle's running list of the
+    school's commitments; medium, because MaxPreps' row gives her name the other way round ("Decker Alina").
+  - Seven on the owner's ruling of 2026-11-25 that a club's own announcement counts when the row is already tied to
+    that club (all medium): Rebecca Iffla (Mercy Burlingame) to Nevada (TopDrawerSoccer, club Bay Area Surf),
+    Audrey Pfeiffer (Valley Christian) to UC San Diego (MVLA's commitments page), Kenzie Willerer (Valley Christian)
+    to Azusa Pacific and Kaitlyn Gray (Soquel) to Cal Lutheran (Los Gatos United's posts), and, from Monterey Surf's
+    own page, Bailey Portillo and Samantha Torres (Salinas) to Menlo College and Sherlyn Farfan (Rancho San Juan) to
+    Stanislaus State; Monterey Surf's record and N1 rosters were added the same day ("Girls soccer: club rosters").
+  - New sources: the M-A Chronicle for Juliana Pandolfo (Nov 9, now the date), TopDrawerSoccer's roundups of Nov 16
+    and 23 for Kailani Bock and Delaney Kumer (their dates).
+
+  Before that round: 12 players at 6 schools, to 12 colleges, 10 in soccer, 1 in field
   hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
   Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos) to
   Brandeis, Selya Sen (Los Altos) to Franklin & Marshall and Kat Smith (Los Altos) to Ithaca in field hockey, from The
@@ -1982,7 +2007,10 @@ on 2026-11-21:
   Spokesman-Review and Prep Redzone. Three rest on pages that put the player a class above the grade MaxPreps'
   roster still shows (below): Rocco Smith (Palo Alto) to Linfield, from his Prep Hoops page and its commitments
   list; Jace Cannon (Serra) to USC in football, from On3 and Cal-Hi Sports; and Brady Clugage (Mitty) to Chapman,
-  medium, from one row of Prep Hoops' commitments list. Every quote was re-read at assembly. No commitment to a
+  from Prep Hoops' commitments list and, since 2026-11-25, its second page for him (`/player/brady-kulage/`, the
+  one the list links), which names Archbishop Mitty (high since then; medium before). The 2026-11-25 round found no
+  new commitment over the 1,212 varsity rows (466 of them new since 2026-11-21) and added VerbalCommits' page as a
+  source for Ahamefule's signing. Every quote was re-read at assembly. No commitment to a
   two-year college was found, though every sport's `commits.json` takes `njcaa` and `cccaa` levels since
   2026-11-21.
 
@@ -2217,7 +2245,9 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   roster alone is medium confidence; its status was unknown (the page dates nothing) until the owner decided on
   2026-11-25 that a club roster read this season makes a tie current. GotSport's club ids are keyed
   `gotsport-<id>` in `clubSlugs`, apart from Athlete One's: Almaden FC, Silicon Valley SA and San Francisco Glens are
-  mapped. South Valley Surf (Morgan Hill) has no record; Newark, Lamorinda, Sacramento United and Clovis Crossfire are
+  mapped. South Valley Surf has no record and is not local: it is Bakersfield's club (Surf Nation's announcement of
+  April 3, 2026 names "South Valley (Bakersfield, CA)"; this line said Morgan Hill until 2026-11-26, wrongly); Newark,
+  Lamorinda, Sacramento United and Clovis Crossfire are
   based away from the schools. Their rows are compared but never linked.
 - **Linked on 2026-11-25.** *Girls Academy:* **29 ties cite a GA roster** (32 entries on 8 team pages, 14 schools):
   22 new, resting on a roster alone (Almaden FC 16 and Silicon Valley SA 13 in all), and 7 ties other pages had

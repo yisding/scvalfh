@@ -2277,6 +2277,12 @@
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/arshpreet-ruprah/?careerid=s9pnrvqc7ljee"
+            },
+            {
+              "classOf": 2028,
+              "note": "MAX Field Hockey player page: class of 2028, defense and midfield, hometown Sunnyvale, CA; high school Fremont, club San Jose Fly. It names the school with a Sunnyvale hometown (the Fremont High of Sunnyvale, not its namesakes), and the class year agrees with the roster. New in MAX's California player directory since 2026-11-16; found by the 2026-11-25 commitment round's list pass and read twice that day (identical). No commitment on the page.",
+              "platform": "maxfh",
+              "url": "https://maxfh.longstreth.com/players/2028-arshpreet-ruprah/"
             }
           ],
           "sourceName": null
@@ -15027,6 +15033,12 @@
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/grace-moniak/?careerid=bvi9id0rpkaff"
+            },
+            {
+              "classOf": 2029,
+              "note": "MAX Field Hockey player page: class of 2029, midfield and forward, hometown Huntington Beach, CA; high school Huntington Beach, club Ventura County Red Devils. It names the school and its city, and the class year agrees with the roster. New in MAX's California player directory since 2026-11-16; found by the 2026-11-25 commitment round's list pass and read twice that day (identical). No commitment on the page.",
+              "platform": "maxfh",
+              "url": "https://maxfh.longstreth.com/players/2029-grace-moniak/"
             }
           ],
           "sourceName": null

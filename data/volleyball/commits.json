@@ -1,13 +1,14 @@
 {
-  "builtBy": "Research by hand, 2026-11-13 and 2026-11-14, for the girls volleyball build: commitment lists (Prep Dig, PrepVolleyball, Vision Volleyball Club's College Bound page, SportsRecruits' commits feed for program ids 6 to 453), college athletics sites' news feeds from 2026-11-11 on (292 on the first day, about 890 on the second), school and local papers, the clubs' commitment pages, the players' own recruiting pages and name-by-name web searches. Every quote was checked against its page as served that day, twice. A third round on 2026-11-22 re-read the lists, the clubs' pages, the colleges' signing releases, school and local news and SportsRecruits; its coverage is in the notes.",
-  "capturedAt": "2026-11-22",
+  "builtBy": "Research by hand, 2026-11-13 and 2026-11-14, for the girls volleyball build: commitment lists (Prep Dig, PrepVolleyball, Vision Volleyball Club's College Bound page, SportsRecruits' commits feed for program ids 6 to 453), college athletics sites' news feeds from 2026-11-11 on (292 on the first day, about 890 on the second), school and local papers, the clubs' commitment pages, the players' own recruiting pages and name-by-name web searches. Every quote was checked against its page as served that day, twice. A third round on 2026-11-22 re-read the lists, the clubs' pages, the colleges' signing releases, school and local news and SportsRecruits; its coverage is in the notes. A further round on 2026-11-25 over all four builds (README and DATA-SOURCES §1.15).",
+  "capturedAt": "2026-11-25",
   "season": "26-27",
   "notes": [
     "Players on the 60 tracked varsity rosters a public page says have committed to, or signed with, a college team, in volleyball or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names her high school or gives the roster's class year with a hometown in the school's own area; offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
     "Ten commitments: nine in volleyball and one in beach volleyball. Maura Hambly's is signed: Cal's own release of 2026-11-11 names her with Palo Alto High School. Aanya Hotha's (Penn), Kylee Mark's (Cal Poly) and Katie Hamburger's (Tulane, beach) rest on their schools' student papers, with Prep Dig or PrepVolleyball agreeing for the first two; neither Penn nor Cal Poly had posted a signing release by 2026-11-14, and Tulane's beach release of 2026-11-12 names five other signees, so those three stay committed. Emi Yu-Yang's (Hamilton) is medium: her own SportsRecruits page gives the class year, Palo Alto and the commitment but no school. The 2026-11-14 round added five: Chayse Courtney (Mitty, Stanford) and Abby Cardenas (Saint Francis, UC Irvine), both class of 2028, Eileen Pfeffer (St. Ignatius, Nevada) and Whitney Fleming (Valley Christian, UC Riverside), from Prep Dig's player pages with its California list (and PrepVolleyball or Vision's College Bound page agreeing for Courtney and Fleming), and Orli Jones (Notre Dame San Jose, Portland) from her own SportsRecruits page. Nevada's and UC Riverside's sites refused automated reads on 2026-11-14, so a signing release naming Pfeffer or Fleming was not checked; both stay committed.",
     "Recall is partial. The fall signing period opened three days before the second round and many colleges had posted nothing; 72 college sites refused automated reads (among them Cal, UC Irvine, UC Riverside, Nevada and Tulane). SportsRecruits' commits feed was read for 434 of about 3,700 programs. Name-by-name web searches covered every senior at the 60 schools and 40 of the 271 juniors; every named junior, senior and ungraded row was looked up on Prep Dig and PrepVolleyball, and on NCSA, where no commitment turned up.",
     "Tulane's beach volleyball conference is left blank: the schedule page read on 2026-11-13 was an earlier season's.",
-    "On 2026-11-22 another round over the 876 varsity rows and 473 JV players, by the same rules. It added one commitment, Stella Broshear (Mitty, class of 2028) to Loyola Marymount in beach volleyball, medium: Vision Volleyball Club's College Bound page lists her under its class of 2028 with 'LMU (Beach)' and names no school, and Prep Dig's player page ties her name, class and Vision to Archbishop Mitty; Vision's line was on its page on 2026-11-14 and was not matched then. Eileen Pfeffer's is now signed: Nevada's own signing-day release of 2026-11-11 names her with Saint Ignatius College Preparatory (Nevada's site answered this round). New sources: the Mercury News' story of 2026-11-07, whose deck calls Mitty's Chayse Courtney, named in its headline and a photo caption, 'Stanford-bound' (only parts shown without a subscription are quoted), and Vision's College Bound lines for Maura Hambly and Aanya Hotha. So the file holds eleven commitments, two of them signed. College releases: 1,070 college athletics sites' news feeds (950 answered), 13,739 stories of Nov 10 to 22 opened and matched against every varsity and JV name, 139 of the 141 women's and beach volleyball signing releases among them; Penn, Cal Poly (whose beach release of Nov 16 names five others; Kylee Mark's commitment is indoor), Hamilton, UC Riverside and Portland had posted no volleyball signing release, so Hotha, Mark, Yu-Yang, Fleming and Jones stay committed, and no posted release omits a player listed here. 76 sites refused and were not read; Santa Clara's began answering with a bot check, so its volleyball signing story of Nov 11 (read on 2026-11-13 against varsity names only), its beach volleyball story of Nov 16 and its other sports' signing stories were not read. Lists: Prep Dig's California list (163 rows), its team pages for 58 of the 60 schools and a player-page probe for all 589 class-of-2027, class-of-2028 and ungraded varsity rows; PrepVolleyball's master list (836 rows) and California player database (1,050 players); the sites of 36 of the 37 clubs in clubs.json; the Prep Network's other-sport lists, TopDrawerSoccer, MileSplit and ADVNC; the 83 linked NCSA pages of seniors, juniors and ungraded rows (none shows a commitment). All 17 Prep Dig, PrepVolleyball and Vision quotes already here were found on their pages. News: 2,838 posts on 29 student-paper sites (The Catalyst at Notre Dame Belmont and The Halo Tribune at Santa Teresa are new this round), 3,887 posts of Nov 1 to 22 on 12 local news sites, the WCAL and WBAL schools' own news and athletics pages, and the 41 public schools' home pages; the signing posts found (Saint Francis' of Nov 12, Menlo's, King's Academy's page, St. Ignatius' list of 19 seniors, on which no volleyball player appears) name no rostered player. Web searches: one each for 60 class-of-2028 varsity players at 17 schools, and eight more by the list pass; none found a commitment, and the other 208 juniors not in the file were covered through the lists and the papers, not one by one. SportsRecruits: all 94 linked profiles re-read twice (two show a commitment, both in this file); an address probe for all 512 class-of-2027 and class-of-2028 rows with no linked profile (2,673 addresses, 619 live pages, no commitment by a rostered player); its commits feed for program ids 1 to 112, 454 to 474 and 1,045 to 3,700 (ids 475 to 1,044 have never been read for this build). Not read: the Mercury News' and San Francisco Chronicle's subscriber-only article text, Saint Francis' school site, STEPS Lacrosse, SwimCloud and a beach club's site (a bot check in the browser too), The Bear Witness at Branham (no answer), 31 NCSA pages of freshmen and sophomores, Instagram; no student paper was found for 32 schools."
+    "On 2026-11-22 another round over the 876 varsity rows and 473 JV players, by the same rules. It added one commitment, Stella Broshear (Mitty, class of 2028) to Loyola Marymount in beach volleyball, medium: Vision Volleyball Club's College Bound page lists her under its class of 2028 with 'LMU (Beach)' and names no school, and Prep Dig's player page ties her name, class and Vision to Archbishop Mitty; Vision's line was on its page on 2026-11-14 and was not matched then. Eileen Pfeffer's is now signed: Nevada's own signing-day release of 2026-11-11 names her with Saint Ignatius College Preparatory (Nevada's site answered this round). New sources: the Mercury News' story of 2026-11-07, whose deck calls Mitty's Chayse Courtney, named in its headline and a photo caption, 'Stanford-bound' (only parts shown without a subscription are quoted), and Vision's College Bound lines for Maura Hambly and Aanya Hotha. So the file holds eleven commitments, two of them signed. College releases: 1,070 college athletics sites' news feeds (950 answered), 13,739 stories of Nov 10 to 22 opened and matched against every varsity and JV name, 139 of the 141 women's and beach volleyball signing releases among them; Penn, Cal Poly (whose beach release of Nov 16 names five others; Kylee Mark's commitment is indoor), Hamilton, UC Riverside and Portland had posted no volleyball signing release, so Hotha, Mark, Yu-Yang, Fleming and Jones stay committed, and no posted release omits a player listed here. 76 sites refused and were not read; Santa Clara's began answering with a bot check, so its volleyball signing story of Nov 11 (read on 2026-11-13 against varsity names only), its beach volleyball story of Nov 16 and its other sports' signing stories were not read. Lists: Prep Dig's California list (163 rows), its team pages for 58 of the 60 schools and a player-page probe for all 589 class-of-2027, class-of-2028 and ungraded varsity rows; PrepVolleyball's master list (836 rows) and California player database (1,050 players); the sites of 36 of the 37 clubs in clubs.json; the Prep Network's other-sport lists, TopDrawerSoccer, MileSplit and ADVNC; the 83 linked NCSA pages of seniors, juniors and ungraded rows (none shows a commitment). All 17 Prep Dig, PrepVolleyball and Vision quotes already here were found on their pages. News: 2,838 posts on 29 student-paper sites (The Catalyst at Notre Dame Belmont and The Halo Tribune at Santa Teresa are new this round), 3,887 posts of Nov 1 to 22 on 12 local news sites, the WCAL and WBAL schools' own news and athletics pages, and the 41 public schools' home pages; the signing posts found (Saint Francis' of Nov 12, Menlo's, King's Academy's page, St. Ignatius' list of 19 seniors, on which no volleyball player appears) name no rostered player. Web searches: one each for 60 class-of-2028 varsity players at 17 schools, and eight more by the list pass; none found a commitment, and the other 208 juniors not in the file were covered through the lists and the papers, not one by one. SportsRecruits: all 94 linked profiles re-read twice (two show a commitment, both in this file); an address probe for all 512 class-of-2027 and class-of-2028 rows with no linked profile (2,673 addresses, 619 live pages, no commitment by a rostered player); its commits feed for program ids 1 to 112, 454 to 474 and 1,045 to 3,700 (ids 475 to 1,044 have never been read for this build). Not read: the Mercury News' and San Francisco Chronicle's subscriber-only article text, Saint Francis' school site, STEPS Lacrosse, SwimCloud and a beach club's site (a bot check in the browser too), The Bear Witness at Branham (no answer), 31 NCSA pages of freshmen and sophomores, Instagram; no student paper was found for 32 schools.",
+    "On 2026-11-25 a commitment round over all four builds (field hockey, volleyball, soccer, basketball), every row as it stood that day, varsity and JV, by the same rules; docs/DATA-SOURCES.md §1.15 says what it read and did not. For volleyball it added one: Sophia Giles (The King's Academy) signed with Santa Clara in softball, from Santa Clara's own release of 2026-11-11, which names 'Sophie Giles' with The King's Academy and her First Team All-WBAL volleyball season (high; the nickname is backed by the school, the sport and the class). The 2026-11-22 round's exact-name match missed it. Nothing new on Prep Dig, PrepVolleyball or the 36 clubs' sites."
   ],
   "colleges": [
     {
@@ -279,6 +280,28 @@
         }
       ],
       "checkedOn": "2026-11-22"
+    },
+    {
+      "slug": "santa-clara",
+      "name": "Santa Clara University",
+      "shortName": "Santa Clara",
+      "city": "Santa Clara",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "softball",
+          "division": "ncaa-d1",
+          "conference": "West Coast Conference",
+          "url": "https://santaclarabroncos.com/sports/softball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://santaclarabroncos.com/sports/softball",
+          "what": "Santa Clara University Athletics' softball page (HTTP 200, read 2026-11-25). Embedded Sidearm metadata reads school_division DI and school_conference West Coast; both are the school's values. The university is in Santa Clara, California."
+        }
+      ],
+      "checkedOn": "2026-11-25"
     }
   ],
   "commitments": [
@@ -699,6 +722,36 @@
         }
       ],
       "basis": "Medium: no one page states it all. Vision Volleyball Club's College Bound page lists 'Stella Broshear 16G, OH 5'10\" LMU (Beach)' under its class of 2028, among players who 'committed to college while playing for Vision'; it names no high school. Prep Dig's player page says Stella Broshear, class of 2028, attends Archbishop Mitty and plays for Vision Volleyball Club (the club tie already in clubs.json), and a scout's note there speaks of 'LMU Beach', but the page does not say committed. So the match rests on the name, the class year and the club she is tied to, as field hockey's club-table matches do. 'LMU' is read as Loyola Marymount, whose beach volleyball team the scout's note names. Vision's line was on its page in the 2026-11-14 round, which did not match it; found by the 2026-11-22 list pass, both pages read twice and again at assembly. No date; a class-of-2028 player cannot sign before November 2027."
+    },
+    {
+      "teamSlug": "kings-academy",
+      "athleteId": "a3ca7485-4705-4c09-8226-00a8bdc47cf3",
+      "playerId": "p6c88e64af2",
+      "fullName": "Sophia Giles",
+      "college": "santa-clara",
+      "sport": "softball",
+      "status": "signed",
+      "asOf": "2026-11-11",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/11/softball-unveils-athletic-and-balanced-2027-recruiting-class.aspx",
+          "kind": "college",
+          "quote": "Sophie Giles | 1B/OF | 5-8 | L/L | San Jose, Calif. | The King's Academy Giles is a three-sport athlete who also excels in soccer and volleyball receiving All-West Bay Athletic League recognition in all three sports.",
+          "statedSchool": "The King's Academy",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-11-11"
+        },
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/11/softball-unveils-athletic-and-balanced-2027-recruiting-class.aspx",
+          "kind": "college",
+          "quote": "In 2025, the San Jose, California native was named First Team All-WBAL in volleyball and an Honorable Mention All-WBAL in soccer, having played each sport three and four seasons, respectively, at The King's Academy.",
+          "statedSchool": "The King's Academy",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-11-11"
+        }
+      ],
+      "basis": "Santa Clara University's own softball release of 2026-11-11 ('Softball Unveils Athletic and Balanced 2027 Recruiting Class') says the staff signed five players and gives 'Sophie Giles | 1B/OF | … | San Jose, Calif. | The King's Academy'. The roster row is Sophia Giles, a King's Academy senior on the volleyball varsity; the release says Sophie, so the nickname rule applies, and what backs it beyond the name is the school the release names, its statement that she was First Team All-WBAL in volleyball there in 2025, and the class (a 2027 signing class). No other Giles is on a King's Academy roster in any build. The class year is the release's title's, not a line of her own. The 2026-11-22 round, matching exact first names, missed it; found by the 2026-11-25 college pass, fetched twice, and re-read at assembly."
     }
   ]
 }

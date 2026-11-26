@@ -1738,7 +1738,12 @@ County Sports (no answer), Extra Inning Softball's posts (members only), Redwood
 (on no page found), Instagram; no student paper was found for about 19 NorCal and 35 SoCal schools. No
 name-by-name web search ran: the 50 searches made returned almost nothing published after Nov 5.
 
-*Recall is partial.* On 2026-11-22, 39 of the 1,775 varsity rows have a commitment, at 23 of the 102
+*The 2026-11-25 round* covered all four builds at once and is described in §1.15 ("The commitment round of
+2026-11-25"). For field hockey it added no row; it added fifteen sources (The Tower, Bishop's student paper, for Lola
+Conway and Emerson Davis; eleven players' own MAX pages; Kendall Gann's FieldLevel page, which makes hers high) and
+re-read every list and club page above.
+
+*Recall is partial.* On 2026-11-25, as on 2026-11-22, 39 of the 1,775 varsity rows have a commitment, at 23 of the 102
 schools (Torrey Pines' third added on 2026-11-22). On 2026-11-13 it was 38 at 23
 (San Marcos added on 2026-11-13). On 2026-11-06 it was 37 at 22 (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19
 (Valley Christian and Archbishop Mitty added on 2026-10-12, Temecula Valley on 2026-10-22): Southern California's 14 at 8 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
@@ -3317,6 +3322,10 @@ then assembled onto the first round's files (each new tie or profile says it is 
   read.
 - **Web search** by name: every senior at the 60 schools, 40 of the 271 juniors, no ungraded row; one standard
   query per player. Nothing rests on a search result alone.
+- **The commitment round of 2026-11-25** covered all four builds and is described in §1.15. For volleyball it found
+  Sophia Giles (The King's Academy) signed with Santa Clara in softball, from Santa Clara's own release of 2026-11-11
+  ("Sophie Giles … The King's Academy", with her All-WBAL volleyball season); the 2026-11-22 round's exact-name match
+  had missed the nickname. Prep Dig, PrepVolleyball, Vision and the other 35 club sites gave nothing new.
 - **The commitment round of 2026-11-22**, over the 876 varsity rows and 473 JV players of all 60 schools, in five
   passes, every finding re-read at assembly. Sites that refuse a plain request were read in headless Chromium under
   its ordinary identity where it was shown the page (no CAPTCHA, login or paywall passed). *Found:* Stella Broshear
@@ -3680,6 +3689,54 @@ assembler per sport built the files from them with a second read, and they are k
   403 to an automated read) and MaxPreps' career and roster pages (MaxPreps serves its 403 page here), so there is
   no NCSA or claimed-MaxPreps profile for these teams; SportsRecruits addresses that redirect (307) to another
   sport's subdomain were skipped.
+- **The commitment round of 2026-11-25, all four builds** (field hockey, volleyball, soccer, basketball; §1.1j3 and
+  §1.11 point here). Over each build's rosters as they stood that day: field hockey 1,775 varsity rows and 860 JV
+  names, volleyball 876 and 473, soccer 876 and 815, basketball 1,212 and 320; the PCAL and PSAL soccer and
+  basketball teams, added that day, had never had a commitment round. Seven passes, each on one source family, every
+  kept page read twice and re-read at assembly; refusing sites read in headless Chromium, stopping at any challenge,
+  login or paywall. *Rule change (owner, 2026-11-25):* a club's own commitment announcement counts when the roster row
+  is already tied to that club in `clubs.json`; such commitments are medium.
+  *College releases:* 1,083 athletics hosts; classic Sidearm sites answer
+  `/services/archives.ashx/stories?index=1&page_size=200&sport=0&season=0&search=` with their latest 200 stories of
+  every sport (924 hosts answered); WMT sites (Stanford, SJSU, UCLA, SDSU and others) through `/sitemap.xml`. 8,036
+  stories of Nov 9 to 25 opened on 635 hosts (2,288 dated Nov 20 or later; 1,395 signing releases from 320 hosts),
+  matched against every build's rows, boys included, by exact name, school plus surname, and first-name prefix near a
+  California mention. 62 of 70 hosts that refused curl rendered in Chromium; 8 did not (Cal Maritime, Willamette,
+  Penn State Harrisburg, Delaware Valley, Colby, Elizabeth City State, Macalester's main site, St. Thomas Aquinas), and
+  Harvard's story pages showed a bot check. Found: Sophia Giles (volleyball, The King's Academy) signed with Santa Clara
+  in softball ("Sophie Giles", with the school, in Santa Clara's release of Nov 11).
+  *SportsRecruits and linked profiles:* every linked SportsRecruits, MAX Field Hockey, FieldLevel and NCSA profile
+  re-read for a commitment line; eleven field hockey players' own MAX pages and Kendall Gann's FieldLevel page cited
+  (MAX answers curl with 403 and was read in Chromium); an address probe of rows new since the earlier probes linked
+  two soccer pages (Mills). SportsRecruits' commits feed was read for program ids 113 to about 480 by the time of
+  assembly: the host answered with repeated 502s and the rest of the feed (to 1,044) is unread.
+  *Lists and clubs:* field hockey and volleyball as on 2026-11-22 (MAX's table, now 1,759 rows; FH College Path 2027
+  348 and 2028 209; Prep Dig's California list 166; PrepVolleyball 837; all 36 volleyball and 27 field hockey club
+  sites), with nothing new for a rostered player; two new MAX player pages linked as profiles (Grace Moniak,
+  Huntington Beach; Arshpreet Ruprah, Fremont). Soccer: TopDrawerSoccer's California search (2027: 225, 2028: 128)
+  and all-state search, 198 roundups and features from July 2025, SoccerWire's tracker, PrepSoccer's California list
+  (168; the filter wants `?state=California`) and 1,736 posts, 113 pages on 33 club hosts; found Caelyn Dyer and
+  Jasmine Vemuri (Notre Dame San Jose, roster new since 2026-11-21) and, under the club rule, Rebecca Iffla, Audrey
+  Pfeiffer, Kenzie Willerer and Kaitlyn Gray, and Monterey Surf's three (Bailey Portillo, Samantha Torres, Sherlyn
+  Farfan), tied once Monterey Surf's N1 rosters were kept. Basketball: Prep Hoops' commitment lists and 711 player
+  pages, Prep Redzone's California list and 624 pages, On3/Rivals' California rankings and a by-name search of all
+  1,483 names, Prep Baseball Report, Perfect Game and VerbalCommits (readable in a browser this time), TopDrawerSoccer
+  and SoccerWire boys, Cal-Hi Sports (200 posts), SwimSwam (1,200 posts): no new commitment; VerbalCommits for
+  Emmanuel Ahamefule and Prep Hoops' second page for Brady Clugage (now high).
+  *News:* Bay Area and Monterey Bay: 65 WordPress hosts read whole for Aug 1 to Nov 25 (13,062 posts; 40 student and
+  24 local papers, the first full read of the Pajaronian, BenitoLink, Free Lance, Rustler, Salinas Valley Tribune,
+  Press Banner, Good Times, Gilroy Dispatch and Morgan Hill Times), headlines only at six paywalled papers, schools'
+  own pages (Saint Francis' Nov 12 roundup read at last, in its print view); found Alina Decker (Menlo-Atherton) to
+  Brandeis in track and field, medium because MaxPreps lists her as "Decker Alina", and the M-A Chronicle as a source
+  for Juliana Pandolfo. Southern California and the EAL: 18 student-paper and athletics WordPress hosts for Nov 17 to
+  25, local outlets, about 100 school and district pages; The Tower (Bishop's) for Lola Conway and Emerson Davis.
+  *Not read:* the Salinas Californian (HTTP 402), Aragon Outlook, kehillah.org, Branham's Bear Witness, the OC
+  Register's signing list (subscribers only), hw.com, sdprepinsider.com, scrippsranchnews.com; 247Sports (CAPTCHA),
+  SwimCloud and Inside Lacrosse (Cloudflare), ESPN's recruiting database, FieldLevel's commitments page; Perfect Game's
+  rows were checked by eye, not saved, and nothing from it is cited. Web search ran short of new pages: about 65 calls
+  over the passes, almost none returning anything published in November 2026. Many winter rosters (soccer at Saint
+  Francis, Carmel, Hollister, Monterey and Stevenson; basketball at Carmel, Monterey and King City) were still empty,
+  so stories naming their players could not be matched; the passes' reports list such leads for when they post.
 
 ### 1.6 Rejected sources (one line each)
 
