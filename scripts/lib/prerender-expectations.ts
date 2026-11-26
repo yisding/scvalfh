@@ -6,7 +6,7 @@
  *
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
  * loads it), the league config (`lib/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
- * file (through lib/players/clubs.ts). Games take their slug (`Game.slug`, lib/game-slug.ts), which
+ * file (through lib/players/clubs.ts), and the festival file (through lib/festival/festival.ts). Games take their slug (`Game.slug`, lib/game-slug.ts), which
  * tests/game-urls.test.ts holds and both gates' ':' check backs up (a contest id never reaches a path).
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
@@ -16,12 +16,13 @@
  */
 
 import { getClubSlugs } from '../../lib/players/clubs';
+import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs } from '../../lib/festival/festival';
 import { gameSlug } from '../../lib/game-slug';
 import { gameAliasTable } from '../../lib/game-urls';
 import { getJvGameSlugs } from '../../lib/jv/jv';
 import { getFreshmanGameSlugs, hasFreshmanLevel } from '../../lib/freshman/freshman';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
-import { HAS_CLUB_CALENDAR, HAS_RECRUITING, IS_FIELD_HOCKEY } from '../../lib/sports/current';
+import { HAS_CLUB_CALENDAR, HAS_FESTIVAL, HAS_RECRUITING, IS_FIELD_HOCKEY } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 
@@ -42,17 +43,24 @@ const ALL_FIXED_PAGES = [
   'jv',
   'freshman',
   'draft/awards',
+  'festival',
+  'festival/schedule',
+  'festival/clubs',
 ] as const;
+
+/** The National Hockey Festival's fixed pages (DESIGN §35): field hockey's build only (HAS_FESTIVAL). */
+const FESTIVAL_PAGES: readonly string[] = ['festival', 'festival/schedule', 'festival/clubs'];
 
 /**
  * The fixed pages this build prerenders: a route this sport's build does not have (lib/sports/current.ts
- * HAS_RECRUITING: every high school build, not the VAL's; HAS_CLUB_CALENDAR: field hockey; app/draft/awards: field hockey) is
+ * HAS_RECRUITING: every high school build, not the VAL's; HAS_CLUB_CALENDAR, HAS_FESTIVAL: field hockey; app/draft/awards: field hockey) is
  * a 404 there, which `next build` writes as a not-found page and vinext skips, so it is not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
   (p) =>
     (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)) &&
     (HAS_CLUB_CALENDAR || p !== 'club-calendar') &&
+    (HAS_FESTIVAL || !FESTIVAL_PAGES.includes(p)) &&
     (IS_FIELD_HOCKEY || p !== 'draft/awards') &&
     (hasFreshmanLevel() || p !== 'freshman'),
 );
@@ -68,6 +76,10 @@ export const SKIPPED_ROUTES: readonly string[] = [
   ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
   ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),
   ...(IS_FIELD_HOCKEY ? [] : ['/draft/awards']),
+  // The National Hockey Festival (DESIGN §35): any other build renders the fixed pages as a 404 and has no params.
+  ...(HAS_FESTIVAL
+    ? []
+    : ['/festival', '/festival/schedule', '/festival/clubs', '/festival/clubs/:club', '/festival/teams/:team', '/festival/:division']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
   // The freshman level (girls soccer and boys basketball): any other build renders the hub as a 404 and has no params.
   ...(hasFreshmanLevel() ? [] : ['/freshman', '/freshman/:league', '/freshman/game/:id']),
@@ -95,6 +107,12 @@ export interface ExpectedFamilies {
   freshmanLeagueIds: readonly string[];
   /** Every listed freshman game's slug (lib/freshman/freshman.ts): the /freshman/game/[id] family. */
   freshmanGameParams: readonly string[];
+  /** The /festival/[division] family (lib/festival/festival.ts): field hockey's divisions, none in any other build. */
+  festivalDivisions: readonly string[];
+  /** The /festival/clubs/[club] family: every festival club with a team. */
+  festivalClubs: readonly string[];
+  /** The /festival/teams/[team] family: every festival team. */
+  festivalTeams: readonly string[];
 }
 
 /** The items of `a` not in `b`. */
@@ -160,6 +178,9 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     jvGameParams: getJvGameSlugs(),
     freshmanLeagueIds: hasFreshmanLevel() ? [...LEAGUE_IDS] : [],
     freshmanGameParams: getFreshmanGameSlugs(),
+    festivalDivisions: HAS_FESTIVAL ? festivalDivisionSlugs() : [],
+    festivalClubs: HAS_FESTIVAL ? festivalClubSlugs() : [],
+    festivalTeams: HAS_FESTIVAL ? festivalTeamSlugs() : [],
   };
 }
 
@@ -193,9 +214,18 @@ export function makeFamilyChecker(
       .filter((name) => name !== '' && !name.includes('/') && !name.startsWith('['));
   }
 
+  /**
+   * The family's members among the pages directly inside `<family>/`: every one but a fixed page living in the same
+   * folder (festival/schedule.html and festival/clubs.html sit beside the /festival/[division] pages, and another
+   * sport's build writes them as 404 pages there too), unless the family expects that name itself (history/2025-26).
+   */
+  function membersOf(family: string, expected: readonly string[]): string[] {
+    return pagesIn(family).filter((x) => expected.includes(x) || !(ALL_FIXED_PAGES as readonly string[]).includes(`${family}/${x}`));
+  }
+
   /** Exact page set for a family, then OG/page parity BY NAME (never by count). */
   function family(name: string, expected: readonly string[], { og }: { og: boolean }): void {
-    const got = pagesIn(name);
+    const got = membersOf(name, expected);
     counts.push(`${name} ${got.length}/${expected.length}`);
     const missing = diff(expected, got);
     const extra = diff(got, expected);
@@ -230,7 +260,13 @@ export function makeFamilyChecker(
     // One page per club of data/field-hockey/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.
     family('clubs', expected.clubSlugs, { og: false });
+    // The National Hockey Festival (DESIGN §35), all on the root OG card: one page per division (beside the fixed
+    // festival/schedule and festival/clubs pages, which membersOf leaves out), per club and per team. pagesIn reads
+    // only a folder's direct children, so festival/clubs/X.html and festival/teams/X.html never count as divisions.
+    family('festival', expected.festivalDivisions, { og: false });
+    family('festival/clubs', expected.festivalClubs, { og: false });
+    family('festival/teams', expected.festivalTeams, { og: false });
   }
 
-  return { pagesIn, cardsIn, family, allFamilies, counts };
+  return { pagesIn, membersOf, cardsIn, family, allFamilies, counts };
 }

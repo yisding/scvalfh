@@ -20,6 +20,9 @@
  * | `/playoffs` HTML gzip                                          | ≤ 5.1 × baseline `playoffs`        |
  * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
  * | `/leaders` HTML gzip                                           | ≤ 2.7 × baseline `standings`       |
+ * | `/festival`, `/festival/schedule`, `/festival/clubs` HTML gzip (field hockey) | ≤ 0.5 ×, 0.6 ×, 0.3 × baseline `schedule` |
+ * | largest `/festival/<division>`, `/festival/clubs/<club>`, `/festival/teams/<team>` HTML gzip | ≤ 0.4 ×, 0.4 ×, 0.3 × baseline `schedule` |
+ * | first-load JS of `/festival`, `/festival/schedule`, `/festival/[division]`, `/festival/clubs/[club]`, `/festival/teams/[team]` | ≤ baseline `standings` + 24 KB |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 1600 KB               |
  *
  * THE SOUTHERN CALIFORNIA AMENDMENT (DESIGN §24), measured 2026-10-06. The 99-team, nine-league
@@ -99,7 +102,7 @@ import { gzipSync } from 'node:zlib';
 
 import { LEAGUE_IDS } from '../lib/leagues';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '../lib/pipeline/steps/assemble';
-import { DATA_DIR } from '../lib/sports/current';
+import { DATA_DIR, HAS_FESTIVAL } from '../lib/sports/current';
 
 const APP = '.next/server/app';
 const STATS = '.next/diagnostics/route-bundle-stats.json';
@@ -225,6 +228,38 @@ if (!workerOnly) {
     check(`/teams/<slug> HTML gzip, largest of ${teamGz.length}`, biggest.bytes, 6.0 * baseline.teams.htmlGzip, `6.0 × teams: ${biggest.f}`);
   }
 
+  // The National Hockey Festival (DESIGN §35.8), field hockey's build only. Its pages have no baseline on `main`, so
+  // each line is a multiple of the nearest page kind that has one: `schedule`, the long game list, which is what
+  // the festival's schedule, hub, division and club pages mostly are (295 games, 118 hidden follow cards on the
+  // hub). The lines were set on 2026-11-26 by §24.6's rule (measured × 1.12 / baseline, rounded up to one
+  // decimal) from the larger of two builds of this tree: the committed file (24 of 295 games final) and the same
+  // file with every game final and every placement side named, the event's end state. The schedule page grows
+  // most with results (50.8 → 55.8 KB, a score on every row); the hub shrinks (its "Up next" empties).
+  if (HAS_FESTIVAL) {
+    const sched = baseline.schedule.htmlGzip;
+    check('/festival HTML gzip', gz(file('festival.html')), 0.5 * sched, '0.5 × schedule');
+    check('/festival/schedule HTML gzip', gz(file('festival/schedule.html')), 0.6 * sched, '0.6 × schedule');
+    check('/festival/clubs HTML gzip', gz(file('festival/clubs.html')), 0.3 * sched, '0.3 × schedule');
+    // The largest page of each family, by name. festival/schedule.html and festival/clubs.html share the
+    // division pages' folder and are not division pages.
+    for (const [family, what, times] of [
+      ['festival', 'division', 0.4],
+      ['festival/clubs', 'club', 0.4],
+      ['festival/teams', 'team', 0.3],
+    ] as const) {
+      const dir = path.join(APP, family);
+      const pages = existsSync(dir)
+        ? readdirSync(dir).filter((f) => f.endsWith('.html') && !(family === 'festival' && (f === 'schedule.html' || f === 'clubs.html')))
+        : [];
+      if (pages.length === 0) {
+        failures.push(`${dir} has no prerendered ${what} pages — run \`pnpm build\` first`);
+        continue;
+      }
+      const largest = pages.map((f) => ({ f, bytes: gz(file(`${family}/${f}`)) })).reduce((m, x) => (x.bytes > m.bytes ? x : m));
+      check(`/${family}/<${what}> HTML gzip, largest of ${pages.length}`, largest.bytes, times * sched, `${times.toFixed(1)} × schedule: ${largest.f}`);
+    }
+  }
+
   // ------------------------------------------------------------ first-load client JS
   if (!existsSync(STATS)) {
     failures.push(`${STATS} missing — run \`pnpm build\` first`);
@@ -255,6 +290,14 @@ if (!workerOnly) {
       ['/teams/[slug]', 'teams'],
       ['/standings/[league]', 'standings'],
       ['/leaders', 'standings'],
+      // The festival's follow controls, the "Only my teams" filter and the freshness notice are its only client
+      // modules (DESIGN §35), mounted under app/festival alone: no data or zod may reach them
+      // (tests/ui/client-boundary.test.ts), so these routes sit with the other `standings`-sized pages.
+      ...(HAS_FESTIVAL
+        ? ['/festival', '/festival/schedule', '/festival/[division]', '/festival/clubs/[club]', '/festival/teams/[team]'].map(
+            (route): [string, BaselineName] => [route, 'standings'],
+          )
+        : []),
     ];
     for (const [route, base] of js) {
       const row = stats.find((r) => r.route === route);

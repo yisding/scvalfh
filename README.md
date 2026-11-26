@@ -187,6 +187,12 @@ Per-league pages show their own region's league chips.
 | `/clubs` | "Which clubs do players here play for?" The 28 youth field hockey clubs by region, each region's section scoped to its half of the site under the NorCal/SoCal switcher; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). All 102 teams' schools have been swept for clubs |
 | `/clubs/[slug]` | One club (28 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages, then the tournaments and leagues it hosts or its own pages list, each linking `/club-calendar` |
 | `/club-calendar` | "When and where do Northern California club teams play?" The club tournaments, league days and national events of `data/field-hockey/club-events.json`, as the organizers' own pages listed them on the day it was read (the header prints it): a league part-way through its season that day (`#under-way`), then one section per month with an event coming up (`#month-2026-12`; each event its own anchor, `#<event id>`), with its dates, place, who plays, host club and the clubs whose own pages list it, and links to the event page, its fixtures and results, and registration; then the recurring events whose next dates are not posted (`#not-announced`), where club fixtures are posted (`#where-posted`: the association calendars, tournament sites and the national events calendar), the events already over (`#earlier`) and how the list is made (`#how-made`). Field hockey only |
+| `/festival` | The 2026 National Hockey Festival (USA Field Hockey, Nov 26–28, Naples, Fla.), from TourneyMachine's public results (`data/field-hockey/festival.json`, refreshed while games are on; DESIGN §35): a status line from the data ("Day 2 of 3 · 143 of 295 games final"), "Your teams" (the teams you follow, saved in this browser only), the California teams (Northern, then Southern California), the latest results, what is up next, every division, the clubs and how the results are read. Times are venue time, labelled ET, with PT beside them in slot headings. Field hockey only |
+| `/festival/schedule` | Every festival game by day and time slot, with links to jump to each day, each slot headed in ET and PT; an "Only my teams" filter (no JavaScript shows every game) |
+| `/festival/clubs` | The clubs at the festival A–Z, the California clubs first (Northern, then Southern California), each with its region where known, its teams and their combined record |
+| `/festival/clubs/[club]` | One festival club (one page per club): its teams with their records and pool places, "Follow all", one schedule of every team's games merged by time (what a parent juggling fields needs), then one section per team with its games, pool table and Saturday placement paths; a club this site has a page for links `/clubs/<slug>`, which links back |
+| `/festival/teams/[team]` | One festival team (one page per team, `/festival/teams/u16-san-francisco-hawks`): record, points, pool place, next game, its games with results, its pool table and its placement path; Follow |
+| `/festival/[division]` | One festival division (`u10`, `u12`, `u14-coed`, `u14-7v7`, `u14-11v11`, `u16`, `u19`, `adult`): its pool tables, its placement bracket as the feed lays it out, and its schedule |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the tracked varsity rosters (all 102 teams' have been swept) a public page says have committed to (or signed with) a college team, in field hockey or any other sport, split NorCal/SoCal by the region toggle, each region by class year (`#norcal-class-2027`), each with the college, the sport, its level and the pages it rests on, then that region's colleges (`#norcal-colleges`); then how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
 | `/recruiting` | "Who here has a recruiting profile, a club or a college commitment?" Every school's recruiting data on one page, under the NorCal/SoCal switcher: region → league (`#scval`, …) → school (`#<team slug>`), each listed player with the commitment line, club line and recruiting-profile links their team page's roster shows (the same rows and words), then how the page is built (`#how-matched`). Only schools with a listed player appear: a school with none is not named or counted. Every team roster with a listed player links its school's block |
 | `/playoffs` | "Playoffs", one block per region, each opening with "Where every league stands" (`#board-norcal`, `#board-socal`: one row per postseason with what it is and its next dated item, linking its section) and "This week in the postseason" (`#this-week-norcal`, `#this-week-socal`: the region's postseason games and dated events from two days back to a week ahead, at most 12 rows, each linking its game page or block). Every league has a section of the same shape (DESIGN §32). `#norcal`: the CCS intro and `#bracket` under it (one path per proven CCS division, "CCS Division 1" and "CCS Division 2", from the games MaxPreps lists, with seeds and pairing cards from `data/field-hockey/ccs-bracket-2026.json`; before seeding, one sentence), then `#scval #bval #pcal` (each league's crossover and play-in cards first, `#<league>-pairings`, with their results, then its division tables), the at-large berths, the key dates with each round's site in the CCS calendar's words, `#mcal` (the tournament's next round or champion, linking `/playoffs/mcal`) and `#eal` (the Super Regional's dates, the top-six rule, the listed site and streams, the Guidelines and the results by day as MaxPreps posts them; no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, the round dates (`#sds-round-dates`) and links to the Section's brackets sheet, the officials' calendar and the Section's field hockey page; `#sds-bracket`, the Section's published brackets with MaxPreps' results, from `data/field-hockey/sds-brackets-2026.json`; never a projected place or a seed word), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card (with the Tournament of Champions, `#toc`, the postseason for both the Sunset and the LA independents) and an `#independents` card pointing to it |
@@ -204,6 +210,8 @@ on every `/standings` page. After hydration Scores, Teams and Playoffs follow th
 looking at or have chosen (Teams to that league's tables, `/teams#<league>`). `/clubs` is in
 neither: it is linked from `/teams`, from the Roster section of every team page and from `/about`.
 `/club-calendar` is not in the nav either: it is linked from `/clubs` and from every club page with an event.
+`/festival` is a row of the phone bar's More sheet, and the home page points to it around the event's dates; each
+festival club this site has a club page for is linked from that page (field hockey only).
 Nor is `/commits`: it is linked from `/teams`, from `/about` and from the roster of every team page
 with a committed player. Nor is `/recruiting`: it is linked from `/teams`, `/clubs`, `/commits` and the roster of every
 team page with a listed player. The `/clubs`, `/clubs/[slug]`, `/commits` and `/recruiting` rows hold for every high
@@ -323,6 +331,27 @@ For this to work on a deployed copy of this repo:
    branch — already declared in the workflow, but the repo-level default must allow it).
 3. Connect your host (see "Deploy notes") to redeploy automatically on push to `main` — most
    static hosts do this without any extra configuration once the repo is linked.
+
+### The festival refresh
+
+`.github/workflows/update-data-festival.yml` keeps `/festival` (the 2026 National Hockey Festival, Nov 26-28, Naples,
+Fla.) current while games are on: `pnpm fetch-festival` reads TourneyMachine into `data/field-hockey/festival.json`,
+`tests/festival-file.test.ts`, `tests/tourneymachine.test.ts` and `tests/festival-clubs.test.ts` run on it, and the
+file is committed (`data: refresh festival <day> · <finals> of <games> games final`) only when its content changed.
+Games start on the hour and last 55 minutes, so it runs 12, 32 and 52 minutes after each slot ends (:07, :27 and :47
+past the next hour, UTC crons) and once more 2 h 15 min after each day's last slot. The crons are derived from the
+festival's slots: `pnpm festival-crons` prints them for the committed file (`lib/festival/festival-crons.ts`).
+`tests/workflows.test.ts` holds the workflow's lines to the derivation over a frozen copy of the slots as first
+published (`tests/fixtures/festival/slots-2026.json`), so a slot TourneyMachine moves never fails the suite (which
+also gates field hockey's Saturday refresh, ci and the deploy); instead the job's "Schedule drift check" step warns
+on the run, with the lines to paste, when the fetched file's crons differ from the workflow's.
+
+Each run first checks, with nothing checked out, that the Eastern date is Nov 26-28 and that TourneyMachine's
+~30-byte version stamp differs from the committed file's `sourceVersion`; when they are equal the refresh job is
+skipped, so a quiet run costs one tiny request. Any error in that check refreshes anyway. The job has its own
+concurrency group, `update-data-festival`, so it never waits behind the other refreshes. A manual **Run workflow**
+with `force` runs outside the dates and reads the whole feed whatever its version. Schedules run only from the
+default branch.
 
 ### Self-hosting the cron
 
@@ -3765,6 +3794,9 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   `update-data-basketball.yml` refreshes `data/basketball/` Nov–Mar (6:07 and 15:07 UTC, after the other two,
   in the same concurrency group), ci's `basketball` job builds and asserts the site on every PR, and
   `deploy-cloudflare.yml` lets its data commits through. No domain is chosen in the repo.
+- **The National Hockey Festival.** `update-data-festival.yml` commits `data/field-hockey/festival.json` up to
+  three times an hour while the festival's games are on (Nov 26-28, 2026; see "The festival refresh"). Only the
+  field hockey build reads it, so only that project rebuilds, and `deploy-cloudflare.yml` lets its commits through.
 - **Rosters refresh for the winter sports.** `update-data-soccer.yml` and `update-data-basketball.yml` also
   run `pnpm fetch-rosters` and `pnpm fetch-rosters --level jv` on every run and commit
   `data/<sport>/rosters.json` and `data/<sport>/jv-rosters.json` when their content changed: coaches post
@@ -3933,8 +3965,8 @@ A real deploy needs:
   build time.
 
 `.github/workflows/deploy-cloudflare.yml` runs that deploy from GitHub Actions. It follows the `ci`
-workflow and the three refreshes, `update-data`, `update-data-soccer` and `update-data-basketball`
-(`workflow_run`, on `main`), rather than `push`, because each refresh
+workflow and the refreshes, `update-data`, `update-data-soccer`, `update-data-basketball`, `update-data-volleyball`,
+`update-data-val-soccer` and `update-data-festival` (`workflow_run`, on `main`), rather than `push`, because each refresh
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
 `main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a

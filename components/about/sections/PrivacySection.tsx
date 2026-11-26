@@ -1,9 +1,12 @@
 import SectionHeader from '../../ui/SectionHeader';
-import { IS_FIELD_HOCKEY, SPORT } from '../../../lib/sports/current';
+import { HAS_FESTIVAL, IS_FIELD_HOCKEY, SPORT } from '../../../lib/sports/current';
 import { RECORD_SLASH_WORDS } from '../../words/score-words';
 
 /**
- * /about#a11y (and `#privacy`): what the site stores, and its accessibility floor. Static.
+ * /about#a11y (and `#privacy`): what the site stores, and its accessibility floor. Static. Field hockey's build has
+ * a fifth stored thing, the National Hockey Festival teams a reader follows (`scvalfh.festivalTeams`, DESIGN §35);
+ * the other builds have no festival pages, so nothing there ever writes it. components/prefs/local-store.ts lists the
+ * keys.
  */
 export function PrivacySection() {
   return (
@@ -12,10 +15,11 @@ export function PrivacySection() {
       <SectionHeader kicker="Privacy &amp; accessibility" />
       <div className="sx-prose">
         <p>
-          This site stores exactly four things, all only in your browser: a theme choice, a pinned
-          team, the league you chose to see on the home page, and the region you chose (Northern or
-          Southern California{IS_FIELD_HOCKEY ? '' : `; this ${SPORT.noun} site covers Northern California only`}). None of it is ever sent anywhere &mdash; there are no accounts, no
-          analytics, no tracking cookies and no requests to other sites from any page. School
+          This site stores exactly {HAS_FESTIVAL ? 'five' : 'four'} things, all only in your browser: a theme choice, a
+          pinned team, the league you chose to see on the home page, {HAS_FESTIVAL ? '' : 'and '}the region you chose
+          (Northern or Southern California{IS_FIELD_HOCKEY ? '' : `; this ${SPORT.noun} site covers Northern California only`})
+          {HAS_FESTIVAL ? ', and the National Hockey Festival teams you follow' : ''}. None of it is ever sent anywhere
+          &mdash; there are no accounts, no analytics, no tracking cookies and no requests to other sites from any page. School
           colors come from MaxPreps&rsquo; data, never an image copied from another site, and the
           fonts ship with the site.
         </p>

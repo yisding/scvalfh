@@ -6,6 +6,8 @@ import BottomTabBar from '../components/layout/BottomTabBar';
 import SiteHeader from '../components/layout/SiteHeader';
 import { BUILD_INSTANT } from '../components/layout/build-instant';
 import { DISCLOSURE_SCRIPT } from '../components/layout/disclosure-script';
+import { festivalHeadScript } from '../components/festival/follow-script';
+import { festivalNoticeCloses } from '../components/home/FestivalNotice';
 import { buildLeagueScopeCss } from '../components/prefs/league-scope-css';
 import { buildPrefsScript } from '../components/prefs/prefs-script';
 import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '../components/layout/site';
@@ -14,8 +16,10 @@ import { THEME_COLOR, THEME_SCRIPT } from '../components/prefs/theme-script';
 import PinnedTeamMarks from '../components/prefs/PinnedTeamMarks';
 import TwinMarks from '../components/layout/TwinMarks';
 import { getFetchedAt, getTeams } from '../lib/data';
+import { getFestival } from '../lib/festival/festival';
 import { DEFAULT_REGION } from '../lib/league-config/sections';
 import { LEAGUE_IDS, regionOf } from '../lib/leagues';
+import { HAS_FESTIVAL } from '../lib/sports/current';
 
 import './globals.css';
 
@@ -112,6 +116,8 @@ const PREFS_SCRIPT = buildPrefsScript({
   defaultRegion: DEFAULT_REGION,
 });
 const SCOPE_CSS = buildLeagueScopeCss(LEAGUE_IDS);
+/** The festival head script, with the instant the home page's notice comes down baked in (field hockey only). */
+const FEST_HEAD_SCRIPT = HAS_FESTIVAL ? festivalHeadScript(festivalNoticeCloses(getFestival().tournament)) : '';
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   const snapshotAt = getFetchedAt();
@@ -127,6 +133,12 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <PinnedTeamMarks /> below re-applies it after every client-side navigation; see
             components/prefs/pinned-team-script.ts for why this pass still lives here. */}
         <script dangerouslySetInnerHTML={{ __html: PINNED_TEAM_SCRIPT }} />
+        {/* The followed festival teams (DESIGN §35): stamps data-fest-follow on <html> before first
+            paint, so /festival's stylesheet marks them in the first paint and after every client-side
+            navigation; see components/festival/follow-script.ts. It also stamps data-fest-over once the
+            reader's clock is past the home page notice's window, which hides the notice without a rebuild
+            (components/home/FestivalNotice.tsx). Field hockey's build only. */}
+        {HAS_FESTIVAL ? <script dangerouslySetInnerHTML={{ __html: FEST_HEAD_SCRIPT }} /> : null}
         {/* The remembered league and region (SPEC §8.2, DESIGN-socal §2.4), a SEPARATE blocking
             script: stamps data-js, data-league, data-region (SoCal only), data-pin and
             data-pin-stale on <html> before first paint, so the scope stylesheet below paints the

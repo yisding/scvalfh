@@ -18,7 +18,9 @@
 # the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
 # schedule, playoffs; a game is at its slug, and every alias of it, its old id URL included, is no
 # page but a 308 to that slug, with its OG image, and is kept out of the sitemap), and data/field-hockey/clubs.json's count of /clubs/<slug> (DESIGN §17; no
-# OG card of its own, so none is fetched); the old anchors resolve without JavaScript (/standings
+# OG card of its own, so none is fetched), and in the field hockey build the National Hockey Festival's three fixed pages and
+# data/field-hockey/festival.json's count of /festival/<division>, /festival/clubs/<club> and /festival/teams/<team>
+# (DESIGN §35; the root OG card, so none is fetched); the old anchors resolve without JavaScript (/standings
 # #de-anza #el-camino and the other section/league/division ids, the two region wrappers #norcal
 # #socal and the Southern California sections, leagues and divisions (DESIGN-socal §2.4) and the Southern
 # Section independents' block #independents (DESIGN §24.9), /standings/scval,
@@ -32,7 +34,7 @@
 # any dynamic family (/standings/nope, /schedule/nope, /playoffs/nope, /playoffs/scval,
 # /playoffs/eal, /playoffs/sunset, /playoffs/city and /playoffs/independents — leagues or a group, but not
 # tournament leagues —
-# /playoffs/ccs, /teams/nope, /clubs/nope, …), is a no-store 404 with the root not-found page (its
+# /playoffs/ccs, /teams/nope, /clubs/nope, /festival/nope, /festival/clubs/nope, /festival/teams/nope, …), is a no-store 404 with the root not-found page (its
 # OG card, where the family has one, an empty 404, /playoffs/scval/opengraph-image,
 # /playoffs/eal/opengraph-image and /playoffs/sunset/opengraph-image included),
 # rendered with the same SITE_URL and build instant as the prerendered pages and marked noindex; pages carry an ETag
@@ -150,7 +152,8 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 # The counts every family must have, from the snapshot this tree holds as lib/data.ts loads it (the
 # one the server was built from), never from the server: games, distinct game dates, teams, leagues,
 # league-tournament leagues, the clubs of data/field-hockey/clubs.json (every club has a page, one with no tied player
-# included), and each old URL segment of a game as `<segment> <the game's slug>`: every alias (`Game.aliases`,
+# included), the National Hockey Festival's divisions, clubs and teams (lib/festival/festival.ts, as the pages read
+# data/field-hockey/festival.json: all 0 in a build without the festival, HAS_FESTIVAL), and each old URL segment of a game as `<segment> <the game's slug>`: every alias (`Game.aliases`,
 # lib/game-urls.ts: a slug it had, and the id it was published at before slugs, a MaxPreps GUID or sblive-N,
 # cifsds-A-at-B, official-D-A-at-B), and for a schedule-only game (not stored, so nothing lists an alias for it)
 # its `official-` id segment where its slug is that id without the prefix, which is where proxy.ts sends it. A
@@ -159,12 +162,15 @@ facts=$(node_modules/.bin/tsx -e '
   import fs from "node:fs";
   import { getSnapshot } from "./lib/data";
   import { gameIdToParam as param } from "./lib/game-id";
+  import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs } from "./lib/festival/festival";
+  import { HAS_FESTIVAL } from "./lib/sports/current";
   // The snapshot as the site loads it: lib/data.ts adds a game for each official fixture and each
   // configured game the feeds lack, and every one of them has a page.
   const s = getSnapshot();
   const clubs = JSON.parse(fs.readFileSync("data/field-hockey/clubs.json", "utf8")).clubs;
   console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
-    s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length].join(" "));
+    s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length,
+    ...(HAS_FESTIVAL ? [festivalDivisionSlugs().length, festivalClubSlugs().length, festivalTeamSlugs().length] : [0, 0, 0])].join(" "));
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
   const old = new Map<string, string>();
   for (const g of s.games) {
@@ -173,7 +179,7 @@ facts=$(node_modules/.bin/tsx -e '
   }
   for (const g of s.games) old.delete(g.slug!);
   for (const [segment, slug] of old) console.log(segment + " " + slug);')
-read -r n_games n_dates n_teams n_leagues n_tournaments n_clubs <<< "$(sed -n 1p <<< "$facts")"
+read -r n_games n_dates n_teams n_leagues n_tournaments n_clubs n_fest_divisions n_fest_clubs n_fest_teams <<< "$(sed -n 1p <<< "$facts")"
 aliases=$(sed -n '3,$p' <<< "$facts")
 
 # Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
@@ -191,11 +197,25 @@ for path in / /about /standings /schedule /playoffs /teams /leaders /history/202
   /schedule/sunset /schedule/city /schedule/north-county /schedule/metro /schedule/independents; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done
+# The festival's fixed pages, in the build that has it (DESIGN §35); none in any other.
+if [ "$n_fest_divisions" != 0 ]; then
+  for path in /festival /festival/schedule /festival/clubs; do
+    grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
+  done
+elif grep -qE '^/festival(/|$)' <<< "$paths"; then
+  fail /sitemap.xml "lists a /festival page in a build without the festival"
+fi
 families=''
 for family in "game:$n_games" "scores:$n_dates" "teams:$n_teams" "standings:$n_leagues" "schedule:$n_leagues" \
   "playoffs:$n_tournaments" "clubs:$n_clubs"; do
   n=$(grep -cE "^/${family%:*}/[^/]+$" <<< "$paths" || true)
   [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot or data/field-hockey/clubs.json)"
+  families+=" $n /${family%:*}/"
+done
+# The festival's families: /festival/schedule and /festival/clubs sit beside the division pages and are no division.
+for family in "festival:$n_fest_divisions" "festival/clubs:$n_fest_clubs" "festival/teams:$n_fest_teams"; do
+  n=$(grep -E "^/${family%:*}/[^/]+$" <<< "$paths" | grep -cvxE '/festival/(schedule|clubs)' || true)
+  [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from data/field-hockey/festival.json)"
   families+=" $n /${family%:*}/"
 done
 listed_aliases=$(grep -xFf <(sed -n 's#^\([^ ]*\) .*#/game/\1#p' <<< "$aliases") <<< "$paths" || true)
@@ -329,6 +349,7 @@ if [ -z "$font" ]; then fail / "no /_next/static font in the HTML"; else expect 
 for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico \
   /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/eal /playoffs/sunset /playoffs/city \
   /playoffs/independents /playoffs/ccs /playoffs/socal /game/sblive-0 /clubs/nope \
+  /festival/nope /festival/clubs/nope /festival/teams/nope \
   /game/00000000-0000-4000-8000-000000000000 /game/cifsds-nobody-at-nowhere /game/1999-01-01-nobody-at-nowhere; do
   expect "$path" 404 text/html "$nostore"
   grep -qF '>Page not found</h1>' "$tmp/b" || fail "$path" "not the root not-found page"

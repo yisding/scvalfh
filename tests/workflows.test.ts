@@ -16,7 +16,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { localDateKey } from '../lib/format';
+import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs, getFestival, type FestivalSlot } from '../lib/festival/festival';
+import { festivalCrons } from '../lib/festival/festival-crons';
 import { withFixtureGames } from '../lib/results/fixture-games';
+import { FESTIVAL_TOURNAMENT_ID, lastUpdatedUrl } from '../lib/sources/tourneymachine';
 
 import { getClubSlugs } from '../lib/players/clubs';
 import { getJvGameSlugs } from '../lib/jv/jv';
@@ -34,8 +37,16 @@ const updateBasketball = read('update-data-basketball.yml');
 const updateVolleyball = read('update-data-volleyball.yml');
 /** The VAL middle school soccer site's refresh (SCVAL_SPORT=val-soccer): the league's own pages, no players. */
 const updateValSoccer = read('update-data-val-soccer.yml');
+/** The National Hockey Festival's results (field hockey's build, data/field-hockey/festival.json), Nov 26-28 2026. */
+const updateFestival = read('update-data-festival.yml');
 const deploy = read('deploy-cloudflare.yml');
-const updates = [update, updateSoccer, updateBasketball, updateVolleyball, updateValSoccer];
+const updates = [update, updateSoccer, updateBasketball, updateVolleyball, updateValSoccer, updateFestival];
+
+/**
+ * The festival's game slots as TourneyMachine first published them (festivalSlots of data/field-hockey/festival.json on
+ * 2026-11-26), frozen: the workflow's crons are held to the derivation over these, never over the live file.
+ */
+const FROZEN_SLOTS: FestivalSlot[] = JSON.parse(readFileSync(path.join(REPO, 'tests', 'fixtures', 'festival', 'slots-2026.json'), 'utf8'));
 
 /** The player registry's files (scripts/refresh-player-registry.sh --files), which a refresh stages as `$registry`. */
 const registryFiles = execFileSync('bash', ['scripts/refresh-player-registry.sh', '--files'], { encoding: 'utf8' }).trim().split(/\s+/);
@@ -82,6 +93,7 @@ describe('the update-data commit and the deploy gate', () => {
       'data/basketball/snapshot.json',
       'data/basketball/snapshot.meta.json',
       'data/field-hockey/claims.json',
+      'data/field-hockey/festival.json',
       'data/field-hockey/jv.json',
       'data/field-hockey/player-index.json',
       'data/field-hockey/player-stats.json',
@@ -385,7 +397,7 @@ describe('the teamViews budget gates ci, never the data cron', () => {
 
   it('update-data.yml and deploy-cloudflare.yml never set CI_GATE', () => {
     expect(stepBody(update, 'Test')).toMatch(/^\s*pnpm test$/m);
-    for (const text of [update, updateSoccer, updateBasketball, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
+    for (const text of [update, updateSoccer, updateBasketball, updateFestival, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
   });
 });
 
@@ -438,9 +450,11 @@ describe('the soccer refresh', () => {
   });
 
   it('never runs beside the field hockey refresh: one concurrency group, never cancelled', () => {
-    for (const u of updates) {
+    // The festival refresh alone has its own group (its header says why); only it writes festival.json.
+    for (const u of updates.filter((u) => u !== updateFestival)) {
       expect(u).toMatch(/^concurrency:\n {2}group: update-data\n {2}cancel-in-progress: false$/m);
     }
+    expect(updateFestival).toMatch(/^concurrency:\n {2}group: update-data-festival\n {2}cancel-in-progress: false$/m);
   });
 
   it('commits and restores only data/soccer/ files, and the player registry its rosters rebuild', () => {
@@ -740,6 +754,248 @@ describe('the field hockey refresh stops at the season window, before it install
   });
 });
 
+/**
+ * The National Hockey Festival's refresh (update-data-festival.yml): its crons are the ones lib/festival/festival-crons.ts
+ * derives from the festival's slots as first published (a frozen copy, tests/fixtures/festival/slots-2026.json: this
+ * suite also gates update-data.yml's Saturday refresh, ci and the deploy, so it must not fail when TourneyMachine
+ * moves a live slot; the job's own non-blocking drift check warns instead), its window is the festival's own dates,
+ * and its cheap change check skips the refresh only when both version stamps were read and are equal. The checks
+ * run their own shell here, with a `date`, `curl`, `gh` and `pnpm` that print what a case needs (jq is the runner's
+ * own).
+ */
+describe('the festival refresh', () => {
+  const windowJob = updateFestival.slice(updateFestival.indexOf('\n  window:\n'), updateFestival.indexOf('\n  refresh:\n'));
+  const gate = stepBody(updateFestival, 'Festival window');
+  const check = stepBody(updateFestival, 'Upstream change check');
+
+  /** Fake commands in a scratch PATH directory: name → the script's body. */
+  function bin(scripts: Record<string, string>): string {
+    const dir = mkdtempSync(path.join(tmpdir(), 'festival-refresh-'));
+    for (const [name, body] of Object.entries(scripts)) writeFileSync(path.join(dir, name), `#!/usr/bin/env bash\n${body}\n`, { mode: 0o755 });
+    return dir;
+  }
+
+  /** A step's shell as GitHub runs it (`bash -e -o pipefail`), and what it wrote to GITHUB_OUTPUT. */
+  function runStep(step: string, dir: string, env: Record<string, string>): { output: string; stdout: string } {
+    const out = path.join(dir, 'output');
+    writeFileSync(out, '');
+    const r = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', runBlock(step)], {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PATH: `${dir}:${process.env.PATH}`,
+        GITHUB_OUTPUT: out,
+        GITHUB_STEP_SUMMARY: path.join(dir, 'summary'),
+        ...env,
+      },
+    });
+    expect(r.status, r.stderr).toBe(0);
+    return { output: readFileSync(out, 'utf8').trim(), stdout: r.stdout };
+  }
+
+  function runGate(today: string, force = ''): string {
+    const dir = bin({ date: `echo ${today}` });
+    try {
+      return runStep(gate, dir, {
+        FEST_START: /FEST_START: '([^']+)'/.exec(gate)![1],
+        FEST_END: /FEST_END: '([^']+)'/.exec(gate)![1],
+        FORCE: force,
+      }).output;
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+
+  const STAMP = 'v6_11/26/2026 3:26:47 PM';
+  /** The endpoint's body: a JSON string, its slashes escaped. */
+  const STAMP_BODY = JSON.stringify(STAMP).replaceAll('/', '\\/');
+
+  /** The change check against a TourneyMachine and a contents API that answer as given (null: the call fails). */
+  function runCheck(opts: { upstream: string | null; committed: string | null; force?: string }) {
+    const dir = bin({
+      curl: `echo "curl $*" >> "$CALLS"\n[ "$CURL_FAIL" = 1 ] && exit 22\nprintf '%s' "$CURL_BODY"`,
+      gh: `echo "gh $*" >> "$CALLS"\n[ "$GH_FAIL" = 1 ] && exit 1\nprintf '%s' "$GH_BODY"`,
+    });
+    const calls = path.join(dir, 'calls');
+    writeFileSync(calls, '');
+    try {
+      const r = runStep(check, dir, {
+        CALLS: calls,
+        CURL_FAIL: opts.upstream === null ? '1' : '',
+        CURL_BODY: opts.upstream ?? '',
+        GH_FAIL: opts.committed === null ? '1' : '',
+        GH_BODY: opts.committed ?? '',
+        FORCE: opts.force ?? '',
+        LAST_UPDATED_URL: lastUpdatedUrl(FESTIVAL_TOURNAMENT_ID),
+        GITHUB_SERVER_URL: 'https://github.com',
+        GITHUB_REPOSITORY: 'owner/repo',
+        GITHUB_REF_NAME: 'main',
+      });
+      return { ...r, calls: readFileSync(calls, 'utf8').trim().split('\n').filter(Boolean) };
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+
+  it('fires exactly when lib/festival/festival-crons.ts says, for the festival’s slots as first published', () => {
+    const crons = [...updateFestival.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
+    const expected = festivalCrons(FROZEN_SLOTS);
+    expect(expected.length).toBeGreaterThan(0);
+    // The frozen slots, not the live file: a slot TourneyMachine moves mid-event must not fail this suite (it gates
+    // field hockey's own refresh and the deploy). The refresh job's drift check reports that case.
+    expect(crons).toEqual(expected);
+  });
+
+  it('keeps the frozen slots a slot list of the festival’s three days', () => {
+    expect(FROZEN_SLOTS.length).toBe(27);
+    const { startDate, endDate } = getFestival().tournament;
+    for (const slot of FROZEN_SLOTS) {
+      expect(slot.start.slice(0, 10) >= startDate && slot.start.slice(0, 10) <= endDate, slot.start).toBe(true);
+      expect(Date.parse(slot.endUtc) - Date.parse(slot.startUtc)).toBe(55 * 60_000);
+    }
+    expect(FROZEN_SLOTS.map((s) => s.startUtc)).toEqual([...FROZEN_SLOTS.map((s) => s.startUtc)].sort());
+  });
+
+  describe('the schedule drift check', () => {
+    const step = stepBody(updateFestival, 'Schedule drift check');
+    const lines = [...updateFestival.matchAll(/cron: '([^']+)'/g)].map((m) => `    - cron: '${m[1]}'`);
+
+    /** The step with a `pnpm` that prints `printed` (null: it fails), in the repo, so it reads this workflow. */
+    function runDrift(printed: string[] | null): string {
+      const dir = bin({ pnpm: printed === null ? 'exit 1' : `printf '%s\\n' ${printed.map((l) => `"${l}"`).join(' ')}` });
+      try {
+        return runStep(step, dir, {}).stdout;
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    }
+
+    it('runs after the tests and before the commit, and can never fail the job', () => {
+      expect(step).toContain('continue-on-error: true');
+      expect(step).toContain('pnpm -s festival-crons');
+      const at = (name: string) => updateFestival.indexOf(`- name: ${name}\n`);
+      expect(at('Test')).toBeLessThan(at('Schedule drift check'));
+      expect(at('Schedule drift check')).toBeLessThan(at('Commit the data that changed'));
+    });
+
+    it('is quiet when the derived lines are the workflow’s', () => {
+      const out = runDrift(lines);
+      expect(out).not.toContain('::warning::');
+      expect(out).toContain('the cron lines match');
+    });
+
+    it('warns, with the lines to paste, when a slot moved', () => {
+      const moved = [...lines.slice(0, -1), "    - cron: '40 22 28 11 *'"];
+      const out = runDrift(moved);
+      expect(out).toMatch(/^::warning::the festival's slots moved: paste these under schedule:/m);
+      expect(out).toContain("- cron: '40 22 28 11 *'");
+    });
+
+    it('warns, and still succeeds, when the lines cannot be derived', () => {
+      expect(runDrift(null)).toContain("::warning::could not derive the festival's cron lines");
+    });
+  });
+
+  it('carries the festival’s own dates, by the Eastern day', () => {
+    const { startDate, endDate } = getFestival().tournament;
+    expect(gate).toContain(`FEST_START: '${startDate}'`);
+    expect(gate).toContain(`FEST_END: '${endDate}'`);
+    expect(gate).toContain('TZ=America/New_York date +%F');
+  });
+
+  it('runs on the festival’s three days and not the day before or after, unless forced', () => {
+    expect(runGate('2026-11-25')).toBe('in_window=false');
+    expect(runGate('2026-11-26')).toBe('in_window=true');
+    expect(runGate('2026-11-28')).toBe('in_window=true');
+    expect(runGate('2026-11-29')).toBe('in_window=false');
+    expect(runGate('2027-11-26')).toBe('in_window=false');
+    expect(runGate('2026-12-05', '1')).toBe('in_window=true');
+    expect(gate).toContain("FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}");
+    expect(gate.slice(gate.indexOf('run: |'))).not.toContain('inputs.');
+  });
+
+  it('reads TourneyMachine’s version stamp from the endpoint the fetch script reads, with a descriptive User-Agent', () => {
+    expect(check).toContain(`LAST_UPDATED_URL: ${lastUpdatedUrl(FESTIVAL_TOURNAMENT_ID)}\n`);
+    const r = runCheck({ upstream: STAMP_BODY, committed: JSON.stringify({ sourceVersion: STAMP }) });
+    const curl = r.calls.find((c) => c.startsWith('curl '));
+    expect(curl).toContain(lastUpdatedUrl(FESTIVAL_TOURNAMENT_ID));
+    expect(curl).toMatch(/-A scvalfh\/1\.0 \(.*unofficial fan site; \+https:\/\/github\.com\/owner\/repo;/);
+    const gh = r.calls.find((c) => c.startsWith('gh '));
+    expect(gh).toContain('repos/owner/repo/contents/data/field-hockey/festival.json?ref=main');
+    expect(check).toContain('GH_TOKEN: ${{ github.token }}');
+  });
+
+  it('skips the refresh only when both stamps were read and are equal', () => {
+    expect(runCheck({ upstream: STAMP_BODY, committed: JSON.stringify({ sourceVersion: STAMP }) }).output).toBe('changed=false');
+    expect(runCheck({ upstream: STAMP_BODY, committed: JSON.stringify({ sourceVersion: 'v6_11/26/2026 3:11:37 PM' }) }).output).toBe(
+      'changed=true',
+    );
+  });
+
+  it('refreshes on any failure of the check, never skipping on an error', () => {
+    const committed = JSON.stringify({ sourceVersion: STAMP });
+    expect(runCheck({ upstream: null, committed }).output).toBe('changed=true');
+    expect(runCheck({ upstream: '<html>busy</html>', committed }).output).toBe('changed=true');
+    expect(runCheck({ upstream: '""', committed }).output).toBe('changed=true');
+    expect(runCheck({ upstream: STAMP_BODY, committed: null }).output).toBe('changed=true');
+    expect(runCheck({ upstream: STAMP_BODY, committed: '{"games":[]}' }).output).toBe('changed=true');
+    expect(runCheck({ upstream: STAMP_BODY, committed: 'not json' }).output).toBe('changed=true');
+    expect(runCheck({ upstream: null, committed: null }).output).toBe('changed=true');
+    // And the step itself can never fail the job.
+    expect(check).toContain('continue-on-error: true');
+    expect(check).toContain("if: steps.check.outputs.in_window == 'true'");
+  });
+
+  it('asks nothing of TourneyMachine on a forced run', () => {
+    const r = runCheck({ upstream: STAMP_BODY, committed: JSON.stringify({ sourceVersion: STAMP }), force: '1' });
+    expect(r.output).toBe('changed=true');
+    expect(r.calls).toEqual([]);
+  });
+
+  it('checks nothing out in the window job, and refreshes only on a festival day with a changed (or unknown) stamp', () => {
+    expect(windowJob).not.toMatch(/uses: |pnpm/);
+    expect(windowJob).toContain('in_window: ${{ steps.check.outputs.in_window }}');
+    expect(windowJob).toContain('changed: ${{ steps.upstream.outputs.changed }}');
+    expect(updateFestival).toMatch(
+      /\n {2}refresh:\n {4}needs: window\n {4}if: needs\.window\.outputs\.in_window == 'true' && needs\.window\.outputs\.changed != 'false'\n/,
+    );
+  });
+
+  it('starts from the branch’s tip, so a run queued behind another builds on its commit', () => {
+    expect(stepBody(updateFestival, 'Check out')).toContain('ref: ${{ github.ref_name }}');
+    expect(updateFestival).toMatch(/\n {2}refresh:\n[\s\S]*?\n {4}timeout-minutes: 10\n/);
+  });
+
+  it('fetches with the manual force passed through env, never interpolated', () => {
+    const step = stepBody(updateFestival, 'Fetch the festival');
+    expect(step).toContain('pnpm fetch-festival "${args[@]}"');
+    expect(step).toContain('[ -n "$FORCE" ] && args+=(--force)');
+    expect(step.slice(step.indexOf('run: |'))).not.toContain('inputs.');
+  });
+
+  it('tests the festival data files it just wrote, with test files that exist', () => {
+    const files = [...stepBody(updateFestival, 'Test').matchAll(/tests\/[\w.-]+\.test\.ts/g)].map((m) => m[0]);
+    expect(files).toEqual(['tests/festival-file.test.ts', 'tests/tourneymachine.test.ts', 'tests/festival-clubs.test.ts']);
+    for (const f of files) expect(existsSync(path.join(REPO, f)), f).toBe(true);
+  });
+
+  it('commits and reads only data/field-hockey/festival.json, as the gate expects', () => {
+    const paths = [...updateFestival.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
+    expect(paths.length).toBeGreaterThan(0);
+    for (const p of paths) expect(p, p).toBe('data/field-hockey/festival.json');
+    const commit = stepBody(updateFestival, 'Commit the data that changed');
+    expect(commit).toContain('git commit -m "data: refresh festival ${DAY} · ${SUMMARY}"');
+    expect(commit).toContain('process.stdout.write(`${finals} of ${f.games.length} games final`)');
+  });
+
+  it('pushes with a rebase, three tries, undoing a failed rebase between them', () => {
+    const push = stepBody(updateFestival, 'Push');
+    expect(push).toContain('for i in 1 2 3; do');
+    expect(push).toContain('git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"');
+    expect(push).toContain('git rebase --abort');
+  });
+});
+
 describe('the Stage D gate runs the cloudflare job’s checks', () => {
   const ci = read('ci.yml');
   const gate = readFileSync(path.join(REPO, 'scripts', 'stage-gate-d.sh'), 'utf8');
@@ -777,7 +1033,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
       writeFileSync(path.join(app, rel), body);
     };
-    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'club-calendar', 'commits', 'recruiting', 'jv', 'draft/awards']) {
+    for (const p of ['index', 'about', 'standings', 'schedule', 'playoffs', 'teams', 'leaders', 'history/2025-26', 'clubs', 'club-calendar', 'commits', 'recruiting', 'jv', 'draft/awards', 'festival', 'festival/schedule', 'festival/clubs']) {
       put(`${p}.html`);
     }
     put('opengraph-image.body');
@@ -807,6 +1063,11 @@ describe('assert:prerender on a .next that has served traffic', () => {
     for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
     // One JV calendar per league (app/jv/[league]), no OG card either.
     for (const league of LEAGUE_IDS) put(`jv/${league}.html`);
+    // The National Hockey Festival (DESIGN §35): one page per division (beside the fixed festival/schedule and
+    // festival/clubs pages), club and team of data/field-hockey/festival.json, all on the root OG card.
+    for (const division of festivalDivisionSlugs()) put(`festival/${division}.html`);
+    for (const club of festivalClubSlugs()) put(`festival/clubs/${club}.html`);
+    for (const team of festivalTeamSlugs()) put(`festival/teams/${team}.html`);
     for (const [rel, body] of Object.entries(extra)) put(rel, body);
     return root;
   }
@@ -857,6 +1118,22 @@ describe('assert:prerender on a .next that has served traffic', () => {
     rmSync(path.join(root, '.next', 'server', 'app', 'clubs', `${slug}.html`));
     const missing = run(root);
     expect(missing.output).toContain(`FAIL clubs/: 1 expected page(s) not prerendered: ${slug}`);
+    expect(missing.status).toBe(1);
+  });
+
+  it('holds each festival family to its own pages: the fixed ones beside the divisions are none, a stray one is named', () => {
+    const ok = run(tree({}));
+    expect(ok.output).toMatch(new RegExp(`festival ${festivalDivisionSlugs().length}/${festivalDivisionSlugs().length} divisions`));
+    const extra = run(tree({ 'festival/nope.html': '', 'festival/teams/nope.html': '' }));
+    expect(extra.output).toContain('FAIL festival/: 1 unexpected page(s) prerendered: nope');
+    expect(extra.output).toContain('FAIL festival/teams/: 1 unexpected page(s) prerendered: nope');
+    expect(extra.status).toBe(1);
+
+    const root = tree({});
+    const team = festivalTeamSlugs()[0];
+    rmSync(path.join(root, '.next', 'server', 'app', 'festival', 'teams', `${team}.html`));
+    const missing = run(root);
+    expect(missing.output).toContain(`FAIL festival/teams/: 1 expected page(s) not prerendered: ${team}`);
     expect(missing.status).toBe(1);
   });
 

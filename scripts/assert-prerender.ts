@@ -21,6 +21,10 @@
  *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
  *    LA independents joined, 99 with the Southern California amendment; the snapshot's team
  *    slugs must equal TEAMS, in order);
+ *  - the National Hockey Festival (field hockey only, DESIGN §35): `festival/<division>.html` = the division
+ *    slugs of data/field-hockey/festival.json (the fixed festival/schedule and festival/clubs pages beside them are
+ *    not division pages), `festival/clubs/<club>.html` = its clubs and `festival/teams/<team>.html` = its teams,
+ *    all on the root OG card;
  *  - `clubs/*.html` = the slugs of data/field-hockey/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/players/clubs.ts validates
  *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd
@@ -105,7 +109,7 @@ const { gameParams, redirectParams, dates, slugs, clubSlugs } = expected;
 for (const p of FIXED_PAGES) if (!fileSet.has(`${p}.html`)) fail(`fixed page not prerendered: ${p}.html`);
 
 // ---------------------------------------------------------------- families
-const { pagesIn, allFamilies } = makeFamilyChecker(files, { cardSuffix: '/opengraph-image.body', fail });
+const { pagesIn, membersOf, allFamilies } = makeFamilyChecker(files, { cardSuffix: '/opengraph-image.body', fail });
 allFamilies(expected);
 
 // Roster and Player stats on every team page, every league (the empty states count: a team
@@ -135,7 +139,10 @@ console.log(
     `schedule ${pagesIn('schedule').length}/${expected.leagueIds.length}; playoffs ${pagesIn('playoffs').length}/${expected.tournament.length}; ` +
     `game ${pagesIn('game').length}/${gameParams.length} (+ ${redirectParams.length} aliases redirected); ` +
     `scores ${pagesIn('scores').length}/${dates.length}; teams ${pagesIn('teams').length}/${slugs.length}; ` +
-    `clubs ${pagesIn('clubs').length}/${clubSlugs.length}`,
+    `clubs ${pagesIn('clubs').length}/${clubSlugs.length}; ` +
+    `festival ${membersOf('festival', expected.festivalDivisions).length}/${expected.festivalDivisions.length} divisions, ` +
+    `${pagesIn('festival/clubs').length}/${expected.festivalClubs.length} clubs, ` +
+    `${pagesIn('festival/teams').length}/${expected.festivalTeams.length} teams`,
 );
 if (problems.length) {
   for (const p of problems) console.error(`FAIL ${p}`);

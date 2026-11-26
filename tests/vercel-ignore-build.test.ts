@@ -83,6 +83,12 @@ describe('scripts/vercel-ignore-build.sh', () => {
     expect(decide('val-soccer', volleyballData, valData)).toBe(BUILD);
     for (const other of ['field-hockey', 'soccer', 'basketball', 'volleyball']) expect(decide(other, volleyballData, valData), other).toBe(SKIP);
     expect(decide('val-soccer', soccerData, basketballData)).toBe(SKIP);
+
+    // The festival refresh (update-data-festival.yml) commits only data/field-hockey/festival.json, as often
+    // as three times an hour while games are on: field hockey builds, every other project skips it (DESIGN §35.6).
+    const festivalData = commit(['data/field-hockey/festival.json']);
+    expect(decide('field-hockey', valData, festivalData)).toBe(BUILD);
+    for (const other of ['soccer', 'basketball', 'volleyball', 'val-soccer']) expect(decide(other, valData, festivalData), other).toBe(SKIP);
   });
 
   it('builds every project on a change to a file filed by person, which every build reads', () => {

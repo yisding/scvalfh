@@ -1,0 +1,606 @@
+{
+  "checkedOn": "2026-11-26",
+  "clubs": [
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "agh"
+      ],
+      "name": "AGH",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "agh"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "aim athletes"
+      ],
+      "name": "AIM Athletes",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "aim-athletes"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "atlanta fhc"
+      ],
+      "name": "Atlanta FHC",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "atlanta-fhc"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "beastie",
+        "beasties"
+      ],
+      "name": "Beastie",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "beastie"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "blue star"
+      ],
+      "name": "Blue Star",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "blue-star"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "bluegrass"
+      ],
+      "name": "Bluegrass Premier",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "bluegrass-premier"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "cape ann"
+      ],
+      "name": "Cape Ann FHC",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "cape-ann-fhc"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "charlotte ambush"
+      ],
+      "name": "Charlotte Ambush",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "charlotte-ambush"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "cowtown"
+      ],
+      "name": "Cowtown Field Hockey",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "cowtown-field-hockey"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "doral"
+      ],
+      "name": "Doral",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "doral"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "dynasty"
+      ],
+      "name": "Dynasty",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "dynasty"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "excelsior"
+      ],
+      "name": "Excelsior Hockey Club",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "excelsior-hockey-club"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "fhl"
+      ],
+      "name": "FHL",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "fhl"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "firestyx"
+      ],
+      "name": "FireStyx",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "firestyx"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "florida united"
+      ],
+      "name": "Florida United",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "florida-united"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "frontier"
+      ],
+      "name": "Frontier",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "frontier"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "gateway"
+      ],
+      "name": "Gateway",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "gateway"
+    },
+    {
+      "california": true,
+      "evidence": [
+        {
+          "quote": "U-12 Teams … Hayward Hawks",
+          "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        },
+        {
+          "quote": "Hayward Hawks U12 Fall season.",
+          "url": "https://haywardhawksfhc.playbookapi.com/programs/register/"
+        }
+      ],
+      "match": [
+        "hayward hawks"
+      ],
+      "name": "Hayward Hawks",
+      "norCal": true,
+      "region": "Fremont, Calif.",
+      "siteClub": "hayward-hawks",
+      "slug": "hayward-hawks",
+      "teamNotes": {
+        "Hayward Hawks": "Matched to the Fremont club Hayward Hawks Field Hockey by its name and its U12 program; the club’s own pages do not mention the festival"
+      }
+    },
+    {
+      "california": false,
+      "evidence": [
+        {
+          "quote": "There will be a choice between “HTC – U16” or “HTC CA – U19”.",
+          "url": "https://www.htcfieldhockey.com/events/national-hockey-festival-2026-east-coast-teams/"
+        },
+        {
+          "quote": "U-16 Teams … HTC",
+          "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        }
+      ],
+      "match": [
+        "htc"
+      ],
+      "name": "HTC",
+      "norCal": false,
+      "region": null,
+      "siteClub": "htc",
+      "slug": "htc",
+      "teamNotes": {
+        "HTC": "HTC’s East Coast team"
+      }
+    },
+    {
+      "california": true,
+      "evidence": [
+        {
+          "quote": "There will be a choice between “HTC – U16” or “HTC CA – U19”.",
+          "url": "https://www.htcfieldhockey.com/events/national-hockey-festival-2026-east-coast-teams/"
+        },
+        {
+          "quote": "National Hockey Festival 2026 – WEST COAST TEAMS",
+          "url": "https://www.htcfieldhockey.com/events/national-hockey-festival-2026-west-coast-teams/"
+        },
+        {
+          "quote": "HTC San Diego Chula Vista Elite Athlete Training Center 2800 Olympic Parkway Chula Vista, CA 92915",
+          "url": "https://www.htcfieldhockey.com/club/"
+        },
+        {
+          "quote": "U-19 Teams … HTC CA",
+          "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        }
+      ],
+      "match": [
+        "htc ca"
+      ],
+      "name": "HTC CA",
+      "norCal": false,
+      "region": "San Diego, Calif.",
+      "siteClub": "htc",
+      "slug": "htc-ca",
+      "teamNotes": {
+        "HTC CA U19": "HTC’s California team, which trains in San Diego County"
+      }
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "ifhck"
+      ],
+      "name": "IFHCK",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "ifhck"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "key biscayne"
+      ],
+      "name": "Key Biscayne Field Hockey",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "key-biscayne-field-hockey"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "legacy academy"
+      ],
+      "name": "Legacy Academy",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "legacy-academy"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "lonestar"
+      ],
+      "name": "Lonestar",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "lonestar"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "meerkats"
+      ],
+      "name": "Meerkats",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "meerkats"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "mid-jersey knights",
+        "mid jersey knights"
+      ],
+      "name": "Mid Jersey Knights",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "mid-jersey-knights"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "new heights"
+      ],
+      "name": "New Heights",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "new-heights"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "new york elite"
+      ],
+      "name": "New York Elite",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "new-york-elite"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "new york h.c."
+      ],
+      "name": "New York H.C.",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "new-york-hc"
+    },
+    {
+      "california": true,
+      "evidence": [
+        {
+          "quote": "NorCal Wolves, NorCal Impact CLUB",
+          "url": "https://nfhca.sportsrecruits.com/athlete/isabella_alonzo"
+        },
+        {
+          "quote": "Archbishop Mitty High School, 5000 Mitty Ave., San Jose, CA 95129",
+          "url": "https://norcalimpactfh.weebly.com/club-training.html"
+        }
+      ],
+      "match": [
+        "norcal wolves"
+      ],
+      "name": "Norcal Wolves",
+      "norCal": true,
+      "region": "San Jose, Calif.",
+      "siteClub": "norcal-impact",
+      "slug": "norcal-wolves",
+      "teamNotes": {
+        "Norcal Wolves U16": "Likely NorCal Impact’s Wolves: players’ profiles name the San Jose club’s team “NorCal Wolves, NorCal Impact”; the club’s own pages do not mention the festival"
+      }
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "peak fh"
+      ],
+      "name": "Peak FH",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "peak-fh"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "pinnacle"
+      ],
+      "name": "Pinnacle Field Hockey",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "pinnacle-field-hockey"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "polar bears"
+      ],
+      "name": "Polar Bears",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "polar-bears"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "red lions"
+      ],
+      "name": "Red Lions Hockey Club",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "red-lions-hockey-club"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "rob short"
+      ],
+      "name": "Rob Short Academy",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "rob-short-academy"
+    },
+    {
+      "california": true,
+      "evidence": [
+        {
+          "quote": "National Hockey Festival Naples, FL U16, U19 Thanksgiving November 26 – 28, 2026",
+          "url": "https://sfyouthfieldhockey.com/tournaments/"
+        },
+        {
+          "quote": "U-16 Teams … San Francisco Hawks",
+          "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        }
+      ],
+      "match": [
+        "san francisco hawks"
+      ],
+      "name": "San Francisco Hawks",
+      "norCal": true,
+      "region": "San Francisco, Calif.",
+      "siteClub": "sf-hawks",
+      "slug": "san-francisco-hawks"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "spirit of usa"
+      ],
+      "name": "Spirit of USA",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "spirit-of-usa"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "summit"
+      ],
+      "name": "Summit",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "summit"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "texas pride"
+      ],
+      "name": "Texas Pride",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "texas-pride"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "weston"
+      ],
+      "name": "Weston",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "weston"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "williamsville stampede"
+      ],
+      "name": "Williamsville Stampede",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "williamsville-stampede"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "windy city"
+      ],
+      "name": "Windy City",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "windy-city"
+    },
+    {
+      "california": false,
+      "evidence": [],
+      "match": [
+        "wizards"
+      ],
+      "name": "Wizards",
+      "norCal": false,
+      "region": null,
+      "siteClub": null,
+      "slug": "wizards"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs",
+      "what": "USA Field Hockey’s 2026 Festival participating clubs, by age group: the clubs’ display names"
+    },
+    {
+      "url": "https://tourneymachine.com/Public/Results/Tournament.aspx?IDTournament=h20260601141424398b290c0851f3e4c",
+      "what": "TourneyMachine’s team names, which the match prefixes are written against"
+    },
+    {
+      "url": "https://sfyouthfieldhockey.com/tournaments/",
+      "what": "San Francisco Youth Field Hockey Club’s tournaments: the festival, U16 and U19"
+    },
+    {
+      "url": "https://www.htcfieldhockey.com/events/national-hockey-festival-2026-west-coast-teams/",
+      "what": "HTC’s festival page for its West Coast (California) teams"
+    }
+  ]
+}

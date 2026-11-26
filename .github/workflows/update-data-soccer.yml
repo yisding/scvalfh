@@ -13,8 +13,11 @@
 # month: the earliest Pacific-November instant is already November in UTC, and a Pacific Mar 10 evening
 # run is still March in UTC.
 #
-# Both refreshes share the `update-data` concurrency group, so they never push at the same time, and each
-# rebases before it pushes. The commit messages start "data: refresh soccer", which deploy-cloudflare.yml
+# Both refreshes share the `update-data` concurrency group, so they never push at the same time as each other, and
+# each rebases before it pushes. The festival refresh (update-data-festival.yml) has its own group: in its hours one of
+# its pushes can land in the ~1 s between this job's pull and its push, and this push, not retried, then fails; the
+# next scheduled run recovers the data (an accepted risk, 2026-11-26).
+# The commit messages start "data: refresh soccer", which deploy-cloudflare.yml
 # accepts as a data commit, so a soccer refresh never holds back field hockey's Worker deploy
 # (tests/workflows.test.ts holds the files and messages to the gate). The push is what makes Vercel
 # rebuild the soccer project (soccer.ncfh.net); the field hockey project skips a build that touched only

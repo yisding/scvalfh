@@ -26,7 +26,9 @@
  *     first /clubs/ page whose club no tracked player is tied to (DESIGN §17). The sitemap lists the
  *     clubs with the most tied players first, so the first club page is the longest player list
  *     (/clubs/sf-hawks today) and the first empty one puts the empty state, the programs and the
- *     sources through axe with no player rows (/clubs/pac-heights today).
+ *     sources through axe with no player rows (/clubs/pac-heights today). In field hockey, the National Hockey
+ *     Festival's /festival, /festival/schedule and /festival/clubs, and the sitemap's first division, club and
+ *     team page of it (DESIGN §35).
  *  2. `/` once per remembered league: an init script sets localStorage['scvalfh.league'] to each
  *     league id of data/field-hockey/snapshot.json (plus 'city', so a SoCal league runs even on a snapshot written
  *     before the SoCal leagues were added) and to 'all' (the no-league run is `/` in 1), once with
@@ -34,7 +36,9 @@
  *     'socal' alone (the SoCal first-visit view), and with a NorCal pin (the pin kept, no league from
  *     it). axe skips `display:none` subtrees, so each league’s blocks and each region are checked only in
  *     its own run; each run also asserts the pre-paint stamp (html[data-league], html[data-pin],
- *     html[data-region]) the run was meant to produce.
+ *     html[data-region]) the run was meant to produce. And /festival with scvalfh.festivalTeams set to the first
+ *     festival team of the sitemap: the run asserts html[data-fest-follow] holds it and its "Your teams" card is
+ *     rendered, so the card goes through axe as well as the empty state.
  *  3. `/teams` with "mar" typed into the finder (the filtered list and the live region), and with
  *     "la jolla" typed under the default (NorCal) region: the /teams lift must show the SoCal team's
  *     tile (rendered, not display:none) while the finder searches.
@@ -150,6 +154,11 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/club-calendar',
   '/commits',
   '/recruiting',
+  // The National Hockey Festival (field hockey, DESIGN §35): its three fixed pages; a division, a club and a team
+  // page come from the sitemap.
+  '/festival',
+  '/festival/schedule',
+  '/festival/clubs',
 ];
 
 function load() {
@@ -228,12 +237,22 @@ async function sampleDynamicRoutes() {
   // The freshman pages exist only in a build with the level (girls soccer, boys basketball): the hub, a league's
   // calendar and a game, each from the sitemap, none in any other build.
   const freshman = [locs.find((p) => p === '/freshman'), first('/freshman/game/'), locs.find((p) => /^\/freshman\/[^/]+$/.test(p))];
-  return [first('/game/'), first('/jv/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub, ...freshman]
+  // The festival's division, club and team pages (field hockey only): /festival/schedule and /festival/clubs share
+  // the division pages' folder and are fixed routes above, not a division.
+  const festival = [
+    locs.find((p) => /^\/festival\/[^/]+$/.test(p) && p !== '/festival/schedule' && p !== '/festival/clubs'),
+    first('/festival/clubs/'),
+    first('/festival/teams/'),
+  ];
+  return [first('/game/'), first('/jv/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub, ...freshman, ...festival]
     .filter((p, i, all) => p && !ROUTES.includes(p) && all.indexOf(p) === i);
 }
 
 const { axeSource, chromium } = load();
-const routes = [...ROUTES, ...(await sampleDynamicRoutes())];
+const dynamicRoutes = await sampleDynamicRoutes();
+const routes = [...ROUTES, ...dynamicRoutes];
+/** The team of the festival follow run: the first /festival/teams/ page in the sitemap (none outside field hockey). */
+const FEST_TEAM = dynamicRoutes.find((p) => p.startsWith('/festival/teams/'))?.slice('/festival/teams/'.length) ?? null;
 const browser = await chromium.launch({ args: ['--no-sandbox'] });
 let serious = 0;
 let checked = 0;
@@ -437,6 +456,33 @@ for (const theme of ['light', 'dark']) {
         region: 'socal',
       },
     ];
+    // /festival with one followed team (DESIGN §35): the head script stamps html[data-fest-follow] before paint and
+    // the festival layout's generated CSS reveals that team's "Your teams" card, so axe sees the card, not the empty state.
+    if (FEST_TEAM) {
+      const label = `/festival (festivalTeams=${FEST_TEAM}) ${tag}`;
+      jobs.push({ label, run: async (log) => {
+        const ctx = await newContext({ theme, width, storage: { 'scvalfh.festivalTeams': FEST_TEAM } });
+        const page = await open(ctx, '/festival', log);
+        if (page) {
+          const got = await page.evaluate((slug) => {
+            const card = document.querySelector(`[data-fest-card="${slug}"]`);
+            return {
+              stamp: document.documentElement.getAttribute('data-fest-follow'),
+              card: card ? card.getClientRects().length > 0 : null,
+            };
+          }, FEST_TEAM);
+          if (!(got.stamp ?? '').split(' ').includes(FEST_TEAM)) {
+            failRun(label, `stamped data-fest-follow=${got.stamp}, expected it to hold ${FEST_TEAM}`, log);
+          }
+          if (got.card === null) failRun(label, `no [data-fest-card="${FEST_TEAM}"] card on /festival`, log);
+          else if (!got.card) failRun(label, `the [data-fest-card="${FEST_TEAM}"] card stays hidden`, log);
+          await check(page, label, log);
+          await page.close();
+        }
+        await ctx.close();
+      } });
+    }
+
     for (const run of runs) {
       jobs.push({ label: `/ (${run.label}) ${tag}`, run: async (log) => {
         const ctx = await newContext({ theme, width, storage: run.storage });

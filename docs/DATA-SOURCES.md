@@ -3816,6 +3816,92 @@ assembler per sport built the files from them with a second read, and they are k
   Francis, Carmel, Hollister, Monterey and Stevenson; basketball at Carmel, Monterey and King City) were still empty,
   so stories naming their players could not be matched; the passes' reports list such leads for when they post.
 
+### 1.16 NATIONAL HOCKEY FESTIVAL — TourneyMachine's public feed (`data/field-hockey/festival.json`, `data/field-hockey/festival-clubs.json`)
+
+USA Field Hockey's 2026 National Hockey Festival (Thu Nov 26 to Sat Nov 28, Paradise Coast Sports Complex, Naples,
+Fla.; `/festival`, DESIGN §35) publishes its schedule, pool tables and results on TourneyMachine, tournament
+`h20260601141424398b290c0851f3e4c`. The field hockey build only (`HAS_FESTIVAL`, `lib/sports/current.ts`); another
+sport's build reads neither file. Decoded on 2026-11-26 from the JSON TourneyMachine's own public web app loads (its
+`global.js`), with no login and no key. Two endpoints, both under
+`https://tourneymachine.com/Public/Service/JSON/` (`lib/sources/tourneymachine.ts`):
+
+- **`TournamentResultsLastUpdated.aspx?IDTournament=…`** (~30 bytes, `cache-control: public, max-age=10`): a JSON
+  string such as `"v6_11\/26\/2026 3:26:47 PM"` that changes whenever the tournament does; the web app polls it and
+  re-reads the feed only when it moves. The time is the server's clock in UTC (it read 3:13:00 PM at 15:13 UTC, when
+  four scores posted), and the space before AM/PM is a narrow no-break space (U+202F). It is stored opaque as
+  `sourceVersion`; only the cached-copy check below reads the time out of it (`versionInstant`).
+- **`TournamentResults.aspx?IDTournament=…&nofile=true`** (~275 KB, gzip): the whole tournament. Cloudflare serves it
+  from cache (`max-age=30`; a copy was seen served at age 82, made 15:17:21 while the version already read 3:13:00
+  PM), and the endpoint answers any extra query parameter with a 302, so the cache cannot be bypassed. A read whose
+  `Last-Modified` is not more than 2 s after the version's own time is treated as a stale copy: both are cut to the
+  second, so a copy made earlier in the very second a score went in carries the version's own stamp, and the 2 s
+  cover the two servers' clocks (`feedIsCurrent`, `FEED_CLOCK_MARGIN_MS`); a false "stale" costs one more read, a
+  false "current" would lose a score. A stale copy newer than what the committed file holds is still written, stamped
+  `cached_<its Last-Modified>` (`cachedCopyVersion`): never a real version, so the next run reads again, and an
+  instant `versionInstant` reads back, so a later copy is compared with what was actually published. A copy no newer
+  than that keeps the committed file whole, so a `--force` run or two cached copies arriving out of order can never
+  put older results back.
+
+What the feed holds, and how `normalizeFestival` reads it:
+
+- Divisions, pools and games share one integer sequence (divisions 1, 3, 5, 9, 14, 16, 22, 29; games 31–325) and are
+  keyed by it as a string; teams and fields are keyed by hex ids. A division's own `IDDivision` is a hex id used only
+  in its bracket page's URL. A game's division is the division whose `IDGames` lists it; a team's pool is the pool
+  whose `IDTeams` lists it (teams carry no pool).
+- A pool's `IDTeams` is re-sorted by TourneyMachine as results come in, and its public table prints it as given: that
+  order is the pool's rank, kept as `pools[].teamIds`, except that teams level on points, wins, goal difference and
+  goals for are listed alphabetically by raw name (Pool S on 2026-11-26: "Atlanta FHC U19" over "FHL", both 1-0-0, +1,
+  2 goals; Pool C: "IFHCK Thunder" over "U12 Gateway Red Stripes", age token and all) until the event staff fill the
+  placement sides. Regs D.2 break such a tie on the head-to-head result, then a shoot-out or a coin toss, none of
+  which the feed carries, so the pages rank those teams equal and leave their placement slot open (DESIGN §35.5). Team records are the `*Pool` fields (points 3/1/0, regs D.1).
+- `S` is the venue's naive wall clock (Eastern Standard Time all three days, so `startUtc` is `S` + 5 hours); every
+  game starts on the hour and lasts 55 minutes. `S1`/`S2` are 0/0 before a result, so a score is kept only when `F`
+  (final) or `I` (scoring started) is set; `I` without `F` is read as live (no live game was observed).
+- Placement games (`BR`, all Saturday) name their sources as a pool's hex `IDPool` (`BT1S`/`BT2S`) and a place
+  (`BT1SPP`/`BT2SPP`, a string); `T1`/`T2` hold the slot's text ("Pool T 3rd Place") until TourneyMachine names the
+  team. No game is fed from another game (`BT*SGN` is "0" throughout). `LP`/`TP` are the box's position in
+  TourneyMachine's bracket drawing: clustered into columns (330 and 335 are one) and ranked top to bottom, they are
+  `layout`. Game numbers ("B3") are unique per division only and do not follow the drawing; B3 is played before B2 in
+  the single-pool divisions. There is no shoot-out field, and a placement game tied at full time goes to a shoot-out
+  (regs D.4), so a tied final names no winner.
+- Fields all have `Sort` 0 and come in no useful order: they are ordered by the number in their name.
+- **Dropped on purpose:** every team's `Color`, which is re-randomized on every request (about 115 of 118 changed
+  between two reads with no result between them), so keeping it would commit on every run; `SS`, `DID`, `ISID`, `N`,
+  the work team (`T3`), the video fields, `BL`/`SL`, and the teams' `City`/`State` (blank). `BracketFinalDictionary`,
+  `PlaceDictionary` and `AthleteDictionary` are empty. The bracket pages (`BracketUpdated.aspx`) are not read: their
+  column titles are made from the sources ("Pool R and S crossovers").
+
+Slugs are made, never read: divisions from their names (`u14-11v11`, `u14-coed`, `adult`; never `schedule`, `clubs`
+or `teams`, the static routes beside `/festival/[division]`), teams as the division's slug and the name without age
+tokens (`u16-san-francisco-hawks`; a collision takes `-2` in team id order). The file is held to
+`lib/festival/festival-schema.ts`, and its content key ignores only `fetchedAt`: `sourceVersion` is content, so a
+version bump commits and the next run's check stops at the 30-byte read.
+
+Budget: `.github/workflows/update-data-festival.yml` runs three times an hour after each game slot during the event.
+Each run costs TourneyMachine one ~30-byte version read; only a run whose version moved reads the whole feed once
+(`scripts/fetch-festival.ts`, through `lib/sources/http.ts`: the site's descriptive User-Agent, a 15 s timeout,
+retries on 429/5xx only), and only a change in content commits. The browser never calls TourneyMachine. The job tests
+the read with `tests/tourneymachine.test.ts` (three trimmed captures of 2026-11-26 in `tests/fixtures/tourneymachine/`),
+`tests/festival-file.test.ts` and `tests/festival-clubs.test.ts` before it commits.
+
+**Clubs (`data/field-hockey/festival-clubs.json`), by hand on 2026-11-26.** TourneyMachine names teams, not clubs
+("U14 Gateway Red Stars", "AGH U16 2"). A club's display name is the one USA Field Hockey's participating-clubs page
+prints (its festival event page's clubs list), and a team joins the club whose `match` prefix is the longest its name
+starts with, at a word boundary, after a leading age token (`lib/festival/festival.ts` `resolveFestivalClubs`). On
+2026-11-26 all 118 teams resolved to the 43 curated clubs except the adult teams Stars and Stripes, which take
+automatic clubs of their own names; a team added mid-event does the same and never stops the refresh. Every region,
+California flag and link to a club on this site cites a page and its words (`evidence`):
+
+- **California**: San Francisco Hawks U16 and U19 (SF Hawks' tournaments page lists the festival, U16 and U19), Hayward
+  Hawks (U12; matched to the Fremont club by its name and its U12 program, said so in its note), Norcal Wolves U16
+  ("likely" NorCal Impact's Wolves: players' recruiting profiles name the team "NorCal Wolves, NorCal Impact"; the
+  club's own pages do not mention the festival), and HTC CA U19 (HTC's West Coast page). HTC is two clubs in the
+  file: HTC's festival pages offer "HTC – U16" (its East Coast team) and "HTC CA – U19", so only HTC CA is Californian.
+- **Links to `/clubs/<slug>`** (`siteClub`, checked against `data/field-hockey/clubs.json` at import): sf-hawks,
+  hayward-hawks, norcal-impact and htc (for both HTC clubs), out of the registry's 28 clubs. Names that only look alike
+  are not linked: New Heights (not Pacific Heights), Windy City (not D-City), Lonestar "Orange" (not OC Field Hockey
+  Club), Mid-Jersey Knights (not San Marcos Knights), Red Lions Hockey Club (not the Lions Hockey Club of Fremont).
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

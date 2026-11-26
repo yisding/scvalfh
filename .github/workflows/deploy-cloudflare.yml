@@ -15,17 +15,20 @@
 # that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
 # `push` workflow, so a `push` trigger here would never see a data refresh. Instead this follows
 # the workflows that put commits on main, ci (a green run on main, never a pull_request run) and
-# the four refreshes, update-data, update-data-soccer, update-data-basketball and update-data-volleyball (a green run),
-# and every run deploys main's tip as it is when the run starts.
+# the refreshes, update-data, update-data-soccer, update-data-basketball, update-data-volleyball,
+# update-data-val-soccer and update-data-festival (a green run), and every run deploys main's tip as it is when the
+# run starts.
 #
 # What may ship. The code that ships must have passed ci on main; update-data's data commits only
 # replace data/field-hockey/snapshot.json, its meta file, data/field-hockey/player-stats.json and data/field-hockey/jv.json, after running
 # the suite on them, and ci never runs on them. So the gate walks down from main's tip past the data
 # commits (by the bot, one parent, "data: refresh snapshot ...", "data: refresh player stats ...",
-# "data: refresh JV games ...", update-data-soccer.yml's "data: refresh soccer ..." or
-# update-data-basketball.yml's "data: refresh basketball ..." or update-data-volleyball.yml's "data: refresh volleyball ...") to the newest
+# "data: refresh JV games ...", update-data-soccer.yml's "data: refresh soccer ...",
+# update-data-basketball.yml's "data: refresh basketball ...", update-data-volleyball.yml's "data: refresh volleyball ...",
+# update-data-val-soccer.yml's "data: refresh val-soccer ..." or update-data-festival.yml's "data: refresh festival ...") to the newest
 # other commit, the one whose code ships, requires a successful ci run on main for exactly that commit,
-# and requires that nothing but those data files (the four of data/field-hockey/, the same four plus the two roster
+# and requires that nothing but those data files (the four of data/field-hockey/ and its festival.json, the National Hockey
+# Festival's results; the same four plus the two roster
 # files of data/soccer/, data/basketball/ and data/volleyball/, and the player registry a roster refresh rebuilds:
 # data/players.json, which no site reads, and each sport's player-index.json, which the pages find a row's person by;
 # never a hand-curated file filed by person) changed above it. A soccer or basketball data commit changes at most this Worker's
@@ -71,7 +74,7 @@ name: deploy-cloudflare
 
 on:
   workflow_run:
-    workflows: [ci, update-data, update-data-soccer, update-data-basketball, update-data-volleyball, update-data-val-soccer]
+    workflows: [ci, update-data, update-data-soccer, update-data-basketball, update-data-volleyball, update-data-val-soccer, update-data-festival]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -222,8 +225,8 @@ jobs:
             [ -n "$own" ] || [ -z "$changed" ] || skip "skipped $SCVAL_SPORT: only another sport's data changed since its last deploy ($last)."
           fi
           # base: the newest commit at or below main's tip that is not an update-data data commit
-          # (update-data.yml, update-data-soccer.yml and update-data-basketball.yml "Commit the data that
-          # changed": by the bot, one parent, one of those six message prefixes). Its code is the code that ships; the data commits above it only replace
+          # (update-data.yml and the update-data-*.yml refreshes' "Commit the data that changed": by the bot, one
+          # parent, one of those eight message prefixes). Its code is the code that ships; the data commits above it only replace
           # the data, which update-data ran the suite on before it pushed (ci never runs on them:
           # they are pushed with GITHUB_TOKEN). tests/workflows.test.ts holds the messages and the
           # file list below to what update-data.yml commits.
@@ -237,16 +240,17 @@ jobs:
                   or (.commit.message | startswith("data: refresh soccer"))
                   or (.commit.message | startswith("data: refresh basketball"))
                   or (.commit.message | startswith("data: refresh volleyball"))
-                  or (.commit.message | startswith("data: refresh val-soccer")))
+                  or (.commit.message | startswith("data: refresh val-soccer"))
+                  or (.commit.message | startswith("data: refresh festival")))
                 and (.parents | length) == 1) | not) | .sha) // ""')
             [ -z "$base" ] || break
           done
           [ -n "$base" ] || refuse "main ($tip) sits on more than 500 data commits; deploy by hand after checking it."
-          # Between base and the tip only the data files (field hockey's four; soccer's, basketball's and volleyball's six each, the roster files included, and soccer's and basketball's freshman.json; and the player registry a roster refresh rebuilds: scripts/refresh-player-registry.sh --files) may change, so the tree that ships is
+          # Between base and the tip only the data files (field hockey's four and its festival.json; soccer's, basketball's and volleyball's six each, the roster files included, and soccer's and basketball's freshman.json; and the player registry a roster refresh rebuilds: scripts/refresh-player-registry.sh --files) may change, so the tree that ships is
           # base's tree with newer data.
           others=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$tip" --jq '
             if .status == "identical" or .status == "ahead"
-            then [.files[]?.filename] - ["data/field-hockey/snapshot.json", "data/field-hockey/snapshot.meta.json", "data/field-hockey/claims.json", "data/field-hockey/player-stats.json", "data/field-hockey/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/claims.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/freshman.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/claims.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/freshman.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/claims.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json", "data/val-soccer/snapshot.json", "data/val-soccer/snapshot.meta.json", "data/val-soccer/claims.json", "data/val-soccer/jv.json", "data/players.json", "data/field-hockey/player-index.json", "data/soccer/player-index.json", "data/basketball/player-index.json", "data/volleyball/player-index.json", "data/val-soccer/player-index.json"] | join(" ")
+            then [.files[]?.filename] - ["data/field-hockey/snapshot.json", "data/field-hockey/snapshot.meta.json", "data/field-hockey/claims.json", "data/field-hockey/player-stats.json", "data/field-hockey/jv.json", "data/field-hockey/festival.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/claims.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/freshman.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/claims.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/freshman.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/claims.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json", "data/val-soccer/snapshot.json", "data/val-soccer/snapshot.meta.json", "data/val-soccer/claims.json", "data/val-soccer/jv.json", "data/players.json", "data/field-hockey/player-index.json", "data/soccer/player-index.json", "data/basketball/player-index.json", "data/volleyball/player-index.json", "data/val-soccer/player-index.json"] | join(" ")
             else "(main is \(.status), not ahead)" end' 2>/dev/null || echo '(the compare failed)')
           [ -z "$others" ] || refuse "main ($tip) changes more than the data above $base: $others"
           # And base must have passed ci on main: a successful ci run for that exact commit, other

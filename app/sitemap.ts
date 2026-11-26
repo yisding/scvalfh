@@ -28,7 +28,14 @@ import { getHistoryLastChecked } from '../lib/history/history';
 import { getJvFetchedAt, getJvGames, getJvGamesOn, jvGameHref } from '../lib/jv/jv';
 import { freshmanGameHref, getFreshmanFetchedAt, getFreshmanGames } from '../lib/freshman/freshman';
 import { getJvProfilesFile } from '../lib/jv/jv-profiles';
-import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
+import {
+  festivalClubSlugs,
+  festivalDivisionSlugs,
+  festivalTeamSlugs,
+  getFestival,
+  getFestivalClubsFile,
+} from '../lib/festival/festival';
+import { HAS_CLUB_CALENDAR, HAS_FESTIVAL, HAS_RECRUITING } from '../lib/sports/current';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
@@ -60,7 +67,10 @@ import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
  * /commits takes the last day data/commitments.json was checked (`getCommitsLastChecked`: its
  * `capturedAt`, or a later college `checkedOn`) for the same reason (DESIGN §21.4). /recruiting gathers
  * the clubs, the commitments, the roster overlay's recruiting profiles and the JV players' (DESIGN §25),
- * so it takes the latest of the four files' dates.
+ * so it takes the latest of the four files' dates. The National Hockey Festival's pages (field hockey only, DESIGN §35)
+ * take data/field-hockey/festival.json's `fetchedAt`, which the refresh moves only when the results change
+ * (festivalContentKey); the club pages and the club index take the later of it and the curated clubs file's
+ * `checkedOn`, since they are built from both.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(getFetchedAt());
@@ -74,6 +84,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const url = (path: string) => `${SITE_URL}${path}`;
   const freshmanFetchedAt = getFreshmanFetchedAt();
   const freshmanStamp = freshmanFetchedAt === null ? null : new Date(freshmanFetchedAt);
+  const festivalStamp = new Date(getFestival().fetchedAt);
+  const festivalClubsStamp = new Date(Math.max(festivalStamp.getTime(), Date.parse(getFestivalClubsFile().checkedOn)));
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: url('/'), lastModified, changeFrequency: 'daily', priority: 1 },
@@ -204,8 +216,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
       }))
     : [];
 
+  // The National Hockey Festival (DESIGN §35): the hub, the schedule, the club index, then one page per division,
+  // club and team. Every other build has none.
+  const festivalRoutes: MetadataRoute.Sitemap = HAS_FESTIVAL
+    ? [
+        { url: url('/festival'), lastModified: festivalStamp, changeFrequency: 'hourly' as const, priority: 0.6 },
+        { url: url('/festival/schedule'), lastModified: festivalStamp, changeFrequency: 'hourly' as const, priority: 0.5 },
+        { url: url('/festival/clubs'), lastModified: festivalClubsStamp, changeFrequency: 'hourly' as const, priority: 0.5 },
+        ...festivalDivisionSlugs().map((division) => ({
+          url: url(`/festival/${division}`),
+          lastModified: festivalStamp,
+          changeFrequency: 'hourly' as const,
+          priority: 0.5,
+        })),
+        ...festivalClubSlugs().map((club) => ({
+          url: url(`/festival/clubs/${club}`),
+          lastModified: festivalClubsStamp,
+          changeFrequency: 'hourly' as const,
+          priority: 0.4,
+        })),
+        ...festivalTeamSlugs().map((team) => ({
+          url: url(`/festival/teams/${team}`),
+          lastModified: festivalStamp,
+          changeFrequency: 'hourly' as const,
+          priority: 0.4,
+        })),
+      ]
+    : [];
+
   return [
     ...staticRoutes,
+    ...festivalRoutes,
     ...leagueRoutes,
     ...tournamentRoutes,
     ...teamRoutes,

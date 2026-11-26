@@ -13,7 +13,9 @@ import ExternalLink from '../../../components/ui/ExternalLink';
 import { plural } from '../../../components/words/plural';
 import RecruitingTabs from '../../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../../components/ui/SectionHeader';
+import { festivalClubs } from '../../../lib/festival/festival';
 import { clubDisplayName, getClub, getClubAffiliations, getClubJvAffiliations, getClubSlugs } from '../../../lib/players/clubs';
+import { HAS_FESTIVAL } from '../../../lib/sports/current';
 import { getClubInstagram, instagramUrl } from '../../../lib/social/instagram';
 
 /**
@@ -25,7 +27,8 @@ import { getClubInstagram, instagramUrl } from '../../../lib/social/instagram';
  *
  * Source order is reading order: identity (the display name as the h1; the full name, the city and
  * the founding year in the one line under it), the recruiting family's tab row with "Clubs" lit
- * (the way back to /clubs: the page is not in the nav), what the club is and its website, then the
+ * (the way back to /clubs: the page is not in the nav), what the club is and its website (and, for a club at the
+ * National Hockey Festival, a link to its festival page, DESIGN §35.8), then the
  * players from the tracked rosters, then the club's teams and programs, then where all of it comes
  * from.
  *
@@ -83,6 +86,16 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
   if (!view) notFound();
   const events = clubEventLines(slug);
   const instagram = getClubInstagram(slug);
+  // The festival clubs this club is (data/field-hockey/festival-clubs.json `siteClub`, field hockey only): one, or
+  // two for HTC, whose East Coast team and California team are listed as separate clubs there. Each names itself
+  // when there are two, so the links say which is which, and the California one comes first (spec §3 (b), as the
+  // festival club pages order their siblings): a San Diego parent's first tap is HTC CA, not the East Coast U16 team.
+  // The sort is stable, so the A–Z order holds within each group.
+  const festival = HAS_FESTIVAL
+    ? festivalClubs()
+        .filter((c) => c.siteClub === slug)
+        .sort((a, b) => Number(b.california) - Number(a.california))
+    : [];
 
   return (
     <div className="pb-section-lg">
@@ -104,7 +117,7 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
       </PageHeader>
 
       <p className="mt-4 mb-0 max-w-prose text-body text-ink-2">{view.description}</p>
-      {view.website || instagram ? (
+      {view.website || instagram || festival.length > 0 ? (
         <ul className="sx-linkrow">
           {view.website ? (
             <li>
@@ -121,6 +134,13 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
               </ExternalLink>
             </li>
           ) : null}
+          {festival.map((club) => (
+            <li key={club.slug}>
+              <Link href={`/festival/clubs/${club.slug}`} prefetch={false} className="sx-action whitespace-normal">
+                {festival.length > 1 ? `${club.name} at the National Hockey Festival` : 'At the National Hockey Festival'}
+              </Link>
+            </li>
+          ))}
         </ul>
       ) : null}
 
