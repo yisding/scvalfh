@@ -335,6 +335,15 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     const one = { firstName: 'Ravyn', lastName: 'Arazi', position: null };
     expect(withList([one, one])).toMatch(/otherRosters failed validation/);
     expect(withList([{ ...one, grade: 12 }])).toMatch(/otherRosters failed validation/);
+    // A listed player may carry her own recruiting pages: one per platform and sport, on the platform's host,
+    // and never a MaxPreps page (she has no MaxPreps row).
+    const ncsa = { platform: 'ncsa', url: 'https://www.ncsasports.org/field-hockey-recruiting/x', classOf: 2028, note: null };
+    expect(withList([{ ...one, profiles: [ncsa] }])).not.toMatch(/failed validation/);
+    expect(withList([{ ...one, profiles: [ncsa, { ...ncsa, url: `${ncsa.url}2` }] }])).toMatch(/otherRosters failed validation/);
+    expect(withList([{ ...one, profiles: [{ ...ncsa, url: 'https://example.com/x' }] }])).toMatch(/otherRosters failed validation/);
+    expect(
+      withList([{ ...one, profiles: [{ platform: 'maxpreps', url: 'https://www.maxpreps.com/x', classOf: null, note: null }] }]),
+    ).toMatch(/otherRosters failed validation/);
   });
 
   it('tags every filled value with a source, a kind and a confidence', () => {

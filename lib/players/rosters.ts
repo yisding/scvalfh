@@ -35,8 +35,10 @@ import bundledRostersSoccer from '../../data/soccer/rosters.json';
 import bundledRostersValSoccer from '../../data/val-soccer/rosters.json';
 import { readOverride, validateData } from '../data-file';
 import {
+  PlayerProfileSchema,
   RosterEnrichmentSchema,
   RostersSchema,
+  profileSportKey,
   type EnrichedGrade,
   type EnrichedHeight,
   type EnrichedJersey,
@@ -107,6 +109,16 @@ const ListedPlayerSchema = z
     lastName: z.string().min(1),
     /** The source's own position text ("GK"), or null where it gives none: shown through positionFromText. */
     position: z.string().min(1).nullable(),
+    /**
+     * The player's own recruiting pages, by the profile rule (docs/DATA-SOURCES.md): with no roster grade to
+     * check a class year against, a page is linked only when it names the player and the school. At most
+     * one per platform and sport, and never a MaxPreps page (the player has no MaxPreps row). Absent: none found.
+     */
+    profiles: z
+      .array(PlayerProfileSchema)
+      .refine((ps) => new Set(ps.map(profileSportKey)).size === ps.length, 'two profiles on one platform in one sport')
+      .refine((ps) => ps.every((x) => x.platform !== 'maxpreps'), 'a listed player has no MaxPreps page to link')
+      .optional(),
   })
   .strict();
 export type ListedPlayer = z.infer<typeof ListedPlayerSchema>;
