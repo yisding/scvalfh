@@ -53,6 +53,9 @@ export function buildDivisionView(slug: string, m: FestivalModel = festivalModel
       `${division.format} · ${FESTIVAL_GAME_MINUTES}-minute games`,
       plural(teams, 'team'),
       plural(division.pools.length, 'pool'),
+      // TourneyMachine schedules no placement games for a division whose pools of six give every team its five
+      // guaranteed games (U16, U14 Co-Ed, Adult): its result is the final pool table.
+      ...(columns.length > 0 ? [] : ['Pool play only']),
       `${finals} of ${plural(games.length, 'game')} final`,
     ],
     teams,

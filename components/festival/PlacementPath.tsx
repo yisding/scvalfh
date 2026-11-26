@@ -72,10 +72,21 @@ export function PlacementPath({ path, teamName }: { path: PlacementPathModel; te
 }
 
 function Opponent({ side }: { side: SideModel }) {
-  if (side.state === 'team') return <>{side.team!.name}</>;
-  if (side.state === 'pool-complete') return <>{`${side.slot} (${side.team!.name})`}</>;
-  if (side.state === 'provisional') return <>{`${side.slot} (now ${side.team!.name})`}</>;
-  return <>{side.slot}</>;
+  if (side.state === 'placeholder' || !side.team) return <>{side.slot ?? side.name}</>;
+  const name = (
+    <Link href={side.team.href} prefetch={false} className="sx-link">
+      {side.team.name}
+    </Link>
+  );
+  if (side.state === 'team') return name;
+  return (
+    <>
+      {side.slot}
+      {side.state === 'provisional' ? ' (now ' : ' ('}
+      {name}
+      {')'}
+    </>
+  );
 }
 
 export default PlacementPath;

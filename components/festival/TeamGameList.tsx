@@ -96,7 +96,15 @@ function Opponent({ side }: { side: SideModel }) {
   return (
     <span className="text-ink-2">
       {side.slot}
-      {side.state === 'provisional' ? ` (now ${side.team!.name})` : null}
+      {side.state === 'provisional' ? (
+        <>
+          {' (now '}
+          <Link href={side.team!.href} prefetch={false} className="sx-link">
+            {side.team!.name}
+          </Link>
+          {')'}
+        </>
+      ) : null}
     </span>
   );
 }

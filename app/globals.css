@@ -790,6 +790,10 @@
   .sx-game-link:focus-visible { outline: none; }
   .sx-game:has(.sx-game-link:focus-visible) { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
   @media (hover: none), (pointer: coarse) { a.sx-game-name, .sx-livegame a.sx-game-name { pointer-events: none; } }
+  /* The festival's game rows have no game page to open (DESIGN §35): a tap on a team's name opens the team. */
+  @media (hover: none), (pointer: coarse) { .sx-fest-games a.sx-game-name { pointer-events: auto; } }
+  .sx-fest-games .sx-game-name-link { position: relative; z-index: 1; color: inherit; text-decoration: none; }
+  .sx-fest-games a.sx-game-name-link:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .sx-game-status .sx-short { display: none; }
   @container games (max-width: 19.99rem) {   /* a 320px phone: a narrower slot ("PPD" for "Postponed"), 15px names */
     .sx-game-grid { grid-template-columns: 3.25rem minmax(0, 1fr) auto; padding-inline: 0.25rem; font-size: 0.9375rem; }

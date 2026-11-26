@@ -141,7 +141,9 @@ export default function FestivalPage() {
                   Bracket
                   <span className="sr-only"> &mdash; {d.short}</span>
                 </Link>
-              ) : null}
+              ) : (
+                <span className="ml-auto text-cell text-ink-2">Pool play only</span>
+              )}
             </li>
           ))}
         </ul>
