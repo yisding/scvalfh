@@ -3,39 +3,84 @@
   "clubs": [
     {
       "california": false,
-      "evidence": [],
+      "description": "Year-round club offering U10 to U19 travel teams, an academy option, clinics and camps for players in Connecticut and nearby states.",
+      "evidence": [
+        {
+          "quote": "Based out of Greenwich, Conn., the club was founded under the leadership of",
+          "url": "https://www.usafieldhockey.com/news/2026/february/11/2025-usa-field-hockey-national-club-of-the-year-award-winner-agh-field-hockey-club"
+        },
+        {
+          "quote": "Year-round field hockey for players across Connecticut, New York, Massachusetts and New Jersey.",
+          "url": "https://aghockeyclub.com/"
+        },
+        {
+          "quote": "Home - AGH Field Hockey",
+          "url": "https://aghockeyclub.com/"
+        }
+      ],
       "match": [
         "agh"
       ],
       "name": "AGH",
       "norCal": false,
-      "region": null,
+      "region": "Greenwich, Conn.",
       "siteClub": null,
-      "slug": "agh"
+      "slug": "agh",
+      "website": "https://aghockeyclub.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Newtown, Conn., club offering fall youth teams for grades K-6 and winter, spring and summer club teams for grades K-12, open to all towns.",
+      "evidence": [
+        {
+          "quote": "We are an elite club that practices all year long in Newtown, CT.",
+          "url": "https://www.aimathletes.com/"
+        },
+        {
+          "quote": "FALL - Newtown Youth Teams Grades K-6 Winter, Spring & Summer - Grades K-12 Club Teams. Open to all towns.",
+          "url": "https://www.aimathletes.com/"
+        },
+        {
+          "quote": "Aim Athletes Field Hockey Club",
+          "url": "https://www.aimathletes.com/"
+        }
+      ],
       "match": [
         "aim athletes"
       ],
       "name": "AIM Athletes",
       "norCal": false,
-      "region": null,
+      "region": "Newtown, Conn.",
       "siteClub": null,
-      "slug": "aim-athletes"
+      "slug": "aim-athletes",
+      "website": "https://www.aimathletes.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Nonprofit Atlanta-area club with fall, winter and spring field hockey for boys and girls ages 4 to 18, plus adult programs.",
+      "evidence": [
+        {
+          "quote": "The first youth/junior field hockey club in the Greater Atlanta Area and State of Georgia",
+          "url": "https://www.atlantafhc.com/about"
+        },
+        {
+          "quote": "we are a 501(c)(3) non-profit organization committed to growing the sport of field hockey and creating a fun, competitive team environment for young athletes",
+          "url": "https://www.atlantafhc.com/about"
+        },
+        {
+          "quote": "Atlanta Field Hockey Club",
+          "url": "https://www.atlantafhc.com/"
+        }
+      ],
       "match": [
         "atlanta fhc"
       ],
       "name": "Atlanta FHC",
       "norCal": false,
-      "region": null,
+      "region": "Atlanta, Ga.",
       "siteClub": null,
-      "slug": "atlanta-fhc"
+      "slug": "atlanta-fhc",
+      "website": "https://www.atlantafhc.com/"
     },
     {
       "california": false,
@@ -52,87 +97,187 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Club offering year-round field hockey training, camps, clinics and league play for players from youth through high school, beginners to advanced.",
+      "evidence": [
+        {
+          "quote": "Blue Star Performance Center 430 Miller Rd. Medford, NJ 08055",
+          "url": "https://www.bluestarfieldhockey.com/winter2627training"
+        },
+        {
+          "quote": "focused on developing field hockey players from youth through high school. We run year round field hockey training with camps, clinics, and league play.",
+          "url": "https://www.bluestarfieldhockey.com/"
+        },
+        {
+          "quote": "Official Site of Blue Star Field Hockey",
+          "url": "https://www.bluestarfieldhockey.com/"
+        }
+      ],
       "match": [
         "blue star"
       ],
       "name": "Blue Star",
       "norCal": false,
-      "region": null,
+      "region": "Medford, N.J.",
       "siteClub": null,
-      "slug": "blue-star"
+      "slug": "blue-star",
+      "website": "https://www.bluestarfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Louisville club offering spring and indoor training, lessons, camps, clinics, leagues and travel opportunities for players from preschool through high school.",
+      "evidence": [
+        {
+          "quote": "Bluegrass Premier Field Hockey Club is located in Louisville, Ky.",
+          "url": "https://bpfhl.com/about-bluegrass"
+        },
+        {
+          "quote": "We offer several different options for our athletes ranging from the spring and indoor training sessions, individual and group lessons, camps, clinics, and leagues for all ages.",
+          "url": "https://bpfhl.com/about-bluegrass"
+        },
+        {
+          "quote": "https://bpfhl.com",
+          "url": "https://bpfhl.com/"
+        }
+      ],
       "match": [
         "bluegrass"
       ],
       "name": "Bluegrass Premier",
       "norCal": false,
-      "region": null,
+      "region": "Louisville, Ky.",
       "siteClub": null,
-      "slug": "bluegrass-premier"
+      "slug": "bluegrass-premier",
+      "website": "https://bpfhl.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Massachusetts club fielding competitive U14, U16 and U19 teams, with off-season practices, fitness sessions and tournament play.",
+      "evidence": [
+        {
+          "quote": "Cape Ann Field Hockey Club Worcester MA, 01610",
+          "url": "https://www.capeannfhc.com/"
+        },
+        {
+          "quote": "The Cape Ann FHC offers field hockey players opportunities to play competitively in the off-season.",
+          "url": "https://www.capeannfhc.com/page/about-us"
+        },
+        {
+          "quote": "Cape Ann FHC has competitive teams for athletes in age groups U14, U16 & U19.",
+          "url": "https://www.capeannfhc.com/"
+        }
+      ],
       "match": [
         "cape ann"
       ],
       "name": "Cape Ann FHC",
       "norCal": false,
-      "region": null,
+      "region": "Worcester, Mass.",
       "siteClub": null,
-      "slug": "cape-ann-fhc"
+      "slug": "cape-ann-fhc",
+      "website": "https://www.capeannfhc.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Nonprofit club promoting field hockey in North and South Carolina, with beginner clinics, rec leagues, school club teams, camps and U8-U19 travel teams.",
+      "evidence": [
+        {
+          "quote": "Address: 9535 Monroe Rd, Suite 170 Charlotte, NC 28270",
+          "url": "https://www.charlotteambush.com/"
+        },
+        {
+          "quote": "Beginners, Clinics & Camps, School Club Teams, Rec Leauges and Travel Teams",
+          "url": "https://www.charlotteambush.com/programs"
+        },
+        {
+          "quote": "Ambush U8, U10, U12, U14, U16 & U19 Travel Teams",
+          "url": "https://www.charlotteambush.com/"
+        }
+      ],
       "match": [
         "charlotte ambush"
       ],
       "name": "Charlotte Ambush",
       "norCal": false,
-      "region": null,
+      "region": "Charlotte, N.C.",
       "siteClub": null,
-      "slug": "charlotte-ambush"
+      "slug": "charlotte-ambush",
+      "website": "https://www.charlotteambush.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Nonprofit club in Fort Worth offering indoor seasons and travel teams for players from first through 12th grade.",
+      "evidence": [
+        {
+          "quote": "Fort Worth has a club field hockey team!",
+          "url": "https://www.cowtownfieldhockey.com/"
+        },
+        {
+          "quote": "Cowtown Field Hockey Club is a non-for-profit organization.",
+          "url": "https://www.cowtownfieldhockey.com/"
+        },
+        {
+          "quote": "Festival -Naples FL November 26-28 (Thanksgiving weekend)",
+          "url": "https://www.cowtownfieldhockey.com/"
+        }
+      ],
       "match": [
         "cowtown"
       ],
       "name": "Cowtown Field Hockey",
       "norCal": false,
-      "region": null,
+      "region": "Fort Worth, Texas",
       "siteClub": null,
-      "slug": "cowtown-field-hockey"
+      "slug": "cowtown-field-hockey",
+      "website": "https://www.cowtownfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Youth field hockey club for boys and girls ages 4 to 19, practicing at Doral Meadow Park and listed by the City of Doral.",
+      "evidence": [
+        {
+          "quote": "Doral Meadow Park, 11555 NW 58th Street",
+          "url": "https://www.cityofdoral.com/Departments/Parks-and-Recreation/Sports-Programs/Doral-Field-Hockey"
+        },
+        {
+          "quote": "Offering field hockey for boys and girls",
+          "url": "https://www.cityofdoral.com/Departments/Parks-and-Recreation/Sports-Programs/Doral-Field-Hockey"
+        }
+      ],
       "match": [
         "doral"
       ],
       "name": "Doral",
       "norCal": false,
-      "region": null,
+      "region": "Doral, Fla.",
       "siteClub": null,
       "slug": "doral"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Girls' field hockey club in Nassau County, Long Island, running indoor and outdoor travel teams, a practice team and training for players from beginners up.",
+      "evidence": [
+        {
+          "quote": "Dynasty FHC is based in Carle Place, NY",
+          "url": "https://dynastyfieldhockey.com/about"
+        },
+        {
+          "quote": "Dynasty Field Hockey Club is a USA Field Hockey sanctioned program based in Nassau County, Long Island, created to provide more opportunity for girls in Nassau County",
+          "url": "https://dynastyfieldhockey.com/about"
+        },
+        {
+          "quote": "Our top teams travel to USA Field Hockey national tournaments including National Indoor Festival , National Indoor Tournament, USA National Field Hockey Festival and Shooting Star Tournaments.",
+          "url": "https://dynastyfieldhockey.com/"
+        }
+      ],
       "match": [
         "dynasty"
       ],
       "name": "Dynasty",
       "norCal": false,
-      "region": null,
+      "region": "Carle Place, N.Y.",
       "siteClub": null,
-      "slug": "dynasty"
+      "slug": "dynasty",
+      "website": "https://dynastyfieldhockey.com/"
     },
     {
       "california": false,
@@ -148,63 +293,118 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Field Hockey Life runs leagues, travel teams, camps and clinics for elementary-age players through adults in Cincinnati, Cleveland and Columbus, Ohio.",
+      "evidence": [
+        {
+          "quote": "FHL\nOxford, Ohio",
+          "url": "https://www.usafieldhockey.com/events/2026/June/22/ncc/qualified-teams"
+        },
+        {
+          "quote": "We train in three major cities in Ohio - Columbus, Cincinnati, and Cleveland.",
+          "url": "https://fieldhockeylife.com/our-mission/"
+        },
+        {
+          "quote": "s premier field hockey club... offers field hockey programs in Cincinnati, Cleveland, and Columbus.\" Its social handle is @fhlifeclub, matching USA Field Hockey",
+          "url": "https://fieldhockeylife.com/"
+        }
+      ],
       "match": [
         "fhl"
       ],
       "name": "FHL",
       "norCal": false,
-      "region": null,
+      "region": "Oxford, Ohio",
       "siteClub": null,
-      "slug": "fhl"
+      "slug": "fhl",
+      "website": "https://fieldhockeylife.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "quote": "Firestyx\nFleetwood, PA",
+          "url": "https://www.sportsengine.com/org/firestyx"
+        }
+      ],
       "match": [
         "firestyx"
       ],
       "name": "FireStyx",
       "norCal": false,
-      "region": null,
+      "region": "Fleetwood, Pa.",
       "siteClub": null,
       "slug": "firestyx"
     },
     {
       "california": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "quote": "Florida United\nMiami, Fla.",
+          "url": "https://www.usafieldhockey.com/events/2026/June/22/ncc/qualified-teams"
+        }
+      ],
       "match": [
         "florida united"
       ],
       "name": "Florida United",
       "norCal": false,
-      "region": null,
+      "region": "Miami, Fla.",
       "siteClub": null,
       "slug": "florida-united"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Founded in 2017, Frontier offers youth clinics, skill development programs, travel teams and adult play in the Columbus and Delaware, Ohio, area.",
+      "evidence": [
+        {
+          "quote": "Cleo Dumaree Athletic Complex\n276 S Nelson Road\nColumbus, OH 43205",
+          "url": "https://www.frontierfieldhockey.com/"
+        },
+        {
+          "quote": "Founded in 2017, Frontier Field Hockey is proud to be a leader in growing the sport of field hockey across Ohio, with a strong presence in Columbus, Delaware, and surrounding areas. We offer comprehensive youth clinics, skill development programs, and competitive travel opportunities",
+          "url": "https://www.frontierfieldhockey.com/about"
+        },
+        {
+          "quote": "s club finder lists \"Frontier Field Hockey (236783)\", State: Ohio, Website: www.frontierfieldhockey.com, the only club finder entry named Frontier. The club",
+          "url": "https://www.frontierfieldhockey.com/"
+        }
+      ],
       "match": [
         "frontier"
       ],
       "name": "Frontier",
       "norCal": false,
-      "region": null,
+      "region": "Columbus, Ohio",
       "siteClub": null,
-      "slug": "frontier"
+      "slug": "frontier",
+      "website": "https://www.frontierfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Founded in 1984, Gateway runs leagues, camps, lessons and year-round club teams from U8 to U19 for players in the St. Louis area.",
+      "evidence": [
+        {
+          "quote": "Since 1984, Gateway Field Hockey has paved the way for thousands of athletes in the St. Louis area to grow their love of the game.",
+          "url": "https://gatewayfieldhockey.com/"
+        },
+        {
+          "quote": "We offer Elite Club in U8, U10, U12, U14, U16, and U19.",
+          "url": "https://gatewayfieldhockey.com/elite-club/"
+        },
+        {
+          "quote": "Gateway Field Hockey (225556)",
+          "url": "https://gatewayfieldhockey.com/"
+        }
+      ],
       "match": [
         "gateway"
       ],
       "name": "Gateway",
       "norCal": false,
-      "region": null,
+      "region": "St. Louis, Mo.",
       "siteClub": null,
-      "slug": "gateway"
+      "slug": "gateway",
+      "website": "https://gatewayfieldhockey.com/"
     },
     {
       "california": true,
@@ -229,6 +429,7 @@
     },
     {
       "california": false,
+      "description": "HTC Field Hockey Club, short for \"Hear The Cheers,\" runs club teams, clinics, camps and tournaments in Connecticut and Massachusetts, plus a California program.",
       "evidence": [
         {
           "quote": "There will be a choice between “HTC – U16” or “HTC CA – U19”.",
@@ -237,6 +438,18 @@
         {
           "quote": "U-16 Teams … HTC",
           "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        },
+        {
+          "quote": "30 Eastwood Drive\nMadison, CT 06443",
+          "url": "https://www.htcfieldhockey.com/contact-us/"
+        },
+        {
+          "quote": "Our Club offers the dedicated athlete the opportunity to develop their field hockey and life skills through various activities including:\nClub Teams\nField Hockey Camps\nField Hockey Tournaments\nShowcases/Clinics",
+          "url": "https://www.htcfieldhockey.com/"
+        },
+        {
+          "quote": "s club finder lists \"HTC Field Hockey Club (226354)\", State: Connecticut, Website: www.HTCfieldhockey.com. The club",
+          "url": "https://www.htcfieldhockey.com/"
         }
       ],
       "match": [
@@ -244,9 +457,10 @@
       ],
       "name": "HTC",
       "norCal": false,
-      "region": null,
+      "region": "Madison, Conn.",
       "siteClub": "htc",
-      "slug": "htc"
+      "slug": "htc",
+      "website": "https://www.htcfieldhockey.com/"
     },
     {
       "california": true,
@@ -279,104 +493,224 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Louisville club offering travel and non-travel programs, small-group lessons and tournaments for players from U8 through U19.",
+      "evidence": [
+        {
+          "quote": "600 N. English Station Road Louisville, KY 40223",
+          "url": "https://ifhckfieldhockey.com/about-us"
+        },
+        {
+          "quote": "We provide comprehensive development from U8 through U19",
+          "url": "https://ifhckfieldhockey.com/about-us"
+        },
+        {
+          "quote": "IFHCK (225503)",
+          "url": "https://ifhckfieldhockey.com/"
+        }
+      ],
       "match": [
         "ifhck"
       ],
       "name": "IFHCK",
       "norCal": false,
-      "region": null,
+      "region": "Louisville, Ky.",
       "siteClub": null,
-      "slug": "ifhck"
+      "slug": "ifhck",
+      "website": "https://ifhckfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "quote": "Key Biscayne Field Hockey (226175) ... State: Florida",
+          "url": "https://usafieldhockey.sport80.com/public/widget/1"
+        }
+      ],
       "match": [
         "key biscayne"
       ],
       "name": "Key Biscayne Field Hockey",
       "norCal": false,
-      "region": null,
+      "region": "Key Biscayne, Fla.",
       "siteClub": null,
       "slug": "key-biscayne-field-hockey"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Calgary field hockey academy focused on long-term athlete development, running training programs with the University of Calgary Dinos and travel tournaments.",
+      "evidence": [
+        {
+          "quote": "Field Hockey Academy | Legacy Academy | Calgary",
+          "url": "https://www.legacyacademysports.com/"
+        },
+        {
+          "quote": "This fall, Legacy Academy and the University of Calgary Dinos are coming together",
+          "url": "https://www.legacyacademysports.com/"
+        },
+        {
+          "quote": "Legacy Academy",
+          "url": "https://www.legacyacademysports.com/"
+        }
+      ],
       "match": [
         "legacy academy"
       ],
       "name": "Legacy Academy",
       "norCal": false,
-      "region": null,
+      "region": "Calgary, Alberta",
       "siteClub": null,
-      "slug": "legacy-academy"
+      "slug": "legacy-academy",
+      "website": "https://www.legacyacademysports.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Texas youth club training players from age 5 in Austin, Dallas and Fort Worth, with travel teams from U14 through U19.",
+      "evidence": [
+        {
+          "quote": "© 2026 Lonestar Field Hockey Club · Austin, Texas",
+          "url": "https://www.lonestarfhc.com/"
+        },
+        {
+          "quote": "training young athletes from age five in Austin, Dallas, and Fort Worth.",
+          "url": "https://www.lonestarfhc.com/"
+        },
+        {
+          "quote": "Lone Star FHC (235395)",
+          "url": "https://www.lonestarfhc.com/"
+        }
+      ],
       "match": [
         "lonestar"
       ],
       "name": "Lonestar",
       "norCal": false,
-      "region": null,
+      "region": "Austin, Texas",
       "siteClub": null,
-      "slug": "lonestar"
+      "slug": "lonestar",
+      "website": "https://www.lonestarfhc.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Miami club offering field hockey for girls ages 5 to 18, boys ages 5 to 13, and adult women.",
+      "evidence": [
+        {
+          "quote": "Meerkats Field Hockey Club Miami",
+          "url": "https://www.meerkatsfieldhockey.org/"
+        },
+        {
+          "quote": "GIRLS 5 to 18 years old ... BOYS 5 to 13 years old ... ADULTS Women 19+ years old",
+          "url": "https://www.meerkatsfieldhockey.org/"
+        },
+        {
+          "quote": "Meerkats Field Hockey (229207)",
+          "url": "https://www.meerkatsfieldhockey.org/"
+        }
+      ],
       "match": [
         "meerkats"
       ],
       "name": "Meerkats",
       "norCal": false,
-      "region": null,
+      "region": "Miami, Fla.",
       "siteClub": null,
-      "slug": "meerkats"
+      "slug": "meerkats",
+      "website": "https://www.meerkatsfieldhockey.org/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A central New Jersey club run by Rutgers University coaches, offering training and tournament teams for boys and girls ages 4 to 19.",
+      "evidence": [
+        {
+          "quote": "Outdoor AstroTurf Bauer Track and Field Complex Hospital Road Piscataway, NJ",
+          "url": "https://www.knightsfhc.com/directions.html"
+        },
+        {
+          "quote": "All sessions are open to any and all 4-19 year olds, boys and girls, regardless of club affiliation.",
+          "url": "https://www.knightsfhc.com/"
+        },
+        {
+          "quote": "Mid Jersey Knights (229320)",
+          "url": "https://www.knightsfhc.com/"
+        }
+      ],
       "match": [
         "mid-jersey knights",
         "mid jersey knights"
       ],
       "name": "Mid Jersey Knights",
       "norCal": false,
-      "region": null,
+      "region": "Piscataway, N.J.",
       "siteClub": null,
-      "slug": "mid-jersey-knights"
+      "slug": "mid-jersey-knights",
+      "website": "https://www.knightsfhc.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A New Jersey club running clinics, skill training, leagues and travel teams for field hockey players of all ages and abilities.",
+      "evidence": [
+        {
+          "quote": "ADDRESS: P.O. BOX 567 CHATHAM, NJ 07928",
+          "url": "https://newheightsfieldhockey.com/"
+        },
+        {
+          "quote": "Through our clinics, skill-specific training, leagues, and travel teams, we empower individuals to reach their full potential on and off the field.",
+          "url": "https://newheightsfieldhockey.com/about-us/"
+        },
+        {
+          "quote": "NEW HEIGHTS FIELD HOCKEY",
+          "url": "https://newheightsfieldhockey.com/"
+        }
+      ],
       "match": [
         "new heights"
       ],
       "name": "New Heights",
       "norCal": false,
-      "region": null,
+      "region": "Chatham, N.J.",
       "siteClub": null,
-      "slug": "new-heights"
+      "slug": "new-heights",
+      "website": "https://newheightsfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Long Island field hockey travel club, affiliated with USA Field Hockey, with spring and winter teams from U10 through U19.",
+      "evidence": [
+        {
+          "quote": "newyorkelitefieldhockey@gmail.com Bayport, NY 11715",
+          "url": "https://www.newyorkelitefieldhockey.com/contact"
+        },
+        {
+          "quote": "A Long Island, New York based field hockey travel club affiliated with USA Field Hockey.",
+          "url": "https://www.newyorkelitefieldhockey.com/"
+        },
+        {
+          "quote": "New York Elite Field Hockey",
+          "url": "https://www.newyorkelitefieldhockey.com/"
+        }
+      ],
       "match": [
         "new york elite"
       ],
       "name": "New York Elite",
       "norCal": false,
-      "region": null,
+      "region": "Bayport, N.Y.",
       "siteClub": null,
-      "slug": "new-york-elite"
+      "slug": "new-york-elite",
+      "website": "https://www.newyorkelitefieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Trains U12 through U19 field hockey players in Westchester and Fairfield counties through practice sessions and tournament play.",
+      "evidence": [
+        {
+          "quote": "Based in Westchester and Fairfield Counties, we develop U12–U19 field hockey players through high-level training, competitive tournament play, and a strong team culture.",
+          "url": "https://www.newyorkhockeyclub.com/"
+        },
+        {
+          "quote": "New York H.C. was built for athletes who love the game",
+          "url": "https://www.newyorkhockeyclub.com/"
+        }
+      ],
       "match": [
         "new york h.c."
       ],
@@ -384,7 +718,8 @@
       "norCal": false,
       "region": null,
       "siteClub": null,
-      "slug": "new-york-hc"
+      "slug": "new-york-hc",
+      "website": "https://www.newyorkhockeyclub.com/"
     },
     {
       "california": true,
@@ -409,43 +744,94 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A USA Field Hockey club in Colorado Springs that introduces athletes to the sport and offers skills training, clinics and travel play.",
+      "evidence": [
+        {
+          "quote": "2024 USA FIELD HOCKEY BESSANT GROW THE GAME GRANTEE COLORADO SPRINGS, COLORADO",
+          "url": "https://www.peakfieldhockey.com/"
+        },
+        {
+          "quote": "Peak Field Hockey is passionate about growing the game of field hockey in Colorado Springs An official club of USA field hockey focused on: introducing athletes to the sport",
+          "url": "https://www.peakfieldhockey.com/about-us"
+        },
+        {
+          "quote": "Peak Field Hockey",
+          "url": "https://www.peakfieldhockey.com/"
+        }
+      ],
       "match": [
         "peak fh"
       ],
       "name": "Peak FH",
       "norCal": false,
-      "region": null,
+      "region": "Colorado Springs, Colo.",
       "siteClub": null,
-      "slug": "peak-fh"
+      "slug": "peak-fh",
+      "website": "https://www.peakfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Michigan club, founded in 2009, offering seasonal training programs and travel teams for players in the Ann Arbor and Grand Rapids areas.",
+      "evidence": [
+        {
+          "quote": "FIELD HOCKEY CLUB IN ANN ARBOR AND GRAND RAPIDS, MI",
+          "url": "https://pinnaclefieldhockey.com/"
+        },
+        {
+          "quote": "Since our founding in 2009, Pinnacle has proudly served the Michigan field hockey community ... Our Pinnacle Travel teams, anchored in Ann Arbor and Grand Rapids",
+          "url": "https://pinnaclefieldhockey.com/about-us/"
+        },
+        {
+          "quote": "Pinnacle Field Hockey",
+          "url": "https://pinnaclefieldhockey.com/"
+        }
+      ],
       "match": [
         "pinnacle"
       ],
       "name": "Pinnacle Field Hockey",
       "norCal": false,
-      "region": null,
+      "region": "Ann Arbor, Mich.",
       "siteClub": null,
-      "slug": "pinnacle-field-hockey"
+      "slug": "pinnacle-field-hockey",
+      "website": "https://pinnaclefieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Vancouver program offering year-round field hockey training, leagues and tours for players from age 5 through adults.",
+      "evidence": [
+        {
+          "quote": "Mailing Address 9025 Oak Street Vancouver British Columbia Canada V6P 4B8",
+          "url": "https://polarbearsfieldhockey.com/contact/"
+        },
+        {
+          "quote": "We have year round programs – indoor in the winter and outdoor for all seasons together with select tours",
+          "url": "https://polarbearsfieldhockey.com/about/"
+        },
+        {
+          "quote": "s Junior Programs page (https://polarbearsfieldhockey.com/programs-overview/junior-programs/), which lists ",
+          "url": "https://polarbearsfieldhockey.com/"
+        }
+      ],
       "match": [
         "polar bears"
       ],
       "name": "Polar Bears",
       "norCal": false,
-      "region": null,
+      "region": "Vancouver, British Columbia",
       "siteClub": null,
-      "slug": "polar-bears"
+      "slug": "polar-bears",
+      "website": "https://polarbearsfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A U18 girls touring squad organized by U.S. Sports Scholarships for the National Hockey Festival.",
+      "evidence": [
+        {
+          "quote": "a select squad of 18 female players (2 GKs) called the Red Lions",
+          "url": "https://www.ussportsscholarships.com/usa-hockey-tours/"
+        }
+      ],
       "match": [
         "red lions"
       ],
@@ -457,15 +843,30 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A Vancouver field hockey academy running fall training programs for grades 7 to 12, plus domestic and international tournament tours.",
+      "evidence": [
+        {
+          "quote": "HP field hockey academy in Vancouver, BC",
+          "url": "https://www.robshortcoaching.com/about/"
+        },
+        {
+          "quote": "Rob Short Coaching also offers domestic and international travel opportunities.",
+          "url": "https://www.robshortcoaching.com/about/"
+        },
+        {
+          "quote": "s 2017 festival results also list a ",
+          "url": "https://www.robshortcoaching.com/"
+        }
+      ],
       "match": [
         "rob short"
       ],
       "name": "Rob Short Academy",
       "norCal": false,
-      "region": null,
+      "region": "Vancouver, British Columbia",
       "siteClub": null,
-      "slug": "rob-short-academy"
+      "slug": "rob-short-academy",
+      "website": "https://www.robshortcoaching.com/"
     },
     {
       "california": true,
@@ -490,19 +891,34 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "quote": "| Spirit of USA | Woodbury, N.J. | 6 |",
+          "url": "https://www.usafieldhockey.com/events/2024/june/22/ncc/qualified-teams"
+        }
+      ],
       "match": [
         "spirit of usa"
       ],
       "name": "Spirit of USA",
       "norCal": false,
-      "region": null,
+      "region": "Woodbury, N.J.",
       "siteClub": null,
       "slug": "spirit-of-usa"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "A New Hampshire field hockey club running indoor and outdoor seasons, travel teams from U10 to U19, skill classes, clinics and goalkeeper training.",
+      "evidence": [
+        {
+          "quote": "National Level Teams U10-U19 Local Level Teams U12-U19 Academy Teams U14-U19",
+          "url": "https://summitfieldhockey.com/indoor/travel-teams/"
+        },
+        {
+          "quote": "Summit (U14 Co-Ed)",
+          "url": "https://summitfieldhockey.com/"
+        }
+      ],
       "match": [
         "summit"
       ],
@@ -510,19 +926,35 @@
       "norCal": false,
       "region": null,
       "siteClub": null,
-      "slug": "summit"
+      "slug": "summit",
+      "website": "https://summitfieldhockey.com/"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Year-round Houston club offering leagues, camps and U8 to U19 travel teams, training players from as young as 3 until they enter college.",
+      "evidence": [
+        {
+          "quote": "2415 McAllister Road Houston, TX 77092",
+          "url": "https://txpridefh.com/"
+        },
+        {
+          "quote": "We will foster not only skill development from as young as 3 years old",
+          "url": "https://txpridefh.com/why-we-got-started.html"
+        },
+        {
+          "quote": "Texas Pride Field Hockey - Home",
+          "url": "https://txpridefh.com"
+        }
+      ],
       "match": [
         "texas pride"
       ],
       "name": "Texas Pride",
       "norCal": false,
-      "region": null,
+      "region": "Houston, Texas",
       "siteClub": null,
-      "slug": "texas-pride"
+      "slug": "texas-pride",
+      "website": "https://txpridefh.com"
     },
     {
       "california": false,
@@ -538,31 +970,66 @@
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Western New York club, started by families in 2016, that forms U12 to U19 tournament teams and runs a K-8 skills program.",
+      "evidence": [
+        {
+          "quote": "the state-of-the-art athletic facility at Williamsville North High School",
+          "url": "https://williamsvillestampede.teamsnapsites.com/?p=69"
+        },
+        {
+          "quote": "Each season, we host tryouts/evaluations to form our U12–U19 teams.",
+          "url": "https://williamsvillestampede.teamsnapsites.com/"
+        },
+        {
+          "quote": "Williamsville Stampede – WNY",
+          "url": "https://williamsvillestampede.teamsnapsites.com"
+        }
+      ],
       "match": [
         "williamsville stampede"
       ],
       "name": "Williamsville Stampede",
       "norCal": false,
-      "region": null,
+      "region": "Williamsville, N.Y.",
       "siteClub": null,
-      "slug": "williamsville-stampede"
+      "slug": "williamsville-stampede",
+      "website": "https://williamsvillestampede.teamsnapsites.com"
     },
     {
       "california": false,
-      "evidence": [],
+      "description": "Chicago-area club, founded in 1991, offering travel, indoor, academy and camp programs for girls and boys from age five through college.",
+      "evidence": [
+        {
+          "quote": "Northbrook IL 60062",
+          "url": "https://www.windycityfieldhockey.com/page/our-mission"
+        },
+        {
+          "quote": "We offer activities for girls and boys from five year old's through college.",
+          "url": "https://www.windycityfieldhockey.com/page/our-mission"
+        },
+        {
+          "quote": "Our Mission -- Windy City Field Hockey",
+          "url": "https://www.windycityfieldhockey.com"
+        }
+      ],
       "match": [
         "windy city"
       ],
       "name": "Windy City",
       "norCal": false,
-      "region": null,
+      "region": "Northbrook, Ill.",
       "siteClub": null,
-      "slug": "windy-city"
+      "slug": "windy-city",
+      "website": "https://www.windycityfieldhockey.com"
     },
     {
       "california": false,
-      "evidence": [],
+      "evidence": [
+        {
+          "quote": "Marketing-Home - Wizards Field Hockey",
+          "url": "https://wizardsfieldhockey.com"
+        }
+      ],
       "match": [
         "wizards"
       ],
@@ -570,7 +1037,8 @@
       "norCal": false,
       "region": null,
       "siteClub": null,
-      "slug": "wizards"
+      "slug": "wizards",
+      "website": "https://wizardsfieldhockey.com"
     }
   ],
   "sources": [
