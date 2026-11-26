@@ -3835,8 +3835,12 @@ sport's build reads neither file. Decoded on 2026-11-26 from the JSON TourneyMac
   PM), and the endpoint answers any extra query parameter with a 302, so the cache cannot be bypassed. A read whose
   `Last-Modified` is not more than 2 s after the version's own time is treated as a stale copy: both are cut to the
   second, so a copy made earlier in the very second a score went in carries the version's own stamp, and the 2 s
-  cover the two servers' clocks. The file then keeps the committed `sourceVersion`, so the next run reads again
-  (`feedIsCurrent`, `FEED_CLOCK_MARGIN_MS`); a false "stale" costs one more read, a false "current" would lose a score.
+  cover the two servers' clocks (`feedIsCurrent`, `FEED_CLOCK_MARGIN_MS`); a false "stale" costs one more read, a
+  false "current" would lose a score. A stale copy newer than what the committed file holds is still written, stamped
+  `cached_<its Last-Modified>` (`cachedCopyVersion`): never a real version, so the next run reads again, and an
+  instant `versionInstant` reads back, so a later copy is compared with what was actually published. A copy no newer
+  than that keeps the committed file whole, so a `--force` run or two cached copies arriving out of order can never
+  put older results back.
 
 What the feed holds, and how `normalizeFestival` reads it:
 

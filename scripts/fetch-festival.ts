@@ -38,6 +38,7 @@ import { HttpClient } from '../lib/sources/http';
 import { IS_FIELD_HOCKEY, SPORT_ID } from '../lib/sports/current';
 import {
   FESTIVAL_TOURNAMENT_ID,
+  cachedCopyVersion,
   feedIsCurrent,
   festivalCounts,
   lastUpdatedUrl,
@@ -147,10 +148,10 @@ export async function main(argv: readonly string[], fetchImpl: typeof fetch = gl
   const made = lastModified.get(url) ?? null;
   const current = feedIsCurrent(made, version);
   if (!current) {
-    // A copy older than the version may still be newer than the committed file: then it is written, under the
-    // committed version, so the next run reads the feed again. A copy no newer than the committed version cannot
-    // add anything and could take results away (a --force run would otherwise write older results under the
-    // committed version, which later runs then skip), so the committed file is kept whole.
+    // A copy older than the version may still be newer than the committed file: then it is written, stamped with
+    // its own time (cachedCopyVersion), so the next run reads the feed again and a later copy is compared with
+    // what was published. A copy no newer than what the committed file holds cannot add anything and could take
+    // results away (a --force run, or two cached copies arriving out of order), so the committed file is kept whole.
     if (previous && !feedIsCurrent(made, previous.sourceVersion)) {
       console.log(
         `fetch-festival: the feed read is a cached copy from ${made}, no newer than the committed ` +
@@ -160,12 +161,12 @@ export async function main(argv: readonly string[], fetchImpl: typeof fetch = gl
     }
     console.log(
       `fetch-festival: the feed read is a cached copy from ${made}, older than ${version}; ` +
-        'the file keeps the committed version, so the next run reads it again',
+        'the file is stamped with the copy\'s time, so the next run reads the feed again',
     );
   }
   const file = normalizeFestival(JSON.parse(feed.body) as unknown, {
     fetchedAt: args.fetchedAt ?? new Date().toISOString(),
-    sourceVersion: current ? version : (previous?.sourceVersion ?? 'unverified'),
+    sourceVersion: current ? version : (cachedCopyVersion(made) ?? previous?.sourceVersion ?? 'unverified'),
   });
   const validated = validateAssembled(FestivalFileSchema, file);
   if (validated === null) return 1;

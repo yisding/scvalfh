@@ -157,6 +157,22 @@ export function versionInstant(version: string): number | null {
 export const FEED_CLOCK_MARGIN_MS = 2_000;
 
 /**
+ * The version a file written from a stale cached copy carries: the copy's own Last-Modified in TourneyMachine's
+ * version format, prefixed `cached_` so it never equals a real version (the next run's change check still reads
+ * the feed) while `versionInstant` still reads the instant from it. Later copies are then compared with what was
+ * actually published, not with the older version the file had before, so two cached copies arriving out of order
+ * can never put the older one's results back. Null when the header cannot be read.
+ */
+export function cachedCopyVersion(lastModified: string | null): string | null {
+  const made = lastModified === null ? NaN : Date.parse(lastModified);
+  if (Number.isNaN(made)) return null;
+  const d = new Date(made);
+  const h = d.getUTCHours();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `cached_${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()} ${h % 12 || 12}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} ${h < 12 ? 'AM' : 'PM'}`;
+}
+
+/**
  * Whether a whole-feed response is newer than `version`: its Last-Modified (when Cloudflare's copy was made; the
  * feed is cached with max-age 30 and was seen served at age 82) is strictly after the version's instant, by more
  * than FEED_CLOCK_MARGIN_MS. Both are cut to the second, so a copy made earlier in the very second a score was

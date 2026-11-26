@@ -28,6 +28,7 @@ import {
   FESTIVAL_TOURNAMENT_ID,
   bracketLayout,
   divisionLabels,
+  cachedCopyVersion,
   feedIsCurrent,
   festivalCounts,
   lastUpdatedUrl,
@@ -569,8 +570,33 @@ describe('scripts/fetch-festival.ts', () => {
     expect(await main(['--out', out, '--fetched-at', FETCHED_AT], fetchImpl)).toBe(0);
     expect(lines.join('\n')).toContain('is a cached copy from Thu, 26 Nov 2026 15:17:21 GMT');
     const written = FestivalFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
-    expect(written.sourceVersion).toBe(VERSION_1518);
+    // Stamped with the copy's own time, never a real version, so the next run reads the feed again.
+    expect(written.sourceVersion).toBe('cached_11/26/2026 3:17:21 PM');
+    expect(written.sourceVersion).not.toBe(VERSION_1535);
     expect(festivalCounts(written).finals).toBe(10);
+  });
+
+  it('never lets an older cached copy replace a newer one written before it (copies out of order)', async () => {
+    commit(normalize(capture('1518'), VERSION_1518));
+    // First a copy made 15:20:00 (the 3:26:47 PM results, but older than that version): written, stamped 3:20:00 PM.
+    const newer = upstream({ feed: body('1535'), lastModified: 'Thu, 26 Nov 2026 15:20:00 GMT' });
+    expect(await main(['--out', out, '--fetched-at', FETCHED_AT], newer.fetchImpl)).toBe(0);
+    const afterNewer = readFileSync(out, 'utf8');
+    expect(FestivalFileSchema.parse(JSON.parse(afterNewer)).sourceVersion).toBe('cached_11/26/2026 3:20:00 PM');
+    // Then a copy made 15:17:21 with older results: after the committed 3:13:00 PM version, but before what was
+    // published from the first copy, so the file is kept whole.
+    const older = upstream({ feed: body('1518'), lastModified: 'Thu, 26 Nov 2026 15:17:21 GMT' });
+    expect(await main(['--out', out, '--fetched-at', '2026-11-26T15:41:00.000Z'], older.fetchImpl)).toBe(0);
+    expect(lines.join('\n')).toContain('the committed file is kept as it is');
+    expect(readFileSync(out, 'utf8')).toBe(afterNewer);
+  });
+
+  it('writes a cached copy\'s version in TourneyMachine\'s format, which versionInstant reads back', () => {
+    const v = cachedCopyVersion('Thu, 26 Nov 2026 00:05:09 GMT')!;
+    expect(v).toBe('cached_11/26/2026 12:05:09 AM');
+    expect(versionInstant(v)).toBe(Date.parse('2026-11-26T00:05:09Z'));
+    expect(cachedCopyVersion(null)).toBeNull();
+    expect(cachedCopyVersion('not a date')).toBeNull();
   });
 
   it('keeps the committed file whole when a forced read is a cached copy no newer than it', async () => {
