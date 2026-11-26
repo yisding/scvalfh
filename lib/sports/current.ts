@@ -96,13 +96,16 @@ export const DATA_DIR = `data/${SPORT_ID}`;
  * - `clubCalendar`: /club-calendar and the club pages' "Tournaments and leagues" section.
  *   data/field-hockey/club-events.json is field hockey's research alone, so every other build renders the page as a
  *   404 and links to it from nowhere.
+ * - `festival`: /festival and its pages, the 2026 National Hockey Festival's results from TourneyMachine
+ *   (data/field-hockey/festival.json, DESIGN §35). USA Field Hockey's event is field hockey's alone; every other
+ *   build renders the pages as a 404, lists none of them in the sitemap and links to none.
  */
-export const SPORT_FEATURES = bySport<{ readonly recruiting: boolean; readonly clubCalendar: boolean }>({
-  'field-hockey': { recruiting: true, clubCalendar: true },
-  soccer: { recruiting: true, clubCalendar: false },
-  basketball: { recruiting: true, clubCalendar: false },
-  volleyball: { recruiting: true, clubCalendar: false },
-  'val-soccer': { recruiting: false, clubCalendar: false },
+export const SPORT_FEATURES = bySport<{ readonly recruiting: boolean; readonly clubCalendar: boolean; readonly festival: boolean }>({
+  'field-hockey': { recruiting: true, clubCalendar: true, festival: true },
+  soccer: { recruiting: true, clubCalendar: false, festival: false },
+  basketball: { recruiting: true, clubCalendar: false, festival: false },
+  volleyball: { recruiting: true, clubCalendar: false, festival: false },
+  'val-soccer': { recruiting: false, clubCalendar: false, festival: false },
 });
 
 /**
@@ -126,6 +129,9 @@ export const HAS_RECRUITING = SPORT_FEATURES.recruiting;
 
 /** /club-calendar (SPORT_FEATURES.clubCalendar). */
 export const HAS_CLUB_CALENDAR = SPORT_FEATURES.clubCalendar;
+
+/** /festival and its pages (SPORT_FEATURES.festival). */
+export const HAS_FESTIVAL = SPORT_FEATURES.festival;
 
 /** 'Girls': the program's gender as MaxPreps and the schools' calendars capitalize it. */
 export const GENDER_NAME = `${SPORT_SEASON.gender.charAt(0).toUpperCase()}${SPORT_SEASON.gender.slice(1)}`;

@@ -354,7 +354,14 @@ export function normalizeFestival(raw: unknown, opts: NormalizeOptions): Festiva
         },
       };
     })
-    .sort((a, b) => divisionRank.get(a.divisionKey)! - divisionRank.get(b.divisionKey)! || naturalCompare(a.name, b.name) || (a.id < b.id ? -1 : 1));
+    // A–Z within a division by the name a reader scans for ('U14 Gateway White' under G).
+    .sort(
+      (a, b) =>
+        divisionRank.get(a.divisionKey)! - divisionRank.get(b.divisionKey)! ||
+        naturalCompare(withoutAgeTokens(a.name), withoutAgeTokens(b.name)) ||
+        naturalCompare(a.name, b.name) ||
+        (a.id < b.id ? -1 : 1),
+    );
 
   // A game's division: the division whose IDGames lists it (each game is in exactly one).
   const divisionOfGame = new Map<number, number>();
