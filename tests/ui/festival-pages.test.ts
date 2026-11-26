@@ -170,14 +170,18 @@ describe('team names in matches (owner ask, 2026-11-26: tapping a name opens the
 });
 
 describe('a division without placement games', () => {
-  it('says "Pool play only" in its header and in the hub’s division list; one with a bracket does not', () => {
+  it('says "Pool play only" in its header, and the hub’s division list links its pools where others link a bracket', () => {
     expect(stripTags(u16)).toContain('Pool play only');
     expect(stripTags(u19)).not.toContain('Pool play only');
+    expect(u16).toContain('id="pools"');
     const list = hub.split('aria-labelledby="divisions"')[1]!.split('</section>')[0]!;
-    const row = (short: string) => stripTags(list.split('<li').find((li) => li.includes(`>${short}</a>`)) ?? '');
-    expect(row('U16')).toContain('Pool play only');
-    expect(row('U14 Co-Ed')).toContain('Pool play only');
-    expect(row('U19')).toContain('Bracket');
+    const row = (short: string) => list.split('<li').find((li) => li.includes(`>${short}</a>`)) ?? '';
+    for (const [short, slug] of [['U16', 'u16'], ['U14 Co-Ed', 'u14-coed'], ['Adult', 'adult']]) {
+      expect(row(short), short).toMatch(new RegExp(`href="/festival/${slug}#pools"[^>]*>Pools<`));
+      expect(row(short), short).not.toContain('#bracket');
+    }
+    expect(row('U19')).toMatch(/href="\/festival\/u19#bracket"[^>]*>Bracket</);
+    expect(row('U19')).not.toContain('#pools');
   });
 });
 

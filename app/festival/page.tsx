@@ -142,7 +142,10 @@ export default function FestivalPage() {
                   <span className="sr-only"> &mdash; {d.short}</span>
                 </Link>
               ) : (
-                <span className="ml-auto text-cell text-ink-2">Pool play only</span>
+                <Link href={`${d.href}#pools`} prefetch={false} className="sx-action ml-auto">
+                  Pools
+                  <span className="sr-only"> &mdash; {d.short}</span>
+                </Link>
               )}
             </li>
           ))}
