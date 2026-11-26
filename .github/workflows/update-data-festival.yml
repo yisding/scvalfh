@@ -17,9 +17,13 @@
 # catch-up a day follows its last slot by 2 h 15 min, for the scores entered after the fields close. Cron fields
 # are UTC and Naples is on EST (UTC-5) all three days, so Friday's 6 PM slot's runs (00:07-00:47 UTC Nov 28) and
 # the Thursday and Friday catch-ups (7:10 PM and 9:10 PM ET) fall on the next UTC day. The lines below are exactly
-# what `pnpm festival-crons` derives from the committed festival.json; tests/workflows.test.ts holds them to it, so
-# a slot TourneyMachine moves fails ci (never this job's data commit). Day-of-week is '*': with both day fields
-# restricted, cron fires on either.
+# what `pnpm festival-crons` derived from festival.json as first published; tests/workflows.test.ts holds them to the
+# derivation over a frozen copy of those slots (tests/fixtures/festival/slots-2026.json), never the live file: the
+# whole suite also gates field hockey's Saturday refresh (update-data.yml), ci and the deploy, and a slot
+# TourneyMachine moves must fail none of them. Drift is reported instead: the "Schedule drift check" step below
+# compares `pnpm festival-crons` on the file it just fetched with these lines and leaves a warning on the run (never
+# a failure) when they differ; paste its lines here. Day-of-week is '*': with both day fields restricted, cron
+# fires on either.
 #
 # Scheduled workflows run only from the default branch: none of this fires until this file is on main.
 #
@@ -41,7 +45,11 @@
 # newer one cancels it, and that group is busy in festival hours (soccer 14:30 UTC, basketball 15:07 for 10-12
 # minutes, VAL soccer 15:30, and on Saturday field hockey 14:00 and volleyball 14:20), so a festival run queued
 # behind them would be dropped exactly when the 9 and 10 AM ET scores come in. Only this job writes festival.json,
-# so a rebase never conflicts; a push racing another refresh's is retried.
+# so a rebase never conflicts. The cost of the separate group (accepted, 2026-11-26): this job's push can now race
+# another refresh's, which pushes once with no retry. If a festival commit lands in the ~1 s between that job's
+# pull and its push, its push is rejected and it fails; its next scheduled run recovers the data (for field
+# hockey's and volleyball's Saturday refreshes Nov 28 is the last, so a manual run). This job's own push is retried
+# (three tries, below).
 #
 # The commit message starts "data: refresh festival", which deploy-cloudflare.yml accepts as a data commit
 # (tests/workflows.test.ts holds the file and the message to its gate).
@@ -182,6 +190,25 @@ jobs:
       # The festival file through its validating loader and the clubs map against it; not the whole suite.
       - name: Test
         run: pnpm exec vitest run tests/festival-file.test.ts tests/tourneymachine.test.ts tests/festival-clubs.test.ts
+
+      # Non-blocking: TourneyMachine moved or added a slot when the cron lines the fetched file derives differ from
+      # this file's. A warning on the run, never a failure (the scores still commit); the fix is to paste the lines
+      # it prints under `schedule:`. The suite checks the derivation on frozen slots only (see the header).
+      - name: Schedule drift check
+        continue-on-error: true
+        run: |
+          # Not -e: a failed derivation is a warning like the rest, not a failed step.
+          set +e -uo pipefail
+          derived=$(pnpm -s festival-crons | grep -E "^ *- cron: " | sed 's/^ *//')
+          scheduled=$(grep -E "^ *- cron: " .github/workflows/update-data-festival.yml | sed 's/^ *//')
+          if [ -z "$derived" ]; then
+            echo "::warning::could not derive the festival's cron lines (pnpm festival-crons); schedule not checked"
+          elif [ "$derived" != "$scheduled" ]; then
+            echo "::warning::the festival's slots moved: paste these under schedule: in update-data-festival.yml%0A${derived//$'\n'/%0A}"
+          else
+            echo "the cron lines match the festival's slots"
+          fi
+          exit 0
 
       - name: Commit the data that changed
         id: commit

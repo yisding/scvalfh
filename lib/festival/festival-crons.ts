@@ -1,8 +1,10 @@
 /**
  * The National Hockey Festival refresh's schedule (.github/workflows/update-data-festival.yml), derived from the game
  * slots of data/field-hockey/festival.json: the cron lines that workflow must carry. tests/workflows.test.ts holds the
- * workflow's crons to `festivalCrons(festivalSlots(getFestival()))`, and `pnpm festival-crons` prints them to paste
- * when TourneyMachine moves a slot.
+ * workflow's crons to `festivalCrons` over a frozen copy of the slots as first published
+ * (tests/fixtures/festival/slots-2026.json), never the live file, so a moved slot fails no gate; the refresh job's
+ * "Schedule drift check" step compares `pnpm festival-crons` with the workflow and warns, and its lines are the ones
+ * to paste.
  *
  * The rule (owner decision, 2026-11-26; spec §5): every game lasts 55 minutes (FESTIVAL_GAME_MINUTES), so a slot
  * starting on the hour ends at :55. Three runs follow each slot's end, FESTIVAL_REFRESH_OFFSETS minutes after it:

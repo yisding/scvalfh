@@ -10,9 +10,9 @@ import type { BracketColumnModel, PlacementGameModel, SideModel } from './festiv
  * 1024px and stack on a phone.
  *
  * A box: the game number, the time ET and the field over two lines. Each line is the slot ("Pool R 1st") over
- * who fills it: the team TourneyMachine named; else, when the source pool is complete, the team at that place
- * "from the final pool table"; else, while the pool is under way, "Now: <team>" in the secondary grey; else the
- * slot alone. A final's winner is bold; a level final reads "Tied — shoot-out" and names no winner.
+ * who fills it: the team TourneyMachine named; else, when the source pool is complete and one team is alone at
+ * that place, that team "from the final pool table"; else, while the pool is under way or the place is tied (a full
+ * tie is listed alphabetically: DESIGN §35.5), "Now: <team>" in the secondary grey; else the slot alone. A final's winner is bold; a level final reads "Tied — shoot-out" and names no winner.
  */
 export function PlacementBracket({ columns, label }: { columns: readonly BracketColumnModel[]; label: string }) {
   return (

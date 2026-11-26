@@ -14,8 +14,8 @@ import {
 
 /**
  * /festival/teams/[team] (DESIGN §35 §6): one team's record and place, every game it plays (pool games, and a
- * placement game once TourneyMachine names it), its pool table with the team marked, and where each final pool
- * place sends it on Saturday.
+ * placement game once TourneyMachine names it or its finished pool puts it alone at the place: gamesOfTeam), its
+ * pool table with the team marked, and where each final pool place sends it on Saturday.
  */
 export interface TeamViewModel {
   card: TeamCardModel;

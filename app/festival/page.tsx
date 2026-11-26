@@ -175,7 +175,10 @@ export default function FestivalPage() {
             tie and 0 for a loss, and break a tie on points by matches won, then goal difference, then goals for, then
             the head-to-head result, then a shoot-out (D.2); three or more teams level are ranked on the games among
             them only (D.3). A placement game level at the end goes straight to a shoot-out (D.4); TourneyMachine does
-            not post shoot-outs, so such a game shows “Tied — shoot-out” here, with no winner.
+            not post shoot-outs, so such a game shows “Tied — shoot-out” here, with no winner. TourneyMachine lists teams
+            level on points, wins, goal difference and goals for alphabetically, and posts no head-to-head result or
+            shoot-out to separate them, so here they share a rank (“=1”), and the placement game their place feeds is
+            not settled until the event staff fill it in.
           </p>
           <p>
             While games are on, this page is checked for new scores three times an hour (about 10, 30 and 50 minutes

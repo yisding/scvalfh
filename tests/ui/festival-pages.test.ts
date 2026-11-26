@@ -16,6 +16,8 @@ import ClubsPage, { generateMetadata as clubsMetadata } from '../../app/festival
 import ClubPage, { generateMetadata as clubMetadata, generateStaticParams as clubParams } from '../../app/festival/clubs/[club]/page';
 import SchedulePage, { generateMetadata as scheduleMetadata } from '../../app/festival/schedule/page';
 import TeamPage, { generateMetadata as teamMetadata, generateStaticParams as teamParams } from '../../app/festival/teams/[team]/page';
+import FestivalPoolTable from '../../components/festival/FestivalPoolTable';
+import { festivalModel, poolTable } from '../../components/festival/festival-model';
 import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs, getFestival } from '../../lib/festival/festival';
 import { stripTags } from './html-text';
 
@@ -138,6 +140,22 @@ describe('a division page', () => {
     expect(u19.indexOf('id="bracket"')).toBeLessThan(u19.indexOf('id="schedule"'));
     expect(u16).not.toContain('id="bracket"');
     expect(u19).toContain('aria-current="page"');
+  });
+});
+
+describe('a pool table with a full tie', () => {
+  // DESIGN §35.5: teams level on points, wins, goal difference and goals for share a rank (TourneyMachine lists them
+  // alphabetically); the table prints it "=1", read as "tied 1".
+  it('prints the shared rank as "=1", and a plain rank for a team alone at its place', () => {
+    const base = poolTable(festivalModel(), FILE.divisions[0].pools[0].id);
+    const pool = {
+      ...base,
+      rows: base.rows.map((r, i) => ({ ...r, rank: i < 2 ? 1 : i + 1, tied: i < 2 })),
+    };
+    const html = render(createElement(FestivalPoolTable, { pool }));
+    const cells = [...html.matchAll(/<td class="sx-num sx-col-rank">(.*?)<\/td>/g)].map((m) => m[1]);
+    const tied = '<span aria-hidden="true">=1</span><span class="sr-only">tied 1</span>';
+    expect(cells.slice(0, 3)).toEqual([tied, tied, '3']);
   });
 });
 

@@ -3,6 +3,8 @@
  * browser runs it, in a `node:vm` context with a fake `localStorage` and `<html>`; its size; its agreement with
  * the client's own parser; and the generated stylesheet (components/festival/follow-css.ts).
  */
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import vm from 'node:vm';
 
 import { describe, expect, it } from 'vitest';
@@ -14,9 +16,13 @@ import {
   FEST_FOLLOW_MAX,
   FEST_FOLLOW_RESTAMP,
   FEST_FOLLOW_SCRIPT,
+  FEST_OVER_ATTR,
+  festivalHeadScript,
   parseFollows,
 } from '../../components/festival/follow-script';
-import { festivalTeamSlugs } from '../../lib/festival/festival';
+import { festivalNoticeCloses } from '../../components/home/FestivalNotice';
+import { festivalTeamSlugs, getFestival } from '../../lib/festival/festival';
+import { REPO } from '../helpers';
 
 class FakeHtml {
   attrs = new Map<string, string>();
@@ -28,7 +34,11 @@ class FakeHtml {
   }
 }
 
-function run(stored: string | null | 'throws') {
+/** The script the root layout ships: the follow stamp and the notice's close instant from the committed file. */
+const CLOSES = festivalNoticeCloses(getFestival().tournament);
+const HEAD_SCRIPT = festivalHeadScript(CLOSES);
+
+function run(stored: string | null | 'throws', script = HEAD_SCRIPT, now = Date.parse('2026-11-26T15:00:00Z')) {
   const html = new FakeHtml();
   const store: Record<string, string> = stored !== null && stored !== 'throws' ? { [FEST_FOLLOW_KEY]: stored } : {};
   const listeners: Array<(e: { key: string | null }) => void> = [];
@@ -38,25 +48,49 @@ function run(stored: string | null | 'throws') {
       return k in store ? store[k] : null;
     },
   };
-  const context: Record<string, unknown> = { document: { documentElement: html }, localStorage };
+  const context: Record<string, unknown> = {
+    document: { documentElement: html },
+    localStorage,
+    Date: { now: () => now },
+  };
   context.window = Object.assign(context, {
     addEventListener: (type: string, fn: (e: { key: string | null }) => void) => {
       if (type === 'storage') listeners.push(fn);
     },
   });
-  vm.runInNewContext(FEST_FOLLOW_SCRIPT, context);
+  vm.runInNewContext(script, context);
   return { html, store, listeners, context };
 }
 
 describe('the head script', () => {
-  // Measured 489 B on 2026-11-26; the line is that × 1.12 rounded up to 128 B. It runs on every page of the
-  // field hockey site, before first paint, so it stays small: no slug list, no known-slug check (the client's).
-  it('stays within 640 B', () => {
-    expect(Buffer.byteLength(FEST_FOLLOW_SCRIPT, 'utf8')).toBeLessThanOrEqual(640);
+  // Measured 489 B on 2026-11-26, and 591 B with the notice's close stamp (festivalHeadScript); the line is still
+  // the first measure × 1.12 rounded up to 128 B. It runs on every page of the field hockey site, before first
+  // paint, so it stays small: no slug list, no known-slug check (the client's).
+  it('stays within 640 B, as the layout ships it', () => {
+    expect(Buffer.byteLength(HEAD_SCRIPT, 'utf8')).toBeLessThanOrEqual(640);
+    expect(HEAD_SCRIPT.startsWith(FEST_FOLLOW_SCRIPT)).toBe(true);
   });
 
   it('has nothing that could close the <script>', () => {
-    expect(FEST_FOLLOW_SCRIPT).not.toContain('<');
+    expect(HEAD_SCRIPT).not.toContain('<');
+    expect(() => festivalHeadScript(Number.NaN)).toThrow(/not an instant/);
+  });
+
+  // The home page's notice (components/home/FestivalNotice.tsx) is static, and field hockey has no scheduled build
+  // after the festival, so the reader's clock takes it down: 2026-12-02T05:00Z, the end of Dec 1 at the venue.
+  it('stamps data-fest-over once the reader’s clock reaches the notice’s close, and only then', () => {
+    expect(CLOSES).toBe(Date.parse('2026-12-02T05:00:00Z'));
+    expect(run(null, HEAD_SCRIPT, CLOSES - 1).html.attrs.has(FEST_OVER_ATTR)).toBe(false);
+    expect(run(null, HEAD_SCRIPT, CLOSES).html.attrs.get(FEST_OVER_ATTR)).toBe('');
+    expect(run('u10-weston', HEAD_SCRIPT, CLOSES + 86_400_000).html.attrs.get(FEST_FOLLOW_ATTR)).toBe('u10-weston');
+  });
+
+  it('the stylesheet hides the notice under that stamp, and the layout ships the script to field hockey alone', () => {
+    const css = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
+    expect(css).toContain(`html[${FEST_OVER_ATTR}] [data-festival-notice] { display: none; }`);
+    const layout = readFileSync(path.join(REPO, 'app', 'layout.tsx'), 'utf8');
+    expect(layout).toContain('{HAS_FESTIVAL ? <script dangerouslySetInnerHTML={{ __html: FEST_HEAD_SCRIPT }} /> : null}');
+    expect(layout).toContain('const FEST_HEAD_SCRIPT = HAS_FESTIVAL ? festivalHeadScript(festivalNoticeCloses(getFestival().tournament)) : \'\';');
   });
 
   it('stamps the stored slugs on <html>, cleaned the way the client parses them', () => {

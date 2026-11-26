@@ -1943,8 +1943,9 @@ every plane but collapses CVD separation from 10.4 to **5.5**, `exit=1`; the lig
   *state*, not its row number.
 - **Refetch:** there is none. The page is static; a new snapshot is a new deploy. A re-filter
   holds the previous list at `opacity: .6` — no skeleton flash, no layout jump.
-  *(The festival pages are the one exception, §35.7: a HEAD request to their own URL every three
-  minutes while the tab is visible, to say "New scores are in" — never a refetch of the page.)*
+  *(The festival pages are the one exception, §35.7: a GET of one small festival page every three
+  minutes while the tab is visible, read only for its scores stamp, to say "New scores are in" —
+  never a refetch of the page itself.)*
 
 ---
 
@@ -5239,7 +5240,7 @@ except where this section says otherwise (§35.4 times, §35.7 the freshness pol
   the committed file: the browser never calls TourneyMachine, and `lib/sources` stays out of app/ and components/.
 - **What is kept.** The tournament (name, dates, venue, the venue's time zone and UTC offset, links to
   TourneyMachine's results and USA Field Hockey's event page), the fields, each division (key, slug, the feed's
-  name, a short label, format, pools with their teams in TourneyMachine's rank order), each team (its pool record
+  name, a short label, format, pools with their teams in TourneyMachine's order, §35.5), each team (its pool record
   as TourneyMachine computes it: W, L, T, points, GF, GA, GD) and each game (number, division, pool or placement,
   start in venue time and UTC, field, two sides, score, status, exhibition flag, and a placement game's place in
   its bracket). **Dropped on purpose:** the team colours (random on every request: every run would commit), the
@@ -5306,7 +5307,12 @@ not counted as divisions), `scripts/smoke-server.sh` checks the sitemap's counts
 **Surfacing** (§17.6's "links in, not nav" holds for the header and the four tabs): a "Festival" row in the phone
 bar's More sheet (the More tab is lit on every festival page), a section head on `/` ("National Hockey Festival",
 "Naples, Fla. · Nov 26–28", "Results and brackets") while the build instant is between a week before the first day
-and three days after the last, and the club-page links of §35.2. The home head is a section head, not a strip: a
+and three days after the last, and the club-page links of §35.2 (a site club with two festival clubs lists the
+California one first). The home head also comes down on the reader's clock: field hockey has no scheduled build
+after the festival (its weekly refresh's last run is the festival's last day, and other sports' refreshes do not
+rebuild its Worker), so the festival head script (§35.7) stamps `<html data-fest-over>` once `Date.now()` reaches
+the window's close (the end of the venue's day three days after the last, embedded at build time), and the global
+stylesheet hides `[data-festival-notice]` under it. The home head is a section head, not a strip: a
 strip's right end does not wrap, and the meta and the link do not fit a 320 px row together. It is not a filled
 banner.
 
@@ -5328,7 +5334,16 @@ second layout for three days.
 ### 35.5 Results and ties
 
 Points 3/1/0, and the pool order is TourneyMachine's rank (the tiebreak order of the event's regulations, D.2–D.4,
-quoted briefly in "About these results"). Placement games tied at full time are decided by a shoot-out and the
+quoted briefly in "About these results"), with one exception: teams level on every figure the feed carries (points,
+wins, goal difference, goals for) are listed alphabetically by TourneyMachine until the event staff fill the
+placement sides, and the head-to-head result, shoot-out or coin toss that settles them (D.2) is not in the feed. So
+such teams share a rank ("=1" in the table, "tied for 1st of 6" in words), and a place among them is never settled
+by the table: a placement side it feeds stays "Now: <team>" (provisional) even when the pool is complete, the game
+is filed under no team until TourneyMachine names one, and the team's placement path keeps every place of the tie
+open ("Tied for 1st now."). A place is settled by the table only when the pool is complete and its team is strictly
+apart from both neighbours. Once settled, the game is the team's everywhere (its page, its card, its club's
+schedule and team section), with its score and result chip, whether or not TourneyMachine fills the side, and a
+team is never shown as its own opponent (in a one-pool division, the slot it holds now prints alone). Placement games tied at full time are decided by a shoot-out and the
 feed has no shoot-out field, so such a game shows "Tied — shoot-out" and no winner is picked. Scores follow the
 site's score rules (an en dash, never 0, for a missing score). The site is unofficial; the corrections link is the
 site's usual thread.
@@ -5339,8 +5354,11 @@ A slot is a distinct start time; games last 55 minutes (two 25-minute halves and
 12-minute quarters). The job `.github/workflows/update-data-festival.yml` runs 12, 32 and 52 minutes after each
 slot ends (:07, :27 and :47 past the next hour, clear of the :00 rush on GitHub's scheduler), plus one catch-up
 per day 2 h 15 min after the day's last slot. The cron lines are derived from the file's slots
-(`lib/festival/festival-crons.ts`), and tests/workflows.test.ts alone asserts the YAML matches them, so a schedule
-change upstream never blocks a data commit. Each run first reads TourneyMachine's ~30-byte "last updated" stamp
+(`lib/festival/festival-crons.ts`). tests/workflows.test.ts holds the derivation to the YAML on a frozen copy of the
+slots as first published (`tests/fixtures/festival/slots-2026.json`), never on the live file: the whole suite also
+gates field hockey's own Saturday refresh, ci and the deploy, and a slot TourneyMachine moves must not fail any of
+them. Drift is reported instead: after its tests, the refresh job compares `pnpm festival-crons` with its own cron
+lines and leaves a warning (never a failure) on the run when they differ, the cue to paste the new lines. Each run first reads TourneyMachine's ~30-byte "last updated" stamp
 and stops when it equals the committed `sourceVersion`: no install, no download, no commit, no deploy. Only a
 changed stamp downloads the ~275 KB feed, runs the festival tests and commits on a content change; Cloudflare
 Workers Builds redeploys the push in about 2.5 minutes. So a score entered at the field appears here a few minutes
@@ -5359,11 +5377,16 @@ after the check that finds it; score entry itself lags the games by 10–30 minu
   team's hidden "Your teams" card and marks its name with the accent star (with hidden words, "Following") and a
   bold name. The attributes are `data-fest-*`, never `data-team-slug`, so the site's pinned-team marks never pick
   them up. With no JavaScript the hub explains how following works and shows every other section unchanged.
-- **The freshness notice: the one network request.** While a festival tab is visible, a small client component
-  sends `HEAD` to the page's own URL every three minutes and compares its ETag or Last-Modified with the first one
-  it saw; when it changes it shows "New scores are in. Reload". It stops when the tab is hidden and never runs once
-  every game is final. It asks only our own static origin, and it is the only polling on the site (§6.7 otherwise
-  holds: no refetch).
+- **The freshness notice: the one network request.** ncfh.net sends no ETag or Last-Modified (vinext on Cloudflare
+  Workers; checked 2026-11-26), so the notice compares content, not headers. Every festival page prints the
+  committed file's `fetchedAt` as `data-fest-stamp` on its "Scores as of" line; the refresh commits only on a
+  content change, so the stamp moves with the scores and nothing else (another sport's deploy changes the bytes and
+  the build id, not the stamp). While a festival tab is visible, a small client component GETs one small festival
+  page, `/festival/clubs`, with `cache: 'no-store'` every three minutes (and once when a hidden tab comes back),
+  reads its stamp and compares it with its own page's; when they differ it shows "New scores are in. Reload" and
+  stops (components/festival/freshness-poll.ts). It does not poll at all without a stamp of its own, stops when a
+  response carries none (it cannot tell), pauses while the tab is hidden and never runs once every game is final.
+  It asks only our own static origin, and it is the only polling on the site (§6.7 otherwise holds: no refetch).
 
 ### 35.8 Gates and budgets
 

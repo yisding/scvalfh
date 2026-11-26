@@ -1,7 +1,7 @@
 /**
  * lib/festival/festival-crons.ts: the festival refresh's cron lines from the game slots (spec §5). Slots built in
- * memory, so these hold the rule itself; tests/workflows.test.ts holds the workflow to the lines for the committed
- * data/field-hockey/festival.json.
+ * memory, so these hold the rule itself; tests/workflows.test.ts holds the workflow to the lines for the festival's
+ * slots as first published (tests/fixtures/festival/slots-2026.json, frozen).
  */
 
 import { describe, expect, it, vi } from 'vitest';

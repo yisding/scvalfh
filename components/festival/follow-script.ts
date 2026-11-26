@@ -61,3 +61,19 @@ export const FEST_FOLLOW_SCRIPT =
   `if(o.length)h.setAttribute('${FEST_FOLLOW_ATTR}',o.join(' '));else h.removeAttribute('${FEST_FOLLOW_ATTR}')}catch(e){}}` +
   `s();try{window.${FEST_FOLLOW_RESTAMP}=s;window.addEventListener('storage',function(e){` +
   `if(e.key===null||e.key==='${FEST_FOLLOW_KEY}')s()})}catch(e){}})();`;
+
+/** The `<html>` attribute stamped once the home page's festival notice is past its window (FestivalNotice.tsx). */
+export const FEST_OVER_ATTR = 'data-fest-over';
+
+/**
+ * The head script as the root layout ships it: FEST_FOLLOW_SCRIPT, then one statement that stamps
+ * `<html data-fest-over>` when the reader's clock is at or past `closesMs`, the instant the home page's festival
+ * notice comes down (festivalNoticeCloses, embedded at build time). The notice is static and field hockey's last
+ * scheduled build of the season is the festival's own last day, so without this it would stay up until the next code
+ * push; app/globals.css hides `[data-festival-notice]` under the stamp. A whole number, so nothing but digits is
+ * interpolated; `>=` and no `<`, like the rest.
+ */
+export function festivalHeadScript(closesMs: number): string {
+  if (!Number.isSafeInteger(closesMs)) throw new Error(`follow-script: ${closesMs} is not an instant in ms`);
+  return `${FEST_FOLLOW_SCRIPT}try{Date.now()>=${closesMs}&&document.documentElement.setAttribute('${FEST_OVER_ATTR}','')}catch(e){}`;
+}

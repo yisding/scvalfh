@@ -10,8 +10,11 @@
 # season's months. The scripts' own guard is the season window (lib/league-config/val-soccer/sections.ts: Nov 21 -
 # Feb 11 Pacific; lib/pipeline/steps/window.ts), so a run outside it writes nothing.
 #
-# It shares the `update-data` concurrency group with the other refreshes, so they never push at the same time, and it
-# rebases before it pushes. The commit messages start "data: refresh val-soccer", which deploy-cloudflare.yml accepts
+# It shares the `update-data` concurrency group with the other refreshes, so they never push at the same time as each
+# other, and it rebases before it pushes. The festival refresh (update-data-festival.yml) has its own group: in its
+# hours one of its pushes can land in the ~1 s between this job's pull and its push, and this push, not retried, then
+# fails; the next scheduled run recovers the data (an accepted risk, 2026-11-26).
+# The commit messages start "data: refresh val-soccer", which deploy-cloudflare.yml accepts
 # as a data commit (tests/workflows.test.ts holds the files and messages to the gate).
 
 name: update-data-val-soccer

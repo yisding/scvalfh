@@ -22,11 +22,14 @@ import {
   festivalModel,
   gameRow,
   latestAndNext,
+  placeOf,
   placementPath,
+  playingTeamIds,
   poolTable,
   sidesOf,
   teamCard,
   teamGame,
+  teamGames,
   type FestivalModel,
 } from '../../components/festival/festival-model';
 import { bothClocks, clockET, clockPT, dayLabelET, slotHeading, stampWords, whenET } from '../../components/festival/festival-time';
@@ -55,6 +58,25 @@ function edited(edit: (file: FestivalFile) => void): FestivalModel {
 function finalize(g: FestivalGame, score: [number, number] = [1, 0]): void {
   g.status = 'final';
   g.score = score;
+}
+
+/**
+ * Give a pool's teams records that put each alone at its line of TourneyMachine's order (points falling by 3 a
+ * place), so a test of a settled place does not hang on today's records, where most places are still level.
+ */
+function separate(f: FestivalFile, poolId: string): void {
+  const pool = f.divisions.flatMap((d) => d.pools).find((p) => p.id === poolId)!;
+  pool.teamIds.forEach((id, i) => {
+    const w = pool.teamIds.length - i;
+    f.teams.find((t) => t.id === id)!.record = { w, l: i, t: 0, pts: 3 * w, gf: w, ga: i, gd: w - i };
+  });
+}
+
+/** Make the teams at `places` (1-based) of a pool level on points, wins, goal difference and goals for. */
+function level(f: FestivalFile, poolId: string, places: readonly number[]): void {
+  const pool = f.divisions.flatMap((d) => d.pools).find((p) => p.id === poolId)!;
+  const model = f.teams.find((t) => t.id === pool.teamIds[places[0] - 1])!.record;
+  for (const p of places.slice(1)) f.teams.find((t) => t.id === pool.teamIds[p - 1])!.record = { ...model };
 }
 
 const placement = FILE.games.filter((g) => g.kind === 'placement');
@@ -99,16 +121,51 @@ describe('the clock words (from UTC instants, in the named zones)', () => {
 });
 
 describe('pool tables', () => {
-  it('lists every pool in TourneyMachine’s order, which is the rank', () => {
+  it('lists every pool in TourneyMachine’s order, which is the rank where the records differ', () => {
     for (const d of FILE.divisions) {
       for (const p of d.pools) {
         const t = poolTable(M, p.id);
         expect(t.rows.map((r) => r.team.id)).toEqual(p.teamIds);
         const any = FILE.games.some((g) => g.poolId === p.id && g.status === 'final');
-        expect(t.rows.map((r) => r.rank)).toEqual(p.teamIds.map((_, i) => (any ? i + 1 : null)));
+        for (const [i, row] of t.rows.entries()) expect(row.rank === null ? null : row.tied || row.rank === i + 1).toBe(any ? true : null);
         expect(t.hasResults).toBe(any);
       }
     }
+    const m = edited((f) => {
+      separate(f, SOURCE_POOL.id);
+      finalize(poolGamesOf(f, SOURCE_POOL.id)[0]);
+    });
+    expect(poolTable(m, SOURCE_POOL.id).rows.map((r) => [r.rank, r.tied])).toEqual(SOURCE_POOL.teamIds.map((_, i) => [i + 1, false]));
+  });
+
+  // DESIGN §35.5: TourneyMachine lists teams level on points, wins, goal difference and goals for alphabetically
+  // (Pool S, 2026-11-26: "Atlanta FHC U19" over "FHL" at 1-0-0, +1, 2 goals), and the feed has no head-to-head or
+  // shoot-out result. That order is not a rank, so the rows share one.
+  it('ranks teams level on every figure equal, "=1", and none of them 1st', () => {
+    const m = edited((f) => {
+      separate(f, SOURCE_POOL.id);
+      level(f, SOURCE_POOL.id, [1, 2]);
+      finalize(poolGamesOf(f, SOURCE_POOL.id)[0]);
+    });
+    const t = poolTable(m, SOURCE_POOL.id);
+    expect(t.rows.slice(0, 3).map((r) => [r.rank, r.tied])).toEqual([
+      [1, true],
+      [1, true],
+      [3, false],
+    ]);
+    const first = placeOf(m, SOURCE_POOL.teamIds[0])!;
+    const second = placeOf(m, SOURCE_POOL.teamIds[1])!;
+    const of = SOURCE_POOL.teamIds.length;
+    expect([first.words, second.words]).toEqual([`tied for 1st of ${of}`, `tied for 1st of ${of}`]);
+    expect(placeOf(m, SOURCE_POOL.teamIds[2])!.words).toBe(`3rd of ${of}`);
+    // Even with every pool game played, a tied place is not final.
+    const done = edited((f) => {
+      separate(f, SOURCE_POOL.id);
+      level(f, SOURCE_POOL.id, [1, 2]);
+      poolGamesOf(f, SOURCE_POOL.id).forEach((g) => finalize(g));
+    });
+    expect(placeOf(done, SOURCE_POOL.teamIds[1])).toMatchObject({ tied: true, final: false, first: 1, last: 2 });
+    expect(placeOf(done, SOURCE_POOL.teamIds[2])).toMatchObject({ tied: false, final: true });
   });
 
   it('counts the games left and says when a pool is complete', () => {
@@ -154,12 +211,37 @@ describe('a placement game’s sides (spec §6)', () => {
   });
 
   it('names the team from the final pool table once the pool is complete', () => {
-    const m = edited((f) => poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g)));
+    const m = edited((f) => {
+      separate(f, SOURCE.poolId);
+      poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g));
+    });
     const side = sidesOf(m, m.file.games.find((g) => g.key === P.key)!)[0];
     expect(side.state).toBe('pool-complete');
     expect(side.team!.id).toBe(SOURCE_POOL.teamIds[SOURCE.place - 1]);
     expect(side.name).toBe(side.team!.name);
     expect(gameRow(m, m.file.games.find((g) => g.key === P.key)!).teamSlugs).toContain(side.team!.slug);
+  });
+
+  // A full tie at the place, in a finished pool: TourneyMachine's first is only alphabetical (DESIGN §35.5), so the
+  // side stays "Now: <team>" and nobody is filed under the game until the event staff fill it.
+  it('keeps a place tied in the final pool table provisional, and files the game under nobody', () => {
+    const neighbour = SOURCE.place === SOURCE_POOL.teamIds.length ? SOURCE.place - 1 : SOURCE.place + 1;
+    const m = edited((f) => {
+      separate(f, SOURCE.poolId);
+      level(f, SOURCE.poolId, [SOURCE.place, neighbour]);
+      poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g));
+    });
+    const g = m.file.games.find((x) => x.key === P.key)!;
+    const side = sidesOf(m, g)[0];
+    expect(side.state).toBe('provisional');
+    expect(side.team!.id).toBe(SOURCE_POOL.teamIds[SOURCE.place - 1]);
+    expect(side.name).toBe(side.slot);
+    expect(gameRow(m, g).teamSlugs).not.toContain(side.team!.slug);
+    for (const p of [SOURCE.place, neighbour]) {
+      const id = SOURCE_POOL.teamIds[p - 1];
+      expect(teamGames(m, id).map((x) => x.key)).not.toContain(P.key);
+      expect(placementPath(m, id).entries.flatMap((e) => e.games).some((x) => x.settled && x.number === P.number)).toBe(false);
+    }
   });
 
   it('takes the team TourneyMachine names, whatever the pool says', () => {
@@ -243,13 +325,60 @@ describe('a team’s placement path', () => {
   });
 
   it('marks the team’s place now, and the one game it plays once the pool is complete', () => {
-    const m = edited((f) => poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g)));
+    const m = edited((f) => {
+      separate(f, SOURCE.poolId);
+      poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g));
+    });
     const path = placementPath(m, team.id);
     const place = SOURCE_POOL.teamIds.indexOf(team.id) + 1;
     expect(path.poolComplete).toBe(true);
     expect(path.entries.filter((e) => e.current).map((e) => e.place)).toEqual(path.entries.some((e) => e.place === place) ? [place] : []);
     const settled = path.entries.flatMap((e) => e.games.filter((g) => g.settled).map(() => e.place));
     expect(new Set(settled)).toEqual(new Set(path.entries.some((e) => e.place === place) ? [place] : []));
+  });
+
+  it('a team tied in its finished pool is "tied for 1st" across the tie, and plays no game yet', () => {
+    const m = edited((f) => {
+      separate(f, SOURCE.poolId);
+      level(f, SOURCE.poolId, [1, 2]);
+      poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g));
+    });
+    const second = SOURCE_POOL.teamIds[1];
+    const path = placementPath(m, second);
+    expect(path.place).toMatchObject({ tied: true, words: `tied for 1st of ${SOURCE_POOL.teamIds.length}` });
+    const fed = path.entries.map((e) => e.place).filter((p) => p <= 2);
+    expect(path.entries.filter((e) => e.current).map((e) => e.place)).toEqual(fed);
+    for (const e of path.entries.filter((x) => x.current)) expect(e.nowWords).toBe('Tied for 1st now.');
+    expect(path.entries.flatMap((e) => e.games).filter((g) => g.settled)).toEqual([]);
+    expect(teamCard(m, second).place).toMatchObject({ final: false });
+  });
+
+  // In a one-pool division (U10, U12 Pool D, U14 7v7) both sides of B1 come from the same pool: on Blue Star
+  // Warriors' page, 2nd in Pool F on 2026-11-26, "If 1st: plays Pool F 2nd (now Blue Star Warriors)". The team
+  // cannot hold that place and play against it, so the slot prints alone.
+  it('never names the team as its own opponent', () => {
+    const single = placement.find((g) => g.sides[0].source!.poolId === g.sides[1].source!.poolId)!;
+    const poolId = single.sides[0].source!.poolId;
+    const pool = FILE.divisions.flatMap((d) => d.pools).find((p) => p.id === poolId)!;
+    const holderPlace = single.sides[1].source!.place;
+    const m = edited((f) => {
+      separate(f, poolId);
+      poolGamesOf(f, poolId).forEach((g) => ((g.status = 'scheduled'), (g.score = null)));
+      finalize(poolGamesOf(f, poolId)[0]);
+    });
+    const self = pool.teamIds[holderPlace - 1];
+    const path = placementPath(m, self);
+    const line = path.entries.flatMap((e) => e.games).find((g) => g.number === single.number && g.opponent.slot === sidesOf(m, single)[1].slot)!;
+    expect(line.opponent.state).toBe('placeholder');
+    expect(line.opponent.team).toBeNull();
+    // Every other team's page still names who holds that slot now.
+    const other = pool.teamIds.find((id) => id !== self)!;
+    for (const g of placementPath(m, other).entries.flatMap((e) => e.games)) {
+      if (g.opponent.state === 'provisional') expect(g.opponent.team!.id).not.toBe(other);
+    }
+    for (const id of pool.teamIds) {
+      for (const g of placementPath(m, id).entries.flatMap((e) => e.games)) expect(g.opponent.team?.id).not.toBe(id);
+    }
   });
 
   it('is empty for a pool that feeds no placement game', () => {
@@ -338,7 +467,7 @@ describe('clubs and California', () => {
     for (const club of M.clubs) {
       const view = buildClubView(club.slug, M, site)!;
       const ids = new Set(club.teamIds);
-      const games = FILE.games.filter((g) => g.sides.some((s) => s.teamId && ids.has(s.teamId)));
+      const games = FILE.games.filter((g) => playingTeamIds(M, g).some((id) => ids.has(id)));
       const rows = view.schedule.flatMap((d) => d.slots.flatMap((s) => s.rows));
       expect(rows.map((r) => r.key)).toEqual(games.map((g) => g.key));
       expect(view.teams.map((t) => t.card.team.id)).toEqual(club.teamIds);
@@ -371,12 +500,51 @@ describe('the schedule and team views', () => {
     expect(view.days.map((d) => d.label)).toEqual(['Thu Nov 26', 'Fri Nov 27', 'Sat Nov 28']);
   });
 
-  it('a team page lists every game the team is named in, from its side', () => {
+  it('a team page lists every game the team plays, from its side', () => {
     for (const t of FILE.teams) {
       const view = buildTeamView(t.slug)!;
-      expect(view.games.map((g) => g.key)).toEqual(FILE.games.filter((g) => g.sides.some((s) => s.teamId === t.id)).map((g) => g.key));
+      expect(view.games.map((g) => g.key)).toEqual(FILE.games.filter((g) => playingTeamIds(M, g).includes(t.id)).map((g) => g.key));
       expect(view.games.every((g) => g.team.id === t.id && g.opponent.team?.id !== t.id)).toBe(true);
     }
     expect(buildTeamView('nope')).toBeNull();
+  });
+
+  // TourneyMachine may leave a placement side unfilled after pool play (tm.md never saw it fill one). Once the
+  // source pool is complete with the team alone at the place, the game is the team's on every page of its own, and
+  // its result reads from that side.
+  it('a placement game a final pool table settles is the team’s: team page, card, club schedule and club section', () => {
+    const holder = SOURCE_POOL.teamIds[SOURCE.place - 1];
+    const unfilled = (f: FestivalFile) => {
+      separate(f, SOURCE.poolId);
+      poolGamesOf(f, SOURCE.poolId).forEach((g) => finalize(g));
+      const g = f.games.find((x) => x.key === P.key)!;
+      g.sides.forEach((s) => (s.teamId = null));
+      g.status = 'scheduled';
+      g.score = null;
+    };
+    const m = edited(unfilled);
+    const g = m.file.games.find((x) => x.key === P.key)!;
+    expect(sidesOf(m, g)[0].state).toBe('pool-complete');
+    expect(teamGames(m, holder).map((x) => x.key)).toContain(P.key);
+    const card = teamCard(m, holder);
+    expect(card.next?.key).toBe(P.key);
+    expect(card.placementAhead).toBe(false);
+    const clubSlug = m.clubOfTeam.get(holder)!;
+    const club = buildClubView(clubSlug, m)!;
+    expect(club.schedule.flatMap((d) => d.slots.flatMap((s) => s.rows)).map((r) => r.key)).toContain(P.key);
+    expect(club.teams.find((t) => t.card.team.id === holder)!.games.map((x) => x.key)).toContain(P.key);
+
+    // Played and final, still unfilled: the result is the team's, chip and score from its resolved side.
+    const played = edited((f) => {
+      unfilled(f);
+      finalize(f.games.find((x) => x.key === P.key)!, [1, 3]);
+    });
+    const own = teamCard(played, holder).last!;
+    expect(own.key).toBe(P.key);
+    expect(own.chip).toBe('L');
+    expect(own.score).toBe('1–3');
+    const row = buildClubView(clubSlug, played)!.schedule.flatMap((d) => d.slots.flatMap((s) => s.rows)).find((r) => r.key === P.key)!;
+    expect(row.team.id).toBe(holder);
+    expect(row.chip).toBe('L');
   });
 });

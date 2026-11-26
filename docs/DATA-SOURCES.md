@@ -3792,8 +3792,10 @@ sport's build reads neither file. Decoded on 2026-11-26 from the JSON TourneyMac
 - **`TournamentResults.aspx?IDTournament=…&nofile=true`** (~275 KB, gzip): the whole tournament. Cloudflare serves it
   from cache (`max-age=30`; a copy was seen served at age 82, made 15:17:21 while the version already read 3:13:00
   PM), and the endpoint answers any extra query parameter with a 302, so the cache cannot be bypassed. A read whose
-  `Last-Modified` is before the version's own time is a stale copy: the file keeps the committed `sourceVersion`, so
-  the next run reads again (`feedIsCurrent`).
+  `Last-Modified` is not more than 2 s after the version's own time is treated as a stale copy: both are cut to the
+  second, so a copy made earlier in the very second a score went in carries the version's own stamp, and the 2 s
+  cover the two servers' clocks. The file then keeps the committed `sourceVersion`, so the next run reads again
+  (`feedIsCurrent`, `FEED_CLOCK_MARGIN_MS`); a false "stale" costs one more read, a false "current" would lose a score.
 
 What the feed holds, and how `normalizeFestival` reads it:
 
@@ -3802,7 +3804,11 @@ What the feed holds, and how `normalizeFestival` reads it:
   in its bracket page's URL. A game's division is the division whose `IDGames` lists it; a team's pool is the pool
   whose `IDTeams` lists it (teams carry no pool).
 - A pool's `IDTeams` is re-sorted by TourneyMachine as results come in, and its public table prints it as given: that
-  order is the pool's rank, kept as `pools[].teamIds`. Team records are the `*Pool` fields (points 3/1/0, regs D.1).
+  order is the pool's rank, kept as `pools[].teamIds`, except that teams level on points, wins, goal difference and
+  goals for are listed alphabetically by raw name (Pool S on 2026-11-26: "Atlanta FHC U19" over "FHL", both 1-0-0, +1,
+  2 goals; Pool C: "IFHCK Thunder" over "U12 Gateway Red Stripes", age token and all) until the event staff fill the
+  placement sides. Regs D.2 break such a tie on the head-to-head result, then a shoot-out or a coin toss, none of
+  which the feed carries, so the pages rank those teams equal and leave their placement slot open (DESIGN §35.5). Team records are the `*Pool` fields (points 3/1/0, regs D.1).
 - `S` is the venue's naive wall clock (Eastern Standard Time all three days, so `startUtc` is `S` + 5 hours); every
   game starts on the hour and lasts 55 minutes. `S1`/`S2` are 0/0 before a result, so a score is kept only when `F`
   (final) or `I` (scoring started) is set; `I` without `F` is read as live (no live game was observed).

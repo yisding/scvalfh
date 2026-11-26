@@ -16,7 +16,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { localDateKey } from '../lib/format';
-import { festivalClubSlugs, festivalDivisionSlugs, festivalSlots, festivalTeamSlugs, getFestival } from '../lib/festival/festival';
+import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs, getFestival, type FestivalSlot } from '../lib/festival/festival';
 import { festivalCrons } from '../lib/festival/festival-crons';
 import { withFixtureGames } from '../lib/results/fixture-games';
 import { FESTIVAL_TOURNAMENT_ID, lastUpdatedUrl } from '../lib/sources/tourneymachine';
@@ -41,6 +41,12 @@ const updateValSoccer = read('update-data-val-soccer.yml');
 const updateFestival = read('update-data-festival.yml');
 const deploy = read('deploy-cloudflare.yml');
 const updates = [update, updateSoccer, updateBasketball, updateVolleyball, updateValSoccer, updateFestival];
+
+/**
+ * The festival's game slots as TourneyMachine first published them (festivalSlots of data/field-hockey/festival.json on
+ * 2026-11-26), frozen: the workflow's crons are held to the derivation over these, never over the live file.
+ */
+const FROZEN_SLOTS: FestivalSlot[] = JSON.parse(readFileSync(path.join(REPO, 'tests', 'fixtures', 'festival', 'slots-2026.json'), 'utf8'));
 
 /** Every path the refreshes stage: the arguments of their `git add` lines. */
 const committedFiles = new Set(
@@ -726,9 +732,12 @@ describe('the field hockey refresh stops at the season window, before it install
 
 /**
  * The National Hockey Festival's refresh (update-data-festival.yml): its crons are the ones lib/festival/festival-crons.ts
- * derives from the committed data/field-hockey/festival.json, its window is the festival's own dates, and its cheap
- * change check skips the refresh only when both version stamps were read and are equal. Both checks run their own
- * shell here, with a `date`, `curl` and `gh` that print what a case needs (jq is the runner's own).
+ * derives from the festival's slots as first published (a frozen copy, tests/fixtures/festival/slots-2026.json: this
+ * suite also gates update-data.yml's Saturday refresh, ci and the deploy, so it must not fail when TourneyMachine
+ * moves a live slot; the job's own non-blocking drift check warns instead), its window is the festival's own dates,
+ * and its cheap change check skips the refresh only when both version stamps were read and are equal. The checks
+ * run their own shell here, with a `date`, `curl`, `gh` and `pnpm` that print what a case needs (jq is the runner's
+ * own).
  */
 describe('the festival refresh', () => {
   const windowJob = updateFestival.slice(updateFestival.indexOf('\n  window:\n'), updateFestival.indexOf('\n  refresh:\n'));
@@ -804,12 +813,63 @@ describe('the festival refresh', () => {
     }
   }
 
-  it('fires exactly when lib/festival/festival-crons.ts says, for the committed festival.json', () => {
+  it('fires exactly when lib/festival/festival-crons.ts says, for the festival’s slots as first published', () => {
     const crons = [...updateFestival.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
-    const expected = festivalCrons(festivalSlots(getFestival()));
+    const expected = festivalCrons(FROZEN_SLOTS);
     expect(expected.length).toBeGreaterThan(0);
-    // When this fails, TourneyMachine moved a slot: paste `pnpm festival-crons` under `schedule:`.
+    // The frozen slots, not the live file: a slot TourneyMachine moves mid-event must not fail this suite (it gates
+    // field hockey's own refresh and the deploy). The refresh job's drift check reports that case.
     expect(crons).toEqual(expected);
+  });
+
+  it('keeps the frozen slots a slot list of the festival’s three days', () => {
+    expect(FROZEN_SLOTS.length).toBe(27);
+    const { startDate, endDate } = getFestival().tournament;
+    for (const slot of FROZEN_SLOTS) {
+      expect(slot.start.slice(0, 10) >= startDate && slot.start.slice(0, 10) <= endDate, slot.start).toBe(true);
+      expect(Date.parse(slot.endUtc) - Date.parse(slot.startUtc)).toBe(55 * 60_000);
+    }
+    expect(FROZEN_SLOTS.map((s) => s.startUtc)).toEqual([...FROZEN_SLOTS.map((s) => s.startUtc)].sort());
+  });
+
+  describe('the schedule drift check', () => {
+    const step = stepBody(updateFestival, 'Schedule drift check');
+    const lines = [...updateFestival.matchAll(/cron: '([^']+)'/g)].map((m) => `    - cron: '${m[1]}'`);
+
+    /** The step with a `pnpm` that prints `printed` (null: it fails), in the repo, so it reads this workflow. */
+    function runDrift(printed: string[] | null): string {
+      const dir = bin({ pnpm: printed === null ? 'exit 1' : `printf '%s\\n' ${printed.map((l) => `"${l}"`).join(' ')}` });
+      try {
+        return runStep(step, dir, {}).stdout;
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+    }
+
+    it('runs after the tests and before the commit, and can never fail the job', () => {
+      expect(step).toContain('continue-on-error: true');
+      expect(step).toContain('pnpm -s festival-crons');
+      const at = (name: string) => updateFestival.indexOf(`- name: ${name}\n`);
+      expect(at('Test')).toBeLessThan(at('Schedule drift check'));
+      expect(at('Schedule drift check')).toBeLessThan(at('Commit the data that changed'));
+    });
+
+    it('is quiet when the derived lines are the workflow’s', () => {
+      const out = runDrift(lines);
+      expect(out).not.toContain('::warning::');
+      expect(out).toContain('the cron lines match');
+    });
+
+    it('warns, with the lines to paste, when a slot moved', () => {
+      const moved = [...lines.slice(0, -1), "    - cron: '40 22 28 11 *'"];
+      const out = runDrift(moved);
+      expect(out).toMatch(/^::warning::the festival's slots moved: paste these under schedule:/m);
+      expect(out).toContain("- cron: '40 22 28 11 *'");
+    });
+
+    it('warns, and still succeeds, when the lines cannot be derived', () => {
+      expect(runDrift(null)).toContain("::warning::could not derive the festival's cron lines");
+    });
   });
 
   it('carries the festival’s own dates, by the Eastern day', () => {

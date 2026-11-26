@@ -22,6 +22,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FestivalFileSchema, festivalContentKey, type FestivalFile } from '../lib/festival/festival-schema';
 import { POLITE_USER_AGENT } from '../lib/sources/http';
 import {
+  FEED_CLOCK_MARGIN_MS,
   FESTIVAL_INFO_URL,
   FESTIVAL_TIME_ZONE,
   FESTIVAL_TOURNAMENT_ID,
@@ -101,13 +102,18 @@ describe('tourneymachine: endpoints and the version stamp', () => {
     expect(versionInstant('v7_something else')).toBeNull();
   });
 
-  it('calls a whole-feed read stale only when its Last-Modified is before the version it was read for', () => {
+  it('calls a whole-feed read current only when its Last-Modified is more than the margin after the version', () => {
     // The cached copy seen on 2026-11-26 (served at age 82): made 15:17:21, after the 3:13:00 PM version but
     // before 3:26:47 PM.
     const cached = 'Thu, 26 Nov 2026 15:17:21 GMT';
     expect(feedIsCurrent(cached, VERSION_1518)).toBe(true);
     expect(feedIsCurrent(cached, VERSION_1535)).toBe(false);
-    expect(feedIsCurrent('Thu, 26 Nov 2026 15:26:47 GMT', VERSION_1535)).toBe(true);
+    // Both stamps are cut to the second: a copy stamped the version's own second may have been made just before
+    // the score went in, and one within the clocks' margin may be too. Stale, so the next run reads again.
+    expect(FEED_CLOCK_MARGIN_MS).toBe(2_000);
+    expect(feedIsCurrent('Thu, 26 Nov 2026 15:26:47 GMT', VERSION_1535)).toBe(false);
+    expect(feedIsCurrent('Thu, 26 Nov 2026 15:26:49 GMT', VERSION_1535)).toBe(false);
+    expect(feedIsCurrent('Thu, 26 Nov 2026 15:26:50 GMT', VERSION_1535)).toBe(true);
     // Unknowable counts as current: no header, an unparseable one, a version of another shape.
     expect(feedIsCurrent(null, VERSION_1535)).toBe(true);
     expect(feedIsCurrent('yesterday', VERSION_1535)).toBe(true);
@@ -231,7 +237,7 @@ describe('normalizeFestival: the 15:35 capture', () => {
     for (const d of file.divisions) expect(d.bracketUrl).toBe(raw.DivisionDictionary[String(d.key)].BracketWebPage);
   });
 
-  it('orders pools by name and keeps each pool’s teams in TourneyMachine’s order, which is its rank', () => {
+  it('orders pools by name and keeps each pool’s teams in TourneyMachine’s order (its rank; full ties alphabetical)', () => {
     expect(file.divisions.map((d) => d.pools.map((p) => p.name))).toEqual([['Pool F'], ['Pool G', 'Pool H', 'Pool I', 'Pool J'], ['Pool V']]);
     const rawPools = new Map(Object.values(raw.PoolDictionary).map((p) => [p.IDPool, p.IDTeams]));
     for (const d of file.divisions) for (const p of d.pools) expect(p.teamIds, p.name).toEqual(rawPools.get(p.id));

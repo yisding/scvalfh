@@ -64,7 +64,11 @@ export const FestivalTournamentSchema = z.object({
 /** A field at the venue: 'Field 7', number 7. */
 export const FestivalFieldSchema = z.object({ id: text, name: text, number: int.min(1) });
 
-/** A pool: TourneyMachine's hex IDPool, 'Pool K', and its teams in TourneyMachine's order, which is the pool's rank. */
+/**
+ * A pool: TourneyMachine's hex IDPool, 'Pool K', and its teams in TourneyMachine's order: the pool's rank, except that
+ * teams level on points, wins, goal difference and goals for are listed alphabetically until the event staff fill the
+ * placement sides (DESIGN §35.5).
+ */
 export const FestivalPoolSchema = z.object({ id: text, name: text, teamIds: z.array(text) });
 
 export const FestivalDivisionSchema = z.object({

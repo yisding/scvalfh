@@ -14,7 +14,10 @@
  *   - `S` is the venue's naive wall clock (Eastern; Naples, Fla.). S1/S2 are 0/0 before a result, so a score exists
  *     only when F (final) or I (scoring started) is set.
  *   - A pool's IDTeams is pre-sorted by TourneyMachine as results come in, and its public standings print it as
- *     given: that order is the pool's rank.
+ *     given: that order is the pool's rank, except that teams level on points, wins, goal difference and goals for
+ *     are listed alphabetically by raw name (Pool S, 2026-11-26: "Atlanta FHC U19" over "FHL", both 1-0-0, +1, 2
+ *     goals; FHL led before Atlanta's win) until the event staff fill the placement sides. The feed carries no
+ *     head-to-head, shoot-out or coin-toss result (regs D.2), so the view marks such teams tied (DESIGN §35.5).
  *   - Facilities all have Sort 0 and come in no useful order: fields are ordered by the number in their name.
  *   - TeamDictionary[*].Color is randomized on every request; it is dropped, or every run would commit.
  *
@@ -148,14 +151,25 @@ export function versionInstant(version: string): number | null {
 }
 
 /**
- * Whether a whole-feed response is at least as new as `version`: its Last-Modified (when Cloudflare's copy was made;
- * the feed is cached with max-age 30 and was seen served at age 82) is not before the version's instant. Unknowable
- * (no header, a version of another shape) counts as current.
+ * Seconds of slack between TourneyMachine's clock and Cloudflare's: a copy must be made more than this after the
+ * version's instant to count as holding it.
+ */
+export const FEED_CLOCK_MARGIN_MS = 2_000;
+
+/**
+ * Whether a whole-feed response is newer than `version`: its Last-Modified (when Cloudflare's copy was made; the
+ * feed is cached with max-age 30 and was seen served at age 82) is strictly after the version's instant, by more
+ * than FEED_CLOCK_MARGIN_MS. Both are cut to the second, so a copy made earlier in the very second a score was
+ * entered carries the same stamp as the version; read as current, it would be stored under the new
+ * `sourceVersion` with the old content, and every later run's change check would skip until TourneyMachine changed
+ * again (after a day's last score, never). The margin covers the two servers' clocks drifting apart. A false
+ * "stale" costs one more read on the next run; a false "current" loses a score. Unknowable (no header, a version
+ * of another shape) counts as current.
  */
 export function feedIsCurrent(lastModified: string | null, version: string): boolean {
   const changed = versionInstant(version);
   const made = lastModified === null ? NaN : Date.parse(lastModified);
-  return changed === null || Number.isNaN(made) || made >= changed;
+  return changed === null || Number.isNaN(made) || made > changed + FEED_CLOCK_MARGIN_MS;
 }
 
 // ---------------------------------------------------------------- pieces

@@ -632,6 +632,10 @@
      table column heads are NOT tinted. */
   .sx-section { margin-top: 2.5rem; }
   .sx-section:first-child, .sx-section[data-first] { margin-top: 1.25rem; }
+  /* The home page's festival notice, once the reader's clock is past its window: the festival head script stamps
+     data-fest-over (components/festival/follow-script.ts), so the notice comes down without waiting for a build
+     (components/home/FestivalNotice.tsx, DESIGN §35.3). */
+  html[data-fest-over] [data-festival-notice] { display: none; }
   .sx-kicker { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.75rem; margin: 0 0 0.5rem; padding: 0; border: 0; font-size: 1rem; }
   .sx-kicker > div { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.75rem; min-width: 0; }
   .sx-kicker > .sx-action { margin-left: auto; }

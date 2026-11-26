@@ -38,7 +38,12 @@ export interface FestivalModel {
   teamById: ReadonlyMap<string, FestivalTeam>;
   teamBySlug: ReadonlyMap<string, FestivalTeam>;
   fieldById: ReadonlyMap<string, FestivalField>;
-  /** Every game a team is named in (pool games, and placement games once TourneyMachine fills the side), in file order. */
+  /**
+   * Every game a team plays, in file order: its pool games, and a placement game once TourneyMachine names it in a
+   * side or once a side's source pool has finished with the team alone at that place (`pool-complete`, sideAt).
+   * TourneyMachine may leave a side unfilled through Saturday (it was never seen filling one; DESIGN §35.5), and
+   * the team's own pages must still carry that game and its result.
+   */
   gamesOfTeam: ReadonlyMap<string, readonly FestivalGame[]>;
   /** A pool's own games. */
   gamesOfPool: ReadonlyMap<string, readonly FestivalGame[]>;
@@ -73,11 +78,10 @@ export function buildFestivalModel(file: FestivalFile, clubs: ResolvedClubsInput
   const gamesOfPool = new Map<string, FestivalGame[]>();
   const placementOfDivision = new Map<number, FestivalGame[]>();
   for (const g of file.games) {
-    for (const side of g.sides) if (side.teamId) push(gamesOfTeam, side.teamId, g);
     if (g.kind === 'pool' && g.poolId) push(gamesOfPool, g.poolId, g);
     if (g.kind === 'placement') push(placementOfDivision, g.divisionKey, g);
   }
-  return {
+  const m: FestivalModel = {
     file,
     divisionByKey: new Map(file.divisions.map((d) => [d.key, d])),
     divisionBySlug: new Map(file.divisions.map((d) => [d.slug, d])),
@@ -93,6 +97,12 @@ export function buildFestivalModel(file: FestivalFile, clubs: ResolvedClubsInput
     clubBySlug: new Map(clubs.clubs.map((c) => [c.slug, c])),
     clubOfTeam: clubs.clubOfTeam,
   };
+  // A second pass, once the pools' games are indexed: a placement side resolves from its source pool (sideAt), so
+  // a game is listed under the team that plays it, named by TourneyMachine or settled by a final pool table.
+  for (const g of file.games) {
+    for (const id of new Set(playingTeamIds(m, g))) push(gamesOfTeam, id, g);
+  }
+  return m;
 }
 
 let committed: FestivalModel | null = null;
@@ -166,8 +176,15 @@ export function poolHasResults(m: FestivalModel, poolId: string): boolean {
 
 export interface PoolRowModel {
   team: TeamRef;
-  /** TourneyMachine's order is the rank (its own tiebreaks, regs D.2–D.3); null before any result in the pool. */
+  /**
+   * The place, from TourneyMachine's order; null before any result in the pool. Teams level on every figure the
+   * feed carries (points, wins, goal difference, goals for; regs D.2) share the rank of the first of them
+   * (`tied`): TourneyMachine lists such teams alphabetically until the event staff fill the placement sides, and
+   * the feed has no head-to-head, shoot-out or coin-toss result (regs D.2–D.3) to break them.
+   */
   rank: number | null;
+  /** Level with a neighbour on (pts, w, gd, gf): the table prints the rank as '=1'. */
+  tied: boolean;
   gp: number;
   w: number;
   l: number;
@@ -219,9 +236,11 @@ export function poolTable(m: FestivalModel, poolId: string, selfIds: readonly st
     divisionSlug: division.slug,
     rows: pool.teamIds.map((id, i) => {
       const r = m.teamById.get(id)!.record;
+      const tie = tieAt(m, pool, i + 1);
       return {
         team: teamRef(m, id),
-        rank: hasResults ? i + 1 : null,
+        rank: hasResults ? tie.first : null,
+        tied: hasResults && tie.tied,
         gp: r.w + r.l + r.t,
         w: r.w,
         l: r.l,
@@ -241,13 +260,43 @@ export function poolTable(m: FestivalModel, poolId: string, selfIds: readonly st
   };
 }
 
-/** A team's place in its pool ('2nd of 6'), once the pool has a result. */
+/** The key a full tie is level on: the figures of regs D.2 the feed carries (points, wins, goal difference, goals for). */
+function recordKey(m: FestivalModel, teamId: string): string {
+  const r = m.teamById.get(teamId)!.record;
+  return [r.pts, r.w, r.gd, r.gf].join();
+}
+
+/**
+ * Whether the team at `place` (1-based) in TourneyMachine's order is level on every figure with a neighbour, and the
+ * places its tie group spans. TourneyMachine lists fully level teams alphabetically (seen on 2026-11-26: Pool S's
+ * "Atlanta FHC U19" over "FHL" at 1-0-0, +1, 2 goals; Pool C's "IFHCK Thunder" over "U12 Gateway Red Stripes", by
+ * the raw name). That order is not a result: regs D.2 then goes to the head-to-head result and a shoot-out (a coin
+ * toss without time), which the feed does not carry, so a tied place is open until the event staff fill the
+ * placement sides (DESIGN §35.5).
+ */
+export function tieAt(m: FestivalModel, pool: FestivalPool, place: number): { tied: boolean; first: number; last: number } {
+  const ids = pool.teamIds;
+  const key = recordKey(m, ids[place - 1]);
+  let first = place;
+  let last = place;
+  while (first > 1 && recordKey(m, ids[first - 2]) === key) first--;
+  while (last < ids.length && recordKey(m, ids[last]) === key) last++;
+  return { tied: last > first, first, last };
+}
+
+/** A team's place in its pool ('2nd of 6', 'tied for 1st of 6'), once the pool has a result. */
 export interface PlaceModel {
+  /** Its line in TourneyMachine's order. */
   place: number;
   of: number;
-  /** '2nd of 6'. */
+  /** Level with a neighbour on every figure the feed carries: its place is not settled (tieAt). */
+  tied: boolean;
+  /** The places a tie spans (`place` alone when not tied). */
+  first: number;
+  last: number;
+  /** '2nd of 6', 'tied for 1st of 6'. */
   words: string;
-  /** The pool's table is final. */
+  /** The pool's table is final and the team is alone at its place. */
   final: boolean;
 }
 
@@ -256,7 +305,17 @@ export function placeOf(m: FestivalModel, teamId: string): PlaceModel | null {
   if (!poolHasResults(m, team.poolId)) return null;
   const pool = m.poolById.get(team.poolId)!;
   const place = pool.teamIds.indexOf(teamId) + 1;
-  return { place, of: pool.teamIds.length, words: `${ordinal(place)} of ${pool.teamIds.length}`, final: poolComplete(m, team.poolId) };
+  const of = pool.teamIds.length;
+  const { tied, first, last } = tieAt(m, pool, place);
+  return {
+    place,
+    of,
+    tied,
+    first,
+    last,
+    words: tied ? `tied for ${ordinal(first)} of ${of}` : `${ordinal(place)} of ${of}`,
+    final: poolComplete(m, team.poolId) && !tied,
+  };
 }
 
 // ---------------------------------------------------------------- game sides
@@ -264,9 +323,10 @@ export function placeOf(m: FestivalModel, teamId: string): PlaceModel | null {
 /**
  * Where a side of a game stands (spec §6):
  * - `team`: a pool game's team, or a placement side TourneyMachine has filled;
- * - `pool-complete`: an unfilled placement side whose source pool has played every game: the team at that
- *   place in the final pool table;
- * - `provisional`: the source pool is under way: the team at that place NOW, which can still change;
+ * - `pool-complete`: an unfilled placement side whose source pool has played every game, with one team alone at
+ *   that place in the final pool table (no full tie with a neighbour: tieAt);
+ * - `provisional`: the source pool is under way, or finished with that place tied: the team TourneyMachine lists
+ *   there NOW, which can still change (a tie goes to a head-to-head result or a shoot-out the feed lacks);
  * - `placeholder`: the source pool has no result yet: only the slot.
  */
 export type SideState = 'team' | 'pool-complete' | 'provisional' | 'placeholder';
@@ -309,7 +369,9 @@ function sideAt(m: FestivalModel, game: FestivalGame, i: 0 | 1): SideModel {
   }
   const pool = m.poolById.get(side.source.poolId)!;
   const holder = pool.teamIds[side.source.place - 1];
-  if (poolComplete(m, pool.id) && holder) {
+  // A complete pool settles the side only when its holder is alone at the place: a full tie is listed
+  // alphabetically (tieAt), so that team is shown as "Now: …" until the event staff fill the side.
+  if (poolComplete(m, pool.id) && holder && !tieAt(m, pool, side.source.place).tied) {
     const team = teamRef(m, holder);
     return { state: 'pool-complete', team, slot, name: team.name, score, result };
   }
@@ -330,9 +392,24 @@ export function isShootoutTie(game: FestivalGame): boolean {
 
 export const SHOOTOUT_WORDS = `Tied ${'—'} shoot-out`;
 
-/** Every team slug a game names or (filled from a complete pool) will name: the "Only my teams" filter's hook. */
+/** The side is the team that plays: TourneyMachine named it, or a final pool table put it alone at the place. */
+export function sidePlays(side: SideModel): boolean {
+  return side.state === 'team' || side.state === 'pool-complete';
+}
+
+/**
+ * Every team slug a game names or (filled from a complete pool, the place untied) will name: the "Only my teams"
+ * filter's hook. A tied place is `provisional`, so its alphabetical first team is not filed under the game.
+ */
 export function gameTeamSlugs(sides: readonly SideModel[]): string[] {
-  return sides.filter((s) => s.state === 'team' || s.state === 'pool-complete').map((s) => s.team!.slug);
+  return sides.filter(sidePlays).map((s) => s.team!.slug);
+}
+
+/** The ids of the teams that play `game`, in side order (gamesOfTeam's index, a club's schedule). */
+export function playingTeamIds(m: FestivalModel, game: FestivalGame): string[] {
+  return sidesOf(m, game)
+    .filter(sidePlays)
+    .map((s) => s.team!.id);
 }
 
 // ---------------------------------------------------------------- a game row (neutral)
@@ -501,8 +578,10 @@ export interface TeamGameModel {
 }
 
 export function teamGame(m: FestivalModel, game: FestivalGame, teamId: string): TeamGameModel {
-  const i = game.sides[0].teamId === teamId ? 0 : 1;
   const sides = sidesOf(m, game);
+  // The team's side as it resolves, not the raw teamId: an unfilled placement side settled by a final pool table
+  // is the team's too, and its score and chip read from it.
+  const i = sidePlays(sides[0]) && sides[0].team!.id === teamId ? 0 : 1;
   const own = sides[i];
   const opponent = sides[1 - i];
   let chip: ChipLetter | null = null;
@@ -629,8 +708,10 @@ export interface PathEntryModel {
   place: number;
   /** '2nd'. */
   placeWord: string;
-  /** The team holds this place in the table now (or finished there). */
+  /** The team holds this place in the table now (or finished there), or shares it in a full tie (PlaceModel.first … last). */
   current: boolean;
+  /** What marks a current entry: 'Now 2nd.', or 'Tied for 1st now.' across a full tie; null for the others. */
+  nowWords: string | null;
   games: PathGameModel[];
 }
 
@@ -661,13 +742,18 @@ export function placementPath(m: FestivalModel, teamId: string): PlacementPathMo
     g.sides.forEach((side, i) => {
       if (side.source?.poolId !== pool.id) return;
       const own = sides[i];
-      const settled = (own.state === 'team' || own.state === 'pool-complete') && own.team?.id === teamId;
+      const settled = sidePlays(own) && own.team?.id === teamId;
+      const opponent = sides[1 - i];
       push(byPlace, side.source.place, {
         number: g.number,
         href: `${divisionHref(division.slug)}#${gameAnchor(g.number)}`,
         when: whenET(g.startUtc),
         field: fieldName(m, g.fieldId),
-        opponent: sides[1 - i],
+        // In a one-pool division both sides can draw on the team's own pool, and the slot it would play is one it
+        // holds now ("If 1st: plays Pool F 2nd (now <itself>)"). It cannot hold that place and play against it, and
+        // who would is unknown, so the slot is printed alone.
+        opponent:
+          opponent.state === 'provisional' && opponent.team?.id === teamId ? { ...opponent, state: 'placeholder', team: null } : opponent,
         settled,
       });
     });
@@ -678,7 +764,11 @@ export function placementPath(m: FestivalModel, teamId: string): PlacementPathMo
     place,
     entries: [...byPlace.entries()]
       .sort((a, b) => a[0] - b[0])
-      .map(([p, games]) => ({ place: p, placeWord: ordinal(p), current: place?.place === p, games })),
+      .map(([p, games]) => {
+        const current = place !== null && p >= place.first && p <= place.last;
+        const nowWords = !current ? null : place.tied ? `Tied for ${ordinal(place.first)} now.` : `Now ${ordinal(p)}.`;
+        return { place: p, placeWord: ordinal(p), current, nowWords, games };
+      }),
     bracketHref: `${divisionHref(division.slug)}#bracket`,
   };
 }

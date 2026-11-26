@@ -36,7 +36,9 @@ export function TeamCard({
             <Link href={team.href} prefetch={false} className="sx-link">
               {team.name}
             </Link>
-            <span className="sx-pin-note" hidden>
+            {/* The star still shows; its word is hidden from screen readers here because the FollowButton beside
+                it already says "Following", which would otherwise be heard twice. */}
+            <span className="sx-pin-note" aria-hidden="true" hidden>
               Following
             </span>
           </span>

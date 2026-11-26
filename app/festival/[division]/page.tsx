@@ -93,7 +93,8 @@ export default async function FestivalDivisionPage({ params }: PageProps<'/festi
         ))}
         <p className="sx-note">
           In TourneyMachine’s order: points (3 for a win, 1 for a tie), then wins, goal difference, goals for and the
-          head-to-head result.{' '}
+          head-to-head result. Teams level on the first four share a rank (“=1”): TourneyMachine lists them
+          alphabetically.{' '}
           <Link href="/festival#about" prefetch={false} className="sx-link">
             How ties are broken
           </Link>

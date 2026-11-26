@@ -14,8 +14,13 @@ import { HAS_FESTIVAL } from '../../lib/sports/current';
  * heading and the link keeps its line.
  *
  * Shown only in field hockey's build (HAS_FESTIVAL) and only while the build instant falls between a week before the
- * first day and three days after the last (festivalNoticeShown): the page is static, so "now" is the build, never
- * the reader's clock, and the twice-daily rebuilds take the notice down on their own.
+ * first day and three days after the last (festivalNoticeShown): the page is static, so the build decides whether it
+ * is rendered. Taking it down cannot wait for a build: field hockey's last scheduled refresh of the season is the
+ * festival's last day (update-data.yml, Saturdays to November; the festival job ends Nov 28), and the other sports'
+ * refreshes do not rebuild its Worker, so a page built inside the window would keep the notice until the next code
+ * push. So the root layout's festival head script also stamps `<html data-fest-over>` once the reader's clock reaches
+ * festivalNoticeCloses (embedded at build time; follow-script.ts festivalHeadScript), and app/globals.css hides
+ * `[data-festival-notice]` under it, before first paint. Without JS it stays until the next build.
  */
 
 /** Days before the first day the notice goes up, and after the last that it stays. */
@@ -36,9 +41,13 @@ export function festivalNoticeShown(
   tournament: Pick<FestivalTournament, 'startDate' | 'endDate' | 'utcOffset'>,
 ): boolean {
   const opens = Date.parse(`${tournament.startDate}T00:00:00${tournament.utcOffset}`) - NOTICE_DAYS_BEFORE * DAY_MS;
-  const closes = Date.parse(`${tournament.endDate}T00:00:00${tournament.utcOffset}`) + (NOTICE_DAYS_AFTER + 1) * DAY_MS;
   const at = Date.parse(instant);
-  return at >= opens && at < closes;
+  return at >= opens && at < festivalNoticeCloses(tournament);
+}
+
+/** The instant (ms) the notice comes down: the end of the venue's day NOTICE_DAYS_AFTER days after `endDate`. */
+export function festivalNoticeCloses(tournament: Pick<FestivalTournament, 'endDate' | 'utcOffset'>): number {
+  return Date.parse(`${tournament.endDate}T00:00:00${tournament.utcOffset}`) + (NOTICE_DAYS_AFTER + 1) * DAY_MS;
 }
 
 /** "Nov 26–28", or "Nov 30–Dec 2" across a month. */

@@ -80,7 +80,10 @@ permissions:
   issues: write
 
 # Never let two refreshes race on the same branch; a queued run would only rewrite what the
-# in-flight one is about to commit.
+# in-flight one is about to commit. The festival refresh is the exception, in its own group: in its hours
+# (Sat Nov 28 here) its push can land in the ~1 s between this job's pull and push, and this push, not
+# retried, then fails. Nov 28 is this job's last scheduled run of the season, so a manual run recovers
+# the data (accepted, 2026-11-26; update-data-festival.yml).
 concurrency:
   group: update-data
   cancel-in-progress: false

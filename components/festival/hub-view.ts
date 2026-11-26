@@ -211,6 +211,8 @@ export interface FestivalChromeModel {
   place: string;
   dates: string;
   stamp: string;
+  /** The committed file's fetchedAt, printed as `data-fest-stamp` for the freshness poll (freshness-poll.ts). */
+  fetchedAt: string;
   resultsUrl: string;
   complete: boolean;
   tabs: { id: string; href: string; label: string }[];
@@ -223,6 +225,7 @@ export function buildChrome(m: FestivalModel = festivalModel()): FestivalChromeM
     place: `${tournament.venue.city}, ${AP_STATE[tournament.venue.state] ?? tournament.venue.state}`,
     dates: eventDates(tournament.startDate, tournament.endDate),
     stamp: stampWords(fetchedAt),
+    fetchedAt,
     resultsUrl: tournament.resultsUrl,
     complete: statusLine(m).complete,
     tabs: [

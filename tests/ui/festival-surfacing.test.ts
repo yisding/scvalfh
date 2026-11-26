@@ -68,10 +68,12 @@ describe('the /clubs/<slug> link to the club’s festival page', () => {
     expect(linked(await render('sf-hawks'))).toEqual([['san-francisco-hawks', 'At the National Hockey Festival']]);
   });
 
-  it('names both of HTC’s festival clubs, its East Coast team’s and its California team’s', async () => {
+  // Spec §3 (b): the California club first, so a San Diego parent's first tap is HTC CA U19, not the East Coast
+  // U16 team (A–Z put "HTC" first).
+  it('names both of HTC’s festival clubs, its California team’s first, then its East Coast team’s', async () => {
     expect(linked(await render('htc'))).toEqual([
-      ['htc', 'HTC at the National Hockey Festival'],
       ['htc-ca', 'HTC CA at the National Hockey Festival'],
+      ['htc', 'HTC at the National Hockey Festival'],
     ]);
   });
 });

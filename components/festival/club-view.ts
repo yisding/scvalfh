@@ -1,9 +1,11 @@
+import type { FestivalGame } from '../../lib/festival/festival';
 import { listWords, plural } from '../../lib/format';
 import {
   byDayAndSlot,
   clubHref,
   festivalModel,
   placementPath,
+  playingTeamIds,
   poolTable,
   teamCard,
   teamGame,
@@ -71,9 +73,12 @@ export function buildClubView(slug: string, m: FestivalModel = festivalModel(), 
         .sort((a, b) => Number(b.california) - Number(a.california))
         .map((c) => ({ slug: c.slug, name: c.name, href: clubHref(c.slug), divisions: listWords(divisionsOf(c.teamIds)) }))
     : [];
-  // A game between two of the club's teams appears once, read from the side TourneyMachine lists first.
-  const games = m.file.games.filter((g) => g.sides.some((s) => s.teamId && ids.has(s.teamId)));
-  const schedule = byDayAndSlot(games, (g) => teamGame(m, g, g.sides.find((s) => s.teamId && ids.has(s.teamId))!.teamId!));
+  // A game between two of the club's teams appears once, read from the side TourneyMachine lists first. Sides as
+  // they resolve (playingTeamIds), so a placement game a final pool table settled is the club's before
+  // TourneyMachine fills it in, with its score and chip.
+  const clubTeamOf = (g: FestivalGame) => playingTeamIds(m, g).find((id) => ids.has(id));
+  const games = m.file.games.filter((g) => clubTeamOf(g) !== undefined);
+  const schedule = byDayAndSlot(games, (g) => teamGame(m, g, clubTeamOf(g)!));
   return {
     slug,
     name: club.name,

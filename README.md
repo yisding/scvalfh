@@ -340,8 +340,11 @@ Fla.) current while games are on: `pnpm fetch-festival` reads TourneyMachine int
 file is committed (`data: refresh festival <day> · <finals> of <games> games final`) only when its content changed.
 Games start on the hour and last 55 minutes, so it runs 12, 32 and 52 minutes after each slot ends (:07, :27 and :47
 past the next hour, UTC crons) and once more 2 h 15 min after each day's last slot. The crons are derived from the
-committed file: `pnpm festival-crons` prints them (`lib/festival/festival-crons.ts`), and `tests/workflows.test.ts`
-fails when the workflow's differ, for instance after TourneyMachine moves a slot.
+festival's slots: `pnpm festival-crons` prints them for the committed file (`lib/festival/festival-crons.ts`).
+`tests/workflows.test.ts` holds the workflow's lines to the derivation over a frozen copy of the slots as first
+published (`tests/fixtures/festival/slots-2026.json`), so a slot TourneyMachine moves never fails the suite (which
+also gates field hockey's Saturday refresh, ci and the deploy); instead the job's "Schedule drift check" step warns
+on the run, with the lines to paste, when the fetched file's crons differ from the workflow's.
 
 Each run first checks, with nothing checked out, that the Eastern date is Nov 26-28 and that TourneyMachine's
 ~30-byte version stamp differs from the committed file's `sourceVersion`; when they are equal the refresh job is

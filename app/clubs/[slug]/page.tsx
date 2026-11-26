@@ -88,8 +88,14 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
   const instagram = getClubInstagram(slug);
   // The festival clubs this club is (data/field-hockey/festival-clubs.json `siteClub`, field hockey only): one, or
   // two for HTC, whose East Coast team and California team are listed as separate clubs there. Each names itself
-  // when there are two, so the links say which is which.
-  const festival = HAS_FESTIVAL ? festivalClubs().filter((c) => c.siteClub === slug) : [];
+  // when there are two, so the links say which is which, and the California one comes first (spec §3 (b), as the
+  // festival club pages order their siblings): a San Diego parent's first tap is HTC CA, not the East Coast U16 team.
+  // The sort is stable, so the A–Z order holds within each group.
+  const festival = HAS_FESTIVAL
+    ? festivalClubs()
+        .filter((c) => c.siteClub === slug)
+        .sort((a, b) => Number(b.california) - Number(a.california))
+    : [];
 
   return (
     <div className="pb-section-lg">

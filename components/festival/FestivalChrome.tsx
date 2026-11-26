@@ -46,13 +46,15 @@ export function FestivalChrome({ title, meta, current, exact = true, children }:
         </nav>
       </PageHeader>
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-        <p className="m-0 text-cell text-ink-2">
+        {/* The stamp FestivalFreshness polls for (FEST_STAMP_ATTR in freshness-poll.ts): the committed file's
+            fetchedAt, which moves only when the scores do. */}
+        <p className="m-0 text-cell text-ink-2" data-fest-stamp={chrome.fetchedAt}>
           Scores as of {chrome.stamp}, from{' '}
           <ExternalLink href={chrome.resultsUrl} arrow={false}>
             TourneyMachine
           </ExternalLink>
         </p>
-        <FestivalFreshness complete={chrome.complete} />
+        <FestivalFreshness complete={chrome.complete} stamp={chrome.fetchedAt} />
       </div>
       {children}
     </>

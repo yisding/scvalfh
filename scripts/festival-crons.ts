@@ -5,8 +5,9 @@
  *
  *   pnpm festival-crons
  *
- * tests/workflows.test.ts fails when the workflow's crons and these lines differ (TourneyMachine moved or added a
- * slot); this is the fix. Another sport's build has no festival, so there is nothing to print (exit 0).
+ * update-data-festival.yml's "Schedule drift check" step compares these lines with the workflow's after each refresh
+ * and warns when they differ (TourneyMachine moved or added a slot); pasting them is the fix. Another sport's build has
+ * no festival, so there is nothing to print (exit 0).
  */
 
 import { festivalCrons } from '../lib/festival/festival-crons';
