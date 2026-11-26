@@ -85,6 +85,7 @@ export default async function FestivalDivisionPage({ params }: PageProps<'/festi
 
       <section aria-labelledby="pools" className="sx-section">
         <SectionHeader id="pools" kicker="Pools" meta={plural(view.pools.length, 'pool')} />
+        {view.poolsOnlyNote ? <p className="mt-0 mb-4 max-w-prose text-body text-ink-2">{view.poolsOnlyNote}</p> : null}
         {view.pools.map((pool) => (
           <div key={pool.id} className="mt-4">
             <SectionHeader strip id={pool.anchor} kicker={pool.name} meta={pool.status} />

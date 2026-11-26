@@ -175,6 +175,12 @@ export default function FestivalPage() {
             event itself is on <ExternalLink href={view.infoUrl}>USA Field Hockey’s site</ExternalLink>. Times are the
             venue’s, Eastern (ET), with Pacific (PT) beside each time slot. Games last {FESTIVAL_GAME_MINUTES} minutes.
           </p>
+          <p className="m-0">
+            The festival crowns no division champion. USA Field Hockey awards Pool Champion medals: to each pool’s
+            table winner, or, where two pools are paired for Saturday’s crossover finals (1st v 1st, 2nd v 2nd and so
+            on), to the winner of their 1st-place final. Six-team pools play only pool games, which give every team the
+            five games the festival guarantees.
+          </p>
           <p>
             Pool tables are in TourneyMachine’s order. USA Field Hockey’s regulations give 3 points for a win, 1 for a
             tie and 0 for a loss, and break a tie on points by matches won, then goal difference, then goals for, then

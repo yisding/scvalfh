@@ -5256,8 +5256,19 @@ except where this section says otherwise (§35.4 times, §35.7 the freshness pol
   2nd", then "3rd v 4th" (`finalLabel`). The division page calls the section "Finals", heads each column with its
   pools ("Pool R v Pool S", "Pool A"), and opens with a line built from the pairings ("No knockout bracket: on
   Saturday each team plays the team that finished in the same place in the paired pool … Pools P and Q have no
-  finals."). Each side still reads as the feed's slot ("Pool R 1st") over the team that fills it. No game is called a
-  championship, and no word of the "eliminat-" family is used anywhere (the copy gate).
+  finals."). Each side still reads as the feed's slot ("Pool R 1st") over the team that fills it. No word of the
+  "eliminat-" family is used anywhere (the copy gate).
+- **Checked against USA Field Hockey, not only TourneyMachine** (owner ask, 2026-11-26). The festival is a
+  "showcase event" in USA Field Hockey's regulations (November 1, 2026, roster rule ii), not a championship; they
+  call the Saturday games "crossover competition" and send a tied one straight to a shoot-out (D.4); "USA Field Hockey
+  will approve any and all formats of competition" (E.1). The event page's format is "All teams are guaranteed five
+  games", which is why six-team pools (U16, U14 Co-Ed) play pool games only. There is no division champion: the
+  festival awards Pool Champion medals (its 2024 recap: "teams competed … for the title of Pool Champion … Twenty-four
+  teams went home with medals"), one per pool or per pair of crossover pools ("U-19 Girls … Pool A: Texas Pride …
+  Pool E/F: TC Shore"). So the pages say a paired pools' 1st-place final decides their champion and an unpaired
+  pool's table winner is its own; a single pool's "1st v 2nd" game is not said to decide its champion, because no
+  source says so. Sources: usafieldhockey.com/events/2026/november/26/festival (its regulations PDF), the 2026
+  preview, and usafieldhockey.com/news/2024/december/03/2024-national-hockey-festival-concludes.
 - **Commit only on a content change.** `festivalContentKey` ignores `fetchedAt` alone, so a run that finds the
   same results writes nothing; the feed's version stamp (`sourceVersion`) is content, so a version bump with new
   results commits. TourneyMachine also moves its version about once an hour with no new result (5:01:59, 6:02:01,

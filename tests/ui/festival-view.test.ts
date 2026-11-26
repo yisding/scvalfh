@@ -312,14 +312,21 @@ describe('the bracket columns', () => {
     ]);
   });
 
-  it('says in words that there is no knockout bracket, and which pools have no finals', () => {
+  // Checked against USA Field Hockey, not only TourneyMachine (owner ask, 2026-11-26): the regulations' "crossover
+  // competition" and shoot-out (D.4), and Pool Champion medals per pool or per pair of pools (the 2024 recap).
+  it('says in words that there is no knockout bracket, what decides a champion, and which pools have no finals', () => {
     expect(buildDivisionView('u19')!.finalsSummary).toBe(
-      'No knockout bracket: on Saturday each team plays the team that finished in the same place in the paired pool (Pool R v Pool S and Pool T v Pool U). Pools P and Q have no finals.',
+      'No knockout bracket. On Saturday paired pools play crossover finals, 1st v 1st, 2nd v 2nd and so on (Pool R v Pool S and Pool T v Pool U); the 1st-place final decides the pool champion (Pool R/S and Pool T/U). A tied final goes straight to a shoot-out. Pools P and Q have no finals: each one’s table winner is its champion.',
     );
     expect(buildDivisionView('u12')!.finalsSummary).toBe(
-      'No knockout bracket: on Saturday Pool D’s teams play by place: 1st v 2nd, 3rd v 4th and 4th v 5th. Pools B and C have no finals.',
+      'No knockout bracket. On Saturday Pool D’s teams play by place: 1st v 2nd, 3rd v 4th and 4th v 5th. A tied final goes straight to a shoot-out. Pools B and C have no finals: each one’s table winner is its champion.',
     );
+    // A single pool's 1st v 2nd game is not said to decide its champion: no source says so.
+    expect(buildDivisionView('u10')!.finalsSummary).not.toContain('champion');
     expect(buildDivisionView('u16')!.finalsSummary).toBeNull();
+    expect(buildDivisionView('u16')!.poolsOnlyNote).toBe('No finals in this division: each pool’s table winner is its champion.');
+    expect(buildDivisionView('u14-coed')!.poolsOnlyNote).toBe('No finals in this division: the pool’s table winner is its champion.');
+    expect(buildDivisionView('u19')!.poolsOnlyNote).toBeNull();
   });
 
   it('puts every placement game in exactly one column, rows top to bottom', () => {
