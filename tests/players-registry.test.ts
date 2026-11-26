@@ -657,6 +657,18 @@ describe('what the reviewers broke', () => {
     expect(after.players).toHaveLength(1);
     expect(after.players[0]).toMatchObject({ id: before.players[0].id, name: 'Alina Decker', formerIds: [] });
     expect(after.players[0].stints.some((st) => st.gone)).toBe(false);
+    // One career's rows in two seasons, one with the names each way round, are one player, not a career with two names.
+    const both = build([
+      row({ name: 'Decker Alina', careerIds: ['c1'], season: '25-26', obs: { grade: 11 } }),
+      row({ name: 'Alina Decker', careerIds: ['c1'], obs: { grade: 12 } }),
+    ]);
+    expect(both.players).toHaveLength(1);
+    expect(both.review.filter((r) => r.kind === 'career-two-names')).toEqual([]);
+    // And a carried season under the old order stays with the player the fresh row is.
+    const carried = build([row({ name: 'Alina Decker', careerIds: ['c1'], obs: { grade: 12 } })], { previous: both, built: [{ sport: 'field-hockey', season: '26-27' }] });
+    expect(carried.players).toHaveLength(1);
+    expect(carried.players[0].id).toBe(both.players[0].id);
+    expect(carried.players[0].stints.map((st) => st.season)).toEqual(['25-26', '26-27']);
     // Other words are another person still: the guard above holds.
     const other = build([row({ name: 'Alina Becker', careerIds: ['c1'], obs: { grade: 12 } })], { previous: before });
     expect(named(other, 'Alina Becker')[0].id).not.toBe(before.players[0].id);
