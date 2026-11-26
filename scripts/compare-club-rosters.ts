@@ -76,6 +76,10 @@ function line(r: CompareRow, urls = false): string {
   return `  ${r.row.level.padEnd(7)} ${r.row.teamSlug} / ${r.row.fullName} (${graded}): ${hits.join('; ')}`;
 }
 
+/** A match rule 4 resolved by another page's tie names the other clubs' rows it leaves unlinked. */
+const setAsideNote = (r: CompareRow): string =>
+  r.setAside.length === 0 ? '' : `; set aside: ${r.setAside.map((h) => `${h.team.teamName} (${h.player.playerType ?? 'no label'})`).join('; ')}`;
+
 /** The outcome as the report groups it: a match by how it stands in clubs.json, a birth-years row marked apart. */
 const kindOf = (r: CompareRow): string =>
   `${r.tier === 'birth-years' ? 'birth-years ' : ''}${r.outcome === 'match' ? `match: ${r.tie}${r.classYearFrom === 'grade' ? '' : ` (class year from the ${r.classYearFrom})`}` : r.outcome}`;
@@ -106,11 +110,11 @@ export function main(argv: readonly string[] = process.argv.slice(2)): number {
 
   const open = compared.filter((r) => r.outcome === 'match' && r.tie !== 'linked');
   console.log(`\nMatches clubs.json does not cite yet (${open.length}; a varsity row's tie goes in affiliations, a JV row's in jvAffiliations):`);
-  for (const r of open) console.log(`${line(r, true)} [${r.tie}${r.tier === 'birth-years' ? ', on birth years' : ''}]`);
+  for (const r of open) console.log(`${line(r, true)} [${r.tie}${r.tier === 'birth-years' ? ', on birth years' : ''}]${setAsideNote(r)}`);
   if (all) {
     for (const k of kinds) {
       console.log(`\n${k}:`);
-      for (const r of compared) if (kindOf(r) === k) console.log(line(r));
+      for (const r of compared) if (kindOf(r) === k) console.log(`${line(r)}${setAsideNote(r)}`);
     }
   }
   if (jsonPath) writeFileSync(jsonPath, `${JSON.stringify(compared, null, 1)}\n`);

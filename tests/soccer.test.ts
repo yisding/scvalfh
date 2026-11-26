@@ -344,6 +344,7 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
       'Kaia Gurdak',
       'Mari Madalen Jan',
       'Noa Goldberg',
+      'Reagan Connors',
       'Samantha Bonar',
       'Samantha Erickson',
       'Shea Murphy',

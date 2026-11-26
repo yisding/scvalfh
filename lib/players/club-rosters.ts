@@ -17,11 +17,19 @@
  *      no grade; loosened 2026-11-25) the one class year the player's own linked recruiting pages state,
  *      else, on a team whose rows carry a class year, the roster's own, when every row under the name that
  *      gives one gives the same year and it is a class in high school this season (`classYearFromRoster`);
+ *      A roster row with no class year agrees when the team's name gives its birth years ("G2010/11") and
+ *      they admit the row's class year, as a Girls Academy row's do (below; added 2026-11-26);
  *   3. no other tracked school has a row under that name, varsity or JV;
- *   4. every roster row that passes 1 and 2 is at one club;
+ *   4. every roster row that passes 1 and 2 is at one club, or, when they are at several, exactly one of
+ *      those clubs is one a page other than a league roster already ties the row to (in the class-year
+ *      tier only: a GotSport roster is undated): the match is then
+ *      that club's, and the other clubs' rows are set aside (`setAside`), never linked (added 2026-11-26:
+ *      a player a club has moved from can stay on its rosters, as Vivian Baker of Mitty stays on MVLA's
+ *      with the same league account as on Bay Area Surf's, the club her other pages name);
  *   5. the club has a record in clubs.json and is based where the tracked schools are (LOCAL_REGIONS).
  * A name alone never links: a row with no grade whose name's roster rows give no class year (or two),
- * a roster row with no class year and a class year that disagrees are each reported and left alone. A
+ * a roster row with no class year on a team whose name gives no birth years, and a class year that
+ * disagrees are each reported and left alone. A
  * match is medium confidence on its own (a class year and the club's location, nothing naming the
  * school); it adds a source to a tie other pages already make. A match on a row with no grade says
  * where its class year came from (`classYearFrom`): MaxPreps posts no grade for whole schools (Los
@@ -195,7 +203,7 @@ export interface RosterHit {
 export type CompareOutcome =
   /** Passes the league-roster rule. */
   | 'match'
-  /** Rules 1-3 hold, but the agreeing rows are at more than one club. */
+  /** Rules 1-3 hold, but the agreeing rows are at more than one club, and other pages do not pick one of them out. */
   | 'several-clubs'
   /** Rules 1-4 hold, but the club has no record in clubs.json. */
   | 'no-club-record'
@@ -209,7 +217,7 @@ export type CompareOutcome =
    * this season. The name is all there is.
    */
   | 'no-grade'
-  /** No roster row under the name carries a class year. */
+  /** No roster row under the name carries a class year, nor is on a team whose name gives its birth years. */
   | 'no-class-year'
   /** Every class year under the name disagrees with the row's. */
   | 'class-year-differs';
@@ -243,6 +251,11 @@ export interface CompareRow {
   hits: RosterHit[];
   /** Set for a match only. */
   tie: TieState | null;
+  /**
+   * For a match rule 4 resolved by another page's tie: the agreeing rows at the other clubs, which the
+   * match leaves unlinked. Empty otherwise.
+   */
+  setAside: RosterHit[];
 }
 
 /** The class years in high school during a season: "26-27" is 2027 (seniors) through 2030 (freshmen). */
@@ -262,6 +275,20 @@ export function seasonClassYears(season: string): { first: number; last: number 
 export function classYearFromRoster(hits: readonly RosterHit[]): number | null {
   const years = new Set(hits.filter((h) => h.team.birthYears === undefined && h.player.gradYear !== null).map((h) => h.player.gradYear!));
   return years.size === 1 ? [...years][0] : null;
+}
+
+/**
+ * The birth years an ECNL team's name gives: "Bay Area Surf ECNL G2009/10" is [2009, 2010], "Union FC ECNL
+ * RL G 2008/09" and "Diablo Valley Futbol Club ECNL RL G07/08" read the same way, and a single year
+ * ("G2012") is [2012]; null when the name gives none.
+ */
+export function birthYearsFromTeamName(teamName: string): number[] | null {
+  const m = /\bG ?((?:20)?\d{2})(?:\/(\d{2}))?\b/.exec(teamName);
+  if (!m) return null;
+  const first = Number(m[1].length === 2 ? `20${m[1]}` : m[1]);
+  if (m[2] === undefined) return [first];
+  const second = 2000 + Number(m[2]);
+  return second === first + 1 ? [first, second] : null;
 }
 
 /** "Delaney Kumer": the roster's two fields as one name. */
@@ -294,16 +321,24 @@ export function compareClubRosters(
   const regionOf = new Map(clubs.clubs.map((c) => [c.slug, c.region]));
   // 'linked' only when the tie cites one of the rosters this match rests on: a tie citing a club's ECNL
   // roster does not make its GA match linked, nor the other way round.
+  const tiesOf = (r: SchoolRow) =>
+    r.athleteId === null
+      ? []
+      : (r.level === 'jv' ? (clubs.jvAffiliations ?? []) : clubs.affiliations).filter((a) => a.teamSlug === r.teamSlug && a.athleteId === r.athleteId);
   const tieOf = (r: SchoolRow, club: string, agreeing: readonly RosterHit[]): TieState => {
-    if (r.athleteId === null) return 'new';
-    const ties = r.level === 'jv' ? (clubs.jvAffiliations ?? []) : clubs.affiliations;
-    const tie = ties.find((a) => a.teamSlug === r.teamSlug && a.athleteId === r.athleteId && a.club === club);
+    const tie = tiesOf(r).find((a) => a.club === club);
     if (!tie) return 'new';
     const pages = new Set(agreeing.map((h) => h.team.url));
     return tie.sources.some((s) => s.kind === LEAGUE_ROSTER_KIND && pages.has(s.url)) ? 'linked' : 'tie-without-roster';
   };
-  const agrees = (h: RosterHit, classYear: number): boolean =>
-    h.team.birthYears === undefined ? h.player.gradYear === classYear : birthYearsAdmit(h.team.birthYears, classYear);
+  // A team's birth years: a GotSport team's own, else, for a roster row with no class year, the team name's.
+  const birthYearsOf = (h: RosterHit): readonly number[] | null =>
+    h.team.birthYears ?? (h.player.gradYear === null ? birthYearsFromTeamName(h.team.teamName) : null);
+  const agrees = (h: RosterHit, classYear: number): boolean => {
+    if (h.team.birthYears === undefined && h.player.gradYear !== null) return h.player.gradYear === classYear;
+    const years = birthYearsOf(h);
+    return years !== null && birthYearsAdmit(years, classYear);
+  };
   // Rule 4 counts clubs as clubs.json does: hits mapped to one record are one club whatever their league
   // ids; an unmapped hit is its own club, by its league key, so two unknown clubs still count as two.
   const clubOf = (h: RosterHit): string => (h.club !== null ? `slug:${h.club}` : `key:${clubKey(h.team)}`);
@@ -319,8 +354,8 @@ export function compareClubRosters(
       if (all.length === 0) continue;
       let classYear: number | null = null;
       let classYearFrom: ClassYearFrom | null = null;
-      const result = (outcome: CompareOutcome, hits: RosterHit[] = all, tie: TieState | null = null) =>
-        out.push({ row, tier, outcome, classYear, classYearFrom, hits, tie });
+      const result = (outcome: CompareOutcome, hits: RosterHit[] = all, tie: TieState | null = null, setAside: RosterHit[] = []) =>
+        out.push({ row, tier, outcome, classYear, classYearFrom, hits, tie, setAside });
       if ((schoolsByName.get(key)?.size ?? 0) > 1) {
         result('name-at-two-schools');
         continue;
@@ -344,18 +379,37 @@ export function compareClubRosters(
       }
       const agreeing = all.filter((h) => agrees(h, year));
       if (agreeing.length === 0) {
-        result(all.every((h) => h.team.birthYears === undefined && h.player.gradYear === null) ? 'no-class-year' : 'class-year-differs');
+        result(all.every((h) => h.team.birthYears === undefined && h.player.gradYear === null && birthYearsOf(h) === null) ? 'no-class-year' : 'class-year-differs');
         continue;
       }
+      let kept = agreeing;
+      let setAside: RosterHit[] = [];
       if (new Set(agreeing.map(clubOf)).size > 1) {
-        result('several-clubs', agreeing);
-        continue;
+        // Rule 4's second case: exactly one of the clubs is tied by a page other than a league roster. ECNL's
+        // tier only: its rosters are this season's, where a GotSport roster is undated and keeps players a
+        // team once carried, so a second club there says nothing about which is current.
+        if (tier !== 'class-year') {
+          result('several-clubs', agreeing);
+          continue;
+        }
+        const byOtherPage = new Set(
+          tiesOf(row)
+            .filter((a) => a.sources.some((s) => s.kind !== LEAGUE_ROSTER_KIND))
+            .map((a) => `slug:${a.club}`),
+        );
+        const picked = [...new Set(agreeing.map(clubOf))].filter((c) => byOtherPage.has(c));
+        if (picked.length !== 1) {
+          result('several-clubs', agreeing);
+          continue;
+        }
+        kept = agreeing.filter((h) => clubOf(h) === picked[0]);
+        setAside = agreeing.filter((h) => clubOf(h) !== picked[0]);
       }
-      const club = agreeing[0].club;
+      const club = kept[0].club;
       const region = club === null ? undefined : regionOf.get(club);
-      if (club === null || region === undefined) result('no-club-record', agreeing);
-      else if (!LOCAL_REGIONS.includes(region)) result('club-elsewhere', agreeing);
-      else result('match', agreeing, tieOf(row, club, agreeing));
+      if (club === null || region === undefined) result('no-club-record', kept);
+      else if (!LOCAL_REGIONS.includes(region)) result('club-elsewhere', kept);
+      else result('match', kept, tieOf(row, club, kept), setAside);
     }
   }
   return out;
