@@ -589,7 +589,7 @@
           "teamId": "h20261030135311130b6ff6def43c94d"
         },
         {
-          "label": "IFHCK ICE",
+          "label": "IFHCK Ice",
           "source": null,
           "teamId": "h2026103013531113155eb8ecb980a48"
         }
@@ -1485,7 +1485,7 @@
           "teamId": "h202610301437422116f5a7541fbc54f"
         },
         {
-          "label": "IFHCK SPIRIT",
+          "label": "IFHCK Spirit",
           "source": null,
           "teamId": "h20261030143742211d9584d0267c04e"
         }
@@ -1915,7 +1915,7 @@
       ],
       "sides": [
         {
-          "label": "ROB SHORT ACADEMY U19",
+          "label": "Rob Short Academy U19",
           "source": null,
           "teamId": "h20261030145612519e86f5f64a7c348"
         },
@@ -2786,7 +2786,7 @@
           "teamId": "h2026103014561251987ae02b5464b4e"
         },
         {
-          "label": "ROB SHORT ACADEMY U19",
+          "label": "Rob Short Academy U19",
           "source": null,
           "teamId": "h20261030145612519e86f5f64a7c348"
         }
@@ -2833,7 +2833,7 @@
       "score": null,
       "sides": [
         {
-          "label": "IFHCK SPIRIT",
+          "label": "IFHCK Spirit",
           "source": null,
           "teamId": "h20261030143742211d9584d0267c04e"
         },
@@ -3668,7 +3668,7 @@
       "score": null,
       "sides": [
         {
-          "label": "ROB SHORT ACADEMY U19",
+          "label": "Rob Short Academy U19",
           "source": null,
           "teamId": "h20261030145612519e86f5f64a7c348"
         },
@@ -4791,7 +4791,7 @@
           "teamId": "h20261030145612519ee5a5197e3cc47"
         },
         {
-          "label": "ROB SHORT ACADEMY U19",
+          "label": "Rob Short Academy U19",
           "source": null,
           "teamId": "h20261030145612519e86f5f64a7c348"
         }
@@ -4864,7 +4864,7 @@
       "score": null,
       "sides": [
         {
-          "label": "IFHCK ICE",
+          "label": "IFHCK Ice",
           "source": null,
           "teamId": "h2026103013531113155eb8ecb980a48"
         },
@@ -5228,7 +5228,7 @@
       "score": null,
       "sides": [
         {
-          "label": "IFHCK SPIRIT",
+          "label": "IFHCK Spirit",
           "source": null,
           "teamId": "h20261030143742211d9584d0267c04e"
         },
@@ -5753,7 +5753,7 @@
           "teamId": "h2026103013531113063fbe510496f48"
         },
         {
-          "label": "IFHCK ICE",
+          "label": "IFHCK Ice",
           "source": null,
           "teamId": "h2026103013531113155eb8ecb980a48"
         }
@@ -5883,7 +5883,7 @@
           "teamId": "h20261030143742211e0f307b9461e48"
         },
         {
-          "label": "IFHCK SPIRIT",
+          "label": "IFHCK Spirit",
           "source": null,
           "teamId": "h20261030143742211d9584d0267c04e"
         }
@@ -6486,7 +6486,7 @@
       "score": null,
       "sides": [
         {
-          "label": "ROB SHORT ACADEMY U19",
+          "label": "Rob Short Academy U19",
           "source": null,
           "teamId": "h20261030145612519e86f5f64a7c348"
         },
@@ -7347,7 +7347,7 @@
       "score": null,
       "sides": [
         {
-          "label": "IFHCK ICE",
+          "label": "IFHCK Ice",
           "source": null,
           "teamId": "h2026103013531113155eb8ecb980a48"
         },
@@ -7773,7 +7773,7 @@
       "score": null,
       "sides": [
         {
-          "label": "IFHCK SPIRIT",
+          "label": "IFHCK Spirit",
           "source": null,
           "teamId": "h20261030143742211d9584d0267c04e"
         },
@@ -9223,7 +9223,7 @@
     {
       "divisionKey": 9,
       "id": "h2026103013531113155eb8ecb980a48",
-      "name": "IFHCK ICE",
+      "name": "IFHCK Ice",
       "poolId": "h2026103013531113068ea57cc231240",
       "record": {
         "ga": 0,
@@ -9591,7 +9591,7 @@
     {
       "divisionKey": 16,
       "id": "h20261030143742211d9584d0267c04e",
-      "name": "IFHCK SPIRIT",
+      "name": "IFHCK Spirit",
       "poolId": "h20261030143742211ec937e88f57d4b",
       "record": {
         "ga": 5,
@@ -10247,7 +10247,7 @@
     {
       "divisionKey": 22,
       "id": "h20261030145612519e86f5f64a7c348",
-      "name": "ROB SHORT ACADEMY U19",
+      "name": "Rob Short Academy U19",
       "poolId": "h2026103014561251985cb1d0280774d",
       "record": {
         "ga": 3,
