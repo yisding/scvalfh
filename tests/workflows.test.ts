@@ -37,15 +37,14 @@ const updateValSoccer = read('update-data-val-soccer.yml');
 const deploy = read('deploy-cloudflare.yml');
 const updates = [update, updateSoccer, updateBasketball, updateVolleyball, updateValSoccer];
 
-/** The player registry's files (scripts/refresh-player-registry.sh --files), which a refresh stages by that call. */
-const REGISTRY_CALL = '$(scripts/refresh-player-registry.sh --files)';
+/** The player registry's files (scripts/refresh-player-registry.sh --files), which a refresh stages as `$registry`. */
 const registryFiles = execFileSync('bash', ['scripts/refresh-player-registry.sh', '--files'], { encoding: 'utf8' }).trim().split(/\s+/);
 
-/** Every path the refreshes stage: the arguments of their `git add` lines, the registry's call read as its files. */
+/** Every path the refreshes stage: the arguments of their `git add` lines, `$registry` read as the registry's files. */
 const committedFiles = new Set(
   updates.flatMap((u) =>
     [...u.matchAll(/^\s*git add ([^\n]+)$/gm)].flatMap((m) =>
-      m[1].replace(REGISTRY_CALL, registryFiles.join(' ')).trim().split(/\s+/).filter((a) => a !== '--'),
+      m[1].replace('$registry', registryFiles.join(' ')).trim().split(/\s+/).filter((a) => a !== '--'),
     ),
   ),
 );
@@ -74,7 +73,6 @@ describe('the update-data commit and the deploy gate', () => {
     expect([...committedFiles].sort()).toEqual([...gateFiles].sort());
     expect([...gateFiles].sort()).toEqual([
       'data/basketball/claims.json',
-      'data/basketball/clubs.json',
       'data/basketball/freshman.json',
       'data/basketball/jv-rosters.json',
       'data/basketball/jv.json',
@@ -83,18 +81,14 @@ describe('the update-data commit and the deploy gate', () => {
       'data/basketball/rosters.json',
       'data/basketball/snapshot.json',
       'data/basketball/snapshot.meta.json',
-      'data/commitments.json',
       'data/field-hockey/claims.json',
-      'data/field-hockey/clubs.json',
       'data/field-hockey/jv.json',
       'data/field-hockey/player-index.json',
       'data/field-hockey/player-stats.json',
       'data/field-hockey/snapshot.json',
       'data/field-hockey/snapshot.meta.json',
-      'data/player-accounts.json',
       'data/players.json',
       'data/soccer/claims.json',
-      'data/soccer/clubs.json',
       'data/soccer/freshman.json',
       'data/soccer/jv-rosters.json',
       'data/soccer/jv.json',
@@ -104,13 +98,11 @@ describe('the update-data commit and the deploy gate', () => {
       'data/soccer/snapshot.json',
       'data/soccer/snapshot.meta.json',
       'data/val-soccer/claims.json',
-      'data/val-soccer/clubs.json',
       'data/val-soccer/jv.json',
       'data/val-soccer/player-index.json',
       'data/val-soccer/snapshot.json',
       'data/val-soccer/snapshot.meta.json',
       'data/volleyball/claims.json',
-      'data/volleyball/clubs.json',
       'data/volleyball/jv-rosters.json',
       'data/volleyball/jv.json',
       'data/volleyball/player-index.json',
@@ -454,7 +446,9 @@ describe('the soccer refresh', () => {
   it('commits and restores only data/soccer/ files, and the player registry its rosters rebuild', () => {
     const paths = [...updateSoccer.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
     expect(paths.length).toBeGreaterThan(0);
-    for (const p of paths) expect(p.startsWith('data/soccer/') || p === 'data/players.json' || p === 'data/player-identity.json', p).toBe(true);
+    // The files filed by person appear only to be restored, or watched, never staged (\`git add\` reads \`$registry\`).
+    const curated = ['data/player-accounts.json', 'data/commitments.json', 'data/*/clubs.json'];
+    for (const p of paths) expect(p.startsWith('data/soccer/') || p === 'data/players.json' || p === 'data/player-identity.json' || curated.includes(p), p).toBe(true);
   });
 
   it('rebuilds and tests the player registry after the roster fetch, and never fails the refresh over it', () => {
@@ -477,12 +471,14 @@ describe('the soccer refresh', () => {
     // commits neither rosters nor registry.
     const commit = stepBody(updateSoccer, 'Commit the data that changed');
     expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
-    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json $(scripts/refresh-player-registry.sh --files)');
+    expect(commit).toContain('registry="$(scripts/refresh-player-registry.sh --files)"\n          if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json $registry data/player-accounts.json data/commitments.json \'data/*/clubs.json\'');
     expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
     // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
     const push = stepBody(updateSoccer, 'Push');
-    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json $(scripts/refresh-player-registry.sh --files)');
-    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/player-accounts.json data/commitments.json \'data/*/clubs.json\' $registry');
+    // …and never with a file filed by person rewritten: that is a person's to check and commit.
+    expect(push).toContain("pnpm -s build-players --no-stamp && git diff --quiet -- data/player-accounts.json data/commitments.json 'data/*/clubs.json'");
+    expect(push).toContain('&& pnpm exec vitest run tests/players-registry.test.ts');
     expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
     expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
@@ -506,7 +502,9 @@ describe('the basketball refresh', () => {
   it('commits and restores only data/basketball/ files, and the player registry its rosters rebuild', () => {
     const paths = [...updateBasketball.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
     expect(paths.length).toBeGreaterThan(0);
-    for (const p of paths) expect(p.startsWith('data/basketball/') || p === 'data/players.json' || p === 'data/player-identity.json', p).toBe(true);
+    // The files filed by person appear only to be restored, or watched, never staged (\`git add\` reads \`$registry\`).
+    const curated = ['data/player-accounts.json', 'data/commitments.json', 'data/*/clubs.json'];
+    for (const p of paths) expect(p.startsWith('data/basketball/') || p === 'data/players.json' || p === 'data/player-identity.json' || curated.includes(p), p).toBe(true);
   });
 
   it('rebuilds and tests the player registry after the roster fetch, and never fails the refresh over it', () => {
@@ -529,12 +527,14 @@ describe('the basketball refresh', () => {
     // commits neither rosters nor registry.
     const commit = stepBody(updateBasketball, 'Commit the data that changed');
     expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
-    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/basketball/rosters.json data/basketball/jv-rosters.json $(scripts/refresh-player-registry.sh --files)');
+    expect(commit).toContain('registry="$(scripts/refresh-player-registry.sh --files)"\n          if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/basketball/rosters.json data/basketball/jv-rosters.json $registry data/player-accounts.json data/commitments.json \'data/*/clubs.json\'');
     expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
     // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
     const push = stepBody(updateBasketball, 'Push');
-    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json $(scripts/refresh-player-registry.sh --files)');
-    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/player-accounts.json data/commitments.json \'data/*/clubs.json\' $registry');
+    // …and never with a file filed by person rewritten: that is a person's to check and commit.
+    expect(push).toContain("pnpm -s build-players --no-stamp && git diff --quiet -- data/player-accounts.json data/commitments.json 'data/*/clubs.json'");
+    expect(push).toContain('&& pnpm exec vitest run tests/players-registry.test.ts');
     expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
     expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
@@ -566,7 +566,9 @@ describe('the volleyball refresh', () => {
   it('commits and restores only data/volleyball/ files, and the player registry its rosters rebuild', () => {
     const paths = [...updateVolleyball.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
     expect(paths.length).toBeGreaterThan(0);
-    for (const p of paths) expect(p.startsWith('data/volleyball/') || p === 'data/players.json' || p === 'data/player-identity.json', p).toBe(true);
+    // The files filed by person appear only to be restored, or watched, never staged (\`git add\` reads \`$registry\`).
+    const curated = ['data/player-accounts.json', 'data/commitments.json', 'data/*/clubs.json'];
+    for (const p of paths) expect(p.startsWith('data/volleyball/') || p === 'data/players.json' || p === 'data/player-identity.json' || curated.includes(p), p).toBe(true);
   });
 
   it('rebuilds and tests the player registry after the roster fetch, and never fails the refresh over it', () => {
@@ -589,12 +591,14 @@ describe('the volleyball refresh', () => {
     // commits neither rosters nor registry.
     const commit = stepBody(updateVolleyball, 'Commit the data that changed');
     expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
-    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/volleyball/rosters.json data/volleyball/jv-rosters.json $(scripts/refresh-player-registry.sh --files)');
+    expect(commit).toContain('registry="$(scripts/refresh-player-registry.sh --files)"\n          if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/volleyball/rosters.json data/volleyball/jv-rosters.json $registry data/player-accounts.json data/commitments.json \'data/*/clubs.json\'');
     expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
     // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
     const push = stepBody(updateVolleyball, 'Push');
-    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json $(scripts/refresh-player-registry.sh --files)');
-    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/player-accounts.json data/commitments.json \'data/*/clubs.json\' $registry');
+    // …and never with a file filed by person rewritten: that is a person's to check and commit.
+    expect(push).toContain("pnpm -s build-players --no-stamp && git diff --quiet -- data/player-accounts.json data/commitments.json 'data/*/clubs.json'");
+    expect(push).toContain('&& pnpm exec vitest run tests/players-registry.test.ts');
     expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
     expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });

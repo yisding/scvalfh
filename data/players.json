@@ -38,12 +38,12 @@
     "classOfConflicts": 307,
     "multiSeason": 1204,
     "multiSport": 87,
-    "nameOnly": 607,
-    "observations": 15907,
-    "players": 7711,
+    "nameOnly": 606,
+    "observations": 15903,
+    "players": 7710,
     "review": 68,
     "stintConflicts": 186,
-    "stints": 9622,
+    "stints": 9621,
     "withCareer": 7104
   },
   "notes": [
@@ -28362,50 +28362,6 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "sacred-heart-prep"
-        }
-      ]
-    },
-    {
-      "aliases": [],
-      "classOf": 2029,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p1135ff63e1",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "benjaminnaret",
-          "sport": "basketball",
-          "team": "leland"
-        }
-      ],
-      "name": "Benjamin Naret",
-      "names": [
-        "Benjamin Naret"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "gone": true,
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Benjamin Naret",
-          "observations": [
-            {
-              "classOf": 2029,
-              "kind": "hudl",
-              "name": "Benjamin Naret",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/27088391"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "leland"
         }
       ]
     },
@@ -163688,24 +163644,6 @@
                 "FORW"
               ],
               "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2027,
-              "kind": "ncsa",
-              "src": "profile",
-              "url": "https://www.ncsasports.org/womens-soccer-recruiting/california/san-jose/archbishop-mitty-high-school/zuri-brandt"
-            },
-            {
-              "classOf": 2027,
-              "kind": "sportsrecruits",
-              "src": "profile",
-              "url": "https://my.sportsrecruits.com/athlete/zuri_brandt2"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/21709735"
             }
           ],
           "positions": [

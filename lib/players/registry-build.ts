@@ -453,7 +453,7 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
       const pair = pairKey(stint.sport, stint.season);
       const afresh = toppedUp.get(pair);
       if (builtPairs.has(pair) && !afresh) continue;
-      // A recruiting page is no row's: it is added to the player afresh every build (5a, below).
+      // A recruiting page is no row's: it is added to the player afresh every build (5c, below).
       const observations = (afresh ? stint.observations.filter((o) => !afresh.has(o.src)) : stint.observations).filter((o) => o.src !== 'profile');
       if (observations.length === 0) continue;
       const own = names.filter((n) => n.sport === stint.sport && n.team === stint.team).map((n) => n.name);
@@ -613,7 +613,13 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
       e.careerId !== undefined
         ? [firstWithCareer.get(e.careerId)].flatMap((i) => (i === undefined ? [] : [i]))
         : named(e.isName as string, e.isSport ?? e.sport, e.isTeam ?? e.team);
-    if (to.length === 0) continue;
+    if (to.length === 0) {
+      // A name on another school's lists that no source lists (a careerId no source lists was reported above).
+      if (e.isName !== undefined && !sameTeam(e)) {
+        drift('sameAs', e, e.name, `sameAs ties this name to "${e.isName}" on ${e.isSport ?? e.sport} ${e.isTeam}'s lists, which no source lists`);
+      }
+      continue;
+    }
     for (const i of from) clusters.union(to[0], i);
   }
   // A previous player known by name alone stays one player, whatever teams her stints were on.
@@ -897,29 +903,6 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     idOf.set(d, id);
   }
 
-  // ---- 5a. each person's recruiting pages, filed under her id: their class years are statements about her
-  // A page goes on her latest stint (in the page's sport where she has one there, varsity first), so that it
-  // speaks for the season it was read in; an id no previous player had or retired is somebody nobody knows.
-  const prevById = new Map(prevPlayers.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p] as const)));
-  for (const person of input.accounts ?? []) {
-    const prev = prevById.get(person.playerId);
-    if (!prev) throw new Error(`registry: data/player-accounts.json files pages under ${person.playerId}, which is no player of the registry`);
-    const d = heirOf.get(prev.id);
-    if (!d || d.stints.length === 0) continue;
-    for (const a of person.accounts) {
-      const order = [...d.stints].sort(
-        (x, y) =>
-          byText(y.season, x.season) ||
-          Number(!(a.sports ?? []).includes(x.sport)) - Number(!(a.sports ?? []).includes(y.sport)) ||
-          byLevel(x.level, y.level) || byText(x.sport, y.sport) || byText(x.team, y.team),
-      );
-      const at = d.stints.indexOf(order[0]);
-      const st = d.stints[at];
-      const said: Observation = { src: 'profile', kind: a.platform, url: a.url, ...(a.classOf !== null && a.classOf >= 2020 && a.classOf <= 2040 ? { classOf: a.classOf } : {}) };
-      d.stints[at] = { ...resolveStint({ season: st.season, sport: st.sport, team: st.team, level: st.level }, [...st.observations, said]), ...(st.gone ? { gone: true as const } : {}) };
-    }
-  }
-
   // ---- 5b. a season being rebuilt does not forget who was in it
   // A stint a previous build held for a pair this build reads in full, and that no source lists any
   // more, is kept as it was and marked `gone`. A player with nothing else left is kept whole.
@@ -933,7 +916,11 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     // MaxPreps' "Player #4" (lib/players/placeholder-name.ts; "null Player #4" before the roster read
     // dropped the "null") was never a person, so there is nobody to remember.
     if (p.names.every((n) => isPlaceholderName(n.replace(/^null\s+/, '')))) continue;
-    const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season) && !s.observations.some((o) => stillListed.has(`${stintKey(s)} ${said(o)}`)));
+    // A recruiting page is no row's: it is added afresh below (5c), never kept on a stint no source lists any more.
+    const lost = p.stints
+      .filter((s) => fullyBuilt(s.sport, s.season) && !s.observations.some((o) => stillListed.has(`${stintKey(s)} ${said(o)}`)))
+      .map((s) => ({ ...s, observations: s.observations.filter((o) => o.src !== 'profile') }))
+      .filter((s) => s.observations.some((o) => o.name !== undefined));
     if (lost.length === 0) continue;
     const heir = heirOf.get(p.id);
     if (heir) {
@@ -966,6 +953,37 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
     drafts.push(ghost);
     idOf.set(ghost, p.id);
     formerOf.set(ghost, new Set(p.formerIds));
+  }
+
+  // ---- 5c. each person's recruiting pages, filed under her id: their class years are statements about her
+  // A page goes on her latest stint (in the page's sport where she has one there, varsity first), so that it
+  // speaks for the season it was read in; an id no previous player had or retired is somebody nobody knows. Her
+  // record is the one that now holds the id, or holds it as a former id (a join), else the heir of the previous
+  // player it named: after a join is undone the id goes back to the person it was founded under, and so do her pages.
+  const prevById = new Map(prevPlayers.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p] as const)));
+  const holderOf = new Map<string, Draft>();
+  for (const d of drafts) {
+    const id = idOf.get(d);
+    if (id !== undefined) holderOf.set(id, d);
+  }
+  for (const d of drafts) for (const f of formerOf.get(d) ?? []) if (!holderOf.has(f)) holderOf.set(f, d);
+  for (const person of input.accounts ?? []) {
+    const prev = prevById.get(person.playerId);
+    if (!prev && !holderOf.has(person.playerId)) throw new Error(`registry: data/player-accounts.json files pages under ${person.playerId}, which is no player of the registry`);
+    const d = holderOf.get(person.playerId) ?? (prev ? heirOf.get(prev.id) : undefined);
+    if (!d || d.stints.length === 0) continue;
+    for (const a of person.accounts) {
+      const order = [...d.stints].sort(
+        (x, y) =>
+          byText(y.season, x.season) ||
+          Number(!(a.sports ?? []).includes(x.sport)) - Number(!(a.sports ?? []).includes(y.sport)) ||
+          byLevel(x.level, y.level) || byText(x.sport, y.sport) || byText(x.team, y.team),
+      );
+      const at = d.stints.indexOf(order[0]);
+      const st = d.stints[at];
+      const said: Observation = { src: 'profile', kind: a.platform, url: a.url, ...(a.classOf !== null && a.classOf >= 2020 && a.classOf <= 2040 ? { classOf: a.classOf } : {}) };
+      d.stints[at] = { ...resolveStint({ season: st.season, sport: st.sport, team: st.team, level: st.level }, [...st.observations, said]), ...(st.gone ? { gone: true as const } : {}) };
+    }
   }
 
   // ---- 6. the records
@@ -1068,16 +1086,14 @@ export function buildRegistry(input: BuildInput, { onDrift = () => {} }: BuildOp
   const nowId = new Map(players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p.id] as const)));
   for (const old of previous?.review ?? []) {
     if (old.seasons.every((season) => fullyBuilt(old.sport, season))) continue;
+    // Found afresh every build over every player, carried seasons included: an old one is stale, never carried.
+    if (old.kind === 'possible-transfer') continue;
     if (review.some((r) => sameItem(r, old))) continue;
     // A pair a person has since said is two people is settled, whichever season it was found in.
     const pairKinds: ReadonlyArray<ReviewItem['kind']> = ['possible-match', 'same-name-other-sport'];
     const [first, second = first] = old.names;
     if (pairKinds.includes(old.kind) && settledPairs.has(settledKey(old.kind === 'possible-match' ? old.sport : null, old.team, first, second))) continue;
     const ids = [...new Set(old.players.flatMap((id) => (nowId.has(id) ? [nowId.get(id) as string] : [])))];
-    if (old.kind === 'possible-transfer' && ids.length === 2) {
-      const [a, b] = ids.map((id) => players.find((p) => p.id === id) as Player);
-      if (transferSettled(settledPairs, a, b)) continue;
-    }
     // Two players since found to be one, or gone: nothing left to decide.
     if (ids.length !== new Set(old.players).size) continue;
     review.push({ ...old, players: ids });
@@ -1260,6 +1276,9 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const seasonsA = new Set([...sa.values()].flatMap((x) => [...x]));
         const seasonsB = new Set([...sb.values()].flatMap((x) => [...x]));
         if ([...seasonsA].some((x) => seasonsB.has(x))) continue;
+        // No high school career spans more than four seasons.
+        const starts = [...seasonsA, ...seasonsB].map((x) => Number(x.slice(0, 2)));
+        if (Math.max(...starts) - Math.min(...starts) > 3) continue;
         if (gap(a, b) > 1 || transferSettled(settled, a, b)) continue;
         // A class year outside a season's four high school classes (a graduate, an eighth-grader) is two people.
         if (!inHighSchool(a, seasonsB) || !inHighSchool(b, seasonsA)) continue;

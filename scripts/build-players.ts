@@ -149,7 +149,16 @@ export function rekeyAccounts(accounts: AccountsFile, file: PlayersFile): Accoun
     merged.set(p.id, { playerId: p.id, name: p.name, accounts: list });
   }
   const out = { ...accounts, players: [...merged.values()].sort((a, b) => (a.playerId < b.playerId ? -1 : 1)) };
-  return AccountsFileSchema.parse(out);
+  const parsed = AccountsFileSchema.safeParse(out);
+  if (!parsed.success) {
+    // Two records the registry now holds to be one person may each have a page on one platform in one sport.
+    const at = parsed.error.issues.map((i) => {
+      const person = typeof i.path[1] === 'number' ? out.players[i.path[1]] : undefined;
+      return `  ${person ? `${person.name} (${person.playerId}${now.get(person.playerId)?.formerIds.length ? `, formerly ${now.get(person.playerId)!.formerIds.join(', ')}` : ''})` : i.path.join('.')}: ${i.message}`;
+    });
+    throw new Error(`${PLAYER_ACCOUNTS_FILE}: keyed to the registry as it now is, the file no longer holds:\n${at.join('\n')}\nKeep one of the pages by hand.`);
+  }
+  return parsed.data;
 }
 
 export interface StampIndex {

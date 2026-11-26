@@ -38,6 +38,11 @@
       "notes": [
         "The JV players' own recruiting pages, linked by the rule of data/volleyball/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has her pages in the varsity file. Recall is partial."
       ]
+    },
+    "val-soccer": {
+      "builtBy": "Nothing: The Valley Athletic League is an after-school league of middle schools; no source this site reads publishes its players, and the site lists none.",
+      "capturedAt": "2026-11-21",
+      "notes": []
     }
   },
   "players": [

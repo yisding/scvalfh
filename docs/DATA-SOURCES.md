@@ -2039,10 +2039,10 @@ by the player registry (m). No page reads it. **[V] 2026-11-14.**
 
 **(m) The player registry** — `data/players.json` (`lib/players/registry-schema.ts`), built by
 `pnpm build-players` (`scripts/build-players.ts`; the rules are `lib/players/registry-build.ts`, the reading
-of each file `lib/players/registry-sources.ts`). One record per person across all three sports and every
-season the repository holds. **Internal: no page reads it**, nothing under `app/` or `components/` may import
-it (`tests/players-registry.test.ts`), and it is read from disk, never bundled. (The `playerId` values it
-writes into the four curated files below do travel in the server bundle with those files; no page prints
+of each file `lib/players/registry-sources.ts`). One record per person across every sport that lists players and
+every season the repository holds. **Internal: no page reads it**, nothing under `app/` or `components/` may import
+it (`tests/players-registry.test.ts`), and it is read from disk, never bundled. (The `playerId` values in the roster
+overlays, the files filed by person and each sport's player index do travel in the server bundle; no page prints
 one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
 - **It names people the repository did not name before.** The 2025-26 stat sheets (l2) add about 770 players
   who appear in no other file here, most of them last year's seniors, each with a MaxPreps career link, a
@@ -2070,7 +2070,8 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   recruiting profile a class-year statement, `sourceName` another spelling, `name` the name of a MaxPreps
   "Player #N" stand-in, `level` the squad; an unnamed stand-in is no sighting at all),
   `player-stats.json`, `jv-rosters-school-sites.json`, a `listed` otherRosters' names (`school-roster`: a school's
-  own varsity list, while MaxPreps lists nobody for the team, since 2026-11-26); and for a past season
+  own varsity list, while MaxPreps lists nobody for the team, since 2026-11-26); `data/player-accounts.json` (each
+  page's class year, on its person's latest stint); and for a past season
   `prior-players.json` (l2) and `history-<season>.json`'s all-league lists. Game notes and box-score lines are
   not read: they carry no more identity than the stat sheet.
 - **Who is who.** (1) One MaxPreps career id is one player, in any season, sport, school or level, as long as

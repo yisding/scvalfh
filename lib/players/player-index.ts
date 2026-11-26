@@ -53,6 +53,35 @@ const BY_PLAYER = new Map<string, PlayerIndexRow[]>();
 for (const r of ROWS) BY_PLAYER.set(r.playerId, [...(BY_PLAYER.get(r.playerId) ?? []), r]);
 for (const rows of BY_PLAYER.values()) rows.sort((a, b) => Number(a.athleteId === null) - Number(b.athleteId === null) || Number(a.level === 'jv') - Number(b.level === 'jv'));
 
+const GONE = new Map(file.gone);
+const HOMES = new Map(file.homes.map(([id, team, athleteId]) => [id, `${team} ${athleteId ?? ''}`]));
+
+/**
+ * Where a person goes on this season's rows: her varsity MaxPreps row, else her row of a school's own varsity list,
+ * else her JV MaxPreps row (the index names it, for a person with several rows: the one under her official name);
+ * null when she has none. A person MaxPreps lists twice has one home, and her club ties, commitment and recruiting
+ * pages all show there (a MaxPreps career page on its own career's row: lib/players/rosters.ts).
+ */
+export function homeRow(playerId: string): PlayerIndexRow | null {
+  const rows = rowsOfPerson(playerId);
+  const chosen = HOMES.get(playerId);
+  if (chosen !== undefined) {
+    const home = rows.find((r) => `${r.team} ${r.athleteId ?? ''}` === chosen);
+    if (home) return home;
+  }
+  return (
+    rows.find((r) => r.athleteId !== null && r.level === 'varsity') ??
+    rows.find((r) => r.athleteId === null && r.level === 'varsity') ??
+    rows.find((r) => r.athleteId !== null && r.level === 'jv') ??
+    null
+  );
+}
+
+/** The team a person had a row on this season that no source lists any more, when she has no row now; else null. */
+export function goneFrom(playerId: string): string | null {
+  return GONE.get(playerId) ?? null;
+}
+
 /** The season the index's rows are of; null for a sport that lists no players. */
 export function getPlayerIndexSeason(): string | null {
   return file.season;

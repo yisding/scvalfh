@@ -306,9 +306,10 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([25, 3, 11, 0]);
   });
 
-  it('rests on 132 source entries on 98 distinct URLs (SoCal: 60 on 51), and 23 commitments carry a date', () => {
+  it('rests on 134 source entries on 98 distinct URLs (SoCal: 60 on 51), and 23 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(132);
+    // 134: Kat Smith's one commitment also carries the two Talon quotes the soccer round recorded from her soccer row.
+    expect(entries).toHaveLength(134);
     expect(new Set(entries.map((s) => s.url)).size).toBe(98);
     const socalEntries = socal.flatMap((c) => c.sources);
     // The 2026-11-25 round: The Tower (Bishop's student paper) for Lola Conway and Emerson Davis, seven players'

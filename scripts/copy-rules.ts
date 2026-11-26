@@ -506,7 +506,7 @@ export function affiliationLeaks(
 ): string[] {
   return leaks(
     squash(text),
-    // A listed player's ties (clubs.json listedAffiliations) are held to the same rule.
+    // A listed player's ties (the memberships lib/players/clubs.ts serves as listedAffiliations) are held to the same rule.
     [...file.affiliations, ...(file.listedAffiliations ?? [])].map((a) => ({ who: `${a.teamSlug} / ${a.fullName} (${a.club})`, basis: a.basis, sources: a.sources })),
     printsItself,
     publicTerms,

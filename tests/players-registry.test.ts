@@ -1037,6 +1037,50 @@ describe('what is filed by person', () => {
     ]);
   });
 
+  it('when a join is undone, the pages filed under the id it gave back go with that person', () => {
+    const rows = [row({ name: 'Gabrielle Moll', careerIds: ['c1'], obs: { grade: 11 } }), row({ name: 'Gabby Moll', season: '25-26', observations: [{ src: 'all-league', name: 'Gabby Moll', grade: 10, award: 'firstTeam' }] })];
+    const apart = build(rows);
+    const gabby = named(apart, 'Gabby Moll')[0].id;
+    const joined = build(rows, { previous: apart, identity: { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', name: 'Gabby Moll', careerId: 'c1', basis: 'one' }] } });
+    expect(joined.players).toHaveLength(1);
+    const split = build(rows, {
+      previous: joined,
+      accounts: [{ playerId: gabby, accounts: [{ platform: 'ncsa', url: 'https://www.ncsasports.org/g', sports: ['field-hockey'], classOf: 2030 }] }],
+    });
+    expect(split.players).toHaveLength(2);
+    const holder = split.players.find((p) => p.stints.some((st) => st.observations.some((o) => o.url === 'https://www.ncsasports.org/g')));
+    expect(holder?.id).toBe(gabby);
+  });
+
+  it('a page is never kept on a stint no source lists any more', () => {
+    const first = build([row({ name: 'Ada Ng', careerIds: ['c1'] }), row({ name: 'Bo Li', careerIds: ['c2'] })]);
+    const ada = named(first, 'Ada Ng')[0].id;
+    const page = { platform: 'hudl', url: 'https://www.hudl.com/profile/9', sports: ['field-hockey'], classOf: 2028 };
+    const second = build([row({ name: 'Ada Ng', careerIds: ['c1'] }), row({ name: 'Bo Li', careerIds: ['c2'] })], { previous: first, accounts: [{ playerId: ada, accounts: [page] }] });
+    // Ada's row leaves the roster, and her page leaves the file: nothing of it stays on her gone stint.
+    const third = build([row({ name: 'Bo Li', careerIds: ['c2'] })], { previous: second, accounts: [] });
+    const gone = third.players.find((p) => p.id === ada)!;
+    expect(gone.stints.every((st) => st.gone)).toBe(true);
+    expect(gone.stints.flatMap((st) => st.observations).some((o) => o.src === 'profile')).toBe(false);
+  });
+
+  it('a possible transfer is found afresh every build: an old one no longer found is not carried, nor one across five seasons', () => {
+    const transfer = [
+      { ...row({ name: 'Kiley Mags', careerIds: ['c1'], season: '25-26', team: 'beta' }), softLevel: true, observations: [{ src: 'maxpreps-stats' as const, name: 'Kiley Mags', grade: 11 }] },
+      row({ name: 'Kiley Mags', careerIds: ['c2'], obs: { grade: 12 } }),
+    ];
+    const first = build(transfer);
+    expect(first.review.map((r) => r.kind)).toEqual(['possible-transfer']);
+    // This season's Kiley is a freshman now: a fresh build finds no transfer, and the old item is not carried.
+    const next = buildRegistry({ previous: first, identity: NO_IDENTITY, built: [{ sport: 'field-hockey', season: '26-27' }], sightings: [row({ name: 'Kiley Mags', careerIds: ['c2'], obs: { grade: 9 } })], builtBy: 'test' });
+    expect(next.review).toEqual([]);
+    const far = build([
+      { ...row({ name: 'Rae Long', careerIds: ['c3'], season: '21-22', team: 'beta' }), softLevel: true, observations: [{ src: 'maxpreps-stats' as const, name: 'Rae Long' }] },
+      row({ name: 'Rae Long', careerIds: ['c4'] }),
+    ]);
+    expect(far.review).toEqual([]);
+  });
+
   it('pages filed under an id the registry never gave are refused', () => {
     const first = build([row({ name: 'Ada Ng', careerIds: ['c1'] })]);
     expect(() => build([row({ name: 'Ada Ng', careerIds: ['c1'] })], { previous: first, accounts: [{ playerId: 'p0000000000', accounts: [] }] })).toThrow(/no player of the registry/);

@@ -85,6 +85,18 @@ describe('scripts/vercel-ignore-build.sh', () => {
     expect(decide('val-soccer', soccerData, basketballData)).toBe(SKIP);
   });
 
+  it('builds every project on a change to a file filed by person, which every build reads', () => {
+    for (const file of ['data/commitments.json', 'data/player-accounts.json']) {
+      const base = git('rev-parse', 'HEAD');
+      const head = commit([file]);
+      for (const sport of ['field-hockey', 'soccer', 'basketball', 'volleyball', 'val-soccer']) expect(decide(sport, base, head), `${sport} ${file}`).toBe(BUILD);
+    }
+    // The registry, which no build reads, is still another sport's data to every project.
+    const base = git('rev-parse', 'HEAD');
+    const registry = commit(['data/players.json']);
+    for (const sport of ['field-hockey', 'soccer']) expect(decide(sport, base, registry), sport).toBe(SKIP);
+  });
+
   it('builds both on a code change, even beside data', () => {
     const base = git('rev-parse', 'HEAD');
     const code = commit(['lib/leagues.ts', 'data/soccer/jv.json']);

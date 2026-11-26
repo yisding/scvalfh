@@ -1826,7 +1826,9 @@ allocation of the field, and the smoke and axe passes on this build.
 
 The volleyball build has /clubs, /clubs/[slug], /commits and /recruiting, and its team rosters show the same
 profile, club and commitment lines field hockey's do (`HAS_RECRUITING` in `lib/sports/current.ts`). The data is
-research by hand in `data/volleyball/`, under field hockey's schemas, loaders and rules ("Rosters", "Clubs" and
+research by hand in `data/volleyball/` (since 2026-11-26 its profiles are filed by person in `data/player-accounts.json`,
+its club ties as `clubs.json` memberships and its commitments in `data/commitments.json`; the counts below, written of
+`jv-profiles.json` and `commits.json`, are as its rounds recorded them), under field hockey's schemas, loaders and rules ("Rosters", "Clubs" and
 "College commitments" above), with one change of place: where field hockey accepts a class year plus a location in
 the school's half of the state, volleyball asks for a hometown in the school's own area (its city or a neighbouring
 one). Two rounds: 2026-11-13 for the 41 SCVAL and BVAL schools, and 2026-11-14 for the 19 WCAL and WBAL schools,
@@ -2172,9 +2174,10 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   **medium** confidence; the club's location stands in for the hometown rule (b) asks for. `compare-club-rosters`
   says where a match's class year came from ("class year from the profile", "from the roster").
 - **Linking is by hand.** `pnpm compare-club-rosters` reads and reports only; each match it lists names the roster
-  pages it rests on (two clubs' GA teams share a name, such as "GA 08/09"). A varsity row's tie goes in `clubs.json`'s
-  `affiliations`, a JV row's in `jvAffiliations`, each with a `league-roster` source, then `SCVAL_SPORT=soccer pnpm
-  build-players`. *An ECNL match:* open the team page, press Roster, and cite the team page's URL, with the team's
+  pages it rests on (two clubs' GA teams share a name, such as "GA 08/09"). A tie goes in `clubs.json`'s
+  `memberships` under the player's registry id (`playerId`, from `data/soccer/player-index.json` or `data/players.json`;
+  `name` her official name), with a `league-roster` source, then `pnpm build-players`; the loader serves it on her
+  varsity row or, for a JV player, her JV row. *An ECNL match:* open the team page, press Roster, and cite the team page's URL, with the team's
   name and the player's row as the quote, the class year (`statedClassYear`), `sourceDate` the league season, status
   `current`. *A Girls Academy match* ("on birth years"): cite the team's GotSport Rankings roster
   (`rankings.gotsport.com/teams/<id>/roster`), which shows the rows with no button to press, with the page's team name
@@ -2315,7 +2318,7 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   2026-27: Samantha Childers and Marea Hayes (Sobrato) and Kayden and Addison Paradiso (Valley Christian) on the N1
   rosters, and Xienna De La Torre, Alleah Guy, Yifan He and Olivia Webber (Sobrato JV) on U15G Black. Not linked:
   Brianna Paredes (Sobrato JV, grade 10), whom Hudl lists as the class of 2030, one year off with a common name.
-- **JV ties, from 2026-11-25.** A JV row's ties go in `clubs.json`'s `jvAffiliations`, and join the school's MaxPreps
+- **JV ties, from 2026-11-25.** A JV player's ties (`clubs.json` memberships since 2026-11-26, served as `jvAffiliations`) join the school's MaxPreps
   JV roster (`data/soccer/jv-rosters.json`): every soccer JV player is on that list rather than on a JV row of the
   varsity roster, so the loader now joins a JV tie to a JV-list row whose player is not on the varsity roster
   (`withJvListRows` in `lib/players/clubs.ts`). `compare-club-rosters` reads a JV row's ties from there. **4 JV ties
@@ -2517,11 +2520,11 @@ no page reads them. On 2026-11-21 the four players of the soccer file who are on
 (Leland), Kailani Bock (Leland), Isabella Cain (Los Gatos) and Brooke Neschleba (Los Altos), were copied by hand
 into `data/soccer/commits.json` as ordinary commitments, with no label of their own (owner decision), and re-read
 that day (Park's is signed now: Illinois' release of 2026-11-11 could be read); /commits and the rosters show them
-from there. The other four, Saara Lahtela, Teagan Kaefer, Abby Nelson and Avery Edson, are on no 2026-27 roster
+from there (from `data/commitments.json` since 2026-11-26, which holds every build's commitments). The other four, Saara Lahtela, Teagan Kaefer, Abby Nelson and Avery Edson, are on no 2026-27 roster
 MaxPreps listed on 2026-11-21 and are not shown. The basketball file holds none. `tests/prior-commits.test.ts` no
 longer fails when something under `app/` or `components/` names the files. Last season's seniors are not included.
 
-They follow `data/field-hockey/commits.json`'s rules ("College commitments") and reuse its source, college and program shapes
+They follow `data/commitments.json`'s rules ("College commitments") and reuse its source, college and program shapes
 (`lib/players/prior-commits-schema.ts`), with these differences:
 
 - A commitment names its player by the registry's `playerId` ("The player registry"), with MaxPreps' `careerId`
@@ -2585,9 +2588,13 @@ registry id, so it follows her from season to season, school to school, squad to
 
 | File | What | Shown on |
 |---|---|---|
-| `data/player-accounts.json` | her own recruiting pages, every sport's, each with the sports it shows her in and the research rounds that linked it (`linkedBy`) | every row of hers, in every build |
-| `data/<sport>/clubs.json` `memberships` | her ties to that sport's clubs (current, earlier, or not known to be current) | her varsity row, else her listed row, else her JV row |
-| `data/commitments.json` | her college commitment, in any sport (each build's research round in `rounds`) | her varsity row, in every build she is on |
+| `data/player-accounts.json` | her own recruiting pages, every sport's, each with the sports it shows her in and the research rounds that linked it (`linkedBy`) | her home row, in every build she is on |
+| `data/<sport>/clubs.json` `memberships` | her ties to that sport's clubs (current, earlier, or not known to be current) | her home row |
+| `data/commitments.json` | her college commitment, in any sport (each build's research round in `rounds`) | her home row when it is a varsity one, in every build she is on |
+
+Her *home row* in a build is her varsity MaxPreps row, else her row of a school's own varsity list, else her JV row
+(`homeRow`, `lib/players/player-index.ts`): a player MaxPreps lists twice shows everything on one row, and a player on
+a varsity roster shows nothing on the JV list.
 
 Each build finds people on its rows through `data/<sport>/player-index.json`, which `pnpm build-players` writes
 with the registry: for each of this season's roster rows of a person something is filed under (a MaxPreps row by
@@ -2596,7 +2603,10 @@ recruiting pages. Run it after adding a record for someone new, as the tests say
 person is ever re-keyed by hand: a roster refresh or a new season rewrites the index, and when a build retires an
 id (two records found to be one person) it rewrites the person-filed files to the id that stayed. A person on no
 row of a build this season (graduated, moved away, plays another sport) keeps her records, shown nowhere there:
-that is not roster drift. Previous schools are not shown on any page (owner's decision, 2026-11-26); previous
+that is not roster drift. One whose row this season a coach has since dropped (a stint the registry marks `gone`)
+is: her club ties and commitment are reported by `pnpm roster-drift`, for a person to re-check. A roster refresh
+never commits a file filed by person: when a rebuild would rewrite one (it retired an id something is filed under),
+the refresh holds its rosters back and says so, and a person runs `pnpm build-players` and commits what moved. Previous schools are not shown on any page (owner's decision, 2026-11-26); previous
 clubs are, as before.
 
 **Every high school player is a person.** Since 2026-11-26 a school's own varsity list (otherRosters `listed`:

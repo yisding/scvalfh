@@ -55,7 +55,7 @@ import {
   type TeamRoster,
 } from './rosters-schema';
 import { isPlaceholderRow } from './placeholder-name';
-import { accountsOfPerson, assertPlayerIndexSeason, isCareerPage, personOfName, personOfRow } from './player-index';
+import { accountsOfPerson, assertPlayerIndexSeason, homeRow, isCareerPage, personOfName, personOfRow, rowsOfPerson } from './player-index';
 import { reportDrift } from './roster-drift';
 import { dateKey, httpUrl, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
@@ -302,11 +302,12 @@ assertPlayerIndexSeason(rosters.season);
 
 /**
  * Each MaxPreps row's recruiting profiles, by `<slug> <athleteId>`: its person's accounts (lib/players/player-index.ts),
- * held to the row as the overlay's profiles always were. A class year a page states must agree with the grade the row
- * shows (MaxPreps', else the overlay's, or the corrected grade of a `rosterBehind` conflict: classYearAgrees), and a
- * MaxPreps page is shown only on a row of its own career. A page that fails the class year is roster drift (the
- * grade is the roster's, which a refresh rewrites): left out of the row and reported. A MaxPreps page of the
- * person's other career (she was listed twice, or in another sport under another) is simply not this row's.
+ * on her home row only (homeRow: the row her club ties and commitment show on, so a player MaxPreps lists twice has
+ * one row with all of it; a MaxPreps career page goes on its own career's row, the home row when that is it),
+ * held to the row as the overlay's profiles always were. A class year a page states must
+ * agree with the grade the row shows (MaxPreps', else the overlay's, or the corrected grade of a `rosterBehind`
+ * conflict: classYearAgrees), and a MaxPreps page is shown only on a row of its own career. A page that fails the
+ * class year is roster drift (the grade is the roster's, which a refresh rewrites): left out of the row and reported.
  */
 const PROFILES_BY_ROW: ReadonlyMap<string, PlayerProfile[]> = (() => {
   const out = new Map<string, PlayerProfile[]>();
@@ -315,10 +316,17 @@ const PROFILES_BY_ROW: ReadonlyMap<string, PlayerProfile[]> = (() => {
     for (const p of team.players) {
       if (p.athleteId === null) continue;
       const person = personOfRow(team.slug, p.athleteId);
+      const home = person === null ? null : homeRow(person);
+      if (home === null) continue;
+      const isHome = home.team === team.slug && home.athleteId === p.athleteId;
+      // The home row's career, when it is a MaxPreps row of a team rosters.json holds: a MaxPreps page of another of
+      // her careers (she was listed twice under two) shows on that career's row instead.
+      const homeCareer = home.athleteId === null ? null : (BASE_BY_SLUG.get(home.team)?.players.find((x) => x.athleteId === home.athleteId)?.careerId ?? null);
       const e = extra.get(p.athleteId);
       const row = { grade: p.grade ?? e?.grade?.value ?? null, conflicts: e?.conflicts ?? [] };
       const profiles = accountsOfPerson(person).filter((x) => {
-        if (x.platform === 'maxpreps' && !isCareerPage(x.url, p.careerId)) return false;
+        if (x.platform !== 'maxpreps' && !isHome) return false;
+        if (x.platform === 'maxpreps' && (!isCareerPage(x.url, p.careerId) || (!isHome && isCareerPage(x.url, homeCareer)))) return false;
         if (x.classOf !== null && !classYearAgrees(rosters.season, row, x.classOf)) {
           reportDrift({
             file: 'player-accounts',
@@ -337,6 +345,19 @@ const PROFILES_BY_ROW: ReadonlyMap<string, PlayerProfile[]> = (() => {
   }
   return out;
 })();
+
+/**
+ * Whether a person's varsity roster row shows the page `url`: lib/jv/jv-profiles.ts leaves it off her JV list row. A
+ * row of the varsity page a school source marks JV is her JV row, so its pages show on the JV list as well.
+ */
+export function shownOnVarsityRow(playerId: string, url: string): boolean {
+  return rowsOfPerson(playerId).some(
+    (r) =>
+      r.level === 'varsity' &&
+      r.athleteId !== null &&
+      (PROFILES_BY_ROW.get(`${r.team} ${r.athleteId}`) ?? []).some((x) => x.url === url),
+  );
+}
 
 /**
  * A listed player's recruiting profiles (otherRosters `listed`): her person's accounts, found by her name on the

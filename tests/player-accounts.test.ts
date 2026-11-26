@@ -31,7 +31,8 @@ describe('data/player-accounts.json', () => {
     expect(file.players.length).toBeGreaterThan(2000);
     const builds = new Set(file.players.flatMap((p) => p.accounts.flatMap((a) => a.linkedBy.map((r) => r.build))));
     expect([...builds].sort()).toEqual(['basketball', 'field-hockey', 'soccer', 'volleyball']);
-    expect(Object.keys(file.jvResearch).sort()).toEqual(['basketball', 'field-hockey', 'soccer', 'volleyball']);
+    // val-soccer's note says why it has no JV round; it has no pages.
+    expect(Object.keys(file.jvResearch).sort()).toEqual(['basketball', 'field-hockey', 'soccer', 'val-soccer', 'volleyball']);
   });
 
   it('keeps a page two builds\' rounds linked as one account, with both rounds and every sport it shows', () => {

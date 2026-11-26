@@ -80,6 +80,19 @@ export const PlayerIndexFileSchema = z
     accountColumns: z.tuple([z.literal('platform'), z.literal('url'), z.literal('sports'), z.literal('classOf')]),
     /** The recruiting pages of the people in `rows`, by person, in data/player-accounts.json's order. */
     accounts: z.record(playerId, z.array(IndexAccountSchema).min(1)),
+    /**
+     * [playerId, team]: a person something is filed under whose every row of this season in this sport no source
+     * lists any more (a stint the registry marks `gone`: a coach dropped her row), on the team of that row. Her club
+     * ties and commitment are roster drift here (lib/players/clubs.ts, commits.ts): reported, not silently dropped.
+     */
+    gone: z.array(z.tuple([playerId, text])),
+    /**
+     * [playerId, team, athleteId]: the home row of a person with more than one row (a player MaxPreps lists twice, a
+     * school list beside MaxPreps' JV page): her varsity MaxPreps row, else her school varsity list row, else her JV
+     * MaxPreps row, and among those the one under her official name (as she spells it, then as it folds), preferring
+     * one that gives a number (MaxPreps' copy of a row has none). Her pages, club ties and commitment show there.
+     */
+    homes: z.array(z.tuple([playerId, text, text.nullable()])),
   })
   .strict()
   .superRefine((f, ctx) => {
@@ -99,6 +112,7 @@ export const PlayerIndexFileSchema = z
       if (i > 0 && rowOrder(rows[i - 1]) > rowOrder(r)) ctx.addIssue({ code: 'custom', path: ['rows', i], message: 'rows are out of order' });
     });
     const people = new Set(rows.map((r) => r.playerId));
+    for (const [id] of f.gone) if (people.has(id)) ctx.addIssue({ code: 'custom', path: ['gone'], message: `${id} has a row and is gone` });
     for (const id of Object.keys(f.accounts)) {
       if (!people.has(id)) ctx.addIssue({ code: 'custom', path: ['accounts', id], message: `${id} has accounts but no row` });
     }
@@ -133,11 +147,20 @@ export function buildPlayerIndex(
 ): PlayerIndexFile {
   const season = currentSeason(file, sport);
   const rows: PlayerIndexRow[] = [];
+  /** `<team> <athleteId>` of the MaxPreps rows that give a number: the real row of a player MaxPreps lists twice. */
+  const numbered = new Set<string>();
+  /** person → the team of a stint of this season no source lists any more. */
+  const goneAt = new Map<string, string>();
   if (season !== null) {
     for (const p of file.players) {
       for (const s of p.stints) {
-        if (s.sport !== sport || s.season !== season || s.gone || s.level === 'freshman') continue;
+        if (s.sport !== sport || s.season !== season || s.level === 'freshman') continue;
+        if (s.gone) {
+          if (!goneAt.has(p.id)) goneAt.set(p.id, s.team);
+          continue;
+        }
         for (const o of s.observations) {
+          if (MAXPREPS_PAGES.has(o.src) && o.athleteId && o.jersey != null && o.jersey !== '') numbered.add(`${s.team} ${o.athleteId}`);
           if (MAXPREPS_PAGES.has(o.src) && o.athleteId) rows.push({ playerId: p.id, team: s.team, level: s.level, athleteId: o.athleteId, name: o.name ?? s.name });
           else if (SCHOOL_LISTS.has(o.src) && o.name) rows.push({ playerId: p.id, team: s.team, level: s.level, athleteId: null, name: o.name });
         }
@@ -161,6 +184,31 @@ export function buildPlayerIndex(
     .filter((r) => filed === null || filed.has(r.playerId))
     .sort((a, b) => (rowOrder(a) < rowOrder(b) ? -1 : rowOrder(a) > rowOrder(b) ? 1 : 0));
   const people = new Set(out.map((r) => r.playerId));
+  const withRows = new Set(rows.map((r) => r.playerId));
+  const officialName = new Map(file.players.map((p) => [p.id, p.name]));
+  const rank = (r: PlayerIndexRow) => (r.athleteId !== null && r.level === 'varsity' ? 0 : r.athleteId === null && r.level === 'varsity' ? 1 : r.athleteId !== null ? 2 : 3);
+  const byPerson = new Map<string, PlayerIndexRow[]>();
+  for (const r of out) byPerson.set(r.playerId, [...(byPerson.get(r.playerId) ?? []), r]);
+  const homes = [...byPerson]
+    .filter(([, rs]) => rs.length > 1)
+    .map(([id, rs]) => {
+      const best = Math.min(...rs.map(rank));
+      const top = rs.filter((r) => rank(r) === best);
+      // Her official name as she spells it, then as it folds; at each, a row with a number first (MaxPreps' copy of a
+      // row has none), then a row with a number under another name, then the first.
+      const official = officialName.get(id) ?? '';
+      const hasNumber = (r: (typeof top)[number]) => numbered.has(`${r.team} ${r.athleteId}`);
+      const byName = [(r: (typeof top)[number]) => r.name === official, (r: (typeof top)[number]) => nameKey(r.name) === nameKey(official)];
+      const home =
+        byName.flatMap((named) => [top.find((r) => named(r) && hasNumber(r)), top.find(named)]).find((r) => r !== undefined) ??
+        top.find(hasNumber) ??
+        top[0];
+      return [id, home.team, home.athleteId] as [string, string, string | null];
+    })
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  const gone = [...goneAt]
+    .filter(([id]) => !withRows.has(id) && (filed === null || filed.has(id)))
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
   return {
     builtBy,
     sport,
@@ -175,14 +223,18 @@ export function buildPlayerIndex(
         .filter((p) => people.has(p.playerId))
         .map((p) => [p.playerId, p.accounts.map((a): IndexAccountTuple => [a.platform, a.url, a.sports ? [...a.sports] : null, a.classOf])]),
     ),
+    gone,
+    homes,
   };
 }
 
 /** The file as it is committed: the header as JSON.stringify writes it, then one row, and one person's accounts, per line. */
 export function formatPlayerIndex(f: PlayerIndexFile): string {
-  const { rows, accounts, ...head } = f;
+  const { rows, accounts, gone, homes, ...head } = f;
   const top = JSON.stringify(head, null, 2).replace(/\n}$/, '');
   const list = rows.map((r) => `    ${JSON.stringify(r)}`).join(',\n');
   const people = Object.entries(accounts).map(([id, a]) => `    ${JSON.stringify(id)}: ${JSON.stringify(a)}`).join(',\n');
-  return `${top},\n  "rows": [${rows.length ? `\n${list}\n  ` : ''}],\n  "accounts": {${people ? `\n${people}\n  ` : ''}}\n}\n`;
+  const left = gone.map((g) => `    ${JSON.stringify(g)}`).join(',\n');
+  const home = homes.map((h) => `    ${JSON.stringify(h)}`).join(',\n');
+  return `${top},\n  "rows": [${rows.length ? `\n${list}\n  ` : ''}],\n  "accounts": {${people ? `\n${people}\n  ` : ''}},\n  "gone": [${left ? `\n${left}\n  ` : ''}],\n  "homes": [${home ? `\n${home}\n  ` : ''}]\n}\n`;
 }

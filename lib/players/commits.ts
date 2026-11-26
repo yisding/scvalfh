@@ -3,7 +3,8 @@
  * committed to play a sport in college (their own sport or any other), and those colleges with the team in each
  * sport a player here committed to (SPEC §1.1j3, DESIGN §21).
  *
- * The file is research, written by hand and checked twice; no script rebuilds it (see lib/players/commits-schema.ts).
+ * The file is research, written by hand and checked twice; no script rebuilds it (see lib/players/commits-schema.ts),
+ * and `pnpm build-players` only keeps it keyed.
  * It is one file for every build: a commitment is filed under its person's registry id, and this module serves the
  * commitments of the people this build's varsity rows are this season (data/<sport>/player-index.json,
  * lib/players/player-index.ts), named as those rows are. A person on no varsity row of this build (she graduated,
@@ -11,7 +12,7 @@
  * the reason lib/players/rosters.ts gives: a Worker has no project filesystem. It is validated once at module
  * scope — the schema, then the join to the rosters the schema cannot see — so a bad file fails at import time
  * rather than half-way through a render. There is no env override, for lib/players/clubs.ts' reason: nothing
- * writes the file, and the tests that need a bad one build it in memory and pass it to `loadCommits`.
+ * else writes the file, and the tests that need a bad one build it in memory and pass it to `loadCommits`.
  *
  * The join, on team slug + MaxPreps athleteId, is against the MERGED rosters
  * (`getAllEnrichedRosters`), so the checks see the grade and level a reader sees. Every commitment
@@ -41,7 +42,7 @@ import {
   type CommitsFile,
   type CommitsView,
 } from './commits-schema';
-import { rowsOfPerson } from './player-index';
+import { goneFrom, homeRow } from './player-index';
 import { SPORT_ID } from '../sports/current';
 import { reportDrift } from './roster-drift';
 import { joinToRoster, playerKey } from './roster-join';
@@ -88,8 +89,16 @@ export function loadCommits(
 function viewOf(file: CommitsFile, teams: readonly MergedTeamRoster[], season: string): CommitsView {
   const named = new Map(teams.flatMap((t) => t.players.flatMap((p) => (p.athleteId === null ? [] : [[playerKey(t.slug, p.athleteId), p.fullName] as const]))));
   const commitments: Commitment[] = file.commitments.flatMap(({ name, playerId, ...c }) => {
-    const row = rowsOfPerson(playerId).find((r) => r.athleteId !== null && r.level === 'varsity');
-    if (!row) return [];
+    const home = homeRow(playerId);
+    const row = home !== null && home.athleteId !== null && home.level === 'varsity' ? home : null;
+    if (!row) {
+      // On a row this season that no source lists any more (a coach dropped it): roster drift, kept and reported.
+      const team = home === null ? goneFrom(playerId) : null;
+      if (team !== null) {
+        reportDrift({ file: 'commitments', teamSlug: team, who: `${name} (${c.college})`, key: playerId, what: 'no roster row lists this player any more', leftOut: 'record' });
+      }
+      return [];
+    }
     return [{ teamSlug: row.team, athleteId: row.athleteId as string, playerId, fullName: named.get(playerKey(row.team, row.athleteId as string)) ?? name, ...c }];
   });
   const programs = new Set(commitments.map((c) => `${c.college} ${c.sport}`));

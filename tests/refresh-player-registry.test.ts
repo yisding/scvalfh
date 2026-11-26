@@ -23,7 +23,9 @@ case "$*" in
       echo 'FAILED: registry: data/player-identity.json sameAs ties "Jhayde Domingo" (macdonald) to MaxPreps career 36jirp6p2fr44, which no source lists'
       exit 1
     fi
-    echo '{"rebuilt":true}' > data/players.json ;;
+    echo '{"rebuilt":true}' > data/players.json
+    # A rebuild that retires an id something is filed under re-keys the person-filed files.
+    if [ "$FAKE_BUILD" = rekey ]; then echo '{"rekeyed":true}' > data/commitments.json; fi ;;
   *vitest*)
     if [ "$FAKE_TEST" = fail ]; then echo "AssertionError: sameAs: Mic Borgonia's career dkfpoh6hcdatd: expected false to be true"; exit 1; fi ;;
 esac
@@ -37,7 +39,7 @@ const git = (cwd: string, ...args: string[]) => {
 };
 
 /** A repository with committed soccer rosters and registry; `edit` changes the rosters before the step runs. */
-function run(opts: { editRosters: boolean; build?: 'ok' | 'fail'; test?: 'ok' | 'fail' }) {
+function run(opts: { editRosters: boolean; build?: 'ok' | 'fail' | 'rekey'; test?: 'ok' | 'fail' }) {
   const dir = mkdtempSync(path.join(tmpdir(), 'refresh-registry-'));
   const bin = path.join(dir, '.bin');
   mkdirSync(bin);
@@ -47,6 +49,8 @@ function run(opts: { editRosters: boolean; build?: 'ok' | 'fail'; test?: 'ok' | 
   writeFileSync(path.join(dir, 'data', 'soccer', 'rosters.json'), '{"v":1}\n');
   writeFileSync(path.join(dir, 'data', 'soccer', 'jv-rosters.json'), '{"v":1}\n');
   writeFileSync(path.join(dir, 'data', 'players.json'), '{"committed":true}\n');
+  writeFileSync(path.join(dir, 'data', 'soccer', 'player-index.json'), '{"committed":true}\n');
+  writeFileSync(path.join(dir, 'data', 'commitments.json'), '{"committed":true}\n');
   writeFileSync(path.join(dir, '.gitignore'), '.bin/\ncalls\n');
   git(dir, 'init', '-q');
   git(dir, '-c', 'user.email=t@example.com', '-c', 'user.name=t', 'add', '.');
@@ -90,6 +94,27 @@ describe('scripts/refresh-player-registry.sh', () => {
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/^::error title=Player registry \(soccer rosters held back\)::pnpm build-players failed/);
     expect(errors[0]).toContain('"Jhayde Domingo" (macdonald) to MaxPreps career 36jirp6p2fr44');
+  });
+
+  it('when the rebuild re-keys a file filed by person: restores everything, says which in one error annotation, exits 1', () => {
+    const r = run({ editRosters: true, build: 'rekey' });
+    expect(r.status).toBe(1);
+    expect(r.calls).toEqual(['pnpm -s build-players --no-stamp']);
+    expect(r.changed).toBe('');
+    expect(r.read('data/commitments.json')).toBe('{"committed":true}\n');
+    const errors = r.stdout.split('\n').filter((l) => l.startsWith('::error'));
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain('re-keyed a file filed by person');
+    expect(errors[0]).toContain('data/commitments.json');
+  });
+
+  it('lists the registry a refresh commits, never a file filed by person, and fails outside a repository', () => {
+    const r = spawnSync('bash', [SCRIPT, '--files'], { cwd: REPO, encoding: 'utf8' });
+    expect(r.status).toBe(0);
+    const files = r.stdout.trim().split(/\s+/);
+    expect(files).toContain('data/players.json');
+    expect(files.filter((f) => !f.endsWith('/player-index.json') && f !== 'data/players.json')).toEqual([]);
+    expect(spawnSync('bash', [SCRIPT, '--files'], { cwd: tmpdir(), encoding: 'utf8' }).status).toBe(1);
   });
 
   it('when the registry tests fail: restores rosters and registry, says so in one error annotation, exits 1', () => {

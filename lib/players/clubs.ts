@@ -1,15 +1,16 @@
 /**
- * The read API for data/field-hockey/clubs.json — the youth field hockey clubs, and which players on the
- * tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
+ * The read API for data/<sport>/clubs.json — the sport's youth clubs, and which players on its rosters a public
+ * page ties to one (SPEC §1.1j2, DESIGN §17).
  *
- * The file is research, written by hand and checked twice; no script rebuilds it (see
- * lib/players/clubs-schema.ts). It is imported so the build bundles it, for the reason lib/players/rosters.ts
+ * The file is research, written by hand and checked twice; no script rebuilds it (see lib/players/clubs-schema.ts),
+ * and `pnpm build-players` only keeps its `memberships` keyed (a retired id rewritten to the one that stayed, `name`
+ * to the official one). It is imported so the build bundles it, for the reason lib/players/rosters.ts
  * gives: a Worker has no project filesystem. It is validated once at module scope — the schema,
  * then the join to the rosters the schema cannot see — so a bad file fails at import time rather
  * than half-way through a render.
  *
  * There is no env override. lib/players/rosters.ts has one because a script rewrites those files and a
- * child-process test swaps them; nothing writes clubs.json, and the tests that need a bad file
+ * child-process test swaps them; nothing else writes clubs.json, and the tests that need a bad file
  * build one in memory and pass it to `loadClubs`. So this module reads no file of its own.
  *
  * The file names each tie by person (`memberships`: a registry id, data/players.json). The person is found on this
@@ -58,7 +59,8 @@ import {
   type ClubsView,
   type ListedAffiliation,
 } from './clubs-schema';
-import { rowsOfPerson } from './player-index';
+import { goneFrom, homeRow } from './player-index';
+import { reportDrift } from './roster-drift';
 import { getJvRostersFile } from '../jv/jv-rosters';
 import { nameKey } from './name-compare';
 import { joinToRoster, playerKey } from './roster-join';
@@ -135,10 +137,18 @@ function tiesOfRows(memberships: ClubsFile['memberships'], teams: readonly Merge
   for (const m of memberships) {
     const { playerId } = m;
     const tie = { club: m.club, clubTeam: m.clubTeam, status: m.status, asOf: m.asOf, confidence: m.confidence, sources: m.sources, basis: m.basis };
-    const rows = rowsOfPerson(playerId);
-    const varsity = rows.find((r) => r.athleteId !== null && r.level === 'varsity');
-    const listed = rows.find((r) => r.athleteId === null && r.level === 'varsity');
-    const jv = rows.find((r) => r.athleteId !== null && r.level === 'jv');
+    const home = homeRow(playerId);
+    if (home === null) {
+      // On a row this season that no source lists any more (a coach dropped it): roster drift, kept and reported.
+      const team = goneFrom(playerId);
+      if (team !== null) {
+        reportDrift({ file: 'clubs', teamSlug: team, who: `${m.name} (${m.club})`, key: playerId, what: 'no roster row lists this player any more', leftOut: 'record' });
+      }
+      continue;
+    }
+    const varsity = home.athleteId !== null && home.level === 'varsity' ? home : undefined;
+    const listed = home.athleteId === null ? home : undefined;
+    const jv = home.athleteId !== null && home.level === 'jv' ? home : undefined;
     const at = (r: { team: string; athleteId: string | null; name: string }): ClubAffiliation => ({
       teamSlug: r.team,
       athleteId: r.athleteId as string,

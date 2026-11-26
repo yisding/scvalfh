@@ -42,8 +42,9 @@ changed=$(git diff --name-only "$base" "$head") || build "git diff $base $head f
 [ -n "$changed" ] || skip "nothing changed since $base"
 
 while IFS= read -r file; do
-  # Its own folder builds; any other data file is another sport's.
-  case "$file" in "data/$sport/"*) build "$file changed" ;; data/*) ;; *) build "$file changed" ;; esac
+  # Its own folder builds, and so do the files filed by person every high school build reads (data/commitments.json,
+  # and data/player-accounts.json, which its player index is built from); any other data file is another sport's.
+  case "$file" in "data/$sport/"* | data/commitments.json | data/player-accounts.json) build "$file changed" ;; data/*) ;; *) build "$file changed" ;; esac
 done <<< "$changed"
 
 skip "only another sport's data changed since $base"

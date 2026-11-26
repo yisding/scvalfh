@@ -6,7 +6,8 @@
  * row: a player who moves up from JV, or plays another sport, keeps it. A JV list row is found as a person by
  * its name (lib/players/player-index.ts personOfName, the JV lists' names as data/<sport>/player-index.json
  * records them: the team's MaxPreps JV roster page, its own JV list, and a varsity-page row a school source marks
- * JV), and shows that person's pages under the rule the JV lists always had, checked here at load time:
+ * JV), and shows that person's pages under the rule the JV lists always had, checked here at load time (a page her
+ * varsity row already shows is not repeated, and one the list names twice has them on the first of her rows):
  *   - a class year a page states agrees with the grade the JV list shows (a page that does not is roster drift,
  *     lib/players/roster-drift.ts: the JV list is rewritten by every roster refresh, so it is left out and
  *     reported, never thrown);
@@ -17,7 +18,7 @@
  */
 import { reportDrift } from '../players/roster-drift';
 import { accountsOfPerson, getJvResearch, personOfName } from '../players/player-index';
-import { classOf, getRosterEnrichment, getRosters } from '../players/rosters';
+import { classOf, getRosterEnrichment, getRosters, shownOnVarsityRow } from '../players/rosters';
 import type { PlayerProfile } from '../players/rosters-schema';
 import type { TeamSlug } from '../types';
 import { getJvRoster, nameKey } from './jv-rosters';
@@ -40,10 +41,14 @@ function load(): JvProfilesView {
   for (const t of getRosters().teams) {
     const slug = t.slug as TeamSlug;
     const players: JvProfilesView['teams'][number]['players'] = [];
+    const shown = new Set<string>();
     for (const p of getJvRoster(slug)?.players ?? []) {
       const person = personOfName(slug, 'jv', p.name);
+      // One the JV list names twice has her pages on the first of her rows; a page her varsity row shows is not repeated.
+      if (person === null || shown.has(person)) continue;
+      shown.add(person);
       const profiles = accountsOfPerson(person).filter((x) => {
-        if (x.platform === 'maxpreps') return false;
+        if (x.platform === 'maxpreps' || shownOnVarsityRow(person, x.url)) return false;
         if (x.classOf !== null && p.grade !== null && x.classOf !== classOf(season, p.grade)) {
           reportDrift({
             file: 'player-accounts',
