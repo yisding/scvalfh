@@ -161,6 +161,12 @@ describe('team names in matches (owner ask, 2026-11-26: tapping a name opens the
     const css = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
     expect(css).toContain('@media (hover: none), (pointer: coarse) { .sx-fest-games a.sx-game-name { pointer-events: auto; } }');
   });
+
+  it('underlines the "Now:" team of an open placement side, so it reads as a link without relying on colour', () => {
+    const now = u19.match(/ · Now: <\/?[^>]*>?<a [^>]*>/g) ?? u19.match(/Now: <a [^>]*>/g) ?? [];
+    expect(now.length).toBeGreaterThan(0);
+    for (const a of now) expect(a).toContain('class="sx-link"');
+  });
 });
 
 describe('a division without placement games', () => {

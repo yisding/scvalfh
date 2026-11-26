@@ -75,7 +75,7 @@ function Side({ side, at }: { side: SideModel; at: 'away' | 'home' }) {
             {side.state === 'provisional' ? (
               <span className="text-ink-3">
                 {' · Now: '}
-                <Link href={side.team!.href} prefetch={false} className="sx-game-name-link">
+                <Link href={side.team!.href} prefetch={false} className="sx-link">
                   {side.team!.name}
                 </Link>
               </span>

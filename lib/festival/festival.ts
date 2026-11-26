@@ -244,6 +244,27 @@ export interface FestivalSlot {
   games: number;
 }
 
+/**
+ * A short stamp of the results alone: each game's status, score and teams, each pool's order and each team's record,
+ * hashed (FNV-1a, 32 bits, hex). The pages print it for the "New scores are in" poll (DESIGN §35.7) instead of
+ * `fetchedAt`, because TourneyMachine moves its version about once an hour with no new result, and the refresh commits
+ * that version (so the next checks stop at the 30-byte read); a stamp of the fetch time would then tell an open page
+ * there were new scores when there were none.
+ */
+export function festivalResultsStamp(file: Pick<FestivalFile, 'games' | 'divisions' | 'teams'>): string {
+  const parts = [
+    ...file.games.map((g) => [g.key, g.status, g.score?.join('-') ?? '', g.sides.map((side) => side.teamId ?? '').join('|')].join(',')),
+    ...file.divisions.flatMap((d) => d.pools.map((p) => `${p.id}:${p.teamIds.join('|')}`)),
+    ...file.teams.map((t) => `${t.id}:${[t.record.w, t.record.l, t.record.t, t.record.pts, t.record.gf, t.record.ga].join('-')}`),
+  ];
+  let h = 0x811c9dc5;
+  for (const ch of parts.join(';')) {
+    h ^= ch.codePointAt(0)!;
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16).padStart(8, '0');
+}
+
 /** The distinct start times, in order, each with when its games end and how many there are. */
 export function festivalSlots(festival: { games: readonly Pick<FestivalGame, 'start' | 'startUtc'>[] }): FestivalSlot[] {
   const slots = new Map<string, FestivalSlot>();
