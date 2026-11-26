@@ -501,12 +501,13 @@ describe('clubs and California', () => {
     expect(buildClubView('nope', M, site)).toBeNull();
   });
 
-  it('HTC’s page holds both its teams and says which is which', () => {
+  it('HTC’s page holds its team and links the other HTC club, with no note on either', () => {
     const htc = buildClubView('htc', M, site)!;
     expect(htc.teams.map((t) => t.card.team.name)).toEqual(['HTC']);
-    expect(htc.teams[0].card.note).toMatch(/East Coast/);
+    expect(htc.teams[0].card.note).toBeNull();
     const ca = buildClubView('htc-ca', M, site)!;
     expect(ca.teams.map((t) => t.card.team.name)).toEqual(['HTC CA U19']);
+    expect(ca.teams[0].card.note).toBeNull();
     expect(ca.california).toBe(true);
     expect(htc.site?.href).toBe('/clubs/htc');
     // Spec §3 (a): the two festival clubs that are one club on this site link each other.

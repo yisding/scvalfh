@@ -225,10 +225,7 @@
       "norCal": true,
       "region": "Fremont, Calif.",
       "siteClub": "hayward-hawks",
-      "slug": "hayward-hawks",
-      "teamNotes": {
-        "Hayward Hawks": "Matched to the Fremont club Hayward Hawks Field Hockey by its name and its U12 program; the club’s own pages do not mention the festival"
-      }
+      "slug": "hayward-hawks"
     },
     {
       "california": false,
@@ -249,10 +246,7 @@
       "norCal": false,
       "region": null,
       "siteClub": "htc",
-      "slug": "htc",
-      "teamNotes": {
-        "HTC": "HTC’s East Coast team"
-      }
+      "slug": "htc"
     },
     {
       "california": true,
@@ -281,10 +275,7 @@
       "norCal": false,
       "region": "San Diego, Calif.",
       "siteClub": "htc",
-      "slug": "htc-ca",
-      "teamNotes": {
-        "HTC CA U19": "HTC’s California team, which trains in San Diego County"
-      }
+      "slug": "htc-ca"
     },
     {
       "california": false,
@@ -414,10 +405,7 @@
       "norCal": true,
       "region": "San Jose, Calif.",
       "siteClub": "norcal-impact",
-      "slug": "norcal-wolves",
-      "teamNotes": {
-        "Norcal Wolves U16": "Likely NorCal Impact’s Wolves: players’ profiles name the San Jose club’s team “NorCal Wolves, NorCal Impact”; the club’s own pages do not mention the festival"
-      }
+      "slug": "norcal-wolves"
     },
     {
       "california": false,

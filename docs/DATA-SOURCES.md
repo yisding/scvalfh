@@ -3893,10 +3893,12 @@ automatic clubs of their own names; a team added mid-event does the same and nev
 California flag and link to a club on this site cites a page and its words (`evidence`):
 
 - **California**: San Francisco Hawks U16 and U19 (SF Hawks' tournaments page lists the festival, U16 and U19), Hayward
-  Hawks (U12; matched to the Fremont club by its name and its U12 program, said so in its note), Norcal Wolves U16
+  Hawks (U12; matched to the Fremont club by its name and its U12 program), Norcal Wolves U16
   ("likely" NorCal Impact's Wolves: players' recruiting profiles name the team "NorCal Wolves, NorCal Impact"; the
   club's own pages do not mention the festival), and HTC CA U19 (HTC's West Coast page). HTC is two clubs in the
   file: HTC's festival pages offer "HTC – U16" (its East Coast team) and "HTC CA – U19", so only HTC CA is Californian.
+- **No team notes are printed** (owner decision, 2026-11-26): the festival pages show results, not explanations. How a
+  team was matched to a club stays in the file's `evidence` and here; `teamNotes` is supported but left empty.
 - **Links to `/clubs/<slug>`** (`siteClub`, checked against `data/field-hockey/clubs.json` at import): sf-hawks,
   hayward-hawks, norcal-impact and htc (for both HTC clubs), out of the registry's 28 clubs. Names that only look alike
   are not linked: New Heights (not Pacific Heights), Windy City (not D-City), Lonestar "Orange" (not OC Field Hockey
