@@ -168,9 +168,20 @@ describe('the festival’s teams resolve to their clubs', () => {
   it('leaves a curated club empty only when no team in the file carries one of its prefixes', () => {
     // Derived from the roster as it is now, not from 2026-11-26's, so a team that withdraws or one that joins a
     // curated club mid-event never fails the refresh job's tests.
-    const carried = (c: FestivalCuratedClub) =>
-      festival.teams.some((t) => c.match.some((prefix) => matchesPrefix(clubMatchText(t.name), prefix)));
-    expect(resolved.unmatched).toEqual(raw.clubs.filter((c) => !carried(c)).map((c) => c.slug));
+    // A team goes to the club with its longest matching prefix ('HTC CA U19' to htc-ca, not htc), so a club is
+    // carried only by the teams that prefix wins.
+    const owner = (name: string) => {
+      const text = clubMatchText(name);
+      let best: { slug: string; length: number } | null = null;
+      for (const c of raw.clubs) {
+        for (const prefix of c.match) {
+          if (matchesPrefix(text, prefix) && (best === null || prefix.length > best.length)) best = { slug: c.slug, length: prefix.length };
+        }
+      }
+      return best?.slug;
+    };
+    const carried = new Set(festival.teams.map((t) => owner(t.name)));
+    expect(resolved.unmatched).toEqual(raw.clubs.filter((c) => !carried.has(c.slug)).map((c) => c.slug));
   });
 
   it('gives every team one club, every club a unique slug, and serves them A–Z', () => {
@@ -241,6 +252,13 @@ describe('resolveFestivalClubs: the rules', () => {
     const wolves = { ...club('wolves', 'Wolves', ['wolves']), teamNotes: { 'Wolves u16': 'feed spelling', 'Wolves U19': 'printed' } };
     const r = resolve(['Wolves U16', 'Wolves U19'], [wolves]);
     expect(r.clubs[0].teamNotes).toEqual({ t1: 'feed spelling', t2: 'printed' });
+  });
+
+  it('leaves the shorter-prefix club empty when only the longer-prefix club’s team remains', () => {
+    // HTC's East Coast team withdraws and HTC CA U19 stays: 'htc' matches its name too, but htc-ca wins it.
+    const r = resolve(['HTC CA U19'], [club('htc', 'HTC', ['htc']), club('htc-ca', 'HTC CA', ['htc ca'])]);
+    expect(r.of).toEqual(['htc-ca']);
+    expect(r.unmatched).toEqual(['htc']);
   });
 
   it('takes the longest matching prefix, whichever club the file lists first', () => {
