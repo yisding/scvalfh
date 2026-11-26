@@ -464,6 +464,7 @@
     },
     {
       "california": true,
+      "description": "HTC's California program, with club and tryout-only High Performance training at The Bishop's School in La Jolla and in Chula Vista.",
       "evidence": [
         {
           "quote": "There will be a choice between “HTC – U16” or “HTC CA – U19”.",
@@ -480,6 +481,14 @@
         {
           "quote": "U-19 Teams … HTC CA",
           "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        },
+        {
+          "quote": "Winter Venue The Bishop’s School 7607 La Jolla Blvd La Jolla, CA",
+          "url": "https://www.htcfieldhockey.com/club/springseason2026/"
+        },
+        {
+          "quote": "High Performance requires a tryout and invitation in order to participate.",
+          "url": "https://www.htcfieldhockey.com/club/hpwinterseason2026/"
         }
       ],
       "match": [
@@ -723,6 +732,7 @@
     },
     {
       "california": true,
+      "description": "A NorCal Impact team; the Bay Area club trains on weekends in San Jose and on Stanford's varsity turf.",
       "evidence": [
         {
           "quote": "NorCal Wolves, NorCal Impact CLUB",
@@ -730,6 +740,10 @@
         },
         {
           "quote": "Archbishop Mitty High School, 5000 Mitty Ave., San Jose, CA 95129",
+          "url": "https://norcalimpactfh.weebly.com/club-training.html"
+        },
+        {
+          "quote": "This year, we will be at Archbishop Mitty High School and the Stanford University Varsity turf. We train on weekends to avoid conflicts with weekly HS sports",
           "url": "https://norcalimpactfh.weebly.com/club-training.html"
         }
       ],
@@ -870,6 +884,7 @@
     },
     {
       "california": true,
+      "description": "A San Francisco youth club with fall, winter and spring seasons and summer camps, in age groups from U06 to U19.",
       "evidence": [
         {
           "quote": "National Hockey Festival Naples, FL U16, U19 Thanksgiving November 26 – 28, 2026",
@@ -878,6 +893,14 @@
         {
           "quote": "U-16 Teams … San Francisco Hawks",
           "url": "https://www.usafieldhockey.com/events/2026/november/26/festival/clubs"
+        },
+        {
+          "quote": "offer year-round opportunities to play: Fall, Winter, and Spring Seasons and Summer Camps.",
+          "url": "https://sfyouthfieldhockey.com/program-overview/"
+        },
+        {
+          "quote": "U06, U08, U10 practice 1x/week (fall, winter, spring) U12, U14 practice 2x/week (fall, winter, spring) U16, U19 practice 3x",
+          "url": "https://sfyouthfieldhockey.com/program-overview/"
         }
       ],
       "match": [

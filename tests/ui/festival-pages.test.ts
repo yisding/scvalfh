@@ -176,8 +176,9 @@ describe('a club page’s profile (owner ask, 2026-11-26: hometown, a brief desc
     const page = render(await ClubPage(params({ club: 'san-francisco-hawks' })));
     const text = stripTags(page);
     expect(text).toContain('San Francisco, Calif.');
-    // SF Hawks' description and website come from its page on this site (data/field-hockey/clubs.json).
-    expect(text).toContain('San Francisco youth club for boys and girls');
+    // SF Hawks' description is its festival entry's own (festival-clubs.json); its website comes from its page on
+    // this site (data/field-hockey/clubs.json).
+    expect(text).toContain('A San Francisco youth club with fall, winter and spring seasons');
     expect(page).toMatch(/href="https:\/\/sfyouthfieldhockey\.com\/"[^>]*>Club website/);
   });
 

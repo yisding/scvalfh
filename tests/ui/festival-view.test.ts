@@ -549,6 +549,17 @@ describe('clubs and California', () => {
   });
 });
 
+describe('a club page’s description (DESIGN §35: one sentence of at most 25 words)', () => {
+  it('holds for the description each page prints, curated or inherited from this site’s club page', () => {
+    // The schema caps festival-clubs.json's own descriptions; a club without one falls back to its page on this
+    // site (data/field-hockey/clubs.json), which the schema never sees, so the cap is checked on what renders.
+    for (const club of M.clubs) {
+      const { description } = buildClubView(club.slug, M)!;
+      if (description) expect(description.split(/\s+/).length, club.slug).toBeLessThanOrEqual(25);
+    }
+  });
+});
+
 describe('the schedule and team views', () => {
   it('the schedule holds every game once, by venue day then slot', () => {
     const view = buildScheduleView();
