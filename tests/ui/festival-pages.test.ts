@@ -116,7 +116,7 @@ describe('the hub', () => {
     const text = stripTags(hub);
     const cal = text.slice(text.indexOf('California teams'), text.indexOf('Latest results') > 0 ? text.indexOf('Latest results') : text.indexOf('Divisions'));
     expect(cal.indexOf('Northern California')).toBeLessThan(cal.indexOf('Southern California'));
-    for (const name of ['San Francisco Hawks U16', 'San Francisco Hawks U19', 'Norcal Wolves U16', 'Hayward Hawks', 'HTC CA U19']) {
+    for (const name of ['San Francisco Hawks U16', 'San Francisco Hawks U19', 'NorCal Wolves U16', 'Hayward Hawks', 'HTC CA U19']) {
       expect(cal).toContain(name);
     }
     // HTC's U16 team is its East Coast team: no card for it in this section.
@@ -184,6 +184,19 @@ describe('a club page’s profile (owner ask, 2026-11-26: hometown, a brief desc
 
   it('prints neither when a club has none (the adult "Stars" team’s automatic club)', async () => {
     const page = render(await ClubPage(params({ club: 'stars' })));
+    expect(page).not.toContain('Club website');
+  });
+
+  it('a team page carries its club’s hometown, description and website too (owner ask: every team page)', async () => {
+    const page = render(await TeamPage(params({ team: 'u16-san-francisco-hawks' })));
+    const text = stripTags(page);
+    expect(text).toContain('San Francisco, Calif.');
+    expect(text).toContain('A San Francisco youth club with fall, winter and spring seasons');
+    expect(page).toMatch(/href="https:\/\/sfyouthfieldhockey\.com\/"[^>]*>Club website/);
+  });
+
+  it('a team page of a club with no profile prints none of it', async () => {
+    const page = render(await TeamPage(params({ team: 'adult-stars' })));
     expect(page).not.toContain('Club website');
   });
 });

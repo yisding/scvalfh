@@ -19,6 +19,7 @@ import path from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { displayTeamName } from '../lib/festival/festival-names';
 import { FestivalFileSchema, festivalContentKey, type FestivalFile } from '../lib/festival/festival-schema';
 import { POLITE_USER_AGENT } from '../lib/sources/http';
 import {
@@ -251,12 +252,12 @@ describe('normalizeFestival: the 15:35 capture', () => {
     for (const d of file.divisions) for (const p of d.pools) expect(p.teamIds, p.name).toEqual(rawPools.get(p.id));
   });
 
-  it('keeps every team under its hex id with its feed name, its pool and its pool record, and drops Color', () => {
+  it('keeps every team under its hex id with its feed name as printed (displayTeamName), its pool and its pool record, and drops Color', () => {
     expect(new Set(file.teams.map((t) => t.id))).toEqual(new Set(Object.keys(raw.TeamDictionary)));
     for (const t of file.teams) {
       const r = raw.TeamDictionary[t.id];
       expect(Object.keys(t).sort()).toEqual(['divisionKey', 'id', 'name', 'poolId', 'record', 'slug']);
-      expect(t.name).toBe(r.Name);
+      expect(t.name).toBe(displayTeamName(r.Name));
       expect(t.divisionKey).toBe(r.IDDivision);
       expect(t.poolId).toBe(rawPoolOf.get(t.id));
       expect(t.record).toEqual({
@@ -310,8 +311,8 @@ describe('normalizeFestival: the 15:35 capture', () => {
       expect(g.start).toBe(r.S);
       expect(Date.parse(g.startUtc) - Date.parse(`${r.S}Z`)).toBe(5 * 3_600_000);
       expect(g.sides.map((s) => [s.teamId ?? '', s.label])).toEqual([
-        [r.IDT1, r.T1],
-        [r.IDT2, r.T2],
+        [r.IDT1, displayTeamName(r.T1)],
+        [r.IDT2, displayTeamName(r.T2)],
       ]);
       expect(g.kind).toBe(r.BR ? 'placement' : 'pool');
       if (g.kind === 'pool') expect(g.poolId).toBe(rawPoolOf.get(r.IDT1));

@@ -11,6 +11,8 @@ import {
   type TeamCardModel,
   type TeamGameModel,
 } from './festival-model';
+import { clubProfile, type ClubProfileModel } from './club-view';
+import { siteClubInfo, type SiteClubLookup } from './site-clubs';
 
 /**
  * /festival/teams/[team] (DESIGN §35 §6): one team's record and place, every game it plays (pool games, and a
@@ -27,12 +29,15 @@ export interface TeamViewModel {
   path: PlacementPathModel;
   /** TourneyMachine's results page (the feed has no per-team page). */
   resultsUrl: string;
+  /** The team's club: its hometown, description and website, as on the club's own festival page. */
+  club: ClubProfileModel;
 }
 
-export function buildTeamView(slug: string, m: FestivalModel = festivalModel()): TeamViewModel | null {
+export function buildTeamView(slug: string, m: FestivalModel = festivalModel(), site: SiteClubLookup = siteClubInfo): TeamViewModel | null {
   const team = m.teamBySlug.get(slug);
   if (!team) return null;
   const division = m.divisionByKey.get(team.divisionKey)!;
+  const club = m.clubBySlug.get(m.clubOfTeam.get(team.id)!)!;
   return {
     card: teamCard(m, team.id),
     divisionName: division.name,
@@ -41,5 +46,6 @@ export function buildTeamView(slug: string, m: FestivalModel = festivalModel()):
     pool: poolTable(m, team.poolId, [team.id]),
     path: placementPath(m, team.id),
     resultsUrl: m.file.tournament.resultsUrl,
+    club: clubProfile(club, club.siteClub ? site(club.siteClub) : null),
   };
 }

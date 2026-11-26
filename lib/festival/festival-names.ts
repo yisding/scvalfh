@@ -14,13 +14,35 @@ export const FESTIVAL_RESERVED_SLUGS: readonly string[] = ['clubs', 'teams', 'sc
 const AGE_TOKEN = /\bu-?\d+\b/gi;
 
 /**
+ * Words the feed spells differently from how the festival prints them (owner asks, 2026-11-26), each changed only
+ * as a whole word written exactly so:
+ * - capitals that are not acronyms: 'ROB SHORT ACADEMY U19' → 'Rob Short Academy U19', as its U16 team is entered;
+ *   'IFHCK ICE' and 'IFHCK SPIRIT' beside IFHCK's Storm, Thunder, Fire and Phoenix;
+ * - 'Norcal' → 'NorCal', as Northern California is written across this site ('NorCal Wolves U16').
+ * A list, not a rule: a capitalised word in a team name is usually an acronym (AGH, FHL, HTC, IFHCK, AIM).
+ */
+const TEAM_NAME_WORDS: Readonly<Record<string, string>> = {
+  ROB: 'Rob',
+  SHORT: 'Short',
+  ACADEMY: 'Academy',
+  ICE: 'Ice',
+  SPIRIT: 'Spirit',
+  Norcal: 'NorCal',
+  NORCAL: 'NorCal',
+};
+const TEAM_NAME_WORD = new RegExp(`\\b(?:${Object.keys(TEAM_NAME_WORDS).join('|')})\\b`, 'g');
+
+/**
  * A team name as the festival pages print it: the feed's own words, with every age token's `u` capitalised
- * ('Atlanta FHC u10' → 'Atlanta FHC U10', 'Norcal Wolves u16' → 'Norcal Wolves U16'), so a division's teams read
- * alike (owner decision, 2026-11-26). Nothing else is changed: 'Florida United white' keeps its lower-case colour.
- * Slugs and club matching are case-blind, so this never moves a URL.
+ * ('Atlanta FHC u10' → 'Atlanta FHC U10', 'Norcal Wolves u16' → 'NorCal Wolves U16'), so a division's teams read
+ * alike (owner decision, 2026-11-26), and the few words in TEAM_NAME_WORDS written as the site writes them.
+ * Nothing else is changed: 'Florida United white' keeps its lower-case colour. Slugs and club matching are case-blind, so this never moves a URL.
  */
 export function displayTeamName(name: string): string {
-  return name.trim().replace(AGE_TOKEN, (token) => `U${token.slice(1)}`);
+  return name
+    .trim()
+    .replace(AGE_TOKEN, (token) => `U${token.slice(1)}`)
+    .replace(TEAM_NAME_WORD, (word) => TEAM_NAME_WORDS[word]!);
 }
 
 /** 'San Francisco Hawks U16' → 'san-francisco-hawks'; 'New York H.C.' → 'new-york-h-c'; nothing usable → ''. */
