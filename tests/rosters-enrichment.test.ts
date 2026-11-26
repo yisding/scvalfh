@@ -286,10 +286,14 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
       monterey: 'none',
       'santa-catalina': 'none',
       'marin-academy': 'partial',
+      // 2026-11-26: the school's (Marina) and the team's (Newport Harbor) own sites list the whole 2026 varsity.
+      marina: 'listed',
+      'newport-harbor': 'listed',
     });
     // The EAL has had no school-athletics sweep: Corning (empty) records no otherRosters, and its view says not-checked.
     // Neither have the four Southern California leagues nor the independents (recruiting pages only, 2026-10-06): an
-    // empty SoCal roster (Chaparral, Fountain Valley, …) is not-checked too, never "none".
+    // empty SoCal roster (Chaparral, Fountain Valley, …) is not-checked too, never "none", except the two whose own
+    // sites list their varsity (`listed`, above).
     const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const unswept = (slug: string) => EAL_SLUGS.has(slug) || SOCAL.has(getTeamBySlug(slug)!.league);
     for (const t of base.teams.filter((x) => x.status === 'empty' && !unswept(x.slug))) {
@@ -297,6 +301,7 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     }
     expect(getEnrichedTeamRoster('corning')!.otherRosters).toEqual({ status: 'not-checked' });
     for (const t of base.teams.filter((x) => x.status === 'empty' && SOCAL.has(getTeamBySlug(x.slug)!.league))) {
+      if (recorded[t.slug] === 'listed') continue;
       expect(getEnrichedTeamRoster(t.slug)!.otherRosters, t.slug).toEqual({ status: 'not-checked' });
     }
     // A team the file says nothing about has not been checked, and its view says so.
@@ -305,6 +310,31 @@ describe('data/field-hockey/rosters-enrichment.json', () => {
     const bad = structuredClone(raw) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
     bad.teams.find((t) => t.slug === 'marin-academy')!.otherRosters = { status: 'partial', checkedOn: '2026-10-03' };
     expect(loadError(bad as unknown as RosterEnrichment)).toMatch(/otherRosters failed validation/);
+  });
+
+  it('holds a listed roster as its source writes it: 20 names each, no name twice, validated at load', () => {
+    const marina = getEnrichedTeamRoster('marina')!.otherRosters;
+    const nh = getEnrichedTeamRoster('newport-harbor')!.otherRosters;
+    if (marina.status !== 'listed' || nh.status !== 'listed') throw new Error('expected listed');
+    expect(marina.source).toBe('https://www.marinavikingsathletics.org/varsity/field-hockey/roster');
+    expect(marina.players).toHaveLength(20);
+    expect(marina.players.every((p) => p.position === null)).toBe(true);
+    // A two-word surname stays one surname, as the site's own first/last fields split it.
+    expect(marina.players).toContainEqual({ firstName: 'Leyna', lastName: 'Bui Le', position: null });
+    expect(nh.source).toBe('http://newportharborfieldhockey.com/?page_id=193');
+    expect(nh.players).toHaveLength(20);
+    expect(nh.players.filter((p) => p.position === 'GK').map((p) => p.lastName)).toEqual(['Clark', 'Rodriguez']);
+
+    const withList = (players: unknown) => {
+      const bad = structuredClone(raw) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
+      const t = bad.teams.find((x) => x.slug === 'marina')!;
+      t.otherRosters = { ...(t.otherRosters as object), players };
+      return loadError(bad as unknown as RosterEnrichment);
+    };
+    expect(withList([])).toMatch(/otherRosters failed validation/);
+    const one = { firstName: 'Ravyn', lastName: 'Arazi', position: null };
+    expect(withList([one, one])).toMatch(/otherRosters failed validation/);
+    expect(withList([{ ...one, grade: 12 }])).toMatch(/otherRosters failed validation/);
   });
 
   it('tags every filled value with a source, a kind and a confidence', () => {

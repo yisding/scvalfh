@@ -286,8 +286,21 @@ The 53 Southern California entries, swept 2026-10-06, are the same: recruiting p
 recorded per team, not inferred: `otherRosters` (validated in `lib/players/rosters.ts`) is `none` (looked,
 no current roster anywhere: Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina), `partial`
 (a source lists current players in a form that cannot be joined, with a link: Marin Academy's
-school page, 18 players as first name, last initial and class year) or, when absent, not checked.
-Only `none` lets the page say "no other public source we checked has a current roster". The
+school page, 18 players as first name, last initial and class year), `listed` (a source publishes the whole
+current varsity list with full names, transcribed as written into `players`, each `{firstName, lastName,
+position}` with the source's own position text or null) or, when absent, not checked.
+Only `none` lets the page say "no other public source we checked has a current roster". A `listed`
+list is shown, in the source's order and under its `summary` and link, only while MaxPreps lists nobody
+for the team; it has no athleteId, so it joins no club, commitment, profile or stat, and it is not in
+`data/players.json`. Two since 2026-11-26, both **[V]** that day, each read twice: Marina
+(https://www.marinavikingsathletics.org/varsity/field-hockey/roster, the school's athletics site with
+the year on 2026-27 and level Varsity: 20 names, no number, grade or position; the 2025-26 view is empty)
+and Newport Harbor (http://newportharborfieldhockey.com/?page_id=193, the team's site the school's
+athletics page links, http only: "2026 Varsity Team", 20 names as "Last, First", two marked GK; posted
+2026-08-01 as the preseason list). The same day's search found nothing current outside MaxPreps for the
+other ten empty field hockey teams (school sites, Hudl, league all-league lists, local and school papers),
+and school-paper game stories naming 14 Fountain Valley and 3 Bonita Vista players, too few to stand for a
+roster and not recorded; those ten entries are unchanged. The
 coaches and sources found for such a team still show under its empty state. Where a coach left
 MaxPreps blank, the school's own public roster often is not. A one-off sweep on 2026-10-02 (16
 teams; official athletics sites, one roster PDF, two school papers, MaxPreps career and JV pages)

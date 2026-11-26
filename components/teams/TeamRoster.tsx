@@ -186,7 +186,7 @@ function Sources({ view }: { view: RosterView }) {
 function OtherRostersText({ view }: { view: RosterView }) {
   const other = view.otherRosters;
   if (other.status === 'none') return <>No other public source we checked has a current roster either.</>;
-  if (other.status === 'partial') {
+  if (other.status === 'partial' || other.status === 'listed') {
     return (
       <>
         {other.summary}{' '}
@@ -197,6 +197,27 @@ function OtherRostersText({ view }: { view: RosterView }) {
     );
   }
   return <>We have not checked other public sources for this team.</>;
+}
+
+/**
+ * Another source's whole current list, for a team MaxPreps lists nobody for (otherRosters `listed`): the
+ * names as that source writes them, in its order, with the one fact it gives (a position) where it gives
+ * one. The note above it names and links the source; nothing here joins a club, commitment or profile.
+ */
+function ListedRoster({ view }: { view: RosterView }) {
+  if (view.listedRows.length === 0) return null;
+  return (
+    <ul className="sx-auto m-0 mt-3 list-none p-0" aria-label={`${view.teamName} players, from another source`}>
+      {view.listedRows.map((row) => (
+        <li key={row.key} className="flex min-w-0 items-baseline gap-3 border-b border-hairline py-1.5">
+          <span className="min-w-0 flex-1">
+            <span className="block text-body font-medium text-ink">{row.name}</span>
+            {row.position ? <span className="block text-cell text-ink-2">{row.position}</span> : null}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export interface TeamRosterProps {
@@ -231,6 +252,7 @@ export function TeamRoster({ view }: TeamRosterProps) {
             <OtherRostersText view={view} />
           </p>
         ) : null}
+        <ListedRoster view={view} />
         <Coaches view={view} />
         <Sources view={view} />
       </div>
