@@ -78,6 +78,7 @@ describe('soccerClubTeamWords', () => {
       'ECNL G10': 'ECNL G2010',
       'ECNL-RL': 'ECNL RL',
       ECRL: 'ECNL RL',
+      'El Camino FC Salinas - ECNL RL G2009/10': 'ECNL RL G2009/10',
       Elite: 'Elite',
       'Elite, Girls Academy': 'Elite GA',
       'FC Milpitas Pumas 10/11G': 'Pumas G2010/11',

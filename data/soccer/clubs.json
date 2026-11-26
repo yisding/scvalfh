@@ -10,7 +10,7 @@
     "Second reader at assembly (2026-11-21): a separate script re-fetched every tie's every source and checked the quote on the page as served (Hudl and SportsRecruits through the data the page itself loads; pages the pass read rendered, in headless Chromium). Every source confirmed. MaxPreps' club entries are cited on the career page's Bio tab, where the pass read them, and quoted as the page's own run of fields. A PrepSoccer program page is quoted as its class heading and the player's row. 2 ties found on a player's JV-list row are left out because the same player's varsity row has a grade whose class year the page contradicts.",
     "League rosters, 2026-11-22 (README, \"Club rosters\"): the public team rosters of ECNL Girls Northern Cal and the ECNL Regional League's NorCal girls division, GU14 through GU18/19 (199 teams of 55 clubs; kept in club-rosters.json), compared with every varsity and JV row by pnpm compare-club-rosters. The league-roster rule (lib/players/club-rosters.ts): the folded names are equal, the row has a grade and the roster's class year is that grade's, no other tracked school has the name, every agreeing roster row is at one club, and the club has a record here and is based in San Francisco, on the Peninsula, in the South Bay or on the Central Coast. A roster names no school, so a tie resting on one alone is medium confidence. 96 ties cite a roster (source kind league-roster, 110 entries on 32 team pages, each quoted as the team's name and the player's row on the page's Roster dialog; the class year is in the data the page loads): 63 new ties rest on a roster alone; 32 ties other pages already made gained it and are now current for 2026-27, Sally Burns's to Mustang Soccer (East Bay) among them; and Delaney Kumer's to Marin FC is new, resting on TopDrawerSoccer's UC Davis list (class year, hometown San Carlos, the club) with the roster, with a record for Marin FC written from its own site. Second reader: a separate script opened all 32 team pages (and 2 more) in Chromium, pressed Roster and found every cited row as displayed. Not linked: 30 varsity and 11 JV rows with no grade whose name is on a roster; 11 varsity rows whose class year disagrees with every roster row of the name and 5 rows (1 JV) whose roster rows carry none; Vivian Baker (Mitty), listed at that class year by two clubs; Taylor Williams (Branham, Marin FC), Tanisha Rameshkumar (Valley Christian, Pleasanton Rage, a club with no record) and a JV player at Evergreen Valley (Mustang Soccer), each at a club outside the area with no other page. No JV row passed the rule.",
     "League rosters, 2026-11-24: the ECNL Regional League's Golden State conference (the 12 ECNL Northern Cal clubs' second teams, Athlete One event 4300; 57 teams added to club-rosters.json) read and compared the same way, under the same rule, now over three leagues. 38 more ties cite a roster, all at Golden State teams: 33 new ties at 11 schools resting on a roster alone (MVLA 23, Bay Area Surf 6, De Anza Force 4), medium confidence; and 5 ties other pages already made, which gain the roster and are now current for 2026-27 (Dylan Harrison, Los Altos, and Sora Cerniglia, Mitty, to MVLA; Melanie Adler, Wilcox, and Isabella Larsen, Sobrato, to Bay Area Surf; Emerinne Denina, Monta Vista, to De Anza Force). 40 entries on 12 team pages. Second reader: a separate script opened the 12 pages in Chromium, pressed Roster and found all 40 cited rows as displayed, with the label the copy gives. In all, 134 ties cite a roster (150 entries on 44 team pages, 23 schools). Not linked: 3 JV rows that pass the rule (Branham 2, Willow Glen 1), as no JV tie is listed.",
-    "No record, so no tie shown, although a player's page names the club: El Camino FC (sobrato / Lauren Crowell, maxpreps); Hawaii Rush Soccer (Girls) (valley-christian / Alessia Costa, sportsrecruits); Newark 1974 FC (santa-clara / Dhiaan Plaha, ncsa); Reno Apex (cupertino / Emily Sugimura, ncsa); AllStars FC (sobrato / Isabella Larsen, ncsa); Silicon Valley Soccer Club (carlmont / Gianna Armanini, ncsa). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). Nor is \"Surf\" on one Mitty player's NCSA page mapped (Santa Cruz Mid-County also goes by Surf); her Bay Area Surf tie rests on other pages and is listed. TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
+    "No record, so no tie shown, although a player's page names the club: Hawaii Rush Soccer (Girls) (valley-christian / Alessia Costa, sportsrecruits); Newark 1974 FC (santa-clara / Dhiaan Plaha, ncsa); Reno Apex (cupertino / Emily Sugimura, ncsa); AllStars FC (sobrato / Isabella Larsen, ncsa); Silicon Valley Soccer Club (carlmont / Gianna Armanini, ncsa). \"AFC\", as one Leland player's SportsRecruits page gives it, is not mapped to Almaden FC: the athlete-entered name has no team or city (her Hudl page ties her to Almaden FC, and that tie is listed). Nor is \"Surf\" on one Mitty player's NCSA page mapped (Santa Cruz Mid-County also goes by Surf); her Bay Area Surf tie rests on other pages and is listed. TopDrawerSoccer's \"FC Bay Area\" is read as Bay Area Surf only where a second page names Bay Area Surf.",
     "JV ties (jvAffiliations), since 2026-11-25: a JV row's ties are listed apart from the varsity rows' and join the school's MaxPreps JV roster (data/soccer/jv-rosters.json; lib/players/clubs.ts withJvListRows). A player on both the JV and the varsity list has her ties on the varsity row. They came from the league rosters only (the league-roster rule, as for varsity rows) until two Hudl entries on 2026-11-25 (below); first 4 ties at 3 schools, Samantha Erickson and Taylor Laughter (Branham) and Isabel Ramirez-Ortega (Pioneer) to De Anza Force, Lelie Vatton Raclot (Willow Glen) to Bay Area Surf, medium, current for 2026-27; a separate run pressed Roster on the 3 cited pages and found all 5 cited rows. Of the JV rows, only the 4 tied players were looked for on SportsRecruits and Hudl (2026-11-25, nothing found); PrepSoccer, TopDrawerSoccer, NCSA and MaxPreps career pages were not searched for JV rows and the JV rows with no grade whose name is on a roster linked on 2026-11-25 under the loosened rule (below). Shown since 2026-11-25: the JV roster's club line, the club pages (marked JV) and /recruiting.",
     "League rosters, 2026-11-25: Girls Academy's Northwest conference, 38 GA teams U14-U19 of eight clubs, each team's public roster on GotSport Rankings (README, 'Club rosters'; kept in club-rosters.json as league ga). The page gives no class year, so a GA row is compared on the team's birth years (California's September 1 cutoff: 'GA 08/09' admits the classes of 2026-2028), in a tier of its own (lib/players/club-rosters.ts): an ECNL row at another club neither blocks a GA match nor is blocked by one. 29 varsity rows match: 22 new ties resting on a GA roster alone, medium confidence and status unknown (the page has no date), and 7 ties other pages already made, which gain the roster and keep their status. By club: Almaden FC 16, Silicon Valley SA 13, San Francisco Glens 0. Each source quotes the page's own team name and the player's row; a player on two of a club's GA teams cites both. Second reader: a separate run opened every cited team page in Chromium and found each cited row as displayed. Not linked: Tatum Hadfield (Valley Christian), on 1974 Newark FC's GA 10/11 only (no record; East Bay); 2 JV rows with no grade (Los Gatos, Leland) on Almaden's GA 09/10. South Valley Surf, Lamorinda, Sacramento United and Clovis Crossfire rows matched no tracked row.",
     "League rosters, 2026-11-25 (ECNL): the MaxPreps refresh of 2026-11-24/25 brought rows the three ECNL leagues' kept rosters (read 2026-11-22 and 2026-11-24) match under the same rule: 9 varsity rows, at Pioneer (6) and Notre Dame San Jose (3). 6 new ties resting on a roster alone, medium, current for 2026-27 (Mariana Mejia to MVLA; Addison Amooi to Los Gatos United; Luna Hernandez to Santa Clara Sporting; Sonia Garcia and Mattie Chukwudebe to De Anza Force; Alessandra Barba to Los Gatos United); and 3 ties other pages already made, which gain the roster and now read current for 2026-27 (Isabella Guillebeaux and Addison Subala to De Anza Force, Valerie Contreras to Bay Area Surf). 15 entries on 13 team pages. Second reader: a separate run opened the 13 pages in Chromium, pressed Roster and found all 15 cited rows as displayed, with the position and label the copy gives. The 4 JV rows that pass the rule (Branham 2, Pioneer 1, Willow Glen 1) are listed in jvAffiliations (below).",
@@ -22,7 +22,8 @@
     "Owner decision, 2026-11-25: 11 rows whose ECNL roster class year is one off the grade's are tied anyway, each league-roster source marked classYearDiffers (lib/players/clubs-schema.ts; lib/players/roster-join.ts accepts that one year's difference for such a source only). 3 ties other pages already made gain the roster and read current (Maya Coriell to De Anza Force, Valyn Rubina to MVLA, Taylor Skovmand to Los Gatos United); 8 are new, medium: 5 whose own linked page confirms the grade's class year (Elise Shafie and Ciara Riciputi to MVLA, Isabella Huston to Los Gatos United, Roya Jamasbi to Burlingame, Eliza Dennebaum to Stanford Strikers) and 3 with no other page and an uncommon name (Ariella Edens to Santa Clara Sporting, Maya Onalfo to De Anza Force, Milla Chow to MVLA). Not tied: Grace Badawi (Menlo-Atherton also has an Ella Badawi), Jocelyn Rocha and Sofia Nguyen (common names), and the rows two years off, at a club with no record, or another player of the name.",
     "Owner's judgment asked for, 2026-11-25, on the three one-off rows left the same day: Grace Badawi (Menlo-Atherton) is tied to Stanford Strikers (the same G2009/10 team lists an Ella Badawi, the name of the school's senior, who is tied to the club already, though no page says the two are related; the club is beside the school; and her grade's class of 2029 fits a 2009/10 birth-year team where the roster's 2030 does not). Jocelyn Rocha (Overfelt; Santa Clara Sporting) and Sofia Nguyen (Menlo-Atherton; Bay Area Surf) are left: common names, one year off, and no other page or teammate pattern backs them (a SportsRecruits address probe of all three found only another Sofia Nguyen, a Fountain Valley volleyball player).",
     "Club team names, 2026-11-25 (owner's request: one shape wherever a current roster shows the actual team). Every tie that cites a league roster now names, in `clubTeam`, a team on one of the rosters it cites, as the league writes it, rather than whatever an older profile wrote (\"ECNL\", \"2010G ECNL\", \"Juventus ECNL\", \"AFC U18 GA\"); /clubs prints it in the one shape of components/words/club-team-words.ts. Where a player is on two or more of the cited rosters, the team is the one the league marks her First Team Player on; failing that (GotSport rosters carry no label, and some players are in two teams' Club Player Pool only), the team whose birth years best fit her class year (the class of 2028 to G2009/10 over G2008/09), then the one whose birth years the old wording named. 55 ties changed (Scarlett Martinez's De Anza Force tie is left as it was, a record kept unchanged while MaxPreps' Mitty roster does not list her), among them Santa Cruz United's Leala Bennett (\"ECNL\" to ECNL RL G2010/11: the club has no ECNL team, only the Regional League), Palo Alto SC's Gianna Armanini (whose tie had carried her SVSA team's name) and Almaden's Mahi Nanda (\"AFC U18 GA\" to the N1 Quicksilver Green team her roster lists). Two ties gained the roster that names their team: Marissa Garcia (Soquel; Santa Cruz United FC ECNL RL G2008/09) and Quinn Murphy (Leland; Almaden's N1 G2008/09 Quicksilver Green). Ties with no league roster keep their source's wording. tests/ui/club-team-words.test.ts holds the rule: a tie that cites a league roster prints one of its teams.",
-    "League rosters, 2026-11-26 (README, 'Club rosters'): two extensions of the league-roster rule (lib/players/club-rosters.ts). (1) Rule 4: when the agreeing ECNL rows are at several clubs, the match is the one club a page other than a league roster already ties the row to, if exactly one is; the other clubs' rows are set aside, never linked. Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, and on MVLA's ECNL G2009/10 and G2008/09 under the same Athlete One account; her Bay Area Surf tie now cites the roster and is current for 2026-27, and MVLA is not linked. (2) An ECNL roster row with no class year is compared on the birth years its team's name gives, as a Girls Academy row is: 11 new ties, medium, current for 2026-27, resting on the roster alone (Bay Area Surf 7, Palo Alto SC 2, Santa Cruz United 1, De Anza Force 1 JV), every cited row re-read from the live team pages the same day. Also: the 11 ties to De Anza Force, whose record has no city, said the club was 'based in None'; they now say the South Bay."
+    "League rosters, 2026-11-26 (README, 'Club rosters'): two extensions of the league-roster rule (lib/players/club-rosters.ts). (1) Rule 4: when the agreeing ECNL rows are at several clubs, the match is the one club a page other than a league roster already ties the row to, if exactly one is; the other clubs' rows are set aside, never linked. Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, and on MVLA's ECNL G2009/10 and G2008/09 under the same Athlete One account; her Bay Area Surf tie now cites the roster and is current for 2026-27, and MVLA is not linked. (2) An ECNL roster row with no class year is compared on the birth years its team's name gives, as a Girls Academy row is: 11 new ties, medium, current for 2026-27, resting on the roster alone (Bay Area Surf 7, Palo Alto SC 2, Santa Cruz United 1, De Anza Force 1 JV), every cited row re-read from the live team pages the same day. Also: the 11 ties to De Anza Force, whose record has no city, said the club was 'based in None'; they now say the South Bay.",
+    "El Camino FC Salinas, 2026-11-26: a record (el-camino-fc-salinas, Salinas, Central Coast) written from the club's own site (ecfcsalinas.com: home, history, tryouts and girls teams pages), the first club record in Monterey County, and its ECNL Regional League club id (4063) mapped in club-rosters.json's clubSlugs. Its NorCal RL G2009/10 roster then matches 5 varsity rows under the league-roster rule: Lucia Mariscal (Salinas), Izabella Mandujano (Gonzales), Myah De Leon (Soledad), Kathryn Dill (Palma) and Annalyse Bottazzo (Notre Dame San Jose), each new, medium, current for 2026-27, each row re-read from the team page's own data the same day. Not tied: Emily Garcia (Rancho San Juan; the roster's class year is one off and the name is common) and Kaylee Hernandez (the name is on Rancho San Juan's and Gunn's rosters). Lauren Crowell (Sobrato), whose MaxPreps career page lists \"U16 El Camino FC\" (the note of clubs with no record had named her), is tied as earlier on the owner's reading: U16 is her 2024-25 age group, and no 2026-27 roster kept lists her; El Camino's two ECNL RL teams were re-read in full the same day (5 and 26 high-school-age players, as kept)."
   ],
   "clubs": [
     {
@@ -2475,6 +2476,60 @@
         }
       ],
       "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "el-camino-fc-salinas",
+      "name": "El Camino Futbol Club",
+      "shortName": "El Camino FC",
+      "aliases": [
+        "El Camino FC Salinas",
+        "ECFC",
+        "ECFC Salinas",
+        "El Camino FC"
+      ],
+      "website": "https://www.ecfcsalinas.com/",
+      "city": "Salinas",
+      "region": "central-coast",
+      "youth": true,
+      "description": "El Camino Futbol Club (ECFC) is a Salinas youth soccer club, founded in 2017, with over 30 boys and girls teams from Under-7 through Under-18 in the ECNL, NorCal NPL and NorCal Premier leagues; its girls program lists teams by birth year from 2017 to 2008.",
+      "founded": 2017,
+      "programs": [
+        {
+          "name": "Girls teams",
+          "detail": "Girls Teams page lists teams by birth year, 2017 GIRLS through 2008 GIRLS (2010 GIRLS NPL, Red and Green; 2009 GIRLS NPL; 2008 GIRLS Black), in NorCal Premier League play",
+          "source": "https://www.ecfcsalinas.com/our-teams/girls-teams/"
+        },
+        {
+          "name": "ECNL Regional League 2026-27: El Camino FC Salinas - ECNL RL G2009/10",
+          "detail": "ECNL RL Girls NorCal 2026-27 team page for the club's G2009/10 team (also a G2012/13 team in the league)",
+          "source": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108122/41212"
+        },
+        {
+          "name": "Elite Clubs National League (boys)",
+          "detail": "\"ECFC is a proud member club since 2021 of the Elite Clubs National League\"; the page describes its Boys ECNL teams",
+          "source": "https://www.ecfcsalinas.com/programs/ecnl/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.ecfcsalinas.com/",
+          "what": "Home page titled \"El Camino Futbol Club – Boys and Girls Youth Soccer Club – Salinas & Monterey County\""
+        },
+        {
+          "url": "https://www.ecfcsalinas.com/home/our-history/",
+          "what": "\"El Camino Futbol Club (ECFC) was established in 2017 in Salinas, California.\" \"What began with 11 teams, we have expanded to over 30 teams of boys and girls Under-7 through Under-18\""
+        },
+        {
+          "url": "https://www.ecfcsalinas.com/our-teams/tryouts/",
+          "what": "\"Our teams participate in Elite Clubs National League (ECNL), NorCal NPL and NorCal Premier leagues.\" \"The girl's program is our fastest growing membership since 2017 with 14 teams of all ages U7-U18\""
+        },
+        {
+          "url": "https://www.ecfcsalinas.com/our-teams/girls-teams/",
+          "what": "\"Be a part of one of the most successful boys and girls soccer clubs in Northern California, based right here in Monterey County.\""
+        }
+      ],
+      "checkedOn": "2026-11-26"
     },
     {
       "slug": "mustang-soccer-league",
@@ -10098,6 +10153,28 @@
       "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Force (CA) ECNL RL G2011/12) lists a player of this name with class year 2030, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (the South Bay, the region of its record). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the three leagues. Medium. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-24."
     },
     {
+      "teamSlug": "sobrato",
+      "athleteId": "d486a629-755a-4c82-8140-f81267d5d404",
+      "playerId": "p4d0e20659d",
+      "fullName": "Lauren Crowell",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": null,
+      "status": "past",
+      "asOf": "2024-25",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/lauren-crowell/bio/?careerid=ve9pg7khos8rb",
+          "kind": "maxpreps-career",
+          "quote": "U16 El Camino FC",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The club-teams block of the player's own MaxPreps career bio page, the page her Sobrato roster row links, lists \"U16 El Camino FC\" (found in the 2026-11-21 sweep; MaxPreps refuses automated reads from this environment since, so the entry is quoted as the owner read it on 2026-11-26, and its city and dates were not read here). Read as El Camino FC Salinas (owner's reading, 2026-11-26): no other El Camino FC is known in Northern California, and Salinas is about 40 miles from Morgan Hill. Status past (owner decision): U16 is the age group of her birth years (class of 2027) in the 2024-25 club season, and she is on no 2026-27 roster kept from the ECNL, ECNL Regional League, Girls Academy or NorCal Premier leagues; El Camino FC Salinas's two ECNL RL teams were re-read in full from the league's page data on 2026-11-26 and do not list her. Medium: the page names the club without a city that was read here."
+    },
+    {
       "teamSlug": "mitty",
       "athleteId": "ea7f9784-a369-40a0-a8ac-038fd2ac8c29",
       "playerId": "p5986d22630",
@@ -10512,6 +10589,28 @@
       "basis": "League-roster rule (lib/players/club-rosters.ts), as extended on 2026-11-26 to a roster row with no class year: the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2010/11) lists a player of this name with no class year, on a team whose name gives the birth years 2010/2011; the grade's class of 2029 is one those birth years admit (California's September 1 cutoff). No other tracked school has the name, varsity or JV; every agreeing ECNL roster row of the name is at this club; the club is based in San Jose. No page names the school: the match rests on the name, the class year the team's birth years admit and the club's location. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data, 2026-11-26."
     },
     {
+      "teamSlug": "notre-dame-san-jose",
+      "athleteId": "fde812df-3bbb-48db-89a7-2feaba983963",
+      "playerId": "p5e6af8631e",
+      "fullName": "Annalyse Bottazzo",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "El Camino FC Salinas - ECNL RL G2009/10",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108122/41212",
+          "kind": "league-roster",
+          "quote": "El Camino FC Salinas - ECNL RL G2009/10 | Bottazzo, Annalyse | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
+    },
+    {
       "teamSlug": "salinas",
       "athleteId": "bb97d313-1331-4b40-8a32-33bca5b45024",
       "playerId": "p3d46c839ad",
@@ -10588,6 +10687,28 @@
       "basis": "League-roster rule (lib/players/club-rosters.ts): the leagues' own 2026-27 rosters (ECNL Girls Northern Cal 2026-27: Bay Area Surf - ECNL G2011/12, Bay Area Surf ECNL G2010/11; ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2010/11) list a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (San Jose). The name is on one tracked school's rosters and, at that class year, on one club's rosters. Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again on the team page's Roster dialog as displayed, 2026-11-25. Medium."
     },
     {
+      "teamSlug": "salinas",
+      "athleteId": "946c9472-ec0b-4d2a-91b3-270b934458c8",
+      "playerId": "p0253981f46",
+      "fullName": "Lucia Mariscal",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "El Camino FC Salinas - ECNL RL G2009/10",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108122/41212",
+          "kind": "league-roster",
+          "quote": "El Camino FC Salinas - ECNL RL G2009/10 | Mariscal, Lucia | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
+    },
+    {
       "teamSlug": "palma",
       "athleteId": "7f01c441-0666-442a-91d0-f5ad048989a3",
       "playerId": "pc5ba5e0478",
@@ -10638,6 +10759,28 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), as extended on 2026-11-26 to a roster row with no class year: the league's own 2026-27 roster (ECNL RL Girls Golden State 2026-27: Bay Area Surf ECNL RL G2011/12) lists a player of this name with no class year, on a team whose name gives the birth years 2011/2012; the grade's class of 2030 is one those birth years admit (California's September 1 cutoff). No other tracked school has the name, varsity or JV; every agreeing ECNL roster row of the name is at this club; the club is based in San Jose. No page names the school: the match rests on the name, the class year the team's birth years admit and the club's location. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data, 2026-11-26."
+    },
+    {
+      "teamSlug": "palma",
+      "athleteId": "9840d0eb-53a5-46ae-a6ca-f6a763896a53",
+      "playerId": "p5b28e7e684",
+      "fullName": "Kathryn Dill",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "El Camino FC Salinas - ECNL RL G2009/10",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108122/41212",
+          "kind": "league-roster",
+          "quote": "El Camino FC Salinas - ECNL RL G2009/10 | Dill, Kathryn | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
     },
     {
       "teamSlug": "cristo-rey-san-jose",
@@ -11693,6 +11836,50 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), as extended on 2026-11-26 to a roster row with no class year: the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: Palo Alto SC ECNL RL G2008/09) lists a player of this name with no class year, on a team whose name gives the birth years 2008/2009; the grade's class of 2028 is one those birth years admit (California's September 1 cutoff). No other tracked school has the name, varsity or JV; every agreeing ECNL roster row of the name is at this club; the club is based in Palo Alto. No page names the school: the match rests on the name, the class year the team's birth years admit and the club's location. Medium. Read from the kept copy (data/soccer/club-rosters.json) and again from the team page's own data, 2026-11-26."
+    },
+    {
+      "teamSlug": "gonzales",
+      "athleteId": "bdb2a9b5-8a07-4ef5-8127-efc137866e44",
+      "playerId": "p78427b91d2",
+      "fullName": "Izabella Mandujano",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "El Camino FC Salinas - ECNL RL G2009/10",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108122/41212",
+          "kind": "league-roster",
+          "quote": "El Camino FC Salinas - ECNL RL G2009/10 | Mandujano, Izabella | Forward | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2029, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
+    },
+    {
+      "teamSlug": "soledad",
+      "athleteId": "02794e7b-9cc7-4586-9bfd-9cce72045abc",
+      "playerId": "pc72e1c690a",
+      "fullName": "Myah De Leon",
+      "club": "el-camino-fc-salinas",
+      "clubTeam": "El Camino FC Salinas - ECNL RL G2009/10",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://app.athleteone.com/public/event/4307/schedules-standings/team/108122/41212",
+          "kind": "league-roster",
+          "quote": "El Camino FC Salinas - ECNL RL G2009/10 | De Leon, Myah | Defender | First Team Player",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts): the league's own 2026-27 roster (ECNL RL Girls NorCal 2026-27: El Camino FC Salinas - ECNL RL G2009/10) lists a player of this name with class year 2028, which agrees with the roster grade. No page names the school: the match rests on the name, the class year and the club's location (Salinas). The name is on one tracked school's rosters and, at that class year, on one club's rosters in the leagues kept. Medium. Linked once the club had a record (2026-11-26, written from its own site, ecfcsalinas.com). Read from the kept copy (data/soccer/club-rosters.json; the class year is in the data the team page loads) and again from the team page's own data, 2026-11-26."
     }
   ]
 }
