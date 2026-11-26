@@ -23,7 +23,8 @@
     "Owner's judgment asked for, 2026-11-25, on the three one-off rows left the same day: Grace Badawi (Menlo-Atherton) is tied to Stanford Strikers (the same G2009/10 team lists an Ella Badawi, the name of the school's senior, who is tied to the club already, though no page says the two are related; the club is beside the school; and her grade's class of 2029 fits a 2009/10 birth-year team where the roster's 2030 does not). Jocelyn Rocha (Overfelt; Santa Clara Sporting) and Sofia Nguyen (Menlo-Atherton; Bay Area Surf) are left: common names, one year off, and no other page or teammate pattern backs them (a SportsRecruits address probe of all three found only another Sofia Nguyen, a Fountain Valley volleyball player).",
     "Club team names, 2026-11-25 (owner's request: one shape wherever a current roster shows the actual team). Every tie that cites a league roster now names, in `clubTeam`, a team on one of the rosters it cites, as the league writes it, rather than whatever an older profile wrote (\"ECNL\", \"2010G ECNL\", \"Juventus ECNL\", \"AFC U18 GA\"); /clubs prints it in the one shape of components/words/club-team-words.ts. Where a player is on two or more of the cited rosters, the team is the one the league marks her First Team Player on; failing that (GotSport rosters carry no label, and some players are in two teams' Club Player Pool only), the team whose birth years best fit her class year (the class of 2028 to G2009/10 over G2008/09), then the one whose birth years the old wording named. 55 ties changed (Scarlett Martinez's De Anza Force tie is left as it was, a record kept unchanged while MaxPreps' Mitty roster does not list her), among them Santa Cruz United's Leala Bennett (\"ECNL\" to ECNL RL G2010/11: the club has no ECNL team, only the Regional League), Palo Alto SC's Gianna Armanini (whose tie had carried her SVSA team's name) and Almaden's Mahi Nanda (\"AFC U18 GA\" to the N1 Quicksilver Green team her roster lists). Two ties gained the roster that names their team: Marissa Garcia (Soquel; Santa Cruz United FC ECNL RL G2008/09) and Quinn Murphy (Leland; Almaden's N1 G2008/09 Quicksilver Green). Ties with no league roster keep their source's wording. tests/ui/club-team-words.test.ts holds the rule: a tie that cites a league roster prints one of its teams.",
     "League rosters, 2026-11-26 (README, 'Club rosters'): two extensions of the league-roster rule (lib/players/club-rosters.ts). (1) Rule 4: when the agreeing ECNL rows are at several clubs, the match is the one club a page other than a league roster already ties the row to, if exactly one is; the other clubs' rows are set aside, never linked. Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, and on MVLA's ECNL G2009/10 and G2008/09 under the same Athlete One account; her Bay Area Surf tie now cites the roster and is current for 2026-27, and MVLA is not linked. (2) An ECNL roster row with no class year is compared on the birth years its team's name gives, as a Girls Academy row is: 11 new ties, medium, current for 2026-27, resting on the roster alone (Bay Area Surf 7, Palo Alto SC 2, Santa Cruz United 1, De Anza Force 1 JV), every cited row re-read from the live team pages the same day. Also: the 11 ties to De Anza Force, whose record has no city, said the club was 'based in None'; they now say the South Bay.",
-    "El Camino FC Salinas, 2026-11-26: a record (el-camino-fc-salinas, Salinas, Central Coast) written from the club's own site (ecfcsalinas.com: home, history, tryouts and girls teams pages), the first club record in Monterey County, and its ECNL Regional League club id (4063) mapped in club-rosters.json's clubSlugs. Its NorCal RL G2009/10 roster then matches 5 varsity rows under the league-roster rule: Lucia Mariscal (Salinas), Izabella Mandujano (Gonzales), Myah De Leon (Soledad), Kathryn Dill (Palma) and Annalyse Bottazzo (Notre Dame San Jose), each new, medium, current for 2026-27, each row re-read from the team page's own data the same day. Not tied: Emily Garcia (Rancho San Juan; the roster's class year is one off and the name is common) and Kaylee Hernandez (the name is on Rancho San Juan's and Gunn's rosters). Lauren Crowell (Sobrato), whose MaxPreps career page lists \"U16 El Camino FC\" (the note of clubs with no record had named her), is tied as earlier on the owner's reading: U16 is her 2024-25 age group, and no 2026-27 roster kept lists her; El Camino's two ECNL RL teams were re-read in full the same day (5 and 26 high-school-age players, as kept)."
+    "El Camino FC Salinas, 2026-11-26: a record (el-camino-fc-salinas, Salinas, Central Coast) written from the club's own site (ecfcsalinas.com: home, history, tryouts and girls teams pages), the first club record in Monterey County, and its ECNL Regional League club id (4063) mapped in club-rosters.json's clubSlugs. Its NorCal RL G2009/10 roster then matches 5 varsity rows under the league-roster rule: Lucia Mariscal (Salinas), Izabella Mandujano (Gonzales), Myah De Leon (Soledad), Kathryn Dill (Palma) and Annalyse Bottazzo (Notre Dame San Jose), each new, medium, current for 2026-27, each row re-read from the team page's own data the same day. Not tied: Emily Garcia (Rancho San Juan; the roster's class year is one off and the name is common) and Kaylee Hernandez (the name is on Rancho San Juan's and Gunn's rosters). Lauren Crowell (Sobrato), whose MaxPreps career page lists \"U16 El Camino FC\" (the note of clubs with no record had named her), is tied as earlier on the owner's reading: U16 is her 2024-25 age group, and no 2026-27 roster kept lists her; El Camino's two ECNL RL teams were re-read in full the same day (5 and 26 high-school-age players, as kept).",
+    "Monterey Surf Soccer Club, 2026-11-26 (the owner's pointer: the club was missing): a record (monterey-surf-soccer-club, Monterey, Central Coast) written from the club's own site (montereysurf.com: home, about, coaches and competitive program pages), the second club record in Monterey County, with its GotSport club id (13007) and its ECNL Regional League club id (4178) mapped in club-rosters.json's clubSlugs. Its older girls play in NorCal Premier's N1 League in 2026-27 (N1 G2008/09, G2009/10 and G2010/11; its one ECNL RL girls team of U14 and up, G2012/13, holds no player of high school age), and the three N1 rosters on GotSport Rankings (25, 9 and 4 rows) match 7 varsity rows under the league-roster rule's birth-year tier: Bailey Portillo, Samantha Torres and Xochitl Tovar (Salinas), Sherlyn Farfan, Giovanna Rodriguez and Jenssy Torres (Rancho San Juan) and Amaya Eubanks (North Monterey County), each new, medium, current for 2026-27 (the owner's decision of 2026-11-25 for a club roster read this season), each row read in the data the roster page loads and again on the page as displayed in Chromium the same day. Jenssy Torres is on all three rosters and cites all three; her team is the G2009/10, whose birth years best fit the class of 2028. No Monterey Surf row was left unlinked for a class year, a second school or a second club. The club's site announces college commitments for three of them (Bailey Portillo, Samantha Torres and 'Sherlynn' Farfan, as it spells her); those posts are reposts from social media and are not cited here. Not read: its Fall League 'U16G Academy I' (no Rankings team under the club's name); its Hudl teams list no player."
   ],
   "clubs": [
     {
@@ -2527,6 +2528,63 @@
         {
           "url": "https://www.ecfcsalinas.com/our-teams/girls-teams/",
           "what": "\"Be a part of one of the most successful boys and girls soccer clubs in Northern California, based right here in Monterey County.\""
+        }
+      ],
+      "checkedOn": "2026-11-26"
+    },
+    {
+      "slug": "monterey-surf-soccer-club",
+      "name": "Monterey Surf Soccer Club",
+      "shortName": "Monterey Surf",
+      "aliases": [
+        "Monterey Surf",
+        "Monterey Surf SC"
+      ],
+      "website": "https://www.montereysurf.com/",
+      "city": "Monterey",
+      "region": "central-coast",
+      "youth": true,
+      "description": "Monterey Surf Soccer Club is a Monterey youth soccer club, a Surf Cup Sports and Surf Nation partner, with boys and girls competitive teams from Under-7 through Under-19 in the ECNL Regional League, the NorCal N1 League and the NorCal Premier League, plus a Junior Academy, recreational leagues, camps and clinics; its girls list runs from U7/U8 to U13 and U14 ECNL RL teams and U16, U17 and U19 N1 teams.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Girls teams",
+          "detail": "Coaches page lists the girls teams: U7/U8 through U12 Girls Academy I, U13 Girls ECNL RL, U14 Girls ECNL RL, U16 Girls Academy I, U16 Girls N1, U17 Girls N1 and U19 Girls N1",
+          "source": "https://www.montereysurf.com/coaches"
+        },
+        {
+          "name": "NorCal N1 League 2026-27: N1 G2008/09, G2009/10 and G2010/11",
+          "detail": "Monterey Surf Soccer Club's club page in the N1 League event lists four girls teams: N1 G2013/14 (U13), N1 G2010/11 (U16), N1 G2009/10 (U17) and N1 G2008/09 (U18/U19 Girls South)",
+          "source": "https://system.gotsport.com/org_event/events/54043/clubs/13007"
+        },
+        {
+          "name": "ECNL Regional League 2026-27: Monterey Surf ECNL RL G2012/13",
+          "detail": "ECNL RL Girls NorCal 2026-27 team page for the club's G2012/13 team, its one team in the three Northern California ECNL girls leagues",
+          "source": "https://app.athleteone.com/public/event/4307/schedules-standings/team/95832/41209"
+        },
+        {
+          "name": "Competitive program",
+          "detail": "Age matrix for 2026/27, U6 through U19 (\"Going into the 2026/27 season the leagues will be changing from birth year to school year\")",
+          "source": "https://www.montereysurf.com/competitive-program"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.montereysurf.com/",
+          "what": "Home page: \"Monterey Surf competes in the NorCal Premier League, N1, and ECNL RL. We are also proud partners with Surf Cup Sports and Surf Nation\"; \"a player development focused club with the goal of giving local youth the tools and opportunities to succeed\""
+        },
+        {
+          "url": "https://www.montereysurf.com/about",
+          "what": "\"Monterey Surf is proud to be the hub for elite soccer in Monterey County, as well as a gateway for those players just beginning their soccer journey.\" Address in the footer: 950 Casanova Ave, Monterey, CA 93940"
+        },
+        {
+          "url": "https://www.montereysurf.com/coaches",
+          "what": "Girls Teams and Boys Teams lists, by age group and league (Academy I, ECNL RL, N1)"
+        },
+        {
+          "url": "https://system.gotsport.com/org_event/events/54541/clubs/13007",
+          "what": "NorCal Premier Fall League 2026-27 club page: Monterey Surf Soccer Club's teams (girls U8 to U12 and U16G Academy I there), with the club's site, www.montereysurf.com"
         }
       ],
       "checkedOn": "2026-11-26"
@@ -12325,6 +12383,176 @@
         }
       ],
       "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (N1 G2008/09 Academy (CA), born 2008/2009; the team is on the N1 League's club page for OV Toros FC, event 54043, club 13069) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based in the South Bay (Morgan Hill). No page names the school: the match rests on the name, the class year and the club's location. Read from the kept copy (data/soccer/club-rosters.json) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "887b8b39-1b38-4e35-be45-7ad3b8b8d852",
+      "playerId": "p94a70c2b5d",
+      "fullName": "Bailey Portillo",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Portillo | Bailey | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "8a40ffbb-1a17-4dc0-ba59-c29b0945fc06",
+      "playerId": "pf94702f8a4",
+      "fullName": "Samantha Torres",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Torres | Samantha | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "salinas",
+      "athleteId": "60a635a7-54d3-4771-a83b-f941517d8f3e",
+      "playerId": "p5abbf4c526",
+      "fullName": "Xochitl Tovar",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Tovar | Xochitl | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "rancho-san-juan",
+      "athleteId": "e4e2ba18-d349-4ea1-b1b3-1a49890a1dab",
+      "playerId": "p5fb9ab4853",
+      "fullName": "Sherlyn Farfan",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Farfan | Sherlyn | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "rancho-san-juan",
+      "athleteId": "8d0528bf-c544-49df-9771-cfd2a2a0ed64",
+      "playerId": "p9841b3816a",
+      "fullName": "Giovanna Rodriguez",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2009/10 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91458/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2009/10 (CA) | Rodriguez | Giovanna | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2009/10 (CA), born 2009/2010; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "rancho-san-juan",
+      "athleteId": "690692f9-0b1b-4f3e-8a4c-f95643661faa",
+      "playerId": "p5ed1e7e6c5",
+      "fullName": "Jenssy Torres",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2009/10 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91458/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2009/10 (CA) | Torres | Jenssy | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Torres | Jenssy | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://rankings.gotsport.com/teams/135148/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2010/11 (CA) | Torres | Jenssy | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2009/10 (CA), born 2009/2010; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028; the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2010/11 (CA), born 2010/2011; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2028. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on each page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
+    },
+    {
+      "teamSlug": "north-monterey-county",
+      "athleteId": "5503be87-cf0c-44ae-a27e-66b0debbb50e",
+      "playerId": "p0c66258c79",
+      "fullName": "Amaya Eubanks",
+      "club": "monterey-surf-soccer-club",
+      "clubTeam": "Monterey Surf N1 G2008/09 (CA)",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://rankings.gotsport.com/teams/91457/roster",
+          "kind": "league-roster",
+          "quote": "Monterey Surf N1 G2008/09 (CA) | Eubanks | Amaya | No Position Listed",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "League-roster rule (lib/players/club-rosters.ts), 2026-11-26: the club's NorCal N1 League roster on GotSport Rankings (Monterey Surf N1 G2008/09 (CA), born 2008/2009; the team is on the N1 League's club page for Monterey Surf Soccer Club, event 54043, club 13007) lists a player of this name, and those birth years admit the class of 2027. The class year compared is the roster grade's. No other tracked school has the name, every agreeing roster row is at this club, and the club is based on the Central Coast (Monterey). No page names the school: the match rests on the name, the class year and the club's location. The page gives no class year, jersey or date. Read from the kept copy (data/soccer/club-rosters.json; the data the roster page loads) and again on the page as displayed in Chromium, 2026-11-26. Medium. Status current for 2026-27 (owner decision, 2026-11-25): a club roster read this season lists the player."
     }
   ]
 }

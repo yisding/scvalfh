@@ -112,6 +112,8 @@ describe('soccerClubTeamWords', () => {
       'Los Gatos United Soccer Club ECNL RL G2011/12': 'ECNL RL G2011/12',
       'Los Gatos United Soccer Club ECNL RL G2012/13': 'ECNL RL G2012/13',
       'Marin FC ECNL G2008/09': 'ECNL G2008/09',
+      'Monterey Surf N1 G2008/09 (CA)': 'N1 G2008/09',
+      'Monterey Surf N1 G2009/10 (CA)': 'N1 G2009/10',
       'Mustang SC ECNL G2010/11': 'ECNL G2010/11',
       'MVLA ECNL G2008/09': 'ECNL G2008/09',
       'MVLA ECNL G2009/10': 'ECNL G2009/10',

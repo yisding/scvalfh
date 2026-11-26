@@ -13,7 +13,8 @@
   "NorCal Premier, the larger clubs, read 2026-11-25: the girls U14-U19 teams in the N1 League and Fall League of MVLA (11058) and MVLA San Jose (10948; both mapped to mvla-soccer-club, 'MVLA San Jose' being an alias in its record; MVLA East, 12993, is an affiliated club in Turlock and is not mapped), Force (462; De Anza Force), Los Gatos United (10937), Burlingame (11048), Palo Alto SC (8215), San Francisco Elite (9040), Santa Cruz United (13066) and Stanford Strikers (8384): 37 event teams. Not kept: Palo Alto SC's 'SVSA GA 2009/10' and Bay Area Surf's 'ECNL RL - G2011/12' (kept under ga and ecnl-rl-golden-state already) and Bay Area Surf's single-year 'N1 U14G'. Not found on GotSport Rankings by the club's or the team's name: PASC N1 G2010/11 (CA), Palo Alto SC 12/13G Blue 2, Los Gatos United U17/U18G Black, Burlingame 2008/09G Premier, Santa Cruz United 11/12 and 09/10 Girls Navy (same-named teams found belong to other clubs). Santa Clara Sporting (8444) has no girls U14-U19 team in either event. 'De Anza Force' finds nothing on Rankings and 'Force' alone fills the result cap with other clubs: Force's teams were found by their own names. 28 teams kept, 95 rows; as before, most list 0 to 5 players (MVLA's N1 G2008/09 Gunners Green 20, Los Gatos United's U17/U18G Comp I 18, Palo Alto SC's 08/09G Blue 16, Force's G2009/10 Elite 11). 'U17/U18G' is read as born 2009/10; '2012/11G' as 2011/12.",
   "Alum Rock FC, read 2026-11-25: Alum Rock Futbol Club (GotSport club 18476, mapped to alum-rock-fc) has one girls U14-U19 team in NorCal Premier's two events, the N1 League's 'FC N1 G2008/09 Stingrays (CA)' (U19); its Fall League girls teams are U11 to U13 (born 2013 and later). The club's own girls team list (alumrockfc.org/girls-teams) agrees: 2015/16, 2014/15, 2013/14 and 2008/09 Stingrays. The Rankings team of that name (176017, 'Alum Rock FC N1 G2008/09 Stingrays (CA)', Female U18) was found with the site's team search and read as for Girls Academy: 14 rows. No Alum Rock girls team turned up on Rankings at U14 to U17.",
   "Hudl (read 2026-11-26): where a club keeps a team's roster on Hudl for the season (2026-2027), that roster is kept instead of the team's GotSport Rankings roster, which lists only players linked on GotSport and everyone the team has carried. Almaden FC's GA U14-U18 teams (league ga) and OV Toros FC's U15G Black (league norcal-fall), read through Hudl's public GraphQL endpoint and again on each team's roster page (fan.hudl.com/…/roster) as displayed in Chromium. teamId is Hudl's team id and clubId its organization id (clubSlugs key hudl-<id>); birthYears are the age group's, as on the GotSport roster of the same team, which is kept with supersededBy naming the Hudl page and is not compared. A row keeps Hudl's class year (\"Class of\") and positions; jersey numbers are not kept. A player with a class year after the season's freshmen is left out (tooYoung).",
-  "OV Toros FC (Morgan Hill; GotSport club 13069), read 2026-11-26: the N1 League's club page for it (event 54043) lists its four girls teams, kept from their Rankings rosters (found with GotSport's own team_ranking_data search); its Fall League U15G Black is kept from Hudl (above). U14 teams are left out: a single-year U14 is born 2013."
+  "OV Toros FC (Morgan Hill; GotSport club 13069), read 2026-11-26: the N1 League's club page for it (event 54043) lists its four girls teams, kept from their Rankings rosters (found with GotSport's own team_ranking_data search); its Fall League U15G Black is kept from Hudl (above). U14 teams are left out: a single-year U14 is born 2013.",
+  "Monterey Surf Soccer Club (Monterey; GotSport club 13007, Athlete One club 4178, both mapped to monterey-surf-soccer-club), read 2026-11-26: the club's own site (montereysurf.com, Coaches page) lists its girls teams as U13 and U14 ECNL RL, U16 Academy I and U16, U17 and U19 N1; the three ECNL events, read again through their pages, hold one Monterey Surf team, the Regional League's G2012/13 (kept above, all 18 players too young). The N1 League's club page for it (event 54043) lists four girls teams: N1 G2013/14 (U13, too young, not kept) and N1 G2010/11 (U16), N1 G2009/10 (U17) and N1 G2008/09 (U18/U19), kept from their Rankings rosters ('Monterey Surf N1 G2008/09 (CA)' and the like, found with GotSport's own team_ranking_data search, each read from the data the roster page loads and again on the page as displayed in Chromium): 25, 9 and 4 rows, 38 in all (three players are on all three rosters, one on two). Its Fall League club page (event 54541) lists one girls team of high school age, 'U16G Academy I', which has no Rankings team under the club's name and is not kept. Its Hudl organization (190053) lists five girls ECNL RL teams (four of the 2025 season, G07/08 to G11, and a 2026 G2011/12), every roster empty."
  ],
  "leagues": [
   {
@@ -87,11 +88,13 @@
   "4063": "el-camino-fc-salinas",
   "hudl-97189": "almaden-fc",
   "gotsport-13069": "ov-toros-fc",
-  "hudl-180759": "ov-toros-fc"
+  "hudl-180759": "ov-toros-fc",
+  "4178": "monterey-surf-soccer-club",
+  "gotsport-13007": "monterey-surf-soccer-club"
  },
  "counts": {
-  "teams": 351,
-  "players": 5189,
+  "teams": 354,
+  "players": 5227,
   "hidden": 0,
   "tooYoung": 1157,
   "emptyTeams": 14
@@ -41328,6 +41331,323 @@
      "lastName": "Webber",
      "gradYear": null,
      "position": "M",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U19",
+   "teamId": 91457,
+   "teamName": "Monterey Surf N1 G2008/09 (CA)",
+   "clubId": 13007,
+   "clubName": "Monterey Surf Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/91457/roster",
+   "birthYears": [
+    2008,
+    2009
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Jackeline",
+     "lastName": "Cano",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emma",
+     "lastName": "Garcia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Emilie",
+     "lastName": "Santiago-Merino",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Scarlett",
+     "lastName": "Stateler",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sarah",
+     "lastName": "Reiland",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Miah",
+     "lastName": "Ramos-Politron",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Ariana",
+     "lastName": "Romero Hernandez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jenssy",
+     "lastName": "Torres",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Savanna",
+     "lastName": "Licea",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Amaditz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sydney",
+     "lastName": "Amaditz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eva",
+     "lastName": "Sedillos",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Belen",
+     "lastName": "Rodriguez-Muniz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Sherlyn",
+     "lastName": "Farfan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylen",
+     "lastName": "Rodriguez-Muniz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Bailey",
+     "lastName": "Portillo",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amaya",
+     "lastName": "Eubanks",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaimana",
+     "lastName": "Mokuahi",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kamaia",
+     "lastName": "Wagner",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jazly",
+     "lastName": "Arango",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jasmine",
+     "lastName": "Olivo-Aguilar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Samantha",
+     "lastName": "Torres",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Xochitl",
+     "lastName": "Tovar",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vanna",
+     "lastName": "Willmon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mika",
+     "lastName": "Ureta",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U17",
+   "teamId": 91458,
+   "teamName": "Monterey Surf N1 G2009/10 (CA)",
+   "clubId": 13007,
+   "clubName": "Monterey Surf Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/91458/roster",
+   "birthYears": [
+    2009,
+    2010
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Jenssy",
+     "lastName": "Torres",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylen",
+     "lastName": "Rodriguez-Muniz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaimana",
+     "lastName": "Mokuahi",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Andrea",
+     "lastName": "Kirn",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Gabriella",
+     "lastName": "Pallan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aimee",
+     "lastName": "Piini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Jimenez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alissa",
+     "lastName": "Abma",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Giovanna",
+     "lastName": "Rodriguez",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "n1",
+   "division": "U16",
+   "teamId": 135148,
+   "teamName": "Monterey Surf N1 G2010/11 (CA)",
+   "clubId": 13007,
+   "clubName": "Monterey Surf Soccer Club",
+   "url": "https://rankings.gotsport.com/teams/135148/roster",
+   "birthYears": [
+    2010,
+    2011
+   ],
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Jenssy",
+     "lastName": "Torres",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Aylen",
+     "lastName": "Rodriguez-Muniz",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kaimana",
+     "lastName": "Mokuahi",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Kamaia",
+     "lastName": "Wagner",
+     "gradYear": null,
+     "position": null,
      "playerType": null
     }
    ]

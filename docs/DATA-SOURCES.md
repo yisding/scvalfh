@@ -3587,6 +3587,18 @@ assembler per sport built the files from them with a second read, and they are k
   GotSport Rankings' own search is an open API (`system.gotsport.com/api/v1/team_ranking_data`, with
   `search[team_country]`, `search[age]`, `search[gender]` and `search[team_or_club_name]`), and a team's rows are
   `api/v1/teams/<team_id>/members?role=player&public=true`, what the roster page loads.
+- **Monterey Surf Soccer Club** (2026-11-26; README "Girls soccer: club rosters"). `montereysurf.com` (a Byga site)
+  answers a plain request; it has no team or roster pages, only a Coaches page that lists the teams by age group and
+  league, and a home page feed of the club's social media posts (never a source). Its GotSport club id is 13007: the
+  N1 League's and the Fall League's club pages (`system.gotsport.com/org_event/events/54043/clubs/13007`,
+  `…/54541/clubs/13007`) answer a plain request and list its teams; `team_ranking_data` under "Monterey Surf",
+  Female, ages 13 to 19, finds five teams (N1 G2013/14, ECNL RL G2012/13, N1 G2010/11, G2009/10 and G2008/09) and no
+  U15 or U18 team, nor the Fall League's U16G Academy I. The three N1 rosters of high school age were read from the
+  `members` endpoint and again on `rankings.gotsport.com/teams/<id>/roster` in headless Chromium: 25, 9 and 4 rows,
+  the same rows both ways. The three Athlete One ECNL events, every girls division's standings read through the page
+  (18 requests), hold one Monterey Surf team (ECNL RL G2012/13, club 4178). On Hudl, `fanSearch` finds the club only
+  with type CLUB (the result's `club` field; organization 190053): five girls ECNL RL teams, seasons 2025 and 2026,
+  every roster empty. 13 GotSport API requests, 9 Hudl requests, 9 page reads, one a second, no 403 or 429.
 - **College releases.** Soccer: 1,043 athletics hosts (the NCAA directory's women's soccer member lists, D1 349, D2
   261, D3 415, read through headless Chromium since the API answers curl with 403, and 19 NAIA sites), 947 with a
   feed that parsed: 12,387 stories listed, 6,237 opened (3,236 dated 2026-11-11 or later); one names a rostered

@@ -1922,23 +1922,26 @@ on 2026-11-21:
   address probe over every varsity and JV row.
 - **Clubs** (`clubs.json`; recounted on 2026-11-26, after the Girls Academy and NorCal Premier rosters, the refresh's
   ECNL ties, the Mitty drift, Alum Rock FC, the loosened league-roster rule, the roster team names and the rule's
-  two extensions of 2026-11-26 and El Camino FC Salinas in "Girls soccer: club rosters" below): **53 clubs** (South
-  Bay 20, Peninsula 15, San Francisco 10, Central Coast 6, East Bay 1, Marin 1) and **324 varsity ties for 276 of the
-  876 varsity rows, at 38 of the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left
-  out as roster drift while MaxPreps does not list her): 266 current, 36 listed (unknown) and 22 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
+  two extensions of 2026-11-26, El Camino FC Salinas, the Hudl rosters, OV Toros FC and Monterey Surf in "Girls
+  soccer: club rosters" below): **54 clubs** (South
+  Bay 20, Peninsula 15, San Francisco 10, Central Coast 7, East Bay 1, Marin 1) and **340 varsity ties for 292 of the
+  876 varsity rows, at 40 of the 46 schools with a roster** (one player's tie, Scarlett Martinez's at Mitty, is left
+  out as roster drift while MaxPreps does not list her): 286 current, 31 listed (unknown) and 23 earlier (Kailani Bock's Santa Clara Sporting tie and Emily Sugimura's Almaden
   FC tie are earlier since 2026-11-25: Santa Clara Sporting's girls left Girls Academy for the ECNL Regional League
   for 2026-27, NorCal Premier's announcement of May 11, 2026, and neither player is on her old club's 2026-27
-  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 199
-  medium (196 of them resting on a league roster alone: a class year, or a team's birth years, and the club's
-  location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 44, Almaden FC 35, Los Gatos United 32, Santa
-  Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame and Palo Alto SC 9 each. 28 clubs have no
-  tied player. The ties rest on 504 source entries on 231 URLs (league rosters 312: ECNL's 250 and GotSport Rankings'
-  62, Girls Academy and NorCal Premier; NCSA 60, PrepSoccer 34, SportsRecruits 34, MaxPreps career pages 27, Hudl 22,
+  rosters, both on another's); 40 players are tied to more than one club; 125 high confidence, 215
+  medium (212 of them resting on league rosters alone: a class year, or a team's birth years, and the club's
+  location). The most ties: MVLA 62, De Anza Force 56, Bay Area Surf 44, Almaden FC 40, Los Gatos United 32, Santa
+  Clara Sporting and Silicon Valley SA 14 each, Stanford Strikers 12, Burlingame and Palo Alto SC 9 each, Santa Cruz
+  United and Monterey Surf 7 each. 27 clubs have no
+  tied player. The ties rest on 539 source entries on 239 URLs (league rosters 347: ECNL's 250, GotSport Rankings'
+  69, Girls Academy and NorCal Premier, and Hudl's team rosters 28; NCSA 60, PrepSoccer 34, SportsRecruits 34,
+  MaxPreps career pages 27, Hudl profile pages 22,
   TopDrawerSoccer 10, SoccerWire 3, a college release 1, a news story 1). Where a tie cites a league roster, the team
   it names is that roster's (clubs.json's notes). San Francisco, the Peninsula and the South Bay were searched for
   every club (`SEARCHED_REGIONS`); Santa Cruz County was too, but not the rest of the Central Coast, so /clubs does
-  not claim it. **25 JV ties** for 25 JV players at 9 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
-  Mountain View 5, Pacific Collegiate 4, Branham 3), shown marked JV.
+  not claim it. **30 JV ties** for 30 JV players at 10 schools (`jvAffiliations`, since 2026-11-25; Los Gatos 7,
+  Mountain View 5, Pacific Collegiate and Sobrato 4 each, Branham 3), shown marked JV.
 - **College commitments** (`commits.json`): **12 players at 6 schools, to 12 colleges**, 10 in soccer, 1 in field
   hockey and 1 in softball; 8 to NCAA Division I programs and 4 to Division III. Allison Park (Leland) signed with
   Illinois on 2026-11-11 (Illinois' own release names her with Leland High School). Brooke Neschleba (Los Altos) to
@@ -2082,7 +2085,7 @@ Northwest conference (league `ga`, below). It is there so that a high school ros
 rosters the day a school posts it, without reading the leagues' pages again. ECNL's three leagues, read on
 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL teams of 12 clubs, 139 NorCal Regional League teams of
 43, 57 Golden State teams of the 12 ECNL clubs); Golden State was added that day, the other two leagues first read on
-2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for fifteen clubs: **46 teams, 198 rows** (below); Almaden FC's GA teams on Hudl, read on 2026-11-26: **5 teams, 87 rows**, which replace the club's GotSport GA rosters in the comparison, and OV Toros FC's N1 and Fall League teams the same day: **6 teams, 43 rows** (below). In all 351 teams, 5,189 players.
+2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for fifteen clubs: **46 teams, 198 rows** (below); Almaden FC's GA teams on Hudl, read on 2026-11-26: **5 teams, 87 rows**, which replace the club's GotSport GA rosters in the comparison, and OV Toros FC's N1 and Fall League teams the same day: **6 teams, 43 rows** (below); Monterey Surf's three N1 teams, also read on 2026-11-26: **3 teams, 38 rows** (below). In all 354 teams, 5,227 players.
 
 ```bash
 pnpm fetch-club-rosters             # rewrite data/soccer/club-rosters.json (a local Chromium; about 4 minutes)
@@ -2364,6 +2367,27 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   players, exactly as kept). Lauren Crowell (Sobrato), whose MaxPreps career page lists "U16 El Camino FC", is on
   neither nor on any kept roster, so she is tied as **earlier** (medium; U16 is her 2024-25 age group), on the
   owner's reading of the page: MaxPreps refuses automated reads from this environment.
+- **Monterey Surf, 2026-11-26.** Monterey Surf Soccer Club (montereysurf.com; Monterey) had no record and no kept
+  roster of high school age: an oversight the owner pointed out. Its own site's Coaches page lists the girls teams as
+  U13 and U14 ECNL RL, U16 Academy I and U16, U17 and U19 N1, so its older girls play in NorCal Premier's N1 League
+  this season, not in the Regional League (its Hudl organization, 190053, still lists 2025 ECNL RL teams G07/08 to
+  G11 and a 2026 G2011/12, every roster empty). The three ECNL events were read again through their own pages for a
+  Monterey Surf team under any name: one, the Regional League's G2012/13 (Athlete One club 4178), 18 players of the
+  classes of 2031-2033, all too young, as kept. The N1 League's club page for it (event 54043, GotSport club 13007)
+  lists four girls teams, N1 G2013/14 (U13, too young), G2010/11, G2009/10 and G2008/09; the Fall League's (54541)
+  one of high school age, U16G Academy I, which has no Rankings team under the club's name and is not kept. **Kept:**
+  the three N1 rosters from GotSport Rankings (found with `team_ranking_data`; each read from the data the roster
+  page loads and again as displayed in Chromium): G2008/09 25 rows, G2009/10 9 and G2010/11 4, 38 in all (three
+  players are on all three, one on two). The record (`monterey-surf-soccer-club`, Central Coast) is written from the
+  club's own site, the second club record in Monterey County (still not swept for clubs), and `clubSlugs` maps
+  `gotsport-13007` and `4178` to it. **Linked:** 7 new ties under the rule's birth-year tier, medium, current for
+  2026-27, each resting on the roster alone: Bailey Portillo, Samantha Torres and Xochitl Tovar (Salinas), Sherlyn
+  Farfan, Giovanna Rodriguez and Jenssy Torres (Rancho San Juan) and Amaya Eubanks (North Monterey County), all on
+  the G2008/09 roster but Giovanna Rodriguez (G2009/10); Jenssy Torres is on all three and is named on the G2009/10,
+  whose birth years best fit the class of 2028. No Monterey Surf row was left for a class year, a second school or a
+  second club; the other 24 names on the rosters are on no tracked roster. The club's site announces three of the
+  seven's college commitments (it spells Farfan's first name Sherlynn); those are reposts of social media posts and
+  are not a club source here. `compare-club-rosters` lists no match `clubs.json` does not cite.
 - **Why Los Gatos had so few links, 2026-11-25.** MaxPreps posts no grade for any of the 18 Los Gatos varsity rows
   (nor the JV list's), so the league-roster rule, which asked for a grade, took none of them although every varsity
   name is on an ECNL roster; that is what the loosened rule fixes. Its recruiting pages are few for other reasons:
