@@ -3608,6 +3608,21 @@ assembler per sport built the files from them with a second read, and they are k
   (18 requests), hold one Monterey Surf team (ECNL RL G2012/13, club 4178). On Hudl, `fanSearch` finds the club only
   with type CLUB (the result's `club` field; organization 190053): five girls ECNL RL teams, seasons 2025 and 2026,
   every roster empty. 13 GotSport API requests, 9 Hudl requests, 9 page reads, one a second, no 403 or 429.
+- **The NorCal Premier club audit** (2026-11-26; README "Girls soccer: club rosters", "The clubs an audit found").
+  The two events' club lists (`system.gotsport.com/org_event/events/54043/clubs` and `/54541/clubs`) answer a plain
+  request, as each club page does; a club page names the club's website. A Rankings team is the event team when the
+  club is the same and the name is (the event's name is the club's name and the Rankings team's; some Rankings names
+  repeat the club's: "JSC 2011/12G White", "San Carlos United SC 12/13G Blue", "2009 SENTINELS GIRLS"). 90 rosters
+  kept from `api/v1/teams/<id>/members?role=player&public=true` (1.2 s apart) and re-read on
+  `rankings.gotsport.com/teams/<id>/roster`: one headless Chromium driven over DevTools, a page at a time, waiting
+  for the table to hold still, about 25 s a page (the first nine with a fresh Chromium each, slower); 10 pages that
+  never drew were read again, four of them with a fresh Chromium. Every page showed the rows the API gave, under the team's name as its heading. Club sites
+  read for the new records: `hollistertremors.org`, `nvysl.net`, `siliconvalleyeagles.com`, `smcfootball.club` and
+  `pleasantonrage.org` answer a plain request; `pacificaunited.org` is drawn by script (Sprocket Sports) and was read
+  in Chromium. `prepsoccer.com` player and program pages are server-rendered. Surf Nation's announcement of April 3,
+  2026 (`surfsoccernation.com`) places South Valley Surf in Bakersfield. Not read: Cal North's leagues, DPL, GA
+  Aspire, NorCal's State Cup, and the sites of East San Jose FC (parked), Central Coast FC, Real Salinas, Lobitos
+  and San Juan Bautista SC (none found).
 - **College releases.** Soccer: 1,043 athletics hosts (the NCAA directory's women's soccer member lists, D1 349, D2
   261, D3 415, read through headless Chromium since the API answers curl with 403, and 19 NAIA sites), 947 with a
   feed that parsed: 12,387 stories listed, 6,237 opened (3,236 dated 2026-11-11 or later); one names a rostered
