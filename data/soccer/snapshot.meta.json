@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "04e626f28ac92991ba12c153dc82938d78029583ae4a6ae5706c8338ceb88375",
+  "contentHash": "343228f5bc774beb304f0d680727ae0806f786281c2ca94deb2fb426b59d1117",
   "counts": {
     "byLeague": {
       "bval": {
@@ -81,7 +81,7 @@
     "conflicts": 0,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-27T05:37:36.380Z",
+  "fetchedAt": "2026-11-27T14:38:01.169Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -163,7 +163,7 @@
   "requests": {
     "maxpreps": 158,
     "official": 5,
-    "sblive": 42
+    "sblive": 41
   },
   "sources": [
     {
@@ -1157,11 +1157,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-11-12",
-      "rowCount": 4,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-11-18",
       "rowCount": 24,
       "status": "ok"
@@ -1238,7 +1233,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 336,
+      "rowCount": 338,
       "status": "ok"
     },
     {
@@ -1257,7 +1252,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-26",
+  "today": "2026-11-27",
   "warnings": 41,
   "window": {
     "firstGame": "2026-11-12T00:00:00",
