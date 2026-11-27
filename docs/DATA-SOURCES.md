@@ -3273,10 +3273,10 @@ College Prep), its WBAL opponents as highlights (Harker), or a name no other sch
 Leigh, Half Moon Bay, Aptos, Westmoor, King City, Monte Vista Christian, Soledad, Nueva, Summit Shasta,
 Evergreen Valley; Andrew Hill and Gunderson share one account with the boys). The rest belong to namesakes:
 `mountainviewgirlssoccer` is Oregon's (OSAA), `elcaminogirlssoccer` is Sacramento's El Camino (its GoFan
-link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `lahsgirlssoccer` Los Amigos's,
+link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `lohs.girlssoccer` (a lion, "Back to Back Section Champions") the Live Oak in Live Oak, California (owner), not Morgan Hill's Acorns, `lahsgirlssoccer` Los Amigos's,
 `stfrancisgirlssoccer`/`sfhs_girls_soccer` Illinois's, `yhs.girls.soccer` Yucaipa's, and `mvhsgirlssoccer`,
 `mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
-Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`, `lohs.girlssoccer`, `oghs.girlssoccer`, `pioneerwsoccer`, `lelandwomenssoccer`,
+Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`, `oghs.girlssoccer`, `pioneerwsoccer`, `lelandwomenssoccer`,
 `vchs_girlssoccer`, `vc.girlssoccer`, `tka_girlssoccer`, `ksjcgirlssoccer`, `ecpgirlssoccer`,
 `montereygirlssoccer`, `carmelgirlsoccer`, `seasidegirlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no
 gender named), `pvhs.girlssoccer`. Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are
