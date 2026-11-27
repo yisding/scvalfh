@@ -20,8 +20,17 @@ import ClubPage, { generateMetadata as clubMetadata, generateStaticParams as clu
 import SchedulePage, { generateMetadata as scheduleMetadata } from '../../app/festival/schedule/page';
 import TeamPage, { generateMetadata as teamMetadata, generateStaticParams as teamParams } from '../../app/festival/teams/[team]/page';
 import FestivalPoolTable from '../../components/festival/FestivalPoolTable';
-import { festivalModel, poolTable } from '../../components/festival/festival-model';
-import { festivalClubSlugs, festivalDivisionSlugs, festivalTeamSlugs, getFestival } from '../../lib/festival/festival';
+import PlacementBracket from '../../components/festival/PlacementBracket';
+import { buildDivisionView } from '../../components/festival/division-view';
+import { buildFestivalModel, festivalModel, poolTable } from '../../components/festival/festival-model';
+import {
+  festivalClubSlugs,
+  festivalDivisionSlugs,
+  festivalTeamSlugs,
+  getFestival,
+  getFestivalClubsFile,
+  resolveFestivalClubs,
+} from '../../lib/festival/festival';
 import { REPO } from '../helpers';
 import { stripTags } from './html-text';
 
@@ -165,7 +174,28 @@ describe('team names in matches (owner ask, 2026-11-26: tapping a name opens the
   });
 
   it('underlines the "Now:" team of an open placement side, so it reads as a link without relying on colour', () => {
-    const now = u19.match(/ · Now: <\/?[^>]*>?<a [^>]*>/g) ?? u19.match(/Now: <a [^>]*>/g) ?? [];
+    // An edited copy whose U19 finals are unfilled and whose pools are under way (one game played), so every side
+    // is open whatever the committed refresh shows: once the event staff fill the finals, the live page has none.
+    const file = structuredClone(getFestival());
+    const u19Key = file.divisions.find((d) => d.slug === 'u19')!.key;
+    const seen = new Set<string>();
+    for (const g of file.games.filter((x) => x.divisionKey === u19Key)) {
+      if (g.kind === 'placement') {
+        for (const side of g.sides) side.teamId = null;
+        g.status = 'scheduled';
+        g.score = null;
+      } else if (seen.has(g.poolId!)) {
+        g.status = 'scheduled';
+        g.score = null;
+      } else {
+        seen.add(g.poolId!);
+        g.status = 'final';
+        g.score = [1, 0];
+      }
+    }
+    const view = buildDivisionView('u19', buildFestivalModel(file, resolveFestivalClubs(file, getFestivalClubsFile())))!;
+    const html = render(createElement(PlacementBracket, { columns: view.bracket!, label: 'U19 finals' }));
+    const now = html.match(/Now: <a [^>]*>/g) ?? [];
     expect(now.length).toBeGreaterThan(0);
     for (const a of now) expect(a).toContain('class="sx-link"');
   });
