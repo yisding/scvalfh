@@ -1,7 +1,7 @@
 import { listWords } from '../../lib/format';
 import { Clubs, Profiles } from '../teams/TeamRoster';
 import ExternalLink from '../ui/ExternalLink';
-import { MissingValue } from '../ui/MissingValue';
+import { JerseyNumber } from '../ui/JerseyNumber';
 import type { TeamJvRosterView } from './jv-roster-view';
 
 /**
@@ -44,14 +44,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
           <li key={row.key} className="flex min-w-0 items-baseline gap-3 border-b border-hairline py-1.5">
             {showNumbers ? (
               <span className={['sx-num shrink-0 text-right text-body text-ink-2', view.numberChars > 3 ? 'w-11' : 'w-8'].join(' ')}>
-                {row.jersey ? (
-                  <>
-                    <span className="sr-only">Number </span>
-                    {row.jersey}
-                  </>
-                ) : (
-                  <MissingValue words="No number listed" />
-                )}
+                <JerseyNumber number={row.jersey ?? null} />
               </span>
             ) : null}
             <span className="min-w-0 flex-1">

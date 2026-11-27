@@ -834,12 +834,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Caylee Chin"
-        }
-      ],
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [
@@ -858,9 +853,8 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Caylee Chinn",
+      "name": "Caylee Chin",
       "names": [
-        "Caylee Chinn",
         "Caylee Chin"
       ],
       "stints": [
@@ -892,13 +886,13 @@
           "height": null,
           "jersey": "20",
           "level": "varsity",
-          "name": "Caylee Chinn",
+          "name": "Caylee Chin",
           "observations": [
             {
               "athleteId": "180495fe-775f-46bd-9b52-2a182a878a7b",
               "grade": 11,
               "jersey": "20",
-              "name": "Caylee Chinn",
+              "name": "Caylee Chin",
               "positions": [
                 "OPP",
                 "S"
@@ -13368,12 +13362,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Ella Bradford"
-        }
-      ],
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [
@@ -13392,9 +13381,8 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Ella Bradfrd",
+      "name": "Ella Bradford",
       "names": [
-        "Ella Bradfrd",
         "Ella Bradford"
       ],
       "stints": [
@@ -13426,13 +13414,13 @@
           "height": null,
           "jersey": "4",
           "level": "varsity",
-          "name": "Ella Bradfrd",
+          "name": "Ella Bradford",
           "observations": [
             {
               "athleteId": "889e3fb9-2b4a-4183-862f-17f3c7b3f9a8",
               "grade": 11,
               "jersey": "4",
-              "name": "Ella Bradfrd",
+              "name": "Ella Bradford",
               "positions": [
                 "F",
                 "M",
@@ -13442,7 +13430,7 @@
             },
             {
               "jersey": "4",
-              "name": "E. Bradfrd",
+              "name": "E. Bradford",
               "src": "maxpreps-stats"
             }
           ],
@@ -99444,12 +99432,8 @@
           "name": "GiGi Borello"
         },
         {
-          "kind": "spelling",
-          "name": "Guiliana (GiGi) Borello"
-        },
-        {
           "kind": "nickname",
-          "name": "Giuliana Gigi Borello"
+          "name": "Giuliana (GiGi) Borello"
         }
       ],
       "classOf": 2028,
@@ -99481,8 +99465,7 @@
       "names": [
         "Giuliana Borello",
         "GiGi Borello",
-        "Guiliana (GiGi) Borello",
-        "Giuliana Gigi Borello"
+        "Giuliana (GiGi) Borello"
       ],
       "stints": [
         {
@@ -99551,12 +99534,12 @@
           "height": null,
           "jersey": null,
           "level": "varsity",
-          "name": "Guiliana (GiGi) Borello",
+          "name": "Giuliana (GiGi) Borello",
           "observations": [
             {
               "athleteId": "7f4c2fb6-6bad-4edb-ab4e-e1e34b304b82",
               "grade": 11,
-              "name": "Guiliana (GiGi) Borello",
+              "name": "Giuliana (GiGi) Borello",
               "src": "maxpreps-roster"
             }
           ],
@@ -129730,9 +129713,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Chelsie Chinn",
+      "name": "Chelsie Chin",
       "names": [
-        "Chelsie Chinn"
+        "Chelsie Chin"
       ],
       "stints": [
         {
@@ -129742,13 +129725,13 @@
           "height": null,
           "jersey": "3",
           "level": "jv",
-          "name": "Chelsie Chinn",
+          "name": "Chelsie Chin",
           "observations": [
             {
               "athleteId": "8b4babc0-0624-4140-98bd-33e9684901d2",
               "grade": 10,
               "jersey": "3",
-              "name": "Chelsie Chinn",
+              "name": "Chelsie Chin",
               "positions": [
                 "S"
               ],
@@ -241563,12 +241546,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Daisy Regaldo"
-        }
-      ],
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [
@@ -241589,8 +241567,7 @@
       ],
       "name": "Daisy Regalado",
       "names": [
-        "Daisy Regalado",
-        "Daisy Regaldo"
+        "Daisy Regalado"
       ],
       "stints": [
         {
@@ -241600,12 +241577,12 @@
           "height": null,
           "jersey": null,
           "level": "varsity",
-          "name": "Daisy Regaldo",
+          "name": "Daisy Regalado",
           "observations": [
             {
               "athleteId": "3f1dc0d6-56e6-4a88-b6df-bb090e1a61b1",
               "grade": 10,
-              "name": "Daisy Regaldo",
+              "name": "Daisy Regalado",
               "src": "maxpreps-roster"
             }
           ],
@@ -242869,12 +242846,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Kyraiki Pries"
-        }
-      ],
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [
@@ -242890,8 +242862,7 @@
       ],
       "name": "Kyriaki Pries",
       "names": [
-        "Kyriaki Pries",
-        "Kyraiki Pries"
+        "Kyriaki Pries"
       ],
       "stints": [
         {
@@ -242901,12 +242872,12 @@
           "height": null,
           "jersey": null,
           "level": "jv",
-          "name": "Kyraiki Pries",
+          "name": "Kyriaki Pries",
           "observations": [
             {
               "athleteId": "dd26285b-ab88-463f-ae05-a414ca0531e5",
               "grade": 11,
-              "name": "Kyraiki Pries",
+              "name": "Kyriaki Pries",
               "src": "maxpreps-jv-roster"
             },
             {
@@ -327027,9 +326998,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Victoria Tuipolotu",
+      "name": "Victoria Tuipulotu",
       "names": [
-        "Victoria Tuipolotu"
+        "Victoria Tuipulotu"
       ],
       "stints": [
         {
@@ -327039,14 +327010,14 @@
           "height": "5'8\"",
           "jersey": "4",
           "level": "varsity",
-          "name": "Victoria Tuipolotu",
+          "name": "Victoria Tuipulotu",
           "observations": [
             {
               "athleteId": "3f0c42da-9099-4ffc-9449-48bd32213962",
               "grade": 12,
               "height": "5'8\"",
               "jersey": "4",
-              "name": "Victoria Tuipolotu",
+              "name": "Victoria Tuipulotu",
               "positions": [
                 "OH"
               ],
@@ -360661,12 +360632,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Varun Panikkar"
-        }
-      ],
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [
@@ -360680,9 +360646,8 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Varun Pannikar",
+      "name": "Varun Panikkar",
       "names": [
-        "Varun Pannikar",
         "Varun Panikkar"
       ],
       "stints": [
@@ -360719,13 +360684,13 @@
           "height": null,
           "jersey": "22",
           "level": "varsity",
-          "name": "Varun Pannikar",
+          "name": "Varun Panikkar",
           "observations": [
             {
               "athleteId": "4a59dd43-07cc-4355-b349-cfc59122a34f",
               "grade": 11,
               "jersey": "22",
-              "name": "Varun Pannikar",
+              "name": "Varun Panikkar",
               "src": "maxpreps-roster"
             }
           ],
@@ -390233,12 +390198,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Madina Nooray"
-        }
-      ],
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [
@@ -390254,8 +390214,7 @@
       ],
       "name": "Madina Noorzay",
       "names": [
-        "Madina Noorzay",
-        "Madina Nooray"
+        "Madina Noorzay"
       ],
       "stints": [
         {
@@ -390265,13 +390224,13 @@
           "height": null,
           "jersey": "16",
           "level": "jv",
-          "name": "Madina Nooray",
+          "name": "Madina Noorzay",
           "observations": [
             {
               "athleteId": "e46ff282-a2b6-499a-95d8-fde588adb5c8",
               "grade": 9,
               "jersey": "16",
-              "name": "Madina Nooray",
+              "name": "Madina Noorzay",
               "positions": [
                 "OH"
               ],
@@ -419397,12 +419356,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Dhrishti Shan"
-        }
-      ],
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [
@@ -419418,8 +419372,7 @@
       ],
       "name": "Dhrishti Shah",
       "names": [
-        "Dhrishti Shah",
-        "Dhrishti Shan"
+        "Dhrishti Shah"
       ],
       "stints": [
         {
@@ -419429,13 +419382,13 @@
           "height": null,
           "jersey": "11",
           "level": "jv",
-          "name": "Dhrishti Shan",
+          "name": "Dhrishti Shah",
           "observations": [
             {
               "athleteId": "ae57ea84-4f25-48c6-b87a-cf44b0297a0f",
               "grade": 9,
               "jersey": "11",
-              "name": "Dhrishti Shan",
+              "name": "Dhrishti Shah",
               "positions": [
                 "OH",
                 "OPP"
@@ -421508,9 +421461,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Melina Gklaros-Stavropolous",
+      "name": "Melina Gklaros-Stavropoulos",
       "names": [
-        "Melina Gklaros-Stavropolous"
+        "Melina Gklaros-Stavropoulos"
       ],
       "stints": [
         {
@@ -421520,14 +421473,14 @@
           "height": "6'2\"",
           "jersey": "13",
           "level": "varsity",
-          "name": "Melina Gklaros-Stavropolous",
+          "name": "Melina Gklaros-Stavropoulos",
           "observations": [
             {
               "athleteId": "0b36cdc3-7fa8-48ce-b8fb-8fa26ecc17c3",
               "grade": 9,
               "height": "6'2\"",
               "jersey": "13",
-              "name": "Melina Gklaros-Stavropolous",
+              "name": "Melina Gklaros-Stavropoulos",
               "positions": [
                 "OPP"
               ],
@@ -421535,7 +421488,7 @@
             },
             {
               "jersey": "13",
-              "name": "M. Gklaros-Stavropolous",
+              "name": "M. Gklaros-Stavropoulos",
               "src": "maxpreps-stats"
             }
           ],
@@ -423538,9 +423491,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Thas Ettori",
+      "name": "Thaïs Ettori",
       "names": [
-        "Thas Ettori"
+        "Thaïs Ettori"
       ],
       "stints": [
         {
@@ -423550,14 +423503,14 @@
           "height": "6'0\"",
           "jersey": "17",
           "level": "varsity",
-          "name": "Thas Ettori",
+          "name": "Thaïs Ettori",
           "observations": [
             {
               "athleteId": "eeb846d9-36c4-4a68-9ec1-d6d7fa5676ed",
               "grade": 11,
               "height": "6'0\"",
               "jersey": "17",
-              "name": "Thas Ettori",
+              "name": "Thaïs Ettori",
               "positions": [
                 "OH"
               ],
@@ -425251,12 +425204,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "spelling",
-          "name": "Nethra Lyer"
-        }
-      ],
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [
@@ -425272,8 +425220,7 @@
       ],
       "name": "Nethra Iyer",
       "names": [
-        "Nethra Iyer",
-        "Nethra Lyer"
+        "Nethra Iyer"
       ],
       "stints": [
         {
@@ -425283,13 +425230,13 @@
           "height": null,
           "jersey": "4",
           "level": "jv",
-          "name": "Nethra Lyer",
+          "name": "Nethra Iyer",
           "observations": [
             {
               "athleteId": "92ee90ce-004b-43d1-a7e5-6c3ded7898b2",
               "grade": 9,
               "jersey": "4",
-              "name": "Nethra Lyer",
+              "name": "Nethra Iyer",
               "positions": [
                 "OH"
               ],

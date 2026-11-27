@@ -284,8 +284,8 @@ describe('buildClubsIndexView (/clubs)', () => {
     expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
     // 30 until Mt. Carmel's Aashi Gauba (2026-11-26).
     expect(line('htc')).toBe('31 players: 27 current, 4 earlier or not known to be current');
-    // 17 since Margaux Schlumberger's 2026-11-16 tie (unknown status).
-    expect(line('rush')).toBe('17 players: 14 current, 3 earlier or not known to be current');
+    // 17 since Margaux Schlumberger's 2026-11-16 tie (unknown status); 18 with Scripps Ranch's Lucy Miller (2026-11-27).
+    expect(line('rush')).toBe('18 players: 15 current, 3 earlier or not known to be current');
     expect(line('myto')).toBe('15 players: 13 current, 2 earlier or not known to be current');
     // 6 until the 2026-11-26 ties of two listed players, Marina's Anna Schwab and Newport Harbor's Kate Shepherd.
     expect(line('vcrd')).toBe('8 current players');
@@ -317,9 +317,10 @@ describe('buildClubsIndexView (/clubs)', () => {
     // 150 varsity players and the 2 Los Gatos JV players (JV ties counted since 2026-11-25), the 2026-11-26
     // sweep's three (Mt. Carmel is the 49th school), and two listed players' (Marina and Newport Harbor, 51), and the
     // 2026-11-27 comparison with the kept club rosters' two (Marin Academy's JV is the 52nd school).
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([159, 52, 28, 15]);
+    // 160 with Scripps Ranch's Lucy Miller, linked on the owner's decision the same day.
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([160, 52, 28, 15]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 159 players from 52 schools are tied to 15 of these 28 clubs, the most to SF Hawks (36) and HTC (31).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 160 players from 52 schools are tied to 15 of these 28 clubs, the most to SF Hawks (36) and HTC (31).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');

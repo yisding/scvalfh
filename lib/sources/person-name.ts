@@ -168,6 +168,77 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
       'The pairs apply at once, so her first name becomes Alina and her last name Decker.',
   },
   {
+    maxpreps: 'Gklaros-Stavropolous',
+    spelled: 'Gklaros-Stavropoulos',
+    basis:
+      "Melina Gklaros-Stavropoulos (Archbishop Mitty volleyball): MaxPreps' roster and stat sheets spell the second half " +
+      "'Stavropolous'; her Prep Dig page and the NCVA's Power League roster write 'Stavropoulos', as her brother Nick's " +
+      "Mitty basketball row does, and the site owner confirmed it (2026-11-27).",
+  },
+  {
+    maxpreps: 'Victoria Tuipolotu',
+    spelled: 'Victoria Tuipulotu',
+    basis:
+      "Victoria Tuipulotu (Saint Francis volleyball): MaxPreps' roster writes 'Tuipolotu'; Saint Francis' own Hudl team " +
+      "roster and the NCVA's Power League roster write 'Tuipulotu', and the site owner confirmed it (2026-11-27). Her " +
+      'row only: the run is her whole name.',
+  },
+  {
+    maxpreps: 'Thas Ettori',
+    spelled: 'Thaïs Ettori',
+    basis: "Thaïs Ettori (Archbishop Mitty volleyball): MaxPreps drops the 'ï' ('Thas'); her own Hudl profile writes 'Thaïs Ettori' and the NCVA's Vision 16 Gold roster 'Thais Ettori'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Caylee Chinn',
+    spelled: 'Caylee Chin',
+    basis: "Caylee Chin (Sacred Heart Cathedral volleyball): MaxPreps' roster writes 'Chinn'; her own Hudl profile, the NCVA's SF Tremors 16 roster and MaxPreps' own 2025-26 stat sheet write 'Chin'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Chelsie Chinn',
+    spelled: 'Chelsie Chin',
+    basis: "Chelsie Chin (Sacred Heart Cathedral volleyball, JV): MaxPreps' JV roster writes 'Chinn'; her own Hudl profile and the NCVA's SF Tremors 15 roster write 'Chin', as for her sister Caylee. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Dhrishti Shan',
+    spelled: 'Dhrishti Shah',
+    basis: "Dhrishti Shah (Saratoga volleyball, JV): MaxPreps' JV roster writes 'Shan'; Saratoga's own JV roster (shs-athletics.com) and the NCVA's Red Rock 14 roster write 'Shah'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Nethra Lyer',
+    spelled: 'Nethra Iyer',
+    basis: "Nethra Iyer (Saratoga volleyball, JV): MaxPreps' JV roster writes 'Lyer', a lowercase l for the capital I; Saratoga's own JV roster writes 'Iyer'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Madina Nooray',
+    spelled: 'Madina Noorzay',
+    basis: "Madina Noorzay (Saratoga volleyball, JV): MaxPreps' JV roster writes 'Nooray'; Saratoga's own JV roster writes 'Noorzay'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Kyraiki Pries',
+    spelled: 'Kyriaki Pries',
+    basis: "Kyriaki Pries (Leland field hockey, JV): MaxPreps' JV roster writes 'Kyraiki'; Leland's own JV list writes 'Kyriaki', the Greek name. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Bradfrd',
+    spelled: 'Bradford',
+    basis: "Ella Bradford (Stevenson field hockey): MaxPreps' roster and 2026 stat sheet write 'Bradfrd'; its own 2025-26 stat sheet writes 'Bradford'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the surname alone, which no one else has, so the stat sheet's 'E. Bradfrd' is respelled too.",
+  },
+  {
+    maxpreps: 'Guiliana (GiGi) Borello',
+    spelled: 'Giuliana (GiGi) Borello',
+    basis: "Giuliana (GiGi) Borello (Valley Christian soccer): MaxPreps' soccer roster transposes two letters ('Guiliana'); the school's own rosters, the 2025-26 all-league list and her field hockey row write 'Giuliana' (data/player-identity.json, 2026-11-22). Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Daisy Regaldo',
+    spelled: 'Daisy Regalado',
+    basis: "Daisy Regalado (Andrew Hill soccer): MaxPreps' soccer roster writes 'Regaldo'; her volleyball row at the same school writes 'Regalado'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
+    maxpreps: 'Varun Pannikar',
+    spelled: 'Varun Panikkar',
+    basis: "Varun Panikkar (Homestead basketball): MaxPreps' roster writes 'Pannikar'; SCVAL's official 2025-26 all-league list writes 'Panikkar'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
+  },
+  {
     maxpreps: 'Amelia "mimi" Scatena',
     spelled: 'Amelia "Mimi" Scatena',
     basis: 'Amelia "Mimi" Scatena (Mission Bay field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner\'s request (2026-11-25).',

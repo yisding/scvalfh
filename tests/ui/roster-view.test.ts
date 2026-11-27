@@ -327,7 +327,8 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
     }
     // 150 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16); 153 with the 2026-11-26 sweep's three; 154
     // with Convent's Julia Ahlstrand (the kept club rosters, 2026-11-27).
-    expect(tied).toBe(154);
+    // 155 with Scripps Ranch's Lucy Miller (the owner's decision, 2026-11-27).
+    expect(tied).toBe(155);
   });
 
   it('words the pinned rows', () => {
