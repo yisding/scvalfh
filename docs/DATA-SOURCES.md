@@ -3255,6 +3255,34 @@ school or which team they are (`breakerbball`, `eahssoccer`, `smhsbball`, `thewo
 `comet_volleyball`, which still would not open. Most of the small charter and private schools of the PCAL
 and PSAL showed only their school's account.
 
+A third soccer round the same day began with three accounts from the owner: Cupertino
+`cupertinogirlssoccer`, Los Altos `lahs.girls.soccer` (not `losaltosgirlssoccer`, a Southern California
+Los Altos's) and Lynbrook `lynbrookgirlsoccer` (the owner also gave `lynbrookhs_girlssoccer`, a smaller
+highlights account; a team keeps one varsity record). Then, as for field hockey's BVAL, likely handles
+for the 111 teams without a record were requested as public profile pages: each school's name, short name and
+initials (with and without `hs`) with `girlssoccer`, `girlsoccer`, `gsoccer`, `wsoccer`, `womenssoccer`,
+`soccer`, `girlsvarsitysoccer` and their `.` and `_` forms, about 10,000 handles. Plain `curl` still got
+the login wall, but a headless Chromium on instagram.com got every profile page (a known profile requested
+every 200 handles always came back), from fetches that read only as far as the page's `<title>`. About 900
+existed; each that could be the team's was opened, and 38 were kept, 50 of 123 in all. Each was kept only
+when its name, bio, story highlights or link places it at the school: a city
+(Gilroy, Christopher, Del Mar, Terra Nova, Hollister), a league or CCS title (Los Altos, Wilcox, Piedmont
+Hills, Willow Glen, Mt. Pleasant, Everett Alvarez, Soquel, Menlo, Mitty, Rancho San Juan, Woodside), a
+mascot (Aragon, Hillsdale, Palma, San Lorenzo Valley), the school's own site linked (Scotts Valley, Latino
+College Prep), its WBAL opponents as highlights (Harker), or a name no other school has (Carlmont, Gunderson,
+Leigh, Half Moon Bay, Aptos, Westmoor, King City, Monte Vista Christian, Soledad, Nueva, Summit Shasta,
+Evergreen Valley; Andrew Hill and Gunderson share one account with the boys). The rest belong to namesakes:
+`mountainviewgirlssoccer` is Oregon's (OSAA), `elcaminogirlssoccer` is Sacramento's El Camino (its GoFan
+link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `lahsgirlssoccer` Los Amigos's,
+`stfrancisgirlssoccer`/`sfhs_girls_soccer` Illinois's, `yhs.girls.soccer` Yucaipa's, and `mvhsgirlssoccer`,
+`mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
+Left out because nothing places them: `fremontgirls_soccer`, `fremont.girls.soccer`, `silvercreekgirlssoccer`,
+`liveoakgirlssoccer`, `lohs.girlssoccer`, `oghs.girlssoccer`, `pioneerwsoccer`, `lelandwomenssoccer`,
+`vchs_girlssoccer`, `vc.girlssoccer`, `tka_girlssoccer`, `ksjcgirlssoccer`, `ecpgirlssoccer`,
+`montereygirlssoccer`, `carmelgirlsoccer`, `seasidegirlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no
+gender named), `pvhs.girlssoccer`. Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are
+not affiliated with the school, although they link San Mateo's MaxPreps page and name Notre Dame Belmont.
+
 ### 1.11 VOLLEYBALL RECRUITING — profiles, clubs and commitments (`data/volleyball/*.json`)
 
 Research by hand on 2026-11-13 for the girls volleyball build's 41 SCVAL and BVAL schools (569 varsity rows, 322
