@@ -338,8 +338,9 @@ For this to work on a deployed copy of this repo:
 Fla.) current while games are on: `pnpm fetch-festival` reads TourneyMachine into `data/field-hockey/festival.json`,
 `tests/festival-file.test.ts`, `tests/tourneymachine.test.ts` and `tests/festival-clubs.test.ts` run on it, and the
 file is committed (`data: refresh festival <day> · <finals> of <games> games final`) only when its content changed.
-Games start on the hour and last 55 minutes, so it runs 12, 32 and 52 minutes after each slot ends (:07, :27 and :47
-past the next hour, UTC crons) and once more 2 h 15 min after each day's last slot. The crons are derived from the
+Games start on the hour and last 55 minutes, so it runs every 10 minutes from 12 to 62 minutes after each slot ends
+(:07, :17, :27, :37, :47 and :57 past the next hour, UTC crons; each run stops after a ~30-byte version check when
+nothing changed upstream) and once more 2 h 15 min after each day's last slot. The crons are derived from the
 festival's slots: `pnpm festival-crons` prints them for the committed file (`lib/festival/festival-crons.ts`).
 `tests/workflows.test.ts` holds the workflow's lines to the derivation over a frozen copy of the slots as first
 published (`tests/fixtures/festival/slots-2026.json`), so a slot TourneyMachine moves never fails the suite (which

@@ -31,11 +31,11 @@ function day(date: string, first: number, last: number) {
 const FESTIVAL = { games: [...day('2026-11-26', 8, 16), ...day('2026-11-27', 8, 18), ...day('2026-11-28', 8, 14)] };
 
 describe('festivalCrons', () => {
-  it('gives the festival’s schedule: three runs an hour after each slot, and a catch-up a day', () => {
+  it('gives the festival’s schedule: six runs an hour after each slot, and a catch-up a day', () => {
     expect(festivalCrons(festivalSlots(FESTIVAL))).toEqual([
-      '7,27,47 14-22 26 11 *',
-      '7,27,47 14-23 27 11 *',
-      '7,27,47 0,14-20 28 11 *',
+      '7,17,27,37,47,57 14-22 26 11 *',
+      '7,17,27,37,47,57 14-23 27 11 *',
+      '7,17,27,37,47,57 0,14-20 28 11 *',
       '10 0 27 11 *',
       '10 2,22 28 11 *',
     ]);
@@ -46,17 +46,20 @@ describe('festivalCrons', () => {
     expect(slots).toEqual([{ start: '2026-11-27T18:00:00', startUtc: '2026-11-27T23:00:00Z', endUtc: '2026-11-27T23:55:00Z', games: 1 }]);
     expect(festivalRuns(slots)).toEqual([
       { at: '2026-11-28T00:07:00Z', kind: 'slot' },
+      { at: '2026-11-28T00:17:00Z', kind: 'slot' },
       { at: '2026-11-28T00:27:00Z', kind: 'slot' },
+      { at: '2026-11-28T00:37:00Z', kind: 'slot' },
       { at: '2026-11-28T00:47:00Z', kind: 'slot' },
+      { at: '2026-11-28T00:57:00Z', kind: 'slot' },
       // 9:10 PM ET.
       { at: '2026-11-28T02:10:00Z', kind: 'catch-up' },
     ]);
-    expect(festivalCrons(slots)).toEqual(['7,27,47 0 28 11 *', '10 2 28 11 *']);
+    expect(festivalCrons(slots)).toEqual(['7,17,27,37,47,57 0 28 11 *', '10 2 28 11 *']);
   });
 
   it('rolls the month over with the day', () => {
     const slots = festivalSlots({ games: day('2026-11-30', 18, 18) });
-    expect(festivalCrons(slots)).toEqual(['7,27,47 0 1 12 *', '10 2 1 12 *']);
+    expect(festivalCrons(slots)).toEqual(['7,17,27,37,47,57 0 1 12 *', '10 2 1 12 *']);
   });
 
   it('keeps day-of-week unrestricted and every field a plain cron list', () => {
@@ -67,11 +70,11 @@ describe('festivalCrons', () => {
 
   it('runs FESTIVAL_REFRESH_OFFSETS after each slot ends and the catch-up after the day’s last', () => {
     expect(FESTIVAL_GAME_MINUTES).toBe(55);
-    expect(FESTIVAL_REFRESH_OFFSETS).toEqual([12, 32, 52]);
+    expect(FESTIVAL_REFRESH_OFFSETS).toEqual([12, 22, 32, 42, 52, 62]);
     expect(FESTIVAL_CATCH_UP_MINUTES).toBe(135);
     const runs = festivalRuns(festivalSlots(FESTIVAL));
-    // 27 slots, three runs each, and three catch-ups.
-    expect(runs.filter((r) => r.kind === 'slot')).toHaveLength(81);
+    // 27 slots, six runs each, and three catch-ups.
+    expect(runs.filter((r) => r.kind === 'slot')).toHaveLength(162);
     expect(runs.filter((r) => r.kind === 'catch-up').map((r) => r.at)).toEqual([
       '2026-11-27T00:10:00Z',
       '2026-11-28T02:10:00Z',
@@ -84,7 +87,7 @@ describe('festivalCrons', () => {
   });
 
   it('groups a day’s hours by their minutes, and counts each slot once whatever its games', () => {
-    // Two games in one slot, and an odd 10:30 slot: its runs are :37, :57 and :17 of the next hour.
+    // Two games in one slot, and an odd 10:30 slot: its runs are :37, :47, :57 and :07, :17, :27 of the next hour.
     const games = [
       { start: '2026-11-26T08:00:00', startUtc: '2026-11-26T13:00:00Z' },
       { start: '2026-11-26T08:00:00', startUtc: '2026-11-26T13:00:00Z' },
@@ -92,14 +95,25 @@ describe('festivalCrons', () => {
     ];
     expect(festivalRuns(festivalSlots({ games })).map((r) => r.at.slice(11, 16))).toEqual([
       '14:07',
+      '14:17',
       '14:27',
+      '14:37',
       '14:47',
+      '14:57',
       '16:37',
+      '16:47',
       '16:57',
+      '17:07',
       '17:17',
+      '17:27',
       '18:40',
     ]);
-    expect(festivalCrons(festivalSlots({ games }))).toEqual(['7,27,47 14 26 11 *', '37,57 16 26 11 *', '17 17 26 11 *', '40 18 26 11 *']);
+    expect(festivalCrons(festivalSlots({ games }))).toEqual([
+      '7,17,27,37,47,57 14 26 11 *',
+      '37,47,57 16 26 11 *',
+      '7,17,27 17 26 11 *',
+      '40 18 26 11 *',
+    ]);
   });
 
   it('drops a catch-up that falls on a slot run', () => {
