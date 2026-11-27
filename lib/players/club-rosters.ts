@@ -73,6 +73,13 @@ export const LEAGUE_ROSTER_KIND = 'league-roster';
 /** Where the tracked soccer schools are: a club based in one of these is near enough for a class year to link. */
 export const LOCAL_REGIONS: readonly ClubRegion[] = ['san-francisco', 'peninsula', 'south-bay', 'central-coast'];
 
+/**
+ * Volleyball's: LOCAL_REGIONS and the East Bay (owner decision, 2026-11-27). The East Bay's clubs (City Beach and
+ * Union Volleyball Academy in Fremont, among them) draw players from the South Bay schools, and a Saint Francis
+ * player's UVA tie, confirmed by the owner, was the case that showed it. Marin's clubs stay out.
+ */
+export const VOLLEYBALL_LOCAL_REGIONS: readonly ClubRegion[] = [...LOCAL_REGIONS, 'east-bay'];
+
 const text = z.string().min(1);
 /**
  * A league's public page: Athlete One's for ECNL, GotSport's event page for Girls Academy, TM2Sign's event for
@@ -404,7 +411,8 @@ export const rosterName = (p: Pick<ClubRosterPlayer, 'firstName' | 'lastName'>):
 export interface ClubRosterCompareOptions {
   /**
    * Rule 5: whether a club in this region is near enough to the row's school. Default: the club is in
-   * LOCAL_REGIONS (soccer's schools, and basketball's and volleyball's, which are the same area's).
+   * LOCAL_REGIONS (soccer's schools, and basketball's, which are the same area's; volleyball passes
+   * VOLLEYBALL_LOCAL_REGIONS).
    */
   isLocal?: (region: ClubRegion, row: SchoolRow) => boolean;
 }
