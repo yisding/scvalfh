@@ -372,9 +372,13 @@ describe('structure the design depends on', () => {
     }
   });
 
-  it('gives body an explicit background and room for the fixed tab bar', () => {
+  it('gives body an explicit background, and the tab bar its room as a sticky last child, not body padding', () => {
     const body = block(/^\s*body\s*\{/m);
     expect(body).toContain('background: var(--sx-bg)');
-    expect(body).toContain('env(safe-area-inset-bottom)');
+    expect(body).not.toContain('padding-bottom');
+    const bar = block(/^\s*\.sx-tabbar\s*\{/m);
+    expect(bar).toContain('position: sticky');
+    expect(bar).toContain('bottom: 0');
+    expect(bar).toContain('env(safe-area-inset-bottom)');
   });
 });
