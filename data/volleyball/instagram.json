@@ -5,7 +5,7 @@
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls volleyball program’s own, or one the school’s girls and boys teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 18 of the 60 teams have one (2026-11-27)."
+    "No record means no account we could find and check on the day, not that there is none: 24 of the 60 teams have one (2026-11-27)."
   ],
   "teams": [
     {
@@ -23,6 +23,14 @@
       "foundAt": null,
       "note": "Found by search. Profile opened: \"Homestead Volleyball\", bio \"HHS Volleyball | 1x CCS Girls Finalist | 1x CCS Boys Finalist | 1x Boys Nor-Cal Champions\". One account for the girls and the boys; the CCS and Nor-Cal lines place it at Homestead, Cupertino. Not homestead.vb, which is Homestead High School’s in Fort Wayne, Indiana.",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "los-altos",
+      "level": "varsity",
+      "handle": "losaltosvolleyball",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"LAHS VARSITY 🥶🥶\", bio \"GO EAGLES 🦅\"; it does not say girls or name a city, so it rests on the owner’s word that it is Los Altos’s girls volleyball team.",
+      "checkedOn": "2026-11-27"
     },
     {
       "slug": "los-gatos",
@@ -57,12 +65,44 @@
       "checkedOn": "2026-11-14"
     },
     {
+      "slug": "fremont",
+      "level": "varsity",
+      "handle": "fremont.girlsvb",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Fremont Girls Volleyball\", bio \"FHS Girls Varsity & JV Volleyball 2026-2027\"; it names no city, so it rests on the owner’s word that it is Fremont’s, Sunnyvale.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "gunn",
       "level": "varsity",
       "handle": "gunngirlsvolleyball",
       "foundAt": "https://www.gunnathletics.com/",
       "note": "Linked from the \"Volleyball, Girls\" entry of the sports menu on the school’s athletics site. Profile opened: \"GUNN GIRLS VOLLEYBALL\", bio \"Gunn High School Girl’s Volleyball Team\", linking the Gunn Titans’ MaxPreps schedule",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "lynbrook",
+      "level": "varsity",
+      "handle": "lynbrook.volleyball",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Lynbrook Women’s Volleyball\", bio \"mindset like dory’s\"; it names no city, so it rests on the owner’s word that it is Lynbrook’s, San Jose.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "macdonald",
+      "level": "varsity",
+      "handle": "condorgirlsvb",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"macdonald girls vb\", bio \"Unofficial Kathleen MacDonald Girl's Varsity Volleyball - Not affiliated with KMHS\": a team account the school does not run, kept on the owner’s word.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "mountain-view",
+      "level": "varsity",
+      "handle": "mvhs_girlsvball",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"MVHS Girls Volleyball\", bio \"Official Instagram for the Mountain View High School Girls Volleyball program\". Left out on 2026-11-14 because it names no city; kept now on the owner’s word that it is Mountain View’s, Mountain View.",
+      "checkedOn": "2026-11-27"
     },
     {
       "slug": "santa-clara",
@@ -78,6 +118,14 @@
       "handle": "togagirlsvolleyball",
       "foundAt": "https://saratogafalcon.org/18787/sports/student-run-social-media-accounts-hype-up-school-sports-teams/",
       "note": "Named by the school’s student paper, The Saratoga Falcon (2023-12-02), among the school’s active team accounts: \"girls’ volleyball (@togagirlsvolleyball)\" (the boys have their own, @toga_mvb). Profile not opened: on 2026-11-27 Instagram answered every anonymous profile view (curl and Chromium) with its login wall for rate limiting; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "wilcox",
+      "level": "varsity",
+      "handle": "wilcoxgirlsvolleyball",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Wilcox Girls Volleyball\", bio \"SCVAL CHAMPS 22-23 | CCS SEMIFINALISTS 22-23 … not affiliated with wilcox! student ran acc\"; the SCVAL title places it at Wilcox, Santa Clara.",
       "checkedOn": "2026-11-27"
     },
     {
