@@ -36,6 +36,7 @@ import {
   getFreshmanGamesOn,
   getFreshmanTeam,
   hasFreshmanLevel,
+  getFreshmanLevelScoreNote,
 } from '../../lib/freshman/freshman';
 import { getLeague } from '../../lib/leagues';
 import { SPORT } from '../../lib/sports/current';
@@ -54,11 +55,12 @@ function today(): string {
   return at === null ? '' : localDateKey(at);
 }
 
-/** A freshman game as a row of the JV lists: no chip (no freshman tables), no note, its own page. */
+/** A freshman game as a row of the JV lists: no chip (no freshman tables), no note but a withheld level score's, its own page. */
 const rowsOf = (games: readonly Game[]): JvRowView[] =>
   games.map((game) => ({
     game,
-    differsNote: null,
+    // The one note a freshman row can carry: a level final withheld in a sport with no ties (lib/jv/jv-level-scores.ts).
+    differsNote: getFreshmanLevelScoreNote(game),
     chips: false,
     nonLeague: false,
     fromSchedule: false,
@@ -337,6 +339,7 @@ function buildModel(game: Game): FreshmanGameModel {
     ? { name: `${getLeague(league).shortName} ${FRESHMAN_LEVEL.long}`, href: `/freshman/${league}` }
     : { name: FRESHMAN_LEVEL.short, href: '/freshman' };
   const crossLevel = crossLevelNote(game, (crossLevelSides(game)?.which === 'home' ? away : home).name);
+  const levelScore = getFreshmanLevelScoreNote(game);
   const series = (isCrossLevelGame(game) ? [game] : all)
     .filter(
       (g) =>
@@ -357,7 +360,7 @@ function buildModel(game: Game): FreshmanGameModel {
     away,
     home,
     competition,
-    notes: [...(crossLevel ? [crossLevel] : []), FRESHMAN_COUNTS_NOTE],
+    notes: [...(crossLevel ? [crossLevel] : []), ...(levelScore ? [levelScore] : []), FRESHMAN_COUNTS_NOTE],
     recordsCaption:
       tracked === 0
         ? null
