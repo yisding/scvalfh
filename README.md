@@ -897,6 +897,15 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   Cathedral Catholic for the varsity 1-0; 16 the same score from si.com; 12 not shown, with no other source) and
   volleyball's KIPP San Jose Collegiate at Andrew Hill, Oct 16, a "0-0" like its varsity row. No JV table's status
   changed; the EAL's is at 17 of 28 reported.
+- **Level finals in a sport with no ties** (`lib/jv/jv-level-scores.ts`, after the corrections and before the copied
+  scores; also on the freshman level, `lib/freshman/freshman.ts`). In basketball and volleyball (`Sport.scoring.allowsTies`
+  false) a MaxPreps JV or freshman final level on the scoreboard, whatever its W/L/T flags, is no result: it loses its
+  score exactly as a copied score does, so another source fills it where it has the game, and otherwise it reads
+  "score not reported" and counts in no JV table, with a note saying MaxPreps listed it as, say, a 0-0 final. A
+  forfeit, a tiebreak win (`SO`) and a score that is not MaxPreps' own are left alone. Added 2026-11-27 in place of
+  excluding such rows one by one in `lib/jv/jv-corrections.ts`: MaxPreps left two JV basketball games, Hollister at
+  Gonzales (Nov 21) and Hollister at St. Francis (Watsonville) (Nov 23), as 0-0 "finals" both rows mark T, and each
+  had been left out by hand after the basketball build's copy check caught its "Tie".
 - **York in Santa Catalina's JV slot** (`JV_OUTSIDE_TEAMS` in `lib/jv/jv-teams.ts`). PCAL's schedule, Note 1:
   "Santa Catalina is Varsity only. York is JV only. They are paired together in this schedule as CAT/YOR."
   So York holds the PCAL JV table row in Santa Catalina's place (name only, no page), a JV row MaxPreps or

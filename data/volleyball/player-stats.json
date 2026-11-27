@@ -2,11 +2,11 @@
   "counts": {
     "errors": 0,
     "goalkeepers": 0,
-    "players": 561,
+    "players": 563,
     "teams": 60,
     "teamsWithStats": 38
   },
-  "fetchedAt": "2026-11-21T14:48:27.556Z",
+  "fetchedAt": "2026-11-27T15:07:12.879Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "06a44d81-ac81-4c31-a553-ff924f193c02",
@@ -6499,7 +6499,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -6520,7 +6520,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0400145a-d7ca-43a8-9890-2d5ecb8444e6",
@@ -9243,6 +9243,160 @@
           "warnings": []
         },
         {
+          "contestId": "64740cd2-536e-4d22-ae91-fab187d29f27",
+          "players": [
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Evelyn Zhang"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Lola Ferrari"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Kat Minkevich"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Xochi Cook"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Angela Deng"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Anya Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Aleshia Thorpe"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Pristyne Lim"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Teagan Prendergast"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Kaitlyn King"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Brooklyn Miehm"
+            }
+          ],
+          "rowKey": "1766e0a2",
+          "tracked": {
+            "field": [],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "84b47b2f-b0af-4be1-b7dc-ad2e67e0e5dc",
+          "players": [
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Evelyn Zhang"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Teagan Prendergast"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Lola Ferrari"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Brooklyn Miehm"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Kat Minkevich"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Xochi Cook"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Angela Deng"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Anya Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Aleshia Thorpe"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Mila Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Kaitlyn King"
+            }
+          ],
+          "rowKey": "676afa8e",
+          "tracked": {
+            "field": [],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
           "contestId": "84bc9863-e9d5-4825-9810-d5d0912f6f04",
           "players": [
             {
@@ -11028,6 +11182,95 @@
           "warnings": []
         },
         {
+          "contestId": "bf1edd14-f265-4199-8b53-384d62396a10",
+          "players": [
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Evelyn Zhang"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Lola Ferrari"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Brooklyn Miehm"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Kat Minkevich"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Xochi Cook"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Angela Deng"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Anya Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Aleshia Thorpe"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Mila Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Pristyne Lim"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Teagan Prendergast"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Kaitlyn King"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Emme Liao"
+            }
+          ],
+          "rowKey": "abb49c87",
+          "tracked": {
+            "field": [],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
           "contestId": "c5a145d7-b037-44e6-a5cb-2090d4395a4c",
           "players": [
             {
@@ -11852,6 +12095,89 @@
               "receptions",
               "receptionErrors"
             ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "de26dc85-3ab4-4bfa-a201-615cbe7df608",
+          "players": [
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Evelyn Zhang"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Lola Ferrari"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Brooklyn Miehm"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Kat Minkevich"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Xochi Cook"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Angela Deng"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Anya Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Aleshia Thorpe"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Mila Wong"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Teagan Prendergast"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Kaitlyn King"
+            },
+            {
+              "field": {},
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Emme Liao"
+            }
+          ],
+          "rowKey": "385933d6",
+          "tracked": {
+            "field": [],
             "goalkeeping": []
           },
           "warnings": []
@@ -13035,7 +13361,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-04T17:16:15",
+      "lastUpdated": "2026-11-23T10:43:12",
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
       "players": [
@@ -13046,17 +13372,17 @@
           "field": {
             "aces": 0,
             "assists": 0,
-            "attackAttempts": 378,
-            "attackErrors": 44,
-            "blockAssists": 42,
+            "attackAttempts": 438,
+            "attackErrors": 53,
+            "blockAssists": 45,
             "digs": 21,
-            "kills": 181,
+            "kills": 213,
             "receptionErrors": 0,
             "receptions": 1,
             "serveAttempts": 9,
             "serveErrors": 0,
-            "setsPlayed": 100,
-            "soloBlocks": 23
+            "setsPlayed": 115,
+            "soloBlocks": 28
           },
           "fullName": "Evelyn Zhang",
           "goalkeeping": null,
@@ -13069,18 +13395,18 @@
           "careerId": "9ag1at0k49cue",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/pristyne-lim/?careerid=9ag1at0k49cue",
           "field": {
-            "aces": 19,
+            "aces": 20,
             "assists": 71,
             "attackAttempts": 3,
             "attackErrors": 1,
             "blockAssists": null,
-            "digs": 76,
+            "digs": 78,
             "kills": 1,
             "receptionErrors": 2,
             "receptions": 5,
-            "serveAttempts": 159,
-            "serveErrors": 11,
-            "setsPlayed": 55,
+            "serveAttempts": 165,
+            "serveErrors": 12,
+            "setsPlayed": 57,
             "soloBlocks": null
           },
           "fullName": "Pristyne Lim",
@@ -13094,18 +13420,18 @@
           "careerId": "k38mo33tvo0ue",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/teagan-prendergast/?careerid=k38mo33tvo0ue",
           "field": {
-            "aces": 18,
+            "aces": 25,
             "assists": 0,
-            "attackAttempts": 6,
+            "attackAttempts": 7,
             "attackErrors": 1,
             "blockAssists": null,
-            "digs": 104,
-            "kills": 1,
-            "receptionErrors": 36,
-            "receptions": 189,
-            "serveAttempts": 216,
-            "serveErrors": 19,
-            "setsPlayed": 72,
+            "digs": 136,
+            "kills": 2,
+            "receptionErrors": 40,
+            "receptions": 245,
+            "serveAttempts": 270,
+            "serveErrors": 24,
+            "setsPlayed": 87,
             "soloBlocks": null
           },
           "fullName": "Teagan Prendergast",
@@ -13121,17 +13447,17 @@
           "field": {
             "aces": 6,
             "assists": 0,
-            "attackAttempts": 163,
-            "attackErrors": 38,
-            "blockAssists": 22,
-            "digs": 9,
-            "kills": 59,
+            "attackAttempts": 182,
+            "attackErrors": 45,
+            "blockAssists": 26,
+            "digs": 11,
+            "kills": 66,
             "receptionErrors": 1,
             "receptions": 2,
             "serveAttempts": 28,
             "serveErrors": 6,
-            "setsPlayed": 76,
-            "soloBlocks": 13
+            "setsPlayed": 88,
+            "soloBlocks": 18
           },
           "fullName": "Lola Ferrari",
           "goalkeeping": null,
@@ -13144,18 +13470,18 @@
           "careerId": "flnibm6ahlm22",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/brooklyn-miehm/?careerid=flnibm6ahlm22",
           "field": {
-            "aces": 17,
+            "aces": 18,
             "assists": null,
-            "attackAttempts": 7,
-            "attackErrors": 2,
+            "attackAttempts": 13,
+            "attackErrors": 4,
             "blockAssists": null,
-            "digs": 103,
+            "digs": 128,
             "kills": 1,
-            "receptionErrors": 17,
-            "receptions": 159,
-            "serveAttempts": 130,
-            "serveErrors": 13,
-            "setsPlayed": 44,
+            "receptionErrors": 22,
+            "receptions": 216,
+            "serveAttempts": 143,
+            "serveErrors": 14,
+            "setsPlayed": 59,
             "soloBlocks": null
           },
           "fullName": "Brooklyn Miehm",
@@ -13169,19 +13495,19 @@
           "careerId": "jkagdv07q6qk4",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/kat-minkevich/?careerid=jkagdv07q6qk4",
           "field": {
-            "aces": 34,
+            "aces": 44,
             "assists": 3,
-            "attackAttempts": 919,
-            "attackErrors": 180,
-            "blockAssists": 30,
-            "digs": 240,
-            "kills": 330,
-            "receptionErrors": 40,
-            "receptions": 389,
-            "serveAttempts": 240,
-            "serveErrors": 46,
-            "setsPlayed": 104,
-            "soloBlocks": 13
+            "attackAttempts": 1058,
+            "attackErrors": 206,
+            "blockAssists": 31,
+            "digs": 281,
+            "kills": 384,
+            "receptionErrors": 43,
+            "receptions": 460,
+            "serveAttempts": 289,
+            "serveErrors": 55,
+            "setsPlayed": 119,
+            "soloBlocks": 14
           },
           "fullName": "Kat Minkevich",
           "goalkeeping": null,
@@ -13199,13 +13525,13 @@
             "attackAttempts": 2,
             "attackErrors": 0,
             "blockAssists": null,
-            "digs": 109,
+            "digs": 111,
             "kills": 2,
             "receptionErrors": 31,
-            "receptions": 190,
+            "receptions": 194,
             "serveAttempts": 101,
             "serveErrors": 13,
-            "setsPlayed": 65,
+            "setsPlayed": 67,
             "soloBlocks": null
           },
           "fullName": "Emme Liao",
@@ -13221,16 +13547,16 @@
           "field": {
             "aces": 0,
             "assists": 3,
-            "attackAttempts": 154,
-            "attackErrors": 33,
-            "blockAssists": 16,
+            "attackAttempts": 164,
+            "attackErrors": 34,
+            "blockAssists": 18,
             "digs": 31,
-            "kills": 35,
+            "kills": 39,
             "receptionErrors": 0,
             "receptions": 4,
             "serveAttempts": 10,
             "serveErrors": 0,
-            "setsPlayed": 71,
+            "setsPlayed": 77,
             "soloBlocks": 11
           },
           "fullName": "Xochi Cook",
@@ -13269,18 +13595,18 @@
           "careerId": "rjcs1n97fleqa",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/angela-deng/?careerid=rjcs1n97fleqa",
           "field": {
-            "aces": 80,
-            "assists": 901,
-            "attackAttempts": 296,
-            "attackErrors": 53,
-            "blockAssists": 14,
-            "digs": 302,
-            "kills": 123,
+            "aces": 84,
+            "assists": 1068,
+            "attackAttempts": 314,
+            "attackErrors": 58,
+            "blockAssists": 18,
+            "digs": 348,
+            "kills": 134,
             "receptionErrors": 1,
             "receptions": 8,
-            "serveAttempts": 481,
-            "serveErrors": 36,
-            "setsPlayed": 104,
+            "serveAttempts": 544,
+            "serveErrors": 42,
+            "setsPlayed": 119,
             "soloBlocks": 3
           },
           "fullName": "Angela Deng",
@@ -13294,19 +13620,19 @@
           "careerId": "28llqsi43j5n7",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/anya-wong/?careerid=28llqsi43j5n7",
           "field": {
-            "aces": 31,
+            "aces": 39,
             "assists": 0,
-            "attackAttempts": 603,
-            "attackErrors": 89,
+            "attackAttempts": 725,
+            "attackErrors": 109,
             "blockAssists": 7,
-            "digs": 213,
-            "kills": 198,
-            "receptionErrors": 55,
-            "receptions": 335,
-            "serveAttempts": 337,
-            "serveErrors": 24,
-            "setsPlayed": 97,
-            "soloBlocks": 1
+            "digs": 244,
+            "kills": 237,
+            "receptionErrors": 58,
+            "receptions": 387,
+            "serveAttempts": 392,
+            "serveErrors": 27,
+            "setsPlayed": 112,
+            "soloBlocks": 3
           },
           "fullName": "Anya Wong",
           "goalkeeping": null,
@@ -13319,18 +13645,18 @@
           "careerId": "89aahi12bu7td",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/aleshia-thorpe/?careerid=89aahi12bu7td",
           "field": {
-            "aces": 15,
-            "assists": null,
-            "attackAttempts": 142,
-            "attackErrors": 9,
+            "aces": 18,
+            "assists": 1,
+            "attackAttempts": 198,
+            "attackErrors": 18,
             "blockAssists": 4,
-            "digs": 42,
-            "kills": 40,
-            "receptionErrors": 30,
-            "receptions": 87,
-            "serveAttempts": 123,
-            "serveErrors": 10,
-            "setsPlayed": 55,
+            "digs": 52,
+            "kills": 60,
+            "receptionErrors": 31,
+            "receptions": 94,
+            "serveAttempts": 170,
+            "serveErrors": 13,
+            "setsPlayed": 68,
             "soloBlocks": 1
           },
           "fullName": "Aleshia Thorpe",
@@ -13344,18 +13670,18 @@
           "careerId": "6hilagf3uaeff",
           "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/kaitlyn-king/?careerid=6hilagf3uaeff",
           "field": {
-            "aces": 18,
+            "aces": 23,
             "assists": 3,
             "attackAttempts": 3,
             "attackErrors": 1,
             "blockAssists": null,
-            "digs": 106,
+            "digs": 121,
             "kills": 0,
-            "receptionErrors": 22,
-            "receptions": 164,
-            "serveAttempts": 139,
-            "serveErrors": 6,
-            "setsPlayed": 71,
+            "receptionErrors": 24,
+            "receptions": 187,
+            "serveAttempts": 186,
+            "serveErrors": 8,
+            "setsPlayed": 84,
             "soloBlocks": null
           },
           "fullName": "Kaitlyn King",
@@ -13371,16 +13697,16 @@
           "field": {
             "aces": 22,
             "assists": 2,
-            "attackAttempts": 332,
-            "attackErrors": 59,
+            "attackAttempts": 356,
+            "attackErrors": 65,
             "blockAssists": 11,
-            "digs": 107,
-            "kills": 102,
+            "digs": 110,
+            "kills": 111,
             "receptionErrors": 30,
-            "receptions": 190,
-            "serveAttempts": 163,
+            "receptions": 193,
+            "serveAttempts": 167,
             "serveErrors": 12,
-            "setsPlayed": 72,
+            "setsPlayed": 79,
             "soloBlocks": 2
           },
           "fullName": "Mila Wong",
@@ -13396,19 +13722,19 @@
       "teamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "totals": {
         "field": {
-          "aces": 277,
-          "assists": 991,
-          "attackAttempts": 3010,
-          "attackErrors": 510,
-          "blockAssists": 146,
-          "digs": 1473,
-          "kills": 1073,
-          "receptionErrors": 266,
-          "receptions": 1725,
-          "serveAttempts": 2176,
-          "serveErrors": 207,
-          "setsPlayed": 123,
-          "soloBlocks": 67
+          "aces": 316,
+          "assists": 1159,
+          "attackAttempts": 3465,
+          "attackErrors": 595,
+          "blockAssists": 160,
+          "digs": 1682,
+          "kills": 1250,
+          "receptionErrors": 284,
+          "receptions": 1998,
+          "serveAttempts": 2514,
+          "serveErrors": 237,
+          "setsPlayed": 138,
+          "soloBlocks": 80
         },
         "goalkeeping": {}
       },
@@ -13434,7 +13760,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "039663b4-1b15-47e3-bb45-24e2a2fde938",
@@ -19815,7 +20141,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "048cc3b5-6180-4b4e-b922-762d217b940d",
@@ -26572,7 +26898,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "074e4a06-bc89-4eee-81c8-4ba5a2c7bc00",
@@ -32031,7 +32357,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -32052,7 +32378,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "22889413-74ed-44c8-8cb1-3eda067b541d",
@@ -33202,7 +33528,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "1facc0f2-0072-44d5-bda0-7e5de69b4c39",
@@ -40784,7 +41110,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0848b490-3320-4c9c-ad95-de4e9fb5e0af",
@@ -45747,7 +46073,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "013c3ebd-b852-4814-b2b8-770690cec229",
@@ -51110,7 +51436,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "013c3ebd-b852-4814-b2b8-770690cec229",
@@ -57302,7 +57628,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -57323,7 +57649,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "035c5900-565a-4a3d-884f-53cbfff99124",
@@ -62138,7 +62464,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "111f7795-9ec5-4812-b365-1abba628fd4d",
@@ -67284,7 +67610,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "044ae758-7a54-482e-a856-7702f8dd15c9",
@@ -73276,7 +73602,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
@@ -73297,7 +73623,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "15fa3ca6-6c1c-4c58-b7ff-25e8de8f9b7a",
@@ -78243,7 +78569,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "1f9915e5-5ed0-41b4-8547-278727b0985e",
@@ -82468,7 +82794,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "1b6b2ce4-4309-4235-b3f9-125eef2752ed",
@@ -87688,7 +88014,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "f8a2ede1-2719-4b4b-b847-d10a46fb93a2",
@@ -87882,7 +88208,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "02815173-2563-4291-a1cd-32beaeaeb2de",
@@ -93258,7 +93584,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "03992edb-0aff-4747-90b5-6fd7f3e5b51f",
@@ -97934,7 +98260,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
@@ -97955,7 +98281,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
@@ -97976,7 +98302,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -97997,7 +98323,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "86f42771-02d3-4c85-a795-142206fe84bf",
@@ -98678,7 +99004,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0183f7b6-4c0b-4e98-ba8d-58bd3d4f5143",
@@ -102922,7 +103248,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
@@ -102943,7 +103269,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
@@ -102964,7 +103290,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -102985,7 +103311,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "1bc1161e-668a-4c0e-a2ec-829423cb010c",
@@ -105610,7 +105936,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -105631,7 +105957,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
@@ -105652,7 +105978,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
@@ -105673,7 +105999,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
@@ -105694,7 +106020,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "1766c73a-a599-4749-93d4-286c98bf4d07",
@@ -106227,7 +106553,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
@@ -106248,7 +106574,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
@@ -106269,7 +106595,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
@@ -106290,7 +106616,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
@@ -106311,7 +106637,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "00ea8c39-edb2-417f-9d91-d994c8d0b831",
@@ -111988,7 +112314,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
@@ -112009,7 +112335,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
@@ -112030,7 +112356,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -112051,7 +112377,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "070022f0-84e9-4408-9e3e-771cdd2907f6",
@@ -118993,7 +119319,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0025ee78-b046-438d-80ae-a79d0df16725",
@@ -125300,7 +125626,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "008272c1-8ecf-4288-a7aa-e4624ef15f67",
@@ -130855,7 +131181,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0c3a1540-3ce0-4f21-8c96-810025470325",
@@ -137100,7 +137426,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "062d5442-b832-4baa-81fa-affece542f42",
@@ -145535,7 +145861,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0c7e902f-c889-4683-a5e6-c860ac52fa0b",
@@ -152565,7 +152891,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "02aebc69-3cfd-4527-86ac-6a197c7de9ec",
@@ -157941,7 +158267,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "008272c1-8ecf-4288-a7aa-e4624ef15f67",
@@ -164096,7 +164422,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "0c20604d-29ec-443a-b4db-b4b94b2b160f",
@@ -165297,6 +165623,190 @@
             "goalkeeping": []
           },
           "warnings": []
+        },
+        {
+          "contestId": "379c8822-f434-4bfd-858e-cd1bc44e5413",
+          "players": [
+            {
+              "field": {
+                "attackAttempts": 2,
+                "attackErrors": 1,
+                "kills": 0,
+                "setsPlayed": 1
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Player #9"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "attackAttempts": 2,
+                "attackErrors": 0,
+                "kills": 1,
+                "setsPlayed": 3,
+                "soloBlocks": 1
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Player #14"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "attackAttempts": 3,
+                "attackErrors": 0,
+                "kills": 3,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Genevie Kwon"
+            },
+            {
+              "field": {
+                "attackAttempts": 5,
+                "attackErrors": 0,
+                "kills": 5,
+                "setsPlayed": 2
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Leilah Abrams"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "attackAttempts": 19,
+                "attackErrors": 1,
+                "digs": 12,
+                "kills": 7,
+                "receptionErrors": 5,
+                "receptions": 17,
+                "serveAttempts": 5,
+                "serveErrors": 0,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Anaya Mehta"
+            },
+            {
+              "field": {
+                "attackAttempts": 1,
+                "attackErrors": 0,
+                "kills": 1,
+                "setsPlayed": 1
+              },
+              "goalkeeping": null,
+              "jersey": "19",
+              "name": "Chandler Munzig"
+            },
+            {
+              "field": {
+                "assists": 32,
+                "attackAttempts": 5,
+                "attackErrors": 0,
+                "digs": 3,
+                "kills": 2,
+                "serveAttempts": 1,
+                "serveErrors": 0,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Hadley Mahon"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "attackAttempts": 7,
+                "attackErrors": 1,
+                "kills": 4,
+                "receptionErrors": 0,
+                "receptions": 5,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "17",
+              "name": "Brie Eisenberg"
+            },
+            {
+              "field": {
+                "serveAttempts": 2,
+                "serveErrors": 0,
+                "setsPlayed": 1
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Reah Canada"
+            },
+            {
+              "field": {
+                "serveAttempts": 1,
+                "serveErrors": 1,
+                "setsPlayed": 1
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Sofia Peypoch"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "digs": 17,
+                "receptionErrors": 1,
+                "receptions": 21,
+                "serveAttempts": 14,
+                "serveErrors": 1,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Nanise Taufoou"
+            },
+            {
+              "field": {
+                "digs": 1,
+                "receptionErrors": 0,
+                "receptions": 3,
+                "setsPlayed": 2
+              },
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Elle Chang"
+            },
+            {
+              "field": {
+                "assists": 0,
+                "setsPlayed": 2
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Gigi Castaillac"
+            }
+          ],
+          "rowKey": "6f43de2f",
+          "tracked": {
+            "field": [
+              "setsPlayed",
+              "kills",
+              "attackErrors",
+              "attackAttempts",
+              "serveErrors",
+              "serveAttempts",
+              "soloBlocks",
+              "digs",
+              "assists",
+              "receptions",
+              "receptionErrors"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "Player #9 has stats but names nobody (MaxPreps' placeholder for a number not on the roster)",
+            "Player #14 has stats but names nobody (MaxPreps' placeholder for a number not on the roster)"
+          ]
         },
         {
           "contestId": "3c0b1303-8c78-4f66-ac92-9dbbed9fe45b",
@@ -169752,27 +170262,77 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-09T08:26:09",
+      "lastUpdated": "2026-11-21T07:11:10",
       "maxprepsTeamId": "27d82a51-2b44-492e-b2cf-114730027de3",
       "name": "Sacred Heart Prep",
       "players": [
+        {
+          "athleteId": null,
+          "careerId": "5afln5bdhhi77",
+          "careerUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/player-9/?careerid=5afln5bdhhi77",
+          "field": {
+            "aces": null,
+            "assists": null,
+            "attackAttempts": 2,
+            "attackErrors": 1,
+            "blockAssists": null,
+            "digs": null,
+            "kills": 0,
+            "receptionErrors": null,
+            "receptions": null,
+            "serveAttempts": null,
+            "serveErrors": null,
+            "setsPlayed": 1,
+            "soloBlocks": null
+          },
+          "fullName": "Player #9",
+          "goalkeeping": null,
+          "jersey": "9",
+          "onRoster": false,
+          "shortName": "Player #9"
+        },
+        {
+          "athleteId": null,
+          "careerId": "luunblgprkl22",
+          "careerUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/player-14/?careerid=luunblgprkl22",
+          "field": {
+            "aces": null,
+            "assists": 0,
+            "attackAttempts": 2,
+            "attackErrors": 0,
+            "blockAssists": 0,
+            "digs": null,
+            "kills": 1,
+            "receptionErrors": null,
+            "receptions": null,
+            "serveAttempts": null,
+            "serveErrors": null,
+            "setsPlayed": 3,
+            "soloBlocks": 1
+          },
+          "fullName": "Player #14",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": false,
+          "shortName": "Player #14"
+        },
         {
           "athleteId": "638d3bd8-a6ce-4908-a505-8edc871b1aa0",
           "careerId": "u7djdoe8hjgee",
           "careerUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/genevie-kwon/?careerid=u7djdoe8hjgee",
           "field": {
             "aces": 32,
-            "assists": 416,
-            "attackAttempts": 293,
+            "assists": 417,
+            "attackAttempts": 296,
             "attackErrors": 36,
             "blockAssists": 15,
             "digs": 210,
-            "kills": 96,
+            "kills": 99,
             "receptionErrors": 0,
             "receptions": 7,
             "serveAttempts": 318,
             "serveErrors": 31,
-            "setsPlayed": 86,
+            "setsPlayed": 89,
             "soloBlocks": 0
           },
           "fullName": "Genevie Kwon",
@@ -169845,9 +170405,9 @@
             "kills": 2,
             "receptionErrors": 11,
             "receptions": 76,
-            "serveAttempts": 236,
+            "serveAttempts": 238,
             "serveErrors": 18,
-            "setsPlayed": 77,
+            "setsPlayed": 78,
             "soloBlocks": null
           },
           "fullName": "Reah Canada",
@@ -169863,16 +170423,16 @@
           "field": {
             "aces": 25,
             "assists": 22,
-            "attackAttempts": 865,
+            "attackAttempts": 870,
             "attackErrors": 78,
             "blockAssists": 15,
             "digs": 337,
-            "kills": 333,
+            "kills": 338,
             "receptionErrors": 17,
             "receptions": 355,
             "serveAttempts": 367,
             "serveErrors": 8,
-            "setsPlayed": 90,
+            "setsPlayed": 92,
             "soloBlocks": 1
           },
           "fullName": "Leilah Abrams",
@@ -169888,16 +170448,16 @@
           "field": {
             "aces": 0,
             "assists": 2,
-            "attackAttempts": 559,
-            "attackErrors": 93,
+            "attackAttempts": 578,
+            "attackErrors": 94,
             "blockAssists": 11,
-            "digs": 78,
-            "kills": 225,
-            "receptionErrors": 14,
-            "receptions": 138,
-            "serveAttempts": 12,
+            "digs": 90,
+            "kills": 232,
+            "receptionErrors": 19,
+            "receptions": 155,
+            "serveAttempts": 17,
             "serveErrors": 1,
-            "setsPlayed": 77,
+            "setsPlayed": 81,
             "soloBlocks": 2
           },
           "fullName": "Anaya Mehta",
@@ -169913,16 +170473,16 @@
           "field": {
             "aces": null,
             "assists": 1,
-            "attackAttempts": 183,
+            "attackAttempts": 184,
             "attackErrors": 39,
             "blockAssists": 28,
             "digs": 8,
-            "kills": 82,
+            "kills": 83,
             "receptionErrors": 1,
             "receptions": 0,
             "serveAttempts": null,
             "serveErrors": null,
-            "setsPlayed": 62,
+            "setsPlayed": 63,
             "soloBlocks": 16
           },
           "fullName": "Chandler Munzig",
@@ -169937,17 +170497,17 @@
           "careerUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/hadley-mahon/?careerid=i7r9p2nv977dd",
           "field": {
             "aces": 0,
-            "assists": 6,
-            "attackAttempts": 221,
+            "assists": 38,
+            "attackAttempts": 226,
             "attackErrors": 30,
             "blockAssists": 44,
-            "digs": 28,
-            "kills": 82,
+            "digs": 31,
+            "kills": 84,
             "receptionErrors": 0,
             "receptions": 3,
-            "serveAttempts": 13,
+            "serveAttempts": 14,
             "serveErrors": 2,
-            "setsPlayed": 86,
+            "setsPlayed": 90,
             "soloBlocks": 9
           },
           "fullName": "Hadley Mahon",
@@ -169963,16 +170523,16 @@
           "field": {
             "aces": 1,
             "assists": 6,
-            "attackAttempts": 500,
-            "attackErrors": 90,
+            "attackAttempts": 507,
+            "attackErrors": 91,
             "blockAssists": 35,
             "digs": 46,
-            "kills": 176,
+            "kills": 180,
             "receptionErrors": 0,
-            "receptions": 19,
+            "receptions": 24,
             "serveAttempts": 24,
             "serveErrors": 1,
-            "setsPlayed": 87,
+            "setsPlayed": 90,
             "soloBlocks": 0
           },
           "fullName": "Brie Eisenberg",
@@ -170022,7 +170582,7 @@
             "receptions": 14,
             "serveAttempts": 57,
             "serveErrors": 8,
-            "setsPlayed": 25,
+            "setsPlayed": 27,
             "soloBlocks": 0
           },
           "fullName": "Gigi Castaillac",
@@ -170045,9 +170605,9 @@
             "kills": 15,
             "receptionErrors": 1,
             "receptions": 0,
-            "serveAttempts": 301,
-            "serveErrors": 41,
-            "setsPlayed": 88,
+            "serveAttempts": 302,
+            "serveErrors": 42,
+            "setsPlayed": 89,
             "soloBlocks": null
           },
           "fullName": "Sofia Peypoch",
@@ -170062,17 +170622,17 @@
           "careerUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/nanise-taufoou/?careerid=r76aihmasi3rb",
           "field": {
             "aces": 19,
-            "assists": 56,
+            "assists": 58,
             "attackAttempts": 91,
             "attackErrors": 6,
             "blockAssists": 1,
-            "digs": 216,
+            "digs": 233,
             "kills": 24,
-            "receptionErrors": 35,
-            "receptions": 369,
-            "serveAttempts": 241,
-            "serveErrors": 22,
-            "setsPlayed": 86,
+            "receptionErrors": 36,
+            "receptions": 390,
+            "serveAttempts": 255,
+            "serveErrors": 23,
+            "setsPlayed": 90,
             "soloBlocks": 0
           },
           "fullName": "Nanise Taufoou",
@@ -170091,13 +170651,13 @@
             "attackAttempts": null,
             "attackErrors": null,
             "blockAssists": null,
-            "digs": 1,
+            "digs": 2,
             "kills": null,
             "receptionErrors": 1,
-            "receptions": 8,
+            "receptions": 11,
             "serveAttempts": 13,
             "serveErrors": 3,
-            "setsPlayed": 10,
+            "setsPlayed": 12,
             "soloBlocks": null
           },
           "fullName": "Elle Chang",
@@ -170139,18 +170699,18 @@
       "totals": {
         "field": {
           "aces": 208,
-          "assists": 914,
-          "attackAttempts": 2911,
-          "attackErrors": 400,
+          "assists": 949,
+          "attackAttempts": 2955,
+          "attackErrors": 403,
           "blockAssists": 161,
-          "digs": 1361,
-          "kills": 1083,
-          "receptionErrors": 99,
-          "receptions": 1259,
-          "serveAttempts": 1921,
-          "serveErrors": 152,
-          "setsPlayed": 128,
-          "soloBlocks": 30
+          "digs": 1394,
+          "kills": 1106,
+          "receptionErrors": 105,
+          "receptions": 1305,
+          "serveAttempts": 1944,
+          "serveErrors": 154,
+          "setsPlayed": 132,
+          "soloBlocks": 31
         },
         "goalkeeping": {}
       },
@@ -170172,11 +170732,14 @@
         ],
         "goalkeeping": []
       },
-      "warnings": []
+      "warnings": [
+        "Player #9 has stats but names nobody (MaxPreps' placeholder for a number not on the roster)",
+        "Player #14 has stats but names nobody (MaxPreps' placeholder for a number not on the roster)"
+      ]
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "022305b0-9ce8-49f8-bebe-5eee4710380c",
@@ -174911,7 +175474,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "lastUpdated": null,
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
@@ -174932,7 +175495,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "198531ca-0a0d-4324-b4bd-4a87c061689e",
@@ -180042,7 +180605,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "3a170a9a-1363-41bc-bee2-f834be48dcdb",
@@ -180996,7 +181559,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "4395f8f5-52c6-473e-9bdb-de997908ee11",
@@ -181653,7 +182216,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-21T14:48:27.556Z",
+      "fetchedAt": "2026-11-27T15:07:12.879Z",
       "games": [
         {
           "contestId": "10a6c432-6d17-4e8f-9a0e-321efcc053f2",

@@ -30,6 +30,7 @@ import { LEDGER_VIEW } from '../fixtures/ledger';
 import { assignGameSlugs } from '../game-urls';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { jvCopiedScoreNote, withholdCopiedScores, type JvCopiedScore } from './jv-copied-scores';
+import { levelScoreNote, withholdLevelScores, type LevelScore } from './jv-level-scores';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { jvSlotsOf, mergeJvOfficial, type JvOfficialMergeResult, type JvSlot } from './jv-official';
 import { mergeJvAdded, type JvAddedMergeResult } from './jv-added';
@@ -45,6 +46,7 @@ import {
 } from './jv-standings';
 import type { BoxScore } from '../players/player-stats-schema';
 import type { GameStatsEntry } from '../players/player-stats';
+import { SPORT } from '../sports/current';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
@@ -56,9 +58,13 @@ function load(): JvFile {
 
 const file = load();
 const corrections: JvCorrectionResult = applyJvCorrections(file.games);
+// A MaxPreps JV final level on the scoreboard in a sport that cannot end level (basketball, volleyball) loses its
+// score here, as a copied score does below, so the sources merged after fill it where they have the game
+// (lib/jv/jv-level-scores.ts).
+const level = withholdLevelScores(corrections.games, SPORT.scoring.allowsTies);
 // A MaxPreps JV final scored exactly like the same day's varsity game loses its score here, so the sources merged
 // below fill it where they have the game (lib/jv/jv-copied-scores.ts).
-const copied = withholdCopiedScores(corrections.games, getSnapshot().games);
+const copied = withholdCopiedScores(level.games, getSnapshot().games);
 const merged: JvMergeResult = mergeJv({
   games: copied.games,
   sblive: file.sblive,
@@ -164,6 +170,17 @@ export function getJvCopiedScores(): ReadonlyMap<ContestId, JvCopiedScore> {
 export function getJvCopiedScoreNote(game: Game): string | null {
   const entry = copied.withheld.get(game.contestId);
   return entry ? jvCopiedScoreNote(game, entry) : null;
+}
+
+/** The MaxPreps JV finals level on the scoreboard in a sport with no ties, withheld before the merge (lib/jv/jv-level-scores.ts). */
+export function getJvLevelScores(): ReadonlyMap<ContestId, LevelScore> {
+  return level.withheld;
+}
+
+/** The sentence beside a JV game whose MaxPreps final was level in a sport with no ties: what MaxPreps had and what is shown. */
+export function getJvLevelScoreNote(game: Game): string | null {
+  const entry = level.withheld.get(game.contestId);
+  return entry ? levelScoreNote(game, entry, SPORT.noun) : null;
 }
 
 /** contest id → school slug → that JV team's box score for the game (JvTeam.boxScores). */

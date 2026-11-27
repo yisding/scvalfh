@@ -39,12 +39,12 @@
     "multiSeason": 1204,
     "multiSport": 87,
     "nameOnly": 606,
-    "observations": 15932,
-    "players": 7711,
+    "observations": 15933,
+    "players": 7712,
     "review": 68,
     "stintConflicts": 186,
-    "stints": 9622,
-    "withCareer": 7105
+    "stints": 9623,
+    "withCareer": 7106
   },
   "notes": [
     "One record per person across every sport and season this repository holds. Internal: no page reads this file.",
@@ -83243,6 +83243,54 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "palo-alto"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p312f8d688d",
+      "identifiers": [
+        {
+          "careerId": "ovvgfo0v0h6rb",
+          "careerProfileId": "1727801e-ba90-41b0-bde9-14d311d90187",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Skye Hunter",
+      "names": [
+        "Skye Hunter"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": "5'6\"",
+          "jersey": "2",
+          "level": "jv",
+          "name": "Skye Hunter",
+          "observations": [
+            {
+              "athleteId": "93a3b939-3003-41ed-9586-c0117a86dd0e",
+              "grade": 10,
+              "height": "5'6\"",
+              "jersey": "2",
+              "name": "Skye Hunter",
+              "positions": [
+                "L"
+              ],
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "positions": [
+            "L"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "live-oak"
         }
       ]
     },
