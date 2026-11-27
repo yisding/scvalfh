@@ -3277,12 +3277,13 @@ link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `loh
 `stfrancisgirlssoccer`/`sfhs_girls_soccer` Illinois's, `yhs.girls.soccer` Yucaipa's, and `mvhsgirlssoccer`,
 `mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
 Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`, `pioneerwsoccer`, `lelandwomenssoccer`,
-`vchs_girlssoccer`, `vc.girlssoccer`, `tka_girlssoccer`, `ksjcgirlssoccer`, `ecpgirlssoccer`,
+`vc.girlssoccer`, `tka_girlssoccer`, `ksjcgirlssoccer`, `ecpgirlssoccer`,
 `montereygirlssoccer`, `carmelgirlsoccer`, `seasidegirlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no
 gender named), `pvhs.girlssoccer`. Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are
 not affiliated with the school, although they link San Mateo's MaxPreps page and name Notre Dame Belmont.
 The owner then placed three of those left out: Fremont `fremontgirls_soccer`, Silver Creek
-`silvercreekgirlssoccer` and Oak Grove `oghs.girlssoccer` (all CCS), kept on the owner's word: 53 of 123.
+`silvercreekgirlssoccer` and Oak Grove `oghs.girlssoccer` (all CCS), kept on the owner's word: 53 of 123. `vchs_girlssoccer`
+("VCHS Girls Soccer") is a private account (owner), so it is not linked.
 
 ### 1.11 VOLLEYBALL RECRUITING — profiles, clubs and commitments (`data/volleyball/*.json`)
 
