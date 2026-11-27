@@ -39,12 +39,12 @@
     "multiSeason": 1204,
     "multiSport": 87,
     "nameOnly": 606,
-    "observations": 15903,
-    "players": 7710,
+    "observations": 15932,
+    "players": 7711,
     "review": 68,
     "stintConflicts": 186,
-    "stints": 9621,
-    "withCareer": 7104
+    "stints": 9622,
+    "withCareer": 7105
   },
   "notes": [
     "One record per person across every sport and season this repository holds. Internal: no page reads this file.",
@@ -18932,6 +18932,11 @@
               "jersey": "4",
               "name": "Francis John Iguban",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "F. Iguban",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -61595,6 +61600,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "5",
+              "name": "B. Beliso",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "ncsa",
               "src": "profile",
@@ -82424,6 +82434,46 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "p30aea0bd06",
+      "identifiers": [
+        {
+          "careerId": "1jvq3cvh6kf99",
+          "careerProfileId": null,
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "B. Rose",
+      "names": [
+        "B. Rose"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "23",
+          "level": "varsity",
+          "name": "B. Rose",
+          "observations": [
+            {
+              "jersey": "23",
+              "name": "B. Rose",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "st-francis-watsonville"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "p30b7f258f2",
       "identifiers": [
         {
@@ -90308,6 +90358,11 @@
               "jersey": "15",
               "name": "Michael Kwan",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "15",
+              "name": "M. Kwan",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -101588,6 +101643,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "30",
+              "name": "D. Festejo Rivera",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -103079,6 +103139,11 @@
               "jersey": "10",
               "name": "Tahj Ibrahim",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "10",
+              "name": "T. Ibrahim",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -125821,6 +125886,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "12",
+              "name": "J. Jordan",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -138567,6 +138637,11 @@
               "jersey": "32",
               "name": "Max Guardino",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "32",
+              "name": "M. Guardino",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -140471,6 +140546,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "11",
+              "name": "N. Gray",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -141290,6 +141370,11 @@
               "jersey": "1",
               "name": "Christopher Bocanegra",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "C. Bocanegra",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -163913,6 +163998,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "2",
+              "name": "T. Dang",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "maxpreps",
               "src": "profile",
@@ -166861,6 +166951,11 @@
               "jersey": "34",
               "name": "Brandon Chu",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "34",
+              "name": "B. Chu",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -168892,6 +168987,11 @@
               "jersey": "4",
               "name": "Jacob Lo",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "J. Lo",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -237026,6 +237126,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "1",
+              "name": "C. Ellis",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -241045,6 +241150,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "3",
+              "name": "B. Melgar",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "ncsa",
               "src": "profile",
@@ -242516,6 +242626,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "T. Carey",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -259249,6 +259364,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "3",
+              "name": "I. Villalobos",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -270911,6 +271031,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "23",
+              "name": "J. Hector",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "src": "profile",
@@ -279861,6 +279986,11 @@
                 "F"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "15",
+              "name": "Z. Vibat",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -302750,6 +302880,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "2",
+              "name": "A. Daniels",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -307223,6 +307358,11 @@
               "jersey": "1",
               "name": "Maxwell Chan",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "M. Chan",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -326839,9 +326979,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Victoria Tuipolotu",
+      "name": "Victoria Tuipulotu",
       "names": [
-        "Victoria Tuipolotu"
+        "Victoria Tuipulotu"
       ],
       "stints": [
         {
@@ -326851,14 +326991,14 @@
           "height": "5'8\"",
           "jersey": "4",
           "level": "varsity",
-          "name": "Victoria Tuipolotu",
+          "name": "Victoria Tuipulotu",
           "observations": [
             {
               "athleteId": "3f0c42da-9099-4ffc-9449-48bd32213962",
               "grade": 12,
               "height": "5'8\"",
               "jersey": "4",
-              "name": "Victoria Tuipolotu",
+              "name": "Victoria Tuipulotu",
               "positions": [
                 "OH"
               ],
@@ -330414,6 +330554,11 @@
               "jersey": "24",
               "name": "Brooks Drake",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "24",
+              "name": "B. Drake",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -331893,6 +332038,11 @@
               "jersey": "11",
               "name": "Angel Serrano-Ruiz",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "11",
+              "name": "A. Serrano-Ruiz",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -338913,6 +339063,11 @@
               "jersey": "23",
               "name": "Jessie Jimenez",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "23",
+              "name": "J. Jimenez",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -364511,6 +364666,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "5",
+              "name": "C. Wicks",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "src": "profile",
@@ -367453,6 +367613,11 @@
               "jersey": "24",
               "name": "Marcus Lee",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "24",
+              "name": "M. Lee",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -386845,6 +387010,11 @@
               "jersey": "11",
               "name": "Mason Tiangsing",
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "11",
+              "name": "M. Tiangsing",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -387343,6 +387513,11 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "3",
+              "name": "I. Kennedy",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2027,
@@ -395958,6 +396133,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "20",
+              "name": "W. Lee",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -421280,9 +421460,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Melina Gklaros-Stavropolous",
+      "name": "Melina Gklaros-Stavropoulos",
       "names": [
-        "Melina Gklaros-Stavropolous"
+        "Melina Gklaros-Stavropoulos"
       ],
       "stints": [
         {
@@ -421292,14 +421472,14 @@
           "height": "6'2\"",
           "jersey": "13",
           "level": "varsity",
-          "name": "Melina Gklaros-Stavropolous",
+          "name": "Melina Gklaros-Stavropoulos",
           "observations": [
             {
               "athleteId": "0b36cdc3-7fa8-48ce-b8fb-8fa26ecc17c3",
               "grade": 9,
               "height": "6'2\"",
               "jersey": "13",
-              "name": "Melina Gklaros-Stavropolous",
+              "name": "Melina Gklaros-Stavropoulos",
               "positions": [
                 "OPP"
               ],
@@ -421307,7 +421487,7 @@
             },
             {
               "jersey": "13",
-              "name": "M. Gklaros-Stavropolous",
+              "name": "M. Gklaros-Stavropoulos",
               "src": "maxpreps-stats"
             }
           ],

@@ -136,6 +136,29 @@ describe('NAME_SPELLINGS', () => {
     });
   });
 
+  it('respells a misspelled half of a hyphenated last name, on the roster row and the stat sheet (2026-11-27)', () => {
+    expect(recaseNameParts({ firstName: 'Melina', lastName: 'Gklaros-Stavropolous', fullName: 'Melina Gklaros-Stavropolous' })).toEqual({
+      firstName: 'Melina',
+      lastName: 'Gklaros-Stavropoulos',
+      fullName: 'Melina Gklaros-Stavropoulos',
+    });
+    expect(recaseName('M. Gklaros-Stavropolous')).toBe('M. Gklaros-Stavropoulos');
+    // A fixed point, and her brother's row (spelled right by MaxPreps) is left alone.
+    expect(recaseName('Melina Gklaros-Stavropoulos')).toBe('Melina Gklaros-Stavropoulos');
+    expect(recaseName('Nick Gklaros-Stavropoulos')).toBe('Nick Gklaros-Stavropoulos');
+  });
+
+  it('respells a last name on one row, keyed to the whole name (2026-11-27)', () => {
+    expect(recaseNameParts({ firstName: 'Victoria', lastName: 'Tuipolotu', fullName: 'Victoria Tuipolotu' })).toEqual({
+      firstName: 'Victoria',
+      lastName: 'Tuipulotu',
+      fullName: 'Victoria Tuipulotu',
+    });
+    expect(recaseName('Victoria Tuipulotu')).toBe('Victoria Tuipulotu');
+    // Anyone else of either spelling keeps hers.
+    expect(recaseName('Leinata Tuipolotu')).toBe('Leinata Tuipolotu');
+  });
+
   it('respells a parenthesized middle name on a roster row', () => {
     expect(
       recaseNameParts({ firstName: 'Sophie (mai Lam)', lastName: 'Vu', fullName: 'Sophie (mai Lam) Vu' }),

@@ -168,6 +168,22 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
       'The pairs apply at once, so her first name becomes Alina and her last name Decker.',
   },
   {
+    maxpreps: 'Gklaros-Stavropolous',
+    spelled: 'Gklaros-Stavropoulos',
+    basis:
+      "Melina Gklaros-Stavropoulos (Archbishop Mitty volleyball): MaxPreps' roster and stat sheets spell the second half " +
+      "'Stavropolous'; her Prep Dig page and the NCVA's Power League roster write 'Stavropoulos', as her brother Nick's " +
+      "Mitty basketball row does, and the site owner confirmed it (2026-11-27).",
+  },
+  {
+    maxpreps: 'Victoria Tuipolotu',
+    spelled: 'Victoria Tuipulotu',
+    basis:
+      "Victoria Tuipulotu (Saint Francis volleyball): MaxPreps' roster writes 'Tuipolotu'; Saint Francis' own Hudl team " +
+      "roster and the NCVA's Power League roster write 'Tuipulotu', and the site owner confirmed it (2026-11-27). Her " +
+      'row only: the run is her whole name.',
+  },
+  {
     maxpreps: 'Amelia "mimi" Scatena',
     spelled: 'Amelia "Mimi" Scatena',
     basis: 'Amelia "Mimi" Scatena (Mission Bay field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner\'s request (2026-11-25).',

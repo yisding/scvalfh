@@ -10,7 +10,8 @@
     "Club rosters give names only (Mountain View Volleyball Club's 2026-27 LeagueApps rosters, Vision's 2025-26 teams page, Academy's SportsRecruits list, Legend's team pages), so a roster match is a tie only where a second page names the player with the same club and her school: 45 ties were completed that way and about 60 exact-name matches were left out. The Mountain View rosters are read at the cited address with '&ngmp_2023_iframe_transition=1' added, which is what the page's own frame loads.",
     "Round of 2026-11-14: the 19 WCAL and WBAL schools (307 varsity rows) by every method of the first round (Hudl team rosters, NCSA, a SportsRecruits address probe, MaxPreps career pages, Prep Dig, PrepVolleyball), NCSA read through a headless browser this time; and, for all 60 schools, NCSA name searches for every named row, Prep Dig and PrepVolleyball for every junior, senior and ungraded row, and web searches for every senior. A tie the first round already had gained the new source, its basis saying so ('Round of 2026-11-14'). Prep Dig pages whose club link goes to a Vision club in another state are not used. NCSA spellings of a club (Pandas Volleyball Club, Panda VBC, MHVC) are mapped to the club's record.",
     "JV players' club ties were not listed until 2026-11-27; since then a JV row's tie is served on its JV row, as in the other builds (the NCVA rosters list JV players: below).",
-    "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the public team rosters of the NCVA Girls Power League, read from TM2Sign's public API into data/volleyball/club-rosters.json (pnpm fetch-club-rosters:volleyball: the 2026 league's 13s-17s, the 2025-26 club season, 579 rosters with players; the 2027 league's 14s-18s, 42 of 594 posted so far), compared with every varsity and JV row by pnpm compare-club-rosters:volleyball. A roster gives a name only: a row matches when its class year is one the team's age group admits (USA Volleyball's July 1 age definition, California's September 1 cutoff), no other tracked school has the name, every agreeing roster that season is at one club, and the club is based in San Francisco, the Peninsula, the South Bay or the Central Coast. 237 new ties rest on a roster alone (medium, current for the club season the roster is for); 169 ties other pages had already made gain the roster and read current. Each cited roster was read again live the same day and lists the player. Not linked: Ellie Chu (Milpitas), Madison Miller (Sobrato) and Kitana Manalo (Notre Dame San Jose), whose names are on another club's roster too; 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael, Union Volleyball Academy), and the rows the rule leaves (a name at two schools, no grade, a class year the age group does not admit, a club with no record)."
+    "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the public team rosters of the NCVA Girls Power League, read from TM2Sign's public API into data/volleyball/club-rosters.json (pnpm fetch-club-rosters:volleyball: the 2026 league's 13s-17s, the 2025-26 club season, 579 rosters with players; the 2027 league's 14s-18s, 42 of 594 posted so far), compared with every varsity and JV row by pnpm compare-club-rosters:volleyball. A roster gives a name only: a row matches when its class year is one the team's age group admits (USA Volleyball's July 1 age definition, California's September 1 cutoff), no other tracked school has the name, every agreeing roster that season is at one club, and the club is based in San Francisco, the Peninsula, the South Bay or the Central Coast. 237 new ties rest on a roster alone (medium, current for the club season the roster is for); 169 ties other pages had already made gain the roster and read current. Each cited roster was read again live the same day and lists the player. Not linked: Ellie Chu (Milpitas), Madison Miller (Sobrato) and Kitana Manalo (Notre Dame San Jose), whose names are on another club's roster too; 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael, Union Volleyball Academy), and the rows the rule leaves (a name at two schools, no grade, a class year the age group does not admit, a club with no record).",
+    "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction)."
   ],
   "clubs": [
     {
@@ -19233,6 +19234,34 @@
         }
       ],
       "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 White (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pfd6bd7eb2a",
+      "name": "Melina Gklaros-Stavropoulos",
+      "club": "mountain-view-volleyball-club",
+      "clubTeam": "MVVC G 14 Red",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepdig.com/player/melina-gklaros-stavropoulos/",
+          "kind": "other",
+          "quote": "Melina Gklaros-stavropoulos is a 6'2\" Right-Side Hitter/Outside Hitter in the 2030 class. Gklaros-stavropoulos attends Archbishop Mitty in California and plays club volleyball for Mountain View Volleyball Club.",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2030,
+          "sourceDate": "2025-10-24"
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/246365/roster",
+          "kind": "league-roster",
+          "quote": "MVVC G 14 Red (14s) | Gklaros-Stavropoulos, Melina",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Her Prep Dig player page (pointed out by the owner, 2026-11-27; profile created October 24, 2025) says she attends Archbishop Mitty (its link goes to Prep Dig's team page for the San Jose school), class of 2030, 6'2\", and plays club volleyball for Mountain View Volleyball Club: rule (a), the page names the player, the club and her high school; high. Class 2030 agrees with her grade 9 on Mitty's roster, and the height with MaxPreps' 6'2\". MaxPreps spells her surname 'Gklaros-Stavropolous'; Prep Dig and the NCVA spell it 'Gklaros-Stavropoulos', which is why the kept-roster comparison of the same day did not find her by name. The site respells MaxPreps' rows since 2026-11-27 (NAME_SPELLINGS, the owner's correction). The NCVA's 2026 Girls Power League roster of MVVC G 14 Red (data/volleyball/club-rosters.json; the 2025-26 club season, a 14s team admitting the classes of 2029 and 2030) lists her, so the tie is current for 2025-26. Both pages read 2026-11-27, the roster again live."
     }
   ]
 }

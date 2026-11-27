@@ -101,8 +101,10 @@ for (const { sport, sources } of SPORTS) {
         expect(file.clubSlugs[clubKey(team)], label).toBe(a.club);
         const named = team.players.filter((p) => nameKey(rosterName(p)) === nameKey(a.fullName));
         if (team.classYears !== undefined) {
-          // A TM2Sign roster states no class year: the tie's quote names the team and the age group.
-          expect(named.length, label).toBeGreaterThan(0);
+          // A TM2Sign roster states no class year: the tie's quote names the team and the age group, then the row as
+          // "Last, First", which the roster lists.
+          const [last, first] = s.quote.slice(s.quote.indexOf(' | ') + 3).split(', ');
+          expect(named.length + team.players.filter((p) => nameKey(rosterName(p)) === nameKey(`${first} ${last}`)).length, label).toBeGreaterThan(0);
           expect(s.statedClassYear, label).toBeNull();
           expect(s.quote.startsWith(`${team.teamName} (${team.division}) | `), label).toBe(true);
         } else if (s.statedClassYear !== null) {
