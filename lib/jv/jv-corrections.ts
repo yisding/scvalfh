@@ -195,6 +195,10 @@ export const JV_CORRECTIONS: JvCorrections = bySport<JvCorrections>({
       // "final" both schools' rows mark T, with no score entered. A basketball game cannot end level, so the row is no
       // result; it is left out until a person checks the game (the varsity game that day is still score-pending).
       '90000ba2-77d6-48bf-ac83-f4e91e7f1240': 'Hollister at St. Francis (Watsonville), Nov 23, 0-0 marked a tie: no score entered, and a basketball game cannot end level',
+      // Read 2026-11-27: the same shape for Hollister at Gonzales, Sat Nov 21 at 12:00 PM (venue "Hollister High
+      // School"), MaxPreps modified 2026-11-27 05:29: a 0-0 "final" both rows mark T, and the snapshot has no varsity
+      // game of the pair that week. Left out until a person checks the game.
+      'b68fe020-eb1e-4054-9aca-f76e858c594b': 'Hollister at Gonzales, Nov 21, 0-0 marked a tie: no score entered, and a basketball game cannot end level',
     },
     opponentFixes: {},
   },
