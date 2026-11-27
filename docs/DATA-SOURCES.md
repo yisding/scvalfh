@@ -3276,15 +3276,17 @@ Evergreen Valley; Andrew Hill and Gunderson share one account with the boys). Th
 link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `lohs.girlssoccer` (a lion, "Back to Back Section Champions") the Live Oak in Live Oak, California (owner), not Morgan Hill's Acorns, `lahsgirlssoccer` Los Amigos's,
 `stfrancisgirlssoccer`/`sfhs_girls_soccer` Illinois's, `yhs.girls.soccer` Yucaipa's, and `mvhsgirlssoccer`,
 `mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
-Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`, `pioneerwsoccer`,
+Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`,
 `vc.girlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no gender named),
 `pvhs.girlssoccer`. Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are not affiliated
 with the school, although they link San Mateo's MaxPreps page and name Notre Dame Belmont.
 
 The owner then placed seven of those left out, kept on the owner's word: Fremont `fremontgirls_soccer`, Silver
 Creek `silvercreekgirlssoccer`, Oak Grove `oghs.girlssoccer` and Monterey `montereygirlssoccer` (all CCS), The
-King's Academy `tka_girlssoccer`, KIPP San Jose Collegiate `ksjcgirlssoccer` and Leland `lelandwomenssoccer`: 57 of 123. The owner also
-turned down four: `ecpgirlssoccer` is a Los Angeles school's, `seasidegirlssoccer` probably Washington state's,
+King's Academy `tka_girlssoccer`, KIPP San Jose Collegiate `ksjcgirlssoccer` and Leland `lelandwomenssoccer`;
+and gave Pioneer's, `pioneergirlsssoccer` (with three s's, which no guess tried): 58 of 123. The owner also
+turned down five: `ecpgirlssoccer` is a Los Angeles school's, `pioneerwsoccer` Michigan's, `seasidegirlssoccer`
+probably Washington state's,
 `vchs_girlssoccer` is a private account, and `carmelgirlsoccer` is inactive.
 
 **Rejected profiles.** From this round on, a profile checked and turned down is kept in the file's `rejected`

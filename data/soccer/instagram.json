@@ -5,7 +5,7 @@
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 57 of the 123 teams have one (2026-11-27).",
+    "No record means no account we could find and check on the day, not that there is none: 58 of the 123 teams have one (2026-11-27).",
     "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked."
   ],
   "teams": [
@@ -119,6 +119,14 @@
       "handle": "phhsgirlsoccer",
       "foundAt": null,
       "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"HOME OF THE PIRATES\", bio \"Piedmont Hills Girls Varsity Soccer | BVAL - Mt. Hamilton Division\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "pioneer",
+      "level": "varsity",
+      "handle": "pioneergirlsssoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27 (the handle spells \"girlsss\"). Profile read: \"Pioneer Girls Soccer ⚽️\", bio \"Official account of Pioneer High School’s Girls Soccer Team\"; it names no city, so it rests on the owner’s word that it is Pioneer’s, San Jose. Not pioneergirlssoccer (New York’s) or pioneerwsoccer (Michigan’s).",
       "checkedOn": "2026-11-27"
     },
     {
@@ -603,7 +611,7 @@
     {
       "handle": "pioneerwsoccer",
       "slug": "pioneer",
-      "why": "Does not say which Pioneer.",
+      "why": "Michigan’s (owner, 2026-11-27).",
       "checkedOn": "2026-11-27"
     },
     {
