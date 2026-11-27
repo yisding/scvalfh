@@ -114,6 +114,9 @@ const fromMaxfh1116 = (a: { basis: string }) => a.basis.endsWith('Read 2026-11-1
 /** A tie the 2026-11-26 sweep of the rows no sweep had reached added: its basis says so. */
 const fromSweep1126 = (a: { basis: string }) => a.basis.endsWith('Read 2026-11-26.');
 
+/** A tie the 2026-11-27 comparison with the kept club rosters (data/field-hockey/club-rosters.json) added: its basis says so. */
+const fromClubRosters1127 = (a: { basis: string }) => a.basis.includes('Found 2026-11-27 by pnpm compare-club-rosters:field-hockey');
+
 /** Beatrix Monk's tie, moved from jvAffiliations on 2026-11-16 when her Los Gatos row was moved to varsity. */
 const movedToVarsity1116 = (a: { basis: string }) => a.basis.includes('when her Los Gatos row was moved to varsity');
 
@@ -253,6 +256,13 @@ describe('data/field-hockey/clubs.json', () => {
     expect(raw.jvAffiliations.filter(fromSweep1126)).toEqual([]);
   });
 
+  it('ties two players found by the 2026-11-27 comparison with the kept club rosters, one varsity and one JV', () => {
+    const pin = (a: (typeof raw.affiliations)[number]) => [a.teamSlug, a.fullName, a.club, a.status, a.confidence, a.sources.map((x) => [x.kind, x.url, x.statedClassYear])];
+    const source = (year: number) => [['club-site', 'https://sfyouthfieldhockey.com/current-players/', year]];
+    expect(raw.affiliations.filter(fromClubRosters1127).map(pin)).toEqual([['convent-sacred-heart', 'Julia Ahlstrand', 'sf-hawks', 'current', 'medium', source(2028)]]);
+    expect(raw.jvAffiliations.filter(fromClubRosters1127).map(pin)).toEqual([['marin-academy', 'Quinn Wintroub', 'sf-hawks', 'current', 'medium', source(2030)]]);
+  });
+
   describe('NorCal, as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
     // These sweeps covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL), and the counts here are
     // over them: their ties, and the 16 clubs they found (HTC among them, whose record the 2026-10-06
@@ -262,7 +272,7 @@ describe('data/field-hockey/clubs.json', () => {
     // Ties from the 2026-10-07 sweep of the rows MaxPreps added later are pinned in their own test below.
     // Beatrix Monk's tie moved here from jvAffiliations on 2026-11-16 with her row: it is pinned with the JV ties below.
     const norcal = raw.affiliations.filter(
-      (a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId) && !movedToVarsity1116(a) && !fromSweep1126(a),
+      (a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId) && !movedToVarsity1116(a) && !fromSweep1126(a) && !fromClubRosters1127(a),
     );
     const norcalClubs = raw.clubs.filter((c) => !SOCAL_CLUBS.has(c.slug));
     const players = new Set(norcal.map((a) => `${a.teamSlug} ${a.athleteId}`));
@@ -442,8 +452,8 @@ describe('data/field-hockey/clubs.json', () => {
     it('finds players in four of the five NorCal leagues and in every Southern California group', () => {
       const byLeague = Object.fromEntries(
         LEAGUES.map((l) => {
-          // The 2026-11-26 sweep's three ties are pinned in their own test.
-          const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id && !fromSweep1126(a));
+          // The 2026-11-26 sweep's three ties and the 2026-11-27 comparison's are pinned in their own tests.
+          const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id && !fromSweep1126(a) && !fromClubRosters1127(a));
           return [
             l.id,
             [new Set(inLeague.map((a) => `${a.teamSlug} ${a.athleteId}`)).size, new Set(inLeague.map((a) => a.teamSlug)).size],
@@ -491,12 +501,12 @@ describe('data/field-hockey/clubs.json', () => {
       expect(raw.clubs).toHaveLength(28);
       expect(socal).toHaveLength(76);
       // 170, the one 2026-10-07 tie and the one 2026-11-16 tie (both above), Beatrix Monk's tie moved from
-      // jvAffiliations (2026-11-16), and the 2026-11-26 sweep's three.
-      expect(raw.affiliations).toHaveLength(176);
+      // jvAffiliations (2026-11-16), the 2026-11-26 sweep's three, and the 2026-11-27 comparison's varsity tie.
+      expect(raw.affiliations).toHaveLength(177);
       expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
       expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
       // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.
-      expect(raw.affiliations.filter((a) => !fromMaxfh1116(a) && !movedToVarsity1116(a) && !fromSweep1126(a)).length - socal.length).toBe(95);
+      expect(raw.affiliations.filter((a) => !fromMaxfh1116(a) && !movedToVarsity1116(a) && !fromSweep1126(a) && !fromClubRosters1127(a)).length - socal.length).toBe(95);
     });
 
     it('counts 61 current, 6 past and 9 unknown; 63 high and 13 medium', () => {
@@ -618,7 +628,9 @@ describe('data/field-hockey/clubs.json: listedAffiliations', () => {
 
 describe('data/field-hockey/clubs.json: jvAffiliations', () => {
   it('holds 3 ties for 2 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
-    expect(raw.jvAffiliations.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
+    // Marin Academy's Quinn Wintroub (2026-11-27) is pinned with the comparison's other tie above.
+    const jv = raw.jvAffiliations.filter((a) => !fromClubRosters1127(a));
+    expect(jv.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
       ['Casey Moorehouse', 9, 'norcal-impact', 'current', null],
       ['Casey Moorehouse', 9, 'sf-hawks', 'current', null],
       ['Colette Von Klemperer', 10, 'norcal-impact', 'current', null],
@@ -629,7 +641,7 @@ describe('data/field-hockey/clubs.json: jvAffiliations', () => {
       ['Beatrix Monk', 'varsity', 'norcal-impact', 'current', 'U16'],
     ]);
     expect(monk[0].sources.map((s) => s.kind)).toEqual(['sportsrecruits', 'other']);
-    for (const a of raw.jvAffiliations) {
+    for (const a of jv) {
       expect(a.teamSlug).toBe('los-gatos');
       expect(rowOf(a)!.level, a.fullName).toBe('jv');
       expect(rowOf(a)!.fullName).toBe(a.fullName);
@@ -719,8 +731,8 @@ describe('lib/players/clubs.ts', () => {
 
   it('serves each club\'s affiliations in file order, and [] for a club no tracked player is tied to', () => {
     const hawks = getClubAffiliations('sf-hawks');
-    // 32, and Convent's Alexandra Dorf from the 2026-11-26 sweep.
-    expect(hawks).toHaveLength(33);
+    // 32, Convent's Alexandra Dorf from the 2026-11-26 sweep and Julia Ahlstrand from the 2026-11-27 comparison.
+    expect(hawks).toHaveLength(34);
     expect(hawks).toEqual(raw.affiliations.filter((a) => a.club === 'sf-hawks'));
     expect(getClubAffiliations('pac-heights')).toEqual([]);
     expect(getClubAffiliations('nope')).toEqual([]);

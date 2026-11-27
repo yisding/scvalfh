@@ -14,7 +14,8 @@
     "On 2026-10-07 the 21 rows MaxPreps had added since the sweeps (Marin Academy's 18, Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept with the same rule: all 21 MaxPreps career pages (no club-teams block lists a club), SportsRecruits addresses in every sport (suffixes to 29, nicknames; live pages rendered for their CLUB and TEAMS blocks), NCSA field hockey addresses, MAX Field Hockey's Marin Academy and Westmont school pages and California club pages, the NFHCA 2025 and 2026 watchlists, one level of every NorCal club's site (Fly's behind a captcha), Stick Together, the Marin IJ, and a web search for every junior and senior. One tie was found: Kaylee True to Fly FHC, from her own NCSA profile (unknown, 2025), re-read by an independent refuter. Lexi True's NCSA page lists no club; the Marin Academy players' SportsRecruits pages are lacrosse (ADVNC, STEPS California, BAE), water polo or volleyball, which do not count.",
     "On 2026-10-13 the club-teams block on the bio page of every MaxPreps career page the player or a parent has claimed (260, listed as MaxPreps profiles in data/rosters-enrichment.json) was read. 32 players list 33 clubs: 22 field hockey ties, every one already in this file (21 already citing the same block), and 11 clubs in other sports (softball, lacrosse, soccer) for 10 players, which are not linked: this file holds field hockey clubs only. One source was added: Eleanor Levy's VCRD entry, made 2026-10-08, after the Southern California sweep, now a second source on her tie, which it dates (asOf 2026-10-09).",
     "2026-11-13, a search of four schools (Sobrato, Cupertino, Lynbrook and Homestead; 116 players, 72 varsity and 44 JV) for field hockey club ties: each varsity row's MaxPreps club-teams block (all 72), the players' recruiting profiles, rendered where the club block is drawn by script, NCSA's school pages, the NorCal clubs' sites (Lightning, NorCal Impact, Infinity, SF Hawks, Fly, Pac Heights, Performance, SJ Khalsa, Stryker, Lions, Hayward Hawks, Golden Gate Rippers), MAX Field Hockey's club pages, the NFHCA watchlists and academic squad, USA Field Hockey's 2026 club championship all-stars, Stick Together, the SCVAL all-league PDF, the schools' papers and local papers, the NCFHA and BAFHA directories and about 25 web searches. No new tie: Junali Dutta's NorCal Impact tie gained her two SportsRecruits profiles (read rendered, twice). Not linked: Lightning's 2025 rosters, which list ten of these players (Cupertino's Allenah Watkins, Bailey Watson and Elizabeth Klinefelter, Lynbrook's Aashvi Gireesh, and Homestead's Sanae Nambu, Elle Correia, Emry Borges, Olivia Leyton Bravo, Aayati Vijayakar and JV Manreet Kaur) by name only, with no school or class year; Lightning's player pages answer with a verification check. Gabrielle Moll's SportsRecruits page also names Cowtown Field Hockey (Fort Worth, Texas), not a California club. No South Bay or Morgan Hill club missing from this file turned up. Not reached: Fly FHC's team rosters (a captcha), Cal Cup's 2026 rosters.",
-    "2026-11-26, club ties for the players no sweep had reached (the 75 varsity rows MaxPreps added on 2026-11-13, and Marina’s and Newport Harbor’s 40 listed players): each row’s MaxPreps club-teams block (none lists a club), the players’ recruiting profiles’ club blocks, the clubs’ own roster pages (SF Hawks, NorCal Impact, RUSH’s player directory, HTC, Myto; Fly FHC publishes none), the NFHCA 2025 and 2026 watchlists, MAX Field Hockey, the federation sites and local news. Three ties, each re-opened by an independent refuter: Corning’s Aliza Thuemler to the Chico Hotshots (an Action News Now story, Aug 5, 2026), Convent’s Alexandra Dorf to SF Hawks (its current-players page, Class of 2029) and Mt. Carmel’s Aashi Gauba to HTC (the NFHCA 2026 watchlist and four of her own pages). Two more, Marina’s Anna Schwab and Newport Harbor’s Kate Shepherd to VCRD (each her own SportsRecruits page), are listed players with no MaxPreps row: they are in listedAffiliations (since 2026-11-26), named by team and listed name."
+    "2026-11-26, club ties for the players no sweep had reached (the 75 varsity rows MaxPreps added on 2026-11-13, and Marina’s and Newport Harbor’s 40 listed players): each row’s MaxPreps club-teams block (none lists a club), the players’ recruiting profiles’ club blocks, the clubs’ own roster pages (SF Hawks, NorCal Impact, RUSH’s player directory, HTC, Myto; Fly FHC publishes none), the NFHCA 2025 and 2026 watchlists, MAX Field Hockey, the federation sites and local news. Three ties, each re-opened by an independent refuter: Corning’s Aliza Thuemler to the Chico Hotshots (an Action News Now story, Aug 5, 2026), Convent’s Alexandra Dorf to SF Hawks (its current-players page, Class of 2029) and Mt. Carmel’s Aashi Gauba to HTC (the NFHCA 2026 watchlist and four of her own pages). Two more, Marina’s Anna Schwab and Newport Harbor’s Kate Shepherd to VCRD (each her own SportsRecruits page), are listed players with no MaxPreps row: they are in listedAffiliations (since 2026-11-26), named by team and listed name.",
+    "2026-11-27, the kept copy of the California clubs' own roster pages (data/field-hockey/club-rosters.json, pnpm fetch-club-rosters:field-hockey: the SportsRecruits players lists of SF Hawks, Myto and HTC California, SF Hawks' current players, NorCal Impact's player directory, RUSH's Elite Performance Group and Lightning's rosters; 12 rosters, 145 players) compared with every varsity and JV row (pnpm compare-club-rosters:field-hockey). 45 matches were ties already citing the page, 12 ties already made on another page of the same club. Two new ties: Convent's Julia Ahlstrand and Marin Academy's JV Quinn Wintroub to SF Hawks (its current-players page). Not linked: Berkeley's Natalie Jones (SF Hawks, Class of 2028) and Julia Stone (Class of 2029), Helix's Gabriella Jones (Myto's Powerhouse U16) and Scripps Ranch's Lucy Miller (RUSH), common names on a roster that names no school, as with Gabriella Jones and Lucy Miller on 2026-10-06; Sadie Baker, a name at Tamalpais and Lick-Wilmerding; six players on Lightning's 2025 rosters, which give no class year."
   ],
   "clubs": [
     {
@@ -7625,6 +7626,46 @@
         }
       ],
       "basis": "Her own live SportsRecruits field hockey profile (kate_shepherd) gives class 2028, hometown Costa Mesa, CA, club \"VCRD/Rush Devils, Ventura County Red Devils High Performance\"; the personal statement says she plays for Newport Harbor High School and VCRD High Performance, and the TEAMS block lists Newport Harbor High School and a \"Rush Devils/VCRD U19\" card. The page names VCRD explicitly, so by the Rush Devils rule this is a VCRD tie (as with Sarah Moniak), not RUSH. High (own profile naming the school); current (live profile; highlight reel dated 2026-04-28; events list Cal Cup 2026 and the 2026 National Club Championship with the U16 Rush Devils). Her Hudl page (27299515) gives the same class year. clubTeam is the CLUB block’s team part, “VCRD/Rush Devils” (Sarah Moniak’s “VCRD Devils / Rush Devils”); “VCRD High Performance” is one of the club’s own names. A listed player (Newport Harbor’s team site’s 2026 varsity list; MaxPreps lists nobody for the team): no MaxPreps row, so named by team and listed name. Re-opened by an independent refuter. Read 2026-11-26."
+    },
+    {
+      "playerId": "p76991b895a",
+      "name": "Julia Ahlstrand",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2028 Julia Ahlstrand Defense | #18",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Only one page. The San Francisco Youth Field Hockey Club (SF Hawks) 'Current Players' page lists Julia Ahlstrand under the 'Class of 2028' heading, which agrees with her varsity row's grade 11 at Convent of the Sacred Heart (San Francisco), and the club is based in San Francisco, so (c) is met by class year plus NorCal club. Found 2026-11-27 by pnpm compare-club-rosters:field-hockey over the kept copy (data/field-hockey/club-rosters.json): no other tracked school has a player of the name and no other kept roster lists it; the page was read again as served the same day. The page has no school and no date; it is the club's live 2025-26/2026-27 roster (class groups 2027-2031). Medium confidence."
+    },
+    {
+      "playerId": "pabf8770fa2",
+      "name": "Quinn Wintroub",
+      "club": "sf-hawks",
+      "clubTeam": null,
+      "status": "current",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/current-players/",
+          "kind": "club-site",
+          "quote": "Class of 2030 … Quinn Wintroub Midfield | #23",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Only one page. The San Francisco Youth Field Hockey Club (SF Hawks) 'Current Players' page lists Quinn Wintroub under the 'Class of 2030' heading, which agrees with her JV row's grade 9 at Marin Academy (San Rafael), and the club is based in San Francisco, so (c) is met by class year plus NorCal club. Found 2026-11-27 by pnpm compare-club-rosters:field-hockey over the kept copy (data/field-hockey/club-rosters.json): no other tracked school has a player of the name and no other kept roster lists it; the page was read again as served the same day. The page has no school and no date; it is the club's live 2025-26/2026-27 roster (class groups 2027-2031). Medium confidence."
     }
   ]
 }

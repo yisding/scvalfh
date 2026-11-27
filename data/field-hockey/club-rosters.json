@@ -1,0 +1,1213 @@
+{
+ "builtBy": "pnpm fetch-club-rosters:field-hockey (scripts/fetch-club-rosters-field-hockey.mjs): the California field hockey clubs' own public roster pages, on SportsRecruits and their own sites. clubSlugs is kept by hand and carried over.",
+ "fetchedAt": "2026-11-27T05:08:30.195Z",
+ "season": "26-27",
+ "notes": [
+  "A kept copy of the public roster pages of the California field hockey clubs that publish one, so a high school roster can be compared with them (pnpm compare-club-rosters:field-hockey). No league or event publishes California club rosters, so this is far from every club player: the Los Angeles, Orange County and Ventura clubs, and most Northern California clubs, post none. Never rendered: it names players who are on no tracked roster.",
+  "SportsRecruits lists only the players who linked their own profile to the club, each with a class year; the club pages list their current players (SF Hawks, by class year; NorCal Impact and RUSH, each with a graduation year); Lightning's SportsEngine rosters (its 2025 Fall Season, the latest it posts) give names only and never link on a name alone.",
+  "Kept per player: name, class year where the page gives one, position. Not kept: jerseys, photos, commitments, HTC's teams outside California, and players outside the classes of 2027-2030 (counted in tooYoung). Read 2026-11-27."
+ ],
+ "leagues": [
+  {
+   "id": "sportsrecruits",
+   "name": "SportsRecruits club players lists (SF Hawks, Myto, HTC California)",
+   "eventId": 0,
+   "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/embed/?type=players&teamid=all"
+  },
+  {
+   "id": "club-sites",
+   "name": "The clubs' own roster pages (SF Hawks, NorCal Impact, RUSH, Lightning)",
+   "eventId": 0,
+   "url": "https://sfyouthfieldhockey.com/current-players/"
+  }
+ ],
+ "clubSlugs": {
+  "sportsrecruits-San_Francisco_Youth_FHC": "sf-hawks",
+  "sportsrecruits-mytofieldhockey": "myto",
+  "sportsrecruits-htcfieldhockey": "htc",
+  "club-site-sfyouthfieldhockey.com": "sf-hawks",
+  "club-site-norcalimpactfh.weebly.com": "norcal-impact",
+  "club-site-rushfieldhockey.org": "rush",
+  "club-site-lightningfieldhockey.org": "lightning"
+ },
+ "counts": {
+  "teams": 12,
+  "players": 145,
+  "hidden": 0,
+  "tooYoung": 19,
+  "emptyTeams": 0
+ },
+ "teams": [
+  {
+   "league": "sportsrecruits",
+   "division": "U16 Hawks Blue",
+   "teamId": 1,
+   "teamName": "U16 Hawks Blue",
+   "clubId": "San_Francisco_Youth_FHC",
+   "clubName": "SF Hawks",
+   "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u16_hawks_blue",
+   "hidden": 0,
+   "tooYoung": 1,
+   "players": [
+    {
+     "firstName": "Mimi",
+     "lastName": "Bakker",
+     "gradYear": 2030,
+     "position": "Defense, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Scarlett",
+     "lastName": "Gammack",
+     "gradYear": 2030,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Stella",
+     "lastName": "Kwok",
+     "gradYear": 2029,
+     "position": "Midfield, Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Monge",
+     "gradYear": 2029,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Tashi",
+     "lastName": "Perkins",
+     "gradYear": 2029,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Lula",
+     "lastName": "Polak",
+     "gradYear": 2029,
+     "position": "Midfield, Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Amber",
+     "lastName": "Price",
+     "gradYear": 2030,
+     "position": "Goalie",
+     "playerType": null
+    },
+    {
+     "firstName": "Vivienne",
+     "lastName": "Wong",
+     "gradYear": 2030,
+     "position": "Forward, Midfield",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "sportsrecruits",
+   "division": "U19 Hawks Blue",
+   "teamId": 2,
+   "teamName": "U19 Hawks Blue",
+   "clubId": "San_Francisco_Youth_FHC",
+   "clubName": "SF Hawks",
+   "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/u19_hawks_blue",
+   "hidden": 0,
+   "tooYoung": 1,
+   "players": [
+    {
+     "firstName": "Chloe",
+     "lastName": "Arwin",
+     "gradYear": 2028,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Sadie",
+     "lastName": "Baker",
+     "gradYear": 2028,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Paola",
+     "lastName": "Brouwers",
+     "gradYear": 2027,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Clara",
+     "lastName": "Brunello",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Sierra",
+     "lastName": "Duncan",
+     "gradYear": 2028,
+     "position": "Goalie",
+     "playerType": null
+    },
+    {
+     "firstName": "Anoushka",
+     "lastName": "Gollerkeri",
+     "gradYear": 2028,
+     "position": "Midfield, Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Claire",
+     "lastName": "Gunning",
+     "gradYear": 2028,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Caitlyn",
+     "lastName": "Hughes",
+     "gradYear": 2028,
+     "position": "Midfield, Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Eva",
+     "lastName": "Layton",
+     "gradYear": 2027,
+     "position": "Goalie",
+     "playerType": null
+    },
+    {
+     "firstName": "Francine",
+     "lastName": "Lemieux",
+     "gradYear": 2028,
+     "position": "Defense, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Storey",
+     "lastName": "Lewis",
+     "gradYear": 2027,
+     "position": "Midfield, Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Margaret",
+     "lastName": "Magnano",
+     "gradYear": 2027,
+     "position": "Defense, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Anaya",
+     "lastName": "Mehta-Vasisht",
+     "gradYear": 2029,
+     "position": "Midfield, Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Hazel",
+     "lastName": "Stang",
+     "gradYear": 2028,
+     "position": "Defense, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Josie",
+     "lastName": "Stout",
+     "gradYear": 2028,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Van de Braak",
+     "gradYear": 2028,
+     "position": "Midfield, Defense, Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Spencer",
+     "lastName": "White",
+     "gradYear": 2028,
+     "position": "Forward, Midfield, Defense",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "sportsrecruits",
+   "division": "Unassigned Players",
+   "teamId": 3,
+   "teamName": "Unassigned Players",
+   "clubId": "San_Francisco_Youth_FHC",
+   "clubName": "SF Hawks",
+   "url": "https://nfhca.sportsrecruits.com/organization/San_Francisco_Youth_FHC/embed/?type=players&teamid=all",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Jessica",
+     "lastName": "Long",
+     "gradYear": 2028,
+     "position": "Midfield, Forward",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "sportsrecruits",
+   "division": "Myto",
+   "teamId": 4,
+   "teamName": "Myto",
+   "clubId": "mytofieldhockey",
+   "clubName": "Myto Field Hockey",
+   "url": "https://nfhca.sportsrecruits.com/organization/mytofieldhockey/myto",
+   "hidden": 0,
+   "tooYoung": 3,
+   "players": [
+    {
+     "firstName": "Melanie",
+     "lastName": "Flatt",
+     "gradYear": 2027,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Hinchman",
+     "gradYear": 2027,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Echo",
+     "lastName": "Howard",
+     "gradYear": 2028,
+     "position": "Goalie",
+     "playerType": null
+    },
+    {
+     "firstName": "Peyton",
+     "lastName": "Kenney",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "sportsrecruits",
+   "division": "Powerhouse U19",
+   "teamId": 5,
+   "teamName": "Powerhouse U19",
+   "clubId": "mytofieldhockey",
+   "clubName": "Myto Field Hockey",
+   "url": "https://nfhca.sportsrecruits.com/organization/mytofieldhockey/powerhouse_u_19",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Isabelle",
+     "lastName": "Blyton",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Lucia",
+     "lastName": "Dewinter",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Melanie",
+     "lastName": "Flatt",
+     "gradYear": 2027,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Kendall",
+     "lastName": "Gann",
+     "gradYear": 2027,
+     "position": "Defense, Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Linnea",
+     "lastName": "Gustaveson",
+     "gradYear": 2028,
+     "position": "Defense, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Madison",
+     "lastName": "Hinchman",
+     "gradYear": 2027,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Peyton",
+     "lastName": "Kenney",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Alice",
+     "lastName": "Powers",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mimi",
+     "lastName": "Scatena",
+     "gradYear": 2028,
+     "position": "Midfield, Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Zuri",
+     "lastName": "St.Clair",
+     "gradYear": 2027,
+     "position": "Forward, Midfield",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "sportsrecruits",
+   "division": "Powerhouse U16",
+   "teamId": 6,
+   "teamName": "Powerhouse U16",
+   "clubId": "mytofieldhockey",
+   "clubName": "Myto Field Hockey",
+   "url": "https://nfhca.sportsrecruits.com/organization/mytofieldhockey/powerhouse_u_16",
+   "hidden": 0,
+   "tooYoung": 3,
+   "players": [
+    {
+     "firstName": "Alessandra",
+     "lastName": "Carreno",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Echo",
+     "lastName": "Howard",
+     "gradYear": 2028,
+     "position": "Goalie",
+     "playerType": null
+    },
+    {
+     "firstName": "Gabriella",
+     "lastName": "Jones",
+     "gradYear": 2029,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Thyme",
+     "lastName": "Stavis",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "sportsrecruits",
+   "division": "HTC - California",
+   "teamId": 7,
+   "teamName": "HTC - California",
+   "clubId": "htcfieldhockey",
+   "clubName": "HTC",
+   "url": "https://nfhca.sportsrecruits.com/organization/htcfieldhockey/htc_california",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Izzy",
+     "lastName": "Adams",
+     "gradYear": 2028,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Aashi",
+     "lastName": "Gauba",
+     "gradYear": 2027,
+     "position": "Goalie",
+     "playerType": null
+    },
+    {
+     "firstName": "Brooke",
+     "lastName": "Gibbons",
+     "gradYear": 2029,
+     "position": "Defense, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Hauer",
+     "gradYear": 2027,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Dylan",
+     "lastName": "Rietti",
+     "gradYear": 2027,
+     "position": "Midfield, Defense",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "club-sites",
+   "division": "Current Players",
+   "teamId": 1,
+   "teamName": "SF Hawks Current Players",
+   "clubId": "sfyouthfieldhockey.com",
+   "clubName": "SF Hawks",
+   "url": "https://sfyouthfieldhockey.com/current-players/",
+   "hidden": 0,
+   "tooYoung": 6,
+   "players": [
+    {
+     "firstName": "Paola",
+     "lastName": "Brouwers",
+     "gradYear": 2027,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Rachel",
+     "lastName": "Flynn",
+     "gradYear": 2027,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Violet",
+     "lastName": "Hesslein",
+     "gradYear": 2027,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Eva",
+     "lastName": "Layton",
+     "gradYear": 2027,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Storey",
+     "lastName": "lewis",
+     "gradYear": 2027,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Maggie",
+     "lastName": "Magnano",
+     "gradYear": 2027,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Stella",
+     "lastName": "Strain",
+     "gradYear": 2027,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Taylor",
+     "gradYear": 2027,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Julia",
+     "lastName": "Ahlstrand",
+     "gradYear": 2028,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Chloe",
+     "lastName": "Arwin",
+     "gradYear": 2028,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Sadie",
+     "lastName": "Baker",
+     "gradYear": 2028,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Clara",
+     "lastName": "Brunello",
+     "gradYear": 2028,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Sam",
+     "lastName": "Brunsell",
+     "gradYear": 2028,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Josie",
+     "lastName": "Connolly",
+     "gradYear": 2028,
+     "position": "Mid/Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Sierra",
+     "lastName": "Duncan",
+     "gradYear": 2028,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Anoushka",
+     "lastName": "Gollerkeri",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Claire",
+     "lastName": "gunning",
+     "gradYear": 2028,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Caitlyn",
+     "lastName": "Hughes",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Natalie",
+     "lastName": "Jones",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Frankie",
+     "lastName": "Lemieux",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Jessica",
+     "lastName": "Long",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Hazel",
+     "lastName": "Stang",
+     "gradYear": 2028,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Josie",
+     "lastName": "Stout",
+     "gradYear": 2028,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "van de Braak",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Spencer",
+     "lastName": "White",
+     "gradYear": 2028,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Bryan",
+     "lastName": "Yang",
+     "gradYear": 2028,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Brody",
+     "lastName": "Chin",
+     "gradYear": 2029,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Lauren",
+     "lastName": "Chow",
+     "gradYear": 2029,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Alexandra",
+     "lastName": "Dorf",
+     "gradYear": 2029,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "David",
+     "lastName": "Gajdos",
+     "gradYear": 2029,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Cora",
+     "lastName": "Gallagher",
+     "gradYear": 2029,
+     "position": "Mid/Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Eleanore",
+     "lastName": "Hayden",
+     "gradYear": 2029,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Beatrice",
+     "lastName": "Hom",
+     "gradYear": 2029,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Stella",
+     "lastName": "Kwok",
+     "gradYear": 2029,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Ava",
+     "lastName": "Long",
+     "gradYear": 2029,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Anaya Mehta",
+     "lastName": "Vasisht",
+     "gradYear": 2029,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Gianna",
+     "lastName": "Monge",
+     "gradYear": 2029,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Sophia",
+     "lastName": "O'Riordan",
+     "gradYear": 2029,
+     "position": "Mid/Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Raylah",
+     "lastName": "Peabody",
+     "gradYear": 2029,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Tashi",
+     "lastName": "Perkins",
+     "gradYear": 2029,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Lula",
+     "lastName": "Polak",
+     "gradYear": 2029,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Arav",
+     "lastName": "Shah",
+     "gradYear": 2029,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Julia",
+     "lastName": "Stone",
+     "gradYear": 2029,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Mimi",
+     "lastName": "Bakker",
+     "gradYear": 2030,
+     "position": "Back",
+     "playerType": null
+    },
+    {
+     "firstName": "Scarlett",
+     "lastName": "Gammack",
+     "gradYear": 2030,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Amber",
+     "lastName": "Price",
+     "gradYear": 2030,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Shiyah",
+     "lastName": "Price",
+     "gradYear": 2030,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Anna",
+     "lastName": "Shapiro",
+     "gradYear": 2030,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Zoe",
+     "lastName": "Shetti",
+     "gradYear": 2030,
+     "position": "Mid/Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Quinn",
+     "lastName": "Wintroub",
+     "gradYear": 2030,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Vivienne",
+     "lastName": "Wong",
+     "gradYear": 2030,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Andrew",
+     "lastName": "Yang",
+     "gradYear": 2030,
+     "position": "Defense",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "club-sites",
+   "division": "Player Directory",
+   "teamId": 2,
+   "teamName": "NorCal Impact Player Directory",
+   "clubId": "norcalimpactfh.weebly.com",
+   "clubName": "NorCal Impact",
+   "url": "https://norcalimpactfh.weebly.com/player-directory.html",
+   "hidden": 0,
+   "tooYoung": 5,
+   "players": [
+    {
+     "firstName": "Genevieve",
+     "lastName": "Ferrini",
+     "gradYear": 2027,
+     "position": "Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Carolyn",
+     "lastName": "Cordoni",
+     "gradYear": 2027,
+     "position": "Forward, Midfield",
+     "playerType": null
+    },
+    {
+     "firstName": "Bridget",
+     "lastName": "Schilb",
+     "gradYear": 2027,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amelia",
+     "lastName": "Zedonis",
+     "gradYear": 2028,
+     "position": "Defense",
+     "playerType": null
+    },
+    {
+     "firstName": "Coco",
+     "lastName": "von Klemperer",
+     "gradYear": 2029,
+     "position": "Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Melanie",
+     "lastName": "Henderson",
+     "gradYear": 2028,
+     "position": "Midfield, Forward",
+     "playerType": null
+    },
+    {
+     "firstName": "Kushi",
+     "lastName": "Amogh",
+     "gradYear": 2028,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "club-sites",
+   "division": "Elite Performance Group",
+   "teamId": 3,
+   "teamName": "RUSH Elite Performance Group",
+   "clubId": "rushfieldhockey.org",
+   "clubName": "RUSH Field Hockey",
+   "url": "https://www.rushfieldhockey.org/player-directory/",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Reese",
+     "lastName": "Roldan",
+     "gradYear": 2027,
+     "position": "B/M",
+     "playerType": null
+    },
+    {
+     "firstName": "Sammy",
+     "lastName": "Ippolito",
+     "gradYear": 2027,
+     "position": "M/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Sophie",
+     "lastName": "Sant",
+     "gradYear": 2027,
+     "position": "B",
+     "playerType": null
+    },
+    {
+     "firstName": "Emma",
+     "lastName": "Forster",
+     "gradYear": 2027,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Reese",
+     "lastName": "Nguyen",
+     "gradYear": 2027,
+     "position": "B/M/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Tiana",
+     "lastName": "Jimenez",
+     "gradYear": 2027,
+     "position": "B",
+     "playerType": null
+    },
+    {
+     "firstName": "Samantha",
+     "lastName": "Lee",
+     "gradYear": 2027,
+     "position": "B/M",
+     "playerType": null
+    },
+    {
+     "firstName": "Elenna",
+     "lastName": "Eiler",
+     "gradYear": 2027,
+     "position": "F",
+     "playerType": null
+    },
+    {
+     "firstName": "Lily",
+     "lastName": "Cumba",
+     "gradYear": 2028,
+     "position": "B/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Eva",
+     "lastName": "Allen",
+     "gradYear": 2028,
+     "position": "M/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Rylie",
+     "lastName": "Storm",
+     "gradYear": 2028,
+     "position": "B/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Stephanie",
+     "lastName": "Isaac",
+     "gradYear": 2028,
+     "position": "GK",
+     "playerType": null
+    },
+    {
+     "firstName": "Kate",
+     "lastName": "Friedman",
+     "gradYear": 2028,
+     "position": "B/M",
+     "playerType": null
+    },
+    {
+     "firstName": "Yaretzi",
+     "lastName": "Cortez",
+     "gradYear": 2029,
+     "position": "B",
+     "playerType": null
+    },
+    {
+     "firstName": "Lucy",
+     "lastName": "Miller",
+     "gradYear": 2029,
+     "position": "B/M",
+     "playerType": null
+    },
+    {
+     "firstName": "Juliet",
+     "lastName": "Noon",
+     "gradYear": 2029,
+     "position": "B",
+     "playerType": null
+    },
+    {
+     "firstName": "Jamilah",
+     "lastName": "Saidy",
+     "gradYear": 2029,
+     "position": "M/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Mia",
+     "lastName": "Rackers",
+     "gradYear": 2029,
+     "position": "B",
+     "playerType": null
+    },
+    {
+     "firstName": "Abby",
+     "lastName": "Karlander",
+     "gradYear": 2029,
+     "position": "B/M",
+     "playerType": null
+    },
+    {
+     "firstName": "Abbey",
+     "lastName": "Whitehead",
+     "gradYear": 2029,
+     "position": "M/F",
+     "playerType": null
+    },
+    {
+     "firstName": "Camryn",
+     "lastName": "Lathrop",
+     "gradYear": 2029,
+     "position": "M/F",
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "club-sites",
+   "division": "U16/U19 Girls - 2025 Fall Season regular",
+   "teamId": 9155774,
+   "teamName": "Lightning U16/U19 Girls - 2025 Fall Season regular",
+   "clubId": "lightningfieldhockey.org",
+   "clubName": "Lightning Field Hockey",
+   "url": "https://www.lightningfieldhockey.org/roster/show/9155774?subseason=950528",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Elle",
+     "lastName": "Correia",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Vanya",
+     "lastName": "Gupta",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Farida",
+     "lastName": "Hassan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Jaelyn",
+     "lastName": "Jensen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Eka",
+     "lastName": "Krishnan",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Olivia",
+     "lastName": "Leyton",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Mehek",
+     "lastName": "Saini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Rajneesh",
+     "lastName": "Saini",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Maya",
+     "lastName": "Tonndorf",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Allenah",
+     "lastName": "Watkins",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  },
+  {
+   "league": "club-sites",
+   "division": "U14/U16 Girls - 2025 Fall Season regular",
+   "teamId": 9155773,
+   "teamName": "Lightning U14/U16 Girls - 2025 Fall Season regular",
+   "clubId": "lightningfieldhockey.org",
+   "clubName": "Lightning Field Hockey",
+   "url": "https://www.lightningfieldhockey.org/roster/show/9155773?subseason=950528",
+   "hidden": 0,
+   "tooYoung": 0,
+   "players": [
+    {
+     "firstName": "Emry",
+     "lastName": "Borges",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Amelia",
+     "lastName": "Deleon",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Beatrix",
+     "lastName": "Monk",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Audrey",
+     "lastName": "Reilly",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Helen",
+     "lastName": "Shen",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    },
+    {
+     "firstName": "Myra",
+     "lastName": "Singhal",
+     "gradYear": null,
+     "position": null,
+     "playerType": null
+    }
+   ]
+  }
+ ]
+}
