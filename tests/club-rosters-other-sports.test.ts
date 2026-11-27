@@ -23,7 +23,6 @@ import {
 } from '../lib/players/club-rosters';
 import type { ClubAffiliation, ClubsFile, ClubsView } from '../lib/players/clubs-schema';
 import { nameKey } from '../lib/players/name-compare';
-// @ts-expect-error -- a plain .mjs script with no type declarations
 import { ageGroupClassYears } from '../scripts/fetch-club-rosters-ncva.mjs';
 
 const json = (rel: string): unknown => JSON.parse(readFileSync(rel, 'utf8'));

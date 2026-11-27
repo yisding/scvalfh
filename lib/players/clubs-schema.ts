@@ -128,8 +128,10 @@ export const CLUB_SOURCE_KINDS = [
   /**
    * a team's public roster on its league's own schedule site (ECNL's team pages), on GotSport Rankings
    * (Girls Academy's and NorCal Premier's teams) or on Hudl (a club's GA teams, where it keeps them there),
-   * read from the kept copy in data/soccer/club-rosters.json (lib/players/club-rosters.ts): it never gives
-   * a school; ECNL's give a class year, Hudl's most often, GotSport's only the team's birth years
+   * read from the kept copy in data/soccer/club-rosters.json (lib/players/club-rosters.ts); since 2026-11-27
+   * also the NCVA Power League's TM2Sign rosters (data/volleyball/club-rosters.json) and The Passport's boys
+   * event rosters (data/basketball/club-rosters.json): it never gives a school; ECNL's and The Passport's
+   * give a class year, Hudl's most often, GotSport's only the team's birth years, TM2Sign's only an age group
    */
   'league-roster',
   'other',

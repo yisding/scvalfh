@@ -3904,6 +3904,59 @@ California flag and link to a club on this site cites a page and its words (`evi
   are not linked: New Heights (not Pacific Heights), Windy City (not D-City), Lonestar "Orange" (not OC Field Hockey
   Club), Mid-Jersey Knights (not San Marcos Knights), Red Lions Hockey Club (not the Lions Hockey Club of Fremont).
 
+### 1.17 CLUB ROSTERS IN THE OTHER SPORTS — kept copies (`data/{volleyball,basketball,field-hockey}/club-rosters.json`)
+
+Probed 2026-11-27, one request at a time about a second apart, no login, no CAPTCHA or checkpoint got round (README,
+"Club rosters in the other sports"). What was looked for: a league- or event-wide public source of club team rosters,
+as ECNL's Athlete One and GotSport Rankings are for girls soccer (§1.15).
+
+- **TM2Sign, the NCVA's event system** (volleyball; `pnpm fetch-club-rosters:volleyball`). ncva.com's results all
+  link TM2Sign. Its public JSON API answers a plain request (curl needs `-g` for the brackets):
+  `tm2sign.com/api/public/events?filter[company_id]=11&limit=100&page=N` (122 NCVA events; 2136 is the 2026 Girls
+  Power League, 2585 the 2027), `api/public/scheduler-teams?filter[event_id]=<event>` (each team: id, name, club name,
+  the USAV team code, `G16RROCK2NC`, whose first letters give the age group, region, finish; a team in two divisions
+  is listed twice with one `club_team_id`) and `api/public/scheduler-teams/<team>/roster` (players' first and last
+  name and jersey; staff, never kept). robots.txt disallows `/app/event/` and the other app pages, not `/api/public/`.
+  The 2026 league: 591 NC-region girls teams 13s-17s read, 579 with players; the 2027 league: 594 teams 14s-18s, 42
+  with players on 2026-11-27 (it starts Jan 9, 2027). 1,185 roster requests and 2 team lists, no 403 or 429. The
+  event-registration list the app loads gives each club's city, used to tell clubs of one name apart (RAGE VBC is
+  Ripon's, NCVC Grass Valley's). A row has no class year: the team's age group admits two classes (USA Volleyball's
+  July 1 age definition and California's September 1 cutoff), `classYears` in the file.
+- **AES** (Advanced Event Systems, `results.advancedeventsystems.com`), volleyball's national events: an OData event
+  list and a roster per team (`api/event/<key>/division/<id>/team/<id>/roster`, "Last, First" and jersey, coaches
+  mixed in), NorCal teams told by a team code ending "nc" (30 at the 2026 18s Junior Nationals, 76 at the Girls West
+  Coast Qualifier). **Not read**: its robots.txt names ClaudeBot under `Disallow: /`. NCVA league play is not on AES.
+- **The Passport** (basketball; `pnpm fetch-club-rosters:basketball`). Open Gym Premier's platform for G365, adidas
+  3SSB, The Stage, the Breakthrough Circuit, Strictly Hoops and For the Love of the Game; `sportspassports.com`
+  redirects there. Its JSON API answers a plain request: `api.the-passport.com/api/events/cards?startDateFrom=…&
+  startDateTo=…` (114 events from March to August 2026, 41 from September to November), `events/<n>` (divisions,
+  season, Exposure's event id), `events/<n>/teams` (`teamsByDivision`: team number, name, season, gender, program)
+  and `events/<n>/teams/<team>/roster` (jersey, name, positions, height, class year, verification status: the full
+  roster as the team played the event). A player's own record, `players/by-player-number/<n>`, gives a birth year, a
+  hometown and, often, a self-reported school (`academicInfo.school`), and `players/<n>/team-history` the programs and
+  teams the player has played for, each program with its city; `teams/<n>` and `teams/<n>/roster` answer 401 (a token).
+  The pages carry `noindex` and the site has no robots.txt. Read: the 25 boys events with a Northern California venue
+  (Oakland, Alameda, Roseville; the adidas 3Stripes Gold West Regional among them) from March to November 2026 and the
+  two adidas 3SSB boys sessions (only the programs with a record): 27 events, 667 teams 14U-17U, each once at its
+  latest event; the file's `leagues` are the 25 events some team was last read at (19 of the spring and summer of
+  2026, the 2025-26 club season in The Passport's numbering, and 6 of the fall, 2026-27). Out of reach: **Exposure Events** (about 292 NorCal events; every event probed has
+  `showRosters: false`, its roster call returns `{"Results":null}` and its API needs a signed key; MADE Hoops' NorCal
+  events run there), **Nike EYBL** (`nikeeyb.com` draws its teams with a script behind a Vercel Security Checkpoint,
+  429), **MADE Hoops**' player finder (no team), HoopSeen (no California events); Puma's Pro16 and UA Next not read.
+- **Field hockey** (`pnpm fetch-club-rosters:field-hockey`). No event-wide source: TourneyMachine's festival feed sets
+  `ShowTeamRosters` but every `RosterSettings.*PubliclyVisible` flag is false and `AthleteDictionary` is empty (118
+  teams, no athletes), and its 2026 NCC and Junior NXC tournaments now redirect to a 404; Cal Cup's Playbook pages
+  (`calcup.playbookapi.com/team/<id>/`) give results only, stats behind a sign-in; SportsRecruits' event rosters reach
+  coaches through EventBeacon, a college coach's login; USA Field Hockey's festival pages link a guest player list
+  that carries parents' emails (not copied) and the Junior NXC teams page lists 51 California names by hometown, by
+  no club; the SoCal Field Hockey Federation's `team_players` call answers 401 to its own page; FH College Path lists
+  commitments with no school. The clubs' own pages were kept instead: the SportsRecruits players lists
+  (`nfhca.sportsrecruits.com/organization/<org>/embed/?type=players&teamid=all`, each team heading linking the team's
+  own page, rows "Name, 2028") of SF Hawks, Myto and HTC (its California team only), SF Hawks' Current Players page,
+  NorCal Impact's Player Directory, RUSH's Elite Performance Group directory (each profile's graduation year, 21
+  profiles) and Lightning's two SportsEngine rosters (its 2025 Fall Season; names only). About 30 requests. MAX Field
+  Hockey's California club pages, which give a high school, were mined on 2026-11-16 (§1.1j2) and not re-copied.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
