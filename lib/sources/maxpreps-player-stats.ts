@@ -41,7 +41,7 @@
 import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
-import { careerIdFromUrl } from './maxpreps-roster';
+import { careerIdFromUrl, jerseyOf } from './maxpreps-roster';
 import { recaseName } from './person-name';
 import { isPlaceholderName } from '../players/placeholder-name';
 import {
@@ -452,7 +452,8 @@ export function parsePlayerStats(
         if (!shortName) fail(`${where}: a row has no player name`, url);
         const careerUrl = nameCell.href?.trim() || null;
         const careerId = careerIdFromUrl(careerUrl);
-        const jersey = jerseyAt >= 0 ? row.columns[jerseyAt].value?.trim() || null : null;
+        // The roster parser's rule: a cell with no letter or digit ("-!", ".", "#") or "N/A" is no number.
+        const jersey = jerseyAt >= 0 ? jerseyOf(row.columns[jerseyAt].value?.trim() || null) : null;
         const playerKey = careerId ?? `${shortName}|${jersey ?? ''}`;
         const lineKey = `${spec.kind} ${playerKey}`;
         const negative = kept.find(({ at }) => /^\s*-\d+(\.\d+)?\s*$/.test(row.columns[at].value ?? ''));
