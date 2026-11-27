@@ -7,12 +7,12 @@
 #
 # Schedule (owner decision, 2026-11-26; lib/festival/festival-crons.ts). Games start on the hour (Thu 8 AM-4 PM ET,
 # Fri 8 AM-6 PM, Sat 8 AM-2 PM) and last 55 minutes (two 25-minute halves and a 5-minute half time, or four 12-minute
-# quarters: "The format is 55-minute games"), so a slot ends at :55. Each slot's end is followed by three runs, 12,
-# 32 and 52 minutes after it: :07, :27 and :47 past the next hour, an even 20-minute cadence up to the next slot's
-# end, and never on :00, GitHub's busiest minute. GitHub starts a scheduled run 5 to 15 minutes late (this repo's
+# quarters: "The format is 55-minute games"), so a slot ends at :55. Each slot's end is followed by six runs, 12,
+# 22, 32, 42, 52 and 62 minutes after it: :07, :17, :27, :37, :47 and :57 past the next hour (owner decision,
+# 2026-11-27: six an hour, up from three), an even 10-minute cadence, and never on :00, GitHub's busiest minute. GitHub starts a scheduled run 5 to 15 minutes late (this repo's
 # runs: 14:37 for a 14:30 cron, 15:14 for 15:07), and scores are entered at the fields 10 to 30 minutes after a
 # slot ends, unevenly (on Nov 26 at 10:13 ET, 18 minutes after the 9 AM slot ended, 4 of its 12 results were in, and
-# only 7 of the 8 and 9 AM slots' 24 games were final), so the first run catches the quick ones and the next two
+# only 7 of the 8 and 9 AM slots' 24 games were final), so the first runs catch the quick ones and the later ones
 # the rest; every run reads the whole feed, so a score from an earlier slot that comes in late is caught too. One
 # catch-up a day follows its last slot by 2 h 15 min, for the scores entered after the fields close. Cron fields
 # are UTC and Naples is on EST (UTC-5) all three days, so Friday's 6 PM slot's runs (00:07-00:47 UTC Nov 28) and
@@ -31,7 +31,7 @@
 # festival's Eastern dates, it makes one ~30-byte GET of TournamentResultsLastUpdated (the version stamp
 # TourneyMachine's own web app polls; cache-control max-age=10) and one GitHub contents API read of the committed
 # file's `sourceVersion`. Equal, and the `refresh` job is skipped whole: no install, no 275 KB download, no commit,
-# no deploy. So TourneyMachine sees about three tiny requests an hour while games are on (84 runs over the three
+# no deploy. So TourneyMachine sees about six tiny requests an hour while games are on (165 runs over the three
 # days), and the whole feed is read at most once a run, in practice only as often as scores actually post. Any
 # failure of that check (TourneyMachine or the API unreachable, a body of another shape) runs the refresh rather
 # than skipping it: a missed score costs more than one 275 KB read. The fetch script repeats the same check against
@@ -58,9 +58,9 @@ name: update-data-festival
 
 on:
   schedule:
-    - cron: '7,27,47 14-22 26 11 *'
-    - cron: '7,27,47 14-23 27 11 *'
-    - cron: '7,27,47 0,14-20 28 11 *'
+    - cron: '7,17,27,37,47,57 14-22 26 11 *'
+    - cron: '7,17,27,37,47,57 14-23 27 11 *'
+    - cron: '7,17,27,37,47,57 0,14-20 28 11 *'
     - cron: '10 0 27 11 *'
     - cron: '10 2,22 28 11 *'
   workflow_dispatch:

@@ -5384,11 +5384,12 @@ feed has no shoot-out field, so such a game shows "Tied — shoot-out" and no wi
 site's score rules (an en dash, never 0, for a missing score). The site is unofficial; the corrections link is the
 site's usual thread.
 
-### 35.6 Refresh: three checks an hour per slot hour
+### 35.6 Refresh: six checks an hour per slot hour
 
 A slot is a distinct start time; games last 55 minutes (two 25-minute halves and a 5-minute break, or four
-12-minute quarters). The job `.github/workflows/update-data-festival.yml` runs 12, 32 and 52 minutes after each
-slot ends (:07, :27 and :47 past the next hour, clear of the :00 rush on GitHub's scheduler), plus one catch-up
+12-minute quarters). The job `.github/workflows/update-data-festival.yml` runs 12, 22, 32, 42, 52 and 62 minutes
+after each slot ends (:07, :17, :27, :37, :47 and :57 past the next hour, clear of the :00 rush on GitHub's
+scheduler; six an hour since 2026-11-27, up from three), plus one catch-up
 per day 2 h 15 min after the day's last slot. The cron lines are derived from the file's slots
 (`lib/festival/festival-crons.ts`). tests/workflows.test.ts holds the derivation to the YAML on a frozen copy of the
 slots as first published (`tests/fixtures/festival/slots-2026.json`), never on the live file: the whole suite also

@@ -7,9 +7,9 @@
  * to paste.
  *
  * The rule (owner decision, 2026-11-26; spec §5): every game lasts 55 minutes (FESTIVAL_GAME_MINUTES), so a slot
- * starting on the hour ends at :55. Three runs follow each slot's end, FESTIVAL_REFRESH_OFFSETS minutes after it:
- * :07, :27 and :47 past the next hour, an even 20-minute cadence up to the next slot's end, never on GitHub's busy
- * :00. Scores are entered at the fields 10 to 30 minutes late, unevenly, and GitHub starts a scheduled run 5 to 15
+ * starting on the hour ends at :55. Six runs follow each slot's end, FESTIVAL_REFRESH_OFFSETS minutes after it:
+ * :07, :17, :27, :37, :47 and :57 past the next hour (six an hour, owner decision 2026-11-27, up from three), an even
+ * 10-minute cadence, never on GitHub's busy :00. Scores are entered at the fields 10 to 30 minutes late, unevenly, and GitHub starts a scheduled run 5 to 15
  * minutes late; every run reads the whole feed, so a late score from an earlier slot is caught by the next run. One
  * catch-up per festival day follows its last slot, FESTIVAL_CATCH_UP_MINUTES after it ends, for the scores entered
  * after the fields close.
@@ -25,7 +25,7 @@
 import type { FestivalSlot } from './festival';
 
 /** Minutes after a slot's games end at which the refresh runs. The cadence is this one line. */
-export const FESTIVAL_REFRESH_OFFSETS: readonly number[] = [12, 32, 52];
+export const FESTIVAL_REFRESH_OFFSETS: readonly number[] = [12, 22, 32, 42, 52, 62];
 
 /** The day's catch-up run, this many minutes after its last slot ends (2 h 15 min). */
 export const FESTIVAL_CATCH_UP_MINUTES = 135;
@@ -87,7 +87,8 @@ export function cronList(values: Iterable<number>): string {
 /**
  * The cron lines for `slots` (UTC, 'minutes hours day month *'): the slot runs first, then the catch-ups, each by UTC
  * day; within a day, the hours that share the same minutes share a line. For today's file:
- *   '7,27,47 14-22 26 11 *', '7,27,47 14-23 27 11 *', '7,27,47 0,14-20 28 11 *', '10 0 27 11 *', '10 2,22 28 11 *'.
+ *   '7,17,27,37,47,57 14-22 26 11 *', '7,17,27,37,47,57 14-23 27 11 *', '7,17,27,37,47,57 0,14-20 28 11 *',
+ *   '10 0 27 11 *', '10 2,22 28 11 *'.
  */
 export function festivalCrons(slots: readonly SlotTimes[]): string[] {
   const lines: string[] = [];
