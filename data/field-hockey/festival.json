@@ -47,8 +47,8 @@
             "h20261030132019768f6d4c394a2814f",
             "h202610301320197685e26f66155d740",
             "h2026103013201976979f08e001d8a4c",
-            "h2026103013201976929f6a5b7ced442",
-            "h20261030132019769cb4e75e30d7d4e"
+            "h20261030132019769cb4e75e30d7d4e",
+            "h2026103013201976929f6a5b7ced442"
           ]
         },
         {
@@ -56,8 +56,8 @@
           "name": "Pool D",
           "teamIds": [
             "h202610301320197692eaa6e55212041",
-            "h20261030132019769345d68bb71e241",
             "h20261030132019769e8368333aaa547",
+            "h20261030132019769345d68bb71e241",
             "h2026103013201976939fa2f147c584d",
             "h202610301320197697f731fc5d9724c"
           ]
@@ -175,8 +175,8 @@
           "teamIds": [
             "h2026103014374221165c6fc8c689e41",
             "h20261030143742211c3e92446e76d46",
-            "h20261030143742211e0f307b9461e48",
             "h202610301437422116f5a7541fbc54f",
+            "h20261030143742211e0f307b9461e48",
             "h2026103014374221165459cc4579a46",
             "h20261030143742211d9584d0267c04e"
           ]
@@ -269,8 +269,8 @@
           "teamIds": [
             "h20261030145612519ece041cf70304f",
             "h2026103014561251952ca38fa627244",
-            "h202610301456125196c079aa9173c4c",
             "h20261030145612519c2d583e9d5e448",
+            "h202610301456125196c079aa9173c4c",
             "h202610301456125196a54b0453bc14b"
           ]
         },
@@ -281,8 +281,8 @@
             "h202610301456125192bd4c66ed2ca4d",
             "h2026103014561251971edf915335943",
             "h2026103014561251926c73356c1fb40",
-            "h20261030145612519817d217000204d",
-            "h202610301456125191724895cb21743"
+            "h202610301456125191724895cb21743",
+            "h20261030145612519817d217000204d"
           ]
         },
         {
@@ -300,8 +300,8 @@
           "id": "h202610301456125201d41472535f742",
           "name": "Pool U",
           "teamIds": [
-            "h20261030145612520c30a9eed54d443",
             "h20261030145612520654f4e52d0684f",
+            "h20261030145612520c30a9eed54d443",
             "h2026103014561252089f5647d192443",
             "h20261030145612520e610e3b4eecc4e",
             "h202610301456125208ee9501a79e44c"
@@ -331,7 +331,7 @@
       "slug": "adult"
     }
   ],
-  "fetchedAt": "2026-11-27T19:28:52.559Z",
+  "fetchedAt": "2026-11-27T20:14:23.329Z",
   "fields": [
     {
       "id": "h20261030120711072516a028aa69c46",
@@ -5415,7 +5415,10 @@
       "layout": null,
       "number": "P57",
       "poolId": "h20261030145612519720077ba142f45",
-      "score": null,
+      "score": [
+        2,
+        2
+      ],
       "sides": [
         {
           "label": "Pinnacle Black",
@@ -5430,7 +5433,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 22,
@@ -5441,7 +5444,10 @@
       "layout": null,
       "number": "P67",
       "poolId": "h20261030145612519cfe5cd6fc46141",
-      "score": null,
+      "score": [
+        0,
+        1
+      ],
       "sides": [
         {
           "label": "Atlanta FHC U19",
@@ -5456,7 +5462,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 22,
@@ -5467,7 +5473,10 @@
       "layout": null,
       "number": "P69",
       "poolId": "h202610301456125201d41472535f742",
-      "score": null,
+      "score": [
+        1,
+        4
+      ],
       "sides": [
         {
           "label": "Cowtown Field Hockey Club U19",
@@ -5482,7 +5491,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 16,
@@ -5545,7 +5554,10 @@
       "layout": null,
       "number": "P38",
       "poolId": "h20261030143742211ec937e88f57d4b",
-      "score": null,
+      "score": [
+        2,
+        2
+      ],
       "sides": [
         {
           "label": "Pinnacle Sky",
@@ -5560,7 +5572,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 5,
@@ -5571,7 +5583,10 @@
       "layout": null,
       "number": "P21",
       "poolId": "h20261030132019768d81d0268463949",
-      "score": null,
+      "score": [
+        4,
+        2
+      ],
       "sides": [
         {
           "label": "Windy City Blast",
@@ -5586,7 +5601,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 5,
@@ -5597,7 +5612,10 @@
       "layout": null,
       "number": "P20",
       "poolId": "h20261030132019768d81d0268463949",
-      "score": null,
+      "score": [
+        3,
+        3
+      ],
       "sides": [
         {
           "label": "New Heights U12 Gold",
@@ -5612,7 +5630,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 5,
@@ -5623,7 +5641,10 @@
       "layout": null,
       "number": "P22",
       "poolId": "h20261030132019768d81d0268463949",
-      "score": null,
+      "score": [
+        5,
+        0
+      ],
       "sides": [
         {
           "label": "Mid-Jersey Knights FHC",
@@ -5638,7 +5659,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 5,
@@ -5649,7 +5670,10 @@
       "layout": null,
       "number": "P32",
       "poolId": "h202610301320197690b6defb70ea94c",
-      "score": null,
+      "score": [
+        3,
+        1
+      ],
       "sides": [
         {
           "label": "U12 Gateway Red Spirit",
@@ -5664,7 +5688,7 @@
       ],
       "start": "2026-11-27T14:00:00",
       "startUtc": "2026-11-27T19:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 9,
@@ -8840,7 +8864,7 @@
       "status": "scheduled"
     }
   ],
-  "sourceVersion": "v6_11/27/2026 7:24:21 PM",
+  "sourceVersion": "v6_11/27/2026 8:09:34 PM",
   "teams": [
     {
       "divisionKey": 3,
@@ -8960,10 +8984,10 @@
       "name": "Beastie U12 Black",
       "poolId": "h20261030132019768d81d0268463949",
       "record": {
-        "ga": 13,
-        "gd": -9,
-        "gf": 4,
-        "l": 1,
+        "ga": 17,
+        "gd": -11,
+        "gf": 6,
+        "l": 2,
         "pts": 1,
         "t": 1,
         "w": 0
@@ -8976,10 +9000,10 @@
       "name": "Doral U12",
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
-        "ga": 4,
-        "gd": 4,
-        "gf": 8,
-        "l": 1,
+        "ga": 7,
+        "gd": 2,
+        "gf": 9,
+        "l": 2,
         "pts": 6,
         "t": 0,
         "w": 2
@@ -9008,13 +9032,13 @@
       "name": "U12 Gateway Red Spirit",
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
-        "ga": 8,
-        "gd": 0,
-        "gf": 8,
+        "ga": 9,
+        "gd": 2,
+        "gf": 11,
         "l": 1,
-        "pts": 6,
+        "pts": 9,
         "t": 0,
-        "w": 2
+        "w": 3
       },
       "slug": "u12-gateway-red-spirit"
     },
@@ -9040,10 +9064,10 @@
       "name": "U12 Gateway Red Stripes",
       "poolId": "h20261030132019768d81d0268463949",
       "record": {
-        "ga": 2,
-        "gd": 8,
+        "ga": 7,
+        "gd": 3,
         "gf": 10,
-        "l": 0,
+        "l": 1,
         "pts": 6,
         "t": 0,
         "w": 2
@@ -9088,12 +9112,12 @@
       "name": "IFHCK Thunder",
       "poolId": "h20261030132019768d81d0268463949",
       "record": {
-        "ga": 10,
+        "ga": 13,
         "gd": -5,
-        "gf": 5,
+        "gf": 8,
         "l": 1,
-        "pts": 1,
-        "t": 1,
+        "pts": 2,
+        "t": 2,
         "w": 0
       },
       "slug": "u12-ifhck-thunder"
@@ -9121,12 +9145,12 @@
       "poolId": "h20261030132019768d81d0268463949",
       "record": {
         "ga": 2,
-        "gd": 13,
-        "gf": 15,
+        "gd": 18,
+        "gf": 20,
         "l": 0,
-        "pts": 6,
+        "pts": 9,
         "t": 0,
-        "w": 2
+        "w": 3
       },
       "slug": "u12-mid-jersey-knights-fhc"
     },
@@ -9136,12 +9160,12 @@
       "name": "New Heights U12 Gold",
       "poolId": "h20261030132019768d81d0268463949",
       "record": {
-        "ga": 7,
+        "ga": 10,
         "gd": -6,
-        "gf": 1,
+        "gf": 4,
         "l": 2,
-        "pts": 0,
-        "t": 0,
+        "pts": 1,
+        "t": 1,
         "w": 0
       },
       "slug": "u12-new-heights-gold"
@@ -9168,13 +9192,13 @@
       "name": "Windy City Blast",
       "poolId": "h20261030132019768d81d0268463949",
       "record": {
-        "ga": 6,
-        "gd": -1,
-        "gf": 5,
+        "ga": 8,
+        "gd": 1,
+        "gf": 9,
         "l": 1,
-        "pts": 3,
+        "pts": 6,
         "t": 0,
-        "w": 1
+        "w": 2
       },
       "slug": "u12-windy-city-blast"
     },
@@ -9808,12 +9832,12 @@
       "name": "U16 Gateway Red Stars",
       "poolId": "h20261030143742211ec937e88f57d4b",
       "record": {
-        "ga": 5,
+        "ga": 7,
         "gd": 0,
-        "gf": 5,
+        "gf": 7,
         "l": 1,
-        "pts": 3,
-        "t": 0,
+        "pts": 4,
+        "t": 1,
         "w": 1
       },
       "slug": "u16-gateway-red-stars"
@@ -10016,12 +10040,12 @@
       "name": "Pinnacle Sky",
       "poolId": "h20261030143742211ec937e88f57d4b",
       "record": {
-        "ga": 3,
+        "ga": 5,
         "gd": 1,
-        "gf": 4,
+        "gf": 6,
         "l": 1,
-        "pts": 3,
-        "t": 0,
+        "pts": 4,
+        "t": 1,
         "w": 1
       },
       "slug": "u16-pinnacle-sky"
@@ -10208,10 +10232,10 @@
       "name": "Atlanta FHC U19",
       "poolId": "h20261030145612519cfe5cd6fc46141",
       "record": {
-        "ga": 11,
-        "gd": -9,
+        "ga": 12,
+        "gd": -10,
         "gf": 2,
-        "l": 2,
+        "l": 3,
         "pts": 3,
         "t": 0,
         "w": 1
@@ -10272,10 +10296,10 @@
       "name": "Cowtown Field Hockey Club U19",
       "poolId": "h202610301456125201d41472535f742",
       "record": {
-        "ga": 8,
-        "gd": -5,
-        "gf": 3,
-        "l": 3,
+        "ga": 12,
+        "gd": -8,
+        "gf": 4,
+        "l": 4,
         "pts": 0,
         "t": 0,
         "w": 0
@@ -10369,12 +10393,12 @@
       "poolId": "h20261030145612519cfe5cd6fc46141",
       "record": {
         "ga": 5,
-        "gd": -3,
-        "gf": 2,
+        "gd": -2,
+        "gf": 3,
         "l": 2,
-        "pts": 1,
+        "pts": 4,
         "t": 1,
-        "w": 0
+        "w": 1
       },
       "slug": "u19-gateway-white"
     },
@@ -10416,13 +10440,13 @@
       "name": "Legacy Academy",
       "poolId": "h202610301456125201d41472535f742",
       "record": {
-        "ga": 1,
-        "gd": 6,
-        "gf": 7,
+        "ga": 2,
+        "gd": 9,
+        "gf": 11,
         "l": 0,
-        "pts": 9,
+        "pts": 12,
         "t": 0,
-        "w": 3
+        "w": 4
       },
       "slug": "u19-legacy-academy"
     },
@@ -10496,12 +10520,12 @@
       "name": "Pinnacle Black",
       "poolId": "h20261030145612519720077ba142f45",
       "record": {
-        "ga": 5,
+        "ga": 7,
         "gd": 2,
-        "gf": 7,
+        "gf": 9,
         "l": 2,
-        "pts": 3,
-        "t": 0,
+        "pts": 4,
+        "t": 1,
         "w": 1
       },
       "slug": "u19-pinnacle-black"
@@ -10608,12 +10632,12 @@
       "name": "Williamsville Stampede U19",
       "poolId": "h20261030145612519720077ba142f45",
       "record": {
-        "ga": 8,
+        "ga": 10,
         "gd": -7,
-        "gf": 1,
+        "gf": 3,
         "l": 3,
-        "pts": 0,
-        "t": 0,
+        "pts": 1,
+        "t": 1,
         "w": 0
       },
       "slug": "u19-williamsville-stampede"
