@@ -2633,7 +2633,11 @@ comparison found it; every cited roster was read again live before it was writte
   **Since 2026-11-27 (owner decisions) a volleyball club in the East Bay or Marin counts as near the schools**
   (`VOLLEYBALL_LOCAL_REGIONS`): City Beach and Union Volleyball Academy, both in Fremont, draw South Bay players, and
   Absolute (San Rafael) the San Francisco and Peninsula schools'. That linked 14 more (City Beach 9, UVA 2, Absolute
-  3) and gave 4 City Beach and 4 Absolute ties their roster.
+  3) and gave 4 City Beach and 4 Absolute ties their roster. The three names on two clubs' rosters, looked at again
+  on the owner's request: Ellie Chu (Milpitas) to Vision and Madison Miller (Sobrato) to North Coast, the other
+  roster of each name being a team two age groups younger (another player); Kitana Manalo (Notre Dame San Jose) to
+  Tyrants as an earlier club (2025-26), since the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her
+  school's volleyball coach's program), a club with no record here because no site of its own was found.
   Later the same day, on the owner's word: Mitty's Melina Gklaros-Stavropoulos to MVVC (her Prep Dig page and MVVC G
   14 Red's roster), and Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; the rule had left the
   roster match as a club away from the school) and to Red Rock (earlier; the NCVA's 2024 Power League). MaxPreps had

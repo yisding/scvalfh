@@ -12,7 +12,8 @@
     "JV players' club ties were not listed until 2026-11-27; since then a JV row's tie is served on its JV row, as in the other builds (the NCVA rosters list JV players: below).",
     "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the public team rosters of the NCVA Girls Power League, read from TM2Sign's public API into data/volleyball/club-rosters.json (pnpm fetch-club-rosters:volleyball: the 2026 league's 13s-17s, the 2025-26 club season, 579 rosters with players; the 2027 league's 14s-18s, 42 of 594 posted so far), compared with every varsity and JV row by pnpm compare-club-rosters:volleyball. A roster gives a name only: a row matches when its class year is one the team's age group admits (USA Volleyball's July 1 age definition, California's September 1 cutoff), no other tracked school has the name, every agreeing roster that season is at one club, and the club is based in San Francisco, the Peninsula, the South Bay or the Central Coast. 237 new ties rest on a roster alone (medium, current for the club season the roster is for); 169 ties other pages had already made gain the roster and read current. Each cited roster was read again live the same day and lists the player. Not linked: Ellie Chu (Milpitas), Madison Miller (Sobrato) and Kitana Manalo (Notre Dame San Jose), whose names are on another club's roster too; 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael, Union Volleyball Academy), and the rows the rule leaves (a name at two schools, no grade, a class year the age group does not admit, a club with no record).",
     "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction). On the owner's word the same day: Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; her club Hudl profile and UVA 17 Lynda's 2026 Power League roster) and Red Rock (earlier; Red Rock 15 Quinn on the 2024 Power League). A sweep of MaxPreps misspellings then corrected eleven more names in lib/sources/person-name.ts NAME_SPELLINGS; with Saratoga's Dhrishti Shah and SHC's Caylee and Chelsie Chin spelled right, the kept rosters matched them (Red Rock; SF Tremors), and Mitty's Thaïs Ettori's Vision tie gained its roster.",
-    "2026-11-27, the owner's decision: for volleyball a club in the East Bay is near enough to the schools (VOLLEYBALL_LOCAL_REGIONS, lib/players/club-rosters.ts; rule 5 of the league-roster rule). The kept NCVA rosters then matched 11 more players at City Beach (Fremont) and Union Volleyball Academy: Milpitas' Katie Cao, MacDonald's Makayla and Ava Tacci and Maya Castro, Branham's Valeriya Tomkiv and Emily Lloyd, Westmont's Annalee Dang, Sobrato's Ashley Nguyen (UVA), Lincoln's Camila Zaldaña, Saint Francis' Jianna Llaneza (UVA) and Presentation's Faith Hau, each on a roster alone (medium, current for 2025-26); Teagan Cummings', Kenley Christensen's, Annabelle Gonzales' and Cierra Huynh's City Beach ties gain the roster. Each roster read again live. On a second decision the same day Marin counts too: Absolute (San Rafael) then matched SHC's Sophia Fong, SI's Cecilia Hecker and Menlo's Jamie Johnson (new, medium), and Britt Melinauskas', Eileen Pfeffer's, Neve Harlan's and Giulia McManigal's Absolute ties gain the roster."
+    "2026-11-27, the owner's decision: for volleyball a club in the East Bay is near enough to the schools (VOLLEYBALL_LOCAL_REGIONS, lib/players/club-rosters.ts; rule 5 of the league-roster rule). The kept NCVA rosters then matched 11 more players at City Beach (Fremont) and Union Volleyball Academy: Milpitas' Katie Cao, MacDonald's Makayla and Ava Tacci and Maya Castro, Branham's Valeriya Tomkiv and Emily Lloyd, Westmont's Annalee Dang, Sobrato's Ashley Nguyen (UVA), Lincoln's Camila Zaldaña, Saint Francis' Jianna Llaneza (UVA) and Presentation's Faith Hau, each on a roster alone (medium, current for 2025-26); Teagan Cummings', Kenley Christensen's, Annabelle Gonzales' and Cierra Huynh's City Beach ties gain the roster. Each roster read again live. On a second decision the same day Marin counts too: Absolute (San Rafael) then matched SHC's Sophia Fong, SI's Cecilia Hecker and Menlo's Jamie Johnson (new, medium), and Britt Melinauskas', Eileen Pfeffer's, Neve Harlan's and Giulia McManigal's Absolute ties gain the roster.",
+    "2026-11-27, on the owner's request, the three names the comparison had left on two clubs' rosters: Milpitas' Ellie Chu to Vision and Sobrato's Madison Miller to North Coast (the other roster of each name is a team two age groups younger, another player), and Notre Dame San Jose's Kitana Manalo to Tyrants as an earlier club (2025-26): the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her school's volleyball coach's program, with two NDSJ teammates), a club with no record here, its site not found."
   ],
   "clubs": [
     {
@@ -19731,6 +19732,66 @@
         }
       ],
       "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 17 Pink (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pdad3e84aa2",
+      "name": "Ellie Chu",
+      "club": "vision-volleyball-club",
+      "clubTeam": "Vision 16 Blue",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248399/roster",
+          "kind": "league-roster",
+          "quote": "Vision 16 Blue (16s) | chu, ellie",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium (the league-roster rule, README \"Club rosters in the other sports\"). The NCVA's 2026 Girls Power League roster of Vision 16 Blue (a 16s team of the 2025-26 club season, admitting the classes of 2027 and 2028) lists an Ellie Chu, which agrees with her Milpitas row's grade 11 (class of 2028); its other tracked players are South Bay girls (Valley Christian, Los Altos, Christopher, Leigh). Left out on 2026-11-27 because a second Ellie Chu is on Academy North 14 HP-1 (Academy of Volleyball, Redwood City); looked at again the same day on the owner's request: that team is a 14s team (the classes of 2029 and 2030), which a class-of-2028 player cannot be on, and its other tracked player is Crystal Springs', so it is another, younger Ellie Chu. Her claimed MaxPreps profile lists no club. The Vision roster read again live 2026-11-27."
+    },
+    {
+      "playerId": "p03bed75fff",
+      "name": "Madison Miller",
+      "club": "north-coast-volleyball-club",
+      "clubTeam": "North Coast 17 Orange",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249049/roster",
+          "kind": "league-roster",
+          "quote": "North Coast 17 Orange (17s) | Miller, Madison",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium (the league-roster rule). The NCVA's 2026 Girls Power League roster of North Coast 17 Orange (a 17s team of the 2025-26 club season, the class of 2027) lists a Madison Miller, which agrees with her Sobrato row's grade 12 (class of 2027); North Coast is a Morgan Hill club, Sobrato's own town, and the team's other tracked players are Gilroy's and Live Oak's. Left out on 2026-11-27 because a second Madison Miller is on Turlock Crush 15 Dave; looked at again the same day on the owner's request: that is a 15s team (the classes of 2028 and 2029) of a Turlock club, so another, younger Madison Miller. The North Coast roster read again live 2026-11-27."
+    },
+    {
+      "playerId": "p02403e4a23",
+      "name": "Kitana Manalo",
+      "club": "tyrants-volleyball-club",
+      "clubTeam": "Tyrants 14 Black",
+      "status": "past",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247873/roster",
+          "kind": "league-roster",
+          "quote": "Tyrants 14 Black (14s) | Manalo, Kitana",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium (the league-roster rule). The NCVA's 2026 Girls Power League roster of Tyrants 14 Black (a 14s team of the 2025-26 club season, admitting the classes of 2029 and 2030) lists a Kitana Manalo, which agrees with her Notre Dame San Jose row's grade 9 (class of 2030). Earlier, not current: the 2027 Power League (the 2026-27 club season) lists her on ND Elite 16 Blue of 'SBND Elite' (Sunny Ball ND Elite Volleyball Club, the program of Notre Dame San Jose's volleyball coach, with two of her Notre Dame San Jose teammates, Isabella Stipe and Sadie Romero), playing up on a 16s team. That club has no record here (no site of its own was found; sunnyball.com is a parked domain and ndelitevolleyball.com a Fargo club), so the current tie is not recorded. Looked at on the owner's request 2026-11-27; both rosters read again live."
     }
   ]
 }
