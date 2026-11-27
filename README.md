@@ -2213,8 +2213,10 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
 - **The league-roster rule** (`lib/players/club-rosters.ts`, a narrower case of the clubs' linking rule). A roster
   row and a high school row are the same player when the folded names are equal; the roster's class year is the high
   school row's (below); no other tracked school has a row under the name, varsity or JV; every roster row that agrees
-  is at one club; and the club has a record in `clubs.json` and is based where the schools are (San Francisco, the
-  Peninsula, the South Bay, the Central Coast). The row's class year is its grade's; **since 2026-11-25 (owner
+  is at one club; and the club has a record in `clubs.json` and is based in the Bay Area or on the Central Coast
+  (`LOCAL_REGIONS`: San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast; until
+  2026-11-27 the first three and the Central Coast only, widened on the owner's decision because club players travel:
+  **the area is deliberately wide**, in soccer, basketball and volleyball alike). The row's class year is its grade's; **since 2026-11-25 (owner
   decision) a row with no grade is not left out**: it takes the class year its own linked recruiting pages state,
   and, if none states one, the roster's own, when every roster row of the name that gives a class year gives the same
   one and it is a class in high school this season (2027-2030 in 2026-27). A linked page's class year that disagrees,
@@ -2630,6 +2632,23 @@ comparison found it; every cited roster was read again live before it was writte
   San Jose's Kitana Manalo), 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael,
   Union Volleyball Academy), and what the rule leaves (a name at two schools, no grade, a class the age group does
   not admit, a club with no record).
+  **Since 2026-11-27 (owner decisions) a club anywhere in the Bay Area or on the Central Coast counts as near the
+  schools, in every sport that keeps club rosters** (`LOCAL_REGIONS` now holds the East Bay and Marin too; field
+  hockey's own rule, the school's half of the state, was wider already). The geography is wide on purpose: City
+  Beach and Union Volleyball Academy, both in Fremont, draw South Bay players, and Absolute (San Rafael) the San
+  Francisco and Peninsula schools'. In volleyball that linked 14 more (City Beach 9, UVA 2, Absolute 3) and gave 4
+  City Beach and 4 Absolute ties their roster; in soccer, Tanisha Rameshkumar (Valley Christian) to Pleasanton Rage,
+  and Alina Decker (Menlo-Atherton) to Stanford Strikers; in basketball, Noah Kirsch-Lopez and Huck Lemmer (St.
+  Ignatius, both with a San Francisco hometown on their own Passport records) to Lakeshow. Basketball's hometown test
+  (a player's own Passport record that names no school) was widened to the same area the same day: a hometown
+  anywhere in the Bay Area or on the Central Coast, where it had been the school's county or one bordering it; that
+  gave Anthony Otis's (St. Ignatius, Richmond) Bay City tie its roster. Left out still: two common
+  names at clubs far from the school with no other page (soccer's Taylor Williams of Branham at Marin FC, and
+  Evergreen Valley's JV Alexia Ramirez at Mustang in Danville). The three names on two clubs' rosters, looked at again
+  on the owner's request: Ellie Chu (Milpitas) to Vision and Madison Miller (Sobrato) to North Coast, the other
+  roster of each name being a team two age groups younger (another player); Kitana Manalo (Notre Dame San Jose) to
+  Tyrants as an earlier club (2025-26), since the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her
+  school's volleyball coach's program), a club with no record here because no site of its own was found.
   Later the same day, on the owner's word: Mitty's Melina Gklaros-Stavropoulos to MVVC (her Prep Dig page and MVVC G
   14 Red's roster), and Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; the rule had left the
   roster match as a club away from the school) and to Red Rock (earlier; the NCVA's 2024 Power League). MaxPreps had
@@ -2644,10 +2663,11 @@ comparison found it; every cited roster was read again live before it was writte
   Thorton (Christopher volleyball; NCSA writes Thornton) and Fiona Schrieber (Chico field hockey; Hudl writes
   Schreiber); and pairs where both spellings are names (Ysabella and Ysabelle, Tepper and Teper, Velasquez and
   Velazquez).
-- **Boys basketball: 112 ties cite a Passport roster.** For every match, and every row the rule left only for want of
+- **Boys basketball: 155 ties cite a Passport roster.** For every match, and every row the rule left only for want of
   a club record, a second club or a club near the schools, the player's own Passport record and team history were
   read. A record naming the row's school decides it (high: rule (a), the player's own record); one naming no school
-  needs a hometown in the school's county or one bordering it (rule (b), medium); one naming another high school
+  needs a hometown in the school's county or one bordering it (rule (b), medium; since 2026-11-27 anywhere in the
+  Bay Area or on the Central Coast, below); one naming another high school
   (Cupertino's Michael Wong: Dougherty Valley; Hollister's Derrick Jones: Overfelt), or a hometown farther away
   (Milpitas' Deren Cayabyab: Elk Grove; SHC, SI and King's Academy names in Oakland, Hayward, Richmond and Antioch),
   rules the match out, and a record with no hometown links nothing (7 rows). A middle school on the record is an
@@ -2655,9 +2675,17 @@ comparison found it; every cited roster was read again live before it was writte
   pages had made, which gain the roster. Ten club records were added for the programs the matches are at (Bay Area
   Impact, South Bay H2G, TM Basketball, SBB Rebels, Bay Area Hurricanes, Ballerz United, Bay Area Rebels, Renegades,
   the PVBC Mavericks, the Palo Alto Huskies), each from the program's own site and The Passport's public program
-  record (`api/programs/public/<n>`: city and website; its director and contact fields are not recorded); fifteen
-  programs have no site of their own or no city to confirm and no record (`clubs.json`'s notes), so their matches are
-  not linked. Not linked either: 10 rows on two programs' rosters in one season.
+  record (`api/programs/public/<n>`: city and website; its director and contact fields are not recorded). Fifteen
+  programs had no site of their own or no city to confirm. On the owner's decision (2026-11-27), a program with no
+  site of its own may take The Passport's public program record (a club, with its city) as its club record: nine
+  such programs now have one (South Bay Snipers, Pacifica Basketball Club, South Bay Reapers, Cali Legends, Salinas
+  Valley Kings, NBC Bulls, SF Work Hard Play Hard, MVP Magic, MBA Triple Threat), and their matches, under the same
+  school and hometown tests on each player's own record, made 40 more ties (14 high, 26 medium; Oceana's six at
+  Pacifica Basketball Club, Palma's, Soledad's and Greenfield's at Salinas Valley Kings, Pacific Grove's at Cali
+  Legends, nine Leland, Leigh, Bellarmine, Evergreen Valley and Cupertino players at South Bay Snipers). Still no
+  record: Wolfpack Zeta (no program of the name found), All-In-Elite (Rocklin), No Limit Basketball (Washington),
+  Fierce Basketball (no city), Bay Area Lakers and Team California (no public record), whose matches stay unlinked.
+  Not linked either: 10 rows on two programs' rosters in one season.
 - **Field hockey: 2 new ties**, Convent's Julia Ahlstrand and Marin Academy's JV Quinn Wintroub to SF Hawks (its
   current-players page); 45 matches were ties already citing the page and 12 ties made on another page of the same
   club. Not linked: Berkeley's Natalie Jones and Julia Stone (SF Hawks) and Helix's Gabriella Jones (Myto), common names

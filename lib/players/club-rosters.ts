@@ -71,7 +71,16 @@ import { nameKey } from './name-compare';
 export const LEAGUE_ROSTER_KIND = 'league-roster';
 
 /** Where the tracked soccer schools are: a club based in one of these is near enough for a class year to link. */
-export const LOCAL_REGIONS: readonly ClubRegion[] = ['san-francisco', 'peninsula', 'south-bay', 'central-coast'];
+/**
+ * Where a club must be based for a league roster's class year to link (rule 5), in soccer, basketball and volleyball:
+ * deliberately wide (owner decision, 2026-11-27). Club players travel: the East Bay's clubs (City Beach and Union
+ * Volleyball Academy in Fremont, Mustang, Lakeshow, Team Lillard) draw South Bay, Peninsula and San Francisco players,
+ * and Marin's (Absolute, Marin FC) San Francisco's and the Peninsula's. Until 2026-11-27 the list was San Francisco,
+ * the Peninsula, the South Bay and the Central Coast, the soccer schools' own areas, which left those clubs' matches
+ * unlinked. Sacramento, the North State and Southern California stay out. Field hockey has its own, wider still: a
+ * club in the school's half of the state (scripts/compare-club-rosters.ts).
+ */
+export const LOCAL_REGIONS: readonly ClubRegion[] = ['san-francisco', 'peninsula', 'south-bay', 'central-coast', 'east-bay', 'marin'];
 
 const text = z.string().min(1);
 /**
@@ -404,7 +413,7 @@ export const rosterName = (p: Pick<ClubRosterPlayer, 'firstName' | 'lastName'>):
 export interface ClubRosterCompareOptions {
   /**
    * Rule 5: whether a club in this region is near enough to the row's school. Default: the club is in
-   * LOCAL_REGIONS (soccer's schools, and basketball's and volleyball's, which are the same area's).
+   * LOCAL_REGIONS (the Bay Area and the Central Coast: soccer's, basketball's and volleyball's).
    */
   isLocal?: (region: ClubRegion, row: SchoolRow) => boolean;
 }

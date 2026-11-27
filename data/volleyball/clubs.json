@@ -11,7 +11,9 @@
     "Round of 2026-11-14: the 19 WCAL and WBAL schools (307 varsity rows) by every method of the first round (Hudl team rosters, NCSA, a SportsRecruits address probe, MaxPreps career pages, Prep Dig, PrepVolleyball), NCSA read through a headless browser this time; and, for all 60 schools, NCSA name searches for every named row, Prep Dig and PrepVolleyball for every junior, senior and ungraded row, and web searches for every senior. A tie the first round already had gained the new source, its basis saying so ('Round of 2026-11-14'). Prep Dig pages whose club link goes to a Vision club in another state are not used. NCSA spellings of a club (Pandas Volleyball Club, Panda VBC, MHVC) are mapped to the club's record.",
     "JV players' club ties were not listed until 2026-11-27; since then a JV row's tie is served on its JV row, as in the other builds (the NCVA rosters list JV players: below).",
     "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the public team rosters of the NCVA Girls Power League, read from TM2Sign's public API into data/volleyball/club-rosters.json (pnpm fetch-club-rosters:volleyball: the 2026 league's 13s-17s, the 2025-26 club season, 579 rosters with players; the 2027 league's 14s-18s, 42 of 594 posted so far), compared with every varsity and JV row by pnpm compare-club-rosters:volleyball. A roster gives a name only: a row matches when its class year is one the team's age group admits (USA Volleyball's July 1 age definition, California's September 1 cutoff), no other tracked school has the name, every agreeing roster that season is at one club, and the club is based in San Francisco, the Peninsula, the South Bay or the Central Coast. 237 new ties rest on a roster alone (medium, current for the club season the roster is for); 169 ties other pages had already made gain the roster and read current. Each cited roster was read again live the same day and lists the player. Not linked: Ellie Chu (Milpitas), Madison Miller (Sobrato) and Kitana Manalo (Notre Dame San Jose), whose names are on another club's roster too; 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael, Union Volleyball Academy), and the rows the rule leaves (a name at two schools, no grade, a class year the age group does not admit, a club with no record).",
-    "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction). On the owner's word the same day: Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; her club Hudl profile and UVA 17 Lynda's 2026 Power League roster) and Red Rock (earlier; Red Rock 15 Quinn on the 2024 Power League). A sweep of MaxPreps misspellings then corrected eleven more names in lib/sources/person-name.ts NAME_SPELLINGS; with Saratoga's Dhrishti Shah and SHC's Caylee and Chelsie Chin spelled right, the kept rosters matched them (Red Rock; SF Tremors), and Mitty's Thaïs Ettori's Vision tie gained its roster."
+    "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction). On the owner's word the same day: Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; her club Hudl profile and UVA 17 Lynda's 2026 Power League roster) and Red Rock (earlier; Red Rock 15 Quinn on the 2024 Power League). A sweep of MaxPreps misspellings then corrected eleven more names in lib/sources/person-name.ts NAME_SPELLINGS; with Saratoga's Dhrishti Shah and SHC's Caylee and Chelsie Chin spelled right, the kept rosters matched them (Red Rock; SF Tremors), and Mitty's Thaïs Ettori's Vision tie gained its roster.",
+    "2026-11-27, the owner's decision: for volleyball a club in the East Bay is near enough to the schools (VOLLEYBALL_LOCAL_REGIONS, lib/players/club-rosters.ts; rule 5 of the league-roster rule). The kept NCVA rosters then matched 11 more players at City Beach (Fremont) and Union Volleyball Academy: Milpitas' Katie Cao, MacDonald's Makayla and Ava Tacci and Maya Castro, Branham's Valeriya Tomkiv and Emily Lloyd, Westmont's Annalee Dang, Sobrato's Ashley Nguyen (UVA), Lincoln's Camila Zaldaña, Saint Francis' Jianna Llaneza (UVA) and Presentation's Faith Hau, each on a roster alone (medium, current for 2025-26); Teagan Cummings', Kenley Christensen's, Annabelle Gonzales' and Cierra Huynh's City Beach ties gain the roster. Each roster read again live. On a second decision the same day Marin counts too: Absolute (San Rafael) then matched SHC's Sophia Fong, SI's Cecilia Hecker and Menlo's Jamie Johnson (new, medium), and Britt Melinauskas', Eileen Pfeffer's, Neve Harlan's and Giulia McManigal's Absolute ties gain the roster.",
+    "2026-11-27, on the owner's request, the three names the comparison had left on two clubs' rosters: Milpitas' Ellie Chu to Vision and Sobrato's Madison Miller to North Coast (the other roster of each name is a team two age groups younger, another player), and Notre Dame San Jose's Kitana Manalo to Tyrants as an earlier club (2025-26): the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her school's volleyball coach's program, with two NDSJ teammates), a club with no record here, its site not found."
   ],
   "clubs": [
     {
@@ -7736,8 +7738,8 @@
       "name": "Teagan Cummings",
       "club": "city-beach-volleyball-club",
       "clubTeam": "17-Black",
-      "status": "unknown",
-      "asOf": "2025",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -7747,9 +7749,17 @@
           "statedSchool": "Branham High School",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249338/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 17-Black (17s) | Cummings, Teagan",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile is on Branham High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page."
+      "basis": "Her Hudl profile is on Branham High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "pe1779a626d",
@@ -9851,9 +9861,17 @@
           "statedSchool": "Willow Glen High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249336/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 15-Black (15s) | Christensen, Kenley",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Rule (a): her Prep Dig player page names her, volleyball, the club and the school; the school name on the page links to https://prepdig.com/team/ca/willow-glen/, whose title reads 'Willow Glen High School Volleyball | San Jose, CA | Prep Dig', so it is the Santa Clara County school. The roster gives her no grade, so the page's class of 2029 conflicts with nothing (it would make her a sophomore). Status current: page dated May 12, 2026, present tense. Single source; high because it names the school. Quotes are the page's visible text copied from the raw HTML saved by curl on 2026-11-13 (link tags removed, HTML entities decoded, whitespace collapsed). Her Hudl profile is on Willow Glen High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 2 entries for this club on the page; the latest is quoted."
+      "basis": "Rule (a): her Prep Dig player page names her, volleyball, the club and the school; the school name on the page links to https://prepdig.com/team/ca/willow-glen/, whose title reads 'Willow Glen High School Volleyball | San Jose, CA | Prep Dig', so it is the Santa Clara County school. The roster gives her no grade, so the page's class of 2029 conflicts with nothing (it would make her a sophomore). Status current: page dated May 12, 2026, present tense. Single source; high because it names the school. Quotes are the page's visible text copied from the raw HTML saved by curl on 2026-11-13 (link tags removed, HTML entities decoded, whitespace collapsed). Her Hudl profile is on Willow Glen High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 2 entries for this club on the page; the latest is quoted. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 15-Black (15s; the classes of 2028 and 2029 its age group admits) lists a player of this name (the row has no grade; class year 2029 from the profile), which agrees with the roster's class of 2029; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
     },
     {
       "playerId": "pe7b959b9d1",
@@ -10988,8 +11006,8 @@
       "name": "Eileen Pfeffer",
       "club": "absolute-volleyball-club",
       "clubTeam": "Absolute 17 Black",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -11007,17 +11025,25 @@
           "statedSchool": "St. Ignatius College Preparatory Girl's Volleyball",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/245874/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 17 Black (17s) | Pfeffer, Eileen",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 17 Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "pa7c735aee0",
       "name": "Neve Harlan",
       "club": "absolute-volleyball-club",
       "clubTeam": "Absolute 17 Black",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -11035,9 +11061,17 @@
           "statedSchool": "St. Ignatius College Preparatory Girl's Volleyball",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/245874/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 17 Black (17s) | Harlan, Neve",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 17 Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "pa7c735aee0",
@@ -12620,8 +12654,8 @@
       "name": "Annabelle Gonzales",
       "club": "city-beach-volleyball-club",
       "clubTeam": "City Beach 16 Black",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -12639,9 +12673,17 @@
           "statedSchool": "Presentation High School",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249338/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 17-Black (17s) | Gonzales, Annabelle",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "p69c7ac67c3",
@@ -12751,9 +12793,17 @@
           "statedSchool": "Notre Dame San Jose",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249337/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 16-Black (16s) | Huynh, Cierra",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; current as of 2026."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; current as of 2026. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 16-Black (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
     },
     {
       "playerId": "pd3209d04a6",
@@ -12956,8 +13006,8 @@
       "name": "Giulia McManigal",
       "club": "absolute-volleyball-club",
       "clubTeam": "Black",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -12975,9 +13025,17 @@
           "statedSchool": "Saint Ignatius College Prep",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248870/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 16 Black (16s) | McManigal, Giulia",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 16 Black (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "pac3ce0560c",
@@ -13368,8 +13426,8 @@
       "name": "Britt Melinauskas",
       "club": "absolute-volleyball-club",
       "clubTeam": null,
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -13379,9 +13437,17 @@
           "statedSchool": "Los Gatos (Prep Dig team link: Los Gatos High School Volleyball | Los Gatos, CA)",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/245874/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 17 Black (17s) | Melinauskas, Britt",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 17 Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "p2669ee612b",
@@ -19386,6 +19452,346 @@
         }
       ],
       "basis": "Victoria Tuipulotu is Saint Francis' class-of-2027 player (MaxPreps wrote 'Tuipolotu' until 2026-11-27; NAME_SPELLINGS corrects it). The owner confirmed (2026-11-27) that she plays for Union Volleyball Academy and played for Red Rock before. The NCVA's 2024 Girls Power League (TM2Sign event 1545, the 2023-24 club season; not in the kept copy, which holds the 2026 and 2027 leagues) lists her on Red Rock 15 Quinn - Redwood City, a 15s team that season admitting the classes of 2026 and 2027: an earlier club. Read 2026-11-27, on the owner's pointer; medium."
+    },
+    {
+      "playerId": "p9fec9921c3",
+      "name": "Katie Cao",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 16-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249337/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 16-Black (16s) | Cao, Katie",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 16-Black (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p5c2bf786c9",
+      "name": "Makayla Tacci",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 15-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249336/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 15-Black (15s) | Tacci, Makayla",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 15-Black (15s; the classes of 2028 and 2029 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p802e3a82ed",
+      "name": "Ava Tacci",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 14-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249335/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 14-Black (14s) | Tacci, Ava",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 14-Black (14s; the classes of 2029 and 2030 its age group admits) lists a player of this name, which agrees with the roster's class of 2030; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p03ba8eab4f",
+      "name": "Maya Castro",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 14-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249335/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 14-Black (14s) | Castro, Maya",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 14-Black (14s; the classes of 2029 and 2030 its age group admits) lists a player of this name, which agrees with the roster's class of 2030; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p9b0fa0b1cf",
+      "name": "Valeriya Tomkiv",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 17-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249338/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 17-Black (17s) | Tomkiv, Valeriya",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pdc420be5bb",
+      "name": "Emily Lloyd",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 16-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249337/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 16-Black (16s) | Lloyd, Emily",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 16-Black (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p4b1716474c",
+      "name": "Annalee Dang",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 17-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249338/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 17-Black (17s) | Dang, Annalee",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pe7471465c6",
+      "name": "Ashley Nguyen",
+      "club": "union-volleyball-academy",
+      "clubTeam": "UVA 16 Mafa",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249143/roster",
+          "kind": "league-roster",
+          "quote": "UVA 16 Mafa (16s) | Nguyen, Ashley",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): UVA 16 Mafa (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p1e7ec13833",
+      "name": "Camila Zaldaña",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 17-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249338/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 17-Black (17s) | Zaldana, Camila",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pba16899d80",
+      "name": "Jianna Llaneza",
+      "club": "union-volleyball-academy",
+      "clubTeam": "UVA 17 Lynda",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249146/roster",
+          "kind": "league-roster",
+          "quote": "UVA 17 Lynda (17s) | Llaneza, Jianna",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): UVA 17 Lynda (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p38be44c32a",
+      "name": "Faith Hau",
+      "club": "city-beach-volleyball-club",
+      "clubTeam": "City Beach 16-Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249337/roster",
+          "kind": "league-roster",
+          "quote": "City Beach 16-Black (16s) | Hau, Faith",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 16-Black (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pc4e2c94801",
+      "name": "Sophia Fong",
+      "club": "absolute-volleyball-club",
+      "clubTeam": "Absolute 15 Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/245878/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 15 Black (15s) | Fong, Sophia",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 15 Black (15s; the classes of 2028 and 2029 its age group admits) lists a player of this name, which agrees with the roster's class of 2029; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p3e3dea018f",
+      "name": "Cecilia Hecker",
+      "club": "absolute-volleyball-club",
+      "clubTeam": "Absolute 16 Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248870/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 16 Black (16s) | Hecker, Cecilia",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 16 Black (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p50b06e9d98",
+      "name": "Jamie Johnson",
+      "club": "absolute-volleyball-club",
+      "clubTeam": "Absolute 17 Pink",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/245875/roster",
+          "kind": "league-roster",
+          "quote": "Absolute 17 Pink (17s) | Johnson, Jamie",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Absolute 17 Pink (17s; the classes of 2027 its age group admits) lists a player of this name, which agrees with the roster's class of 2027; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pdad3e84aa2",
+      "name": "Ellie Chu",
+      "club": "vision-volleyball-club",
+      "clubTeam": "Vision 16 Blue",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248399/roster",
+          "kind": "league-roster",
+          "quote": "Vision 16 Blue (16s) | chu, ellie",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium (the league-roster rule, README \"Club rosters in the other sports\"). The NCVA's 2026 Girls Power League roster of Vision 16 Blue (a 16s team of the 2025-26 club season, admitting the classes of 2027 and 2028) lists an Ellie Chu, which agrees with her Milpitas row's grade 11 (class of 2028); its other tracked players are South Bay girls (Valley Christian, Los Altos, Christopher, Leigh). Left out on 2026-11-27 because a second Ellie Chu is on Academy North 14 HP-1 (Academy of Volleyball, Redwood City); looked at again the same day on the owner's request: that team is a 14s team (the classes of 2029 and 2030), which a class-of-2028 player cannot be on, and its other tracked player is Crystal Springs', so it is another, younger Ellie Chu. Her claimed MaxPreps profile lists no club. The Vision roster read again live 2026-11-27."
+    },
+    {
+      "playerId": "p03bed75fff",
+      "name": "Madison Miller",
+      "club": "north-coast-volleyball-club",
+      "clubTeam": "North Coast 17 Orange",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249049/roster",
+          "kind": "league-roster",
+          "quote": "North Coast 17 Orange (17s) | Miller, Madison",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium (the league-roster rule). The NCVA's 2026 Girls Power League roster of North Coast 17 Orange (a 17s team of the 2025-26 club season, the class of 2027) lists a Madison Miller, which agrees with her Sobrato row's grade 12 (class of 2027); North Coast is a Morgan Hill club, Sobrato's own town, and the team's other tracked players are Gilroy's and Live Oak's. Left out on 2026-11-27 because a second Madison Miller is on Turlock Crush 15 Dave; looked at again the same day on the owner's request: that is a 15s team (the classes of 2028 and 2029) of a Turlock club, so another, younger Madison Miller. The North Coast roster read again live 2026-11-27."
+    },
+    {
+      "playerId": "p02403e4a23",
+      "name": "Kitana Manalo",
+      "club": "tyrants-volleyball-club",
+      "clubTeam": "Tyrants 14 Black",
+      "status": "past",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247873/roster",
+          "kind": "league-roster",
+          "quote": "Tyrants 14 Black (14s) | Manalo, Kitana",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium (the league-roster rule). The NCVA's 2026 Girls Power League roster of Tyrants 14 Black (a 14s team of the 2025-26 club season, admitting the classes of 2029 and 2030) lists a Kitana Manalo, which agrees with her Notre Dame San Jose row's grade 9 (class of 2030). Earlier, not current: the 2027 Power League (the 2026-27 club season) lists her on ND Elite 16 Blue of 'SBND Elite' (Sunny Ball ND Elite Volleyball Club, the program of Notre Dame San Jose's volleyball coach, with two of her Notre Dame San Jose teammates, Isabella Stipe and Sadie Romero), playing up on a 16s team. That club has no record here (no site of its own was found; sunnyball.com is a parked domain and ndelitevolleyball.com a Fargo club), so the current tie is not recorded. Looked at on the owner's request 2026-11-27; both rosters read again live."
     }
   ]
 }

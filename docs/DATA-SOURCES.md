@@ -3946,6 +3946,9 @@ as ECNL's Athlete One and GotSport Rankings are for girls soccer (§1.15).
   roster as the team played the event). A player's own record, `players/by-player-number/<n>`, gives a birth year, a
   hometown and, often, a self-reported school (`academicInfo.school`), and `players/<n>/team-history` the programs and
   teams the player has played for, each program with its city; `teams/<n>` and `teams/<n>/roster` answer 401 (a token).
+  A program's public record, `programs/public/<n>`, gives its name, type (`CLUB`), city and website (its director and
+  contact fields are not recorded); since 2026-11-27 (owner decision) it is the club record of a program with no site
+  of its own (nine in `data/basketball/clubs.json`).
   The pages carry `noindex` and the site has no robots.txt. Read: the 25 boys events with a Northern California venue
   (Oakland, Alameda, Roseville; the adidas 3Stripes Gold West Regional among them) from March to November 2026 and the
   two adidas 3SSB boys sessions (only the programs with a record): 27 events, 667 teams 14U-17U, each once at its

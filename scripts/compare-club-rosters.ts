@@ -20,8 +20,9 @@
  * `pnpm fetch-club-rosters`, which the leagues' season calls for rarely). It reads and reports only:
  * clubs.json is research, so a new match is added there by hand, its page re-read (README, "Club
  * rosters"). The package scripts set SCVAL_SPORT (`compare-club-rosters` soccer's, `:basketball`, `:volleyball`,
- * `:field-hockey`). Rule 5 (a club near enough) is soccer's LOCAL_REGIONS for soccer, basketball and volleyball, whose
- * schools are the same area's; for field hockey, a club in the half of the state (NorCal or SoCal) the
+ * `:field-hockey`). Rule 5 (a club near enough) is LOCAL_REGIONS for soccer, basketball and volleyball: the Bay
+ * Area (San Francisco, the Peninsula, the South Bay, the East Bay and Marin) and the Central Coast, deliberately wide
+ * (owner decision, 2026-11-27); for field hockey, a club in the half of the state (NorCal or SoCal) the
  * school's league is in.
  */
 
