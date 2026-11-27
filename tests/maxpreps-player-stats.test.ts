@@ -342,6 +342,23 @@ describe('parsePlayerStats: loud on drift', () => {
     }
   });
 
+  it('keeps two career-less players of one short name apart when their placeholder jerseys differ', () => {
+    // The key of a row with no career link is the name and the jersey cell as printed: "-" and "." are two players,
+    // though both read as no number.
+    const body = mutable('palo-alto');
+    const sub = body.data.groups[0].subgroups[0];
+    const cols = sub.stats.columns.map((c) => c.name);
+    const [nameAt, jerseyAt] = [cols.indexOf('Name'), cols.indexOf('Jersey')];
+    const [a, b] = sub.stats.rows;
+    for (const [row, jersey] of [[a, '-'], [b, '.']] as const) {
+      row.columns[nameAt] = { value: 'Twin Player', href: null };
+      row.columns[jerseyAt].value = jersey;
+    }
+    const twins = parsePlayerStats(body, { expectedTeamId: teamId })!.players.filter((p) => p.careerId === null && p.shortName === 'Twin Player');
+    expect(twins).toHaveLength(2);
+    expect(twins.map((p) => p.jersey)).toEqual([null, null]);
+  });
+
   it('still throws on a negative team total: that is drift, not one entry', () => {
     const cols = mutable('palo-alto').data.groups[0].subgroups[0].stats.columns;
     const neg = mutable('palo-alto');

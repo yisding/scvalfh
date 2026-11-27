@@ -453,8 +453,11 @@ export function parsePlayerStats(
         const careerUrl = nameCell.href?.trim() || null;
         const careerId = careerIdFromUrl(careerUrl);
         // The roster parser's rule: a cell with no letter or digit ("-!", ".", "#") or "N/A" is no number.
-        const jersey = jerseyAt >= 0 ? jerseyOf(row.columns[jerseyAt].value?.trim() || null) : null;
-        const playerKey = careerId ?? `${shortName}|${jersey ?? ''}`;
+        // The key of a row with no career link keeps the cell as printed, so two players of one short name with
+        // different placeholders ("-" and ".") stay two records.
+        const rawJersey = jerseyAt >= 0 ? row.columns[jerseyAt].value?.trim() || null : null;
+        const jersey = jerseyOf(rawJersey);
+        const playerKey = careerId ?? `${shortName}|${rawJersey ?? ''}`;
         const lineKey = `${spec.kind} ${playerKey}`;
         const negative = kept.find(({ at }) => /^\s*-\d+(\.\d+)?\s*$/.test(row.columns[at].value ?? ''));
         if (negative && !leftOut.has(lineKey)) {
