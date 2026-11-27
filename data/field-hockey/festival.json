@@ -331,7 +331,7 @@
       "slug": "adult"
     }
   ],
-  "fetchedAt": "2026-11-27T18:26:20.669Z",
+  "fetchedAt": "2026-11-27T19:11:38.870Z",
   "fields": [
     {
       "id": "h20261030120711072516a028aa69c46",
@@ -8801,7 +8801,7 @@
       "status": "scheduled"
     }
   ],
-  "sourceVersion": "v6_11/27/2026 6:25:17 PM",
+  "sourceVersion": "v6_11/27/2026 7:06:29 PM",
   "teams": [
     {
       "divisionKey": 3,
