@@ -2663,7 +2663,7 @@ comparison found it; every cited roster was read again live before it was writte
   Thorton (Christopher volleyball; NCSA writes Thornton) and Fiona Schrieber (Chico field hockey; Hudl writes
   Schreiber); and pairs where both spellings are names (Ysabella and Ysabelle, Tepper and Teper, Velasquez and
   Velazquez).
-- **Boys basketball: 112 ties cite a Passport roster.** For every match, and every row the rule left only for want of
+- **Boys basketball: 155 ties cite a Passport roster.** For every match, and every row the rule left only for want of
   a club record, a second club or a club near the schools, the player's own Passport record and team history were
   read. A record naming the row's school decides it (high: rule (a), the player's own record); one naming no school
   needs a hometown in the school's county or one bordering it (rule (b), medium; since 2026-11-27 anywhere in the
@@ -2675,9 +2675,17 @@ comparison found it; every cited roster was read again live before it was writte
   pages had made, which gain the roster. Ten club records were added for the programs the matches are at (Bay Area
   Impact, South Bay H2G, TM Basketball, SBB Rebels, Bay Area Hurricanes, Ballerz United, Bay Area Rebels, Renegades,
   the PVBC Mavericks, the Palo Alto Huskies), each from the program's own site and The Passport's public program
-  record (`api/programs/public/<n>`: city and website; its director and contact fields are not recorded); fifteen
-  programs have no site of their own or no city to confirm and no record (`clubs.json`'s notes), so their matches are
-  not linked. Not linked either: 10 rows on two programs' rosters in one season.
+  record (`api/programs/public/<n>`: city and website; its director and contact fields are not recorded). Fifteen
+  programs had no site of their own or no city to confirm. On the owner's decision (2026-11-27), a program with no
+  site of its own may take The Passport's public program record (a club, with its city) as its club record: nine
+  such programs now have one (South Bay Snipers, Pacifica Basketball Club, South Bay Reapers, Cali Legends, Salinas
+  Valley Kings, NBC Bulls, SF Work Hard Play Hard, MVP Magic, MBA Triple Threat), and their matches, under the same
+  school and hometown tests on each player's own record, made 40 more ties (14 high, 26 medium; Oceana's six at
+  Pacifica Basketball Club, Palma's, Soledad's and Greenfield's at Salinas Valley Kings, Pacific Grove's at Cali
+  Legends, nine Leland, Leigh, Bellarmine, Evergreen Valley and Cupertino players at South Bay Snipers). Still no
+  record: Wolfpack Zeta (no program of the name found), All-In-Elite (Rocklin), No Limit Basketball (Washington),
+  Fierce Basketball (no city), Bay Area Lakers and Team California (no public record), whose matches stay unlinked.
+  Not linked either: 10 rows on two programs' rosters in one season.
 - **Field hockey: 2 new ties**, Convent's Julia Ahlstrand and Marin Academy's JV Quinn Wintroub to SF Hawks (its
   current-players page); 45 matches were ties already citing the page and 12 ties made on another page of the same
   club. Not linked: Berkeley's Natalie Jones and Julia Stone (SF Hawks) and Helix's Gabriella Jones (Myto), common names
