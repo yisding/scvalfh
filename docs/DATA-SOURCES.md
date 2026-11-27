@@ -3278,21 +3278,23 @@ link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `loh
 `mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
 Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`,
 `vc.girlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no gender named),
-`pvhs.girlssoccer`. Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are not affiliated
+`pvhs.girlssoccer` (the owner has since placed all but the last: below). Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are not affiliated
 with the school, although they link San Mateo's MaxPreps page and name Notre Dame Belmont.
 
 The owner then placed seven of those left out, kept on the owner's word: Fremont `fremontgirls_soccer`, Silver
 Creek `silvercreekgirlssoccer`, Oak Grove `oghs.girlssoccer` and Monterey `montereygirlssoccer` (all CCS), The
 King's Academy `tka_girlssoccer`, KIPP San Jose Collegiate `ksjcgirlssoccer` and Leland `lelandwomenssoccer`;
-and gave Pioneer's, `pioneergirlsssoccer` (with three s's, which no guess tried): 58 of 123. The owner also
-turned down five: `ecpgirlssoccer` is a Los Angeles school's, `pioneerwsoccer` Michigan's, `seasidegirlssoccer`
-probably Washington state's,
-`vchs_girlssoccer` is a private account, and `carmelgirlsoccer` is inactive.
+and gave Pioneer's, `pioneergirlsssoccer` (with three s's, which no guess tried): 58 of 123. Later the same day the owner
+placed `liveoakgirlssoccer` as Live Oak's, Morgan Hill (CCS): 59 of 123. The owner also
+turned down nine: `ecpgirlssoccer` is a Los Angeles school's, `pioneerwsoccer` Michigan's, `seasidegirlssoccer`
+probably Washington state's, `vc.girlssoccer` Valley Central's (New York), `fremont.girls.soccer` a Utah
+school's, `northsalinas_soccer` the boys', and `vchs_girlssoccer` and `nmcgirlssoccer` are private accounts and
+`carmelgirlsoccer` is inactive.
 
 **Rejected profiles.** From this round on, a profile checked and turned down is kept in the file's `rejected`
 list (handle, the team it was checked for, why, the day), so a later round need not check it again. It is
 never linked, and a handle cannot be both a record and rejected (invariant 5 of `lib/social/instagram.ts`).
-Soccer's list starts with 59: this round's, and the earlier soccer rounds' named above. The other builds'
+Soccer's list holds 58: this round's, and the earlier soccer rounds' named above. The other builds'
 files have none yet.
 
 ### 1.11 VOLLEYBALL RECRUITING — profiles, clubs and commitments (`data/volleyball/*.json`)
