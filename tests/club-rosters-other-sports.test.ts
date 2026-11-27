@@ -23,6 +23,7 @@ import {
 } from '../lib/players/club-rosters';
 import type { ClubAffiliation, ClubsFile, ClubsView } from '../lib/players/clubs-schema';
 import { nameKey } from '../lib/players/name-compare';
+import { recaseName } from '../lib/sources/person-name';
 import { ageGroupClassYears } from '../scripts/fetch-club-rosters-ncva.mjs';
 
 const json = (rel: string): unknown => JSON.parse(readFileSync(rel, 'utf8'));
@@ -102,9 +103,11 @@ for (const { sport, sources } of SPORTS) {
         const named = team.players.filter((p) => nameKey(rosterName(p)) === nameKey(a.fullName));
         if (team.classYears !== undefined) {
           // A TM2Sign roster states no class year: the tie's quote names the team and the age group, then the row as
-          // "Last, First", which the roster lists.
+          // "Last, First". That row is the tied player's (her name as the site spells it, after NAME_SPELLINGS), and
+          // the roster lists her: another player on the roster never stands in for her.
           const [last, first] = s.quote.slice(s.quote.indexOf(' | ') + 3).split(', ');
-          expect(named.length + team.players.filter((p) => nameKey(rosterName(p)) === nameKey(`${first} ${last}`)).length, label).toBeGreaterThan(0);
+          expect(nameKey(recaseName(`${first} ${last}`)), `${label}: the quote names another player`).toBe(nameKey(a.fullName));
+          expect(named.length, `${label}: the roster does not list her`).toBeGreaterThan(0);
           expect(s.statedClassYear, label).toBeNull();
           expect(s.quote.startsWith(`${team.teamName} (${team.division}) | `), label).toBe(true);
         } else if (s.statedClassYear !== null) {
