@@ -564,11 +564,13 @@ describe('the volleyball recruiting research (data/volleyball/{clubs,commits,ros
     expect(file.season).toBe('26-27');
     expect(file.clubs.length).toBeGreaterThanOrEqual(30);
     expect(file.affiliations.length).toBeGreaterThanOrEqual(240);
-    expect(file.jvAffiliations).toEqual([]);
-    for (const a of file.affiliations) {
+    // JV ties since 2026-11-27: the NCVA Power League's rosters (data/volleyball/club-rosters.json) list JV players too.
+    expect(file.jvAffiliations.length).toBeGreaterThan(0);
+    for (const a of [...file.affiliations, ...file.jvAffiliations]) {
       expect(m.clubs.getClub(a.club), a.club).toBeDefined();
       expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
     }
+    for (const a of file.jvAffiliations) expect(m.clubs.getAffiliatedPlayer(a).level, a.fullName).toBe('jv');
     // The areas searched for every club; the others say they were not.
     expect(m.clubs.SEARCHED_REGIONS).toEqual(['peninsula', 'south-bay']);
     // The largest clubs around these schools each have a page.
