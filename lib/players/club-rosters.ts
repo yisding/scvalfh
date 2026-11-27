@@ -74,11 +74,12 @@ export const LEAGUE_ROSTER_KIND = 'league-roster';
 export const LOCAL_REGIONS: readonly ClubRegion[] = ['san-francisco', 'peninsula', 'south-bay', 'central-coast'];
 
 /**
- * Volleyball's: LOCAL_REGIONS and the East Bay (owner decision, 2026-11-27). The East Bay's clubs (City Beach and
- * Union Volleyball Academy in Fremont, among them) draw players from the South Bay schools, and a Saint Francis
- * player's UVA tie, confirmed by the owner, was the case that showed it. Marin's clubs stay out.
+ * Volleyball's: LOCAL_REGIONS, the East Bay and Marin (owner decisions, 2026-11-27). The East Bay's clubs (City Beach
+ * and Union Volleyball Academy in Fremont, among them) draw players from the South Bay schools, and a Saint Francis
+ * player's UVA tie, confirmed by the owner, was the case that showed it; Marin's (Absolute in San Rafael among them)
+ * draw the San Francisco and Peninsula schools' players.
  */
-export const VOLLEYBALL_LOCAL_REGIONS: readonly ClubRegion[] = [...LOCAL_REGIONS, 'east-bay'];
+export const VOLLEYBALL_LOCAL_REGIONS: readonly ClubRegion[] = [...LOCAL_REGIONS, 'east-bay', 'marin'];
 
 const text = z.string().min(1);
 /**

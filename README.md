@@ -2630,10 +2630,10 @@ comparison found it; every cited roster was read again live before it was writte
   San Jose's Kitana Manalo), 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael,
   Union Volleyball Academy), and what the rule leaves (a name at two schools, no grade, a class the age group does
   not admit, a club with no record).
-  **Since 2026-11-27 (owner decision) a volleyball club in the East Bay counts as near the schools**
-  (`VOLLEYBALL_LOCAL_REGIONS`): City Beach and Union Volleyball Academy, both in Fremont, draw South Bay players. That
-  linked 11 more (City Beach 9, UVA 2) and gave 4 City Beach ties their roster; Absolute (San Rafael, Marin) stays
-  outside, its 7 matches unlinked.
+  **Since 2026-11-27 (owner decisions) a volleyball club in the East Bay or Marin counts as near the schools**
+  (`VOLLEYBALL_LOCAL_REGIONS`): City Beach and Union Volleyball Academy, both in Fremont, draw South Bay players, and
+  Absolute (San Rafael) the San Francisco and Peninsula schools'. That linked 14 more (City Beach 9, UVA 2, Absolute
+  3) and gave 4 City Beach and 4 Absolute ties their roster.
   Later the same day, on the owner's word: Mitty's Melina Gklaros-Stavropoulos to MVVC (her Prep Dig page and MVVC G
   14 Red's roster), and Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; the rule had left the
   roster match as a club away from the school) and to Red Rock (earlier; the NCVA's 2024 Power League). MaxPreps had

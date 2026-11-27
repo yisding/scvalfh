@@ -194,10 +194,11 @@ describe('the league-roster rule, as the other sports use it', () => {
     expect(outcomes(file, [row('Ann Lee', 2028)], { isLocal: () => true })).toEqual(['Ann Lee: match (new) far']);
   });
 
-  it('counts an East Bay club as near the schools in volleyball only (owner decision, 2026-11-27)', () => {
-    expect(VOLLEYBALL_LOCAL_REGIONS).toEqual([...LOCAL_REGIONS, 'east-bay']);
+  it('counts an East Bay or Marin club as near the schools in volleyball only (owner decisions, 2026-11-27)', () => {
+    expect(VOLLEYBALL_LOCAL_REGIONS).toEqual([...LOCAL_REGIONS, 'east-bay', 'marin']);
     expect(LOCAL_REGIONS).not.toContain('east-bay');
-    expect(VOLLEYBALL_LOCAL_REGIONS).not.toContain('marin');
+    expect(LOCAL_REGIONS).not.toContain('marin');
+    expect(VOLLEYBALL_LOCAL_REGIONS).not.toContain('sacramento');
     const file = withTeams([tm2(1, 'ncva-power-2026', 'Far Club', [2027, 2028], [['Ann', 'Lee']])]);
     const eastBay = { ...clubs, clubs: [club('far', 'east-bay')] };
     const volleyball = { isLocal: (region: (typeof LOCAL_REGIONS)[number]) => VOLLEYBALL_LOCAL_REGIONS.includes(region) };
