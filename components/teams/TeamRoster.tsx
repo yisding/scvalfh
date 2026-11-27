@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import ExternalLink from '../ui/ExternalLink';
-import { MissingValue } from '../ui/MissingValue';
+import { JerseyNumber } from '../ui/JerseyNumber';
 import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
 /**
@@ -278,15 +278,7 @@ export function TeamRoster({ view }: TeamRosterProps) {
           >
             {showNumbers ? (
               <span className={['sx-num shrink-0 text-right text-body text-ink-2', numberWidth].join(' ')}>
-                {row.jersey ? (
-                  <>
-                    <span className="sr-only">Number </span>
-                    {row.jersey.text}
-                    {row.jersey.elsewhere ? <ElsewhereMark /> : null}
-                  </>
-                ) : (
-                  <MissingValue words="No number listed" />
-                )}
+                <JerseyNumber number={row.jersey?.text ?? null} after={row.jersey?.elsewhere ? <ElsewhereMark /> : null} />
               </span>
             ) : null}
             <span className="min-w-0 flex-1">

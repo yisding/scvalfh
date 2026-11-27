@@ -1252,6 +1252,16 @@
   letter-spacing: 0;
 }
 
+/* ── Unlayered on purpose, to outrank Tailwind's `sr-only` utility: a visually hidden label keeps its
+      spaces. The utility sets `white-space: nowrap` on an absolutely positioned box, so a space at its
+      end ("Sam Tow's ", "Number ") was dropped: a screen reader's text and a copied selection ran it into
+      what follows ("Sam Tow'sHudl profile", "Number5"). `pre-wrap` keeps the space and still wraps; the
+      box stays 1px and clipped, so nothing shows. (components/ui/JerseyNumber.tsx separates a jersey
+      number from the name beside it, which is a different box.) ── */
+.sr-only {
+  white-space: pre-wrap;
+}
+
 /* ── Print (unlayered, after the token blocks, so it outranks the dark blocks, every layer and the
       unlayered scope stylesheet). Paper is always light: the colour tokens are the `:root` block's,
       copied; keep the two in step. The chrome and the client-only controls are for a screen

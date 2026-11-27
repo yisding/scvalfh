@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import MissingValue from '../ui/MissingValue';
+import { JerseyNumber } from '../ui/JerseyNumber';
 import { plural } from '../words/plural';
 import type { GoalieCard, PlayerStatsView, StatTable } from './player-stats-view';
 import { statText } from './player-stats-view';
@@ -140,14 +141,7 @@ export function StatsTable({ table, caption }: { table: StatTable; caption: stri
                 <span className="flex items-baseline text-body text-ink">
                   {numbered ? (
                     <span className={['sx-num mr-2 shrink-0 text-right text-cell text-ink-2', numberWidth].join(' ')}>
-                      {row.jersey ? (
-                        <>
-                          <span className="sr-only">Number </span>
-                          {row.jersey}
-                        </>
-                      ) : (
-                        <MissingValue words="No number listed" />
-                      )}
+                      <JerseyNumber number={row.jersey ?? null} />
                     </span>
                   ) : null}
                   <span className="min-w-0">
@@ -179,8 +173,7 @@ function Goalie({ card }: { card: GoalieCard }) {
       <h4 className="m-0 text-body font-semibold text-ink">
         {card.jersey ? (
           <span className="sx-num mr-2 text-cell font-normal text-ink-2">
-            <span className="sr-only">Number </span>
-            {card.jersey}
+            <JerseyNumber number={card.jersey} />
           </span>
         ) : null}
         <PlayerName name={card.name} href={card.href} standalone />
@@ -293,8 +286,7 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
                           <span className="flex items-baseline text-body text-ink">
                             {g.jersey ? (
                               <span className="sx-num mr-2 w-6 shrink-0 text-right text-cell text-ink-2">
-                                <span className="sr-only">Number </span>
-                                {g.jersey}
+                                <JerseyNumber number={g.jersey} />
                               </span>
                             ) : null}
                             <span className="min-w-0">
