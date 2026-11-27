@@ -369,11 +369,12 @@
     font-synthesis-weight: none;
     font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
+    /* room for the fixed bottom tab bar + the notch */
+    padding-bottom: calc(var(--spacing-tabbar) + env(safe-area-inset-bottom));
   }
+  @media (min-width: 768px) { body { padding-bottom: 0; } }
   /* A page shorter than the screen keeps its footer on the bottom edge: the body is a column and
-     <main> takes the slack. `width: 100%` because a flex item with auto side margins shrinks to fit.
-     The phone tab bar is the body's last child and sticks to the bottom (see .sx-tabbar), so it takes
-     its own room at the end of the page and the body needs no bottom padding to clear it. */
+     <main> takes the slack. `width: 100%` because a flex item with auto side margins shrinks to fit. */
   body { display: flex; flex-direction: column; min-height: 100dvh; }
   body > main { flex: 1 0 auto; width: 100%; }
 
@@ -1031,13 +1032,8 @@
   /* ── Phone bar + More sheet. Five cells on the page colour (the band is the only dark plane on a
      phone). A cell is as wide as its word plus an equal share of the spare width, so the gaps between
      the words are equal (at 320, "Standings" and "Playoffs" no longer touch). The selected cell: bold,
-     the label in the accent, and a 3px accent bar on its top edge.
-     `sticky`, not `fixed`: Firefox for Android (160, address bar at the bottom, hide-on-scroll on) did
-     not draw a `position: fixed; bottom: 0` bar while its toolbar was collapsed, so the bar was missing
-     until the reader scrolled. A sticky bar is part of the scrolled content and is painted with it.
-     As the body's last child, and the body at least 100dvh tall, it sits on the screen's bottom edge on
-     every page, and after the footer at the end of the page. ── */
-  .sx-tabbar { position: sticky; bottom: 0; z-index: 20; background: var(--sx-bg); border-top: 1px solid var(--sx-border-strong); padding-bottom: env(safe-area-inset-bottom); }
+     the label in the accent, and a 3px accent bar on its top edge. ── */
+  .sx-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--sx-bg); border-top: 1px solid var(--sx-border-strong); padding-bottom: env(safe-area-inset-bottom); }
   .sx-tabbar > ul { display: flex; max-width: 30rem; margin: 0 auto; padding: 0; list-style: none; }
   .sx-tabbar > ul > li { flex: 1 1 auto; min-width: 0; }
   .sx-tabbar-tab {
@@ -1070,6 +1066,19 @@
   .sx-more-sheet > ul > li[data-prefs] { border-top-color: var(--sx-border-strong); }   /* the two preference rows: "Dark mode", "Switch to SoCal" */
   .sx-more-sheet > p { margin: 0; padding: 0.5rem 1rem 1rem; font-size: 0.875rem; color: var(--sx-text-2); }
   @media (min-width: 48rem) { .sx-tabbar { display: none; } }
+  /* Firefox only: the bar is `sticky` to the bottom, not `fixed`. Firefox for Android (160, address bar
+     at the bottom, hide-on-scroll on) did not draw the fixed bar while its toolbar was collapsed: the page
+     ran to the screen's bottom edge and the bar appeared only once the reader scrolled or left the app
+     and came back. A sticky bar is part of the scrolled content and is painted with it. The bar is the
+     body's last child and the body a column at least 100dvh tall, so it sits on the screen's bottom edge
+     on every page, and after the footer at the end, as the fixed one does; it takes its own room there,
+     so the body drops the padding that cleared the fixed bar. Gecko alone, by two Gecko-only features
+     (either one is enough): everywhere else stays `fixed`, which axe's target-size rule (scripts/a11y-axe.mjs) treats as
+     scrollable-past rather than as covering the targets under it. */
+  @supports (-moz-appearance: none) or selector(::-moz-range-thumb) {
+    .sx-tabbar { position: sticky; left: auto; right: auto; }
+    body { padding-bottom: 0; }
+  }
 
   /* ── Disclosure (optional data: "Show all", the Calendar) ─────────────────── */
   .sx-disclosure { position: relative; border: 0; background: none; border-radius: 0; }
