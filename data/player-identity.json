@@ -756,7 +756,7 @@
     {
       "sport": "soccer",
       "team": "andrew-hill",
-      "name": "Daisy Regaldo",
+      "name": "Daisy Regalado",
       "careerId": "c2itqjfqubnqa",
       "basis": "One player. \"Daisy Regaldo\": soccer 26-27 varsity grade 10 (MaxPreps roster). \"Daisy Regalado\": volleyball 26-27 varsity #2 grade 10 (MaxPreps roster). Same school, both class of 2029. No other player of the school has either name. One first name, the surnames one letter apart (Regaldo is Regalado with a letter dropped), both sophomores in 26-27: volleyball in the fall, soccer in the winter, each under its own MaxPreps career. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
     },
@@ -826,7 +826,7 @@
     {
       "sport": "soccer",
       "team": "valley-christian",
-      "name": "Guiliana (GiGi) Borello",
+      "name": "Giuliana (GiGi) Borello",
       "careerId": "0m3unn7lofh88",
       "basis": "One player. \"Guiliana (GiGi) Borello\": soccer 26-27 varsity grade 11 (MaxPreps roster). \"Giuliana Borello\": field-hockey 25-26 varsity #6 grade 10 (MaxPreps stat sheet, all-league list); field-hockey 26-27 varsity #6 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. No other player of the school has either name. The soccer roster's row gives both her name (two letters transposed) and her nickname, the two the field hockey lists use (joined 2026-11-14); both juniors in 26-27. The other Borello at the school is a freshman. Read from the repository's copies of the lists (data/), not the live pages. Decided 2026-11-22."
     },
@@ -1217,8 +1217,8 @@
       "sport": "volleyball",
       "team": "sacred-heart-cathedral",
       "names": [
-        "Caylee Chinn",
-        "Chelsie Chinn"
+        "Caylee Chin",
+        "Chelsie Chin"
       ],
       "basis": "Two people. \"Caylee Chinn\": volleyball 26-27 varsity #20 grade 11 (MaxPreps roster, recruiting profile (hudl)). \"Chelsie Chinn\": volleyball 26-27 jv #3 grade 10 (MaxPreps JV roster, recruiting profile (hudl)). Listed in the same season, classes of 2028 and 2029. No other player of the team has either name. Two MaxPreps careers listed side by side in 26-27, a junior on varsity and a sophomore on JV, with different numbers and their own Hudl profiles: sisters. Read from the repository's copies of the lists (data/volleyball/), not the live pages. Decided 2026-11-16."
     },

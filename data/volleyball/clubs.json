@@ -11,7 +11,7 @@
     "Round of 2026-11-14: the 19 WCAL and WBAL schools (307 varsity rows) by every method of the first round (Hudl team rosters, NCSA, a SportsRecruits address probe, MaxPreps career pages, Prep Dig, PrepVolleyball), NCSA read through a headless browser this time; and, for all 60 schools, NCSA name searches for every named row, Prep Dig and PrepVolleyball for every junior, senior and ungraded row, and web searches for every senior. A tie the first round already had gained the new source, its basis saying so ('Round of 2026-11-14'). Prep Dig pages whose club link goes to a Vision club in another state are not used. NCSA spellings of a club (Pandas Volleyball Club, Panda VBC, MHVC) are mapped to the club's record.",
     "JV players' club ties were not listed until 2026-11-27; since then a JV row's tie is served on its JV row, as in the other builds (the NCVA rosters list JV players: below).",
     "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the public team rosters of the NCVA Girls Power League, read from TM2Sign's public API into data/volleyball/club-rosters.json (pnpm fetch-club-rosters:volleyball: the 2026 league's 13s-17s, the 2025-26 club season, 579 rosters with players; the 2027 league's 14s-18s, 42 of 594 posted so far), compared with every varsity and JV row by pnpm compare-club-rosters:volleyball. A roster gives a name only: a row matches when its class year is one the team's age group admits (USA Volleyball's July 1 age definition, California's September 1 cutoff), no other tracked school has the name, every agreeing roster that season is at one club, and the club is based in San Francisco, the Peninsula, the South Bay or the Central Coast. 237 new ties rest on a roster alone (medium, current for the club season the roster is for); 169 ties other pages had already made gain the roster and read current. Each cited roster was read again live the same day and lists the player. Not linked: Ellie Chu (Milpitas), Madison Miller (Sobrato) and Kitana Manalo (Notre Dame San Jose), whose names are on another club's roster too; 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael, Union Volleyball Academy), and the rows the rule leaves (a name at two schools, no grade, a class year the age group does not admit, a club with no record).",
-    "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction)."
+    "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction). On the owner's word the same day: Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; her club Hudl profile and UVA 17 Lynda's 2026 Power League roster) and Red Rock (earlier; Red Rock 15 Quinn on the 2024 Power League). A sweep of MaxPreps misspellings then corrected eleven more names in lib/sources/person-name.ts NAME_SPELLINGS; with Saratoga's Dhrishti Shah and SHC's Caylee and Chelsie Chin spelled right, the kept rosters matched them (Red Rock; SF Tremors), and Mitty's Thaïs Ettori's Vision tie gained its roster."
   ],
   "clubs": [
     {
@@ -10197,11 +10197,11 @@
     },
     {
       "playerId": "pfe8bdc0403",
-      "name": "Thas Ettori",
+      "name": "Thaïs Ettori",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "medium",
       "sources": [
         {
@@ -10211,9 +10211,17 @@
           "statedSchool": "Archbishop Mitty High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248400/roster",
+          "kind": "league-roster",
+          "quote": "Vision 16 Gold (16s) | Ettori, Thais",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Vision 16 Gold (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "p00d914e1ae",
@@ -12861,7 +12869,7 @@
     },
     {
       "playerId": "p0070d66d1b",
-      "name": "Caylee Chinn",
+      "name": "Caylee Chin",
       "club": "slainte-volleyball-club",
       "clubTeam": "18 Nationals",
       "status": "current",
@@ -13397,11 +13405,11 @@
     },
     {
       "playerId": "p0070d66d1b",
-      "name": "Caylee Chinn",
+      "name": "Caylee Chin",
       "club": "sf-tremors",
       "clubTeam": "16-1 Wolverines",
-      "status": "unknown",
-      "asOf": null,
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -13411,9 +13419,17 @@
           "statedSchool": "Sacred Heart Cathedral (Prep Dig team link: Sacred Heart Cathedral High School Volleyball | San Francisco, CA)",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247888/roster",
+          "kind": "league-roster",
+          "quote": "SF TREMORS 16 WOLVERINES (16s) | Chin, Caylee",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): SF TREMORS 16 WOLVERINES (16s; the classes of 2027 and 2028 its age group admits) lists a player of this name, which agrees with the roster's class of 2028; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day. The tie is current on that roster (2025-26 club season)."
     },
     {
       "playerId": "p058003c0d5",
@@ -19262,6 +19278,114 @@
         }
       ],
       "basis": "Her Prep Dig player page (pointed out by the owner, 2026-11-27; profile created October 24, 2025) says she attends Archbishop Mitty (its link goes to Prep Dig's team page for the San Jose school), class of 2030, 6'2\", and plays club volleyball for Mountain View Volleyball Club: rule (a), the page names the player, the club and her high school; high. Class 2030 agrees with her grade 9 on Mitty's roster, and the height with MaxPreps' 6'2\". MaxPreps spells her surname 'Gklaros-Stavropolous'; Prep Dig and the NCVA spell it 'Gklaros-Stavropoulos', which is why the kept-roster comparison of the same day did not find her by name. The site respells MaxPreps' rows since 2026-11-27 (NAME_SPELLINGS, the owner's correction). The NCVA's 2026 Girls Power League roster of MVVC G 14 Red (data/volleyball/club-rosters.json; the 2025-26 club season, a 14s team admitting the classes of 2029 and 2030) lists her, so the tie is current for 2025-26. Both pages read 2026-11-27, the roster again live."
+    },
+    {
+      "playerId": "pfbb8f4c025",
+      "name": "Dhrishti Shah",
+      "club": "red-rock-volleyball",
+      "clubTeam": "Red Rock 14 Natahlee - Campbell",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247516/roster",
+          "kind": "league-roster",
+          "quote": "Red Rock 14 Natahlee - Campbell (14s) | Shah, Dhrishti",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): Red Rock 14 Natahlee - Campbell (14s; the classes of 2029 and 2030 its age group admits) lists a player of this name, which agrees with the roster's class of 2030; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p312f8d688d",
+      "name": "Skye Hunter",
+      "club": "morgan-hill-volleyball-club",
+      "clubTeam": "MORGAN HILL 15 BLACK",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/276344/roster",
+          "kind": "league-roster",
+          "quote": "MORGAN HILL 15 BLACK (15s) | hunter, skye",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-27"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2027 NCVA Girls Power League (the 2026-27 club season): MORGAN HILL 15 BLACK (15s; the classes of 2029 and 2030 its age group admits) lists a player of this name, which agrees with the roster's class of 2029; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "p4b0c281993",
+      "name": "Chelsie Chin",
+      "club": "sf-tremors",
+      "clubTeam": "SF TREMORS 15 WOLVERINES",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247886/roster",
+          "kind": "league-roster",
+          "quote": "SF TREMORS 15 WOLVERINES (15s) | Chin, Chelsie",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown (the league-roster rule, README \"Club rosters in the other sports\"). Found 2026-11-27 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json): 2026 NCVA Girls Power League (the 2025-26 club season): SF TREMORS 15 WOLVERINES (15s; the classes of 2028 and 2029 its age group admits) lists a player of this name, which agrees with the roster's class of 2029; no other tracked school has a player of the name and no other club's roster that season lists one. Re-read on the live roster the same day."
+    },
+    {
+      "playerId": "pc1644824d5",
+      "name": "Victoria Tuipulotu",
+      "club": "union-volleyball-academy",
+      "clubTeam": "UVA 17 Lynda",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/29089264/Victoria-Tuipulotu",
+          "kind": "hudl",
+          "quote": "Union Volleyball Academy - 17 Lynda / OH, DS / Class of 2027 / HAYWARD, CA",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2025"
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249146/roster",
+          "kind": "league-roster",
+          "quote": "UVA 17 Lynda (17s) | Tuipulotu, Victoria",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Victoria Tuipulotu is Saint Francis' class-of-2027 player (MaxPreps wrote 'Tuipolotu' until 2026-11-27; NAME_SPELLINGS corrects it). The owner confirmed (2026-11-27) that she plays for Union Volleyball Academy and played for Red Rock before. Her club Hudl profile (created December 5, 2025; the owner's pointer) lists her on Union Volleyball Academy's 17 Lynda team, class of 2027, and the NCVA's 2026 Girls Power League roster of UVA 17 Lynda (the kept copy, data/volleyball/club-rosters.json; a 17s team of the 2025-26 club season, the class of 2027) lists her: current. Neither page names her school, so the tie rests on the owner's confirmation with her name and class (medium). The league-roster rule had left the roster match unlinked because the club is in the East Bay (README, \"Club rosters in the other sports\"). Both pages read 2026-11-27."
+    },
+    {
+      "playerId": "pc1644824d5",
+      "name": "Victoria Tuipulotu",
+      "club": "red-rock-volleyball",
+      "clubTeam": "Red Rock 15 Quinn - Redwood City",
+      "status": "past",
+      "asOf": "2023-24",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/191405/roster",
+          "kind": "league-roster",
+          "quote": "Red Rock 15 Quinn - Redwood City (15s) | Tuipulotu, Victoria",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2023-24"
+        }
+      ],
+      "basis": "Victoria Tuipulotu is Saint Francis' class-of-2027 player (MaxPreps wrote 'Tuipolotu' until 2026-11-27; NAME_SPELLINGS corrects it). The owner confirmed (2026-11-27) that she plays for Union Volleyball Academy and played for Red Rock before. The NCVA's 2024 Girls Power League (TM2Sign event 1545, the 2023-24 club season; not in the kept copy, which holds the 2026 and 2027 leagues) lists her on Red Rock 15 Quinn - Redwood City, a 15s team that season admitting the classes of 2026 and 2027: an earlier club. Read 2026-11-27, on the owner's pointer; medium."
     }
   ]
 }

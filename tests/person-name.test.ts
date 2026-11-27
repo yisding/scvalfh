@@ -159,6 +159,30 @@ describe('NAME_SPELLINGS', () => {
     expect(recaseName('Leinata Tuipolotu')).toBe('Leinata Tuipolotu');
   });
 
+  it('respells the misspellings the 2026-11-27 sweep found, each on its own row', () => {
+    const cases: Array<[string, string, string, string, string]> = [
+      // [MaxPreps first, last, then the corrected first, last, full]
+      ['Thas', 'Ettori', 'Thaïs', 'Ettori', 'Thaïs Ettori'],
+      ['Caylee', 'Chinn', 'Caylee', 'Chin', 'Caylee Chin'],
+      ['Chelsie', 'Chinn', 'Chelsie', 'Chin', 'Chelsie Chin'],
+      ['Dhrishti', 'Shan', 'Dhrishti', 'Shah', 'Dhrishti Shah'],
+      ['Nethra', 'Lyer', 'Nethra', 'Iyer', 'Nethra Iyer'],
+      ['Madina', 'Nooray', 'Madina', 'Noorzay', 'Madina Noorzay'],
+      ['Kyraiki', 'Pries', 'Kyriaki', 'Pries', 'Kyriaki Pries'],
+      ['Ella', 'Bradfrd', 'Ella', 'Bradford', 'Ella Bradford'],
+      ['Guiliana (GiGi)', 'Borello', 'Giuliana (GiGi)', 'Borello', 'Giuliana (GiGi) Borello'],
+      ['Daisy', 'Regaldo', 'Daisy', 'Regalado', 'Daisy Regalado'],
+      ['Varun', 'Pannikar', 'Varun', 'Panikkar', 'Varun Panikkar'],
+    ];
+    for (const [first, last, firstTo, lastTo, fullTo] of cases) {
+      expect(recaseNameParts({ firstName: first, lastName: last, fullName: `${first} ${last}` })).toEqual({ firstName: firstTo, lastName: lastTo, fullName: fullTo });
+      expect(recaseName(fullTo), fullTo).toBe(fullTo); // a fixed point
+    }
+    expect(recaseName('E. Bradfrd')).toBe('E. Bradford'); // the stat sheet's short form
+    // Keyed to the whole name: anyone else of a surname keeps it.
+    for (const name of ['Grace Chinn', 'Amy Shan', 'Mia Nooray', 'Tom Pannikar', 'Ana Regaldo']) expect(recaseName(name)).toBe(name);
+  });
+
   it('respells a parenthesized middle name on a roster row', () => {
     expect(
       recaseNameParts({ firstName: 'Sophie (mai Lam)', lastName: 'Vu', fullName: 'Sophie (mai Lam) Vu' }),

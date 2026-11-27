@@ -2630,6 +2630,20 @@ comparison found it; every cited roster was read again live before it was writte
   San Jose's Kitana Manalo), 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael,
   Union Volleyball Academy), and what the rule leaves (a name at two schools, no grade, a class the age group does
   not admit, a club with no record).
+  Later the same day, on the owner's word: Mitty's Melina Gklaros-Stavropoulos to MVVC (her Prep Dig page and MVVC G
+  14 Red's roster), and Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; the rule had left the
+  roster match as a club away from the school) and to Red Rock (earlier; the NCVA's 2024 Power League). MaxPreps had
+  misspelled both. **A sweep for MaxPreps misspellings** (each name that another source spells otherwise: Hudl, NCSA,
+  Prep Dig, the NCVA and Passport rosters, the schools' own JV lists, the all-league lists, MaxPreps' own other pages)
+  then corrected eleven more, each a clear slip that a second page spells the other way, in `NAME_SPELLINGS`
+  (`lib/sources/person-name.ts`, keyed to the whole name, so a refetch keeps them): Thaïs Ettori, Caylee and Chelsie
+  Chin, Dhrishti Shah, Nethra Iyer, Madina Noorzay, Kyriaki Pries, Ella Bradford, Giuliana (GiGi) Borello, Daisy
+  Regalado and Varun Panikkar. Spelled right, four of them matched the kept rosters (Dhrishti Shah to Red Rock,
+  Chelsie Chin to SF Tremors; Caylee Chin's and Thaïs Ettori's ties gained their rosters). Left as MaxPreps has them,
+  for want of a second page: Alejandro Corvarrubias (Live Oak basketball; The Passport writes Covarrubias), Shiloh
+  Thorton (Christopher volleyball; NCSA writes Thornton) and Fiona Schrieber (Chico field hockey; Hudl writes
+  Schreiber); and pairs where both spellings are names (Ysabella and Ysabelle, Tepper and Teper, Velasquez and
+  Velazquez).
 - **Boys basketball: 112 ties cite a Passport roster.** For every match, and every row the rule left only for want of
   a club record, a second club or a club near the schools, the player's own Passport record and team history were
   read. A record naming the row's school decides it (high: rule (a), the player's own record); one naming no school
