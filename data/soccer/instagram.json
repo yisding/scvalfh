@@ -5,7 +5,7 @@
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 50 of the 123 teams have one (2026-11-27)."
+    "No record means no account we could find and check on the day, not that there is none: 52 of the 123 teams have one (2026-11-27)."
   ],
   "teams": [
     {
@@ -54,6 +54,14 @@
       "handle": "cupertinogirlssoccer",
       "foundAt": null,
       "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"Cupertino HS Varsity Girls Soccer\", season highlights 22-23 to 24-25. Cupertino’s boys keep their own account (cupertinosoccer, \"Cupertino Boys Varsity Soccer\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "fremont",
+      "level": "varsity",
+      "handle": "fremontgirls_soccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Fremont’s, Sunnyvale. Profile opened: \"Fremont HS Girls Varsity Soccer\", bio \"Official Account for Fremont Girls Varsity Soccer | League Champions: 2016, 2018, 2025\"; it names no city or mascot. Not fremontgirlssoccer (\"We are Tiger Soccer\") or fremont_girls_soccer (a Fremont FC club team).",
       "checkedOn": "2026-11-27"
     },
     {
@@ -126,6 +134,14 @@
       "handle": "evhs.girlssoccer",
       "foundAt": null,
       "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"evergreen valley girls soccer\", bio \"Team and event updates! 2025 League Champions\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "silver-creek",
+      "level": "varsity",
+      "handle": "silvercreekgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Silver Creek’s, San Jose. Profile opened: \"SC Girls Varsity Soccer\", bio \"Official IG of SCHS Woman’s ⚽️\", season highlights 23-24 to 25-26; it names no city. The boys keep their own account (silvercreeksoccer, \"Silver creek high school boys varsity soccer\").",
       "checkedOn": "2026-11-27"
     },
     {

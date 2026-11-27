@@ -3276,12 +3276,13 @@ Evergreen Valley; Andrew Hill and Gunderson share one account with the boys). Th
 link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `lahsgirlssoccer` Los Amigos's,
 `stfrancisgirlssoccer`/`sfhs_girls_soccer` Illinois's, `yhs.girls.soccer` Yucaipa's, and `mvhsgirlssoccer`,
 `mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
-Left out because nothing places them: `fremontgirls_soccer`, `fremont.girls.soccer`, `silvercreekgirlssoccer`,
-`liveoakgirlssoccer`, `lohs.girlssoccer`, `oghs.girlssoccer`, `pioneerwsoccer`, `lelandwomenssoccer`,
+Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`, `lohs.girlssoccer`, `oghs.girlssoccer`, `pioneerwsoccer`, `lelandwomenssoccer`,
 `vchs_girlssoccer`, `vc.girlssoccer`, `tka_girlssoccer`, `ksjcgirlssoccer`, `ecpgirlssoccer`,
 `montereygirlssoccer`, `carmelgirlsoccer`, `seasidegirlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no
 gender named), `pvhs.girlssoccer`. Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are
 not affiliated with the school, although they link San Mateo's MaxPreps page and name Notre Dame Belmont.
+The owner then placed two of those left out: Fremont `fremontgirls_soccer` and Silver Creek
+`silvercreekgirlssoccer` (both CCS), kept on the owner's word: 52 of 123.
 
 ### 1.11 VOLLEYBALL RECRUITING — profiles, clubs and commitments (`data/volleyball/*.json`)
 

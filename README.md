@@ -1429,12 +1429,12 @@ of the account a search had found.
 The soccer, basketball and volleyball builds read their own files (`data/soccer/`, `data/basketball/`,
 `data/volleyball/`), researched on 2026-11-14 under the same rule for that build's program: the girls
 soccer, boys basketball or girls volleyball program's own account, or one the school's boys and girls
-teams share (its note says so), never the other gender's alone. Coverage: **50 of the 123 soccer
+teams share (its note says so), never the other gender's alone. Coverage: **52 of the 123 soccer
 teams, 26 of the 133 basketball teams and 18 of the 60 volleyball teams** (2026-11-27, after a second round over
 the teams the registries had gained and every team then without a record; Instagram showed most profiles that day
 only behind its login page, so those records were kept unopened, at the owner's direction, on the page or search
 result each note names. A third soccer round requested likely handles as profile pages in a headless browser and
-kept 38 more whose profile places them at the school: DATA-SOURCES §1.10). Most of these schools' sites
+kept 38 more whose profile places them at the school, and the owner placed two more: DATA-SOURCES §1.10). Most of these schools' sites
 link only the school's or the athletics department's account, and a profile that does not say which
 school it is ("Fremont Girls Soccer", "MVHS Girls Volleyball") is left out unless a page of the school's
 links it or the profile links the school's own page. Every profile kept was opened in a browser.
