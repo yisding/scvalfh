@@ -5,8 +5,9 @@
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 59 of the 123 teams have one (2026-11-27).",
-    "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked."
+    "No record means no account we could find and check on the day, not that there is none: 63 of the 123 teams have one (2026-11-27).",
+    "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked.",
+    "MacDonald has no girls soccer account (owner, 2026-11-27)."
   ],
   "teams": [
     {
@@ -42,6 +43,22 @@
       "checkedOn": "2026-11-14"
     },
     {
+      "slug": "mountain-view",
+      "level": "varsity",
+      "handle": "mvgirlsvarsitysoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"MVHS Girls Soccer\", bio \"The official Instagram account for your MVHS girls soccer varsity team (2026 - 2027)\"; it names no city, so it rests on the owner’s word that it is Mountain View’s. Not mountainviewgirlssoccer (Oregon) or mvhs.girlssoccer.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "palo-alto",
+      "level": "varsity",
+      "handle": "palygirls.soccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Paly Girls Varsity Soccer\", bio \"#skovikes\"; Paly and the Vikings are Palo Alto High’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "santa-clara",
       "level": "varsity",
       "handle": "schsvarsitygirlssoccer",
@@ -71,6 +88,22 @@
       "handle": "lynbrookgirlsoccer",
       "foundAt": null,
       "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"lynbrook girls soccer\", season highlights 21-22 to 25-26; it does not name the city, so it rests on the owner’s word. The owner also gave lynbrookhs_girlssoccer (\"Lynbrook HS Girls Soccer\", bio \"Lynbrook HS Soccer Highlights\", 47 followers); a team keeps one varsity record, and this is the larger, current one. Not lynbrookgirlssoccer, an unplaced profile.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "milpitas",
+      "level": "varsity",
+      "handle": "mhsgirlsvarsoc",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Milpitas Girls Varsity Soccer\", bio \"Not affiliated with MHS\": a team account the school does not run, kept on the owner’s word.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "monta-vista",
+      "level": "varsity",
+      "handle": "mvgirlsoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"MV Girls Soccer\", bio \"official account for Monta Vista Girl Soccer!\". The handle-guessing round had found it but filed it under Mountain View and never opened it.",
       "checkedOn": "2026-11-27"
     },
     {

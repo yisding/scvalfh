@@ -3285,7 +3285,11 @@ The owner then placed seven of those left out, kept on the owner's word: Fremont
 Creek `silvercreekgirlssoccer`, Oak Grove `oghs.girlssoccer` and Monterey `montereygirlssoccer` (all CCS), The
 King's Academy `tka_girlssoccer`, KIPP San Jose Collegiate `ksjcgirlssoccer` and Leland `lelandwomenssoccer`;
 and gave Pioneer's, `pioneergirlsssoccer` (with three s's, which no guess tried): 58 of 123. Later the same day the owner
-placed `liveoakgirlssoccer` as Live Oak's, Morgan Hill (CCS): 59 of 123. The owner also
+placed `liveoakgirlssoccer` as Live Oak's, Morgan Hill (CCS): 59 of 123. The owner then gave four SCVAL accounts:
+Mountain View `mvgirlsvarsitysoccer`, Palo Alto `palygirls.soccer`, Milpitas `mhsgirlsvarsoc` (its bio says it is
+not affiliated with the school; kept on the owner's word) and Monta Vista `mvgirlsoccer` ("official account for
+Monta Vista Girl Soccer!"), which the guessing round had found but filed under Mountain View and never opened.
+MacDonald has none (owner): 63 of 123, every SCVAL team but MacDonald. The owner also
 turned down ten: `ecpgirlssoccer` is a Los Angeles school's, `pioneerwsoccer` Michigan's, `seasidegirlssoccer`
 probably Washington state's, `vc.girlssoccer` Valley Central's (New York), `fremont.girls.soccer` a Utah
 school's, `northsalinas_soccer` the boys', and `vchs_girlssoccer` and `nmcgirlssoccer` are private accounts and
