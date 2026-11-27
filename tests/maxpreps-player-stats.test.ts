@@ -317,6 +317,48 @@ describe('parsePlayerStats: loud on drift', () => {
     expect(page.players.filter((p) => p.field !== null)).toHaveLength(clean.players.filter((p) => p.field !== null).length - 1);
   });
 
+  it("reads a jersey cell with no letter or digit as no number, as the roster parser does (Mills JV basketball: \"-!\", \".\", \"#\")", () => {
+    const body = mutable('palo-alto');
+    const first = body.data.groups[0].subgroups[0];
+    const cols = first.stats.columns.map((c) => c.name);
+    const href = first.stats.rows[0].columns[cols.indexOf('Name')].href;
+    const set = (value: string) => {
+      for (const g of body.data.groups) {
+        for (const sub of g.subgroups) {
+          const names = sub.stats.columns.map((c) => c.name);
+          const at = names.indexOf('Jersey');
+          for (const row of sub.stats.rows) if (at >= 0 && row.columns[names.indexOf('Name')].href === href) row.columns[at].value = value;
+        }
+      }
+    };
+    const who = () => parsePlayerStats(body, { expectedTeamId: teamId })!.players.find((p) => p.careerUrl === href)!;
+    for (const junk of ['-!', '.', '-', '#', 'N/A']) {
+      set(junk);
+      expect(who().jersey, junk).toBeNull();
+    }
+    for (const real of ['0', '01']) {
+      set(real);
+      expect(who().jersey).toBe(real);
+    }
+  });
+
+  it('keeps two career-less players of one short name apart when their placeholder jerseys differ', () => {
+    // The key of a row with no career link is the name and the jersey cell as printed: "-" and "." are two players,
+    // though both read as no number.
+    const body = mutable('palo-alto');
+    const sub = body.data.groups[0].subgroups[0];
+    const cols = sub.stats.columns.map((c) => c.name);
+    const [nameAt, jerseyAt] = [cols.indexOf('Name'), cols.indexOf('Jersey')];
+    const [a, b] = sub.stats.rows;
+    for (const [row, jersey] of [[a, '-'], [b, '.']] as const) {
+      row.columns[nameAt] = { value: 'Twin Player', href: null };
+      row.columns[jerseyAt].value = jersey;
+    }
+    const twins = parsePlayerStats(body, { expectedTeamId: teamId })!.players.filter((p) => p.careerId === null && p.shortName === 'Twin Player');
+    expect(twins).toHaveLength(2);
+    expect(twins.map((p) => p.jersey)).toEqual([null, null]);
+  });
+
   it('still throws on a negative team total: that is drift, not one entry', () => {
     const cols = mutable('palo-alto').data.groups[0].subgroups[0].stats.columns;
     const neg = mutable('palo-alto');
