@@ -1438,7 +1438,7 @@ result each note names. A third soccer round requested likely handles as profile
 kept 38 more whose profile places them at the school, and the owner placed or gave fourteen more; profiles turned down are kept in the file's `rejected` list: DATA-SOURCES §1.10). Most of these schools' sites
 link only the school's or the athletics department's account, and a profile that does not say which
 school it is ("Fremont Girls Soccer", "MVHS Girls Volleyball") is left out unless a page of the school's
-links it or the profile links the school's own page. Every profile kept was opened in a browser.
+links it, the profile links the school's own page, or the site's owner confirms it (its note says so). Every profile kept was opened in a browser.
 
 ### Hudl TV broadcasts
 

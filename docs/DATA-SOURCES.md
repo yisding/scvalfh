@@ -3280,7 +3280,7 @@ link), `pcsgirlssoccer` is the "Pacers", `liveoak.girlssoccer` Louisiana's, `loh
 `mvhs_girlssoccer`, `phhs_girlssoccer`, `phhs.girlssoccer` and `lincolnhsgirlssoccer` are other schools'.
 Left out because nothing places them: `fremont.girls.soccer`, `liveoakgirlssoccer`,
 `vc.girlssoccer`, `nmcgirlssoccer`, `northsalinas_soccer` (no gender named),
-`pvhs.girlssoccer` (the owner has since placed them all: below). Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are not affiliated
+`pvhs.girlssoccer` (the owner has since placed `liveoakgirlssoccer` and rejected the other five: below). Also left out: `sanmateogirlssoccer` and `ndbsoccer`, which say they are not affiliated
 with the school, although they link San Mateo's MaxPreps page and name Notre Dame Belmont.
 
 The owner then placed seven of those left out, kept on the owner's word: Fremont `fremontgirls_soccer`, Silver
