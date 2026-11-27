@@ -56,14 +56,13 @@ async function getText(url) {
   }
 }
 
+/** A page's text: tags dropped, the few entities these pages use decoded in one pass (so "&amp;quot;" stays "&quot;"). */
+const ENTITIES = { '&nbsp;': ' ', '&#160;': ' ', '&#39;': "'", '&#039;': "'", '&#8217;': "'", '&rsquo;': "'", '&quot;': '"', '&#8203;': '', '&amp;': '&' };
 const decode = (s) =>
   s
     .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;|&#160;/g, ' ')
-    .replace(/&#0?39;|&#8217;|&rsquo;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#8203;|​/g, '')
+    .replace(/&(?:nbsp|#160|#0?39|#8217|rsquo|quot|#8203|amp);/g, (m) => ENTITIES[m] ?? m)
+    .replace(/​/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 
