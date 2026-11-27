@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "790be937b48128ca050a47afe1716cc84935cc00685e44c611e12cdaba8cfff4",
+  "contentHash": "04e626f28ac92991ba12c153dc82938d78029583ae4a6ae5706c8338ceb88375",
   "counts": {
     "byLeague": {
       "bval": {
@@ -27,7 +27,7 @@
       "pcal": {
         "backfilled": 0,
         "finals": 4,
-        "games": 200,
+        "games": 201,
         "leagueGames": 96,
         "teams": 27
       },
@@ -55,23 +55,23 @@
       "wbal": {
         "backfilled": 0,
         "finals": 2,
-        "games": 103,
-        "leagueGames": 35,
+        "games": 104,
+        "leagueGames": 36,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 51,
+        "games": 50,
         "leagueGames": 18,
         "teams": 6
       }
     },
     "finals": 13,
-    "games": 924,
-    "leagueGames": 616,
+    "games": 925,
+    "leagueGames": 617,
     "mismatches": 4,
-    "pending": 7,
+    "pending": 6,
     "teams": 123
   },
   "crossCheck": {
@@ -81,7 +81,7 @@
     "conflicts": 0,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-26T14:37:42.692Z",
+  "fetchedAt": "2026-11-27T05:37:36.380Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -538,7 +538,7 @@
     },
     {
       "label": "castilleja schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -558,7 +558,7 @@
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -793,7 +793,7 @@
     },
     {
       "label": "monterey schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -803,7 +803,7 @@
     },
     {
       "label": "rancho-san-juan schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -813,7 +813,7 @@
     },
     {
       "label": "watsonville schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -878,7 +878,7 @@
     },
     {
       "label": "seaside schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -1132,6 +1132,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3913-scval-el-camino scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3913-scval-el-camino scoreboard 2026-11-20",
       "rowCount": 0,
       "status": "ok"
@@ -1143,11 +1148,6 @@
     },
     {
       "label": "sblive 3949-wbal-skyline scoreboard 2026-11-24",
-      "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3950-wcal scoreboard 2026-11-23",
       "rowCount": 0,
       "status": "ok"
     },
@@ -1238,7 +1238,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 337,
+      "rowCount": 336,
       "status": "ok"
     },
     {
@@ -1258,7 +1258,7 @@
     }
   ],
   "today": "2026-11-26",
-  "warnings": 40,
+  "warnings": 41,
   "window": {
     "firstGame": "2026-11-12T00:00:00",
     "lastGame": "2027-02-17T18:30:00",
