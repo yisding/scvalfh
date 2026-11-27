@@ -19,6 +19,7 @@
  *   pnpm fetch-jv --dry-run             parse and report, write nothing (captures included)
  *   pnpm fetch-jv --fetched-at <iso>    pin the stamp (reproducible fixture builds)
  *   pnpm fetch-jv --force               run even outside the Aug 1 – Nov 28 season window
+ *   pnpm fetch-jv --all-box-scores      read every JV box score again, whatever its row says
  *   pnpm fetch-jv --level freshman      the freshman level instead (below), into data/<sport>/freshman.json
  *
  * The MaxPreps call is the varsity pipeline's own schedule-calculated read with the JV season id
@@ -28,6 +29,13 @@
  * win (`level: 'jv'`: the sections' shootout rules are varsity rules). si.com pages go through the si.com client's
  * own gate (one at a time, 1 s apart, the browser User-Agent si.com requires). The file keeps what
  * each source said; lib/jv/jv-merge.ts decides what the site shows, MaxPreps first.
+ *
+ * JV box scores (added 2026-11-27, for the JV game pages): for each covered school, MaxPreps' per-game JV stats
+ * table and, for each MaxPreps JV final of the school's whose row there has a count above zero, the school's box
+ * score for that game, read with the varsity reader (scripts/lib/box-scores.ts) and the JV season id, again only
+ * when the row changed. One more call per school, plus one per new or edited game. Captures and fixtures are
+ * `jv-game-stats-<slug>.json` and `jv-box-<slug>-<contest id>.json`. A failure here never fails the school or the
+ * run (readJvBoxScores). The freshman level reads none.
  *
  * .github/workflows/update-data.yml runs this after `pnpm fetch-data` and `pnpm fetch-player-stats`,
  * twice a day in season, and a failure here never costs the day's snapshot. The guards are the
@@ -53,7 +61,7 @@
  * stops the run (exit 1, nothing written), since nothing in it can be told apart from a wipe.
  */
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { ZodType } from 'zod';
@@ -71,6 +79,10 @@ import {
   type PreviousRows,
 } from './lib/team-scope';
 import { droppedTeams, loadPreviousOrFail, prepareCapture, saveCapture, validateAssembled, writeIfChanged } from './lib/team-file';
+import { readBoxScores, readGameRows, type BoxScoreSource } from './lib/box-scores';
+import type { BoxScore } from '../lib/players/player-stats-schema';
+import { RostersSchema } from '../lib/players/rosters-schema';
+import type { RosterJoinPlayer } from '../lib/sources/maxpreps-player-stats';
 import { byDateThenId, localDateKey, monthDay } from '../lib/format';
 import { mergeJv } from '../lib/jv/jv-merge';
 import {
@@ -115,6 +127,7 @@ interface Args {
   fetchedAt: string | null;
   force: boolean;
   sblive: boolean;
+  allBoxScores: boolean;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -128,6 +141,7 @@ function parseArgs(argv: readonly string[]): Args {
     fetchedAt: null,
     force: false,
     sblive: true,
+    allBoxScores: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -145,6 +159,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else if (arg === '--force') out.force = true;
     else if (arg === '--no-sblive') out.sblive = false;
+    else if (arg === '--all-box-scores') out.allBoxScores = true;
     else if (arg === '--level') {
       const level = next();
       if (level !== 'jv' && level !== 'freshman') throw new Error(`--level must be jv or freshman, not ${level}`);
@@ -162,6 +177,7 @@ const NOTES = [
   'A si.com JV side is one of ours only by its si.com JV team id (lib/jv/jv-teams.ts), never by name.',
   'JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.',
   'A source with status carried-forward kept the previous file’s rows after a failed fetch; its own fetchedAt says when those rows were read.',
+  'boxScores, where present, are the JV team’s box scores (team-contest-player-stats), one per MaxPreps JV final of the school’s whose row in its per-game JV stats table (stats) has a count above zero, read as the varsity ones in player-stats.json are and joined to jv-rosters.json and rosters.json on the career id. unreadBoxScores are finals whose box score could not be read and none is kept.',
 ];
 
 const FRESHMAN_NOTES = [
@@ -368,6 +384,83 @@ async function fetchJvFromTeamsideline(args: Args, fetchedAt: string): Promise<n
   });
 }
 
+/** What a team row holds of its JV stats: the per-game table's read, its box scores, the finals not read. */
+type TeamStats = Pick<JvTeam, 'stats' | 'boxScores' | 'unreadBoxScores'>;
+
+/** A team row's stats fields as the previous file had them (nothing, when it had none). */
+function priorStats(prior: JvTeam | undefined): TeamStats {
+  if (!prior?.stats) return {};
+  return {
+    stats: prior.stats,
+    ...(prior.boxScores ? { boxScores: prior.boxScores } : {}),
+    ...(prior.unreadBoxScores ? { unreadBoxScores: prior.unreadBoxScores } : {}),
+  };
+}
+
+/** The players a JV box score's lines are named from: the JV roster first, then the varsity one (a player called up or down). */
+function jvRosterPlayers(): (slug: string) => RosterJoinPlayer[] {
+  const read = (name: string) => {
+    const file = path.join(process.cwd(), DATA_DIR, name);
+    return existsSync(file) ? RostersSchema.parse(JSON.parse(readFileSync(file, 'utf8')) as unknown).teams : [];
+  };
+  const varsity = read('rosters.json');
+  const jv = read('jv-rosters.json');
+  // joinToRoster keys on the career id and the last row wins, so the JV roster's spelling is the one kept.
+  return (slug) => [...(varsity.find((t) => t.slug === slug)?.players ?? []), ...(jv.find((t) => t.slug === slug)?.players ?? [])];
+}
+
+/**
+ * Each covered school's JV box scores (scripts/lib/box-scores.ts, the varsity reader with the JV season id): its
+ * per-game JV stats table, then a box score for each MaxPreps JV final of its in `games` whose row has a count above
+ * zero, read again only when the row changed. Failures never fail the school or the run: a table that cannot be read,
+ * or that lists no game where the previous file holds box scores (a blip, not a wipe), keeps the previous box scores
+ * (`stats` carried-forward); a box score that cannot be read keeps the previous one, or is named in `unreadBoxScores`.
+ * Offline, a school with no `jv-game-stats-<slug>.json` capture keeps what the previous file had.
+ */
+async function readJvBoxScores(
+  args: Args,
+  client: MaxPrepsClient,
+  capture: string | null,
+  covered: readonly Team[],
+  games: readonly Game[],
+  priorTeam: ReadonlyMap<string, JvTeam>,
+  seasonId: string,
+  fetchedAt: string,
+): Promise<Map<string, TeamStats>> {
+  const src: BoxScoreSource = { client, fixtures: args.fixtures, capture, all: args.allBoxScores, prefix: 'jv-', sportSeasonId: seasonId };
+  const rosterOf = jvRosterPlayers();
+  const out = new Map<string, TeamStats>();
+  await Promise.all(
+    covered.map(async (team) => {
+      const prior = priorTeam.get(team.slug);
+      const kept = priorStats(prior);
+      const read = await readGameRows(src, team.slug, team.id);
+      if ('missing' in read && read.missing) {
+        out.set(team.slug, kept);
+        return;
+      }
+      const table = 'rows' in read && read.rows.length === 0 && kept.boxScores ? { error: 'the per-game JV stats table lists no game, but the previous file has box scores' } : read;
+      if (!('rows' in table)) {
+        console.warn(`WARN ${team.slug} JV stats: ${table.error}`);
+        out.set(team.slug, { ...kept, stats: failed(prior?.stats, table.error, true) });
+        return;
+      }
+      const finals = new Set(games.filter((g) => g.status === 'final' && involves(g, team.slug)).map((g) => g.contestId));
+      const warnings: string[] = [];
+      const box = await readBoxScores(src, team.slug, team.id, table.rows, finals, rosterOf(team.slug), kept.boxScores ?? [], warnings);
+      for (const w of warnings) console.warn(`WARN ${team.slug} JV ${w}`);
+      const have = new Set(box.games.map((b: BoxScore) => b.contestId));
+      const unread = box.failed.filter((id) => !have.has(id));
+      out.set(team.slug, {
+        stats: ok(table.rows.length, fetchedAt),
+        ...(box.games.length ? { boxScores: box.games } : {}),
+        ...(unread.length ? { unreadBoxScores: unread } : {}),
+      });
+    }),
+  );
+  return out;
+}
+
 export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
@@ -500,6 +593,10 @@ export async function main(argv: readonly string[]): Promise<number> {
     (a, b) => a.dateKey.localeCompare(b.dateKey) || a.sbliveGameId.localeCompare(b.sbliveGameId),
   );
 
+  // ---- MaxPreps: each covered school's JV box scores, for the JV game pages (the JV level only).
+  const stats = freshman ? new Map<string, TeamStats>() : await readJvBoxScores(args, maxpreps, capture, covered, games, priorTeam, seasonId, fetchedAt);
+  const boxScoreCount = [...stats.values()].reduce((n, t) => n + (t.boxScores?.length ?? 0), 0);
+
   const teams: JvTeam[] = TEAMS.map((team) => {
     const prior = priorTeam.get(team.slug);
     const sbliveUrl = sbliveUrlOf(team.slug);
@@ -524,6 +621,7 @@ export async function main(argv: readonly string[]): Promise<number> {
       sbliveUrl,
       maxpreps: mpState.get(team.slug) ?? PENDING,
       sblive: sbState.get(team.slug) ?? (sbliveUrl ? PENDING : UNAVAILABLE),
+      ...(stats.get(team.slug) ?? {}),
     };
   });
 
@@ -547,6 +645,8 @@ export async function main(argv: readonly string[]): Promise<number> {
     console.log(
       `${t.slug.padEnd(21)} MaxPreps ${t.maxpreps.status.padEnd(15)} si.com ${t.sblive.status.padEnd(15)} ` +
         `${String(mine.length).padStart(2)} games · ${mine.filter((g) => g.status === 'final').length} final` +
+        (t.boxScores ? ` · ${t.boxScores.length} box scores` : '') +
+        (t.stats?.error ? ` · stats: ${t.stats.error}` : '') +
         (t.maxpreps.error ? ` · MaxPreps: ${t.maxpreps.error}` : '') +
         (t.sblive.error ? ` · si.com: ${t.sblive.error}` : ''),
     );
@@ -563,7 +663,8 @@ export async function main(argv: readonly string[]): Promise<number> {
       (freshman
         ? `${carried.length} games carried forward`
         : `${c.sbliveRows} si.com JV finals · si.com filled ${merged.filled.length}, added ${merged.added.length}, ` +
-          `differs on ${merged.differs.length} · ${carried.length} games and ${carriedRows.length} si.com rows carried forward`),
+          `differs on ${merged.differs.length} · ${carried.length} games and ${carriedRows.length} si.com rows carried forward · ` +
+          `${boxScoreCount} JV box scores on ${[...stats.values()].filter((t) => t.boxScores).length} schools`),
   );
   // A covered team that failed decides the exit code, and so does an uncovered one whose previous
   // row was dropped (it is pending now), as in fetch-rosters and fetch-player-stats.

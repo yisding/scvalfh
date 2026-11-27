@@ -2,8 +2,7 @@ import { getTeamPlayerStatsWithNotes } from '../../lib/players/player-stats';
 import SectionHeader from '../ui/SectionHeader';
 import { StatsTable } from '../teams/TeamPlayerStats';
 
-import type { GameModel } from './game-view';
-import { buildGameStatsView, type GameStatsLookup } from './game-stats-view';
+import { buildGameStatsView, type GameStatsLookup, type GameStatsModel } from './game-stats-view';
 
 /**
  * GAME STATS — each followed side's box score for this game, as its coach entered it on MaxPreps
@@ -19,13 +18,20 @@ import { buildGameStatsView, type GameStatsLookup } from './game-stats-view';
  * note itself is quoted under the tables.
  */
 export interface GameStatsProps {
-  model: GameModel;
+  model: GameStatsModel;
   className?: string;
-  /** Where the box scores come from; data/field-hockey/player-stats.json unless a test passes its own. */
+  /** Where the box scores come from; data/field-hockey/player-stats.json unless given (a JV game page's, a test's). */
   lookup?: GameStatsLookup;
+  /** The link on a side's strip; the varsity one (its season stats, else its team page) unless given. */
+  sideAction?: (slug: string) => { href: string; label: string };
 }
 
-export function GameStats({ model, className, lookup }: GameStatsProps) {
+/** A varsity side's strip link: its season stats when the team page has that section, else the page itself. */
+function varsityAction(slug: string): { href: string; label: string } {
+  return getTeamPlayerStatsWithNotes(slug) ? { href: `/teams/${slug}#player-stats`, label: 'Season stats' } : { href: `/teams/${slug}`, label: 'Team' };
+}
+
+export function GameStats({ model, className, lookup, sideAction = varsityAction }: GameStatsProps) {
   const view = buildGameStatsView(model, lookup);
   if (!view) return null;
 
@@ -36,18 +42,11 @@ export function GameStats({ model, className, lookup }: GameStatsProps) {
         {view.sides.map((side) => (
           <div key={side.key} className="min-w-0">
             {/* `side.key` is the team's slug (game-stats-view.ts): every side here is a registry
-                team, so its strip carries the route to that team's page — to its season stats
-                when the team page has that section (it renders one exactly when the player-stats
-                file has the team, app/teams/[slug]/page.tsx), else to the page itself. */}
-            <SectionHeader
-              strip
-              kicker={side.name}
-              action={
-                getTeamPlayerStatsWithNotes(side.key)
-                  ? { href: `/teams/${side.key}#player-stats`, label: 'Season stats' }
-                  : { href: `/teams/${side.key}`, label: 'Team' }
-              }
-            />
+                team, so its strip carries the route to that team's page (sideAction): on a varsity
+                game, to its season stats when the team page has that section (it renders one exactly
+                when the player-stats file has the team, app/teams/[slug]/page.tsx), else to the page
+                itself; on a JV game, to the school's JV games. */}
+            <SectionHeader strip kicker={side.name} action={sideAction(side.key)} />
             {side.scoring ? (
               <StatsTable table={side.scoring} caption={`${side.name} ${side.firstCaption ?? 'scoring'} in this game`} />
             ) : null}

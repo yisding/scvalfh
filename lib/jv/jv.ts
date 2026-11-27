@@ -43,6 +43,8 @@ import {
   type JvClassification,
   type JvDivisionTable,
 } from './jv-standings';
+import type { BoxScore } from '../players/player-stats-schema';
+import type { GameStatsEntry } from '../players/player-stats';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
@@ -163,6 +165,31 @@ export function getJvCopiedScoreNote(game: Game): string | null {
   const entry = copied.withheld.get(game.contestId);
   return entry ? jvCopiedScoreNote(game, entry) : null;
 }
+
+/** contest id → school slug → that JV team's box score for the game (JvTeam.boxScores). */
+const JV_BOX_SCORES = new Map<string, Map<string, BoxScore>>();
+for (const t of file.teams) {
+  for (const box of t.boxScores ?? []) {
+    const bySlug = JV_BOX_SCORES.get(box.contestId) ?? new Map<string, BoxScore>();
+    bySlug.set(t.slug, box);
+    JV_BOX_SCORES.set(box.contestId, bySlug);
+  }
+}
+
+/**
+ * One side of one JV game's box score, as its coach entered it on MaxPreps, in the varsity game page's shape
+ * (lib/players/player-stats.ts getGameStatsEntry), for the JV game page's Game stats section. `unread` when there is
+ * none and none can be claimed absent: the school's per-game JV stats table was not read in the latest run (or
+ * never was), or this game's box score could not be read. JV games have no note credits.
+ */
+export function getJvGameStatsEntry(contestId: ContestId, slug: TeamSlug): GameStatsEntry {
+  const box = JV_BOX_SCORES.get(contestId)?.get(slug);
+  if (box) return { box, unread: false, credits: [] };
+  const team = TEAM_BY_SLUG.get(slug);
+  const unread = team?.stats?.status !== 'ok' || (team.unreadBoxScores ?? []).includes(contestId);
+  return { box, unread, credits: [] };
+}
+
 
 /** One school's JV entry (its two sources' status and pages); undefined only for a non-registry slug. */
 export function getJvTeam(slug: TeamSlug): JvTeam | undefined {
