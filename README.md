@@ -1424,7 +1424,8 @@ owner then gave Los Altos's, Homestead's, Valley Christian's and Lynbrook's, and
 (`<school>fieldhockey`, `<school>fockey`, `<school>fh` and the like) found seven BVAL teams'. On
 2026-11-15 the owner gave four San Diego teams' (San Marcos, Poway, Bishop's, Canyon Hills): 57 records for
 54 of the 102 teams, and 21 of the 28 clubs. On 2026-11-16 the owner gave Davis's (`davisfieldhockey`), in place
-of the account a search had found.
+of the account a search had found. On 2026-11-27 the owner gave Saratoga's (`togafieldhockey`): 58 records for 55
+of the 102 teams.
 
 The soccer, basketball and volleyball builds read their own files (`data/soccer/`, `data/basketball/`,
 `data/volleyball/`), researched on 2026-11-14 under the same rule for that build's program: the girls

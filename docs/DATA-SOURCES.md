@@ -3214,6 +3214,8 @@ On 2026-11-15 the owner gave four San Diego Section accounts: San Marcos `smhs_f
 page, and Canyon Hills' was not opened, so those three rest on the owner's word, as the note of each says. The owner also gave Archbishop Mitty's account, `amhsfh`, which replaces
 `mittyfieldhockey` (found by search on 2026-11-13), on the owner's word.
 
+On 2026-11-27 the owner gave Saratoga's, `togafieldhockey` ("Saratoga Field Hockey"; it names no city).
+
 **The other builds** (`data/soccer/`, `data/basketball/`, `data/volleyball/instagram.json`, 2026-11-14):
 the same method and rule for that build's program, the girls soccer, boys basketball or girls
 volleyball program's own account, or one the school's boys and girls teams share; a boys-only soccer
