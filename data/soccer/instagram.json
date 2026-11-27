@@ -5,9 +5,8 @@
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 63 of the 123 teams have one (2026-11-27).",
-    "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked.",
-    "MacDonald has no girls soccer account (owner, 2026-11-27)."
+    "No record means no account we could find and check on the day, not that there is none: 64 of the 123 teams have one (2026-11-27).",
+    "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked."
   ],
   "teams": [
     {
@@ -88,6 +87,14 @@
       "handle": "lynbrookgirlsoccer",
       "foundAt": null,
       "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"lynbrook girls soccer\", season highlights 21-22 to 25-26; it does not name the city, so it rests on the owner’s word. The owner also gave lynbrookhs_girlssoccer (\"Lynbrook HS Girls Soccer\", bio \"Lynbrook HS Soccer Highlights\", 47 followers); a team keeps one varsity record, and this is the larger, current one. Not lynbrookgirlssoccer, an unplaced profile.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "macdonald",
+      "level": "varsity",
+      "handle": "condors_girlsoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: bio \"Run by girls soccer team managers. Go condors!\"; the Condors are Kathleen MacDonald’s, San Jose. It names no school, so it rests on the owner’s word.",
       "checkedOn": "2026-11-27"
     },
     {

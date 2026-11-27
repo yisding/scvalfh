@@ -3289,7 +3289,8 @@ placed `liveoakgirlssoccer` as Live Oak's, Morgan Hill (CCS): 59 of 123. The own
 Mountain View `mvgirlsvarsitysoccer`, Palo Alto `palygirls.soccer`, Milpitas `mhsgirlsvarsoc` (its bio says it is
 not affiliated with the school; kept on the owner's word) and Monta Vista `mvgirlsoccer` ("official account for
 Monta Vista Girl Soccer!"), which the guessing round had found but filed under Mountain View and never opened.
-MacDonald has none (owner): 63 of 123, every SCVAL team but MacDonald.
+MacDonald's followed, `condors_girlsoccer` ("Run by girls soccer team managers. Go condors!"): 64 of 123,
+every SCVAL soccer team.
 
 The owner also gave the six SCVAL volleyball accounts the rounds had not found: Los Altos `losaltosvolleyball`,
 Fremont `fremont.girlsvb`, Lynbrook `lynbrook.volleyball`, MacDonald `condorgirlsvb` ("Unofficial … Not affiliated
