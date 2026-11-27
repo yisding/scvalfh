@@ -2155,7 +2155,7 @@ leagues ECNL runs: ECNL Girls Northern Cal and the ECNL Regional League's two co
 Premier's) and Golden State (the second teams of the 12 ECNL Northern Cal clubs), the GU14 through GU18/19 age
 groups; and, kept by hand since 2026-11-25, the Girls Academy teams U14 through U19 of the eight clubs in GA's
 Northwest conference (league `ga`, below). It is there so that a high school roster can be compared with the club
-rosters the day a school posts it, without reading the leagues' pages again. ECNL's three leagues, read on
+rosters the day a school posts it, without reading the leagues' pages again. The other recruiting builds keep one too since 2026-11-27 ("Club rosters in the other sports", below). ECNL's three leagues, read on
 2026-11-24: **256 teams of 55 clubs, 4,421 players** (60 ECNL teams of 12 clubs, 139 NorCal Regional League teams of
 43, 57 Golden State teams of the 12 ECNL clubs); Golden State was added that day, the other two leagues first read on
 2026-11-22. Girls Academy, read on 2026-11-25: **38 teams of 8 clubs, 440 rows**; NorCal Premier's N1 and Fall leagues, read the same day for fifteen clubs: **46 teams, 198 rows** (below); Almaden FC's GA teams on Hudl, read on 2026-11-26: **5 teams, 87 rows**, which replace the club's GotSport GA rosters in the comparison, and OV Toros FC's N1 and Fall League teams the same day: **6 teams, 43 rows** (below); Monterey Surf's three N1 teams, also read on 2026-11-26: **3 teams, 38 rows** (below); and, the same day, the N1 and Fall League teams of 23 more clubs with a record and of five clubs given one: **90 teams, 214 rows** (below). In all 444 teams, 5,441 players.
@@ -2539,6 +2539,88 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   entry with its NCSA, SportsRecruits and Hudl profiles; git history keeps them), and Martinez's are kept (her tie to
   De Anza Force and her overlay entry), left out as roster drift while MaxPreps does not list her and shown again if
   it lists her again. `pnpm roster-drift` reports those 2 records; with `--base origin/main` none is this change's.
+
+### Club rosters in the other sports
+
+Girls soccer's kept copy of its leagues' club rosters ("Girls soccer: club rosters", above) has one for each of the
+other three recruiting builds since 2026-11-27, in the same file shape (`ClubRostersFileSchema`,
+`lib/players/club-rosters.ts`) under each sport's data directory, compared with the high school rosters by the same
+script and the same league-roster rule. Each is a kept copy for comparison only: **never rendered, imported by nothing
+in the site**, since it names players on no tracked roster. A source probe of the same day looked for a league- or
+event-wide public source of club rosters in each sport (DATA-SOURCES §1.17).
+
+```bash
+pnpm fetch-club-rosters:volleyball      # data/volleyball/club-rosters.json (TM2Sign's public API; about 25 minutes)
+pnpm fetch-club-rosters:basketball      # data/basketball/club-rosters.json (The Passport's public API; about 30 minutes)
+pnpm fetch-club-rosters:field-hockey    # data/field-hockey/club-rosters.json (the clubs' own pages; about a minute)
+pnpm compare-club-rosters:volleyball    # …:basketball, …:field-hockey: what pnpm compare-club-rosters is for soccer
+```
+
+None of them is on a cron: run one when its club season turns over (volleyball in January, when the 2027 Power League
+fills; basketball in the spring) and compare again after a school's roster changes. Each fetch carries `clubSlugs`
+(a source's club → its `clubs.json` record, kept by hand) over from the file it replaces.
+
+- **Girls volleyball: the NCVA Girls Power League (1,185 teams, 7,403 players).** The NCVA (USA Volleyball's
+  Northern California region) runs its events on TM2Sign, whose public JSON API (`tm2sign.com/api/public/…`) lists
+  an event's teams and each team's roster with no login. Read: every NC-region girls team, 13s through 17s of the
+  2026 league (event 2136, the 2025-26 club season, January to May 2026) and 14s through 18s of the 2027 league
+  (event 2585, the 2026-27 season, from January 2027; 42 of its 594 teams had posted a roster
+  by 2026-11-27). A roster gives a name and a jersey only, so a team carries the classes its age group admits
+  (`classYears`: USA Volleyball's July 1 age definition and California's September 1 school cutoff make a 16s team of
+  the 2026 league the classes of 2027 and 2028), and a row is compared on those; a player playing up on an older team
+  is never matched. Where both leagues list a player at different clubs, the 2027 league's club is the one compared
+  (`clubSeason`). 34 of the TM2Sign clubs map to a record; RAGE VBC (Ripon) is not Belmont's Rage Westside, and
+  NCVC (Grass Valley) is not Morgan Hill's North Coast. AES (Advanced Event Systems), which also holds NorCal teams'
+  rosters at national events, disallows this crawler by name in its robots.txt and was not read.
+- **Boys basketball: The Passport (667 teams, 5,685 players).** The Passport (Open Gym Premier's
+  platform) runs the events of G365, adidas 3SSB, The Stage, the Breakthrough Circuit, Strictly Hoops and For the Love
+  of the Game, and its public JSON API (`api.the-passport.com/api/…`) gives each team's roster at an event with each
+  player's class year. Read: the boys 14U-17U teams of every Passport event held in Northern California from March
+  2026 to the day (25 events, 19 of the spring and summer and 6 of the fall), and, of the adidas 3SSB sessions, the teams of programs `clubs.json` has a record
+  for; each team once, at the latest event it played. Out of reach: Nike's EYBL (a script behind a Vercel checkpoint),
+  Puma's Pro16, and the Exposure Events tournaments (MADE Hoops' NorCal events among them), whose rosters are not
+  public. A Passport roster names no school, but each player's own Passport record (`players/by-player-number/<n>`)
+  gives a hometown and often a self-reported school, and its team history the programs played for: basketball's ties
+  were decided on it (below), which twice turned up a different player of the same name and class (Cupertino's
+  Michael Wong is a Dougherty Valley player in San Ramon; Milpitas' Deren Cayabyab lives in Elk Grove).
+- **Field hockey: the clubs' own pages (12 rosters, 145 players).** No league or event publishes California club
+  rosters (TourneyMachine's festival feed carries no athletes, Cal Cup's Playbook pages give results only,
+  SportsRecruits' event rosters need a college coach's login, the SoCal Field Hockey Federation's roster data answers
+  401), so the copy is the pages of the clubs that publish one: the SportsRecruits players lists of SF Hawks, Myto and
+  HTC California (a class year per row), SF Hawks' current players, NorCal Impact's player directory and RUSH's Elite
+  Performance Group (each with a class year), and Lightning's 2025 rosters (names only, never linked). Rule 5 is the
+  sport's own: a club in the school's half of the state (NorCal or SoCal).
+
+**Linked on 2026-11-27.** Each tie names its pages in `clubs.json` (a `league-roster` source for a TM2Sign or Passport
+roster, a `club-site` or `sportsrecruits` source for a field hockey club's page) and says in its basis that the
+comparison found it; every cited roster was read again live before it was written.
+
+- **Girls volleyball: 406 ties cite a TM2Sign roster.** 237 are new and rest on a roster alone (medium, current for
+  the club season the roster is for), varsity and, for the first time in the volleyball build, JV (a JV row's tie is
+  served on its JV row, as in the other builds); 169 are ties other pages had made, which gain the roster and read
+  current. Not linked: three names on two clubs' rosters (Milpitas' Ellie Chu, Sobrato's Madison Miller, Notre Dame
+  San Jose's Kitana Manalo), 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael,
+  Union Volleyball Academy), and what the rule leaves (a name at two schools, no grade, a class the age group does
+  not admit, a club with no record).
+- **Boys basketball: 112 ties cite a Passport roster.** For every match, and every row the rule left only for want of
+  a club record, a second club or a club near the schools, the player's own Passport record and team history were
+  read. A record naming the row's school decides it (high: rule (a), the player's own record); one naming no school
+  needs a hometown in the school's county or one bordering it (rule (b), medium); one naming another high school
+  (Cupertino's Michael Wong: Dougherty Valley; Hollister's Derrick Jones: Overfelt), or a hometown farther away
+  (Milpitas' Deren Cayabyab: Elk Grove; SHC, SI and King's Academy names in Oakland, Hayward, Richmond and Antioch),
+  rules the match out, and a record with no hometown links nothing (7 rows). A middle school on the record is an
+  entry from before high school and names no high school. 101 ties are new (25 high, 76 medium) and 11 are ties other
+  pages had made, which gain the roster. Ten club records were added for the programs the matches are at (Bay Area
+  Impact, South Bay H2G, TM Basketball, SBB Rebels, Bay Area Hurricanes, Ballerz United, Bay Area Rebels, Renegades,
+  the PVBC Mavericks, the Palo Alto Huskies), each from the program's own site and The Passport's public program
+  record (`api/programs/public/<n>`: city and website; its director and contact fields are not recorded); fifteen
+  programs have no site of their own or no city to confirm and no record (`clubs.json`'s notes), so their matches are
+  not linked. Not linked either: 10 rows on two programs' rosters in one season.
+- **Field hockey: 2 new ties**, Convent's Julia Ahlstrand and Marin Academy's JV Quinn Wintroub to SF Hawks (its
+  current-players page); 45 matches were ties already citing the page and 12 ties made on another page of the same
+  club. Not linked: Berkeley's Natalie Jones and Julia Stone (SF Hawks), Helix's Gabriella Jones (Myto) and Scripps
+  Ranch's Lucy Miller (RUSH), common names on a page that names no school, as on 2026-10-06; a name at two schools;
+  six players on Lightning's 2025 rosters, which give no class year.
 
 ### Soccer and basketball: last season's commitments
 
