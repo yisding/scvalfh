@@ -4,8 +4,8 @@
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
-    "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 58 of the 123 teams have one (2026-11-27).",
+    "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it, the profile links the school’s own page, or the site’s owner confirms it (its note then says it rests on the owner’s word).",
+    "No record means no account we could find and check on the day, not that there is none: 64 of the 123 teams have one (2026-11-27).",
     "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked."
   ],
   "teams": [
@@ -42,6 +42,22 @@
       "checkedOn": "2026-11-14"
     },
     {
+      "slug": "mountain-view",
+      "level": "varsity",
+      "handle": "mvgirlsvarsitysoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"MVHS Girls Soccer\", bio \"The official Instagram account for your MVHS girls soccer varsity team (2026 - 2027)\"; it names no city, so it rests on the owner’s word that it is Mountain View’s. Not mountainviewgirlssoccer (Oregon) or mvhs.girlssoccer.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "palo-alto",
+      "level": "varsity",
+      "handle": "palygirls.soccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Paly Girls Varsity Soccer\", bio \"#skovikes\"; Paly and the Vikings are Palo Alto High’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "santa-clara",
       "level": "varsity",
       "handle": "schsvarsitygirlssoccer",
@@ -71,6 +87,30 @@
       "handle": "lynbrookgirlsoccer",
       "foundAt": null,
       "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"lynbrook girls soccer\", season highlights 21-22 to 25-26; it does not name the city, so it rests on the owner’s word. The owner also gave lynbrookhs_girlssoccer (\"Lynbrook HS Girls Soccer\", bio \"Lynbrook HS Soccer Highlights\", 47 followers); a team keeps one varsity record, and this is the larger, current one. Not lynbrookgirlssoccer, an unplaced profile.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "macdonald",
+      "level": "varsity",
+      "handle": "condors_girlsoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: bio \"Run by girls soccer team managers. Go condors!\"; the Condors are Kathleen MacDonald’s, San Jose. It names no school, so it rests on the owner’s word. The owner notes it has not been updated in a while (6 posts).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "milpitas",
+      "level": "varsity",
+      "handle": "mhsgirlsvarsoc",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"Milpitas Girls Varsity Soccer\", bio \"Not affiliated with MHS\": a team account the school does not run, kept on the owner’s word.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "monta-vista",
+      "level": "varsity",
+      "handle": "mvgirlsoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile read: \"MV Girls Soccer\", bio \"official account for Monta Vista Girl Soccer!\". The handle-guessing round had found it but filed it under Mountain View and never opened it.",
       "checkedOn": "2026-11-27"
     },
     {
@@ -151,6 +191,14 @@
       "handle": "evhs.girlssoccer",
       "foundAt": null,
       "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"evergreen valley girls soccer\", bio \"Team and event updates! 2025 League Champions\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "live-oak",
+      "level": "varsity",
+      "handle": "liveoakgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Live Oak’s, Morgan Hill (CCS). Profile opened: \"Live Oak girls soccer\", bio \"Official page of Live Oak girls soccer ⚽️\"; it names no city. Not liveoak.girlssoccer (Louisiana) or lohs.girlssoccer (Live Oak, California).",
       "checkedOn": "2026-11-27"
     },
     {
@@ -539,7 +587,7 @@
     {
       "handle": "fremont.girls.soccer",
       "slug": "fremont",
-      "why": "Does not say which Fremont.",
+      "why": "A Utah school’s (owner, 2026-11-27).",
       "checkedOn": "2026-11-27"
     },
     {
@@ -645,12 +693,6 @@
       "checkedOn": "2026-11-27"
     },
     {
-      "handle": "liveoakgirlssoccer",
-      "slug": "live-oak",
-      "why": "Does not say which Live Oak.",
-      "checkedOn": "2026-11-27"
-    },
-    {
       "handle": "logirlssoccer",
       "slug": "live-oak",
       "why": "Lake Oswego’s, Oregon.",
@@ -677,7 +719,7 @@
     {
       "handle": "vc.girlssoccer",
       "slug": "valley-christian",
-      "why": "Does not say which school.",
+      "why": "Valley Central’s, New York (owner, 2026-11-27).",
       "checkedOn": "2026-11-27"
     },
     {
@@ -773,7 +815,7 @@
     {
       "handle": "pvhs.girlssoccer",
       "slug": "pajaro-valley",
-      "why": "Does not say which school.",
+      "why": "Inactive, no posts (owner, 2026-11-27); it does not say which school.",
       "checkedOn": "2026-11-27"
     },
     {
@@ -791,13 +833,13 @@
     {
       "handle": "nmcgirlssoccer",
       "slug": "north-monterey-county",
-      "why": "Does not say which school.",
+      "why": "A private account (owner, 2026-11-27).",
       "checkedOn": "2026-11-27"
     },
     {
       "handle": "northsalinas_soccer",
       "slug": "north-salinas",
-      "why": "Does not say boys or girls.",
+      "why": "Boys only (owner, 2026-11-27).",
       "checkedOn": "2026-11-27"
     },
     {

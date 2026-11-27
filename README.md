@@ -1424,20 +1424,21 @@ owner then gave Los Altos's, Homestead's, Valley Christian's and Lynbrook's, and
 (`<school>fieldhockey`, `<school>fockey`, `<school>fh` and the like) found seven BVAL teams'. On
 2026-11-15 the owner gave four San Diego teams' (San Marcos, Poway, Bishop's, Canyon Hills): 57 records for
 54 of the 102 teams, and 21 of the 28 clubs. On 2026-11-16 the owner gave Davis's (`davisfieldhockey`), in place
-of the account a search had found.
+of the account a search had found. On 2026-11-27 the owner gave Saratoga's (`togafieldhockey`): 58 records for 55
+of the 102 teams.
 
 The soccer, basketball and volleyball builds read their own files (`data/soccer/`, `data/basketball/`,
 `data/volleyball/`), researched on 2026-11-14 under the same rule for that build's program: the girls
 soccer, boys basketball or girls volleyball program's own account, or one the school's boys and girls
-teams share (its note says so), never the other gender's alone. Coverage: **58 of the 123 soccer
-teams, 26 of the 133 basketball teams and 18 of the 60 volleyball teams** (2026-11-27, after a second round over
+teams share (its note says so), never the other gender's alone. Coverage: **64 of the 123 soccer
+teams, 26 of the 133 basketball teams and 24 of the 60 volleyball teams** (2026-11-27, after a second round over
 the teams the registries had gained and every team then without a record; Instagram showed most profiles that day
 only behind its login page, so those records were kept unopened, at the owner's direction, on the page or search
 result each note names. A third soccer round requested likely handles as profile pages in a headless browser and
-kept 38 more whose profile places them at the school, and the owner placed eight more; profiles turned down are kept in the file's `rejected` list: DATA-SOURCES §1.10). Most of these schools' sites
+kept 38 more whose profile places them at the school, and the owner placed or gave fourteen more; profiles turned down are kept in the file's `rejected` list: DATA-SOURCES §1.10). Most of these schools' sites
 link only the school's or the athletics department's account, and a profile that does not say which
 school it is ("Fremont Girls Soccer", "MVHS Girls Volleyball") is left out unless a page of the school's
-links it or the profile links the school's own page. Every profile kept was opened in a browser.
+links it, the profile links the school's own page, or the site's owner confirms it (its note says so). Every profile kept was opened in a browser.
 
 ### Hudl TV broadcasts
 
@@ -1934,7 +1935,7 @@ by source. Counted from the files on 2026-11-14:
   Vision to Archbishop Mitty); Eileen Pfeffer signed with Nevada (Nevada's signing-day release of 2026-11-11 names
   her with Saint Ignatius College Preparatory); and new sources for Chayse Courtney (the Mercury News' deck and
   photo caption of 2026-11-07, "Stanford-bound"), Maura Hambly and Aanya Hotha (Vision's page).
-- **Instagram** (`instagram.json`): 27 clubs' accounts, each linked from the club's own site, and 18 of the 60
+- **Instagram** (`instagram.json`): 27 clubs' accounts, each linked from the club's own site, and 24 of the 60
   teams' (2026-11-27; see "Instagram accounts").
 
 What the research did not reach, so that an absence here says little:
