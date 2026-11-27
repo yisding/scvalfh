@@ -23,8 +23,10 @@ import { withCrossLevelNames } from '../cross-level';
 import { readOverride, validateData } from '../data-file';
 import { byDateThenId } from '../format';
 import { assignGameSlugs } from '../game-urls';
+import { levelScoreNote, withholdLevelScores, type LevelScore } from '../jv/jv-level-scores';
 import { JvFileSchema, type JvFile, type JvTeam } from '../jv/jv-schema';
 import { FRESHMAN_SPORT_SEASON_ID } from '../season';
+import { SPORT } from '../sports/current';
 import type { ContestId, Game, TeamSlug } from '../types';
 
 /** The freshman file: the JV file's shape, read from MaxPreps alone, with this build's freshman season id. */
@@ -70,7 +72,10 @@ const dropped: Array<{ game: Game; reason: string }> = (file?.games ?? []).flatM
   const reason = placeholderOf(g);
   return reason === undefined ? [] : [{ game: g, reason }];
 });
-const games: Game[] = withCrossLevelNames((file?.games ?? []).filter((g) => placeholderOf(g) === undefined)).sort(byDateThenId);
+// A level final in a sport that cannot end level (basketball) is no result: its score is withheld, as on the JV
+// pages (lib/jv/jv-level-scores.ts). MaxPreps is the freshman level's only source, so nothing fills it.
+const level = withholdLevelScores((file?.games ?? []).filter((g) => placeholderOf(g) === undefined), SPORT.scoring.allowsTies);
+const games: Game[] = withCrossLevelNames(level.games).sort(byDateThenId);
 const TEAM_BY_SLUG = new Map<string, JvTeam>((file?.teams ?? []).map((t) => [t.slug, t]));
 
 // Every freshman game's page, `/freshman/game/<slug>`, by the JV pages' rule (lib/jv/jv.ts): the varsity slug rule
@@ -79,6 +84,12 @@ const SLUG_BY_ID: ReadonlyMap<ContestId, string> = assignGameSlugs(games, () => 
 const GAME_BY_SLUG = new Map<string, Game>(games.map((g) => [SLUG_BY_ID.get(g.contestId) as string, g]));
 
 /** Whether this build covers the freshman level at all (girls soccer and boys basketball). */
+/** The sentence beside a freshman game whose MaxPreps final was level in a sport with no ties (lib/jv/jv-level-scores.ts), or null. */
+export function getFreshmanLevelScoreNote(game: Game): string | null {
+  const entry: LevelScore | undefined = level.withheld.get(game.contestId);
+  return entry ? levelScoreNote(game, entry, SPORT.noun) : null;
+}
+
 export function hasFreshmanLevel(): boolean {
   return file !== null;
 }

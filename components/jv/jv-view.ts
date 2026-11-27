@@ -13,6 +13,7 @@ import { byDateThenId, localDateKey, recordString, shiftDateKey, shortDate, side
 import {
   getJvClassification,
   getJvCopiedScoreNote,
+  getJvLevelScoreNote,
   getJvFetchedAt,
   getJvGames,
   getJvGamesForOutsideTeam,
@@ -107,6 +108,9 @@ function shortName(side: GameSide): string {
 
 /** The sentence beside a MaxPreps JV final si.com, or a school's own site, reports differently, or null. */
 export function jvDiffersNote(game: Game): string | null {
+  // A MaxPreps level final in a sport with no ties (lib/jv/jv-level-scores.ts): what it was and what is shown.
+  const level = getJvLevelScoreNote(game);
+  if (level) return level;
   // A MaxPreps score that was the varsity game's (lib/jv/jv-copied-scores.ts): what it was and what is shown.
   const copied = getJvCopiedScoreNote(game);
   if (copied) return copied;
