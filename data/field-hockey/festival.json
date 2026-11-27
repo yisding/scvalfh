@@ -11,8 +11,8 @@
           "name": "Pool A",
           "teamIds": [
             "h20261030122724032629e65be1ac745",
-            "h20261030122724032829b3947a6f64a",
             "h202610301227240321609fc64e2ca47",
+            "h20261030122724032829b3947a6f64a",
             "h20261030122724032361483ff3fe548",
             "h202610301227240328a6c30ea906c4b"
           ]
@@ -58,8 +58,8 @@
             "h202610301320197692eaa6e55212041",
             "h20261030132019769345d68bb71e241",
             "h20261030132019769e8368333aaa547",
-            "h202610301320197697f731fc5d9724c",
-            "h2026103013201976939fa2f147c584d"
+            "h2026103013201976939fa2f147c584d",
+            "h202610301320197697f731fc5d9724c"
           ]
         }
       ],
@@ -77,10 +77,10 @@
           "name": "Pool E",
           "teamIds": [
             "h202610301320320925078bc28bbd84b",
+            "h20261030132032092b56ff374bd8c4f",
             "h2026103013203209240a92b74e35445",
             "h20261030132032092d66d2cdde0034a",
             "h20261030132032092064bc79d18f14a",
-            "h20261030132032092b56ff374bd8c4f",
             "h20261030132032092eee045cadac449"
           ]
         }
@@ -131,8 +131,8 @@
           "name": "Pool H",
           "teamIds": [
             "h2026103013531113054c85d2bec0a41",
-            "h20261030135311130957eb62120a84f",
             "h2026103013531113087597e6c08394f",
+            "h20261030135311130957eb62120a84f",
             "h20261030135311130a8b83fd5abe246",
             "h202610301353111305b924fa1cdc641"
           ]
@@ -210,8 +210,8 @@
           "name": "Pool N",
           "teamIds": [
             "h202610301437422129d38ded796084f",
-            "h20261030143742212c1deb3cd8d0a4b",
             "h20261030143742212ee97d052b6204f",
+            "h20261030143742212c1deb3cd8d0a4b",
             "h20261030143742212f37676d7566445",
             "h20261030143742212c5abb28c836548",
             "h2026103014374221254b2ab07eb5044"
@@ -278,8 +278,8 @@
           "id": "h20261030145612519cfe5cd6fc46141",
           "name": "Pool S",
           "teamIds": [
-            "h2026103014561251971edf915335943",
             "h202610301456125192bd4c66ed2ca4d",
+            "h2026103014561251971edf915335943",
             "h2026103014561251926c73356c1fb40",
             "h20261030145612519817d217000204d",
             "h202610301456125191724895cb21743"
@@ -300,10 +300,10 @@
           "id": "h202610301456125201d41472535f742",
           "name": "Pool U",
           "teamIds": [
-            "h20261030145612520654f4e52d0684f",
             "h20261030145612520c30a9eed54d443",
-            "h20261030145612520e610e3b4eecc4e",
+            "h20261030145612520654f4e52d0684f",
             "h2026103014561252089f5647d192443",
+            "h20261030145612520e610e3b4eecc4e",
             "h202610301456125208ee9501a79e44c"
           ]
         }
@@ -331,7 +331,7 @@
       "slug": "adult"
     }
   ],
-  "fetchedAt": "2026-11-27T17:14:05.787Z",
+  "fetchedAt": "2026-11-27T18:26:20.669Z",
   "fields": [
     {
       "id": "h20261030120711072516a028aa69c46",
@@ -2058,7 +2058,7 @@
       "number": "P15",
       "poolId": "h202610301320197690b6defb70ea94c",
       "score": [
-        1,
+        0,
         1
       ],
       "sides": [
@@ -4374,7 +4374,10 @@
       "layout": null,
       "number": "P46",
       "poolId": "h20261030143742211796f627a781e47",
-      "score": null,
+      "score": [
+        2,
+        0
+      ],
       "sides": [
         {
           "label": "Spirit of USA",
@@ -4389,7 +4392,7 @@
       ],
       "start": "2026-11-27T11:00:00",
       "startUtc": "2026-11-27T16:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 16,
@@ -4661,7 +4664,10 @@
       "layout": null,
       "number": "P38",
       "poolId": "h2026103014561251985cb1d0280774d",
-      "score": null,
+      "score": [
+        5,
+        0
+      ],
       "sides": [
         {
           "label": "U19 Gateway Red",
@@ -4676,7 +4682,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 22,
@@ -4687,7 +4693,10 @@
       "layout": null,
       "number": "P54",
       "poolId": "h20261030145612519cfe5cd6fc46141",
-      "score": null,
+      "score": [
+        5,
+        0
+      ],
       "sides": [
         {
           "label": "Spirit of USA U19",
@@ -4702,7 +4711,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 16,
@@ -4713,7 +4722,10 @@
       "layout": null,
       "number": "P57",
       "poolId": "h20261030143742212c426d0f56f0545",
-      "score": null,
+      "score": [
+        1,
+        1
+      ],
       "sides": [
         {
           "label": "New Heights U16 Blue",
@@ -4728,7 +4740,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 22,
@@ -4739,7 +4751,10 @@
       "layout": null,
       "number": "P70",
       "poolId": "h202610301456125201d41472535f742",
-      "score": null,
+      "score": [
+        0,
+        5
+      ],
       "sides": [
         {
           "label": "Frontier Inferno",
@@ -4754,7 +4769,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 16,
@@ -4765,7 +4780,10 @@
       "layout": null,
       "number": "P55",
       "poolId": "h20261030143742212c426d0f56f0545",
-      "score": null,
+      "score": [
+        0,
+        4
+      ],
       "sides": [
         {
           "label": "AGH U16 3",
@@ -4780,7 +4798,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 16,
@@ -4791,7 +4809,10 @@
       "layout": null,
       "number": "P56",
       "poolId": "h20261030143742212c426d0f56f0545",
-      "score": null,
+      "score": [
+        0,
+        2
+      ],
       "sides": [
         {
           "label": "U16 Gateway Red Stripes",
@@ -4806,7 +4827,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 9,
@@ -4817,7 +4838,10 @@
       "layout": null,
       "number": "P29",
       "poolId": "h2026103013531113069042a8868d941",
-      "score": null,
+      "score": [
+        1,
+        0
+      ],
       "sides": [
         {
           "label": "Pinnacle Ivory",
@@ -4832,7 +4856,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 22,
@@ -4843,7 +4867,10 @@
       "layout": null,
       "number": "P36",
       "poolId": "h2026103014561251985cb1d0280774d",
-      "score": null,
+      "score": [
+        3,
+        0
+      ],
       "sides": [
         {
           "label": "Lonestar U19 Orange",
@@ -4858,7 +4885,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 29,
@@ -4869,7 +4896,10 @@
       "layout": null,
       "number": "P9",
       "poolId": "h20261030132032091fbd1c813615643",
-      "score": null,
+      "score": [
+        2,
+        3
+      ],
       "sides": [
         {
           "label": "Florida United white",
@@ -4884,7 +4914,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 5,
@@ -4895,7 +4925,10 @@
       "layout": null,
       "number": "P27",
       "poolId": "h202610301320197684a409fbf141e42",
-      "score": null,
+      "score": [
+        1,
+        1
+      ],
       "sides": [
         {
           "label": "Key Biscayne Field Hockey U12",
@@ -4910,7 +4943,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 5,
@@ -4921,7 +4954,10 @@
       "layout": null,
       "number": "P31",
       "poolId": "h202610301320197690b6defb70ea94c",
-      "score": null,
+      "score": [
+        0,
+        4
+      ],
       "sides": [
         {
           "label": "Wizards U12",
@@ -4936,7 +4972,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 3,
@@ -4947,7 +4983,10 @@
       "layout": null,
       "number": "P8",
       "poolId": "h20261030122724032d9ced45cf8fb47",
-      "score": null,
+      "score": [
+        1,
+        0
+      ],
       "sides": [
         {
           "label": "Key Biscayne Field Hockey U10 White",
@@ -4962,7 +5001,7 @@
       ],
       "start": "2026-11-27T12:00:00",
       "startUtc": "2026-11-27T17:00:00Z",
-      "status": "scheduled"
+      "status": "final"
     },
     {
       "divisionKey": 22,
@@ -8762,7 +8801,7 @@
       "status": "scheduled"
     }
   ],
-  "sourceVersion": "v6_11/27/2026 5:09:38 PM",
+  "sourceVersion": "v6_11/27/2026 6:25:17 PM",
   "teams": [
     {
       "divisionKey": 3,
@@ -8819,12 +8858,12 @@
       "poolId": "h20261030122724032d9ced45cf8fb47",
       "record": {
         "ga": 2,
-        "gd": 1,
-        "gf": 3,
+        "gd": 2,
+        "gf": 4,
         "l": 1,
-        "pts": 3,
+        "pts": 6,
         "t": 0,
-        "w": 1
+        "w": 2
       },
       "slug": "u10-key-biscayne-field-hockey-white"
     },
@@ -8834,10 +8873,10 @@
       "name": "Weston U10",
       "poolId": "h20261030122724032d9ced45cf8fb47",
       "record": {
-        "ga": 8,
-        "gd": -8,
+        "ga": 9,
+        "gd": -9,
         "gf": 0,
-        "l": 1,
+        "l": 2,
         "pts": 1,
         "t": 1,
         "w": 0
@@ -8866,13 +8905,13 @@
       "name": "Atlanta FHC U12",
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
-        "ga": 11,
-        "gd": -9,
+        "ga": 10,
+        "gd": -8,
         "gf": 2,
         "l": 3,
-        "pts": 1,
-        "t": 1,
-        "w": 0
+        "pts": 3,
+        "t": 0,
+        "w": 1
       },
       "slug": "u12-atlanta-fhc"
     },
@@ -8915,12 +8954,12 @@
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
         "ga": 2,
-        "gd": 10,
-        "gf": 12,
+        "gd": 14,
+        "gf": 16,
         "l": 0,
-        "pts": 9,
+        "pts": 12,
         "t": 0,
-        "w": 3
+        "w": 4
       },
       "slug": "u12-dynasty-black"
     },
@@ -9026,12 +9065,12 @@
       "name": "Key Biscayne Field Hockey U12",
       "poolId": "h202610301320197684a409fbf141e42",
       "record": {
-        "ga": 13,
+        "ga": 14,
         "gd": -11,
-        "gf": 2,
+        "gf": 3,
         "l": 3,
-        "pts": 0,
-        "t": 0,
+        "pts": 1,
+        "t": 1,
         "w": 0
       },
       "slug": "u12-key-biscayne-field-hockey"
@@ -9074,12 +9113,12 @@
       "name": "Weston U12",
       "poolId": "h202610301320197684a409fbf141e42",
       "record": {
-        "ga": 7,
+        "ga": 8,
         "gd": -2,
-        "gf": 5,
+        "gf": 6,
         "l": 1,
-        "pts": 4,
-        "t": 1,
+        "pts": 5,
+        "t": 2,
         "w": 1
       },
       "slug": "u12-weston"
@@ -9106,12 +9145,12 @@
       "name": "Wizards U12",
       "poolId": "h202610301320197690b6defb70ea94c",
       "record": {
-        "ga": 7,
-        "gd": -5,
-        "gf": 2,
-        "l": 2,
-        "pts": 1,
-        "t": 1,
+        "ga": 11,
+        "gd": -10,
+        "gf": 1,
+        "l": 4,
+        "pts": 0,
+        "t": 0,
         "w": 0
       },
       "slug": "u12-wizards"
@@ -9122,13 +9161,13 @@
       "name": "AIM Athletes",
       "poolId": "h20261030132032091fbd1c813615643",
       "record": {
-        "ga": 4,
-        "gd": -2,
-        "gf": 2,
+        "ga": 6,
+        "gd": -1,
+        "gf": 5,
         "l": 1,
-        "pts": 3,
+        "pts": 6,
         "t": 0,
-        "w": 1
+        "w": 2
       },
       "slug": "u14-coed-aim-athletes"
     },
@@ -9186,10 +9225,10 @@
       "name": "Florida United white",
       "poolId": "h20261030132032091fbd1c813615643",
       "record": {
-        "ga": 0,
-        "gd": 5,
-        "gf": 5,
-        "l": 0,
+        "ga": 3,
+        "gd": 4,
+        "gf": 7,
+        "l": 1,
         "pts": 6,
         "t": 0,
         "w": 2
@@ -9362,10 +9401,10 @@
       "name": "Florida United Red",
       "poolId": "h2026103013531113069042a8868d941",
       "record": {
-        "ga": 5,
-        "gd": -4,
+        "ga": 6,
+        "gd": -5,
         "gf": 1,
-        "l": 1,
+        "l": 2,
         "pts": 0,
         "t": 0,
         "w": 0
@@ -9491,12 +9530,12 @@
       "poolId": "h2026103013531113069042a8868d941",
       "record": {
         "ga": 2,
-        "gd": 0,
-        "gf": 2,
+        "gd": 1,
+        "gf": 3,
         "l": 0,
-        "pts": 1,
+        "pts": 4,
         "t": 1,
-        "w": 0
+        "w": 1
       },
       "slug": "u14-11v11-pinnacle-ivory"
     },
@@ -9650,10 +9689,10 @@
       "name": "AGH U16 3",
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
-        "ga": 1,
-        "gd": 3,
+        "ga": 5,
+        "gd": -1,
         "gf": 4,
-        "l": 0,
+        "l": 1,
         "pts": 7,
         "t": 1,
         "w": 2
@@ -9683,12 +9722,12 @@
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
         "ga": 3,
-        "gd": 6,
-        "gf": 9,
+        "gd": 8,
+        "gf": 11,
         "l": 1,
-        "pts": 6,
+        "pts": 9,
         "t": 0,
-        "w": 2
+        "w": 3
       },
       "slug": "u16-charlotte-ambush"
     },
@@ -9715,12 +9754,12 @@
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
         "ga": 1,
-        "gd": 9,
-        "gf": 10,
+        "gd": 13,
+        "gf": 14,
         "l": 0,
-        "pts": 9,
+        "pts": 12,
         "t": 0,
-        "w": 3
+        "w": 4
       },
       "slug": "u16-florida-united"
     },
@@ -9746,10 +9785,10 @@
       "name": "U16 Gateway Red Stripes",
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
-        "ga": 4,
-        "gd": 3,
+        "ga": 6,
+        "gd": 1,
         "gf": 7,
-        "l": 1,
+        "l": 2,
         "pts": 4,
         "t": 1,
         "w": 1
@@ -9874,12 +9913,12 @@
       "name": "New Heights U16 Blue",
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
-        "ga": 11,
+        "ga": 12,
         "gd": -11,
-        "gf": 0,
+        "gf": 1,
         "l": 3,
-        "pts": 0,
-        "t": 0,
+        "pts": 1,
+        "t": 1,
         "w": 0
       },
       "slug": "u16-new-heights-blue"
@@ -9906,10 +9945,10 @@
       "name": "NorCal Wolves U16",
       "poolId": "h20261030143742211796f627a781e47",
       "record": {
-        "ga": 3,
-        "gd": -2,
+        "ga": 5,
+        "gd": -4,
         "gf": 1,
-        "l": 1,
+        "l": 2,
         "pts": 3,
         "t": 0,
         "w": 1
@@ -9922,12 +9961,12 @@
       "name": "Pinnacle Blue",
       "poolId": "h20261030143742212c426d0f56f0545",
       "record": {
-        "ga": 11,
+        "ga": 12,
         "gd": -10,
-        "gf": 1,
+        "gf": 2,
         "l": 3,
-        "pts": 0,
-        "t": 0,
+        "pts": 1,
+        "t": 1,
         "w": 0
       },
       "slug": "u16-pinnacle-blue"
@@ -9987,12 +10026,12 @@
       "poolId": "h20261030143742211796f627a781e47",
       "record": {
         "ga": 1,
-        "gd": 3,
-        "gf": 4,
+        "gd": 5,
+        "gf": 6,
         "l": 0,
-        "pts": 6,
+        "pts": 9,
         "t": 0,
-        "w": 2
+        "w": 3
       },
       "slug": "u16-spirit-of-usa"
     },
@@ -10115,12 +10154,12 @@
       "poolId": "h202610301456125201d41472535f742",
       "record": {
         "ga": 5,
-        "gd": 4,
-        "gf": 9,
+        "gd": 9,
+        "gf": 14,
         "l": 1,
-        "pts": 6,
+        "pts": 9,
         "t": 0,
-        "w": 2
+        "w": 3
       },
       "slug": "u19-aim-athletes"
     },
@@ -10130,10 +10169,10 @@
       "name": "Atlanta FHC U19",
       "poolId": "h20261030145612519cfe5cd6fc46141",
       "record": {
-        "ga": 6,
-        "gd": -4,
+        "ga": 11,
+        "gd": -9,
         "gf": 2,
-        "l": 1,
+        "l": 2,
         "pts": 3,
         "t": 0,
         "w": 1
@@ -10258,10 +10297,10 @@
       "name": "Frontier Inferno",
       "poolId": "h202610301456125201d41472535f742",
       "record": {
-        "ga": 3,
-        "gd": -1,
+        "ga": 8,
+        "gd": -6,
         "gf": 2,
-        "l": 1,
+        "l": 2,
         "pts": 4,
         "t": 1,
         "w": 1
@@ -10275,12 +10314,12 @@
       "poolId": "h2026103014561251985cb1d0280774d",
       "record": {
         "ga": 1,
-        "gd": 6,
-        "gf": 7,
+        "gd": 11,
+        "gf": 12,
         "l": 0,
-        "pts": 7,
+        "pts": 10,
         "t": 1,
-        "w": 2
+        "w": 3
       },
       "slug": "u19-gateway-red"
     },
@@ -10306,10 +10345,10 @@
       "name": "HTC CA U19",
       "poolId": "h2026103014561251985cb1d0280774d",
       "record": {
-        "ga": 7,
-        "gd": -4,
+        "ga": 12,
+        "gd": -9,
         "gf": 3,
-        "l": 2,
+        "l": 3,
         "pts": 1,
         "t": 1,
         "w": 0
@@ -10355,12 +10394,12 @@
       "poolId": "h2026103014561251985cb1d0280774d",
       "record": {
         "ga": 2,
-        "gd": 2,
-        "gf": 4,
+        "gd": 5,
+        "gf": 7,
         "l": 0,
-        "pts": 5,
+        "pts": 8,
         "t": 2,
-        "w": 1
+        "w": 2
       },
       "slug": "u19-lonestar-orange"
     },
@@ -10499,12 +10538,12 @@
       "poolId": "h20261030145612519cfe5cd6fc46141",
       "record": {
         "ga": 4,
-        "gd": 2,
-        "gf": 6,
+        "gd": 7,
+        "gf": 11,
         "l": 1,
-        "pts": 6,
+        "pts": 9,
         "t": 0,
-        "w": 2
+        "w": 3
       },
       "slug": "u19-spirit-of-usa"
     },
@@ -10594,10 +10633,10 @@
       "name": "Wizards U19 Black",
       "poolId": "h2026103014561251985cb1d0280774d",
       "record": {
-        "ga": 7,
-        "gd": -2,
+        "ga": 10,
+        "gd": -5,
         "gf": 5,
-        "l": 2,
+        "l": 3,
         "pts": 3,
         "t": 0,
         "w": 1
