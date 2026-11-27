@@ -2639,7 +2639,10 @@ comparison found it; every cited roster was read again live before it was writte
   Francisco and Peninsula schools'. In volleyball that linked 14 more (City Beach 9, UVA 2, Absolute 3) and gave 4
   City Beach and 4 Absolute ties their roster; in soccer, Tanisha Rameshkumar (Valley Christian) to Pleasanton Rage,
   and Alina Decker (Menlo-Atherton) to Stanford Strikers; in basketball, Noah Kirsch-Lopez and Huck Lemmer (St.
-  Ignatius, both with a San Francisco hometown on their own Passport records) to Lakeshow. Left out still: two common
+  Ignatius, both with a San Francisco hometown on their own Passport records) to Lakeshow. Basketball's hometown test
+  (a player's own Passport record that names no school) was widened to the same area the same day: a hometown
+  anywhere in the Bay Area or on the Central Coast, where it had been the school's county or one bordering it; that
+  gave Anthony Otis's (St. Ignatius, Richmond) Bay City tie its roster. Left out still: two common
   names at clubs far from the school with no other page (soccer's Taylor Williams of Branham at Marin FC, and
   Evergreen Valley's JV Alexia Ramirez at Mustang in Danville). The three names on two clubs' rosters, looked at again
   on the owner's request: Ellie Chu (Milpitas) to Vision and Madison Miller (Sobrato) to North Coast, the other
@@ -2663,7 +2666,8 @@ comparison found it; every cited roster was read again live before it was writte
 - **Boys basketball: 112 ties cite a Passport roster.** For every match, and every row the rule left only for want of
   a club record, a second club or a club near the schools, the player's own Passport record and team history were
   read. A record naming the row's school decides it (high: rule (a), the player's own record); one naming no school
-  needs a hometown in the school's county or one bordering it (rule (b), medium); one naming another high school
+  needs a hometown in the school's county or one bordering it (rule (b), medium; since 2026-11-27 anywhere in the
+  Bay Area or on the Central Coast, below); one naming another high school
   (Cupertino's Michael Wong: Dougherty Valley; Hollister's Derrick Jones: Overfelt), or a hometown farther away
   (Milpitas' Deren Cayabyab: Elk Grove; SHC, SI and King's Academy names in Oakland, Hayward, Richmond and Antioch),
   rules the match out, and a record with no hometown links nothing (7 rows). A middle school on the record is an
