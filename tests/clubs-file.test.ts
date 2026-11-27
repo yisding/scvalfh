@@ -256,10 +256,14 @@ describe('data/field-hockey/clubs.json', () => {
     expect(raw.jvAffiliations.filter(fromSweep1126)).toEqual([]);
   });
 
-  it('ties two players found by the 2026-11-27 comparison with the kept club rosters, one varsity and one JV', () => {
+  it('ties the players found by the 2026-11-27 comparison with the kept club rosters: two to SF Hawks, and Lucy Miller to RUSH on the owner\'s word', () => {
     const pin = (a: (typeof raw.affiliations)[number]) => [a.teamSlug, a.fullName, a.club, a.status, a.confidence, a.sources.map((x) => [x.kind, x.url, x.statedClassYear])];
     const source = (year: number) => [['club-site', 'https://sfyouthfieldhockey.com/current-players/', year]];
-    expect(raw.affiliations.filter(fromClubRosters1127).map(pin)).toEqual([['convent-sacred-heart', 'Julia Ahlstrand', 'sf-hawks', 'current', 'medium', source(2028)]]);
+    expect(raw.affiliations.filter(fromClubRosters1127).map(pin)).toEqual([
+      ['convent-sacred-heart', 'Julia Ahlstrand', 'sf-hawks', 'current', 'medium', source(2028)],
+      // Left out as a common name until the owner confirmed her club and school (2026-11-27); RUSH's page is the source.
+      ['scripps-ranch', 'Lucy Miller', 'rush', 'current', 'medium', [['club-site', 'https://www.rushfieldhockey.org/player-directory/elite-performance-group/lucy-miller/', 2029]]],
+    ]);
     expect(raw.jvAffiliations.filter(fromClubRosters1127).map(pin)).toEqual([['marin-academy', 'Quinn Wintroub', 'sf-hawks', 'current', 'medium', source(2030)]]);
   });
 
@@ -480,7 +484,9 @@ describe('data/field-hockey/clubs.json', () => {
   describe('Southern California, as researched 2026-10-06 (changes only with a new sweep)', () => {
     const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     // The 2026-11-16 MAX Field Hockey read added one SoCal tie, pinned in its own test below.
-    const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league) && !fromMaxfh1116(a) && !fromSweep1126(a));
+    const socal = raw.affiliations.filter(
+      (a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league) && !fromMaxfh1116(a) && !fromSweep1126(a) && !fromClubRosters1127(a),
+    );
     const LEVY_MAXPREPS =
       'https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/eleanor-levy/bio/?careerid=nrdsamg37e6p9';
 
@@ -501,8 +507,9 @@ describe('data/field-hockey/clubs.json', () => {
       expect(raw.clubs).toHaveLength(28);
       expect(socal).toHaveLength(76);
       // 170, the one 2026-10-07 tie and the one 2026-11-16 tie (both above), Beatrix Monk's tie moved from
-      // jvAffiliations (2026-11-16), the 2026-11-26 sweep's three, and the 2026-11-27 comparison's varsity tie.
-      expect(raw.affiliations).toHaveLength(177);
+      // jvAffiliations (2026-11-16), the 2026-11-26 sweep's three, and the 2026-11-27 comparison's two varsity ties
+      // (Julia Ahlstrand; Lucy Miller, on the owner's decision).
+      expect(raw.affiliations).toHaveLength(178);
       expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
       expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
       // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.

@@ -2637,8 +2637,11 @@ comparison found it; every cited roster was read again live before it was writte
   not linked. Not linked either: 10 rows on two programs' rosters in one season.
 - **Field hockey: 2 new ties**, Convent's Julia Ahlstrand and Marin Academy's JV Quinn Wintroub to SF Hawks (its
   current-players page); 45 matches were ties already citing the page and 12 ties made on another page of the same
-  club. Not linked: Berkeley's Natalie Jones and Julia Stone (SF Hawks), Helix's Gabriella Jones (Myto) and Scripps
-  Ranch's Lucy Miller (RUSH), common names on a page that names no school, as on 2026-10-06; a name at two schools;
+  club. Not linked: Berkeley's Natalie Jones and Julia Stone (SF Hawks) and Helix's Gabriella Jones (Myto), common names
+  on a page that names no school, as on 2026-10-06. Scripps Ranch's Lucy Miller (RUSH's Elite Performance Group, class
+  of 2029), left out for the same reason, was linked the same day on the owner's decision: the owner confirmed her
+  club and school from her Instagram, which is never cited, so the tie cites RUSH's page and its basis says why. Not
+  linked either: a name at two schools;
   six players on Lightning's 2025 rosters, which give no class year.
 
 ### Soccer and basketball: last season's commitments
