@@ -177,7 +177,7 @@ Per-league pages show their own region's league chips.
 | `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points a team can finish with (the Sunset and the independents, with no fixed schedule, show GP alone); a pill links its JV tables on `/jv`. `/standings/independents` is the group's table of their games against each other, with the group's note and the no-postseason card |
 | `/jv` | The JV hub: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each ranking its teams once enough of its JV league games have a score (before that it lists them unranked); under each league's tables its latest JV results, its next JV games, a link to its whole JV season and every school's JV team |
 | `/jv/[league]` | One league's whole JV season by date (one page per league): results, games with no score reported and games to come, a group per date (`#d-<date>`), including the dates only JV teams play |
-| `/jv/game/[id]` | One JV game's page (one static page per listed JV game; OG card per game), at the slug a varsity game of the same facts would have: `/jv/game/2026-09-15-los-gatos-at-santa-clara`. The JV competition (its JV table on `/jv`, or the league's JV season), the scoreboard with each JV team's record over its listed JV finals as of the game, the date (linking the day's `#jv` block, or the league's JV season on a JV-only date), what it counts for in words, the varsity game played beside it, the two JV teams' season series, and the Details rail. See "JV game pages" under "JV games" |
+| `/jv/game/[id]` | One JV game's page (one static page per listed JV game; OG card per game), at the slug a varsity game of the same facts would have: `/jv/game/2026-09-15-los-gatos-at-santa-clara`. The JV competition (its JV table on `/jv`, or the league's JV season), the scoreboard with each JV team's record over its listed JV finals as of the game, the date (linking the day's `#jv` block, or the league's JV season on a JV-only date), what it counts for in words, the varsity game played beside it, the two JV teams' season series, on a final a Game stats section (`#game-stats-kicker`) with each school's JV box score where its coach entered one on MaxPreps, and the Details rail. See "JV game pages" under "JV games" |
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents; their games against each other count for their table) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
@@ -748,7 +748,14 @@ game has, and kept apart from varsity the same way:
   date within three days, the counterpart rule the JV tables use) is named and linked, and that varsity game's
   page links back to the JV game ("JV game"). Only a one-to-one pair links back: a varsity game two JV games
   sit beside links neither.
-- **No box score, no form strip, no bracket, no rating**: the JV feeds carry none of them.
+- **Game stats** (added 2026-11-27): on a final, each school's JV box score as its coach entered it on MaxPreps,
+  drawn by the varsity page's own section (`components/game/GameStats.tsx` over `getJvGameStatsEntry` in
+  `lib/jv/jv.ts`, `JvGameStats` in `components/jv/JvGameSections.tsx`) with the same tables, notes and legend; a
+  side's strip links the school's JV games. Only where at least one side has a table, and never on a game whose
+  MaxPreps score was its varsity game's and is withheld (its entries may be the varsity game's too). JV games
+  have no game-note credits. Few JV coaches enter stats: on 2026-11-27, 12 field hockey schools, 8 volleyball, 5
+  basketball and 4 soccer had a JV per-game table on MaxPreps. See "JV box scores" below.
+- **No form strip, no bracket, no rating**: the JV feeds carry none of them.
 
 #### Games between two levels
 
@@ -845,6 +852,16 @@ each said:
 - **si.com** (`sblive`): each school's JV team page (all 102 schools; Marin Academy's, 575146, since 2026-11-03),
   scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/jv/jv-teams.ts`,
   read from each varsity page's level switcher), never by name.
+- **JV box scores** (`teams[].stats`, `teams[].boxScores`, added 2026-11-27): MaxPreps' per-game JV stats table
+  for each school (`team-season-game-stats/rollup/v1` with the JV season id and the school's id) and, for each
+  MaxPreps JV final of the school's whose row there has a count above zero, its box score
+  (`team-contest-player-stats/v1`, which answers with the JV season id), read exactly as the varsity box scores in
+  `player-stats.json` are (`scripts/lib/box-scores.ts`, shared with `fetch-player-stats`): read again only when
+  the row's digest changes, lines named from `jv-rosters.json` then `rosters.json` on the career id. One more
+  call per school a run, plus one per new or edited game (about 120 field hockey box scores on a first read). A
+  failure never fails the school or the run: a table that cannot be read keeps the previous box scores (`stats`
+  `carried-forward`), and a final whose box score could not be read and has none kept is in `unreadBoxScores`,
+  so the page says its stats could not be read rather than that none were entered. The freshman level reads none.
 
 What the pages show is `mergeJv` (`lib/jv/jv-merge.ts`) over the two, decided again on every build
 from the file's own `fetchedAt`. **MaxPreps comes first**; si.com only supplements it, for a game
@@ -931,6 +948,8 @@ pnpm fetch-jv --no-sblive                       # MaxPreps only; si.com rows are
 pnpm fetch-jv --fixtures tests/fixtures/jv --leagues pcal   # offline, from the PCAL captures
 pnpm fetch-jv --capture <dir>                   # live, and save every response as <dir>/jv-sched-<slug>.json / jv-sblive-<slug>.html
 pnpm fetch-jv --dry-run                         # parse and report, write nothing
+pnpm fetch-jv --all-box-scores                  # live, reading every JV box score again
+pnpm fetch-jv --fixtures tests/fixtures/jv-stats --leagues scval --no-sblive   # offline, Monta Vista's JV box scores
 ```
 
 ### Freshman games

@@ -70,6 +70,11 @@ export async function fetchBoxScore(
   teamId: string,
   contestId: string,
   onRaw?: (body: string) => void,
+  /**
+   * The season the box score must be for: this season's varsity unless given. A JV contest's box score is the same
+   * call with the school's own team id, and answers with the JV season id (scripts/fetch-jv.ts).
+   */
+  sportSeasonId?: string,
 ): Promise<PlayerStatsPage | null> {
   const url = boxScoreUrl(teamId, contestId);
   let body: string;
@@ -86,5 +91,5 @@ export async function fetchBoxScore(
   } catch (err) {
     throw new MaxPrepsError(`box score: invalid JSON: ${(err as Error).message}`, { url });
   }
-  return parsePlayerStats(raw, { expectedTeamId: teamId, url });
+  return parsePlayerStats(raw, { expectedTeamId: teamId, url, ...(sportSeasonId ? { expectedSeasonId: sportSeasonId } : {}) });
 }

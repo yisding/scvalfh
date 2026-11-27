@@ -84,6 +84,7 @@ import {
   type PreviousFile,
 } from './lib/team-scope';
 import { droppedTeams, loadPreviousOrFail, prepareCapture, saveCapture, validateAssembled, writeIfChanged } from './lib/team-file';
+import { readBoxScores, readGameRows, type BoxScoreSource } from './lib/box-scores';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
 import { teamsCreditedByNotes } from '../lib/players/note-stats';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
@@ -100,8 +101,7 @@ import {
 } from '../lib/players/player-stats-schema';
 import { RostersSchema } from '../lib/players/rosters-schema';
 import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { boxScoreUrl, fetchBoxScore, toBoxScore } from '../lib/sources/maxpreps-box-score';
-import { fetchGameRows, gameStatsUrl, parseGameRows, type GameRow } from '../lib/sources/maxpreps-game-stats';
+import type { GameRow } from '../lib/sources/maxpreps-game-stats';
 import {
   fetchPlayerStats,
   joinToRoster,
@@ -110,7 +110,6 @@ import {
   playerStatsUrl,
   teamStatsPageUrl,
   type PlayerStatsPage,
-  type RosterJoinPlayer,
 } from '../lib/sources/maxpreps-player-stats';
 import { SEASON_YEAR } from '../lib/season';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
@@ -194,109 +193,6 @@ const NOTES = [
   "games, where present, are the team's box scores (team-contest-player-stats), one per final in data/field-hockey/snapshot.json whose row in the team's per-game table has a count above zero, read the same way as the season rows: a stat is tracked when the game's team total is above zero and some player holds it, and a player's line holds only the stats they have a number for. rowKey is a digest of the per-game row the box score was read against; a box score is read again when its row changes.",
 ];
 
-/**
- * The team's per-game table (lib/sources/maxpreps-game-stats.ts), or the reason it could not be
- * had. Offline, a team with no `game-stats-<slug>.json` capture has none (`missing`): the captures
- * cover a few teams, so that is not a failure.
- */
-async function readGameRows(
-  args: Args,
-  client: MaxPrepsClient,
-  capture: string | null,
-  slug: string,
-  maxprepsTeamId: string,
-): Promise<{ rows: GameRow[] } | { error: string; missing?: boolean }> {
-  try {
-    if (args.fixtures) {
-      const file = path.join(args.fixtures, `game-stats-${slug}.json`);
-      if (!existsSync(file)) return { error: `no per-game capture ${path.basename(file)}`, missing: true };
-      return {
-        rows: parseGameRows(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
-          expectedTeamId: maxprepsTeamId,
-          url: gameStatsUrl(maxprepsTeamId),
-        }),
-      };
-    }
-    return {
-      rows: await fetchGameRows(client, maxprepsTeamId, capture ? (body) => saveCapture(capture, `game-stats-${slug}.json`, body) : undefined),
-    };
-  } catch (err) {
-    return { error: err instanceof Error ? err.message : String(err) };
-  }
-}
-
-/**
- * The team's box scores for its finals in the snapshot (`finals`, contest ids) whose per-game row
- * has a count above zero. A stored box score whose row has not changed is kept without a call; any
- * other is read. A box score that cannot be read keeps the stored one, if any, with a warning:
- * its old `rowKey` no longer matches the row, so the next run reads it again.
- */
-async function readBoxScores(
-  args: Args,
-  client: MaxPrepsClient,
-  capture: string | null,
-  slug: string,
-  maxprepsTeamId: string,
-  rows: readonly GameRow[],
-  finals: ReadonlySet<string>,
-  roster: readonly RosterJoinPlayer[],
-  previous: readonly BoxScore[],
-  warnings: string[],
-): Promise<{ games: BoxScore[]; read: number }> {
-  const stored = new Map(previous.map((b) => [b.contestId, b]));
-  let read = 0;
-  // Each game's warning comes back with it and is added in row order, not in the order the calls
-  // finish: warnings are part of the file's content key, so a run over unchanged data must word and
-  // order them the same.
-  const results = await Promise.all(
-    rows
-      .filter((r) => r.entered && finals.has(r.total.contestId))
-      .map(async (row): Promise<{ box: BoxScore | null; warning?: string }> => {
-        const { contestId } = row.total;
-        const prior = stored.get(contestId) ?? null;
-        if (prior && prior.rowKey === row.rowKey && !args.allBoxScores) return { box: prior };
-        try {
-          let page: PlayerStatsPage | null;
-          if (args.fixtures) {
-            const file = path.join(args.fixtures, `box-${slug}-${contestId}.json`);
-            // The captures hold a few box scores, not every one: the rest are simply not read.
-            if (!existsSync(file)) return { box: prior };
-            page = parsePlayerStats(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
-              expectedTeamId: maxprepsTeamId,
-              url: boxScoreUrl(maxprepsTeamId, contestId),
-            });
-          } else {
-            page = await fetchBoxScore(
-              client,
-              maxprepsTeamId,
-              contestId,
-              capture ? (body) => saveCapture(capture, `box-${slug}-${contestId}.json`, body) : undefined,
-            );
-          }
-          read += 1;
-          const box = page ? toBoxScore(page, roster, contestId, row.rowKey) : null;
-          return box
-            ? { box }
-            : { box: null, warning: `box score ${contestId}: its per-game row has stats but MaxPreps lists no player for the game` };
-        } catch (err) {
-          return {
-            box: prior,
-            warning:
-              `box score ${contestId} not read (${err instanceof Error ? err.message : String(err)})` +
-              (prior ? '; the previous one is kept' : ''),
-          };
-        }
-      }),
-  );
-  for (const r of results) if (r.warning) warnings.push(r.warning);
-  return {
-    games: results
-      .flatMap((r) => (r.box ? [r.box] : []))
-      .sort((a, b) => a.contestId.localeCompare(b.contestId)),
-    read,
-  };
-}
-
 /** Each registry team's MaxPreps finals in the snapshot, by slug: the games a box score is read for. */
 function finalsBySlug(games: readonly Game[]): Map<string, Set<string>> {
   const out = new Map<string, Set<string>>();
@@ -351,6 +247,7 @@ export async function main(argv: readonly string[]): Promise<number> {
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
   const capture = prepareCapture(args);
+  const boxSource: BoxScoreSource = { client, fixtures: args.fixtures, capture, all: args.allBoxScores, prefix: '' };
 
   const teams: TeamPlayerStats[] = await Promise.all(
     TEAMS.map(async (team): Promise<TeamPlayerStats> => {
@@ -407,16 +304,14 @@ export async function main(argv: readonly string[]): Promise<number> {
         let gameTotals: GameRow['total'][] | undefined;
         let games: BoxScore[] = [];
         if (lines.length) {
-          const read = await readGameRows(args, client, capture, team.slug, maxprepsTeamId);
+          const read = await readGameRows(boxSource, team.slug, maxprepsTeamId);
           if ('rows' in read && noted.has(team.slug)) gameTotals = read.rows.map((r) => r.total);
           // A team with season stats whose per-game table lists no game (MaxPreps' "No data" answer)
           // has not had its games read: its box scores are kept, never dropped as if none existed.
           const table = 'rows' in read && read.rows.length === 0 ? { error: 'the per-game table lists no game' } : read;
           if ('rows' in table) {
             const box = await readBoxScores(
-              args,
-              client,
-              capture,
+              boxSource,
               team.slug,
               maxprepsTeamId,
               table.rows,

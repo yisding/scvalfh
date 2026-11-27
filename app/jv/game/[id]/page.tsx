@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ScoreBoard, { GameFacts } from '../../../../components/game/ScoreBoard';
-import { JvGameDetails, JvSeasonSeries, JvVarsityGame } from '../../../../components/jv/JvGameSections';
+import { JvGameDetails, JvGameStats, JvSeasonSeries, JvVarsityGame } from '../../../../components/jv/JvGameSections';
 import { buildJvGameView, jvGameDescription, jvGameStaticParams, jvGameTitle } from '../../../../components/jv/jv-game-view';
 import { OG_BASE } from '../../../../components/layout/site';
 
@@ -14,7 +14,8 @@ import { OG_BASE } from '../../../../components/layout/site';
  * scoreboard with each JV team's record over its listed JV finals, the facts under it (the date links the day's
  * JV block, or the league's JV season on a date with no varsity game), the notes a reader must not miss (a score
  * another source reports differently, York in Santa Catalina's slot, a game listed from the league's schedule),
- * then the varsity game played beside it and the two JV teams' season series, beside the Details rail.
+ * then the varsity game played beside it, the two JV teams' season series and the game's stats where a coach entered
+ * them on MaxPreps (Game stats, the varsity page's section), beside the Details rail.
  *
  * `id` is the game's slug as a varsity game's would be (`2026-10-06-carmel-at-salinas`, `-2` on a same-day
  * pair's second game: components/jv/jv-game-view.ts, lib/jv/jv.ts). Fully static: `dynamicParams = false`, so a
@@ -69,6 +70,7 @@ export default async function JvGamePage({ params }: PageProps<'/jv/game/[id]'>)
           ))}
           <JvVarsityGame model={model} className="sx-section" />
           <JvSeasonSeries model={model} className="sx-section" />
+          <JvGameStats model={model} className="sx-section" />
         </div>
         <aside className="sx-rail min-w-0" aria-label="Game details">
           <JvGameDetails model={model} className="sx-section" />

@@ -158,8 +158,10 @@ export async function fetchGameRows(
   teamId: string,
   /** Sees the raw body before anything reads it — scripts/fetch-player-stats.ts --capture. */
   onRaw?: (body: string) => void,
+  /** The season to read: this season's varsity unless given (scripts/fetch-jv.ts reads the JV's). */
+  sportSeasonId: string = SPORT_SEASON_ID,
 ): Promise<GameRow[]> {
-  const url = gameStatsUrl(teamId);
+  const url = gameStatsUrl(teamId, sportSeasonId);
   let body: string;
   try {
     body = (await client.text(url, 'application/json')).data;
@@ -174,5 +176,5 @@ export async function fetchGameRows(
   } catch (err) {
     throw new MaxPrepsError(`game stats: invalid JSON: ${(err as Error).message}`, { url });
   }
-  return parseGameRows(raw, { expectedTeamId: teamId, url });
+  return parseGameRows(raw, { expectedTeamId: teamId, expectedSeasonId: sportSeasonId, url });
 }

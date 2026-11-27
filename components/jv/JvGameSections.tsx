@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
 import { mapsSearchHref, shortDate } from '../../lib/format';
-import { getJvGameForVarsity, jvGameHref } from '../../lib/jv/jv';
+import { getJvGameForVarsity, getJvGameStatsEntry, jvGameHref } from '../../lib/jv/jv';
 import { addressLine, gameAddress } from '../../lib/schools/venue';
+import GameStats from '../game/GameStats';
 import { GameLogRowBody, gameLogRowClass } from '../game-row/GameLogRow';
 import { DATA_CORRECTIONS_URL } from '../layout/site';
 import { describeGame } from '../ui/describe-game';
@@ -14,9 +15,24 @@ import { MAIN_LEVEL, SECOND_LEVEL } from '../words/level-words';
 
 /**
  * The sections of a JV game's page (app/jv/game/[id]) under its scoreboard: the varsity game played beside it, the
- * two JV teams' season series and the Details rail. They are the varsity page's sections (components/game/) cut to
- * what a JV game has: no bracket, no league form, no box score, and every link to a game in the series is a JV page.
+ * two JV teams' season series, the game's stats and the Details rail. They are the varsity page's sections
+ * (components/game/) cut to what a JV game has: no bracket and no league form, and every link to a game in the series
+ * is a JV page.
  */
+
+/** A side's strip link in a JV game's stats: the school's JV games. */
+const jvSideAction = (slug: string) => ({ href: `/teams/${slug}#jv`, label: `${SECOND_LEVEL.short} games` });
+
+/**
+ * "Game stats": each JV side's box score, as its coach entered it on MaxPreps (JvTeam.boxScores in the JV file), drawn
+ * by the varsity page's own section (components/game/GameStats.tsx) over the JV lookup. Nothing when neither side
+ * has a table, and nothing on a game whose MaxPreps score was its varsity game's and is withheld
+ * (lib/jv/jv-copied-scores.ts): its entries may be the varsity game's too.
+ */
+export function JvGameStats({ model, className }: { model: JvGameModel; className?: string }) {
+  if (model.scoreWithheld) return null;
+  return <GameStats model={model} className={className} lookup={getJvGameStatsEntry} sideAction={jvSideAction} />;
+}
 
 /** "Varsity game": the varsity game of the same two schools (lib/jv/jv-standings.ts jvVarsityTwins), linked. */
 export function JvVarsityGame({ model, className }: { model: JvGameModel; className?: string }) {
