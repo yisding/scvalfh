@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T06:24:31.470Z",
+  "fetchedAt": "2026-11-27T15:14:16.103Z",
   "fixtures": [
     {
       "claims": {
@@ -23780,7 +23780,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/more-san-jose-vs-the-nueva-school-san-mateo/12-16-2026/?c=092ab209-9110-436a-8fe7-6907332a5e4d",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/thomas-more-high-school-san-jose-ca/gambc2f9d6a83?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": null
             },
             "venue": {
               "text": null
@@ -27202,7 +27202,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T23:59:31",
+              "maxprepsModifiedOn": "2026-11-27T08:29:35",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42506,7 +42506,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T10:58:23",
+              "maxprepsModifiedOn": "2026-11-27T09:00:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
