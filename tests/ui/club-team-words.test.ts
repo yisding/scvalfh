@@ -142,6 +142,7 @@ describe('soccerClubTeamWords', () => {
       'Palo Alto SC ECNL RL G2008/09': 'ECNL RL G2008/09',
       'Panthers Black U17G': 'Panthers Black',
       'Pleasanton RAGE ECNL G2008/09': 'ECNL G2008/09',
+      'Pleasanton RAGE ECNL G2009/10': 'ECNL G2009/10',
       'Quicksilver Green 2009': 'Quicksilver Green G2009',
       'San Francisco Elite Academy ECNL RL G2011/12': 'ECNL RL G2011/12',
       'Santa Clara Sporting 10G GA': 'GA G2010',

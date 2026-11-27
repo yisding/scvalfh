@@ -10,7 +10,8 @@
     "No record, so no tie shown, although a page ties a rostered player to the club: Team California (2), Seattle Rotary (2), Roadrunners Sports Club (2), Seattle Rotary (EYBL) (2), All In Elite (5), South Bay Snipers (1), San Jose Ninjas (1), Team elite (1), Team Evolution (1), Bay Area Sonics (1), RBA Waves (1), Flight Academy (2), Santa Cruz Premier (2), Silicon Valley Basketball Club (2), Wce Silicon Valley 14ua (1), Fierce (1), All In (2), AYB 14u-Liu (2), Top Flight Elite (2), South Bay Reapers (1), HoopSphere Academy (1), Genesis Basketball (1), Prodigy (1), Work Hard Play Hard (1), AAU Bulldawgs (1), Roadrunners (1), RBA waves (2), Wolfpack Elite (1), Bay Area impact (2), BAAS Dragons (1), San Francisco Cyclones (1), Evolution Adidas Gold (1), WCE East Bay (1), Bay Area Rebels (1). No club-owned site or circuit directory entry was found for these (All In Elite, Team California, Seattle Rotary and Roadrunners Sports Club are named on Prep Hoops pages; the rest on MaxPreps career pages or NCSA Club Information lines; an NCSA line's KOPA entries were left out as unclear).",
     "Every source of every tie was re-read at assembly on 2026-11-21 by a separate script and its quote found on the page as served (Hudl and MaxPreps: the page's own data fields; SportsRecruits: the profile JSON, twice; NCSA: the page re-read once more).",
     "Club records added 2026-11-27 (10), for the programs the kept Passport rosters (data/basketball/club-rosters.json) matched tracked players at: Bay Area Impact, South Bay H2G, TM Basketball, SBB Rebels, Bay Area Hurricanes, Ballerz United, Bay Area Rebels, Renegades Basketball, the PVBC Mavericks and the Palo Alto Huskies, each written from the program's own site and The Passport's public program record (api.the-passport.com/api/programs/public/<n>: city and website; its director and contact fields were not recorded). No record, so their matches are not linked: South Bay Snipers (Passport record: San Jose, no website. southbaysnipers.com exists but is a GoDaddy \"Launching Soon\" page with no club content; only a Lessons.com trainer listing found.); Wolfpack Zeta (Passport record: Sunnyvale, no website. No program of this name found; wolfpackbasketball.org is a Culver City (LA) club, and a \"Wolfpack Basketball Norcal\" is Tri-Valley. Likely a team name; no club site.); All-In-Elite (Passport record says Rocklin (Sacramento area) with website Allinyouthsports.com, which redirects to an unrelated trainer (EA Sports Development); allinelite.org is a \"coming soon\" placeholder. No own site, and its city does not fit the San Jose players.); Pacifica Basketball Club (Passport record: Pacifica (401 Paloma Ave, the Oceana High School address), no website; no site found (guessed hosts do not resolve; search found nothing).); No Limit Basketball (Passport record gives only state WA, no website. nolimitbasketball.com is an Illinois club (tryouts at Dwight Township Fieldhouse), not ours; no Bay Area site found.); Fierce Basketball (fiercebasketball.com (SportsEngine) is a youth training program (private workouts, small groups, clinics) with a 408 phone, but neither it nor the Passport record (state CA only) names a city, and it lists no teams.); South Bay Reapers (Passport record: Gilroy, no website; no site found.); Cali Legends (Passport record: Seaside, no website (social media only); no site found.); Salinas Valley Kings (Passport record: Gonzales, no website (social media only); no site found.); NBC BULLS 2028 (Passport record: San Jose, no website; appears to be a single class-of-2028 team; no site found.); SF Work Hard Play Hard (Passport record: San Francisco 94134, website whphbasketball.com, which does not resolve (DNS failure); no other own site found.); Bay Area Lakers (Passport record: San Jose 95133, website field is an Instagram handle (\"https://@BAL322433\"); no site found.); Team California (The Passport public program endpoint answers 404 \"Program not found\" for 14250; no Bay Area club site of this name found.); MVP Magic (Passport record: Oakland 94705, no website; only a G365 event report names it; no site found.); MBA Triple Threat (Passport record: Gilroy, no website (social media only); Triple Threat Academy (Oakland/Alameda/San Ramon) is a different program; no site found.).",
-    "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the boys club team rosters of the Northern California events on The Passport (G365, The Stage, Breakthrough, Strictly Hoops, For the Love of the Game, the adidas 3Stripes Gold West Regional) and the adidas 3SSB sessions, read from its public API into data/basketball/club-rosters.json (pnpm fetch-club-rosters:basketball: 667 teams, 5,685 players with class years), compared with every varsity and JV row by pnpm compare-club-rosters:basketball. For every row the league-roster rule matched (and the rows it left only for a club with no record, two clubs, or a club away from the schools), each player's own Passport record (players/by-player-number/<n>) and team history were read: a record naming the row's school makes the tie high (rule (a), the player's own record); one naming no school needs a hometown in the school's county or one bordering it (rule (b)) and is medium; one naming another high school, or a hometown farther away, rules the match out (Cupertino's Michael Wong is a Dougherty Valley player; Hollister's Derrick Jones an Overfelt one; Milpitas' Deren Cayabyab lives in Elk Grove; three SHC, SI and King's Academy names live in Oakland, Hayward, Richmond and Antioch), and a record giving no hometown links nothing (7 rows). 101 new ties (25 high, 76 medium) and 11 that other pages had made, which gain the roster; ten club records added for them (above). Not linked: 10 rows on two programs' rosters in one season, and about 80 at programs with no record."
+    "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the boys club team rosters of the Northern California events on The Passport (G365, The Stage, Breakthrough, Strictly Hoops, For the Love of the Game, the adidas 3Stripes Gold West Regional) and the adidas 3SSB sessions, read from its public API into data/basketball/club-rosters.json (pnpm fetch-club-rosters:basketball: 667 teams, 5,685 players with class years), compared with every varsity and JV row by pnpm compare-club-rosters:basketball. For every row the league-roster rule matched (and the rows it left only for a club with no record, two clubs, or a club away from the schools), each player's own Passport record (players/by-player-number/<n>) and team history were read: a record naming the row's school makes the tie high (rule (a), the player's own record); one naming no school needs a hometown in the school's county or one bordering it (rule (b)) and is medium; one naming another high school, or a hometown farther away, rules the match out (Cupertino's Michael Wong is a Dougherty Valley player; Hollister's Derrick Jones an Overfelt one; Milpitas' Deren Cayabyab lives in Elk Grove; three SHC, SI and King's Academy names live in Oakland, Hayward, Richmond and Antioch), and a record giving no hometown links nothing (7 rows). 101 new ties (25 high, 76 medium) and 11 that other pages had made, which gain the roster; ten club records added for them (above). Not linked: 10 rows on two programs' rosters in one season, and about 80 at programs with no record.",
+    "2026-11-27, the owner's decision: the area a club may be based in for a league roster to link (rule 5, LOCAL_REGIONS) is the whole Bay Area (San Francisco, the Peninsula, the South Bay, the East Bay and Marin) and the Central Coast, in every sport. Under it St. Ignatius' Noah Kirsch-Lopez and Huck Lemmer link to Lakeshow (East Bay): each player's own Passport record gives the class of 2028 and a San Francisco hometown and lists the Lakeshow team (medium). The hometown test on the player's own record is unchanged (the school's county or one bordering it), so the East Bay hometowns of a few SF and South Bay players still rule their matches out."
   ],
   "clubs": [
     {
@@ -5318,6 +5319,62 @@
         }
       ],
       "basis": "Found 2026-11-27 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json): G365 Capital Clash 2026 (2026-10-24, Roseville): Bay Area Impact 15U 2030 (15U, class of 2030) lists a player of this name and class year, and no other tracked school has the name. The player's own Passport record names no school; it gives the class of 2030 and a hometown of Millbrae, CA,  in the school's county or one bordering it, so rule (b) (class year plus a hometown in the school's area) is met with the league-roster rule (one club that season, near the schools); medium. The roster was read twice and the record once, the same day."
+    },
+    {
+      "playerId": "p8bee084aa2",
+      "name": "Noah Kirsch-Lopez",
+      "club": "lakeshow",
+      "clubTeam": "Lakeshow 16U 3SSB",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11346/teams/46520/roster",
+          "kind": "league-roster",
+          "quote": "Lakeshow 16U 3SSB (16U) | Noah Kirsch-Lopez | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/25910",
+          "kind": "other",
+          "quote": "graduationYear 2028; address San Francisco, CA; team history: Lakeshow (Lakeshow 16U 3SSB)",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-27 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json): adidas 3SSB Boys Session III + IV (Bryan, TX + Rock Hill, SC) 2026 (2026-07-09, Rock Hill / Bryan): Lakeshow 16U 3SSB (16U, class of 2028) lists a player of this name and class year, and no other tracked school has the name. The player's own Passport record names no school; it gives the class of 2028 and a hometown of San Francisco, CA,  in the school's county or one bordering it, so rule (b) (class year plus a hometown in the school's area) is met with the league-roster rule (one club that season, near the schools); medium. The roster was read twice and the record once, the same day."
+    },
+    {
+      "playerId": "p5aa284bfb2",
+      "name": "Huck Lemmer",
+      "club": "lakeshow",
+      "clubTeam": "Lakeshow 16U Gold Boyd",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11368/teams/46460/roster",
+          "kind": "league-roster",
+          "quote": "Lakeshow 16U Gold Boyd (16U) | Huck Lemmer | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/22273",
+          "kind": "other",
+          "quote": "graduationYear 2028; address San Francisco, CA; team history: Lakeshow (Lakeshow 16U Gold Boyd; Lakeshow 15U Gold Halal)",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-27 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json): The Stage Summer Spotlight 2026 (2026-07-18, Oakland): Lakeshow 16U Gold Boyd (16U, class of 2028) lists a player of this name and class year, and no other tracked school has the name. The player's own Passport record names no school; it gives the class of 2028 and a hometown of San Francisco, CA,  in the school's county or one bordering it, so rule (b) (class year plus a hometown in the school's area) is met with the league-roster rule (one club that season, near the schools); medium. The roster was read twice and the record once, the same day."
     }
   ]
 }

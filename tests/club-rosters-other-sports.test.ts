@@ -14,7 +14,6 @@ import { describe, expect, it } from 'vitest';
 import {
   ClubRostersFileSchema,
   LOCAL_REGIONS,
-  VOLLEYBALL_LOCAL_REGIONS,
   clubKey,
   compareClubRosters,
   rosterName,
@@ -194,16 +193,15 @@ describe('the league-roster rule, as the other sports use it', () => {
     expect(outcomes(file, [row('Ann Lee', 2028)], { isLocal: () => true })).toEqual(['Ann Lee: match (new) far']);
   });
 
-  it('counts an East Bay or Marin club as near the schools in volleyball only (owner decisions, 2026-11-27)', () => {
-    expect(VOLLEYBALL_LOCAL_REGIONS).toEqual([...LOCAL_REGIONS, 'east-bay', 'marin']);
-    expect(LOCAL_REGIONS).not.toContain('east-bay');
-    expect(LOCAL_REGIONS).not.toContain('marin');
-    expect(VOLLEYBALL_LOCAL_REGIONS).not.toContain('sacramento');
+  it('counts the whole Bay Area and the Central Coast as near the schools, in every sport (owner decision, 2026-11-27)', () => {
+    expect(LOCAL_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay', 'central-coast', 'east-bay', 'marin']);
+    for (const far of ['sacramento', 'north-state', 'los-angeles', 'elsewhere'] as const) expect(LOCAL_REGIONS).not.toContain(far);
     const file = withTeams([tm2(1, 'ncva-power-2026', 'Far Club', [2027, 2028], [['Ann', 'Lee']])]);
-    const eastBay = { ...clubs, clubs: [club('far', 'east-bay')] };
-    const volleyball = { isLocal: (region: (typeof LOCAL_REGIONS)[number]) => VOLLEYBALL_LOCAL_REGIONS.includes(region) };
-    expect(compareClubRosters(file, [row('Ann Lee', 2028)], eastBay).map((r) => r.outcome)).toEqual(['club-elsewhere']);
-    expect(compareClubRosters(file, [row('Ann Lee', 2028)], eastBay, volleyball).map((r) => r.outcome)).toEqual(['match']);
+    // The default rule 5 (no sport option) takes an East Bay or Marin club, and not a Sacramento one.
+    for (const region of ['east-bay', 'marin'] as const) {
+      expect(compareClubRosters(file, [row('Ann Lee', 2028)], { ...clubs, clubs: [club('far', region)] }).map((r) => r.outcome), region).toEqual(['match']);
+    }
+    expect(compareClubRosters(file, [row('Ann Lee', 2028)], { ...clubs, clubs: [club('far', 'sacramento')] }).map((r) => r.outcome)).toEqual(['club-elsewhere']);
   });
 
   it('tells each source by its page', () => {

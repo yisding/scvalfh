@@ -20,8 +20,9 @@
  * `pnpm fetch-club-rosters`, which the leagues' season calls for rarely). It reads and reports only:
  * clubs.json is research, so a new match is added there by hand, its page re-read (README, "Club
  * rosters"). The package scripts set SCVAL_SPORT (`compare-club-rosters` soccer's, `:basketball`, `:volleyball`,
- * `:field-hockey`). Rule 5 (a club near enough) is soccer's LOCAL_REGIONS for soccer and basketball, whose
- * schools are the same area's, and those regions, the East Bay and Marin for volleyball (owner decisions, 2026-11-27); for field hockey, a club in the half of the state (NorCal or SoCal) the
+ * `:field-hockey`). Rule 5 (a club near enough) is LOCAL_REGIONS for soccer, basketball and volleyball: the Bay
+ * Area (San Francisco, the Peninsula, the South Bay, the East Bay and Marin) and the Central Coast, deliberately wide
+ * (owner decision, 2026-11-27); for field hockey, a club in the half of the state (NorCal or SoCal) the
  * school's league is in.
  */
 
@@ -35,7 +36,6 @@ import {
   ClubRostersFileSchema,
   compareClubRosters,
   rosterName,
-  VOLLEYBALL_LOCAL_REGIONS,
   type ClubRosterCompareOptions,
   type CompareRow,
   type SchoolRow,
@@ -56,8 +56,7 @@ const USAGE = 'Usage: pnpm compare-club-rosters[:basketball|:volleyball|:field-h
 const SPORT_OPTIONS: Partial<Record<typeof SPORT_ID, ClubRosterCompareOptions>> = {
   soccer: {},
   basketball: {},
-  // Volleyball's clubs near enough include the East Bay's and Marin's (owner decisions, 2026-11-27).
-  volleyball: { isLocal: (region: ClubRegion) => VOLLEYBALL_LOCAL_REGIONS.includes(region) },
+  volleyball: {},
   // Field hockey's schools are the whole state: a club is near when it is in the school's half of it.
   'field-hockey': {
     isLocal: (region: ClubRegion, row: SchoolRow) => {

@@ -2213,8 +2213,10 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
 - **The league-roster rule** (`lib/players/club-rosters.ts`, a narrower case of the clubs' linking rule). A roster
   row and a high school row are the same player when the folded names are equal; the roster's class year is the high
   school row's (below); no other tracked school has a row under the name, varsity or JV; every roster row that agrees
-  is at one club; and the club has a record in `clubs.json` and is based where the schools are (San Francisco, the
-  Peninsula, the South Bay, the Central Coast). The row's class year is its grade's; **since 2026-11-25 (owner
+  is at one club; and the club has a record in `clubs.json` and is based in the Bay Area or on the Central Coast
+  (`LOCAL_REGIONS`: San Francisco, the Peninsula, the South Bay, the East Bay, Marin and the Central Coast; until
+  2026-11-27 the first three and the Central Coast only, widened on the owner's decision because club players travel:
+  **the area is deliberately wide**, in soccer, basketball and volleyball alike). The row's class year is its grade's; **since 2026-11-25 (owner
   decision) a row with no grade is not left out**: it takes the class year its own linked recruiting pages state,
   and, if none states one, the roster's own, when every roster row of the name that gives a class year gives the same
   one and it is a class in high school this season (2027-2030 in 2026-27). A linked page's class year that disagrees,
@@ -2630,10 +2632,16 @@ comparison found it; every cited roster was read again live before it was writte
   San Jose's Kitana Manalo), 22 matches at clubs away from the schools (City Beach in Fremont, Absolute in San Rafael,
   Union Volleyball Academy), and what the rule leaves (a name at two schools, no grade, a class the age group does
   not admit, a club with no record).
-  **Since 2026-11-27 (owner decisions) a volleyball club in the East Bay or Marin counts as near the schools**
-  (`VOLLEYBALL_LOCAL_REGIONS`): City Beach and Union Volleyball Academy, both in Fremont, draw South Bay players, and
-  Absolute (San Rafael) the San Francisco and Peninsula schools'. That linked 14 more (City Beach 9, UVA 2, Absolute
-  3) and gave 4 City Beach and 4 Absolute ties their roster. The three names on two clubs' rosters, looked at again
+  **Since 2026-11-27 (owner decisions) a club anywhere in the Bay Area or on the Central Coast counts as near the
+  schools, in every sport that keeps club rosters** (`LOCAL_REGIONS` now holds the East Bay and Marin too; field
+  hockey's own rule, the school's half of the state, was wider already). The geography is wide on purpose: City
+  Beach and Union Volleyball Academy, both in Fremont, draw South Bay players, and Absolute (San Rafael) the San
+  Francisco and Peninsula schools'. In volleyball that linked 14 more (City Beach 9, UVA 2, Absolute 3) and gave 4
+  City Beach and 4 Absolute ties their roster; in soccer, Tanisha Rameshkumar (Valley Christian) to Pleasanton Rage,
+  and Alina Decker (Menlo-Atherton) to Stanford Strikers; in basketball, Noah Kirsch-Lopez and Huck Lemmer (St.
+  Ignatius, both with a San Francisco hometown on their own Passport records) to Lakeshow. Left out still: two common
+  names at clubs far from the school with no other page (soccer's Taylor Williams of Branham at Marin FC, and
+  Evergreen Valley's JV Alexia Ramirez at Mustang in Danville). The three names on two clubs' rosters, looked at again
   on the owner's request: Ellie Chu (Milpitas) to Vision and Madison Miller (Sobrato) to North Coast, the other
   roster of each name being a team two age groups younger (another player); Kitana Manalo (Notre Dame San Jose) to
   Tyrants as an earlier club (2025-26), since the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her
