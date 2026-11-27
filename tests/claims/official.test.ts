@@ -45,8 +45,10 @@ describe('the official claims', () => {
     const shown = storedOfficialFromSnapshot(snapshot);
     expect(stored.stamps.size).toBeGreaterThan(0);
     expect(stored).toEqual(shown);
+    // One store for every game: seeding one per game made the check quadratic in the snapshot's games.
+    const store = seeded(snapshot);
     for (const g of snapshot.games.filter((x) => x.official && !x.contestId.startsWith('sblive:'))) {
-      const f = seeded(snapshot).get(fixtureOfContest(seeded(snapshot), g.contestId) as string);
+      const f = store.get(fixtureOfContest(store, g.contestId) as string);
       expect(f?.claims.official?.lastMatch, g.contestId).toEqual({ contestId: g.contestId, stamp: g.official });
     }
   });

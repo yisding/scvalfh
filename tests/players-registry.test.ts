@@ -1391,8 +1391,21 @@ describe('data/players.json', () => {
     expect(file.counts.multiSeason).toBeGreaterThan(0);
   });
 
+  // One rebuild from the committed files, shared by the three checks that need it: a build takes most of a
+  // minute on a slow machine, and each check building its own ran past the default timeout.
+  const REBUILD_TIMEOUT = 300_000;
+  let shared: { input: BuildInput; rebuilt: PlayersFile; drift: RosterDrift[] } | null = null;
+  const rebuild = () => {
+    if (!shared) {
+      const input = readBuildInput(ROOT, file.builtBy);
+      const drift: RosterDrift[] = [];
+      shared = { input, rebuilt: buildRegistry(input, { onDrift: (d) => drift.push(d) }), drift };
+    }
+    return shared;
+  };
+
   it('a rebuild from the committed files keeps every id', () => {
-    const rebuilt = buildRegistry(readBuildInput(ROOT, file.builtBy));
+    const { rebuilt } = rebuild();
     const where = new Map(rebuilt.players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p] as const)));
     const keyOwner = new Map(rebuilt.players.flatMap((p) => p.identifiers.map((i) => [identifierKey(i), p.id] as const)));
     for (const p of file.players) {
@@ -1402,13 +1415,12 @@ describe('data/players.json', () => {
       if (!stillListed) continue;
       expect(now, `${p.id} (${p.name}) lost its id`).toBeDefined();
     }
-  });
+  }, REBUILD_TIMEOUT);
 
   it('a rebuild of what has not changed changes nothing', () => {
-    const input = readBuildInput(ROOT, file.builtBy);
-    const once = buildRegistry(input);
+    const { input, rebuilt: once } = rebuild();
     expect(buildRegistry({ ...input, previous: once })).toEqual(once);
-  });
+  }, REBUILD_TIMEOUT);
 
   it('every review item names players the file holds', () => {
     const ids = new Set(file.players.map((p) => p.id));
@@ -1422,16 +1434,14 @@ describe('data/players.json', () => {
   it('reports as curation drift every career the curation file names that the registry\'s sources do not', () => {
     const identity = readPlayerIdentity(ROOT);
     const careers = new Set(file.players.flatMap((p) => p.identifiers.flatMap((i) => (i.kind === 'maxpreps-career' ? [i.careerId] : []))));
-    const drift: RosterDrift[] = [];
-    buildRegistry(readBuildInput(ROOT, file.builtBy), { onDrift: (d) => drift.push(d) });
-    const reported = drift.map((d) => d.what);
+    const reported = rebuild().drift.map((d) => d.what);
     const missing = [
       ...identity.rowSplits.filter((e) => !careers.has(e.careerId)).map((e) => e.careerId),
       ...identity.sameAs.flatMap((e) => (e.careerId && !careers.has(e.careerId) ? [e.careerId] : [])),
       ...identity.distinct.flatMap((e) => e.careerIds.filter((id) => !careers.has(id))),
     ];
     for (const id of missing) expect(reported.some((w) => w.includes(`career ${id},`)), `career ${id}`).toBe(true);
-  });
+  }, REBUILD_TIMEOUT);
 
   describe('the files filed by person name the registry\'s players', () => {
     type Rec = Record<string, unknown>;

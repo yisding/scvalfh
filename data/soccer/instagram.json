@@ -1,11 +1,12 @@
 {
-  "builtBy": "Research by hand on 2026-11-14 for the 60 girls soccer teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found. A second round on 2026-11-27 covered the 116 girls soccer teams then without a record (the registry having grown to 123): the same sources and searches limited to instagram.com. Instagram answered most anonymous profile views that day with its login page, so a record whose profile could not be opened says so in its note and was kept, at the owner’s direction, on the page or search result it rests on.",
+  "builtBy": "Research by hand on 2026-11-14 for the 60 girls soccer teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found. A second round on 2026-11-27 covered the 116 girls soccer teams then without a record (the registry having grown to 123): the same sources and searches limited to instagram.com. Instagram answered most anonymous profile views that day with its login page, so a record whose profile could not be opened says so in its note and was kept, at the owner’s direction, on the page or search result it rests on. A third round the same day, after the owner gave Cupertino’s, Los Altos’s and Lynbrook’s accounts, requested likely handles for the 111 teams then without a record (each school’s name, short name and initials with girlssoccer, gsoccer, wsoccer, womenssoccer, soccer and their . and _ forms, about 10,000) as public profile pages in Chromium, which Instagram answered; each profile that exists and could be the team’s was opened and kept only when its name, bio, highlights or link places it at the school.",
   "capturedAt": "2026-11-27",
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 12 of the 123 teams have one (2026-11-27)."
+    "No record means no account we could find and check on the day, not that there is none: 58 of the 123 teams have one (2026-11-27).",
+    "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked."
   ],
   "teams": [
     {
@@ -25,6 +26,14 @@
       "checkedOn": "2026-11-27"
     },
     {
+      "slug": "los-altos",
+      "level": "varsity",
+      "handle": "lahs.girls.soccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"Los Altos Girls Varsity Soccer\", bio \"2022 CCS D1 Champions | 2023-2024 SCVAL De Anza League Champs\". Not losaltosgirlssoccer, a Southern California Los Altos’s (owner, 2026-11-27), nor lahsgirlssoccer (Los Amigos, Fountain Valley).",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "los-gatos",
       "level": "varsity",
       "handle": "lghsvarsitygirlssoccer",
@@ -41,11 +50,147 @@
       "checkedOn": "2026-11-27"
     },
     {
+      "slug": "cupertino",
+      "level": "varsity",
+      "handle": "cupertinogirlssoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"Cupertino HS Varsity Girls Soccer\", season highlights 22-23 to 24-25. Cupertino’s boys keep their own account (cupertinosoccer, \"Cupertino Boys Varsity Soccer\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "fremont",
+      "level": "varsity",
+      "handle": "fremontgirls_soccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Fremont’s, Sunnyvale. Profile opened: \"Fremont HS Girls Varsity Soccer\", bio \"Official Account for Fremont Girls Varsity Soccer | League Champions: 2016, 2018, 2025\"; it names no city or mascot. Not fremontgirlssoccer (\"We are Tiger Soccer\") or fremont_girls_soccer (a Fremont FC club team).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "lynbrook",
+      "level": "varsity",
+      "handle": "lynbrookgirlsoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27. Profile opened: \"lynbrook girls soccer\", season highlights 21-22 to 25-26; it does not name the city, so it rests on the owner’s word. The owner also gave lynbrookhs_girlssoccer (\"Lynbrook HS Girls Soccer\", bio \"Lynbrook HS Soccer Highlights\", 47 followers); a team keeps one varsity record, and this is the larger, current one. Not lynbrookgirlssoccer, an unplaced profile.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "saratoga",
       "level": "varsity",
       "handle": "saratogagirls_soccer",
       "foundAt": "https://saratogafalcon.org/18787/sports/student-run-social-media-accounts-hype-up-school-sports-teams/",
       "note": "Named by the school’s student paper, The Saratoga Falcon (2023-12-02: \"The girls’ soccer team’s Instagram (@saratogagirls_soccer) is run by senior Katelyn Fritz, a player on the team\"; created December 2018). Profile not opened: on 2026-11-27 Instagram answered every anonymous profile view (curl and Chromium) with its login wall for rate limiting; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "wilcox",
+      "level": "varsity",
+      "handle": "wilcoxgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Wilcox Girls Soccer\", bio \"Official account of Wilcox Varsity Girls Soccer! ‘22-‘23 CIF-CCS DIII Champions (student run account)\"; the CCS places it at Wilcox, Santa Clara.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "gilroy",
+      "level": "varsity",
+      "handle": "gilroygirlsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Gilroy Girls Soccer\", bio \"Gilroy, CA\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "leigh",
+      "level": "varsity",
+      "handle": "leighwomenssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Leigh High School Womens Soccer\", bio \"Leigh High School Women’s Soccer Team | CIF Champs 2022\"; no city named, but no other Leigh High School plays soccer in the US.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "leland",
+      "level": "varsity",
+      "handle": "lelandwomenssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Leland’s, San Jose. Profile opened: \"Leland Women’s Soccer\", bio \"NPS\", linking a Vertical Raise fundraiser; it names no city. Not lelandboyssoccer (boys only) or lelandsoccer (\"Official Page of MLCPA Soccer\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "piedmont-hills",
+      "level": "varsity",
+      "handle": "phhsgirlsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"HOME OF THE PIRATES\", bio \"Piedmont Hills Girls Varsity Soccer | BVAL - Mt. Hamilton Division\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "pioneer",
+      "level": "varsity",
+      "handle": "pioneergirlsssoccer",
+      "foundAt": null,
+      "note": "Given by the site’s owner on 2026-11-27 (the handle spells \"girlsss\"). Profile read: \"Pioneer Girls Soccer ⚽️\", bio \"Official account of Pioneer High School’s Girls Soccer Team\"; it names no city, so it rests on the owner’s word that it is Pioneer’s, San Jose. Not pioneergirlssoccer (New York’s) or pioneerwsoccer (Michigan’s).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "willow-glen",
+      "level": "varsity",
+      "handle": "wghs.girls.soccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"WGHS Girls Soccer\", bio \"2024-2025 BVAL Santa Teresa - West CHAMPS\". wghsgirlssoccer (\"Official WGHS Girls Soccer Account | B League\") does not place itself and was left out.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "christopher",
+      "level": "varsity",
+      "handle": "christophergirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"CHS Girls Varsity Soccer\", bio \"Christopher High Soccer ⚽️ Gilroy, CA\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "evergreen-valley",
+      "level": "varsity",
+      "handle": "evhs.girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"evergreen valley girls soccer\", bio \"Team and event updates! 2025 League Champions\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "oak-grove",
+      "level": "varsity",
+      "handle": "oghs.girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Oak Grove’s, San Jose (CCS). Profile opened: \"Oak Grove Girls Soccer\", bio \"stay updated throughout the 2026-2027 season! 🦅\" (the Eagles); it names no city. An older account, oghsgirlssoccer (\"Oak Grove Girls Soccer\", \"GO EAGLES\", highlights to 24-25), also exists.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "silver-creek",
+      "level": "varsity",
+      "handle": "silvercreekgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Silver Creek’s, San Jose. Profile opened: \"SC Girls Varsity Soccer\", bio \"Official IG of SCHS Woman’s ⚽️\", season highlights 23-24 to 25-26; it names no city. The boys keep their own account (silvercreeksoccer, \"Silver creek high school boys varsity soccer\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "andrew-hill",
+      "level": "varsity",
+      "handle": "andrewhillsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Shared by the boys and girls: profile \"Andrew Hill High School\", bio \"Scores and Info from the Boys and Girls Varsity soccer team. Falcon Territory.\"",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "del-mar",
+      "level": "varsity",
+      "handle": "dmhsgsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Del Mar HS Girl's Soccer\", bio \"VAR & JV | 📍 San Jose, CA | #GoDons\", linking MaxPreps.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "gunderson",
+      "level": "varsity",
+      "handle": "gunderson_soccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Gunderson Soccer\", bio \"Official soccer account for Gunderson High school\"; it names no gender, so it is taken as the school’s shared soccer account. No other Gunderson High School.",
       "checkedOn": "2026-11-27"
     },
     {
@@ -63,6 +208,22 @@
       "foundAt": "https://sites.google.com/esuhsd.org/james-lick-high-school/athletics/winter-sports",
       "note": "Linked on the Winter Sports page of the school’s own site, as \"@JLHS.SOCCER\" under both \"Boys’ Soccer\" and \"Girls’ Soccer\". Profile opened: bio \"Official Girls Soccer Page - James Lick HS | San Jose, CA\", linking the James Lick Comets’ girls soccer schedule on MaxPreps",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "mt-pleasant",
+      "level": "varsity",
+      "handle": "mphs.girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"MP Girls Soccer\", bio \"Mt Pleasant High School | Girls Varsity Soccer Team | BVAL West Valley League Champions 2021 | CCS D2 Quarterfinalists\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "mitty",
+      "level": "varsity",
+      "handle": "mittysoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"AMHS Women’s Soccer Program\", bio \"The Archbishop Mitty High School Women’s Soccer Program… 18 CCS championships\". An older account, mittywomenssoccer (\"AMHS WOMENS SOCCER\", last post 2023), also exists.",
+      "checkedOn": "2026-11-27"
     },
     {
       "slug": "riordan",
@@ -89,11 +250,155 @@
       "checkedOn": "2026-11-14"
     },
     {
+      "slug": "kings-academy",
+      "level": "varsity",
+      "handle": "tka_girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is The King’s Academy’s, Sunnyvale. Profile opened: \"TKA Girls Soccer\", bio \"TKA varsity girls soccer team 2025-26 | @tka_athleticevents\"; it names no city, and other King’s Academies use TKA.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "menlo",
+      "level": "varsity",
+      "handle": "menlogirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Menlo Knights Varsity Girls’ Soccer\", bio \"7-time CCS Champs\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "harker",
+      "level": "varsity",
+      "handle": "harkergirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Harker Varsity Girls Soccer\", bio \"2025-2026 League Champions\", with story highlights named for its WBAL opponents (Nueva, Castilleja, Crystal Springs, Pinewood).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "aragon",
+      "level": "varsity",
+      "handle": "aragongirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Aragon Girls Soccer\", bio \"follow for updates on our season! go dons!\"; the Dons are Aragon’s, San Mateo.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "carlmont",
+      "level": "varsity",
+      "handle": "carlmontgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Carlmont Girls Varsity Soccer\", bio \"2026-27\". No other Carlmont High School; the boys keep their own account (carlmontsoccer).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "hillsdale",
+      "level": "varsity",
+      "handle": "hillsdalegirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"HHS Varsity\", bio \"Girls Varsity soccer. Go Knights!\"; the Knights are Hillsdale’s, San Mateo.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "sequoia",
       "level": "varsity",
       "handle": "seqgirlssoccer",
       "foundAt": null,
       "note": "Found by search, whose result gave the bio \"League Champions 2018-2019 … CCS Central Coast Division 1 Champions 2023\". Profile opened: \"Sequoia Girls Soccer\". No page of the school’s names it and the profile names no city: it rests on the CCS Division I title of 2023, which Sequoia of Redwood City won (1-0 over Aragon in the final).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "woodside",
+      "level": "varsity",
+      "handle": "woodsidehsgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"WHS Girls Soccer Program\", bio \"Official Account For The Woodside High School Girls Soccer Program … Bay League Champions\" (the PAL’s Bay Division).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "half-moon-bay",
+      "level": "varsity",
+      "handle": "hmbgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"HMBHS Girls Soccer Team\". No other Half Moon Bay High School.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "terra-nova",
+      "level": "varsity",
+      "handle": "tngirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Terra Nova HS Girls Soccer\", bio \"Official IG of TNHS Girls Soccer | 2026 Ocean League Champs | Pacifica, CA\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "westmoor",
+      "level": "varsity",
+      "handle": "westmoorgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Westmoor Girls Soccer\", bio \"Follow us for updates!\" with a ram; the Rams are Westmoor’s, Daly City, the only Westmoor High School.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "aptos",
+      "level": "varsity",
+      "handle": "aptossoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Aptos Girls Soccer Team\", bio \"big group of dedicated girls\". No other Aptos High School.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "san-lorenzo-valley",
+      "level": "varsity",
+      "handle": "slvgirlsvarsitysoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"San Lorenzo Valley Girls Varsity Soccer\", bio \"Cougars, you know!\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "scotts-valley",
+      "level": "varsity",
+      "handle": "svhs_girls_soccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"SVHS Girls Soccer\", bio \"Official account for the 26-27 SVHS girls soccer teams\", linking the school’s girls soccer page (svhs.scottsvalleyusd.org).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "soquel",
+      "level": "varsity",
+      "handle": "soquelwsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Soquel Womens Soccer\", bio \"Home of Soquel High’s Women’s Soccer | Go Knights | 2025 CCS D IV CHAMPS\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "everett-alvarez",
+      "level": "varsity",
+      "handle": "eahs_girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"Everett Alvarez High Girls Soccer\", bio \"Official EAHS Girls Soccer Instagram | 2024 CCS Division IV Champs\". An older account, eahsgirlssoccer (\"Everett Alvarez Girls Soccer\"), also exists.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "hollister",
+      "level": "varsity",
+      "handle": "hollistergsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Hollister High Girl’s Soccer\", bio \"The Official Account of HHS Girls Soccer | 2023 CCS & CIF State Champs | Hollister, CA\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "monterey",
+      "level": "varsity",
+      "handle": "montereygirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Monterey High’s, Monterey (CCS). Profile opened: bio \"Official account for Monterey Girls Soccer!!!\"; it names no city.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "rancho-san-juan",
+      "level": "varsity",
+      "handle": "rsjgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"RSJ Girls Soccer\", bio \"2022 Santa Lucía League Champions | 2023 Mission League Champions\" (the PCAL’s divisions).",
       "checkedOn": "2026-11-27"
     },
     {
@@ -103,7 +408,427 @@
       "foundAt": null,
       "note": "Found by search. Profile opened: \"Alisal Girl’s Soccer\", bio \"Official Alisal High School Girls Soccer ⚽️ Proud 93905 Student Athletes.\"",
       "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "monte-vista-christian",
+      "level": "varsity",
+      "handle": "mvcsgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"MVCS Girls Soccer\", bio \"Official account of the Monte Vista Christian Mustangs Girls' JV and Varsity Soccer!!\". A second account, mvcgirlssoccer (\"Official home of @mvcmustangs Girls Soccer\"), also exists.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "soledad",
+      "level": "varsity",
+      "handle": "soledadgirlsvarsitysoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Lady Aztecs Soccer (Varsity)\", bio \"The account of the Soledad High Girls Varsity Soccer Team 22-23\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "king-city",
+      "level": "varsity",
+      "handle": "kchs.girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"KCHS Girls Soccer\", bio \"Welcome to the King City HS Girls Soccer page!\", linking the Mustang Bench booster club’s shop.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "palma",
+      "level": "varsity",
+      "handle": "palma_girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: \"Palma Girls Soccer\", bio \"Official Chieftain Girls Soccer Team\"; the Chieftains are Palma’s, Salinas.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "kipp-san-jose",
+      "level": "varsity",
+      "handle": "ksjcgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is KIPP San Jose Collegiate’s. Profile opened: \"KSJC Girl’s Varsity Soccer\", highlights 22-23 and 23-24; it names no city.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "latino-college-prep",
+      "level": "varsity",
+      "handle": "lcpa.girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile opened: \"LCPA Girls Soccer\", bio \"PSAL Division League Champs\", linking the school’s site (www.sjlcpa.org).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "nueva",
+      "level": "varsity",
+      "handle": "nuevagirlsoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: bio \"the nueva school girls soccer team\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "summit-shasta",
+      "level": "varsity",
+      "handle": "summitshastasoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles (the school’s name or initials with girlssoccer and the like) as public profile pages in Chromium on 2026-11-27. Profile: bio \"Shasta Girls Soccer\"; the handle names Summit Shasta, Daly City.",
+      "checkedOn": "2026-11-27"
     }
   ],
-  "clubs": []
+  "clubs": [],
+  "rejected": [
+    {
+      "handle": "homesteadgsoccer",
+      "slug": "homestead",
+      "why": "An older account that does not say which Homestead.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "lahsgirlssoccer",
+      "slug": "los-altos",
+      "why": "Los Amigos High School’s, Fountain Valley.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "losaltosgirlssoccer",
+      "slug": "los-altos",
+      "why": "A Southern California Los Altos’s (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mountainview_girlssoccer",
+      "slug": "mountain-view",
+      "why": "\"Mountain View Girls Soccer (WY)\": Wyoming’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mountainviewgirlssoccer",
+      "slug": "mountain-view",
+      "why": "Oregon’s: links its OSAA team page.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mvhs.girlssoccer",
+      "slug": "mountain-view",
+      "why": "\"Mountain View High School Girls Soccer\", but neither bio nor link says which Mountain View.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "pahs.girls.soccer",
+      "slug": "palo-alto",
+      "why": "Says it is not affiliated with PAHS, and does not say which.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pahs.girlssoccer",
+      "slug": "palo-alto",
+      "why": "Port Angeles’s, Washington.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "schs.girlssoccer",
+      "slug": "santa-clara",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "cupertinosoccer",
+      "slug": "cupertino",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "fremont.girls.soccer",
+      "slug": "fremont",
+      "why": "Does not say which Fremont.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "fremont_girls_soccer",
+      "slug": "fremont",
+      "why": "A Fremont FC club team’s (\"girls u18 fremont fc\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "fremontgirlssoccer",
+      "slug": "fremont",
+      "why": "\"We are Tiger Soccer\": not the Firebirds.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lynbrookgirlssoccer",
+      "slug": "lynbrook",
+      "why": "Does not say which Lynbrook.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lynbrookhs_girlssoccer",
+      "slug": "lynbrook",
+      "why": "Lynbrook’s, but a smaller highlights account; the team keeps one varsity record (lynbrookgirlsoccer).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mvhs_girlssoccer",
+      "slug": "monta-vista",
+      "why": "Mt. View Lobos’, Clint ISD, Texas.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mvhsgirlssoccer",
+      "slug": "monta-vista",
+      "why": "Mesa Verde’s (\"Lady Mavericks\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "wilcoxvarsitysoccer",
+      "slug": "wilcox",
+      "why": "Links the boys’ schedule.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "lelandboyssoccer",
+      "slug": "leland",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "phhs.girlssoccer",
+      "slug": "piedmont-hills",
+      "why": "Penn Hills’s: links phsd.org.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "phhs_girlssoccer",
+      "slug": "piedmont-hills",
+      "why": "Patrick Henry’s, Ashland, Virginia.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pioneergirlssoccer",
+      "slug": "pioneer",
+      "why": "New York’s.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "pioneerwsoccer",
+      "slug": "pioneer",
+      "why": "Michigan’s (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "wghsgirlssoccer",
+      "slug": "willow-glen",
+      "why": "\"B League\": does not say which WGHS.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lincolngirlssoccer",
+      "slug": "lincoln",
+      "why": "Tallahassee, Florida’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lincolnhsgirlssoccer",
+      "slug": "lincoln",
+      "why": "Lincoln Unified’s (Stockton).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lincolnwomenssoccer",
+      "slug": "lincoln",
+      "why": "Seattle’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "liveoak.girlssoccer",
+      "slug": "live-oak",
+      "why": "Live Oak, Watson, Louisiana’s: links its MaxPreps page.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "liveoakgirlssoccer",
+      "slug": "live-oak",
+      "why": "Does not say which Live Oak.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "logirlssoccer",
+      "slug": "live-oak",
+      "why": "Lake Oswego’s, Oregon.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lohs.girlssoccer",
+      "slug": "live-oak",
+      "why": "Live Oak High’s in Live Oak, California (owner, 2026-11-27), not Morgan Hill’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "silvercreeksoccer",
+      "slug": "silver-creek",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "sjhs_soccer",
+      "slug": "san-jose",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "vc.girlssoccer",
+      "slug": "valley-christian",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "vchs_girlssoccer",
+      "slug": "valley-christian",
+      "why": "A private account (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "ndbsoccer",
+      "slug": "notre-dame-belmont",
+      "why": "Says it is not affiliated with Notre Dame Belmont.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "ecpgirlssoccer",
+      "slug": "eastside",
+      "why": "A Los Angeles school’s (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "harkersoccer",
+      "slug": "harker",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "carlmontsoccer",
+      "slug": "carlmont",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mahssoccer",
+      "slug": "menlo-atherton",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "elcaminogirlssoccer",
+      "slug": "el-camino-ssf",
+      "why": "Sacramento’s El Camino Eagles: its GoFan link.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "jeffersongirlssoccer",
+      "slug": "jefferson",
+      "why": "Bloomington, Minnesota’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "jhs.girlssoccer",
+      "slug": "jefferson",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "sanmateogirlssoccer",
+      "slug": "san-mateo",
+      "why": "Says it is not affiliated with SMHS.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "eahs.soccer",
+      "slug": "everett-alvarez",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "eahssoccer",
+      "slug": "everett-alvarez",
+      "why": "Does not say which school or team.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pcsgirlssoccer",
+      "slug": "pacific-collegiate",
+      "why": "\"Pacers Sr Girls Soccer\": not the Pumas.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "carmelgirlsoccer",
+      "slug": "carmel",
+      "why": "Inactive (owner, 2026-11-27); it does not say which Carmel.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "carmelgirlssoccer",
+      "slug": "carmel",
+      "why": "\"15 State Champions\": not Carmel, California’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pvhs.girlssoccer",
+      "slug": "pajaro-valley",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pvhs_gsoccer",
+      "slug": "pajaro-valley",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "stevensongirlssoccer",
+      "slug": "stevenson",
+      "why": "Illinois’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "nmcgirlssoccer",
+      "slug": "north-monterey-county",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "northsalinas_soccer",
+      "slug": "north-salinas",
+      "why": "Does not say boys or girls.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "seasidegirlssoccer",
+      "slug": "seaside",
+      "why": "Probably a Washington state Seaside’s (owner, 2026-11-27); it does not say which Seaside.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "marinagirlssoccer",
+      "slug": "marina-mariners",
+      "why": "Huntington Beach’s Marina (the Vikings).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "sfhs_girls_soccer",
+      "slug": "st-francis-watsonville",
+      "why": "An Illinois St. Francis’s (IHSA 2A).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "stfrancisgirlssoccer",
+      "slug": "st-francis-watsonville",
+      "why": "Does not say which St. Francis.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "yhs.girls.soccer",
+      "slug": "york",
+      "why": "Yucaipa’s: links its MaxPreps schedule.",
+      "checkedOn": "2026-11-27"
+    }
+  ]
 }

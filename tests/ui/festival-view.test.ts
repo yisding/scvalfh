@@ -440,8 +440,12 @@ describe('a team’s placement path', () => {
     expect(placementPath(M, lone.id).entries).toEqual([]);
     expect(teamCard(M, lone.id).placementAhead).toBe(false);
     // A team whose pool does feed one has it ahead while it is unplayed (an edited model, so the test holds after
-    // Saturday's games are played too).
-    const unplayed = edited((f) => f.games.filter((g) => g.kind === 'placement').forEach((g) => ((g.status = 'scheduled'), (g.score = null))));
+    // the pools and Saturday's games are played too: a complete pool table would put the team in its final).
+    const unplayed = edited((f) =>
+      f.games
+        .filter((g) => g.kind === 'placement' || (g.kind === 'pool' && g.poolId === team.poolId))
+        .forEach((g) => ((g.status = 'scheduled'), (g.score = null))),
+    );
     expect(teamCard(unplayed, team.id).placementAhead).toBe(true);
   });
 });
