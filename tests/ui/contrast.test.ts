@@ -377,4 +377,10 @@ describe('structure the design depends on', () => {
     expect(body).toContain('background: var(--sx-bg)');
     expect(body).toContain('env(safe-area-inset-bottom)');
   });
+
+  it('makes the tab bar sticky, without the body padding, in Firefox only (it did not draw the fixed bar)', () => {
+    const gecko = block(/^\s*@supports \(-moz-appearance: none\) or selector\(::-moz-range-thumb\)\s*\{/m);
+    expect(gecko).toMatch(/\.sx-tabbar\s*\{[^}]*position: sticky/);
+    expect(gecko).toMatch(/body\s*\{\s*padding-bottom: 0;?\s*\}/);
+  });
 });

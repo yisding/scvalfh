@@ -273,7 +273,7 @@ whole build and it prerenders in the same pass. **[R-4]**
 |---|---|---|
 | Top bar | **44px** | `position: sticky; top: 0`. Wordmark (or `←` + page title) · freshness stamp · theme toggle, **all on one line** |
 | Content | — | 16px side gutter; full-bleed zero-radius lists |
-| Bottom tab bar | **56px** + `env(safe-area-inset-bottom)` | `position: fixed; bottom: 0` |
+| Bottom tab bar | **56px** + `env(safe-area-inset-bottom)` | `position: fixed; bottom: 0`; in Firefox `sticky` as the body's last child (Firefox for Android did not draw the fixed bar while its toolbar was collapsed) |
 
 Permanent chrome is **100px of 664 (15.1%)**, down from `phone-first`'s 104px, and the
 freshness stamp moves *into* the top bar rather than occupying its own 28px row — a real

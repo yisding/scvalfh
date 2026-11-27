@@ -1066,6 +1066,19 @@
   .sx-more-sheet > ul > li[data-prefs] { border-top-color: var(--sx-border-strong); }   /* the two preference rows: "Dark mode", "Switch to SoCal" */
   .sx-more-sheet > p { margin: 0; padding: 0.5rem 1rem 1rem; font-size: 0.875rem; color: var(--sx-text-2); }
   @media (min-width: 48rem) { .sx-tabbar { display: none; } }
+  /* Firefox only: the bar is `sticky` to the bottom, not `fixed`. Firefox for Android (160, address bar
+     at the bottom, hide-on-scroll on) did not draw the fixed bar while its toolbar was collapsed: the page
+     ran to the screen's bottom edge and the bar appeared only once the reader scrolled or left the app
+     and came back. A sticky bar is part of the scrolled content and is painted with it. The bar is the
+     body's last child and the body a column at least 100dvh tall, so it sits on the screen's bottom edge
+     on every page, and after the footer at the end, as the fixed one does; it takes its own room there,
+     so the body drops the padding that cleared the fixed bar. Gecko alone, by two Gecko-only features
+     (either one is enough): everywhere else stays `fixed`, which axe's target-size rule (scripts/a11y-axe.mjs) treats as
+     scrollable-past rather than as covering the targets under it. */
+  @supports (-moz-appearance: none) or selector(::-moz-range-thumb) {
+    .sx-tabbar { position: sticky; left: auto; right: auto; }
+    body { padding-bottom: 0; }
+  }
 
   /* ── Disclosure (optional data: "Show all", the Calendar) ─────────────────── */
   .sx-disclosure { position: relative; border: 0; background: none; border-radius: 0; }
