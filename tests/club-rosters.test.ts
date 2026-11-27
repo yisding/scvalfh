@@ -428,8 +428,10 @@ describe('compareClubRosters (the league-roster rule)', () => {
       ...tied,
       affiliations: [{ ...clubs.affiliations[0], teamSlug: r.teamSlug, athleteId: r.athleteId, club: 'near', sources: [{ ...clubs.affiliations[0].sources[0], kind, url }] }] as ClubsView['affiliations'],
     });
-    expect(outcome(teams, [r], tie('ncsa'))).toEqual(['Ann Lee: match (tie-without-roster)']);
+    expect(outcome(teams, [r], tie('ncsa', 'https://www.ncsasports.org/womens-soccer-recruiting/california/x/ann-lee'))).toEqual(['Ann Lee: match (tie-without-roster)']);
     expect(outcome(teams, [r], tie(LEAGUE_ROSTER_KIND))).toEqual(['Ann Lee: match (linked)']);
+    // A source citing the page links it whatever its kind (a field hockey club's roster is a `club-site` source).
+    expect(outcome(teams, [r], tie('club-site'))).toEqual(['Ann Lee: match (linked)']);
     // A league roster the match does not rest on (another team's page) does not link it.
     expect(outcome(teams, [r], tie(LEAGUE_ROSTER_KIND, 'https://app.athleteone.com/public/event/1/schedules-standings/team/99/1'))).toEqual([
       'Ann Lee: match (tie-without-roster)',

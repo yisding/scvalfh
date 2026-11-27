@@ -1,7 +1,11 @@
 #!/usr/bin/env tsx
 /**
- * Compare the kept copy of the ECNL and ECNL Regional League team rosters, and of the Girls Academy
- * rosters kept by hand (data/soccer/club-rosters.json, `pnpm fetch-club-rosters`), with the high school
+ * Compare a sport's kept copy of its club team rosters (data/<sport>/club-rosters.json) with its high school
+ * rosters. Girls soccer: the ECNL and ECNL Regional League team rosters, and the Girls Academy
+ * rosters kept by hand (`pnpm fetch-club-rosters`); girls volleyball: the NCVA Girls Power League's
+ * (`pnpm fetch-club-rosters:volleyball`); boys basketball: The Passport's boys event rosters
+ * (`pnpm fetch-club-rosters:basketball`); field hockey: the California clubs' own roster pages
+ * (`pnpm fetch-club-rosters:field-hockey`). For soccer, with the high school
  * rosters, varsity and JV, and say which players the league-roster rule matches
  * (lib/players/club-rosters.ts) and how each stands in data/soccer/clubs.json. A Girls Academy GotSport
  * roster gives no class year: its rows are compared on the team's birth years, listed apart
@@ -15,7 +19,10 @@
  * Run it after `pnpm fetch-rosters` or `pnpm fetch-jv` brings a school's roster (and after
  * `pnpm fetch-club-rosters`, which the leagues' season calls for rarely). It reads and reports only:
  * clubs.json is research, so a new match is added there by hand, its page re-read (README, "Club
- * rosters"). Girls soccer only; the package script sets SCVAL_SPORT.
+ * rosters"). The package scripts set SCVAL_SPORT (`compare-club-rosters` soccer's, `:basketball`, `:volleyball`,
+ * `:field-hockey`). Rule 5 (a club near enough) is soccer's LOCAL_REGIONS for soccer, basketball and volleyball, whose
+ * schools are the same area's; for field hockey, a club in the half of the state (NorCal or SoCal) the
+ * school's league is in.
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -24,15 +31,39 @@ import path from 'node:path';
 import { validateData } from '../lib/data-file';
 import { getJvPlayerProfiles } from '../lib/jv/jv-profiles';
 import { getJvRostersFile } from '../lib/jv/jv-rosters';
-import { ClubRostersFileSchema, compareClubRosters, rosterName, type CompareRow, type SchoolRow } from '../lib/players/club-rosters';
+import {
+  ClubRostersFileSchema,
+  compareClubRosters,
+  rosterName,
+  type ClubRosterCompareOptions,
+  type CompareRow,
+  type SchoolRow,
+} from '../lib/players/club-rosters';
 import { getClubsFile } from '../lib/players/clubs';
+import { CLUB_REGION_SITE_REGION, type ClubRegion } from '../lib/players/clubs-schema';
+import { regionOf } from '../lib/leagues';
+import { getTeamBySlug } from '../lib/teams';
 import { nameKey } from '../lib/players/name-compare';
 import { classOf, effectiveClassOf, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
 import { DATA_DIR, SPORT_ID } from '../lib/sports/current';
 import type { TeamSlug } from '../lib/types';
 import { runCliIfMain } from './cli';
 
-const USAGE = 'Usage: pnpm compare-club-rosters [--all] [--json <path>]';
+const USAGE = 'Usage: pnpm compare-club-rosters[:basketball|:volleyball|:field-hockey] [--all] [--json <path>]';
+
+/** The sports with a kept copy, and what each changes in the comparison. */
+const SPORT_OPTIONS: Partial<Record<typeof SPORT_ID, ClubRosterCompareOptions>> = {
+  soccer: {},
+  basketball: {},
+  volleyball: {},
+  // Field hockey's schools are the whole state: a club is near when it is in the school's half of it.
+  'field-hockey': {
+    isLocal: (region: ClubRegion, row: SchoolRow) => {
+      const team = getTeamBySlug(row.teamSlug);
+      return team !== undefined && CLUB_REGION_SITE_REGION[region] === regionOf(team.league);
+    },
+  },
+};
 
 /** The class years a player's own linked recruiting pages state (lib/players/club-rosters.ts SchoolRow). */
 const statedYears = (profiles: readonly { classOf: number | null }[]): number[] =>
@@ -70,7 +101,8 @@ function schoolRows(): SchoolRow[] {
 /** One compared row: its hits by team name, and, with `urls`, each team's page (two clubs' GA teams share a name). */
 function line(r: CompareRow, urls = false): string {
   const year = (h: CompareRow['hits'][number]) =>
-    h.player.gradYear ?? (h.team.birthYears ? `born ${h.team.birthYears.join('/')}` : 'no class year');
+    h.player.gradYear ??
+    (h.team.classYears ? `${h.team.division}, classes ${h.team.classYears.join('/')}` : h.team.birthYears ? `born ${h.team.birthYears.join('/')}` : 'no class year');
   const hits = r.hits.map(
     (h) => `${h.team.teamName} (${rosterName(h.player)}, ${year(h)}, ${h.player.playerType ?? 'no label'}${urls ? `; ${h.team.url}` : ''})`,
   );
@@ -94,13 +126,14 @@ export function main(argv: readonly string[] = process.argv.slice(2)): number {
     console.error(USAGE);
     return 2;
   }
-  if (SPORT_ID !== 'soccer') {
-    console.error('compare-club-rosters: the kept rosters are girls soccer only (SCVAL_SPORT=soccer)');
+  const options = SPORT_OPTIONS[SPORT_ID];
+  if (options === undefined) {
+    console.error(`compare-club-rosters: ${SPORT_ID} keeps no club rosters (soccer, basketball, volleyball and field hockey do)`);
     return 2;
   }
   const file = validateData('club-rosters', ClubRostersFileSchema, JSON.parse(readFileSync(path.join(DATA_DIR, 'club-rosters.json'), 'utf8')));
   const rows = schoolRows();
-  const compared = compareClubRosters(file, rows, getClubsFile());
+  const compared = compareClubRosters(file, rows, getClubsFile(), options);
 
   console.log(`club rosters read ${file.fetchedAt}: ${file.counts.teams} teams, ${file.counts.players} players`);
   // A row can have a result in each tier (an ECNL and a GA roster): counted once here, once per tier below.

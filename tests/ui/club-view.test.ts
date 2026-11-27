@@ -273,8 +273,9 @@ describe('buildClubsIndexView (/clubs)', () => {
       expect(r.schools, r.slug).toEqual([...new Set(ties.map((a) => getTeamBySlug(a.teamSlug)!.name))].sort((a, b) => a.localeCompare(b)));
     }
     const line = (slug: string) => rows.find((r) => r.slug === slug)!.countLine;
-    // 33 with Casey Moorehouse's JV tie (JV ties counted since 2026-11-25); 34 with Convent's Alexandra Dorf (2026-11-26).
-    expect(line('sf-hawks')).toBe('34 current players');
+    // 33 with Casey Moorehouse's JV tie (JV ties counted since 2026-11-25); 34 with Convent's Alexandra Dorf (2026-11-26);
+    // 36 with Convent's Julia Ahlstrand and Marin Academy's JV Quinn Wintroub (the kept club rosters, 2026-11-27).
+    expect(line('sf-hawks')).toBe('36 current players');
     // 26 varsity since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16) and her tie with it, and the two
     // Los Gatos JV ties (Casey Moorehouse, Colette Von Klemperer).
     expect(line('norcal-impact')).toBe('28 current players');
@@ -314,10 +315,11 @@ describe('buildClubsIndexView (/clubs)', () => {
   it('answers the page’s question in its lede, counted from the files', () => {
     expect(index.trackedTeams).toBe(getRosters().teams.length);
     // 150 varsity players and the 2 Los Gatos JV players (JV ties counted since 2026-11-25), the 2026-11-26
-    // sweep's three (Mt. Carmel is the 49th school), and two listed players' (Marina and Newport Harbor, 51).
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([157, 51, 28, 15]);
+    // sweep's three (Mt. Carmel is the 49th school), and two listed players' (Marina and Newport Harbor, 51), and the
+    // 2026-11-27 comparison with the kept club rosters' two (Marin Academy's JV is the 52nd school).
+    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([159, 52, 28, 15]);
     expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 157 players from 51 schools are tied to 15 of these 28 clubs, the most to SF Hawks (34) and HTC (31).`,
+      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters and their JV lists play for, or played for, according to public pages that name both. 159 players from 52 schools are tied to 15 of these 28 clubs, the most to SF Hawks (36) and HTC (31).`,
     );
     expect(index.capturedOn).toBe('Oct 3, 2026');
     expect(index.currentSeasons).toBe('2025-26 or 2026-27');
@@ -725,7 +727,7 @@ describe('the clubs routes, rendered', () => {
       (await generateMetadata({ params: Promise.resolve({ slug }) } as never)).description;
     expect(await descriptionOf('htc')).toContain('31 players on this site’s varsity rosters and JV lists are tied to it, each with a source. Unofficial and incomplete.');
     expect(await descriptionOf('golden-gate-rippers')).toContain('1 player on this site’s varsity rosters and JV lists is tied to it, with a source. Unofficial and incomplete.');
-    expect(await descriptionOf('sf-hawks')).toContain('34 players on this site’s varsity rosters and JV lists are tied to it, each with a source.');
+    expect(await descriptionOf('sf-hawks')).toContain('36 players on this site’s varsity rosters and JV lists are tied to it, each with a source.');
     expect(await descriptionOf('pac-heights')).toContain('No player on this site’s varsity rosters and JV lists is tied to it by a public page we found.');
     expect(await descriptionOf('d-city')).toContain('4 players on this site’s varsity rosters and JV lists are tied to it, each with a source.');
     expect(await descriptionOf('roseville-fhc')).toContain('No player on this site’s varsity rosters and JV lists is tied to it by a public page we found.');

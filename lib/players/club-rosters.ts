@@ -42,6 +42,16 @@
  * or 2027). Rules 3-5 hold within each tier, so a GA row neither blocks nor is blocked by an ECNL row
  * at another club: a player's ties are per club, each with its own status.
  *
+ * Other sports (added 2026-11-27). The same file shape holds each sport's kept copy, under its data
+ * directory: data/volleyball/club-rosters.json (the NCVA Girls Power League's rosters on TM2Sign, which give
+ * a name only: a team is compared on the classes its USA Volleyball age group admits, `classYears`) and
+ * data/field-hockey/club-rosters.json (the few California clubs' own roster pages: SportsRecruits team
+ * pages, which give a class year, and club sites) and data/basketball/club-rosters.json (The Passport's boys
+ * event rosters: G365, 3SSB, The Stage and others, each row with a class year). Where a file holds two club seasons (the NCVA's 2026
+ * and 2027 leagues, `clubSeason`), the agreeing rows of the latest season are compared and the older
+ * season's set aside, so a player who changed clubs is matched to the one she plays for now. Which clubs
+ * are near enough (rule 5) is the sport's (`ClubRosterCompareOptions.isLocal`).
+ *
  * Hudl (added 2026-11-26). A club that keeps a team on Hudl (Almaden FC's GA teams, OV Toros FC's U15G
  * Black) has a roster there for the season ("2026-2027"), listing the players this season's team
  * carries, many with a class year, where GotSport Rankings lists everyone a team has carried. Such a team
@@ -64,27 +74,49 @@ export const LEAGUE_ROSTER_KIND = 'league-roster';
 export const LOCAL_REGIONS: readonly ClubRegion[] = ['san-francisco', 'peninsula', 'south-bay', 'central-coast'];
 
 const text = z.string().min(1);
-/** A league's public page: Athlete One's for ECNL, GotSport's event page for Girls Academy. */
+/**
+ * A league's public page: Athlete One's for ECNL, GotSport's event page for Girls Academy, TM2Sign's event for
+ * the NCVA; for a group of club pages that is no league (field hockey's), the club page the group starts from.
+ */
 const leagueUrl = z
   .string()
   .regex(
-    /^https:\/\/(app\.athleteone\.com\/public\/event\/\d+\/|system\.gotsport\.com\/org_event\/events\/\d+$)/,
-    'expected a league page on app.athleteone.com or system.gotsport.com',
+    /^https:\/\/(app\.athleteone\.com\/public\/event\/\d+\/|system\.gotsport\.com\/org_event\/events\/\d+$|tm2sign\.com\/api\/public\/events\/\d+$|[a-z0-9.-]+\.[a-z]{2,}\/)/,
+    'expected a league page on app.athleteone.com, system.gotsport.com or tm2sign.com, or a club page',
   );
-/** A team's public roster: its Athlete One team page, its GotSport Rankings roster page, or its Hudl roster page. */
-const teamUrl = z
-  .string()
-  .regex(
-    /^https:\/\/(app\.athleteone\.com\/public\/event\/\d+\/|rankings\.gotsport\.com\/teams\/\d+\/roster$|fan\.hudl\.com\/[a-z0-9/-]+\/team\/\d+\/[a-z0-9-]+\/roster$)/,
-    'expected a team page on app.athleteone.com, a roster on rankings.gotsport.com or a team roster on fan.hudl.com',
-  );
-const GOTSPORT_TEAM = /^https:\/\/rankings\.gotsport\.com\//;
-const HUDL_TEAM = /^https:\/\/fan\.hudl\.com\//;
+const ATHLETEONE_TEAM = /^https:\/\/app\.athleteone\.com\/public\/event\/\d+\//;
+const GOTSPORT_TEAM = /^https:\/\/rankings\.gotsport\.com\/teams\/\d+\/roster$/;
+const HUDL_TEAM = /^https:\/\/fan\.hudl\.com\/[a-z0-9/-]+\/team\/\d+\/[a-z0-9-]+\/roster$/;
+const PASSPORT_TEAM = /^https:\/\/api\.the-passport\.com\/api\/events\/\d+\/teams\/\d+\/roster$/;
+const TM2_TEAM = /^https:\/\/tm2sign\.com\/api\/public\/scheduler-teams\/\d+\/roster$/;
+const SPORTSRECRUITS_TEAM = /^https:\/\/[a-z]+\.sportsrecruits\.com\/organization\/[A-Za-z0-9_-]+(\/[a-z0-9_-]+|\/embed\/\?type=players&teamid=all)$/;
+/**
+ * A team's public roster: its Athlete One team page, its GotSport Rankings roster page, its Hudl roster page, its
+ * TM2Sign roster, a SportsRecruits team page (or a club's players list there), or a club's own roster page.
+ */
+const teamUrl = z.string().regex(/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}\//, 'expected an https page');
 
-/** Where a kept team's roster was read: the source decides its tier and its club key. */
-export type RosterSource = 'athleteone' | 'gotsport' | 'hudl';
+/**
+ * Where a kept team's roster was read: the source decides its tier and its club key. Any page none of the
+ * patterns names is a club's own (`club-site`).
+ */
+export type RosterSource = 'athleteone' | 'gotsport' | 'hudl' | 'tm2' | 'passport' | 'sportsrecruits' | 'club-site';
 export const rosterSource = (team: Pick<ClubRosterTeam, 'url'>): RosterSource =>
-  GOTSPORT_TEAM.test(team.url) ? 'gotsport' : HUDL_TEAM.test(team.url) ? 'hudl' : 'athleteone';
+  ATHLETEONE_TEAM.test(team.url)
+    ? 'athleteone'
+    : GOTSPORT_TEAM.test(team.url)
+      ? 'gotsport'
+      : HUDL_TEAM.test(team.url)
+        ? 'hudl'
+        : TM2_TEAM.test(team.url)
+          ? 'tm2'
+          : PASSPORT_TEAM.test(team.url)
+            ? 'passport'
+          : SPORTSRECRUITS_TEAM.test(team.url)
+            ? 'sportsrecruits'
+            : 'club-site';
+/** A soccer source's page must be one of its own patterns: a kept page on a host none names is a club's own. */
+const NAMED_HOSTS = /^https:\/\/(app\.athleteone\.com|rankings\.gotsport\.com|fan\.hudl\.com|tm2sign\.com|api\.the-passport\.com|[a-z]+\.sportsrecruits\.com)\//;
 
 export const ClubRosterPlayerSchema = z
   .object({
@@ -105,7 +137,8 @@ export const ClubRosterTeamSchema = z
     division: text,
     teamId: z.number().int(),
     teamName: text,
-    clubId: z.number().int(),
+    /** The source's club id; on TM2Sign, a club site or SportsRecruits, its club name or host as the source writes it. */
+    clubId: z.union([z.number().int(), text]),
     clubName: text,
     /** The team's public page: an Athlete One team page (its Roster button lists the players) or a GotSport Rankings roster. */
     url: teamUrl,
@@ -115,6 +148,12 @@ export const ClubRosterTeamSchema = z
      * year; absent on an Athlete One team (its rows carry one, or its name gives the birth years).
      */
     birthYears: z.array(z.number().int().min(2000).max(2030)).min(1).optional(),
+    /**
+     * The classes the team's age group admits, on a roster that gives no class year and whose age group is
+     * not a birth year (a TM2Sign volleyball team: USA Volleyball's July 1 age definition, README "Girls
+     * volleyball: club rosters"); its rows are compared on these.
+     */
+    classYears: z.array(z.number().int().min(2020).max(2040)).min(1).optional(),
     /**
      * On a GotSport roster only: the Hudl roster of the same team, kept in this file, which replaces it in
      * the comparison (the season's roster, where Rankings lists everyone the team has carried).
@@ -135,12 +174,29 @@ export const ClubRostersFileSchema = z
     /** The high school season the copy is for ("26-27"): the class years kept are that season's. */
     season: z.string().regex(/^\d{2}-\d{2}$/),
     notes: z.array(text),
-    leagues: z.array(z.object({ id: slugId, name: text, eventId: z.number().int(), url: leagueUrl }).strict()).min(1),
+    leagues: z
+      .array(
+        z
+          .object({
+            id: slugId,
+            name: text,
+            eventId: z.number().int(),
+            url: leagueUrl,
+            /**
+             * The club season the league's rosters are for ("2025-26"), where a file holds more than one: the
+             * comparison prefers the latest season's rows. Absent where every league is this season's.
+             */
+            clubSeason: z.string().regex(/^\d{4}-\d{2}$/).optional(),
+          })
+          .strict(),
+      )
+      .min(1),
     /**
      * A league club (clubKey: Athlete One's club id, or "gotsport-" and GotSport's, or "hudl-" and Hudl's
-     * organization id) → the club's slug in clubs.json. Hand-kept; a club with no entry is never linked.
+     * organization id, or "passport-" and The Passport's program number, or "tm2-", "sportsrecruits-" or "club-site-" and the club's name or host as the source
+     * writes it) → the club's slug in clubs.json. Hand-kept; a club with no entry is never linked.
      */
-    clubSlugs: z.record(z.string().regex(/^(gotsport-|hudl-)?\d+$/), slugId),
+    clubSlugs: z.record(z.string().regex(/^((gotsport-|hudl-)?\d+|(tm2|passport|sportsrecruits|club-site)-.+)$/), slugId),
     counts: z
       .object({ teams: z.number().int(), players: z.number().int(), hidden: z.number().int(), tooYoung: z.number().int(), emptyTeams: z.number().int() })
       .strict(),
@@ -157,8 +213,17 @@ export const ClubRostersFileSchema = z
       if (seen.has(key)) ctx.addIssue({ code: 'custom', path: ['teams', i], message: `duplicate team ${key}` });
       seen.add(key);
       const source = rosterSource(t);
-      if ((source !== 'athleteone') !== (t.birthYears !== undefined)) {
+      if (source === 'club-site' && NAMED_HOSTS.test(t.url)) {
+        ctx.addIssue({ code: 'custom', path: ['teams', i, 'url'], message: `${t.url} is on a named source's host but not one of its team pages` });
+      }
+      if ((source === 'gotsport' || source === 'hudl') !== (t.birthYears !== undefined) && source !== 'sportsrecruits' && source !== 'club-site') {
         ctx.addIssue({ code: 'custom', path: ['teams', i, 'birthYears'], message: 'a GotSport or Hudl roster, and only one, gives the team\'s birth years' });
+      }
+      if ((source === 'tm2') !== (t.classYears !== undefined)) {
+        ctx.addIssue({ code: 'custom', path: ['teams', i, 'classYears'], message: 'a TM2Sign roster, and only one, gives the classes its age group admits' });
+      }
+      if (source === 'tm2' && t.players.some((p) => p.gradYear !== null)) {
+        ctx.addIssue({ code: 'custom', path: ['teams', i, 'players'], message: 'a TM2Sign roster gives no class year' });
       }
       if (source === 'gotsport' && t.players.some((p) => p.gradYear !== null)) {
         ctx.addIssue({ code: 'custom', path: ['teams', i, 'players'], message: 'a team compared on its birth years keeps no class year' });
@@ -185,6 +250,10 @@ export const clubKey = (team: Pick<ClubRosterTeam, 'clubId' | 'url'>): string =>
   const source = rosterSource(team);
   return source === 'athleteone' ? String(team.clubId) : `${source}-${team.clubId}`;
 };
+
+/** The club season a team's league is for (`leagues[].clubSeason`), or null where the file gives none. */
+export const clubSeasonOf = (file: Pick<ClubRostersFile, 'leagues'>, team: Pick<ClubRosterTeam, 'league'>): string | null =>
+  file.leagues.find((l) => l.id === team.league)?.clubSeason ?? null;
 
 /**
  * The tier a team's rows are compared in: a GotSport roster's on the team's birth years alone, every
@@ -331,6 +400,15 @@ export function birthYearsFromTeamName(teamName: string): number[] | null {
 /** "Delaney Kumer": the roster's two fields as one name. */
 export const rosterName = (p: Pick<ClubRosterPlayer, 'firstName' | 'lastName'>): string => `${p.firstName} ${p.lastName}`.trim();
 
+/** What a sport changes in the comparison. */
+export interface ClubRosterCompareOptions {
+  /**
+   * Rule 5: whether a club in this region is near enough to the row's school. Default: the club is in
+   * LOCAL_REGIONS (soccer's schools, and basketball's and volleyball's, which are the same area's).
+   */
+  isLocal?: (region: ClubRegion, row: SchoolRow) => boolean;
+}
+
 /**
  * Every high school row a roster row shares a name with, and what the league-roster rule makes of it
  * (see the header): one entry per row and tier that has a roster row under the name. `clubs` is the
@@ -341,7 +419,10 @@ export function compareClubRosters(
   file: ClubRostersFile,
   rows: readonly SchoolRow[],
   clubs: Pick<ClubsView, 'clubs' | 'affiliations'> & Partial<Pick<ClubsView, 'jvAffiliations'>>,
+  options: ClubRosterCompareOptions = {},
 ): CompareRow[] {
+  const isLocal = options.isLocal ?? ((region: ClubRegion) => LOCAL_REGIONS.includes(region));
+  const keptPages = new Set(file.teams.map((t) => t.url));
   const byName = new Map<string, RosterHit[]>();
   for (const team of file.teams) {
     if (team.supersededBy !== undefined) continue; // its Hudl roster is compared instead
@@ -364,11 +445,13 @@ export function compareClubRosters(
     r.athleteId === null
       ? []
       : (r.level === 'jv' ? (clubs.jvAffiliations ?? []) : clubs.affiliations).filter((a) => a.teamSlug === r.teamSlug && a.athleteId === r.athleteId);
+  // A tie cites a roster when a source is one of its pages, whatever kind the source is given (a field hockey
+  // club's own roster page is a `club-site` or `sportsrecruits` source).
   const tieOf = (r: SchoolRow, club: string, agreeing: readonly RosterHit[]): TieState => {
     const tie = tiesOf(r).find((a) => a.club === club);
     if (!tie) return 'new';
     const pages = new Set(agreeing.map((h) => h.team.url));
-    return tie.sources.some((s) => s.kind === LEAGUE_ROSTER_KIND && pages.has(s.url)) ? 'linked' : 'tie-without-roster';
+    return tie.sources.some((s) => pages.has(s.url)) ? 'linked' : 'tie-without-roster';
   };
   // A team's birth years: a GotSport team's own; for a row with no class year on another team, the team's
   // own (Hudl's) or its name's (ECNL's).
@@ -380,6 +463,7 @@ export function compareClubRosters(
         : null;
   const agrees = (h: RosterHit, classYear: number): boolean => {
     if (teamTier(h.team) === 'class-year' && h.player.gradYear !== null) return h.player.gradYear === classYear;
+    if (h.team.classYears !== undefined) return h.team.classYears.includes(classYear);
     const years = birthYearsOf(h);
     return years !== null && birthYearsAdmit(years, classYear);
   };
@@ -423,37 +507,46 @@ export function compareClubRosters(
       }
       const agreeing = all.filter((h) => agrees(h, year));
       if (agreeing.length === 0) {
-        result(all.every((h) => birthYearsOf(h) === null && h.player.gradYear === null) ? 'no-class-year' : 'class-year-differs');
+        result(
+          all.every((h) => birthYearsOf(h) === null && h.player.gradYear === null && h.team.classYears === undefined) ? 'no-class-year' : 'class-year-differs',
+        );
         continue;
       }
       let kept = agreeing;
       let setAside: RosterHit[] = [];
-      if (new Set(agreeing.map(clubOf)).size > 1) {
+      // Where the file holds two club seasons, the latest season's rows are the ones compared.
+      const seasons = [...new Set(agreeing.map((h) => clubSeasonOf(file, h.team)))];
+      if (seasons.length > 1 && seasons.every((x) => x !== null)) {
+        const latest = (seasons as string[]).sort().at(-1)!;
+        kept = agreeing.filter((h) => clubSeasonOf(file, h.team) === latest);
+        setAside = agreeing.filter((h) => clubSeasonOf(file, h.team) !== latest);
+      }
+      if (new Set(kept.map(clubOf)).size > 1) {
         // Rule 4's second case: exactly one of the clubs is tied by a page other than a league roster. The
         // class-year tier only: its rosters (ECNL's, Hudl's) are this season's, where a GotSport roster is
         // undated and keeps players a team once carried, so a second club there says nothing about which is
         // current.
         if (tier !== 'class-year') {
-          result('several-clubs', agreeing);
+          result('several-clubs', kept);
           continue;
         }
         const byOtherPage = new Set(
           tiesOf(row)
-            .filter((a) => a.sources.some((s) => s.kind !== LEAGUE_ROSTER_KIND))
+            .filter((a) => a.sources.some((s) => s.kind !== LEAGUE_ROSTER_KIND && !keptPages.has(s.url)))
             .map((a) => `slug:${a.club}`),
         );
-        const picked = [...new Set(agreeing.map(clubOf))].filter((c) => byOtherPage.has(c));
+        const picked = [...new Set(kept.map(clubOf))].filter((c) => byOtherPage.has(c));
         if (picked.length !== 1) {
-          result('several-clubs', agreeing);
+          result('several-clubs', kept);
           continue;
         }
-        kept = agreeing.filter((h) => clubOf(h) === picked[0]);
-        setAside = agreeing.filter((h) => clubOf(h) !== picked[0]);
+        setAside = [...setAside, ...kept.filter((h) => clubOf(h) !== picked[0])];
+        kept = kept.filter((h) => clubOf(h) === picked[0]);
       }
       const club = kept[0].club;
       const region = club === null ? undefined : regionOf.get(club);
       if (club === null || region === undefined) result('no-club-record', kept);
-      else if (!LOCAL_REGIONS.includes(region)) result('club-elsewhere', kept);
+      else if (!isLocal(region, row)) result('club-elsewhere', kept);
       else result('match', kept, tieOf(row, club, kept), setAside);
     }
   }
