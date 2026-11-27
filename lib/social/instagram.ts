@@ -21,6 +21,8 @@
  *      keeps its own account), and no handle is two records'
  *   3. a handle is an Instagram username: lower case, letters, digits, `.` and `_`, at most 30
  *   4. `foundAt`, when set, is https and not social media
+ *   5. a `rejected` profile names a registry team or club it was checked for, is listed once, and is no record's
+ *      handle (it is never linked: the list only saves a later round from checking it again)
  *
  * One file per sport, as data/field-hockey/clubs.json: data/soccer/, data/basketball/ and data/volleyball/ hold that
  * build's programs' accounts (girls soccer, boys basketball, girls volleyball; an account the school's
@@ -74,6 +76,21 @@ export const TeamInstagramSchema = InstagramAccountSchema.extend({ level: z.enum
 
 export type TeamInstagram = z.infer<typeof TeamInstagramSchema>;
 
+/**
+ * A profile checked for a team or club and turned down (a namesake elsewhere, a boys-only or club account, one that
+ * does not say which school it is, a private one), so a later round need not check it again. Never rendered.
+ */
+export const RejectedInstagramSchema = z.strictObject({
+  handle: instagramHandle,
+  /** The team (or club) it was checked for. */
+  slug: slugId,
+  /** Why it is not that team's ("Port Angeles, Washington's"; "boys only"; "says it is not affiliated"). */
+  why: text,
+  checkedOn: calendarDateKey,
+});
+
+export type RejectedInstagram = z.infer<typeof RejectedInstagramSchema>;
+
 export const InstagramFileSchema = z.strictObject({
   /** How the file was made. */
   builtBy: text,
@@ -82,6 +99,8 @@ export const InstagramFileSchema = z.strictObject({
   notes: z.array(text),
   teams: z.array(TeamInstagramSchema),
   clubs: z.array(InstagramAccountSchema),
+  /** Profiles checked and turned down (invariant 5); absent in a file that keeps none. */
+  rejected: z.array(RejectedInstagramSchema).default([]),
 });
 
 export type InstagramFile = z.infer<typeof InstagramFileSchema>;
@@ -114,6 +133,14 @@ export function loadInstagram(raw: unknown): InstagramFile {
     const other = owner.get(a.handle);
     if (other) fail(list, a.slug, `handle ${a.handle} is already ${other}'s`);
     owner.set(a.handle, `${a.slug}${'level' in a ? ` ${a.level}` : ''}`);
+  }
+  const seenRejected = new Set<string>();
+  for (const r of file.rejected) {
+    if (!teamSlugs.has(r.slug) && !getClub(r.slug)) fail('rejected', r.slug, 'not a registry team or a club');
+    if (seenRejected.has(r.handle)) fail('rejected', r.slug, `${r.handle} listed twice`);
+    seenRejected.add(r.handle);
+    const other = owner.get(r.handle);
+    if (other) fail('rejected', r.slug, `${r.handle} is ${other}'s record`);
   }
   return file;
 }

@@ -111,4 +111,23 @@ describe('loadInstagram refuses a bad file', () => {
     expect(() => loadInstagram(g)).toThrow();
   });
 
+  it('a rejected profile for no team, listed twice, or a record’s own handle', () => {
+    const team = raw.teams[0]!;
+    const turnedDown = { handle: 'some.namesake', slug: team.slug, why: 'a namesake elsewhere', checkedOn: '2026-11-27' };
+    const ok = copy();
+    ok.rejected = [turnedDown];
+    expect(loadInstagram(ok).rejected).toEqual([turnedDown]);
+    // A file without the list (every file before it) loads with none.
+    expect(loadInstagram(copy()).rejected).toEqual([]);
+    const f = copy();
+    f.rejected = [{ ...turnedDown, slug: 'no-such-team' }];
+    expect(() => loadInstagram(f)).toThrow('data/field-hockey/instagram.json: rejected no-such-team: not a registry team or a club');
+    const g = copy();
+    g.rejected = [turnedDown, { ...turnedDown }];
+    expect(() => loadInstagram(g)).toThrow(/listed twice/);
+    const h = copy();
+    h.rejected = [{ ...turnedDown, handle: team.handle }];
+    expect(() => loadInstagram(h)).toThrow(/record/);
+  });
+
 });

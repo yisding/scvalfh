@@ -5,7 +5,8 @@
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 53 of the 123 teams have one (2026-11-27)."
+    "No record means no account we could find and check on the day, not that there is none: 56 of the 123 teams have one (2026-11-27).",
+    "Profiles checked and turned down are kept in `rejected`, with why, so a later round need not check them again; they are never linked."
   ],
   "teams": [
     {
@@ -233,6 +234,14 @@
       "checkedOn": "2026-11-14"
     },
     {
+      "slug": "kings-academy",
+      "level": "varsity",
+      "handle": "tka_girlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is The King’s Academy’s, Sunnyvale. Profile opened: \"TKA Girls Soccer\", bio \"TKA varsity girls soccer team 2025-26 | @tka_athleticevents\"; it names no city, and other King’s Academies use TKA.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "menlo",
       "level": "varsity",
       "handle": "menlogirlssoccer",
@@ -361,6 +370,14 @@
       "checkedOn": "2026-11-27"
     },
     {
+      "slug": "monterey",
+      "level": "varsity",
+      "handle": "montereygirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is Monterey High’s, Monterey (CCS). Profile opened: bio \"Official account for Monterey Girls Soccer!!!\"; it names no city.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "rancho-san-juan",
       "level": "varsity",
       "handle": "rsjgirlssoccer",
@@ -409,6 +426,14 @@
       "checkedOn": "2026-11-27"
     },
     {
+      "slug": "kipp-san-jose",
+      "level": "varsity",
+      "handle": "ksjcgirlssoccer",
+      "foundAt": null,
+      "note": "Found by requesting likely handles as public profile pages in Chromium on 2026-11-27; kept on the site owner’s word (2026-11-27) that it is KIPP San Jose Collegiate’s. Profile opened: \"KSJC Girl’s Varsity Soccer\", highlights 22-23 and 23-24; it names no city.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "latino-college-prep",
       "level": "varsity",
       "handle": "lcpa.girlssoccer",
@@ -433,5 +458,367 @@
       "checkedOn": "2026-11-27"
     }
   ],
-  "clubs": []
+  "clubs": [],
+  "rejected": [
+    {
+      "handle": "homesteadgsoccer",
+      "slug": "homestead",
+      "why": "An older account that does not say which Homestead.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "lahsgirlssoccer",
+      "slug": "los-altos",
+      "why": "Los Amigos High School’s, Fountain Valley.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "losaltosgirlssoccer",
+      "slug": "los-altos",
+      "why": "A Southern California Los Altos’s (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mountainview_girlssoccer",
+      "slug": "mountain-view",
+      "why": "\"Mountain View Girls Soccer (WY)\": Wyoming’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mountainviewgirlssoccer",
+      "slug": "mountain-view",
+      "why": "Oregon’s: links its OSAA team page.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mvhs.girlssoccer",
+      "slug": "mountain-view",
+      "why": "\"Mountain View High School Girls Soccer\", but neither bio nor link says which Mountain View.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "pahs.girls.soccer",
+      "slug": "palo-alto",
+      "why": "Says it is not affiliated with PAHS, and does not say which.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pahs.girlssoccer",
+      "slug": "palo-alto",
+      "why": "Port Angeles’s, Washington.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "schs.girlssoccer",
+      "slug": "santa-clara",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "cupertinosoccer",
+      "slug": "cupertino",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "fremont.girls.soccer",
+      "slug": "fremont",
+      "why": "Does not say which Fremont.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "fremont_girls_soccer",
+      "slug": "fremont",
+      "why": "A Fremont FC club team’s (\"girls u18 fremont fc\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "fremontgirlssoccer",
+      "slug": "fremont",
+      "why": "\"We are Tiger Soccer\": not the Firebirds.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lynbrookgirlssoccer",
+      "slug": "lynbrook",
+      "why": "Does not say which Lynbrook.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lynbrookhs_girlssoccer",
+      "slug": "lynbrook",
+      "why": "Lynbrook’s, but a smaller highlights account; the team keeps one varsity record (lynbrookgirlsoccer).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mvhs_girlssoccer",
+      "slug": "monta-vista",
+      "why": "Mt. View Lobos’, Clint ISD, Texas.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mvhsgirlssoccer",
+      "slug": "monta-vista",
+      "why": "Mesa Verde’s (\"Lady Mavericks\").",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "wilcoxvarsitysoccer",
+      "slug": "wilcox",
+      "why": "Links the boys’ schedule.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "lelandboyssoccer",
+      "slug": "leland",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lelandwomenssoccer",
+      "slug": "leland",
+      "why": "Does not say which Leland.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "phhs.girlssoccer",
+      "slug": "piedmont-hills",
+      "why": "Penn Hills’s: links phsd.org.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "phhs_girlssoccer",
+      "slug": "piedmont-hills",
+      "why": "Patrick Henry’s, Ashland, Virginia.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pioneergirlssoccer",
+      "slug": "pioneer",
+      "why": "New York’s.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "handle": "pioneerwsoccer",
+      "slug": "pioneer",
+      "why": "Does not say which Pioneer.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "wghsgirlssoccer",
+      "slug": "willow-glen",
+      "why": "\"B League\": does not say which WGHS.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lincolngirlssoccer",
+      "slug": "lincoln",
+      "why": "Tallahassee, Florida’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lincolnhsgirlssoccer",
+      "slug": "lincoln",
+      "why": "Lincoln Unified’s (Stockton).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lincolnwomenssoccer",
+      "slug": "lincoln",
+      "why": "Seattle’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "liveoak.girlssoccer",
+      "slug": "live-oak",
+      "why": "Live Oak, Watson, Louisiana’s: links its MaxPreps page.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "liveoakgirlssoccer",
+      "slug": "live-oak",
+      "why": "Does not say which Live Oak.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "logirlssoccer",
+      "slug": "live-oak",
+      "why": "Lake Oswego’s, Oregon.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "lohs.girlssoccer",
+      "slug": "live-oak",
+      "why": "Live Oak High’s in Live Oak, California (owner, 2026-11-27), not Morgan Hill’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "silvercreeksoccer",
+      "slug": "silver-creek",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "sjhs_soccer",
+      "slug": "san-jose",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "vc.girlssoccer",
+      "slug": "valley-christian",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "vchs_girlssoccer",
+      "slug": "valley-christian",
+      "why": "A private account (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "ndbsoccer",
+      "slug": "notre-dame-belmont",
+      "why": "Says it is not affiliated with Notre Dame Belmont.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "ecpgirlssoccer",
+      "slug": "eastside",
+      "why": "A Los Angeles school’s (owner, 2026-11-27).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "harkersoccer",
+      "slug": "harker",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "carlmontsoccer",
+      "slug": "carlmont",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "mahssoccer",
+      "slug": "menlo-atherton",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "elcaminogirlssoccer",
+      "slug": "el-camino-ssf",
+      "why": "Sacramento’s El Camino Eagles: its GoFan link.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "jeffersongirlssoccer",
+      "slug": "jefferson",
+      "why": "Bloomington, Minnesota’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "jhs.girlssoccer",
+      "slug": "jefferson",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "sanmateogirlssoccer",
+      "slug": "san-mateo",
+      "why": "Says it is not affiliated with SMHS.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "eahs.soccer",
+      "slug": "everett-alvarez",
+      "why": "Boys only.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "eahssoccer",
+      "slug": "everett-alvarez",
+      "why": "Does not say which school or team.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pcsgirlssoccer",
+      "slug": "pacific-collegiate",
+      "why": "\"Pacers Sr Girls Soccer\": not the Pumas.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "carmelgirlsoccer",
+      "slug": "carmel",
+      "why": "Inactive (owner, 2026-11-27); it does not say which Carmel.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "carmelgirlssoccer",
+      "slug": "carmel",
+      "why": "\"15 State Champions\": not Carmel, California’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pvhs.girlssoccer",
+      "slug": "pajaro-valley",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "pvhs_gsoccer",
+      "slug": "pajaro-valley",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "stevensongirlssoccer",
+      "slug": "stevenson",
+      "why": "Illinois’s.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "nmcgirlssoccer",
+      "slug": "north-monterey-county",
+      "why": "Does not say which school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "northsalinas_soccer",
+      "slug": "north-salinas",
+      "why": "Does not say boys or girls.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "seasidegirlssoccer",
+      "slug": "seaside",
+      "why": "Probably a Washington state Seaside’s (owner, 2026-11-27); it does not say which Seaside.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "marinagirlssoccer",
+      "slug": "marina-mariners",
+      "why": "Huntington Beach’s Marina (the Vikings).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "sfhs_girls_soccer",
+      "slug": "st-francis-watsonville",
+      "why": "An Illinois St. Francis’s (IHSA 2A).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "stfrancisgirlssoccer",
+      "slug": "st-francis-watsonville",
+      "why": "Does not say which St. Francis.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "handle": "yhs.girls.soccer",
+      "slug": "york",
+      "why": "Yucaipa’s: links its MaxPreps schedule.",
+      "checkedOn": "2026-11-27"
+    }
+  ]
 }
