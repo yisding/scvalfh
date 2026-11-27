@@ -3233,6 +3233,28 @@ WGHS"; `wilcoxvarsitysoccer` links the boys' schedule. The site's owner can conf
 for field hockey. The search allowance gave most schools one search for all their sports, so a school
 with no record was often barely searched.
 
+A second round on 2026-11-27 went over every team then without a record, the registries having grown to
+123 soccer, 133 basketball and 60 volleyball teams (PAL, PCAL, PSAL, SCCAL, WBAL and WCAL schools; the VAL's
+middle schools were left out at the owner's request): 299 team records' worth of schools, each searched
+with searches limited to `instagram.com` (a plain `site:` query returns MaxPreps pages instead) and its
+athletics and school pages and student paper read for handles. It added 28: soccer 5 (12 of 123), basketball
+15 (26 of 133), volleyball 8 (18 of 60). New sources: the per-sport Instagram setting of the SIDEARM-style
+sites again (Riordan, Saint Francis and St. Ignatius basketball and volleyball, Sacred Heart Cathedral), Santa
+Clara's athletics sports menu, and The Saratoga Falcon (2023-12-02, on the school's student-run team
+accounts). Instagram answered most anonymous profile views that day with its login page (its rate limit,
+`is_from_rle`); the profiles that did open are said so in their notes, and the rest (Santa Clara, Saratoga,
+Homestead soccer, Cupertino, Mitty, Sacred Heart Cathedral, Valley Christian, The King's Academy, Castilleja,
+Capuchino) were kept unopened at the owner's direction, on the page or search result each note names.
+Cupertino's `ti.no.buckets` ("Cupertino High School Varsity Basketball") does not say boys; it is taken as the
+boys' because the girls keep their own (`cupertinogirlsbasketball`). Left out: same-named schools elsewhere
+(`stevensongirlssoccer`, Illinois; `marinagirlssoccer`, Huntington Beach; `serrabasketball`, Gardena;
+`sfhs.hoops`, La Cañada Flintridge; `sihsbasketball`, Cleveland; `tka_basketball`'s namesakes in West Palm
+Beach), boys-only soccer accounts (`eahs.soccer`, `lelandboyssoccer`), and profiles that do not say which
+school or which team they are (`breakerbball`, `eahssoccer`, `smhsbball`, `thewoodsideway`,
+`seqboysbasketball`, `jhs.girlssoccer`, `pvhs_gsoccer`). James Lick's Fall Sports page still lists
+`comet_volleyball`, which still would not open. Most of the small charter and private schools of the PCAL
+and PSAL showed only their school's account.
+
 ### 1.11 VOLLEYBALL RECRUITING — profiles, clubs and commitments (`data/volleyball/*.json`)
 
 Research by hand on 2026-11-13 for the girls volleyball build's 41 SCVAL and BVAL schools (569 varsity rows, 322

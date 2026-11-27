@@ -1,11 +1,11 @@
 {
-  "builtBy": "Research by hand on 2026-11-14 for the 41 boys basketball teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found.",
-  "capturedAt": "2026-11-14",
+  "builtBy": "Research by hand on 2026-11-14 for the 41 boys basketball teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found. A second round on 2026-11-27 covered the 122 boys basketball teams then without a record (the registry having grown to 133): the same sources and searches limited to instagram.com. Instagram answered most anonymous profile views that day with its login page, so a record whose profile could not be opened says so in its note and was kept, at the owner’s direction, on the page or search result it rests on.",
+  "capturedAt": "2026-11-27",
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its boys basketball program’s own, or one the school’s boys and girls teams share (its note says so); never a girls-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 11 of the 41 teams have one. The search allowance gave most schools one search for all their sports."
+    "No record means no account we could find and check on the day, not that there is none: 26 of the 133 teams have one (2026-11-27)."
   ],
   "teams": [
     {
@@ -39,6 +39,14 @@
       "foundAt": "https://vikingsportsmag.com/uncategorized/2026/02/11/palo-alto-mens-basketball-falls-to-los-gatos-43-28/",
       "note": "Credited by the school’s student sports magazine, Viking Magazine (\"Photo courtesy of Palo_Alto_hoops\", on its men’s basketball game story of 2026-02-11). Profile opened: \"Palo Alto High School 🏀\", bio \"#SkoVikes … 2x CIF State Champs … 8 CCS Titles\", linking palyathletics.com. The name does not say boys; the Viking story and the two state titles do.",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "cupertino",
+      "level": "varsity",
+      "handle": "ti.no.buckets",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the name \"Cupertino High School Varsity Basketball\" and a \"2023 LEAGUE CHAMPS\" post. \"Tino\" is Cupertino High’s nickname. The girls keep their own account (cupertinogirlsbasketball, \"Cupertino High School Women’s Basketball\"), so this is taken to be the boys’; the profile does not say boys. Profile not opened: on 2026-11-27 Instagram answered every anonymous profile view (curl and Chromium) with its login wall for rate limiting; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
     },
     {
       "slug": "saratoga",
@@ -95,6 +103,118 @@
       "foundAt": "https://sites.google.com/esuhsd.org/james-lick-high-school/athletics/winter-sports",
       "note": "Linked on the Winter Sports page of the school’s own site, as \"@JLHS.BOYSBASKETBALL\" under \"Boys’ Basketball\" (the girls have their own). Profile opened: \"James Lick Boys Basketball\"",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "mitty",
+      "level": "varsity",
+      "handle": "amhsmensbasketball",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the name \"Archbishop Mitty Basketball\" and the bio \"Official Instagram of the Archbishop Mitty Monarchs mens basketball team\" (and a Twitter handle, Mittymenshoops). Profile not opened: on 2026-11-27 Instagram answered every anonymous profile request with its login page; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "riordan",
+      "level": "varsity",
+      "handle": "riordanbasketball",
+      "foundAt": "https://riordanathletics.com/sports/mens-basketball",
+      "note": "Set as the Instagram of \"Varsity Boys’ Basketball\" in the settings of the school’s athletics site, not shown as a link. Profile opened: \"Archbishop Riordan MBB 🏀\", bio \"20x WCAL Champions 🏆 19x CCS Champions 🏆 4x NorCal Champions 🏆 2002 State Champion\". The girls keep their own (riordangirlsbasketball).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "bellarmine",
+      "level": "varsity",
+      "handle": "bcp_hoops",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the bio \"Official Instagram Account of Bellarmine College Preparatory Basketball Program. Summer Camp Registration: www.bcp.org/summer-program\". Profile opened: \"Bellarmine Basketball 🏀\", bio \"Bellarmine Basketball Alumni Game Registration\", linking a form on bcp.org. Bellarmine is a boys’ school.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "serra",
+      "level": "varsity",
+      "handle": "padrebasketball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Serra Padre Basketball\", bio \"San Mateo CA\". Serra is a boys’ school. Not serrabasketball, which is the Serra Cavaliers’ (Junipero Serra, Gardena).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "sacred-heart-cathedral",
+      "level": "varsity",
+      "handle": "shc_hoops",
+      "foundAt": "https://shcathletics.com/sports/boys-basketball",
+      "note": "Linked as the Instagram of \"Boys Basketball\" in the sports menu of the school’s athletics site, spelled \"SHC_HOOPS\" (the girls have their own, SHCLIVB). Not returned by any search, and the profile was not opened: on 2026-11-27 Instagram answered every anonymous profile request with its login page; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "saint-francis",
+      "level": "varsity",
+      "handle": "sfhs_boysbasketball",
+      "foundAt": "https://sfhsathletics.com/sports/mens-basketball",
+      "note": "Set as the Instagram of \"Men’s Varsity Basketball\" in the settings of the school’s athletics site, not shown as a link (the girls have their own, sfhs_girlsbball). Profile opened: bio \"Official account for SFHS Men’s Basketball\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "st-ignatius",
+      "level": "varsity",
+      "handle": "siwildcathoops",
+      "foundAt": "https://siwildcats.com/sports/mens-basketball",
+      "note": "Set as the Instagram of \"Men’s Basketball (Varsity)\" (\"@siwildcathoops\") in the settings of the school’s athletics site, not shown as a link. Profile opened: \"SI WILDCATS MEN’S VARSITY BASKETBALL\", bio \"Saint Ignatius Men’s Basketball #WeAreSI\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "valley-christian",
+      "level": "varsity",
+      "handle": "valleychristianmbb",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the name \"Valley Christian Mens Basketball 🏀\" and the bio \"The Official Instagram of the VCHS Men’s Basketball Team | West Catholic Athletic League\". Profile not opened: on 2026-11-27 Instagram answered every anonymous profile request with its login page; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "kings-academy",
+      "level": "varsity",
+      "handle": "tka_basketball",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the name \"The King’s Academy Boys Basketball\" and the titles \"CCS D4 Champs ’23, ’25 … ’25 WBAL Champs … ’25 Nor Cal D3 Champs\". Profile not opened: on 2026-11-27 Instagram answered every anonymous profile request with its login page; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "half-moon-bay",
+      "level": "varsity",
+      "handle": "hmbboysbball",
+      "foundAt": null,
+      "note": "Found by search, whose result described it as the Half Moon Bay High School boys basketball program. Profile opened: \"Half Moon Bay Boys Basketball\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "menlo-atherton",
+      "level": "varsity",
+      "handle": "menloathertonbasketball",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the bio \"2022 CCS Division 1 Champions … PAL League Champions 2007, 2016, 2017, 2019, 2020, 2022, 2023, 2025\". Profile opened: \"Menlo-Atherton Basketball\". The name does not say boys; the 2022 CCS Division I title is the boys’ (70-64 over Alvarez).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "capuchino",
+      "level": "varsity",
+      "handle": "capuchinomenshoops",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the name \"Capuchino Men’s Basketball\" and the bio \"Official Page of Capuchino Men’s Basketball … #MustangFamily\" (Capuchino, San Bruno: the Mustangs). Profile not opened: on 2026-11-27 Instagram answered every anonymous profile request with its login page; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "hollister",
+      "level": "varsity",
+      "handle": "hollisterbasketball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"SBHS Boys Basketball\", bio \"The official Instagram page for the San Benito High School basketball team. Member of the Pacific Coast Athletic League. Go Balers!\".",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "monterey",
+      "level": "varsity",
+      "handle": "doresmbb",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Monterey High Boys Basketball\", bio \"Official account for the Monterey Boys Varsity Basketball team … CCS Champions: ’17 ’19 ’23 … NORCAL State Champions: ’24 … CIF STATE CHAMPIONS: ’24\".",
+      "checkedOn": "2026-11-27"
     }
   ],
   "clubs": []

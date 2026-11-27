@@ -1,11 +1,11 @@
 {
-  "builtBy": "Research by hand on 2026-11-14 for the 60 girls soccer teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found.",
-  "capturedAt": "2026-11-14",
+  "builtBy": "Research by hand on 2026-11-14 for the 60 girls soccer teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found. A second round on 2026-11-27 covered the 116 girls soccer teams then without a record (the registry having grown to 123): the same sources and searches limited to instagram.com. Instagram answered most anonymous profile views that day with its login page, so a record whose profile could not be opened says so in its note and was kept, at the owner’s direction, on the page or search result it rests on.",
+  "capturedAt": "2026-11-27",
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
     "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
-    "No record means no account we could find and check on the day, not that there is none: 7 of the 60 teams have one. The search allowance gave most schools one search for all their sports."
+    "No record means no account we could find and check on the day, not that there is none: 12 of the 123 teams have one (2026-11-27)."
   ],
   "teams": [
     {
@@ -17,12 +17,36 @@
       "checkedOn": "2026-11-14"
     },
     {
+      "slug": "homestead",
+      "level": "varsity",
+      "handle": "homesteadgirlssoccer",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the name \"Homestead Girls Varsity Soccer💚⚽️🤍\" and the line \"2024 & 2025 D2 CCS Champs\". Homestead (Cupertino) won the 2025 CCS Division II girls title (1-0 over Salinas in the final, per MaxPreps and Prep2Prep), so the CCS title places it at Homestead, Cupertino; the profile names no city. Not homesteadgsoccer, the older account rejected earlier. Profile not opened: on 2026-11-27 Instagram answered every anonymous profile view (curl and Chromium) with its login wall for rate limiting; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
       "slug": "los-gatos",
       "level": "varsity",
       "handle": "lghsvarsitygirlssoccer",
       "foundAt": "https://www.losgatosathletics.org/socialmedia",
       "note": "Linked as \"Soccer- Girls\" on the social media page of the school’s athletics site (the boys have their own). Profile opened: \"lghs girls varsity soccer\"",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "santa-clara",
+      "level": "varsity",
+      "handle": "schsvarsitygirlssoccer",
+      "foundAt": "https://www.schsathletics.com/varsity/soccer-girls/",
+      "note": "Linked from the \"Soccer, Girls\" entry of the sports menu on the school’s athletics site (the boys’ entry has no account), and embedded on the girls soccer page as \"SC Bruins Girls ⚽️💙 (@schsvarsitygirlssoccer)\". Profile not opened: on 2026-11-27 Instagram answered every anonymous profile view (curl and Chromium) with its login wall for rate limiting; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "saratoga",
+      "level": "varsity",
+      "handle": "saratogagirls_soccer",
+      "foundAt": "https://saratogafalcon.org/18787/sports/student-run-social-media-accounts-hype-up-school-sports-teams/",
+      "note": "Named by the school’s student paper, The Saratoga Falcon (2023-12-02: \"The girls’ soccer team’s Instagram (@saratogagirls_soccer) is run by senior Katelyn Fritz, a player on the team\"; created December 2018). Profile not opened: on 2026-11-27 Instagram answered every anonymous profile view (curl and Chromium) with its login wall for rate limiting; kept unopened at the owner’s direction.",
+      "checkedOn": "2026-11-27"
     },
     {
       "slug": "independence",
@@ -63,6 +87,22 @@
       "foundAt": "https://siwildcats.com/sports/womens-soccer",
       "note": "Set as the women’s soccer page’s Instagram (\"@si_wsoccer\") in the settings of the school’s athletics site, not shown as a link. Profile opened: \"St. Ignatius Women’s Varsity Soccer\"",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "sequoia",
+      "level": "varsity",
+      "handle": "seqgirlssoccer",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the bio \"League Champions 2018-2019 … CCS Central Coast Division 1 Champions 2023\". Profile opened: \"Sequoia Girls Soccer\". No page of the school’s names it and the profile names no city: it rests on the CCS Division I title of 2023, which Sequoia of Redwood City won (1-0 over Aragon in the final).",
+      "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "alisal",
+      "level": "varsity",
+      "handle": "alisalgirlssoccer",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Alisal Girl’s Soccer\", bio \"Official Alisal High School Girls Soccer ⚽️ Proud 93905 Student Athletes.\"",
+      "checkedOn": "2026-11-27"
     }
   ],
   "clubs": []
