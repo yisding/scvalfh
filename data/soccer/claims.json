@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-26T14:37:42.692Z",
+  "fetchedAt": "2026-11-27T05:37:36.380Z",
   "fixtures": [
     {
       "claims": {
@@ -860,72 +860,6 @@
       "published": [
         {
           "contestId": "4ff238d1-b3fb-4264-8694-7e229159f0f4"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Mill Valley",
-              "name": "Tamalpais",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "7298608f-2310-4399-aa07-d6bc50df3f4e"
-            },
-            "contestId": "18929658-dabf-4e03-83af-70fb459782ba",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-23",
-            "dateLocal": "2026-11-23T18:15:00",
-            "dateUtc": "2026-11-24T02:15:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Francisco",
-              "name": "St. Ignatius",
-              "result": null,
-              "score": null,
-              "slug": "st-ignatius",
-              "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-09-10T18:47:45",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/st-ignatius-college-preparatory-san-francisco-vs-tamalpais-mill-valley/11-23-2026/?c=18929658-dabf-4e03-83af-70fb459782ba",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "18929658-dabf-4e03-83af-70fb459782ba"
-        }
-      },
-      "id": "2026-11-23-name:tamalpais-at-st-ignatius",
-      "published": [
-        {
-          "contestId": "18929658-dabf-4e03-83af-70fb459782ba"
         }
       ]
     },
@@ -7132,7 +7066,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T08:30:18",
+              "maxprepsModifiedOn": "2026-11-27T03:28:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -7726,7 +7660,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T23:06:36",
+              "maxprepsModifiedOn": "2026-11-26T23:58:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10037,7 +9971,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T00:59:54",
+              "maxprepsModifiedOn": "2026-11-27T01:28:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13165,7 +13099,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-05T17:12:44",
+              "maxprepsModifiedOn": "2026-11-27T03:28:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13178,7 +13112,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/st-francis-high-school-watsonville-watsonville-ca/gamb0f9e63a8e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "St. Francis High School SCP"
             }
           },
           "ref": "38c2e1b0-812c-4624-9d47-c76559621fb1"
@@ -15486,7 +15420,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-05T18:17:49",
+              "maxprepsModifiedOn": "2026-11-27T03:58:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15499,7 +15433,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/st-francis-high-school-watsonville-watsonville-ca/gam08c7dcbd99?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "St. Francis High School SCP"
             }
           },
           "ref": "fb9f17f1-3576-472c-ad7f-ea58401b5ba0"
@@ -20833,12 +20767,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Watsonville",
-              "name": "Monte Vista Christian",
+              "city": "Castroville",
+              "name": "North Monterey County",
               "result": null,
               "score": null,
-              "slug": "monte-vista-christian",
-              "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
+              "slug": "north-monterey-county",
+              "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
             },
             "contestId": "e15dfc07-7995-4eae-b645-5e08dd71d3a7",
             "contestTypes": {
@@ -20852,12 +20786,12 @@
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "Castroville",
-              "name": "North Monterey County",
+              "city": "Watsonville",
+              "name": "Monte Vista Christian",
               "result": null,
               "score": null,
-              "slug": "north-monterey-county",
-              "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+              "slug": "monte-vista-christian",
+              "teamId": "617febb3-8e69-4ba1-b05b-fd886614be21"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -20868,7 +20802,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-05T22:27:36",
+              "maxprepsModifiedOn": "2026-11-27T03:28:49",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20881,7 +20815,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Monte Vista Christian High School"
             }
           },
           "ref": "e15dfc07-7995-4eae-b645-5e08dd71d3a7"
@@ -21660,7 +21594,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-03T11:51:17",
+              "maxprepsModifiedOn": "2026-11-26T23:58:20",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21673,7 +21607,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/monterey-high-school-monterey-ca/gam05763d269e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Monterey High School"
             }
           },
           "ref": "dbb4d5a6-2a88-4aca-803a-010d5aaaf895"
@@ -22012,6 +21946,72 @@
       "published": [
         {
           "contestId": "e5025fb8-0d05-47c1-bb99-d1d1498e8550"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Seaside",
+              "name": "Seaside",
+              "result": null,
+              "score": null,
+              "slug": "seaside",
+              "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+            },
+            "contestId": "8f92f7aa-11eb-4c3d-b7c7-14d0fcbcff50",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-22",
+            "dateLocal": "2026-12-22T17:45:00",
+            "dateUtc": "2026-12-23T01:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Monterey",
+              "name": "Monterey",
+              "result": null,
+              "score": null,
+              "slug": "monterey",
+              "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-26T16:28:43",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/monterey-vs-seaside/12-22-2026/?c=8f92f7aa-11eb-4c3d-b7c7-14d0fcbcff50",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/monterey-high-school-monterey-ca/gam2c62870c7a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Monterey High School"
+            }
+          },
+          "ref": "8f92f7aa-11eb-4c3d-b7c7-14d0fcbcff50"
+        }
+      },
+      "id": "2026-12-22-seaside-at-monterey",
+      "published": [
+        {
+          "contestId": "8f92f7aa-11eb-4c3d-b7c7-14d0fcbcff50"
         }
       ]
     },
@@ -37747,7 +37747,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T07:46:55",
+              "maxprepsModifiedOn": "2026-11-26T23:29:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38798,7 +38798,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-08T23:19:29",
+              "maxprepsModifiedOn": "2026-11-26T23:29:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38811,7 +38811,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gam84d173ad04?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Milpitas High School"
             }
           },
           "ref": "9e772254-d2e6-41fc-859d-27c6196beed7"
@@ -40218,7 +40218,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T02:52:41",
+              "maxprepsModifiedOn": "2026-11-27T00:28:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -40730,7 +40730,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T03:32:03",
+              "maxprepsModifiedOn": "2026-11-26T23:58:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41397,13 +41397,13 @@
             },
             "contestId": "9c51f7d9-fe2e-495a-8a6e-d053e6f67218",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-01-21",
-            "dateLocal": "2027-01-21T18:00:00",
-            "dateUtc": "2027-01-22T02:00:00Z",
+            "dateLocal": "2027-01-21T17:00:00",
+            "dateUtc": "2027-01-22T01:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -41416,14 +41416,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "el-camino",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T08:25:42",
+              "maxprepsModifiedOn": "2026-11-27T00:58:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41436,7 +41436,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Lynbrook HS"
             }
           },
           "ref": "9c51f7d9-fe2e-495a-8a6e-d053e6f67218"
@@ -41464,6 +41464,7 @@
               "source": "scval-pdf"
             }
           },
+          "leagueFlagNote": "the official SCVAL schedule has this as a league game on 2027-01-21; MaxPreps flags it non-league",
           "ref": "el-camino:2027-01-21:fremont@lynbrook"
         }
       },
@@ -41514,7 +41515,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T02:29:28",
+              "maxprepsModifiedOn": "2026-11-26T16:30:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41846,7 +41847,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T02:48:59",
+              "maxprepsModifiedOn": "2026-11-27T03:58:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42135,7 +42136,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T18:47:33",
+              "maxprepsModifiedOn": "2026-11-27T00:58:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42317,7 +42318,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T18:49:36",
+              "maxprepsModifiedOn": "2026-11-27T03:58:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43034,7 +43035,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T02:49:18",
+              "maxprepsModifiedOn": "2026-11-27T03:58:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43579,7 +43580,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T02:52:58",
+              "maxprepsModifiedOn": "2026-11-27T03:58:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43627,6 +43628,72 @@
       "published": [
         {
           "contestId": "543df7b8-0723-4300-adc2-69998109921c"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Belmont",
+              "name": "Notre Dame Belmont",
+              "result": null,
+              "score": null,
+              "slug": "notre-dame-belmont",
+              "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b"
+            },
+            "contestId": "5f75a1b5-1051-41df-92b8-a7edbdc60e47",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-22",
+            "dateLocal": "2027-01-22T16:15:00",
+            "dateUtc": "2027-01-23T00:15:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Palo Alto",
+              "name": "Castilleja",
+              "result": null,
+              "score": null,
+              "slug": "castilleja",
+              "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-26T20:28:25",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/castilleja-palo-alto-vs-notre-dame-belmont/1-22-2027/?c=5f75a1b5-1051-41df-92b8-a7edbdc60e47",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Rich May Field"
+            }
+          },
+          "ref": "5f75a1b5-1051-41df-92b8-a7edbdc60e47"
+        }
+      },
+      "id": "2027-01-22-notre-dame-belmont-at-castilleja",
+      "published": [
+        {
+          "contestId": "5f75a1b5-1051-41df-92b8-a7edbdc60e47"
         }
       ]
     },
@@ -45989,7 +46056,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T23:30:20",
+              "maxprepsModifiedOn": "2026-11-27T04:58:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -64100,15 +64167,15 @@
               "slug": "rancho-san-juan",
               "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5"
             },
-            "contestId": "91e49986-92cb-4c37-bed9-c6bfa9099fb4",
+            "contestId": "a245c63f-a487-4bce-bdfb-ac26f76a3ee5",
             "contestTypes": {
               "away": 0,
               "home": 0
             },
             "countsFor": null,
             "dateKey": "2027-02-10",
-            "dateLocal": "2027-02-10T17:00:00",
-            "dateUtc": "2027-02-11T01:00:00Z",
+            "dateLocal": "2027-02-10T18:45:00",
+            "dateUtc": "2027-02-11T02:45:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -64128,7 +64195,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T20:44:48",
+              "maxprepsModifiedOn": "2026-11-26T12:58:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -64137,20 +64204,20 @@
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/rancho-san-juan-salinas-vs-watsonville/2-10-2027/?c=91e49986-92cb-4c37-bed9-c6bfa9099fb4",
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/rancho-san-juan-salinas-vs-watsonville/2-10-2027/?c=a245c63f-a487-4bce-bdfb-ac26f76a3ee5",
               "nfhsStream": "https://www.nfhsnetwork.com/events/watsonville-high-school-watsonville-ca/gam6bf7027428?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
             }
           },
-          "ref": "91e49986-92cb-4c37-bed9-c6bfa9099fb4"
+          "ref": "a245c63f-a487-4bce-bdfb-ac26f76a3ee5"
         }
       },
-      "id": "2027-02-10-rancho-san-juan-at-watsonville",
+      "id": "2027-02-10-rancho-san-juan-at-watsonville~2",
       "published": [
         {
-          "contestId": "91e49986-92cb-4c37-bed9-c6bfa9099fb4"
+          "contestId": "a245c63f-a487-4bce-bdfb-ac26f76a3ee5"
         }
       ]
     },

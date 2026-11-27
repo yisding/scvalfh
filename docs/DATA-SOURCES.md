@@ -3031,10 +3031,21 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   Torrey Pines (last season's list), Canyon Crest Academy (2025 only), York, and most other schools'
   sites, which publish none. Not reachable: hw.com and Valley Center's district site (bot challenge),
   edisonfieldhockey.com and Monterey's site (the proxy cannot reach them); Bonita Vista has no athletics
-  site we found. `/jv/stats/` (leaders for 4 schools on 2026-10-05) is still not read.
+  site we found. `/jv/stats/` (leaders for 4 schools on 2026-10-05) is not read as season stats; its per-game
+  tables are, for the JV game pages' box scores (below).
 - **Official documents** list JV only as start times on the varsity fixtures (SCVAL "Varsity 4:00
   followed by JV"; BVAL a JV time per game; MCAL's change notes), and PCAL's `CAT/YOR` slot is York's
   JV in Santa Catalina's place. None is read for JV.
+- **JV box scores [V] 2026-11-27.** The varsity stats calls (§1.1k) answer for the JV with the JV season id:
+  `team-season-game-stats/rollup/v1?teamId=<registry id>&sportSeasonId=<JV ssid>` is the school's per-game JV
+  table (the varsity shape; HTTP 400 "No data was found" when the coach entered none), and
+  `team-contest-player-stats/v1?teamId=<registry id>&contestId=<JV contest>` its box score for one JV game, whose
+  `sportSeasonId` is the JV one. On 2026-11-27 a JV table answered for 12 of the 102 field hockey schools (Monta
+  Vista, Leland, Redwood, Bella Vista, Lassen, Davis, Temecula Valley, Canyon Hills, La Jolla, University City,
+  Mission Hills, Harvard-Westlake; 120 box scores), 4 of 123 soccer schools, 5 of 133 basketball and 8 of 60
+  volleyball; every game a table listed was a MaxPreps JV contest in the JV file. `pnpm fetch-jv` reads them
+  (`scripts/lib/box-scores.ts`, the varsity reader) into `teams[].boxScores` of the JV file; the JV game pages show
+  them. The season rollup (`team-season-player-stats`) also answers for the JV and is not read.
 - **Cost:** 102 MaxPreps JSON calls through the MaxPreps client's gate and up to 102 si.com pages one at
   a time, 1 s apart (§1.2's client options); the 102 pages take at least 101 seconds of that spacing alone
   (about a minute in all when it was 49 calls and 48 pages). A failure is scoped to the school and the

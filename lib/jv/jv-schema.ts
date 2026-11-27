@@ -29,6 +29,7 @@ import { z } from 'zod';
 import { isSbliveContestId } from '../game-id';
 import { JV_SLUG_BY_SBLIVE_ID } from './jv-teams';
 import { dateKey, httpUrl, slugId } from '../schema-primitives';
+import { BoxScoreSchema } from '../players/player-stats-schema';
 import { GameSchema } from '../snapshot/snapshot-schema';
 import { contentKey } from '../stable-json';
 import { HAS_MAXPREPS } from '../sports/current';
@@ -79,8 +80,28 @@ export const JvTeamSchema = z
     sbliveUrl: httpUrl.nullable(),
     maxpreps: sourceState,
     sblive: sourceState,
+    /**
+     * MaxPreps' per-game JV stats table (`team-season-game-stats/rollup/v1` with the JV season id), read for the
+     * box scores below: `rowCount` is its games, 0 when the coach entered none ("No data was found"). Absent when no
+     * run has read it (a file from before 2026-11-27, a fixture run with no capture, the freshman level).
+     */
+    stats: sourceState.optional(),
+    /**
+     * The JV team's box scores (lib/players/player-stats-schema.ts BoxScoreSchema, the varsity game page's), one per
+     * MaxPreps JV final of the school's whose row in that table has a count above zero, read as the varsity ones are
+     * (scripts/lib/box-scores.ts); absent when there are none.
+     */
+    boxScores: z.array(BoxScoreSchema).optional(),
+    /** Finals whose box score the latest read could not get and none is kept: their stats are unknown, not absent. */
+    unreadBoxScores: z.array(z.string().min(1)).optional(),
   })
   .refine((t) => getTeamBySlug(t.slug)?.id === t.teamId, "teamId is not the registry team's")
+  .refine((t) => (!t.boxScores && !t.unreadBoxScores) || t.stats !== undefined, 'box scores need a stats read')
+  .refine((t) => !t.boxScores || new Set(t.boxScores.map((b) => b.contestId)).size === t.boxScores.length, 'one box score per contest')
+  .refine(
+    (t) => !t.unreadBoxScores || t.unreadBoxScores.every((id) => !t.boxScores?.some((b) => b.contestId === id)),
+    'a contest with a box score is not unread',
+  )
   // Every school MaxPreps carries has a JV feed; in a build MaxPreps does not carry (the VAL) it is unavailable for all.
   .refine((t) => (t.maxpreps.status === 'unavailable') === !HAS_MAXPREPS, 'MaxPreps is unavailable exactly in a build MaxPreps does not carry')
   .refine((t) => (t.sblive.status === 'unavailable') === (t.sbliveUrl === null), 'si.com is unavailable exactly when there is no JV page');

@@ -45,7 +45,7 @@ import { SPORT } from '../../lib/sports/current';
 import type { TeamSlug } from '../../lib/types';
 import type { StatColumn, StatRow, StatTable } from '../teams/player-stats-view';
 import { overtimeInDoubt } from '../ui/describe-game';
-import type { GameModel, GameSideModel } from './game-view';
+import type { GameModel } from './game-view';
 
 /** The field stats a box score can show, in column order. */
 const FIELD_COLUMNS: Array<StatColumn & { key: FieldStatKey }> = [
@@ -106,7 +106,18 @@ export interface GameStatsView {
   legend: string[];
 }
 
-/** Where a side's entries come from: data/field-hockey/player-stats.json, or a test's own. */
+/**
+ * What the section reads of a game page's model: the game, its two sides, and the postseason notes a varsity page
+ * has (a JV game page, components/jv/jv-game-view.ts, has none). A varsity GameModel is one.
+ */
+export interface GameStatsModel {
+  game: GameModel['game'];
+  away: Pick<GameModel['away'], 'name' | 'team'>;
+  home: Pick<GameModel['home'], 'name' | 'team'>;
+  postseasonNotes?: readonly string[];
+}
+
+/** Where a side's entries come from: data/field-hockey/player-stats.json, data/<sport>/jv.json (lib/jv/jv.ts), or a test's own. */
 export type GameStatsLookup = (contestId: string, slug: TeamSlug) => GameStatsEntry;
 
 /** A box score line, with whether a game note added to its field stats and to its goalkeeping. */
@@ -316,13 +327,13 @@ function goalsNote(box: Entries, score: number | null): string | null {
 }
 
 /** A game whose score may leave out or include a tiebreak (see the header). */
-function tiebreakInDoubt(model: GameModel): boolean {
-  return model.game.decider === 'SO' || overtimeInDoubt(model.game) || model.postseasonNotes.includes(SHOOTOUT_NOTE);
+function tiebreakInDoubt(model: GameStatsModel): boolean {
+  return model.game.decider === 'SO' || overtimeInDoubt(model.game) || (model.postseasonNotes ?? []).includes(SHOOTOUT_NOTE);
 }
 
 function sideView(
-  model: GameModel,
-  side: GameSideModel,
+  model: GameStatsModel,
+  side: GameStatsModel['away'],
   which: 'home' | 'away',
   lookup: GameStatsLookup,
   caveat: boolean,
@@ -366,7 +377,7 @@ function sideView(
 }
 
 /** The section's model, or null when there is nothing to show: not a final, or no table on either side. */
-export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = getGameStatsEntry): GameStatsView | null {
+export function buildGameStatsView(model: GameStatsModel, lookup: GameStatsLookup = getGameStatsEntry): GameStatsView | null {
   if (model.game.status !== 'final') return null;
   // Basketball's score is its points, overtime included, and volleyball's its sets: no tiebreak sits outside either.
   const caveat = !LINE_BOX && tiebreakInDoubt(model);
