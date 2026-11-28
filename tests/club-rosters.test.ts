@@ -193,6 +193,8 @@ describe('isAnotherFormOf (a roster spelling a tie may name, owner decision 2026
     expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Gklaros-Stavropoulos')).toBe(true);
     expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Gklaros Stavropoulos')).toBe(true); // a space for the hyphen
     expect(isAnotherFormOf('Bella Jansen-Olliges', 'Isabella Jansen-Olliges')).toBe(true);
+    expect(isAnotherFormOf('Aaron (Yaozeng) Huang', 'Yaozeng Huang')).toBe(true); // a second given name in parentheses
+    expect(isAnotherFormOf('Yaozeng Huang', 'Aaron (Yaozeng) Huang')).toBe(true);
   });
 
   it('refuses another last name, and first names that are only alike', () => {
@@ -204,6 +206,9 @@ describe('isAnotherFormOf (a roster spelling a tie may name, owner decision 2026
     expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Papas-Stavropoulos')).toBe(false); // a hyphenated surname is whole
     expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Stavropoulos')).toBe(false);
     expect(isAnotherFormOf('Al Smith', 'Alexandra Smith')).toBe(false); // a short form of two letters is not one
+    expect(isAnotherFormOf('Aaron (Yaozeng) Huang', 'Kevin Huang')).toBe(false); // neither given name
+    expect(isAnotherFormOf('Aaron Huang (Yaozeng)', 'Yaozeng Huang')).toBe(false); // only straight after the first name
+    expect(isAnotherFormOf('Aaron (GK) Huang', 'Gk Huang')).toBe(false); // a note is not a name
   });
 });
 

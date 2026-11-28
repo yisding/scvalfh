@@ -412,18 +412,33 @@ export function birthYearsFromTeamName(teamName: string): number[] | null {
  * Whether a club roster's `rosterName` is another form of a high school row's name (lib/players/clubs-schema.ts
  * `rosterName`): the same last word, and first names that are a nickname pair (lib/players/nicknames.ts), one the
  * start of the other ("Ben", "Benjamin"; three letters at least), or one spelling of the other (`respelled`). A middle
- * name on either side is not compared ("Ranvijay Abhimanyu Sinha" and "Ranvijay Sinha").
+ * name on either side is not compared ("Ranvijay Abhimanyu Sinha" and "Ranvijay Sinha"); a second given name in
+ * parentheses after the first is one of the first names (`givenNames`: "Aaron (Yaozeng) Huang", "Yaozeng Huang").
  */
 export function isAnotherFormOf(rowName: string, rosterName: string): boolean {
   const row = nameTokens(rowName);
   const roster = nameTokens(rosterName);
   if (row.length < 2 || roster.length < 2) return false;
   if (!sameSurname(rowName, rosterName)) return false;
-  const [a, b] = [row[0], roster[0]];
+  return givenNames(rowName, row[0]).some((a) => givenNames(rosterName, roster[0]).some((b) => sameGivenName(a, b)));
+}
+
+function sameGivenName(a: string, b: string): boolean {
   if (a === b) return true;
   if (givenForms(a).has(b) || givenForms(b).has(a)) return true;
   if (Math.min(a.length, b.length) >= 3 && (a.startsWith(b) || b.startsWith(a))) return true;
   return respelled(a, b);
+}
+
+/**
+ * The first name, and a second given name the name itself gives in parentheses straight after it: "Aaron (Yaozeng)
+ * Huang" is Aaron and Yaozeng, so a club roster's "Yaozeng Huang" is another form of it. Only one word, and only
+ * there: "(GK)" or a parenthesised note anywhere else is not a name.
+ */
+function givenNames(name: string, first: string): string[] {
+  const m = /^\s*\S+\s+\(\s*([^()\s]+)\s*\)\s+\S/.exec(name);
+  const other = m ? nameTokens(m[1]) : [];
+  return other.length === 1 && other[0] !== first ? [first, other[0]] : [first];
 }
 
 /**
