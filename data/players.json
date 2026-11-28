@@ -35,15 +35,15 @@
   ],
   "builtBy": "scripts/build-players.ts",
   "counts": {
-    "classOfConflicts": 272,
+    "classOfConflicts": 268,
     "multiSeason": 1206,
     "multiSport": 87,
-    "nameOnly": 606,
-    "observations": 16127,
-    "players": 7880,
+    "nameOnly": 625,
+    "observations": 16146,
+    "players": 7899,
     "review": 73,
     "stintConflicts": 166,
-    "stints": 9797,
+    "stints": 9816,
     "withCareer": 7274
   },
   "notes": [
@@ -40112,6 +40112,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p17a01ab33d",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "matiasbarcelona",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Matias Barcelona",
+      "names": [
+        "Matias Barcelona"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Matias Barcelona",
+          "observations": [
+            {
+              "name": "Matias Barcelona",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -48335,16 +48381,6 @@
           "src": "enrichment",
           "team": "serra",
           "url": "https://www.hudl.com/profile/22613270"
-        },
-        {
-          "classOf": 2028,
-          "kind": "hudl",
-          "level": "varsity",
-          "season": "26-27",
-          "sport": "basketball",
-          "src": "profile",
-          "team": "serra",
-          "url": "https://www.hudl.com/profile/22613270"
         }
       ],
       "formerIds": [],
@@ -48392,12 +48428,6 @@
               "kind": "hudl",
               "rejected": true,
               "src": "enrichment",
-              "url": "https://www.hudl.com/profile/22613270"
-            },
-            {
-              "classOf": 2028,
-              "kind": "hudl",
-              "src": "profile",
               "url": "https://www.hudl.com/profile/22613270"
             }
           ],
@@ -54891,16 +54921,6 @@
           "src": "enrichment",
           "team": "serra",
           "url": "https://www.hudl.com/profile/19644116"
-        },
-        {
-          "classOf": 2027,
-          "kind": "hudl",
-          "level": "varsity",
-          "season": "26-27",
-          "sport": "basketball",
-          "src": "profile",
-          "team": "serra",
-          "url": "https://www.hudl.com/profile/19644116"
         }
       ],
       "formerIds": [],
@@ -54949,12 +54969,6 @@
               "kind": "hudl",
               "rejected": true,
               "src": "enrichment",
-              "url": "https://www.hudl.com/profile/19644116"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
               "url": "https://www.hudl.com/profile/19644116"
             }
           ],
@@ -68280,6 +68294,58 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "presentation"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p276b3d2ad9",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "blakebaldi",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Blake Baldi",
+      "names": [
+        "Blake Baldi"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Blake Baldi",
+          "observations": [
+            {
+              "name": "Blake Baldi",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19588515"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -83617,6 +83683,52 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "mountain-view"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p30c3fa629c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "rylancruz",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Rylan Cruz",
+      "names": [
+        "Rylan Cruz"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Rylan Cruz",
+          "observations": [
+            {
+              "name": "Rylan Cruz",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -133006,16 +133118,6 @@
           "src": "enrichment",
           "team": "serra",
           "url": "https://www.hudl.com/profile/19592658"
-        },
-        {
-          "classOf": 2027,
-          "kind": "hudl",
-          "level": "varsity",
-          "season": "26-27",
-          "sport": "basketball",
-          "src": "profile",
-          "team": "serra",
-          "url": "https://www.hudl.com/profile/19592658"
         }
       ],
       "formerIds": [],
@@ -133064,12 +133166,6 @@
               "kind": "hudl",
               "rejected": true,
               "src": "enrichment",
-              "url": "https://www.hudl.com/profile/19592658"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
               "url": "https://www.hudl.com/profile/19592658"
             }
           ],
@@ -147324,6 +147420,58 @@
     },
     {
       "aliases": [],
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p53d54534f6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sammcreynolds",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Sam McReynolds",
+      "names": [
+        "Sam McReynolds"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sam McReynolds",
+          "observations": [
+            {
+              "name": "Sam McReynolds",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            },
+            {
+              "classOf": 2028,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/22613270"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -150692,6 +150840,52 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "leland"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p5622aaae3f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "timostepanenkov",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Timo Stepanenkov",
+      "names": [
+        "Timo Stepanenkov"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Timo Stepanenkov",
+          "observations": [
+            {
+              "name": "Timo Stepanenkov",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -210674,6 +210868,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7900eb30da",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "caydencarlos",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Cayden Carlos",
+      "names": [
+        "Cayden Carlos"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Cayden Carlos",
+          "observations": [
+            {
+              "name": "Cayden Carlos",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -216180,15 +216420,17 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
+      "classOf": 2028,
       "classOfConflicts": [
         {
-          "classOf": 2028,
+          "classOf": 2027,
+          "kind": "hudl",
           "level": "varsity",
           "season": "26-27",
           "sport": "basketball",
-          "src": "maxpreps-roster",
-          "team": "serra"
+          "src": "enrichment",
+          "team": "serra",
+          "url": "https://www.hudl.com/profile/19593787"
         }
       ],
       "formerIds": [],
@@ -216237,24 +216479,6 @@
               "kind": "hudl",
               "rejected": true,
               "src": "enrichment",
-              "url": "https://www.hudl.com/profile/19593787"
-            },
-            {
-              "classOf": 2027,
-              "kind": "ncsa",
-              "src": "profile",
-              "url": "https://www.ncsasports.org/football-recruiting/california/san-mateo/junipero-serra-high-school3/caleb-bandel"
-            },
-            {
-              "classOf": 2027,
-              "kind": "sportsrecruits",
-              "src": "profile",
-              "url": "https://my.sportsrecruits.com/athlete/caleb_bandel"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
               "url": "https://www.hudl.com/profile/19593787"
             }
           ],
@@ -230137,7 +230361,7 @@
     },
     {
       "aliases": [],
-      "classOf": 2027,
+      "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "p84c5be72c8",
@@ -230169,12 +230393,6 @@
               "jersey": "5",
               "name": "Blake Baldi",
               "src": "maxpreps-roster"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
-              "url": "https://www.hudl.com/profile/19588515"
             }
           ],
           "positions": [],
@@ -233540,6 +233758,70 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "edison"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p86579d522f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "calebbandel",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Caleb Bandel",
+      "names": [
+        "Caleb Bandel"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Caleb Bandel",
+          "observations": [
+            {
+              "name": "Caleb Bandel",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            },
+            {
+              "classOf": 2027,
+              "kind": "ncsa",
+              "src": "profile",
+              "url": "https://www.ncsasports.org/football-recruiting/california/san-mateo/junipero-serra-high-school3/caleb-bandel"
+            },
+            {
+              "classOf": 2027,
+              "kind": "sportsrecruits",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/caleb_bandel"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19593787"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -238278,6 +238560,58 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "pescadero"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p88f8349a42",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "tillmanlangridge",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Tillman Langridge",
+      "names": [
+        "Tillman Langridge"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Tillman Langridge",
+          "observations": [
+            {
+              "name": "Tillman Langridge",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/28841374"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -263489,6 +263823,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p9777c0029d",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "roysimpson",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Roy Simpson",
+      "names": [
+        "Roy Simpson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Roy Simpson",
+          "observations": [
+            {
+              "name": "Roy Simpson",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -268131,6 +268511,52 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p9a82cdef5f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "aidenkwan",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Aiden Kwan",
+      "names": [
+        "Aiden Kwan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Aiden Kwan",
+          "observations": [
+            {
+              "name": "Aiden Kwan",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -302073,6 +302499,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "paeab2bc014",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "nathanmiller",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Nathan Miller",
+      "names": [
+        "Nathan Miller"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Nathan Miller",
+          "observations": [
+            {
+              "name": "Nathan Miller",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [
         {
@@ -303373,6 +303845,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "gunn"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "paf74aa5122",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "owenschwalbach",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Owen Schwalbach",
+      "names": [
+        "Owen Schwalbach"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Owen Schwalbach",
+          "observations": [
+            {
+              "name": "Owen Schwalbach",
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -312191,6 +312704,52 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "gilroy"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb4f45bc898",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "lukedeguzman",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Luke De Guzman",
+      "names": [
+        "Luke De Guzman"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Luke De Guzman",
+          "observations": [
+            {
+              "name": "Luke De Guzman",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -335743,6 +336302,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc3897dbac7",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "amarihill",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Amari Hill",
+      "names": [
+        "Amari Hill"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Amari Hill",
+          "observations": [
+            {
+              "name": "Amari Hill",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -337045,6 +337650,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "santa-clara"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc42a31cfcb",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "matteotopalian",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Matteo Topalian",
+      "names": [
+        "Matteo Topalian"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Matteo Topalian",
+          "observations": [
+            {
+              "name": "Matteo Topalian",
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -347387,6 +348033,47 @@
       ]
     },
     {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pcad94b393e",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jordanconey",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Jordan Coney",
+      "names": [
+        "Jordan Coney"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jordan Coney",
+          "observations": [
+            {
+              "name": "Jordan Coney",
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
       "aliases": [
         {
           "kind": "nickname",
@@ -355080,6 +355767,52 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "lick-wilmerding"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pcfa5eaffe6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "maximohaas",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Maximo Haas",
+      "names": [
+        "Maximo Haas"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Maximo Haas",
+          "observations": [
+            {
+              "name": "Maximo Haas",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -396405,6 +397138,58 @@
     },
     {
       "aliases": [],
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe9be12f22a",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "rjguldbech",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "RJ Guldbech",
+      "names": [
+        "RJ Guldbech"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "RJ Guldbech",
+          "observations": [
+            {
+              "name": "RJ Guldbech",
+              "positions": [
+                "guard"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19592658"
+            }
+          ],
+          "positions": [
+            "guard"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -400462,6 +401247,58 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "wilcox"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pec00c17b89",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "paytonlangridge",
+          "sport": "basketball",
+          "team": "serra"
+        }
+      ],
+      "name": "Payton Langridge",
+      "names": [
+        "Payton Langridge"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Payton Langridge",
+          "observations": [
+            {
+              "name": "Payton Langridge",
+              "positions": [
+                "forward"
+              ],
+              "src": "school-roster",
+              "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27"
+            },
+            {
+              "classOf": 2027,
+              "kind": "hudl",
+              "src": "profile",
+              "url": "https://www.hudl.com/profile/19644116"
+            }
+          ],
+          "positions": [
+            "forward"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "serra"
         }
       ]
     },
@@ -413407,16 +414244,6 @@
           "src": "enrichment",
           "team": "serra",
           "url": "https://www.hudl.com/profile/28841374"
-        },
-        {
-          "classOf": 2027,
-          "kind": "hudl",
-          "level": "varsity",
-          "season": "26-27",
-          "sport": "basketball",
-          "src": "profile",
-          "team": "serra",
-          "url": "https://www.hudl.com/profile/28841374"
         }
       ],
       "formerIds": [],
@@ -413464,12 +414291,6 @@
               "kind": "hudl",
               "rejected": true,
               "src": "enrichment",
-              "url": "https://www.hudl.com/profile/28841374"
-            },
-            {
-              "classOf": 2027,
-              "kind": "hudl",
-              "src": "profile",
               "url": "https://www.hudl.com/profile/28841374"
             }
           ],

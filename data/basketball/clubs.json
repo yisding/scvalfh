@@ -2564,7 +2564,7 @@
       "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
     },
     {
-      "playerId": "p1c198e2f15",
+      "playerId": "p53d54534f6",
       "name": "Sam McReynolds",
       "club": "team-esface",
       "clubTeam": "College Prep Elite",
@@ -2581,7 +2581,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2028, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
+      "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2028, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA. On 2026-11-28 MaxPreps’ Serra roster was empty and the tie moved to his row on the school’s own 2026-27 varsity list (padreathletics.com: Sam McReynolds, #33, “Jr.”, class of 2028 as Hudl says)."
     },
     {
       "playerId": "pdb450c0ae0",
@@ -5426,7 +5426,8 @@
           "quote": "TM Basketball Club 17U TM Dragon 17U (17U) | Yaozeng Huang | Class of 2029",
           "statedSchool": null,
           "statedClassYear": 2029,
-          "sourceDate": "2025-26"
+          "sourceDate": "2025-26",
+          "rosterName": "Yaozeng Huang"
         },
         {
           "url": "https://api.the-passport.com/api/players/by-player-number/124714",
@@ -5437,7 +5438,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Found 2026-11-27 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json): G365 The Mayhem 2026 (2026-03-14, Oakland): TM Basketball Club 17U TM Dragon 17U (17U, class of 2029) lists a player of this name and class year, and no other tracked school has the name. The player's own Passport record names no school; it gives the class of 2029 and a hometown of Santa Clara, CA,  in the school's county or one bordering it, so rule (b) (class year plus a hometown in the school's area) is met with the league-roster rule (one club that season, near the schools); medium. The roster was read twice and the record once, the same day."
+      "basis": "Found 2026-11-27 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json): G365 The Mayhem 2026 (2026-03-14, Oakland): TM Basketball Club 17U TM Dragon 17U (17U, class of 2029) lists a player of this name and class year, and no other tracked school has the name. The player's own Passport record names no school; it gives the class of 2029 and a hometown of Santa Clara, CA,  in the school's county or one bordering it, so rule (b) (class year plus a hometown in the school's area) is met with the league-roster rule (one club that season, near the schools); medium. The roster was read twice and the record once, the same day. Since the 2026-11-28 refresh Santa Clara's MaxPreps JV roster lists him only as “Aaron (Yaozeng) Huang” (the “Yaozeng Huang” row the tie was made on is gone; data/player-identity.json joins the two): the roster's spelling is recorded as rosterName."
     },
     {
       "playerId": "p247a03347f",
