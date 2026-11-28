@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T14:38:01.169Z",
+  "fetchedAt": "2026-11-28T04:09:48.352Z",
   "fixtures": [
     {
       "claims": {
@@ -1101,7 +1101,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T18:57:24",
+              "maxprepsModifiedOn": "2026-11-28T00:00:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1233,7 +1233,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T06:02:14",
+              "maxprepsModifiedOn": "2026-11-27T16:08:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1299,7 +1299,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T05:54:30",
+              "maxprepsModifiedOn": "2026-11-27T23:59:56",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1563,7 +1563,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T11:29:24",
+              "maxprepsModifiedOn": "2026-11-27T17:59:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1695,7 +1695,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T23:29:43",
+              "maxprepsModifiedOn": "2026-11-28T00:00:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2553,7 +2553,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:01:02",
+              "maxprepsModifiedOn": "2026-11-28T00:01:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2883,7 +2883,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T17:59:46",
+              "maxprepsModifiedOn": "2026-11-28T00:01:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3015,7 +3015,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T19:29:35",
+              "maxprepsModifiedOn": "2026-11-27T18:00:13",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3543,7 +3543,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T19:29:31",
+              "maxprepsModifiedOn": "2026-11-28T01:03:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4467,7 +4467,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T03:30:43",
+              "maxprepsModifiedOn": "2026-11-28T00:01:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -5292,7 +5292,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:39",
+              "maxprepsModifiedOn": "2026-11-28T00:01:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -6843,7 +6843,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T21:29:36",
+              "maxprepsModifiedOn": "2026-11-27T23:59:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -6909,7 +6909,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T23:59:34",
+              "maxprepsModifiedOn": "2026-11-27T23:59:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8814,12 +8814,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "South San Francisco",
-              "name": "South San Francisco",
+              "city": "Palo Alto",
+              "name": "Gunn",
               "result": null,
               "score": null,
-              "slug": "south-san-francisco",
-              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+              "slug": "gunn",
+              "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
             },
             "contestId": "9adcea12-fe77-4577-b7f0-3e03e01791f7",
             "contestTypes": {
@@ -8833,12 +8833,12 @@
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "Palo Alto",
-              "name": "Gunn",
+              "city": "South San Francisco",
+              "name": "South San Francisco",
               "result": null,
               "score": null,
-              "slug": "gunn",
-              "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -8849,12 +8849,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T16:49:55",
+              "maxprepsModifiedOn": "2026-11-28T01:03:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -9509,7 +9509,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T15:28:41",
+              "maxprepsModifiedOn": "2026-11-28T03:59:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10301,7 +10301,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:15",
+              "maxprepsModifiedOn": "2026-11-28T00:00:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10532,7 +10532,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T11:29:57",
+              "maxprepsModifiedOn": "2026-11-27T18:00:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10755,7 +10755,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:33",
+              "maxprepsModifiedOn": "2026-11-28T00:01:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11052,7 +11052,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T03:59:31",
+              "maxprepsModifiedOn": "2026-11-27T23:59:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11514,7 +11514,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T19:29:21",
+              "maxprepsModifiedOn": "2026-11-27T17:59:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12406,7 +12406,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T11:29:50",
+              "maxprepsModifiedOn": "2026-11-27T18:00:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12472,7 +12472,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T19:30:35",
+              "maxprepsModifiedOn": "2026-11-27T23:59:54",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12637,7 +12637,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T22:58:37",
+              "maxprepsModifiedOn": "2026-11-28T00:00:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12703,7 +12703,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T02:29:34",
+              "maxprepsModifiedOn": "2026-11-27T23:59:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13594,7 +13594,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:03:09",
+              "maxprepsModifiedOn": "2026-11-28T00:01:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13948,7 +13948,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T17:29:31",
+              "maxprepsModifiedOn": "2026-11-28T00:01:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -14892,7 +14892,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:12",
+              "maxprepsModifiedOn": "2026-11-28T00:00:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -14915,6 +14915,72 @@
       "published": [
         {
           "contestId": "674cde1e-bfb9-4acc-994d-f01d49dcce52"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Daly City",
+              "name": "Westmoor",
+              "result": null,
+              "score": null,
+              "slug": "westmoor",
+              "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+            },
+            "contestId": "1788f994-04ca-4daf-bf35-f3aafb257e2e",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-10",
+            "dateLocal": "2026-12-10T16:30:00",
+            "dateUtc": "2026-12-11T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T15:59:55",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-westmoor-daly-city/12-10-2026/?c=1788f994-04ca-4daf-bf35-f3aafb257e2e",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Half Moon Bay High School"
+            }
+          },
+          "ref": "1788f994-04ca-4daf-bf35-f3aafb257e2e"
+        }
+      },
+      "id": "2026-12-10-westmoor-at-half-moon-bay",
+      "published": [
+        {
+          "contestId": "1788f994-04ca-4daf-bf35-f3aafb257e2e"
         }
       ]
     },
@@ -15024,7 +15090,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:49",
+              "maxprepsModifiedOn": "2026-11-28T00:00:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16740,7 +16806,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T17:59:36",
+              "maxprepsModifiedOn": "2026-11-27T23:59:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -19499,7 +19565,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:36",
+              "maxprepsModifiedOn": "2026-11-28T00:00:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21857,7 +21923,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T08:30:28",
+              "maxprepsModifiedOn": "2026-11-28T00:01:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -22500,7 +22566,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:30:43",
+              "maxprepsModifiedOn": "2026-11-27T23:59:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -22510,7 +22576,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-carlmont-belmont/1-5-2027/?c=b24b0630-d176-4f04-beec-06b1adfdc281",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/game6e8df022d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": "Carlmont High School"
@@ -22995,7 +23061,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:24",
+              "maxprepsModifiedOn": "2026-11-28T00:01:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -23318,7 +23384,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:22",
+              "maxprepsModifiedOn": "2026-11-27T23:59:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -23990,7 +24056,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:29:50",
+              "maxprepsModifiedOn": "2026-11-27T23:59:58",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24003,7 +24069,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/south-san-francisco-high-school-south-san-francisco-ca/gam00cc0e83ed?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "South San Francisco High School"
             }
           },
           "ref": "aa17b63c-8332-4eeb-a1ca-3edba8d0fbf7"
@@ -24171,7 +24237,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:38",
+              "maxprepsModifiedOn": "2026-11-28T00:01:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24557,6 +24623,72 @@
       "published": [
         {
           "contestId": "83022129-2a41-44cd-9b88-19f9dba83030"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Daly City",
+              "name": "Westmoor",
+              "result": null,
+              "score": null,
+              "slug": "westmoor",
+              "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+            },
+            "contestId": "9ce947ca-1ad1-48c8-a187-a33f75ea6093",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-05",
+            "dateLocal": "2027-01-05T16:30:00",
+            "dateUtc": "2027-01-06T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:07",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/terra-nova-pacifica-vs-westmoor-daly-city/1-5-2027/?c=9ce947ca-1ad1-48c8-a187-a33f75ea6093",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gam77901ab0ad?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Terra Nova High School"
+            }
+          },
+          "ref": "9ce947ca-1ad1-48c8-a187-a33f75ea6093"
+        }
+      },
+      "id": "2027-01-05-westmoor-at-terra-nova",
+      "published": [
+        {
+          "contestId": "9ce947ca-1ad1-48c8-a187-a33f75ea6093"
         }
       ]
     },
@@ -26809,7 +26941,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:03:45",
+              "maxprepsModifiedOn": "2026-11-28T00:01:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27637,7 +27769,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T16:59:43",
+              "maxprepsModifiedOn": "2026-11-27T23:59:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27759,6 +27891,138 @@
       "published": [
         {
           "contestId": "ebc0fd5e-4d5e-49ee-a2b5-05fa340af723"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "contestId": "8230428c-ab36-4117-bf09-2ad3908c0d69",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-07",
+            "dateLocal": "2027-01-07T16:30:00",
+            "dateUtc": "2027-01-08T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:35",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-south-san-francisco/1-7-2027/?c=8230428c-ab36-4117-bf09-2ad3908c0d69",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Half Moon Bay High School"
+            }
+          },
+          "ref": "8230428c-ab36-4117-bf09-2ad3908c0d69"
+        }
+      },
+      "id": "2027-01-07-south-san-francisco-at-half-moon-bay",
+      "published": [
+        {
+          "contestId": "8230428c-ab36-4117-bf09-2ad3908c0d69"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "contestId": "10dc1939-975b-4bfb-91dd-a2aebe80a910",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-07",
+            "dateLocal": "2027-01-07T16:30:00",
+            "dateUtc": "2027-01-08T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": "mills",
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:01:03",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mills-millbrae-vs-terra-nova-pacifica/1-7-2027/?c=10dc1939-975b-4bfb-91dd-a2aebe80a910",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gamcba852aeb2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Mills High School"
+            }
+          },
+          "ref": "10dc1939-975b-4bfb-91dd-a2aebe80a910"
+        }
+      },
+      "id": "2027-01-07-terra-nova-at-mills",
+      "published": [
+        {
+          "contestId": "10dc1939-975b-4bfb-91dd-a2aebe80a910"
         }
       ]
     },
@@ -27902,7 +28166,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:57",
+              "maxprepsModifiedOn": "2026-11-28T00:01:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29297,7 +29561,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:30:58",
+              "maxprepsModifiedOn": "2026-11-27T23:59:47",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29310,7 +29574,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gam73cbe9d357?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "San Mateo High School"
             }
           },
           "ref": "fd6373fa-2676-4c34-b69e-1ca5d4cd5abc"
@@ -29627,7 +29891,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:19",
+              "maxprepsModifiedOn": "2026-11-27T23:59:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29850,7 +30114,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:39",
+              "maxprepsModifiedOn": "2026-11-28T00:01:20",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29916,7 +30180,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:02:50",
+              "maxprepsModifiedOn": "2026-11-28T00:00:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29982,7 +30246,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:30:28",
+              "maxprepsModifiedOn": "2026-11-27T23:59:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30822,6 +31086,72 @@
       "published": [
         {
           "contestId": "0b10523a-0c97-421a-baca-316ec5d50c0f"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": "mills",
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "contestId": "6043629c-9653-4b3d-9e02-54447098ab8a",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-12",
+            "dateLocal": "2027-01-12T15:00:00",
+            "dateUtc": "2027-01-12T23:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Daly City",
+              "name": "Westmoor",
+              "result": null,
+              "score": null,
+              "slug": "westmoor",
+              "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:47",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mills-millbrae-vs-westmoor-daly-city/1-12-2027/?c=6043629c-9653-4b3d-9e02-54447098ab8a",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gam105c72f760?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Westmoor High School"
+            }
+          },
+          "ref": "6043629c-9653-4b3d-9e02-54447098ab8a"
+        }
+      },
+      "id": "2027-01-12-mills-at-westmoor",
+      "published": [
+        {
+          "contestId": "6043629c-9653-4b3d-9e02-54447098ab8a"
         }
       ]
     },
@@ -31796,6 +32126,72 @@
       "published": [
         {
           "contestId": "917fd837-21aa-435f-bb52-80ffb87c1b32"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "contestId": "e0ceb7e0-d010-4c4a-8792-a5bafc2dc92e",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-12",
+            "dateLocal": "2027-01-12T16:30:00",
+            "dateUtc": "2027-01-13T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:01:03",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/south-san-francisco-vs-terra-nova-pacifica/1-12-2027/?c=e0ceb7e0-d010-4c4a-8792-a5bafc2dc92e",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/game2af68a37e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Terra Nova High School"
+            }
+          },
+          "ref": "e0ceb7e0-d010-4c4a-8792-a5bafc2dc92e"
+        }
+      },
+      "id": "2027-01-12-south-san-francisco-at-terra-nova",
+      "published": [
+        {
+          "contestId": "e0ceb7e0-d010-4c4a-8792-a5bafc2dc92e"
         }
       ]
     },
@@ -33030,7 +33426,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-05T11:01:43",
+              "maxprepsModifiedOn": "2026-11-28T00:01:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33043,7 +33439,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Hillsdale High School"
             }
           },
           "ref": "ce24ea39-fce5-44ee-8893-73b21e13c6fd"
@@ -33096,7 +33492,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:25",
+              "maxprepsModifiedOn": "2026-11-28T00:01:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33651,7 +34047,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:31:26",
+              "maxprepsModifiedOn": "2026-11-28T00:00:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33664,7 +34060,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gamfb83ee8fe0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "San Mateo High School"
             }
           },
           "ref": "6162946a-2884-4e0d-bdbd-67af934682ad"
@@ -33816,7 +34212,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:00:34",
+              "maxprepsModifiedOn": "2026-11-28T00:00:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35080,7 +35476,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T04:59:27",
+              "maxprepsModifiedOn": "2026-11-27T19:59:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35543,7 +35939,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:41",
+              "maxprepsModifiedOn": "2026-11-28T00:00:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35923,7 +36319,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T19:59:51",
+              "maxprepsModifiedOn": "2026-11-28T03:59:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -36658,7 +37054,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:35",
+              "maxprepsModifiedOn": "2026-11-27T23:59:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37615,7 +38011,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T16:59:53",
+              "maxprepsModifiedOn": "2026-11-27T23:59:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37681,7 +38077,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:30:09",
+              "maxprepsModifiedOn": "2026-11-28T00:01:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37747,7 +38143,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T23:29:46",
+              "maxprepsModifiedOn": "2026-11-27T20:58:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37937,7 +38333,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:47",
+              "maxprepsModifiedOn": "2026-11-28T00:01:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38798,7 +39194,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T23:29:42",
+              "maxprepsModifiedOn": "2026-11-27T20:29:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -39474,7 +39870,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:04:00",
+              "maxprepsModifiedOn": "2026-11-28T00:01:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -39720,6 +40116,72 @@
       "published": [
         {
           "contestId": "d36237d1-a1cd-40be-8645-2c702c4c143b"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "contestId": "00e8967b-4838-4bbc-bec5-aa849711c434",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-19",
+            "dateLocal": "2027-01-19T16:30:00",
+            "dateUtc": "2027-01-20T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:01:04",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-terra-nova-pacifica/1-19-2027/?c=00e8967b-4838-4bbc-bec5-aa849711c434",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Half Moon Bay High School"
+            }
+          },
+          "ref": "00e8967b-4838-4bbc-bec5-aa849711c434"
+        }
+      },
+      "id": "2027-01-19-terra-nova-at-half-moon-bay",
+      "published": [
+        {
+          "contestId": "00e8967b-4838-4bbc-bec5-aa849711c434"
         }
       ]
     },
@@ -40218,7 +40680,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-27T00:28:36",
+              "maxprepsModifiedOn": "2026-11-27T20:29:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -40730,7 +41192,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T23:58:17",
+              "maxprepsModifiedOn": "2026-11-28T03:59:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41192,7 +41654,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-12T19:13:35",
+              "maxprepsModifiedOn": "2026-11-27T23:59:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41205,7 +41667,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gamafd49b15b6?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "San Mateo High School"
             }
           },
           "ref": "b05759db-5dc2-412a-953f-7e0edf3a5321"
@@ -41423,7 +41885,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-27T00:58:27",
+              "maxprepsModifiedOn": "2026-11-27T17:28:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -41581,6 +42043,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "contestId": "13bb4918-11d3-4e52-bc35-37377494cefc",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-21",
+            "dateLocal": "2027-01-21T16:30:00",
+            "dateUtc": "2027-01-22T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": "mills",
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:01:51",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-mills-millbrae/1-21-2027/?c=13bb4918-11d3-4e52-bc35-37377494cefc",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gam04b6f15ef4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Mills High School"
+            }
+          },
+          "ref": "13bb4918-11d3-4e52-bc35-37377494cefc"
+        }
+      },
+      "id": "2027-01-21-half-moon-bay-at-mills",
+      "published": [
+        {
+          "contestId": "13bb4918-11d3-4e52-bc35-37377494cefc"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Santa Cruz",
               "name": "Harbor",
               "result": null,
@@ -41682,7 +42210,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T09:39:53",
+              "maxprepsModifiedOn": "2026-11-27T16:58:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42868,6 +43396,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "contestId": "d9236794-4262-4dd9-9208-f6c7755032f5",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-21",
+            "dateLocal": "2027-01-21T15:00:00",
+            "dateUtc": "2027-01-21T23:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Daly City",
+              "name": "Westmoor",
+              "result": null,
+              "score": null,
+              "slug": "westmoor",
+              "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:01:25",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/south-san-francisco-vs-westmoor-daly-city/1-21-2027/?c=d9236794-4262-4dd9-9208-f6c7755032f5",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gam4b8d5a16ee?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Westmoor High School"
+            }
+          },
+          "ref": "d9236794-4262-4dd9-9208-f6c7755032f5"
+        }
+      },
+      "id": "2027-01-21-south-san-francisco-at-westmoor",
+      "published": [
+        {
+          "contestId": "d9236794-4262-4dd9-9208-f6c7755032f5"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Pebble Beach",
               "name": "Stevenson",
               "result": null,
@@ -42969,7 +43563,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:04:05",
+              "maxprepsModifiedOn": "2026-11-27T23:59:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43126,7 +43720,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:39",
+              "maxprepsModifiedOn": "2026-11-28T00:01:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43671,7 +44265,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T20:28:25",
+              "maxprepsModifiedOn": "2026-11-27T20:58:47",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44224,7 +44818,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-27T08:28:24",
+              "maxprepsModifiedOn": "2026-11-27T19:59:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44315,7 +44909,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:19",
+              "maxprepsModifiedOn": "2026-11-27T23:59:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44437,6 +45031,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": "mills",
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "contestId": "b7f0b800-cf06-4f99-80a0-487a7f6f38b4",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-23",
+            "dateLocal": "2027-01-23T00:00:00",
+            "dateUtc": "2027-01-23T08:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": true,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:13",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mills-millbrae-vs-south-san-francisco/1-23-2027/?c=b7f0b800-cf06-4f99-80a0-487a7f6f38b4",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/south-san-francisco-high-school-south-san-francisco-ca/gama375566f77?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "South San Francisco High School"
+            }
+          },
+          "ref": "b7f0b800-cf06-4f99-80a0-487a7f6f38b4"
+        }
+      },
+      "id": "2027-01-23-mills-at-south-san-francisco",
+      "published": [
+        {
+          "contestId": "b7f0b800-cf06-4f99-80a0-487a7f6f38b4"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Archbishop Mitty",
               "result": null,
@@ -44538,7 +45198,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:23",
+              "maxprepsModifiedOn": "2026-11-28T00:01:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44670,7 +45330,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:40:50",
+              "maxprepsModifiedOn": "2026-11-27T23:59:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44683,7 +45343,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gam73ba3f0dcb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Terra Nova High School"
             }
           },
           "ref": "55dc2e7c-41ff-4377-8de9-5c2073243dee"
@@ -44736,7 +45396,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-27T08:29:25",
+              "maxprepsModifiedOn": "2026-11-28T03:59:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44828,7 +45488,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T11:29:28",
+              "maxprepsModifiedOn": "2026-11-27T23:59:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -45232,7 +45892,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:24",
+              "maxprepsModifiedOn": "2026-11-28T00:01:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -45298,7 +45958,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:00:54",
+              "maxprepsModifiedOn": "2026-11-28T00:00:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -45719,7 +46379,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T17:16:52",
+              "maxprepsModifiedOn": "2026-11-28T00:01:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -45732,7 +46392,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gamb38a5f419a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Terra Nova High School"
             }
           },
           "ref": "d1c1dbfd-6c77-4140-96f0-edfd97677f1c"
@@ -45891,7 +46551,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T11:30:00",
+              "maxprepsModifiedOn": "2026-11-28T00:01:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -46056,7 +46716,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-27T04:58:32",
+              "maxprepsModifiedOn": "2026-11-28T00:01:47",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -46345,7 +47005,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:03:54",
+              "maxprepsModifiedOn": "2026-11-28T00:01:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -47351,7 +48011,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T04:40:17",
+              "maxprepsModifiedOn": "2026-11-28T00:01:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -47364,7 +48024,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gam52dcb1e89e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "San Mateo High School"
             }
           },
           "ref": "13d51452-990a-4035-8fab-d8b678c92a1a"
@@ -48803,7 +49463,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:00:21",
+              "maxprepsModifiedOn": "2026-11-27T23:59:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -48869,7 +49529,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:31:24",
+              "maxprepsModifiedOn": "2026-11-28T00:00:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -49230,6 +49890,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "contestId": "b7415c40-dbd9-4eaf-8ae0-2923904a7049",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-28",
+            "dateLocal": "2027-01-28T15:00:00",
+            "dateUtc": "2027-01-28T23:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Daly City",
+              "name": "Westmoor",
+              "result": null,
+              "score": null,
+              "slug": "westmoor",
+              "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:26",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-westmoor-daly-city/1-28-2027/?c=b7415c40-dbd9-4eaf-8ae0-2923904a7049",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gamc3ddb2e600?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Westmoor High School"
+            }
+          },
+          "ref": "b7415c40-dbd9-4eaf-8ae0-2923904a7049"
+        }
+      },
+      "id": "2027-01-28-half-moon-bay-at-westmoor",
+      "published": [
+        {
+          "contestId": "b7415c40-dbd9-4eaf-8ae0-2923904a7049"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Santa Cruz",
               "name": "Harbor",
               "result": null,
@@ -49351,7 +50077,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:22",
+              "maxprepsModifiedOn": "2026-11-28T00:01:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -50622,7 +51348,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T04:34:17",
+              "maxprepsModifiedOn": "2026-11-27T23:59:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -50635,7 +51361,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gam88395c046a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Mills High School"
             }
           },
           "ref": "42e889d6-692c-4640-a3e3-f72ddb8e10bb"
@@ -50899,7 +51625,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:31",
+              "maxprepsModifiedOn": "2026-11-28T00:00:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -52262,7 +52988,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T06:28:29",
+              "maxprepsModifiedOn": "2026-11-28T00:01:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -52275,7 +53001,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gamdf68bfeeab?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Terra Nova High School"
             }
           },
           "ref": "21a6dbfd-aae1-4379-8377-f04a12b97bfd"
@@ -53409,7 +54135,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T16:59:59",
+              "maxprepsModifiedOn": "2026-11-27T23:59:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -53665,7 +54391,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-09T22:59:35",
+              "maxprepsModifiedOn": "2026-11-28T00:00:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -53678,7 +54404,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gamf29ca0c76d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Mills High School"
             }
           },
           "ref": "39edf437-c126-4cf0-a23d-1a224eb93ee5"
@@ -54173,7 +54899,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:21",
+              "maxprepsModifiedOn": "2026-11-27T23:59:20",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -55906,7 +56632,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:34:52",
+              "maxprepsModifiedOn": "2026-11-28T00:01:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -55919,7 +56645,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gam9a6084474c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "San Mateo High School"
             }
           },
           "ref": "d0df51f0-b2b8-404b-85d0-14c952a87f13"
@@ -56127,6 +56853,72 @@
       "published": [
         {
           "contestId": "a74c54c5-adb9-48db-84fc-687a6d4b120a"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "contestId": "684c310f-60f9-4fb2-a609-c6423f9e0b88",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-02",
+            "dateLocal": "2027-02-02T15:00:00",
+            "dateUtc": "2027-02-02T23:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Daly City",
+              "name": "Westmoor",
+              "result": null,
+              "score": null,
+              "slug": "westmoor",
+              "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:07",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/terra-nova-pacifica-vs-westmoor-daly-city/2-2-2027/?c=684c310f-60f9-4fb2-a609-c6423f9e0b88",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gamaf07fb572e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Westmoor High School"
+            }
+          },
+          "ref": "684c310f-60f9-4fb2-a609-c6423f9e0b88"
+        }
+      },
+      "id": "2027-02-02-terra-nova-at-westmoor",
+      "published": [
+        {
+          "contestId": "684c310f-60f9-4fb2-a609-c6423f9e0b88"
         }
       ]
     },
@@ -57004,7 +57796,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:00:45",
+              "maxprepsModifiedOn": "2026-11-28T00:00:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -57070,7 +57862,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:30:39",
+              "maxprepsModifiedOn": "2026-11-27T23:59:56",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -57436,6 +58228,72 @@
       "published": [
         {
           "contestId": "795591bb-7519-47cc-8937-f5c1644c09a7"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "contestId": "ca9d8274-9179-4fcb-b30e-b7792e05ccd0",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-04",
+            "dateLocal": "2027-02-04T16:30:00",
+            "dateUtc": "2027-02-05T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:02:56",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-south-san-francisco/2-4-2027/?c=ca9d8274-9179-4fcb-b30e-b7792e05ccd0",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/south-san-francisco-high-school-south-san-francisco-ca/gama1841518c0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "South San Francisco High School"
+            }
+          },
+          "ref": "ca9d8274-9179-4fcb-b30e-b7792e05ccd0"
+        }
+      },
+      "id": "2027-02-04-half-moon-bay-at-south-san-francisco",
+      "published": [
+        {
+          "contestId": "ca9d8274-9179-4fcb-b30e-b7792e05ccd0"
         }
       ]
     },
@@ -58063,6 +58921,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": "mills",
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "contestId": "08c7fef5-5c6c-48e1-ba93-021a3cb9af13",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-04",
+            "dateLocal": "2027-02-04T16:30:00",
+            "dateUtc": "2027-02-05T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T15:59:30",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mills-millbrae-vs-terra-nova-pacifica/2-4-2027/?c=08c7fef5-5c6c-48e1-ba93-021a3cb9af13",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gam12731f336c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Terra Nova High School"
+            }
+          },
+          "ref": "08c7fef5-5c6c-48e1-ba93-021a3cb9af13"
+        }
+      },
+      "id": "2027-02-04-mills-at-terra-nova",
+      "published": [
+        {
+          "contestId": "08c7fef5-5c6c-48e1-ba93-021a3cb9af13"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Cupertino",
               "name": "Monta Vista",
               "result": null,
@@ -58354,7 +59278,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T02:59:48",
+              "maxprepsModifiedOn": "2026-11-27T22:28:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -58940,7 +59864,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:57",
+              "maxprepsModifiedOn": "2026-11-28T00:00:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -59402,7 +60326,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:02:16",
+              "maxprepsModifiedOn": "2026-11-28T00:00:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -60360,7 +61284,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:21",
+              "maxprepsModifiedOn": "2026-11-27T23:59:58",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -60603,8 +61527,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-02-06",
-            "dateLocal": "2027-02-06T16:30:00",
-            "dateUtc": "2027-02-07T00:30:00Z",
+            "dateLocal": "2027-02-06T11:00:00",
+            "dateUtc": "2027-02-06T19:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -60624,7 +61548,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:35:26",
+              "maxprepsModifiedOn": "2026-11-28T00:01:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -60637,7 +61561,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Hillsdale High School"
             }
           },
           "ref": "a61bd3c0-41b1-4851-817b-d1262220b76d"
@@ -60713,6 +61637,72 @@
       "published": [
         {
           "contestId": "bf509de8-8173-4bd7-a55b-7081e8f92422"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "contestId": "153a4d89-fb7e-4690-91ae-db807647b56e",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-06",
+            "dateLocal": "2027-02-06T00:00:00",
+            "dateUtc": "2027-02-06T08:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "South San Francisco",
+              "name": "South San Francisco",
+              "result": null,
+              "score": null,
+              "slug": "south-san-francisco",
+              "teamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": true,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:01:20",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/south-san-francisco-vs-terra-nova-pacifica/2-6-2027/?c=153a4d89-fb7e-4690-91ae-db807647b56e",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/south-san-francisco-high-school-south-san-francisco-ca/gam6a7284e6bd?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "South San Francisco High School"
+            }
+          },
+          "ref": "153a4d89-fb7e-4690-91ae-db807647b56e"
+        }
+      },
+      "id": "2027-02-06-terra-nova-at-south-san-francisco",
+      "published": [
+        {
+          "contestId": "153a4d89-fb7e-4690-91ae-db807647b56e"
         }
       ]
     },
@@ -61312,6 +62302,72 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Palo Alto",
+              "name": "Castilleja",
+              "result": null,
+              "score": null,
+              "slug": "castilleja",
+              "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249"
+            },
+            "contestId": "272c612b-b411-42a3-8f6e-ee685f13e961",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-09",
+            "dateLocal": "2027-02-09T16:00:00",
+            "dateUtc": "2027-02-10T00:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Sunnyvale",
+              "name": "The King’s Academy",
+              "result": null,
+              "score": null,
+              "slug": "kings-academy",
+              "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T19:29:46",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/castilleja-palo-alto-vs-kings-academy-sunnyvale/2-9-2027/?c=272c612b-b411-42a3-8f6e-ee685f13e961",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/the-kings-academy-sunnyvale-ca/gam1dbe9def5f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "King's Academy High School"
+            }
+          },
+          "ref": "272c612b-b411-42a3-8f6e-ee685f13e961"
+        }
+      },
+      "id": "2027-02-09-castilleja-at-kings-academy",
+      "published": [
+        {
+          "contestId": "272c612b-b411-42a3-8f6e-ee685f13e961"
+        }
+      ]
+    },
+    {
+      "claims": {
         "official": {
           "fixture": {
             "awayName": "Christopher",
@@ -61440,7 +62496,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T17:17:29",
+              "maxprepsModifiedOn": "2026-11-27T23:59:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -61453,7 +62509,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gam729c95fb92?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Westmoor High School"
             }
           },
           "ref": "acaf7939-f08d-4ac6-ad80-07b5fe4af3ce"
@@ -61588,6 +62644,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Gunderson",
+              "result": null,
+              "score": null,
+              "slug": "gunderson",
+              "teamId": "aa94942a-3659-42ea-8c1a-463de8693f1f"
+            },
+            "contestId": "90e3a673-7d02-4956-b1bc-e3e168932c0f",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-09",
+            "dateLocal": "2027-02-09T19:00:00",
+            "dateUtc": "2027-02-10T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Andrew Hill",
+              "result": null,
+              "score": null,
+              "slug": "andrew-hill",
+              "teamId": "847b67d2-64a0-459a-b726-484e88392ba6"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T19:29:41",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gunderson-san-jose-vs-hill-san-jose/2-9-2027/?c=90e3a673-7d02-4956-b1bc-e3e168932c0f",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/andrew-hill-high-school-san-jose-ca/gambc5cdecce8?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Andrew Hill High School"
+            }
+          },
+          "ref": "90e3a673-7d02-4956-b1bc-e3e168932c0f"
+        },
         "official": {
           "fixture": {
             "awayName": "Gunderson",
@@ -61601,10 +62713,25 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "90e3a673-7d02-4956-b1bc-e3e168932c0f",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-02-09:gunderson@andrew-hill",
+              "pass": "same-date",
+              "scheduledDate": "2027-02-09",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2027-02-09:gunderson@andrew-hill"
         }
       },
-      "id": "2027-02-09-gunderson-at-andrew-hill"
+      "id": "2027-02-09-gunderson-at-andrew-hill~2",
+      "published": [
+        {
+          "contestId": "90e3a673-7d02-4956-b1bc-e3e168932c0f"
+        }
+      ]
     },
     {
       "claims": {
@@ -61646,7 +62773,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T08:45:12",
+              "maxprepsModifiedOn": "2026-11-28T02:59:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -61659,7 +62786,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Murray Field"
             }
           },
           "ref": "ae01729a-9cd6-4a40-9a6a-ca031b532025"
@@ -61712,7 +62839,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-05T11:04:24",
+              "maxprepsModifiedOn": "2026-11-28T00:00:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -61725,7 +62852,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Burlingame High School"
             }
           },
           "ref": "2f4ed71f-a256-4867-ba94-78317f112ff5"
@@ -62087,6 +63214,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Mt. Pleasant",
+              "result": null,
+              "score": null,
+              "slug": "mt-pleasant",
+              "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+            },
+            "contestId": "d895284d-2957-4428-8200-4524021126d0",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-09",
+            "dateLocal": "2027-02-09T19:00:00",
+            "dateUtc": "2027-02-10T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Overfelt",
+              "result": null,
+              "score": null,
+              "slug": "overfelt",
+              "teamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T19:30:11",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mt-pleasant-san-jose-vs-overfelt-san-jose/2-9-2027/?c=d895284d-2957-4428-8200-4524021126d0",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Overfelt (William C.) High School"
+            }
+          },
+          "ref": "d895284d-2957-4428-8200-4524021126d0"
+        },
         "official": {
           "fixture": {
             "awayName": "Mt. Pleasant",
@@ -62104,10 +63287,95 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "d895284d-2957-4428-8200-4524021126d0",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-02-09:mt-pleasant@overfelt",
+              "jv": {
+                "dateKey": "2027-02-09",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-02-09",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2027-02-09:mt-pleasant@overfelt"
         }
       },
-      "id": "2027-02-09-mt-pleasant-at-overfelt"
+      "id": "2027-02-09-mt-pleasant-at-overfelt~2",
+      "published": [
+        {
+          "contestId": "d895284d-2957-4428-8200-4524021126d0"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Piedmont",
+              "name": "Piedmont",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "653cb677-764e-4d81-9a2d-42421e439e9c"
+            },
+            "contestId": "e5020b5e-49aa-456a-a458-affee6f28880",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-09",
+            "dateLocal": "2027-02-09T19:00:00",
+            "dateUtc": "2027-02-10T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Willow Glen",
+              "result": null,
+              "score": null,
+              "slug": "willow-glen",
+              "teamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T19:29:38",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/piedmont-vs-willow-glen-san-jose/2-9-2027/?c=e5020b5e-49aa-456a-a458-affee6f28880",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Willow Glen High School"
+            }
+          },
+          "ref": "e5020b5e-49aa-456a-a458-affee6f28880"
+        }
+      },
+      "id": "2027-02-09-name:piedmont-at-willow-glen",
+      "published": [
+        {
+          "contestId": "e5020b5e-49aa-456a-a458-affee6f28880"
+        }
+      ]
     },
     {
       "claims": {
@@ -62276,6 +63544,72 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Presentation",
+              "result": null,
+              "score": null,
+              "slug": "presentation",
+              "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+            },
+            "contestId": "3ffbf121-c86a-4c8f-9367-262944a3b356",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-09",
+            "dateLocal": "2027-02-09T14:45:00",
+            "dateUtc": "2027-02-09T22:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Atherton",
+              "name": "Menlo School",
+              "result": null,
+              "score": null,
+              "slug": "menlo",
+              "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T18:59:50",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-school-atherton-vs-presentation-san-jose/2-9-2027/?c=3ffbf121-c86a-4c8f-9367-262944a3b356",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Menlo School  DO NOT USE"
+            }
+          },
+          "ref": "3ffbf121-c86a-4c8f-9367-262944a3b356"
+        }
+      },
+      "id": "2027-02-09-presentation-at-menlo",
+      "published": [
+        {
+          "contestId": "3ffbf121-c86a-4c8f-9367-262944a3b356"
+        }
+      ]
+    },
+    {
+      "claims": {
         "official": {
           "fixture": {
             "awayName": "Prospect",
@@ -62338,7 +63672,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T19:29:25",
+              "maxprepsModifiedOn": "2026-11-28T03:29:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62503,7 +63837,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T04:36:14",
+              "maxprepsModifiedOn": "2026-11-28T00:00:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62516,7 +63850,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Half Moon Bay High School"
             }
           },
           "ref": "82f7b5ad-3525-47eb-9512-9ca4c3ede424"
@@ -62635,7 +63969,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T12:20:12",
+              "maxprepsModifiedOn": "2026-11-28T03:29:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62648,7 +63982,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "JV at 7:00 PM"
+              "text": "Abraham Lincoln High School"
             }
           },
           "ref": "294d1bc1-e54b-4ab1-85d1-80c8af3aba2c"
@@ -62965,7 +64299,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-10T14:16:53",
+              "maxprepsModifiedOn": "2026-11-28T03:30:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62978,7 +64312,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Evergreen Valley High School"
             }
           },
           "ref": "697c0203-a639-490d-ab3f-82f902386fa3"
@@ -63064,7 +64398,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:00:38",
+              "maxprepsModifiedOn": "2026-11-27T23:59:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -63196,7 +64530,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T16:59:53",
+              "maxprepsModifiedOn": "2026-11-27T23:59:26",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -63262,7 +64596,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-04T01:44:09",
+              "maxprepsModifiedOn": "2026-11-28T03:30:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -63275,7 +64609,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Pioneer High"
             }
           },
           "ref": "7abfbabe-4ea6-4674-a268-f510e72e4797"
@@ -64947,6 +66281,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Half Moon Bay",
+              "name": "Half Moon Bay",
+              "result": null,
+              "score": null,
+              "slug": "half-moon-bay",
+              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
+            },
+            "contestId": "916cd984-b372-4092-9ae0-44c670eae96d",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-11",
+            "dateLocal": "2027-02-11T16:30:00",
+            "dateUtc": "2027-02-12T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "ocean",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T16:00:30",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/half-moon-bay-vs-terra-nova-pacifica/2-11-2027/?c=916cd984-b372-4092-9ae0-44c670eae96d",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/game6e50e1133?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Terra Nova High School"
+            }
+          },
+          "ref": "916cd984-b372-4092-9ae0-44c670eae96d"
+        }
+      },
+      "id": "2027-02-11-half-moon-bay-at-terra-nova",
+      "published": [
+        {
+          "contestId": "916cd984-b372-4092-9ae0-44c670eae96d"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "James Lick",
               "result": null,
@@ -65081,7 +66481,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T00:59:39",
+              "maxprepsModifiedOn": "2026-11-27T23:59:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -65246,7 +66646,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T02:29:34",
+              "maxprepsModifiedOn": "2026-11-28T00:00:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -65437,7 +66837,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T17:01:14",
+              "maxprepsModifiedOn": "2026-11-28T00:00:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -66248,7 +67648,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T19:29:36",
+              "maxprepsModifiedOn": "2026-11-28T00:00:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -66413,7 +67813,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T00:29:42",
+              "maxprepsModifiedOn": "2026-11-28T00:00:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },

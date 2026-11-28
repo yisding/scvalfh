@@ -1,12 +1,12 @@
 {
   "counts": {
-    "errors": 2,
+    "errors": 3,
     "goalkeepers": 0,
     "players": 23,
     "teams": 123,
     "teamsWithStats": 3
   },
-  "fetchedAt": "2026-11-26T05:40:39.357Z",
+  "fetchedAt": "2026-11-28T04:12:41.408Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
       "name": "Gunn",
@@ -45,7 +45,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -66,7 +66,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -87,7 +87,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -108,7 +108,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "09beba1b-240a-45b8-aa6e-281decefa275",
       "name": "Mountain View",
@@ -129,7 +129,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -150,7 +150,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -171,7 +171,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -192,7 +192,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -213,7 +213,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -234,7 +234,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef",
       "name": "MacDonald",
@@ -255,7 +255,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
@@ -276,7 +276,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
@@ -297,7 +297,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -318,7 +318,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
       "name": "Wilcox",
@@ -339,7 +339,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "games": [
         {
           "contestId": "d182ccf5-3868-4567-bc41-b8cf2c4d3939",
@@ -606,7 +606,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
       "name": "Gilroy",
@@ -627,7 +627,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
       "name": "Leigh",
@@ -648,7 +648,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
       "name": "Leland",
@@ -669,7 +669,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
@@ -690,7 +690,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
       "name": "Pioneer",
@@ -711,7 +711,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
       "name": "Westmont",
@@ -732,7 +732,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -753,7 +753,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
       "name": "Christopher",
@@ -774,7 +774,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
@@ -795,7 +795,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
@@ -816,7 +816,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -837,7 +837,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
@@ -879,7 +879,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -900,7 +900,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "name": "Ann Sobrato",
@@ -921,7 +921,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
@@ -942,7 +942,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -963,7 +963,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
@@ -984,7 +984,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
@@ -1005,7 +1005,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
@@ -1026,7 +1026,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
       "name": "Mt. Pleasant",
@@ -1047,7 +1047,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
@@ -1068,7 +1068,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
       "name": "Prospect",
@@ -1089,7 +1089,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
@@ -1110,7 +1110,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
@@ -1131,7 +1131,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
@@ -1152,7 +1152,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
@@ -1173,7 +1173,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
@@ -1194,7 +1194,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -1215,7 +1215,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius",
@@ -1236,7 +1236,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
@@ -1257,7 +1257,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249",
       "name": "Castilleja",
@@ -1278,7 +1278,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
@@ -1299,7 +1299,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
       "name": "The King’s Academy",
@@ -1320,7 +1320,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
       "name": "Menlo School",
@@ -1341,7 +1341,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b",
       "name": "Notre Dame Belmont",
@@ -1362,7 +1362,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
       "name": "Presentation",
@@ -1383,7 +1383,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "27d82a51-2b44-492e-b2cf-114730027de3",
       "name": "Sacred Heart Prep",
@@ -1404,7 +1404,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aabdd1c5-8378-485d-91d3-75827048bf70",
       "name": "Eastside College Prep",
@@ -1425,7 +1425,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
       "name": "Harker",
@@ -1446,7 +1446,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79",
       "name": "Mercy Burlingame",
@@ -1467,7 +1467,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e5d23742-6a32-47e1-b752-d16dfcf77119",
       "name": "Notre Dame San Jose",
@@ -1488,7 +1488,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
       "name": "Pinewood",
@@ -1509,7 +1509,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
       "name": "Priory",
@@ -1530,7 +1530,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
       "name": "Aragon",
@@ -1551,7 +1551,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
       "name": "Burlingame",
@@ -1572,7 +1572,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb",
       "name": "Carlmont",
@@ -1593,7 +1593,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6",
       "name": "Hillsdale",
@@ -1614,7 +1614,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
       "name": "Menlo-Atherton",
@@ -1635,7 +1635,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
       "name": "Sequoia",
@@ -1656,7 +1656,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a35649f4-23d3-4986-bf27-8b517521d021",
       "name": "Woodside",
@@ -1677,7 +1677,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "410b7fd0-8dfd-4912-9563-468206e7e75a",
       "name": "Capuchino",
@@ -1698,7 +1698,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f78ab2a3-b319-43a1-9bc4-29b19ec87189",
       "name": "El Camino",
@@ -1719,7 +1719,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "700a8b1d-c836-44f0-9b24-c255c186d926",
       "name": "Half Moon Bay",
@@ -1740,7 +1740,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c88b0d9e-48e6-4dc5-86b0-274410c5823a",
       "name": "Jefferson",
@@ -1782,7 +1782,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "55853f70-2545-4bfe-a107-4142093e929a",
       "name": "San Mateo",
@@ -1803,7 +1803,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3",
       "name": "South San Francisco",
@@ -1824,7 +1824,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34",
       "name": "Terra Nova",
@@ -1845,7 +1845,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d4260a64-7216-4919-8a8f-678899199df8",
       "name": "Westmoor",
@@ -1866,7 +1866,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
       "name": "Aptos",
@@ -1887,7 +1887,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
       "name": "Harbor",
@@ -1908,7 +1908,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1b3a82da-476f-4a32-9652-c238da7764c7",
       "name": "San Lorenzo Valley",
@@ -1929,7 +1929,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
       "name": "Santa Cruz",
@@ -1950,7 +1950,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
       "name": "Scotts Valley",
@@ -1971,7 +1971,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
       "name": "Soquel",
@@ -1992,7 +1992,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
       "name": "Everett Alvarez",
@@ -2013,7 +2013,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
       "name": "Hollister",
@@ -2034,7 +2034,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "name": "Monterey",
@@ -2055,7 +2055,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
       "name": "Pacific Collegiate",
@@ -2076,7 +2076,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "games": [
         {
           "contestId": "138da5fe-40c6-4f16-985f-a68a0639e6dc",
@@ -2223,7 +2223,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "name": "Salinas",
@@ -2244,7 +2244,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
       "name": "Watsonville",
@@ -2265,7 +2265,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a",
       "name": "Alisal",
@@ -2286,7 +2286,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
       "name": "Carmel",
@@ -2307,7 +2307,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
       "name": "Gonzales",
@@ -2328,7 +2328,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "617febb3-8e69-4ba1-b05b-fd886614be21",
       "name": "Monte Vista Christian",
@@ -2349,7 +2349,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d",
       "name": "Pajaro Valley",
@@ -2370,7 +2370,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "41b63d87-2795-4ed9-9264-e6d7e19c5971",
       "name": "Soledad",
@@ -2391,7 +2391,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
       "name": "Stevenson",
@@ -2412,7 +2412,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
       "name": "Greenfield",
@@ -2433,7 +2433,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
       "name": "King City",
@@ -2454,7 +2454,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
       "name": "North Monterey County",
@@ -2475,7 +2475,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "711dfc65-3eb0-4f0f-99c0-30dd2695be34",
       "name": "North Salinas",
@@ -2496,7 +2496,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "games": [
         {
           "contestId": "950c041a-12aa-4bad-8d7f-116f51ee3a9a",
@@ -2942,7 +2942,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c8520624-627b-4936-a892-fdc7ccdefea7",
       "name": "Seaside",
@@ -2963,7 +2963,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "340cc25b-8dce-4532-a929-4b8358283933",
       "name": "Anzar",
@@ -2984,7 +2984,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a474e593-af4b-4140-92d5-ec9221920834",
       "name": "Marina",
@@ -3005,7 +3005,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7fc8780b-014e-4870-a43f-e2f444a853bc",
       "name": "Monterey Bay Academy",
@@ -3025,7 +3025,7 @@
       "warnings": []
     },
     {
-      "error": null,
+      "error": "player stats: Field Stats / S. Gonzalo-Apolinario: steals is 0 here, undefined in another table",
       "fetchedAt": "2026-11-26T05:40:39.357Z",
       "lastUpdated": null,
       "maxprepsTeamId": "5041038f-a821-4209-90af-196b6d756e48",
@@ -3033,7 +3033,7 @@
       "players": [],
       "slug": "pacific-grove",
       "statsUrl": "https://www.maxpreps.com/ca/pacific-grove/pacific-grove-breakers/soccer/girls/winter/stats/",
-      "status": "none",
+      "status": "carried-forward",
       "teamId": "5041038f-a821-4209-90af-196b6d756e48",
       "totals": {
         "field": {},
@@ -3047,7 +3047,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
       "name": "Santa Catalina",
@@ -3068,7 +3068,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
       "name": "St. Francis",
@@ -3089,7 +3089,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e9a91bc8-5999-4321-9e21-d6cdc8aafcb2",
       "name": "York",
@@ -3110,7 +3110,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "49ac8af1-0277-4a5c-bb79-7da46365404e",
       "name": "Cristo Rey San Jose Jesuit",
@@ -3131,7 +3131,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36",
       "name": "Design Tech",
@@ -3152,7 +3152,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1d8a7dd7-de9b-48f0-8ac9-69bdef86e0f3",
       "name": "KIPP San Jose Collegiate",
@@ -3173,7 +3173,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ba2378a8-680c-4329-9eb0-a2b2b68583f7",
       "name": "Latino College Preparatory Academy",
@@ -3194,7 +3194,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "96a51c1e-ee84-4714-a22a-f8dd898b5789",
       "name": "Oceana",
@@ -3215,7 +3215,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
       "name": "The Nueva School",
@@ -3236,7 +3236,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
       "name": "Thomas More",
@@ -3257,7 +3257,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2b6a30cf-2b1d-4cee-92b8-da73dd638fe8",
       "name": "ACE Charter",
@@ -3278,7 +3278,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4db6f5a7-a1c2-4dbc-bf61-2dd36a9e0865",
       "name": "Cindy Avitia",
@@ -3299,7 +3299,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f690420-95b8-4d69-8130-ba161d4ef703",
       "name": "KIPP Esperanza",
@@ -3320,7 +3320,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4953d6fd-9e58-4bbe-9210-7f34b8bcbac5",
       "name": "KIPP Navigate College Prep",
@@ -3341,7 +3341,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fdc893f7-899d-4fef-87c7-225a20013de7",
       "name": "Summit Preparatory",
@@ -3362,7 +3362,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
       "name": "Summit Shasta",
@@ -3383,7 +3383,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-26T05:40:39.357Z",
+      "fetchedAt": "2026-11-28T04:12:41.408Z",
       "lastUpdated": null,
       "maxprepsTeamId": "03aa8fd2-9ca7-4853-bd33-9391806cd3c3",
       "name": "Summit Tahoma",
