@@ -36,14 +36,14 @@
   "builtBy": "scripts/build-players.ts",
   "counts": {
     "classOfConflicts": 268,
-    "multiSeason": 1206,
+    "multiSeason": 1209,
     "multiSport": 87,
-    "nameOnly": 625,
-    "observations": 16146,
-    "players": 7899,
+    "nameOnly": 688,
+    "observations": 16212,
+    "players": 7962,
     "review": 73,
     "stintConflicts": 166,
-    "stints": 9816,
+    "stints": 9882,
     "withCareer": 7274
   },
   "notes": [
@@ -955,6 +955,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "leigh"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0073d3d9c6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "marilyntalamantes",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Marilyn Talamantes",
+      "names": [
+        "Marilyn Talamantes"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Marilyn Talamantes",
+          "observations": [
+            {
+              "name": "Marilyn Talamantes",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -13606,6 +13647,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p088b6781a3",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kiratennant",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Kira Tennant",
+      "names": [
+        "Kira Tennant"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kira Tennant",
+          "observations": [
+            {
+              "name": "Kira Tennant",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -19577,6 +19659,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "sobrato"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0c41d53bbc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "hannahchan",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Hannah Chan",
+      "names": [
+        "Hannah Chan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Hannah Chan",
+          "observations": [
+            {
+              "name": "Hannah Chan",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -62813,6 +62936,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p24964797b6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "brookelesniak",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Brooke Lesniak",
+      "names": [
+        "Brooke Lesniak"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Brooke Lesniak",
+          "observations": [
+            {
+              "name": "Brooke Lesniak",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -71591,6 +71755,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "la-jolla-country-day"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p299a134237",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "areyasolgarcia",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Areya-Sol Garcia",
+      "names": [
+        "Areya-Sol Garcia"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Areya-Sol Garcia",
+          "observations": [
+            {
+              "name": "Areya-Sol Garcia",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -85790,6 +85995,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p31d3dffe91",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "alyssahan",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Alyssa Han",
+      "names": [
+        "Alyssa Han"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Alyssa Han",
+          "observations": [
+            {
+              "name": "Alyssa Han",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -87334,6 +87580,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p32a776039d",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "lilytoscanini",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Lily Toscanini",
+      "names": [
+        "Lily Toscanini"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lily Toscanini",
+          "observations": [
+            {
+              "name": "Lily Toscanini",
+              "positions": [
+                "Winger"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Winger"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -88765,6 +89057,47 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "menlo"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p338a240e9b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "graysenflores",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Graysen Flores",
+      "names": [
+        "Graysen Flores"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Graysen Flores",
+          "observations": [
+            {
+              "name": "Graysen Flores",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -109495,6 +109828,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3f04a4ff57",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jemmaschwind",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Jemma Schwind",
+      "names": [
+        "Jemma Schwind"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jemma Schwind",
+          "observations": [
+            {
+              "name": "Jemma Schwind",
+              "positions": [
+                "Goalie"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Goalie"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -109736,6 +110115,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "la-jolla"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3f22098e82",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sadieknox",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Sadie Knox",
+      "names": [
+        "Sadie Knox"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sadie Knox",
+          "observations": [
+            {
+              "name": "Sadie Knox",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -110593,6 +111013,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "homestead"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3f8cfb8f96",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "laurenlima",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Lauren Lima",
+      "names": [
+        "Lauren Lima"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lauren Lima",
+          "observations": [
+            {
+              "name": "Lauren Lima",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -113049,6 +113510,52 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "san-marcos"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p40f6c01d05",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sophiawilson",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Sophia Wilson",
+      "names": [
+        "Sophia Wilson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sophia Wilson",
+          "observations": [
+            {
+              "name": "Sophia Wilson",
+              "positions": [
+                "Outside back"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Outside back"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -124823,6 +125330,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p4702604343",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "johannamurilloreyes",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Johanna Murillo Reyes",
+      "names": [
+        "Johanna Murillo Reyes"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Johanna Murillo Reyes",
+          "observations": [
+            {
+              "name": "Johanna Murillo Reyes",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -129377,6 +129925,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "macdonald"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p49bc6b0b73",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "vivianchomentowski",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Vivian Chomentowski",
+      "names": [
+        "Vivian Chomentowski"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Vivian Chomentowski",
+          "observations": [
+            {
+              "name": "Vivian Chomentowski",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -150585,6 +151174,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p55fd6d2a13",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "violetrodriguez",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Violet Rodriguez",
+      "names": [
+        "Violet Rodriguez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Violet Rodriguez",
+          "observations": [
+            {
+              "name": "Violet Rodriguez",
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -169019,6 +169649,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6048be949f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sakurakapla",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Sakura Kapla",
+      "names": [
+        "Sakura Kapla"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sakura Kapla",
+          "observations": [
+            {
+              "name": "Sakura Kapla",
+              "positions": [
+                "Attacking Mid/Foward"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Attacking Mid/Foward"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -170996,6 +171672,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6170faa255",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "eleanorborek",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Eleanor Borek",
+      "names": [
+        "Eleanor Borek"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Eleanor Borek",
+          "observations": [
+            {
+              "name": "Eleanor Borek",
+              "positions": [
+                "Center Back/CDM"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Center Back/CDM"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -172100,6 +172822,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "tamalpais"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6204382fc3",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "taylorericson",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Taylor Ericson",
+      "names": [
+        "Taylor Ericson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Taylor Ericson",
+          "observations": [
+            {
+              "name": "Taylor Ericson",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -177989,6 +178752,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "glendora"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p652dd861d6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kendalfahey",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Kendal Fahey",
+      "names": [
+        "Kendal Fahey"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kendal Fahey",
+          "observations": [
+            {
+              "name": "Kendal Fahey",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -189872,6 +190676,52 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "p6befc2172b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "amaiyamagan",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Amaiya Magan",
+      "names": [
+        "Amaiya Magan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Amaiya Magan",
+          "observations": [
+            {
+              "name": "Amaiya Magan",
+              "positions": [
+                "Outside back"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Outside back"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "p6c03dc346f",
       "identifiers": [
         {
@@ -198974,6 +199824,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p71d1f3d769",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "anaghatendulkar",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Anagha Tendulkar",
+      "names": [
+        "Anagha Tendulkar"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Anagha Tendulkar",
+          "observations": [
+            {
+              "name": "Anagha Tendulkar",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -204444,6 +205335,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p74c15721ff",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jalinawatkins",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Jalina Watkins",
+      "names": [
+        "Jalina Watkins"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jalina Watkins",
+          "observations": [
+            {
+              "name": "Jalina Watkins",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -206076,6 +207008,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p75f89cf951",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "nadamasri",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Nada Masri",
+      "names": [
+        "Nada Masri"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Nada Masri",
+          "observations": [
+            {
+              "name": "Nada Masri",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -206266,6 +207239,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "westmoor"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p762bb9f6e4",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "evapogrowski",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Eva Pogrowski",
+      "names": [
+        "Eva Pogrowski"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Eva Pogrowski",
+          "observations": [
+            {
+              "name": "Eva Pogrowski",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -210731,6 +211745,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p78d0f75311",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "luciaforney",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Lucia Forney",
+      "names": [
+        "Lucia Forney"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lucia Forney",
+          "observations": [
+            {
+              "name": "Lucia Forney",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -211414,6 +212469,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "half-moon-bay"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7964a86472",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kaitlynchao",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Kaitlyn Chao",
+      "names": [
+        "Kaitlyn Chao"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kaitlyn Chao",
+          "observations": [
+            {
+              "name": "Kaitlyn Chao",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -217370,6 +218466,52 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "lincoln"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7cd28624b2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kaliventura",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Kali Ventura",
+      "names": [
+        "Kali Ventura"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kali Ventura",
+          "observations": [
+            {
+              "name": "Kali Ventura",
+              "positions": [
+                "Defender"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Defender"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -226053,6 +227195,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p81e645a37c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "carmellailes",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Carmella Iles",
+      "names": [
+        "Carmella Iles"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Carmella Iles",
+          "observations": [
+            {
+              "name": "Carmella Iles",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -231451,6 +232634,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "yerba-buena"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p856c01416b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "giabelforte",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Gia Belforte",
+      "names": [
+        "Gia Belforte"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Gia Belforte",
+          "observations": [
+            {
+              "name": "Gia Belforte",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -238081,6 +239305,31 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "sacred-heart-cathedral"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Alice Forster",
+          "observations": [
+            {
+              "name": "Alice Forster",
+              "positions": [
+                "Midfielder"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Midfielder"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -243947,6 +245196,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8bd8943f1a",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sashaalexandrasynanska",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Sasha (Alexandra) Synanska",
+      "names": [
+        "Sasha (Alexandra) Synanska"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sasha (Alexandra) Synanska",
+          "observations": [
+            {
+              "name": "Sasha (Alexandra) Synanska",
+              "positions": [
+                "Center Midfielder"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Center Midfielder"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -244668,6 +245963,47 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "la-costa-canyon"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8c4689f8f2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "marwachraibi",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Marwa Chraibi",
+      "names": [
+        "Marwa Chraibi"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Marwa Chraibi",
+          "observations": [
+            {
+              "name": "Marwa Chraibi",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -245549,6 +246885,52 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "aragon"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8cd8da8308",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "whitneyoreilly",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Whitney O'Reilly",
+      "names": [
+        "Whitney O'Reilly"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Whitney O'Reilly",
+          "observations": [
+            {
+              "name": "Whitney O'Reilly",
+              "positions": [
+                "Goal Keeper"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Goal Keeper"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -261149,6 +262531,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p95768dfa50",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ardendumbleton",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Arden Dumbleton",
+      "names": [
+        "Arden Dumbleton"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Arden Dumbleton",
+          "observations": [
+            {
+              "name": "Arden Dumbleton",
+              "positions": [
+                "Outside back"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Outside back"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -263652,6 +265080,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "monta-vista"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p974b021c18",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sawyermccormick",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Sawyer McCormick",
+      "names": [
+        "Sawyer McCormick"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sawyer McCormick",
+          "observations": [
+            {
+              "name": "Sawyer McCormick",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -268395,6 +269864,52 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "independence"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p9a3a914084",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "francescarinaudo",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Francesca Rinaudo",
+      "names": [
+        "Francesca Rinaudo"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Francesca Rinaudo",
+          "observations": [
+            {
+              "name": "Francesca Rinaudo",
+              "positions": [
+                "Wing/Outside back"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Wing/Outside back"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -287493,6 +289008,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa5ef344716",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ruthiesaralatterman",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Ruthie (Sara) Latterman",
+      "names": [
+        "Ruthie (Sara) Latterman"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ruthie (Sara) Latterman",
+          "observations": [
+            {
+              "name": "Ruthie (Sara) Latterman",
+              "positions": [
+                "Midfielder"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Midfielder"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -291097,6 +292658,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa7fedf70da",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jessidunn",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Jessi Dunn",
+      "names": [
+        "Jessi Dunn"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jessi Dunn",
+          "observations": [
+            {
+              "name": "Jessi Dunn",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -292140,6 +293742,52 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "mercy-burlingame"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa8e525953a",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "stellawoo",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Stella Woo",
+      "names": [
+        "Stella Woo"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Stella Woo",
+          "observations": [
+            {
+              "name": "Stella Woo",
+              "positions": [
+                "Midfield"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Midfield"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -293649,6 +295297,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "marin-catholic"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa9b8651d56",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "lylabradley",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Lyla Bradley",
+      "names": [
+        "Lyla Bradley"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lyla Bradley",
+          "observations": [
+            {
+              "name": "Lyla Bradley",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -297052,6 +298741,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "bishops"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pab89432bc0",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "skyestevenson",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Skye Stevenson",
+      "names": [
+        "Skye Stevenson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Skye Stevenson",
+          "observations": [
+            {
+              "name": "Skye Stevenson",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -313584,6 +315314,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb5a6b4a56c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "leannahinn",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Leanna Hinn",
+      "names": [
+        "Leanna Hinn"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Leanna Hinn",
+          "observations": [
+            {
+              "name": "Leanna Hinn",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -317642,6 +319413,52 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "sage-creek"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb8d26b75f5",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "madisonmunoz",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Madison Munoz",
+      "names": [
+        "Madison Munoz"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Madison Munoz",
+          "observations": [
+            {
+              "name": "Madison Munoz",
+              "positions": [
+                "Winger/Striker"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Winger/Striker"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -324541,6 +326358,47 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pbcb92887e2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "lucydunton",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Lucy Dunton",
+      "names": [
+        "Lucy Dunton"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Lucy Dunton",
+          "observations": [
+            {
+              "name": "Lucy Dunton",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pbcbe4d4135",
       "identifiers": [
         {
@@ -326834,6 +328692,47 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "milpitas"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pbde71fcf1c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "charlottehanna",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Charlotte Hanna",
+      "names": [
+        "Charlotte Hanna"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Charlotte Hanna",
+          "observations": [
+            {
+              "name": "Charlotte Hanna",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -333667,6 +335566,31 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "sacred-heart-cathedral"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Francesca Johnson",
+          "observations": [
+            {
+              "name": "Francesca Johnson",
+              "positions": [
+                "Forward"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Forward"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -333846,6 +335770,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "bella-vista"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc1f12f3b40",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "alyssaromersa",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Alyssa Romersa",
+      "names": [
+        "Alyssa Romersa"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Alyssa Romersa",
+          "observations": [
+            {
+              "name": "Alyssa Romersa",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -339494,6 +341459,47 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pc5277ec341",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "livstevenson",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Liv Stevenson",
+      "names": [
+        "Liv Stevenson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Liv Stevenson",
+          "observations": [
+            {
+              "name": "Liv Stevenson",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pc5299a60cc",
       "identifiers": [
         {
@@ -340513,6 +342519,47 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pc60e04923f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "savanahklemish",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Savanah Klemish",
+      "names": [
+        "Savanah Klemish"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Savanah Klemish",
+          "observations": [
+            {
+              "name": "Savanah Klemish",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pc62200d570",
       "identifiers": [
         {
@@ -341087,6 +343134,47 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "gilroy"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc67a9377d6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "madelinepipal",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Madeline Pipal",
+      "names": [
+        "Madeline Pipal"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Madeline Pipal",
+          "observations": [
+            {
+              "name": "Madeline Pipal",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },
@@ -347738,6 +349826,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pca9f73c879",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kensihorn",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Kensi Horn",
+      "names": [
+        "Kensi Horn"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kensi Horn",
+          "observations": [
+            {
+              "name": "Kensi Horn",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -349510,6 +351639,52 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "los-gatos"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pcba4b75d8f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "contessacarrizalez",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Contessa Carrizalez",
+      "names": [
+        "Contessa Carrizalez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Contessa Carrizalez",
+          "observations": [
+            {
+              "name": "Contessa Carrizalez",
+              "positions": [
+                "Defense/Defense"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Defense/Defense"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -357578,6 +359753,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd0fb181764",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "avalindner",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Ava Lindner",
+      "names": [
+        "Ava Lindner"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ava Lindner",
+          "observations": [
+            {
+              "name": "Ava Lindner",
+              "positions": [
+                "Wing/striker"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Wing/striker"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -357821,6 +360042,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "palo-alto"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd13e8a8f03",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "caitlynyuen",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Caitlyn Yuen",
+      "names": [
+        "Caitlyn Yuen"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Caitlyn Yuen",
+          "observations": [
+            {
+              "name": "Caitlyn Yuen",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -359491,6 +361753,47 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "stevenson"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd1f8f69fef",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ellamichon",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Ella Michon",
+      "names": [
+        "Ella Michon"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Ella Michon",
+          "observations": [
+            {
+              "name": "Ella Michon",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -369282,6 +371585,52 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "mission-bay"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd7f49445ad",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "francescaroland",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Francesca Roland",
+      "names": [
+        "Francesca Roland"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Francesca Roland",
+          "observations": [
+            {
+              "name": "Francesca Roland",
+              "positions": [
+                "Goalie"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Goalie"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -391273,6 +393622,52 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe653285d87",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jordynbernabe",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Jordyn Bernabe",
+      "names": [
+        "Jordyn Bernabe"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jordyn Bernabe",
+          "observations": [
+            {
+              "name": "Jordyn Bernabe",
+              "positions": [
+                "Winger/Striker"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Winger/Striker"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -397538,6 +399933,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe9fadc02a2",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "naomieyre",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Naomi Eyre",
+      "names": [
+        "Naomi Eyre"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Naomi Eyre",
+          "observations": [
+            {
+              "name": "Naomi Eyre",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -399695,6 +402131,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "canyon-crest-academy"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "peb2e979395",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "billiemccann",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Billie McCann",
+      "names": [
+        "Billie McCann"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Billie McCann",
+          "observations": [
+            {
+              "name": "Billie McCann",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
         }
       ]
     },
@@ -406423,6 +408900,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pef08d5279c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "deyasandoval",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Deya Sandoval",
+      "names": [
+        "Deya Sandoval"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Deya Sandoval",
+          "observations": [
+            {
+              "name": "Deya Sandoval",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -408447,6 +410965,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pf0910ef2b6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "milanabrockmeyer",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ],
+      "name": "Milana Brockmeyer",
+      "names": [
+        "Milana Brockmeyer"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Milana Brockmeyer",
+          "observations": [
+            {
+              "name": "Milana Brockmeyer",
+              "src": "school-roster",
+              "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "hillsdale"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -409198,6 +411757,31 @@
             "Defender"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Margaret Manuel",
+          "observations": [
+            {
+              "name": "Margaret Manuel",
+              "positions": [
+                "Midfield"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Midfield"
+          ],
+          "season": "26-27",
           "sport": "soccer",
           "team": "sacred-heart-cathedral"
         }
@@ -410482,6 +413066,52 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "capuchino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pf1c0cbe2bc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "tatianamarta",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Tatiana Marta",
+      "names": [
+        "Tatiana Marta"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Tatiana Marta",
+          "observations": [
+            {
+              "name": "Tatiana Marta",
+              "positions": [
+                "Midfield"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Midfield"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -412391,6 +415021,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pf3463fad63",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "campbellflores",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Campbell Flores",
+      "names": [
+        "Campbell Flores"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Campbell Flores",
+          "observations": [
+            {
+              "name": "Campbell Flores",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -414087,6 +416758,52 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "saint-francis"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pf45ed26520",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "simonemyers",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
+        }
+      ],
+      "name": "Simone Myers",
+      "names": [
+        "Simone Myers"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Simone Myers",
+          "observations": [
+            {
+              "name": "Simone Myers",
+              "positions": [
+                "Winger/Striker"
+              ],
+              "src": "school-roster",
+              "url": "https://shcathletics.com/sports/girls-soccer/roster"
+            }
+          ],
+          "positions": [
+            "Winger/Striker"
+          ],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "sacred-heart-cathedral"
         }
       ]
     },
@@ -431479,6 +434196,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "evergreen-valley"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pfe6c9e74c5",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "bellaagnone",
+          "sport": "soccer",
+          "team": "scotts-valley"
+        }
+      ],
+      "name": "Bella Agnone",
+      "names": [
+        "Bella Agnone"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Bella Agnone",
+          "observations": [
+            {
+              "name": "Bella Agnone",
+              "src": "school-roster",
+              "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "scotts-valley"
         }
       ]
     },

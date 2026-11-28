@@ -547,7 +547,12 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "siprep.org/athletics/teams lists Field Hockey as plain text with no team page; /athletics/schedules/field-hockey redirects to /athletics. No roster found."
+      }
     },
     {
       "coaches": [
@@ -625,7 +630,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sfhsathletics.com/sports/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-2027 Women's Varsity Field Hockey Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site of Saint Francis HS (Mountain View)."
+      }
     },
     {
       "coaches": [
@@ -990,7 +1004,12 @@
           "title": "lahstalon.org — The Talon (Los Altos HS paper), 'Badminton loses to Saratoga in rematch', Apr 22 2025: 'On the girls' side, singles 3 player sophomore Naomi Ohye won ",
           "url": "https://lahstalon.org/badminton-loses-to-saratoga-in-rematch/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lahs.mvla.net/field-hockey: program info, coaches, tryout/practice schedule; no player list. No separate athletics site found."
+      }
     },
     {
       "coaches": [
@@ -1030,7 +1049,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://gowarriors.net/sports/field-hockey/roster",
+        "season": "2026",
+        "seasonEvidence": "2026 Varsity Field Hockey Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site; season labeled by single year (2026)."
+      }
     },
     {
       "coaches": [
@@ -1053,7 +1081,12 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "fremonthsathletics.org/field-hockey (linked from fhs.fuhsd.org): coaches, schedule, fundraiser links; no roster."
+      }
     },
     {
       "coaches": [
@@ -1409,7 +1442,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+        "season": "2026",
+        "seasonEvidence": "Rosters: Varsity (no season label); the page’s schedule reads “Printable Schedule updated on 9/9/26”",
+        "listsPlayers": true,
+        "note": "The school’s own field hockey page lists 15 varsity players by name and year (read 2026-11-28). The PlayOn site cupertinoathletics.com answers “School Not Found”."
+      }
     },
     {
       "coaches": [
@@ -1817,7 +1859,12 @@
           "title": "The Epitaph (Homestead's student paper), Nov 2, 2026: 'Varsity girls field hockey pulls ahead of FHS Firebirds 3-2', naming two sophomores",
           "url": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hhs.fuhsd.org/student-life/athletics links only to hhsathletics.com, which is the HHS Athletic Boosters Google Site (not a roster). homesteadathletics.com is a different (Indiana) school."
+      }
     },
     {
       "coaches": [],
@@ -1826,7 +1873,12 @@
       ],
       "players": [],
       "slug": "mitty",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mitty.com/athletics/field-hockey: program description and head coach; rosters only in the AMHS Athletics mobile app."
+      }
     },
     {
       "coaches": [
@@ -3089,7 +3141,16 @@
           "title": "losgatosathletics.org — official school athletics page",
           "url": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster%20(also%20listed%20on%20the%20school%20JV%20roster;%20kept%20as%20Varsity)"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Field Hockey - 2026-2027",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from lghs.net."
+      }
     },
     {
       "coaches": [
@@ -3165,7 +3226,16 @@
           "title": "maxpreps.com — Palo Alto JV Field Hockey Roster (2026-27), sportSeasonId fae4fc22-6de6-47ae-972d-e290b0ec31ef, school verified.",
           "url": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/field-hockey/jv/roster/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.palyathletics.com/sport/field%20hockey/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Field Hockey - 2026-2027",
+        "listsPlayers": true,
+        "note": "Mascot Media site palyathletics.com."
+      }
     },
     {
       "coaches": [
@@ -3220,7 +3290,16 @@
           "title": "presentationhs.org — 2026-27 Varsity Field Hockey Roster PDF, 'Updated 8/25/2026'.",
           "url": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Field_Hockey_Roster.pdf",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Varsity Field Hockey Roster",
+        "listsPlayers": true,
+        "note": "School-hosted PDF on presentationhs.org, linked as 'Team Roster' from https://www.presentationhs.org/athletics/schedules/field-hockey (Field Hockey (Varsity)). Updated 8/25/2026."
+      }
     },
     {
       "coaches": [
@@ -3578,7 +3657,16 @@
           "title": "schsathletics.com",
           "url": "https://www.schsathletics.com/varsity/field-hockey/roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.schsathletics.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey - Varsity - Roster; season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Home Campus site schsathletics.com ('Santa Clara - GO BRUINS!', Santa Clara, CA 95051)."
+      }
     },
     {
       "coaches": [
@@ -3654,7 +3742,16 @@
           "title": "shs-athletics.com — Saratoga HS athletics site (shs-athletics.com, Home Campus) player page: 'Kaylee Stone / Grade 9' (current grade; no team rows listed yet, and she is ",
           "url": "https://www.shs-athletics.com/player/kaylee-stone"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.shs-athletics.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey - Varsity - Roster; season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from saratogahigh.org."
+      }
     },
     {
       "coaches": [
@@ -4062,7 +4159,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lynbrookvikings.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Official HomeCampus site linked from lhs.fuhsd.org."
+      }
     },
     {
       "coaches": [
@@ -4344,7 +4450,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.matadorathletics.org/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Official HomeCampus site linked from mvhs.fuhsd.org."
+      }
     },
     {
       "coaches": [
@@ -4388,7 +4503,16 @@
           "title": "branham.cuhsd.org Fall Sports page: Field Hockey, Varsity Coach Erin Palmer, JV Coach Madison Palmer.",
           "url": "https://branham.cuhsd.org/apps/pages/fall_sports"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://docs.google.com/document/d/1sipmyHSTzIoC0hW3FuhuT5qq-Hx2Tp_UlN_gF_ZG6_g/edit?usp=sharing",
+        "season": "2026-27",
+        "seasonEvidence": "BRANHAM GIRLS VARSITY FIELD HOCKEY 2026-2027 ROSTER (dated 9/11/2026)",
+        "listsPlayers": true,
+        "note": "A Google Doc, linked as the varsity roster from the school’s Fall Sports page (branham.cuhsd.org/apps/pages/fall_sports); 17 players, re-read 2026-11-28 (the source this team has cited since 2026-10-03)."
+      }
     },
     {
       "coaches": [
@@ -4424,7 +4548,12 @@
           "title": "chs.gilroyunified.org CHS Coaches and Schedules: Field Hockey Varsity Coach Dani Hemeon, JV Coach Kimberly Johansen; no roster.",
           "url": "https://chs.gilroyunified.org/athletics/chs-coaches-and-schedules"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chs.gilroyunified.org/athletics and CHS Coaches and Schedules page list coaches, GoFan, BSN store only; no athletics site or roster found; searches return MaxPreps/Gilroy Dispatch."
+      }
     },
     {
       "coaches": [
@@ -4460,7 +4589,12 @@
           "title": "gilroyhs.gilroyunified.org Mustang Athletics: Schedules and Coaches Contact Information, Field Hockey Coach Adam Gemar; no roster.",
           "url": "https://gilroyhs.gilroyunified.org/mustang-athletics"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gilroyhs.gilroyunified.org/mustang-athletics lists coach emails, HomeCampus login (registration), GoFan, BSN store; no public athletics site or roster page found."
+      }
     },
     {
       "coaches": [
@@ -4490,7 +4624,12 @@
           "title": "MaxPreps team staff page (26-27 coach names)",
           "url": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/field-hockey/staff/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "District school site leigh.cuhsd.org athletics/fall sports pages list coaches and links only (boosters, webstore, GoFan); no athletics site or roster page found; web searches return only MaxPreps/SI."
+      }
     },
     {
       "coaches": [
@@ -4978,7 +5117,16 @@
           "title": "MaxPreps 2025-26 JV roster (18 rows, same careerids): grade for 10 of the players.",
           "url": "https://www.maxpreps.com/ca/san-jose/leland-chargers/field-hockey/jv/25-26/roster/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lelandathletics.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Official HomeCampus site linked from leland.sjusd.org."
+      }
     },
     {
       "coaches": [
@@ -5044,7 +5192,16 @@
           "title": "willowglenathletics.com 2026-27 coaches: Jackie Rodriguez, Head Coach; Maya Amann, Assistant Coach.",
           "url": "https://www.willowglenathletics.com/varsity/field-hockey/coaches"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.willowglenathletics.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Official HomeCampus site linked from wghs.sjusd.org."
+      }
     },
     {
       "coaches": [
@@ -5084,7 +5241,12 @@
           "title": "delmar.cuhsd.org Sports Teams overview: Field Hockey - Varsity & JV, Brandon Cedillo Mora; two teams (Varsity and JV), no roster.",
           "url": "https://delmar.cuhsd.org/apps/pages/teamsports"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "District school site delmar.cuhsd.org athletics/fall sports pages list coaches and links only (boosters, webstore, GoFan); no athletics site or roster page found; web searches return only MaxPreps/SI. (delmar.cuhsd.org/apps/pages/teamsports lists coach emails only)."
+      }
     },
     {
       "coaches": [
@@ -5201,7 +5363,12 @@
           "title": "liveoak.mhusd.org Athletics > Coaches: Field Hockey, Jennifer Allen; no roster.",
           "url": "https://liveoak.mhusd.org/athletics/coaches"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "liveoak.mhusd.org/athletics (BVAL, forms, clearance; 'Athletics Website' item points to GoFan); no roster page found."
+      }
     },
     {
       "coaches": [
@@ -5231,7 +5398,12 @@
           "title": "prospect.cuhsd.org Fall Sports: Field Hockey (Varsity & JV), Jason Potmesil; no roster.",
           "url": "https://prospect.cuhsd.org/apps/pages/FallSports"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "District school site prospect.cuhsd.org athletics/fall sports pages list coaches and links only (boosters, webstore, GoFan); no athletics site or roster page found; web searches return only MaxPreps/SI. prospect.cuhsd.org links prospectpanthersports.com only via an olinesports spirit store; that domain does not resolve. prospectathletics.com/.org is an unrelated Alaska basketball org."
+      }
     },
     {
       "coaches": [
@@ -5266,7 +5438,12 @@
           "title": "silvercreekhigh.esuhsd.org Fall Sports: Field Hockey is listed (official start Aug 7, 2026); no roster and no coach name.",
           "url": "https://silvercreekhigh.esuhsd.org/athletics/fall-sports"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "silvercreekhigh.esuhsd.org/athletics/fall-sports mentions field hockey but no roster/team link; silvercreekathletics.com is a different school (Dragons)."
+      }
     },
     {
       "coaches": [
@@ -5301,7 +5478,16 @@
           "title": "sobratoathletics.olinesports.com coaches: Field Hockey - Girls Varsity, Michael Sanchez, Head Coach.",
           "url": "https://sobratoathletics.olinesports.com/coaches.php"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sobratoathletics.olinesports.com/roster.php?sport=582",
+        "season": null,
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "Official site sobratoathletics.com (OlineSports), 'Field Hockey - Girls Varsity' roster; page shows no season/year label."
+      }
     },
     {
       "coaches": [
@@ -5349,7 +5535,16 @@
           "title": "westmont.cuhsd.org Fall Sports Overview: Field Hockey Varsity Trish Casillas, JV Haley Romero Morin; no roster.",
           "url": "https://westmont.cuhsd.org/apps/pages/index.jsp?uREC_ID=445578&type=d&pREC_ID=2147622"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.westmontathletics.com/sport/field%20hockey/girls?tab=roster",
+        "season": "2024-25",
+        "seasonEvidence": "Varsity Girls Field Hockey ROSTER, school year selector 2024-2025",
+        "listsPlayers": true,
+        "note": "Official Bound site. Default 2026-2027 and 2025-2026 school years show an empty roster; newest year with players is 2024-2025 (selected via the page's school-year dropdown)."
+      }
     },
     {
       "coaches": [
@@ -5373,7 +5568,12 @@
           "title": "carmelhigh.carmelunified.org — Carmel High School athletics coaches directory: Field Hockey Varsity, Greg Wolf; Field Hockey JV, TBA. No roster.",
           "url": "https://carmelhigh.carmelunified.org/athletics/coaches-directory"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "carmelhigh.carmelunified.org/athletics (coaches directory, calendar, schedules, registration) has no team/roster pages; carmelhs.digitalsports.com is Carmel NY; only MaxPreps/mbaypreps found."
+      }
     },
     {
       "coaches": [],
@@ -5405,7 +5605,12 @@
         }
       ],
       "slug": "greenfield",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "greenfieldhs.org/athletics and /sports-schedule have no field hockey team or roster page."
+      }
     },
     {
       "coaches": [
@@ -5539,7 +5744,12 @@
           "title": "benitolink.com — \"Baler alumna takes reins of field hockey program\", BenitoLink 2026-09-25 (new head coach Samantha Moran; captains, left defender/left forward/midfielder, players to watch)",
           "url": "https://benitolink.com/baler-alumna-takes-reins-of-field-hockey-program/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Hollister High (formerly San Benito HS) hhs.sanbenitohsd.gov/athletics lists coach contacts and a calendar (field hockey contact: AD); schedules are a Google Drive folder; no roster page found."
+      }
     },
     {
       "coaches": [],
@@ -5553,7 +5763,12 @@
       },
       "players": [],
       "slug": "monterey",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School's Bound athletics site page https://www.mhsgodores.com/sport/field%20hockey/girls/?tab=roster exists (found via search) but returns HTTP 403 Cloudflare block to curl and fetch, so roster could not be opened/verified. montereyhigh.mpusd.net athletics pages have no roster."
+      }
     },
     {
       "coaches": [
@@ -6083,7 +6298,16 @@
           "title": "salinascowboys.com — Teagan Dickison Elias, Grade 11, 2026 Field Hockey. Added 2026-10-12.",
           "url": "https://www.salinascowboys.com/player/teagan-dickison-elias"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.salinascowboys.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Official HomeCampus site linked from shs.salinasuhsd.org."
+      }
     },
     {
       "coaches": [],
@@ -6097,7 +6321,12 @@
       },
       "players": [],
       "slug": "santa-catalina",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "santacatalina.org upper school athletics overview/calendar has no team or roster pages; only third-party (MileSplit, school newspaper) found."
+      }
     },
     {
       "coaches": [
@@ -6121,7 +6350,12 @@
           "title": "athletics.stevensonschool.org — Field Hockey page: head coach Rosanna McCormick; no roster",
           "url": "https://athletics.stevensonschool.org/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "stevensonschool.org/teams/field-hockey/ is a program page (coach bio, titles) with no roster; schedules/scores page has no roster link."
+      }
     },
     {
       "coaches": [
@@ -6434,7 +6668,12 @@
           "title": "awhspitch.com — The Pitch (Archie Williams HS paper) staff profile 'Anna Burch, Reporter' (URL slug annie-burch): 'Anna is a sophomore in her first year of journalism",
           "url": "https://awhspitch.com/staff_profile/annie-burch/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "archiewilliams.tamdistrict.org/athletics/team-pages/field-hockey lists coaches and season start date (Aug 10, 2026) only; district Google Sites athletics page links back to it; no roster."
+      }
     },
     {
       "coaches": [
@@ -6901,7 +7140,12 @@
           "title": "redwoodbark.org — Redwood Bark, 'Girls' varsity field hockey rolls to victory against Convent', Sept 30 2025, photo caption: 'Three players, including juniors Phoebe Mi",
           "url": "https://redwoodbark.org/102291/sports/girls-varsity-field-hockey-rolls-to-victory-against-convent/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "redwood.tamdistrict.org/athletics/team-landing-pages/field-hockey lists co-head coaches and 2026 tryout info only; no roster."
+      }
     },
     {
       "coaches": [
@@ -6953,7 +7197,12 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/mill-valley/tamalpais-red-tailed-hawks/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "tamalpais.tamdistrict.org/athletics/team-pages/field-hockey lists coaches and links to a team-run Google Site (sites.google.com/view/tam-field-hockey) which has schedule/coaches/records pages but no roster page."
+      }
     },
     {
       "coaches": [
@@ -7101,7 +7350,12 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/berkeley/berkeley-yellowjackets/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "BHS athletics Google Site (sites.google.com/berkeley.net/bhsathletics) field hockey page shows coaches and team photos (Varsity 2025 etc.), no player list."
+      }
     },
     {
       "coaches": [
@@ -7217,7 +7471,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "http://m.lwhs.org/team-detail?Team=211343",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey - Varsity, Girls, 2026 - 2027",
+        "listsPlayers": true,
+        "note": "The school’s mobile team page (drawn by script; read in a browser 2026-11-28), 15 players; the desktop team page (lwhs.org/athletics/teams-detail-page/~athletics-team-id/136) shows only the coach."
+      }
     },
     {
       "coaches": [
@@ -7256,7 +7519,12 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-francisco/university-red-devils/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sfuhs.org/athletics/teams/girls-varsity-field-hockey is a program page (league, facilities, coaches, accolades) with no roster."
+      }
     },
     {
       "coaches": [
@@ -7496,7 +7764,15 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/kentfield/marin-catholic-wildcats/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.marincatholic.org/athletics/athletics/team-pages?team=120936&fromId=148925&BlockId=146300",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey - Varsity, season selector 2026 - 2027 selected",
+        "listsPlayers": true
+      }
     },
     {
       "coaches": [
@@ -7520,7 +7796,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-francisco/convent-of-the-sacred-heart-cubs/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://conventstuarthall-ca.sites.ballfrog.com/teams/8803",
+        "season": "2026",
+        "seasonEvidence": "CHS Field Hockey - V Roster, season selector 2026",
+        "listsPlayers": true,
+        "note": "Official schedules & rosters site (Ballfrog) linked from sacredsf.org/athletics/high-school. Selector also has 2025, 2024."
+      }
     },
     {
       "coaches": [
@@ -7596,7 +7881,16 @@
           "title": "MaxPreps team home page (staff list)",
           "url": "https://www.maxpreps.com/ca/san-rafael/marin-academy-wildcats/field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-10-03",
+        "url": "https://www.ma.org/athletics/athletic-teams/team-details/~athletics-team-id/175",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey - Varsity Girls; schedule shows games from Aug 18 2026 to Oct 26 2026 (MCAL Playoffs)",
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (partial): The school's team page lists 18 current players, but only by first name, last initial and class year, so they cannot be matched to MaxPreps and are not listed here."
+      }
     },
     {
       "coaches": [],
@@ -7607,7 +7901,12 @@
       ],
       "players": [],
       "slug": "bella-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "bellavista.sanjuan.edu/athletics and sports-by-season list field hockey without a team/roster page."
+      }
     },
     {
       "coaches": [],
@@ -7618,7 +7917,12 @@
       ],
       "players": [],
       "slug": "chico",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chs.chicousd.org Field Hockey page lists coaches and 2026-27 tryout info only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -7628,7 +7932,12 @@
       ],
       "players": [],
       "slug": "corning",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "corninghs.org/Athletics/Fall-Sports lists field hockey coaches only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -7639,7 +7948,12 @@
       ],
       "players": [],
       "slug": "davis",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "dshs.djusd.net/athletics has no field hockey team or roster page; only news articles found."
+      }
     },
     {
       "coaches": [],
@@ -7650,7 +7964,12 @@
       ],
       "players": [],
       "slug": "lassen",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lassenhigh.org has only a sports calendar; no team/roster pages found."
+      }
     },
     {
       "coaches": [],
@@ -7661,7 +7980,12 @@
       ],
       "players": [],
       "slug": "pleasant-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pvhs.chicousd.org/Athletics/Rosters/ lists 'Field Hockey - Varsity' but it links to a Google Drive file (not an on-site roster); field hockey page lists coaches and a team Google Site."
+      }
     },
     {
       "coaches": [],
@@ -7672,7 +7996,12 @@
       ],
       "players": [],
       "slug": "chaparral",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chs.tvusd.k12.ca.us/athletics and fall-sports pages have no field hockey roster; chaparralathletics.com is a different school (Cowboys); only NFHS/ScoreBook Live found."
+      }
     },
     {
       "coaches": [],
@@ -7698,7 +8027,12 @@
         }
       ],
       "slug": "edison",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "edisonchargers.com athletic information/fall sports pages list coach only; the team-run edisonfieldhockey.com (not school domain) has no roster page."
+      }
     },
     {
       "coaches": [],
@@ -7709,7 +8043,16 @@
       ],
       "players": [],
       "slug": "fountain-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.fvhsathletics.com/sport/girls-field-hockey/roster?team=7813003&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official PlayOn site roster page https://www.fvhsathletics.com/sport/girls-field-hockey/roster?team=7813003&year=2026-2027 shows '2026-2027 roster' with coaches but 'No roster for 2026-2027 Varsity Girls Field Hockey'; earlier years not available (Team Roster Not Found)."
+      }
     },
     {
       "coaches": [],
@@ -8065,7 +8408,16 @@
           "title": "gohsathletics.com — Great Oak HS athletics (gohsathletics.com, SportsEngine) field hockey roster page, JUNIOR VARSITY FIELD HOCKEY 2026: 'Oliveri, Alexa (9)'. (Listed on ",
           "url": "https://www.gohsathletics.com/fieldhockey-roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.gohsathletics.com/fieldhockey-roster",
+        "season": "2026",
+        "seasonEvidence": "Varsity Field Hockey 2026",
+        "listsPlayers": true,
+        "note": "Official GOHS athletics site (SportsEngine). Same page also lists JV 2026 and 2025/2024 rosters below; count is the Varsity 2026 list only."
+      }
     },
     {
       "coaches": [],
@@ -8106,7 +8458,16 @@
           "title": "hbfieldhockey.com — HBHS field hockey program site (hbfieldhockey.com, coach Cathy Van Doornum), \"Varsity Team 2026\": \"Louella (Lulu) Guevera Senior\"; same page header li",
           "url": "https://www.hbfieldhockey.com/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.hbfieldhockey.com/",
+        "season": "2026",
+        "seasonEvidence": "Official Fall 2026 Team / Varsity:",
+        "listsPlayers": true,
+        "note": "Program-run site (site123, booster-run) linked as the field hockey site from the school girls-sports page on hboilers.com; not on the school domain. hboilers.com itself has only coach info."
+      }
     },
     {
       "coaches": [],
@@ -8227,7 +8588,16 @@
       },
       "players": [],
       "slug": "marina",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-26",
+        "url": "https://www.marinavikingsathletics.org/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (listed): The school’s athletics site lists these 20 players on its 2026-27 varsity field hockey roster, by name only."
+      }
     },
     {
       "coaches": [],
@@ -8348,7 +8718,16 @@
       },
       "players": [],
       "slug": "newport-harbor",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-26",
+        "url": "http://newportharborfieldhockey.com/?page_id=193",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (listed): The team’s own site, which the school’s athletics page links, lists these 20 players as its 2026 varsity team, by name, two marked as goalkeepers. It is the preseason list (posted August 2026), so a player who joined or left later may differ."
+      }
     },
     {
       "coaches": [],
@@ -8359,7 +8738,12 @@
       ],
       "players": [],
       "slug": "temecula-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "tvhsgoldenbearathletics.com (PlayOn official site) has no field hockey team at all; tvhs.tvusd.k12.ca.us Fall Sports page has no field hockey content. Only CIF-SS/Facebook/X rosters found (not acceptable)."
+      }
     },
     {
       "coaches": [],
@@ -8401,7 +8785,16 @@
         }
       ],
       "slug": "bishops",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.bishops.com/athletics/athletic-details-page/~athletics-team-id/199",
+        "season": "2026",
+        "seasonEvidence": "Field Hockey (Varsity) page; schedule on same page runs Aug 8 2026 - Nov 14 2026; roster class years 2027-2030",
+        "listsPlayers": true,
+        "note": "Finalsite school page with Schedule/Roster/Coaches. Roster itself has no season label; season inferred from the 2026 schedule on the same page and grad years."
+      }
     },
     {
       "coaches": [],
@@ -8428,7 +8821,16 @@
         }
       ],
       "slug": "canyon-hills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.chrattlers.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -8890,7 +9292,16 @@
           "title": "cchsdonsathletics.com — Cathedral Catholic athletics (cchsdonsathletics.com) varsity field hockey roster, season selector 2026-27: 'Campbell Trocha Grade 11'. (Site stores gr",
           "url": "https://www.cchsdonsathletics.com/varsity/field-hockey/roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.cchsdonsathletics.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons. Old Sidearm URL cchsdonsathletics.com/sports/field-hockey/roster now 404s."
+      }
     },
     {
       "coaches": [],
@@ -8902,7 +9313,16 @@
       ],
       "players": [],
       "slug": "la-jolla",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.ljvikings.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons. Old URL ljvikings.com/teams/2238808/... now 404s."
+      }
     },
     {
       "coaches": [],
@@ -8937,7 +9357,16 @@
           "title": "sandiegouniontribune.com — San Diego Union-Tribune 2026 field hockey preview (Aug 11 2026), 'Players to watch': 'Maddie Stiles, Mission Bay, Sr.'",
           "url": "https://www.sandiegouniontribune.com/2026/08/11/nations-leading-scorer-makes-bishops-the-team-to-beat-in-field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.mbbuccaneers.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -9231,7 +9660,16 @@
           "title": "sandiegouniontribune.com — San Diego Union-Tribune 2026 field hockey preview (Aug 11 2026), 'Players to watch': 'Sammy Ippolito, Scripps Ranch, Sr.'",
           "url": "https://www.sandiegouniontribune.com/2026/08/11/nations-leading-scorer-makes-bishops-the-team-to-beat-in-field-hockey/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.srfalcons.org/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -9518,7 +9956,16 @@
           "title": "chscaptains.com — Clairemont athletics site (chscaptains.com, formerly Chieftains) field hockey news post of Sept 10 2025 (2025-26 season, 8/25/25 game vs Otay Ranch): ",
           "url": "https://www.chscaptains.com/fh-news/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.chscaptains.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons. School renamed Chieftains -> Captains; old chschieftains.com domain no longer resolves to a site."
+      }
     },
     {
       "coaches": [],
@@ -9545,7 +9992,16 @@
         }
       ],
       "slug": "la-jolla-country-day",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.ljcdsathletics.com/sport/field%20hockey/girls?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Field Hockey ... 2026-2027 SCHOOL YEAR",
+        "listsPlayers": true,
+        "note": "Official LJCDS athletics site (Mascot Media); year selector available."
+      }
     },
     {
       "coaches": [],
@@ -9578,7 +10034,16 @@
         }
       ],
       "slug": "mira-mesa",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.mmmarauders.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -9590,7 +10055,16 @@
       ],
       "players": [],
       "slug": "patrick-henry",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.phpatriots.net/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -9830,7 +10304,16 @@
           "title": "timesofsandiego.com — Times of San Diego, Jan 6 2026 (2025 fall season honors): \"Girls field hockey All-Eastern League first team: Molly Curran (11). Second team: Avery Mac",
           "url": "https://timesofsandiego.com/sports/2026/01/06/the-honor-roll-pointer-athletes-coach-grab-honors/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.plhsfightingpointers.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -9899,7 +10382,16 @@
         }
       ],
       "slug": "university-city",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.uchscenturions.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -10122,7 +10614,16 @@
         }
       ],
       "slug": "canyon-crest-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.ravensfieldhockey.org/team-information.html",
+        "season": "2025",
+        "seasonEvidence": "2025 Season Varsity Roster",
+        "listsPlayers": true,
+        "note": "Program-run Weebly site, linked as the Field Hockey site from the school athletics site ccaravensathletics.com/sports.html; not on school domain. ccaravensathletics.com has no rosters. Newest season shown is 2025."
+      }
     },
     {
       "coaches": [],
@@ -10134,7 +10635,12 @@
       ],
       "players": [],
       "slug": "la-costa-canyon",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "No school-hosted field hockey page found; lcc.sduhsd.net and fieldhockey.lccmab.org (booster site, reportedly 2018 roster) did not resolve from this session. Only MaxPreps/NFHS/Hudl results."
+      }
     },
     {
       "coaches": [],
@@ -10357,7 +10863,12 @@
         }
       ],
       "slug": "mt-carmel",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mtcarmel.powayusd.com Athletics > Teams page has only an Instagram link and a team photo (JPG) for field hockey; no roster."
+      }
     },
     {
       "coaches": [],
@@ -10532,7 +11043,12 @@
           "title": "sandiegouniontribune.com — San Diego Union-Tribune, June 19 2026 (end of 2025-26): \"Sienna Little, 16, a Rancho Bernardo High sophomore, is her field hockey team’s captain\"",
           "url": "https://www.sandiegouniontribune.com/2026/06/19/miss-rancho-bernardo-scholarship-pageant-to-award-three-titles-on-saturday/"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ranchobernardo.powayusd.com Field Hockey page shows only coach Katy Sirota. Official DigitalSports site 69392.digitalsports.com Girls Varsity Field Hockey roster: \"Team roster is empty\" for 2026-27 and the three prior years."
+      }
     },
     {
       "coaches": [],
@@ -10544,7 +11060,12 @@
       ],
       "players": [],
       "slug": "san-marcos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sanmarcoshigh.smusd.org/field-hockey has coach/tryout info only, no roster. Team site smknightsfieldhockey.com could not be reached from this session (DNS blocked)."
+      }
     },
     {
       "coaches": [],
@@ -10600,7 +11121,16 @@
         }
       ],
       "slug": "torrey-pines",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://torreypinesfieldhockey.com/home/varsity-roster/",
+        "season": null,
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "Program-run WordPress site, linked as the Field Hockey team website from the school athletics site (sites.google.com/sduhsd.net/tpathletics/team-websites); not on school domain. Page shows no season (footer (c) 2026 only). Official DigitalSports site 58074.digitalsports.com varsity roster is empty for 2026-27 and prior years."
+      }
     },
     {
       "coaches": [],
@@ -10612,7 +11142,12 @@
       ],
       "players": [],
       "slug": "del-norte",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "delnorte.powayusd.com Field Hockey page has 2026 tryout info and coach Tucker Warford only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -10623,7 +11158,12 @@
       ],
       "players": [],
       "slug": "fallbrook",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "fallbrookhs.org sports contact/athletics pages list coach Melissa Palmer only; old fallbrookhs.fuhsd.net Field Hockey page could not be reached (DNS). Team Google site fallbrookfieldhockeyteam is old/unofficial."
+      }
     },
     {
       "coaches": [],
@@ -10885,7 +11425,12 @@
         }
       ],
       "slug": "mission-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mvhs.vistausd.org Athletics and Fall Sports pages list field hockey coach only; no roster or team site link."
+      }
     },
     {
       "coaches": [],
@@ -10897,7 +11442,16 @@
       ],
       "players": [],
       "slug": "poway",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://powayfieldhockey.com/teams/",
+        "season": "2026",
+        "seasonEvidence": "VARSITY 2026",
+        "listsPlayers": true,
+        "note": "Program/booster-run site (PHS Field Hockey Booster Board), linked as Girls Field Hockey from the school page powayhigh.powayusd.com/apps/pages/teams-seasons; not on school domain. Page also lists JUNIOR VARSITY 2026."
+      }
     },
     {
       "coaches": [],
@@ -10908,7 +11462,12 @@
       ],
       "players": [],
       "slug": "rancho-buena-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Official DigitalSports site 69391.digitalsports.com Girls Varsity Field Hockey roster: \"Team roster is empty\" for 2026-27 and the three prior years. rbvathletics.com did not resolve."
+      }
     },
     {
       "coaches": [],
@@ -11166,7 +11725,12 @@
         }
       ],
       "slug": "san-dieguito-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School athletics Google site links to sdafoundation.com/fieldhockey/ (program site: home, program info, coaches, 2025 schedule); no roster page."
+      }
     },
     {
       "coaches": [],
@@ -11178,7 +11742,12 @@
       ],
       "players": [],
       "slug": "valley-center",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "vchs.vcpusd.org athletics page (JS-rendered) shows no field hockey content/roster; no team site found. Only NFHS/news."
+      }
     },
     {
       "coaches": [],
@@ -11212,7 +11781,12 @@
         }
       ],
       "slug": "escondido",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ehscougars.com (Edlio) athletics pages have no field hockey page or roster."
+      }
     },
     {
       "coaches": [],
@@ -11224,7 +11798,12 @@
       ],
       "players": [],
       "slug": "mission-hills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "missionhillshigh.smusd.org/field-hockey has coach info only. A team Weebly site missionhillgfh.weebly.com shows \"Roster 2026 Varsity\" (20 players) but is not on the school domain and not linked from the school page, so not counted."
+      }
     },
     {
       "coaches": [],
@@ -11235,7 +11814,16 @@
       ],
       "players": [],
       "slug": "sage-creek",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sagecreek.homecampus.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster page, level dropdown \"Varsity\" selected, year dropdown \"2026-27\" selected",
+        "listsPlayers": true,
+        "note": "Home Campus athletics site; year selector offers older seasons."
+      }
     },
     {
       "coaches": [],
@@ -11246,7 +11834,12 @@
       ],
       "players": [],
       "slug": "san-pasqual",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sphsgoldeneagles.org Field Hockey page has only the staff tab (coach Rosene Shaw); no roster."
+      }
     },
     {
       "coaches": [],
@@ -11287,7 +11880,16 @@
         }
       ],
       "slug": "vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sites.google.com/site/vhsfieldhockeygopanthers/team-roster",
+        "season": "2025",
+        "seasonEvidence": "2025 VARSITY ROSTER",
+        "listsPlayers": true,
+        "note": "Program-run Google Site, linked as the field hockey Website from the school Fall Sports page vhs.vistausd.org/athletics/fall-sports; not on school domain. Newest season shown is 2025 (also 2024, 2023 below)."
+      }
     },
     {
       "coaches": [],
@@ -11299,7 +11901,12 @@
       ],
       "players": [],
       "slug": "westview",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Official PlayOn site gowestviewathletics.com Girls Varsity Field Hockey roster: \"No roster for 2026-2027\" (also none for 2025-2026, 2024-2025). westview.powayusd.com Field Hockey page has 2026 schedule only."
+      }
     },
     {
       "coaches": [],
@@ -11310,7 +11917,12 @@
       ],
       "players": [],
       "slug": "bonita-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "bvh.sweetwaterschools.org Athletics page has only clearance forms; no field hockey page or roster found."
+      }
     },
     {
       "coaches": [],
@@ -11323,7 +11935,12 @@
       ],
       "players": [],
       "slug": "eastlake",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Official PlayOn site eastlakeathletics.com Varsity Field Hockey roster: \"No roster for 2026-2027\" (also none for 2025-26, 2024-25). Old Google site ehsfieldhockey has a 2018 roster (outdated/unofficial)."
+      }
     },
     {
       "coaches": [],
@@ -11681,7 +12298,16 @@
           "title": "helixathletics.net — Helix athletics site (helixathletics.net) Varsity Girls Field Hockey roster, season 2026-2027: #19 Madison Hinchman, Senior",
           "url": "https://www.helixathletics.net/sport/field%20hockey/girls/?tab=roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.helixathletics.net/sport/field%20hockey/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Field Hockey; year selector 2026-2027 selected",
+        "listsPlayers": true,
+        "note": "Official Helix athletics site (Mascot Media)."
+      }
     },
     {
       "coaches": [],
@@ -11692,7 +12318,12 @@
       ],
       "players": [],
       "slug": "olympian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "olh.sweetwaterschools.org (Finalsite) and its athletics Google Site sites.google.com/sweetwaterschools.net/athletics2025 (general info, AD contacts, important dates only); no team/roster pages. No Home Campus site found."
+      }
     },
     {
       "coaches": [],
@@ -11703,7 +12334,16 @@
       ],
       "players": [],
       "slug": "otay-ranch",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sites.google.com/sweetwaterschools.net/orhathletics/fall-sports/field-hockey",
+        "season": "2026",
+        "seasonEvidence": "ORH Field Hockey 2026 ... Varsity Coach Kylee Rivera ... Varsity Schedule ... Roster",
+        "listsPlayers": true,
+        "note": "Official ORH athletics Google Site on the district's sweetwaterschools.net domain, linked from orh.sweetwaterschools.org. Page shows 2026 varsity schedule then a 'Roster' list."
+      }
     },
     {
       "coaches": [],
@@ -11714,7 +12354,12 @@
       ],
       "players": [],
       "slug": "el-capitan",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "elcapitan.guhsd.net Athletics and Coach Contacts/Team Info pages (general info, no field hockey roster); no separate athletics site found via domain guesses or search."
+      }
     },
     {
       "coaches": [],
@@ -12234,7 +12879,12 @@
           "title": "Granite Hills HS athletics (Home Campus) 2026-27 varsity field hockey roster; each player page gives a grade",
           "url": "https://granite.homecampus.com/varsity/field-hockey/roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "granite.guhsd.net (athletics calendar, old athletics page, PO form) - no team or roster pages. granitehills.homecampus.com and granitehillsathletics.com are different schools (Grizzlies / Apple Valley Cougars)."
+      }
     },
     {
       "coaches": [],
@@ -12245,7 +12895,12 @@
       ],
       "players": [],
       "slug": "hilltop",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hth.sweetwaterschools.org/departments/athletics-schedules lists Field Hockey as a fall sport (plain text, no link), plus AD contacts; district athletics.sweetwaterschools.org has no team pages. No roster found."
+      }
     },
     {
       "coaches": [],
@@ -12559,7 +13214,16 @@
           "title": "Southwest HS (San Diego) Home Campus athletics site 2026-27 varsity field hockey roster; each player page gives a grade (the school homepage does not link this site)",
           "url": "https://southwestsd.homecampus.com/varsity/field-hockey/roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://southwestsd.homecampus.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site 'Southwest SD - GO RAIDERS!'; soh.sweetwaterschools.org/athletics links to Home Campus."
+      }
     },
     {
       "coaches": [],
@@ -12922,7 +13586,16 @@
           "title": "bonitaathletics.org — Bonita HS athletics site (bonitaathletics.org) Varsity Field Hockey roster, 2026-2027: ELAYNA ABOULHOSN, SOPHOMORE",
           "url": "https://www.bonitaathletics.org/sport/field%20hockey/girls/?tab=roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.bonitaathletics.org/sport/field%20hockey/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Field Hockey SCHEDULE 2026-2027 (school-year selector)",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from bonitahigh.net (Bonita HS, La Verne). Selector also has 2025-26 (17) and 2024-25 (20)."
+      }
     },
     {
       "coaches": [],
@@ -12976,7 +13649,16 @@
         }
       ],
       "slug": "chaminade",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.chaminade.org/athletics/high-school/team-details/~athletics-team-id/178",
+        "season": null,
+        "seasonEvidence": "HS Field Hockey Varsity ... Team Roster (Name / Position / Class)",
+        "listsPlayers": true,
+        "note": "Finalsite team page on chaminade.org. No season label on page; class years 2027-2029 listed (seniors = class of 2027), which implies the 2026 fall season. Schedule section shows 'There are no events to display'."
+      }
     },
     {
       "coaches": [],
@@ -13405,7 +14087,16 @@
           "title": "Glendora HS athletics 2026-27 varsity field hockey roster; each player page gives a grade",
           "url": "https://www.glendoraathletics.com/varsity/field-hockey/roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.glendoraathletics.com/varsity/field-hockey/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey Varsity Roster, season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from glendorahigh.net."
+      }
     },
     {
       "coaches": [],
@@ -13431,7 +14122,12 @@
         }
       ],
       "slug": "harvard-westlake",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hw.com/athletics/teams/field-hockey and team pages return HTTP 403 to automated fetches; search shows only Varsity/JV schedule pages on hw.com, no roster page found."
+      }
     },
     {
       "coaches": [],
@@ -13787,7 +14483,16 @@
           "title": "toathletics.com — Thousand Oaks HS athletics site (toathletics.com) Varsity Field Hockey roster, school year 2025-2026 selected: EMMA CORRALES MOLINA, SOPHOMORE",
           "url": "https://www.toathletics.com/sport/field%20hockey/girls/?tab=roster"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.toathletics.com/sport/field%20hockey/girls/?tab=roster",
+        "season": "2025-26",
+        "seasonEvidence": "Varsity Field Hockey SCHEDULE 2026-2027 / school-year selector; 2025-2026 roster lists players",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from tohs.conejousd.org. Default 2026-27 roster is EMPTY; 18 players are under 2025-2026 (fall 2025) via the school-year selector; 2024-25 empty."
+      }
     }
   ]
 }

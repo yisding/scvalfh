@@ -21,7 +21,16 @@
       ],
       "players": [],
       "slug": "gunn",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.gunnathletics.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls / Varsity / Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Linked from gunn.pausd.org. Selector also offers 2024-25 and 2025-26."
+      }
     },
     {
       "coaches": [],
@@ -31,7 +40,16 @@
       ],
       "players": [],
       "slug": "homestead",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.homesteadmustangs.com/sport/200820/roster?team=7813655",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official athletics site homesteadmustangs.com (PlayOn Sites): Girls Varsity Soccer 2026/2027 roster page (/sport/200820/roster?team=7813655) has an empty player list. hhs.fuhsd.org/student-life/athletics and hhsathletics.com (booster Google Site) have no rosters. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -41,7 +59,12 @@
       ],
       "players": [],
       "slug": "los-altos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lahs.mvla.net/girls-soccer: coaching staff, season details and a CCS schedule widget only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -53,7 +76,16 @@
       ],
       "players": [],
       "slug": "los-gatos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.losgatosathletics.org/sport/soccer/girls/?tab=roster",
+        "season": "2025-26",
+        "seasonEvidence": "Varsity Girls Soccer ROSTER, school-year selector 2025-2026",
+        "listsPlayers": true,
+        "note": "This is the roster page with a season selector. The default 2026-2027 roster is empty (no athletes yet); 2025-2026 lists 19. Linked from lghs.net."
+      }
     },
     {
       "coaches": [],
@@ -64,7 +96,16 @@
       ],
       "players": [],
       "slug": "mountain-view",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://mvhs.mvla.net/girls-soccer",
+        "season": null,
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "The school page's Varsity tab embeds the CIF-CCS roster widget (cifccshome.org/widget/rosters?school_id=869&sport_id=25&level_id=1) listing 24 players (name, grade). No season label shown; it's presumably the current season."
+      }
     },
     {
       "coaches": [],
@@ -73,7 +114,16 @@
       ],
       "players": [],
       "slug": "palo-alto",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.palyathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "palyathletics.com (official Paly athletics, Bound/Mascot Media) girls soccer roster tab, Varsity, season 2026-2027: roster table (NUMBER/ATHLETES/GRADE) is empty. Same site renders other 2026-27 rosters (e.g., football), so no 2026-27 girls soccer roster is published yet. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -109,7 +159,16 @@
         }
       ],
       "slug": "santa-clara",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.schsathletics.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Athletics site run by the Athletic Boosters, linked from santaclara.santaclarausd.org/athletics-website/athletics/girls-soccer."
+      }
     },
     {
       "coaches": [],
@@ -119,7 +178,16 @@
       ],
       "players": [],
       "slug": "cupertino",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://chs.fuhsd.org/student-life/athletics/spring-sports/soccer-girls",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "chs.fuhsd.org/student-life/athletics/spring-sports/soccer-girls: Rosters section shows 'Varsity: Name / Year: To be determined'. The only PDF is the 2026-27 schedule. cupertinoathletics.com shows 'School Not Found'. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -128,7 +196,12 @@
       ],
       "players": [],
       "slug": "fremont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "fhs.fuhsd.org links to fremonthsathletics.org (Squarespace); /girls-soccer page has schedule, fundraiser and coaches only, no roster. fremontfirebirds.com is an unconfigured VNN shell ('School Not Found')."
+      }
     },
     {
       "coaches": [],
@@ -137,7 +210,12 @@
       ],
       "players": [],
       "slug": "lynbrook",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lhs.fuhsd.org/student-life/athletics has no team roster pages; lynbrookathletics.com is an unconfigured VNN shell ('School Not Found')."
+      }
     },
     {
       "coaches": [],
@@ -146,7 +224,12 @@
       ],
       "players": [],
       "slug": "macdonald",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "macdonald.santaclarausd.org/athletics (Kathleen MacDonald HS, Santa Clara USD) has calendar events (e.g., 'Soccer, Girls VR vs James Lick'), clearance and booster pages only; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -156,7 +239,16 @@
       ],
       "players": [],
       "slug": "milpitas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.mhstrojanathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2025-26",
+        "seasonEvidence": "Varsity Girls Soccer ROSTER, school-year selector 2025-2026",
+        "listsPlayers": true,
+        "note": "Roster page with a season selector. The default 2026-2027 roster is empty; 2025-2026 lists 21."
+      }
     },
     {
       "coaches": [],
@@ -166,7 +258,16 @@
       ],
       "players": [],
       "slug": "monta-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.matadorathletics.org/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls / Varsity / Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Linked from mvhs.fuhsd.org/student-life/athletics."
+      }
     },
     {
       "coaches": [],
@@ -176,7 +277,16 @@
       ],
       "players": [],
       "slug": "saratoga",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.shs-athletics.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls / Varsity / Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Linked from saratogahigh.org."
+      }
     },
     {
       "coaches": [],
@@ -186,7 +296,16 @@
       ],
       "players": [],
       "slug": "wilcox",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://wilcox.santaclarausd.org/athletics/girls-soccer",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Roster as of 11/14/26",
+        "listsPlayers": true,
+        "note": "Season inferred from the date 11/14/26 (winter 2026-27)."
+      }
     },
     {
       "coaches": [],
@@ -196,7 +315,16 @@
       ],
       "players": [],
       "slug": "branham",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://docs.google.com/document/d/1MrZJJsCY71QLTZmJrO3LKIECr22avLBU57J9TbWYB2E",
+        "season": "2026-27",
+        "seasonEvidence": "BRANHAM GIRLS VARSITY SOCCER 2026-2027 ROSTER",
+        "listsPlayers": true,
+        "note": "A Google Doc, linked as the varsity roster from the school’s winter sports page (branham.cuhsd.org/apps/pages/winter_sports); read 2026-11-28."
+      }
     },
     {
       "coaches": [],
@@ -205,7 +333,12 @@
       ],
       "players": [],
       "slug": "gilroy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gilroyhs.gilroyunified.org/mustang-athletics shows an athletics calendar ('GHS Soccer Game' entries) only; no team/roster pages found."
+      }
     },
     {
       "coaches": [],
@@ -214,7 +347,12 @@
       ],
       "players": [],
       "slug": "leigh",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "leigh.cuhsd.org Winter Sports > Girls Soccer page: tryout dates, 2026-2027 schedule link (to MaxPreps), coaches, TeamSnap note; no roster."
+      }
     },
     {
       "coaches": [],
@@ -224,7 +362,16 @@
       ],
       "players": [],
       "slug": "leland",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lelandathletics.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls / Varsity / Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Linked from leland.sjusd.org/extracurriculuar/athletics."
+      }
     },
     {
       "coaches": [],
@@ -233,7 +380,12 @@
       ],
       "players": [],
       "slug": "piedmont-hills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "piedmonthillshigh.esuhsd.org/athletics-program (Google Site): coaches list (Girls' Soccer Varsity coach) and schedules page pointing to BVAL; no roster."
+      }
     },
     {
       "coaches": [],
@@ -243,7 +395,16 @@
       ],
       "players": [],
       "slug": "pioneer",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.pioneermustangathletics.com/sport/234016/roster?team=7815886",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official athletics site pioneermustangathletics.com (PlayOn Sites): Girls Varsity Soccer 2026/2027 roster page (/sport/234016/roster?team=7815886) has an empty player list. pioneer.sjusd.org/extracurriculuar/athletics has only general info and links to Hudl and GoFan. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -252,7 +413,16 @@
       ],
       "players": [],
       "slug": "westmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.westmontathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "westmontathletics.com (Bound) Varsity Girls Soccer roster tab, school year 2026-2027: roster table empty. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -262,7 +432,15 @@
       ],
       "players": [],
       "slug": "willow-glen",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.willowglenathletics.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls / Varsity / Roster, season selector 2026-27 selected",
+        "listsPlayers": true
+      }
     },
     {
       "coaches": [],
@@ -271,7 +449,12 @@
       ],
       "players": [],
       "slug": "christopher",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chs.gilroyunified.org/athletics/chs-coaches-and-schedules lists coaches by sport (Girls Soccer Varsity Coach Albert Marques); no roster pages."
+      }
     },
     {
       "coaches": [],
@@ -281,7 +464,12 @@
       ],
       "players": [],
       "slug": "evergreen-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "evergreenvalleyhigh.esuhsd.org/sports/soccer-girls: clearance info and coach contact only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -290,7 +478,12 @@
       ],
       "players": [],
       "slug": "lincoln",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lincoln.sjusd.org/extracurriculuar/athletics: sport list, coaching list (Google Sheet), 2025-2026 coaches contact list; no team rosters."
+      }
     },
     {
       "coaches": [],
@@ -300,7 +493,12 @@
       ],
       "players": [],
       "slug": "live-oak",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "liveoak.mhusd.org/athletics/athletics-website has no roster. Search points to liveoakathletics.com as the athletics site, but it doesn't resolve from this session (DNS failure), so I couldn't check it."
+      }
     },
     {
       "coaches": [],
@@ -309,7 +507,12 @@
       ],
       "players": [],
       "slug": "oak-grove",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "oakgrovehigh.esuhsd.org/athletics/winter-sports: Soccer - Girls entry with BVAL schedule link and coach contact only; no roster. (oakgroveathletics.com is a different, North Carolina school.)"
+      }
     },
     {
       "coaches": [],
@@ -318,7 +521,12 @@
       ],
       "players": [],
       "slug": "santa-teresa",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "santateresahigh.esuhsd.org/athletics/teams/soccer-girls: tryout/season information and coach contact only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -328,7 +536,12 @@
       ],
       "players": [],
       "slug": "silver-creek",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "silvercreekhigh.esuhsd.org/athletics/winter-sports: list of sports and clearance info only, no roster. silvercreekathletics.com is a different school (Dragons)."
+      }
     },
     {
       "coaches": [],
@@ -364,7 +577,16 @@
         }
       ],
       "slug": "sobrato",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sobratoathletics.olinesports.com/roster.php?sport=587",
+        "season": null,
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official athletics site sobratoathletics.olinesports.com/roster.php?sport=587 (Soccer - Girls Varsity) lists coaches but no players, and shows no season."
+      }
     },
     {
       "coaches": [],
@@ -374,7 +596,12 @@
       ],
       "players": [],
       "slug": "andrew-hill",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "andrewphill.esuhsd.org/Athletics/Winter-Sports/index.html: coach names and emails only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -383,7 +610,12 @@
       ],
       "players": [],
       "slug": "del-mar",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "delmar.cuhsd.org Sports Teams > 'Soccer - Girls' page: program description (tryouts, league) only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -392,7 +624,12 @@
       ],
       "players": [],
       "slug": "gunderson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gunderson.sjusd.org/extracurricular/athletics: athletics calendar (e.g., 'Girls Soccer vs Oakwood'), handbook and workout schedule; no team rosters."
+      }
     },
     {
       "coaches": [],
@@ -402,7 +639,12 @@
       ],
       "players": [],
       "slug": "independence",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "independence.esuhsd.org athletics links only to a Google Site (sites.google.com/esuhsd.org/sixerathletics) with general info/coaching staff/forms pages; no team or roster pages found."
+      }
     },
     {
       "coaches": [],
@@ -411,7 +653,12 @@
       ],
       "players": [],
       "slug": "james-lick",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "James Lick athletics Google Site (sites.google.com/esuhsd.org/james-lick-high-school/athletics/winter-sports/girls-soccer, linked from jameslick.esuhsd.org): coach name and BVAL schedule link only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -420,7 +667,12 @@
       ],
       "players": [],
       "slug": "mt-pleasant",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mtpleasant.esuhsd.org/Athletics/Winter-Sports/Soccer-Girls-and-Boys: coach contacts only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -430,7 +682,16 @@
       ],
       "players": [],
       "slug": "overfelt",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.wcoathletics.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls - Varsity - Roster; season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Overfelt official athletics site (Home Campus), linked from williamcoverfelt.esuhsd.org. Only 5 players listed so far."
+      }
     },
     {
       "coaches": [],
@@ -440,7 +701,12 @@
       ],
       "players": [],
       "slug": "prospect",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "prospect.cuhsd.org/apps/pages/GirlsSoccer: '2025-2026 Season Welcome' page with coach info and a Canvas course link; no player list. No separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -449,7 +715,12 @@
       ],
       "players": [],
       "slug": "san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sjhs.sjusd.org/extracurricular/athletics: coaches list (Girls Soccer varsity coach Erick Silva) and events; no roster."
+      }
     },
     {
       "coaches": [],
@@ -458,7 +729,12 @@
       ],
       "players": [],
       "slug": "yerba-buena",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "yerbabuena.esuhsd.org links 'Athletics' to ybsn.org (student-run Yerba Buena sports network, GoDaddy site). Its /girls-soccer-1 page has a 'Varsity roster' block with only empty class-year headings (SENIORS/JUNIORS/sophomores/Freshman) and an image, no player names; its text recaps the 2025 season. No 2026-27 roster."
+      }
     },
     {
       "coaches": [],
@@ -469,7 +745,12 @@
       ],
       "players": [],
       "slug": "mitty",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mitty.com/athletics/womens-soccer: program description and head coach only; site says rosters are in the AMHS Athletics mobile app. No web roster."
+      }
     },
     {
       "coaches": [],
@@ -478,7 +759,16 @@
       ],
       "players": [],
       "slug": "riordan",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://riordanathletics.com/sports/womens-soccer/roster",
+        "season": "2025-26",
+        "seasonEvidence": "2025-26 Varsity Girls' Soccer Roster",
+        "listsPlayers": true,
+        "note": "riordanathletics.com (Sidearm) girls soccer roster: latest/only season in selector is '2025-26 Varsity Girls' Soccer Roster'; no 2026-27 roster yet."
+      }
     },
     {
       "coaches": [],
@@ -487,7 +777,144 @@
       ],
       "players": [],
       "slug": "sacred-heart-cathedral",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://shcathletics.com/sports/girls-soccer/roster",
+        "summary": "The school’s athletics site (shcathletics.com) lists these 24 players on its 2026-27 Girls Soccer (Varsity) roster; MaxPreps lists nobody. Positions are the site’s own; Violet Rodriguez’s position field repeats her name, so it is left blank.",
+        "players": [
+          {
+            "firstName": "Stella",
+            "lastName": "Woo",
+            "position": "Midfield"
+          },
+          {
+            "firstName": "Ruthie (Sara)",
+            "lastName": "Latterman",
+            "position": "Midfielder"
+          },
+          {
+            "firstName": "Sophia",
+            "lastName": "Wilson",
+            "position": "Outside back"
+          },
+          {
+            "firstName": "Alice",
+            "lastName": "Forster",
+            "position": "Midfielder"
+          },
+          {
+            "firstName": "Simone",
+            "lastName": "Myers",
+            "position": "Winger/Striker"
+          },
+          {
+            "firstName": "Jordyn",
+            "lastName": "Bernabe",
+            "position": "Winger/Striker"
+          },
+          {
+            "firstName": "Amaiya",
+            "lastName": "Magan",
+            "position": "Outside back"
+          },
+          {
+            "firstName": "Tatiana",
+            "lastName": "Marta",
+            "position": "Midfield"
+          },
+          {
+            "firstName": "Margaret",
+            "lastName": "Manuel",
+            "position": "Midfield"
+          },
+          {
+            "firstName": "Lily",
+            "lastName": "Toscanini",
+            "position": "Winger"
+          },
+          {
+            "firstName": "Kali",
+            "lastName": "Ventura",
+            "position": "Defender"
+          },
+          {
+            "firstName": "Ava",
+            "lastName": "Lindner",
+            "position": "Wing/striker"
+          },
+          {
+            "firstName": "Violet",
+            "lastName": "Rodriguez",
+            "position": null
+          },
+          {
+            "firstName": "Eleanor",
+            "lastName": "Borek",
+            "position": "Center Back/CDM"
+          },
+          {
+            "firstName": "Francesca",
+            "lastName": "Rinaudo",
+            "position": "Wing/Outside back"
+          },
+          {
+            "firstName": "Contessa",
+            "lastName": "Carrizalez",
+            "position": "Defense/Defense"
+          },
+          {
+            "firstName": "Madison",
+            "lastName": "Munoz",
+            "position": "Winger/Striker"
+          },
+          {
+            "firstName": "Arden",
+            "lastName": "Dumbleton",
+            "position": "Outside back"
+          },
+          {
+            "firstName": "Sakura",
+            "lastName": "Kapla",
+            "position": "Attacking Mid/Foward"
+          },
+          {
+            "firstName": "Francesca",
+            "lastName": "Johnson",
+            "position": "Forward"
+          },
+          {
+            "firstName": "Sasha (Alexandra)",
+            "lastName": "Synanska",
+            "position": "Center Midfielder"
+          },
+          {
+            "firstName": "Whitney",
+            "lastName": "O'Reilly",
+            "position": "Goal Keeper"
+          },
+          {
+            "firstName": "Francesca",
+            "lastName": "Roland",
+            "position": "Goalie"
+          },
+          {
+            "firstName": "Jemma",
+            "lastName": "Schwind",
+            "position": "Goalie"
+          }
+        ]
+      },
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://shcathletics.com/sports/girls-soccer/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Page title and season selector: '2026-27 Girls Soccer (Varsity) Roster - Sacred Heart Cathedral Preparatory'",
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (listed): The school’s athletics site (shcathletics.com) lists these 24 players on its 2026-27 Girls Soccer (Varsity) roster; MaxPreps lists nobody. Positions are the site’s own; Violet Rodriguez’s position field repeats her name, so it is left blank."
+      }
     },
     {
       "coaches": [],
@@ -496,7 +923,16 @@
       ],
       "players": [],
       "slug": "saint-francis",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sfhsathletics.com/sports/womens-soccer/roster",
+        "season": "2025-26",
+        "seasonEvidence": "2025-26 Women's Varsity Soccer Roster",
+        "listsPlayers": true,
+        "note": "sfhs.com blocks automated access (403); official athletics site sfhsathletics.com (Sidearm) women's soccer roster newest season is '2025-26 Women's Varsity Soccer Roster'."
+      }
     },
     {
       "coaches": [],
@@ -505,7 +941,16 @@
       ],
       "players": [],
       "slug": "st-ignatius",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://siwildcats.com/sports/womens-soccer/roster",
+        "season": "2025-26",
+        "seasonEvidence": "2025-26 Women's Soccer (Varsity) Roster",
+        "listsPlayers": true,
+        "note": "siprep.org athletics points to siwildcats.com (Sidearm). Women's soccer roster selector's newest season is '2025-26 Women's Soccer (Varsity) Roster'; no 2026-27 roster."
+      }
     },
     {
       "coaches": [],
@@ -515,7 +960,16 @@
       ],
       "players": [],
       "slug": "valley-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://gowarriors.net/sports/womens-soccer/roster",
+        "season": "2025-26",
+        "seasonEvidence": "2025-26 Varsity Women's Soccer Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site; season selector tops out at 2025-26 (2026-27 not posted yet)."
+      }
     },
     {
       "coaches": [],
@@ -524,7 +978,12 @@
       ],
       "players": [],
       "slug": "castilleja",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "castilleja.org/athletics/teams/us/soccer (Finalsite) shows Varsity Soccer 2026-2027 calendar/schedule only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -533,7 +992,12 @@
       ],
       "players": [],
       "slug": "crystal-springs",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "crystal.org/athletics and /athletics/teams list sports and honors only; no team roster pages found."
+      }
     },
     {
       "coaches": [],
@@ -542,7 +1006,12 @@
       ],
       "players": [],
       "slug": "kings-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "tka.org 'Soccer - Varsity Girls' team-details page (team-id 64) has no roster."
+      }
     },
     {
       "coaches": [],
@@ -551,7 +1020,12 @@
       ],
       "players": [],
       "slug": "menlo",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "menloschool.org/athletics/us-girls-varsity-soccer/ has 2026-27 schedule/results and coaches but no roster section."
+      }
     },
     {
       "coaches": [],
@@ -560,7 +1034,12 @@
       ],
       "players": [],
       "slug": "notre-dame-belmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ndhsb.org team page 'Soccer - Varsity Girls' (team-id 138) shows 2026-27 schedule (Dec 2026 games) only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -569,7 +1048,16 @@
       ],
       "players": [],
       "slug": "presentation",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.presentationhs.org/uploaded/2025-26/2025-26_Varsity_Soccer_Roster.pdf",
+        "season": "2025-26",
+        "seasonEvidence": "The PDF is the “2025-26 Varsity Soccer Roster” (its file name and heading), linked as “Team Roster” from the soccer page.",
+        "listsPlayers": true,
+        "note": "presentationhs.org/athletics/schedules/soccer: Varsity 'Team Roster' section has no names, only a download link to /uploaded/2025-26/2025-26_Varsity_Soccer_Roster.pdf (2025-26)."
+      }
     },
     {
       "coaches": [],
@@ -578,7 +1066,12 @@
       ],
       "players": [],
       "slug": "sacred-heart-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "shschools.org 'SHP Girls Soccer Varsity 2026 - 2027' team detail page shows head coach and schedule only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -587,7 +1080,12 @@
       ],
       "players": [],
       "slug": "eastside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "eastside.org/_studentlife/athletics.html lists sports offered (Soccer Girls) only; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -596,7 +1094,12 @@
       ],
       "players": [],
       "slug": "harker",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "harker.org upper-school athletics events page for 'Varsity Soccer - Girls' (team-id 22) shows schedule only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -606,7 +1109,12 @@
       ],
       "players": [],
       "slug": "mercy-burlingame",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mercyhsb.com/athletics links to the official PrestoSports site mercyhs.prestosports.com, but every page there (incl. /sports/wsoc/roster and /sports/wsoc/2026-27/roster) returned HTTP 403 (Cloudflare) so it could not be verified."
+      }
     },
     {
       "coaches": [],
@@ -616,7 +1124,12 @@
       ],
       "players": [],
       "slug": "notre-dame-san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ndsj.org (student-life/soccer, athletics) unreachable (connection failure / HTTP 503). Search snippet suggests ndsj.org/student-life/soccer shows schedules only."
+      }
     },
     {
       "coaches": [],
@@ -625,7 +1138,12 @@
       ],
       "players": [],
       "slug": "pinewood",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pinewood.edu 'HS Girls Soccer' team page (team-id 202) shows schedule and coaching staff only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -634,7 +1152,12 @@
       ],
       "players": [],
       "slug": "priory",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "prioryca.org/athletics team picker 'US Girls Varsity Soccer' shows schedule only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -643,7 +1166,12 @@
       ],
       "players": [],
       "slug": "aragon",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ahs.smuhsd.org/athletics/winter-sports/soccer-girls: description and coaching staff only; refers to MaxPreps/Twitter. No roster."
+      }
     },
     {
       "coaches": [],
@@ -652,7 +1180,16 @@
       ],
       "players": [],
       "slug": "burlingame",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.burlingameathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "burlingameathletics.com (Bound) Varsity Girls Soccer roster tab, school year 2026-2027: roster table empty (football roster on same site is populated). (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -662,7 +1199,16 @@
       ],
       "players": [],
       "slug": "carlmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.carlmontathletics.org/sport/girls-soccer/roster?team=4450308&year=2024-2025",
+        "season": "2024-25",
+        "seasonEvidence": "Girls Varsity Soccer Roster - 2024-2025 roster",
+        "listsPlayers": true,
+        "note": "Official PlayOn site (linked from seq.org). 2026-27 and 2025-26 pages say 'No roster for ... Varsity Girls Soccer'; newest with players is 2024-25. Page has a year selector."
+      }
     },
     {
       "coaches": [],
@@ -671,7 +1217,139 @@
       ],
       "players": [],
       "slug": "hillsdale",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://www.hillsdaleathletics.com/girlssoccer-rosters",
+        "summary": "The school’s athletics site (hillsdaleathletics.com) lists these 23 players under “VARSITY GIRLS SOCCER 2026-27”, by name and grade level; MaxPreps lists nobody.",
+        "players": [
+          {
+            "firstName": "Gia",
+            "lastName": "Belforte",
+            "position": null
+          },
+          {
+            "firstName": "Milana",
+            "lastName": "Brockmeyer",
+            "position": null
+          },
+          {
+            "firstName": "Hannah",
+            "lastName": "Chan",
+            "position": null
+          },
+          {
+            "firstName": "Kaitlyn",
+            "lastName": "Chao",
+            "position": null
+          },
+          {
+            "firstName": "Marwa",
+            "lastName": "Chraibi",
+            "position": null
+          },
+          {
+            "firstName": "Kendal",
+            "lastName": "Fahey",
+            "position": null
+          },
+          {
+            "firstName": "Lucia",
+            "lastName": "Forney",
+            "position": null
+          },
+          {
+            "firstName": "Areya-Sol",
+            "lastName": "Garcia",
+            "position": null
+          },
+          {
+            "firstName": "Alyssa",
+            "lastName": "Han",
+            "position": null
+          },
+          {
+            "firstName": "Charlotte",
+            "lastName": "Hanna",
+            "position": null
+          },
+          {
+            "firstName": "Savanah",
+            "lastName": "Klemish",
+            "position": null
+          },
+          {
+            "firstName": "Sadie",
+            "lastName": "Knox",
+            "position": null
+          },
+          {
+            "firstName": "Nada",
+            "lastName": "Masri",
+            "position": null
+          },
+          {
+            "firstName": "Billie",
+            "lastName": "McCann",
+            "position": null
+          },
+          {
+            "firstName": "Ella",
+            "lastName": "Michon",
+            "position": null
+          },
+          {
+            "firstName": "Johanna",
+            "lastName": "Murillo Reyes",
+            "position": null
+          },
+          {
+            "firstName": "Alyssa",
+            "lastName": "Romersa",
+            "position": null
+          },
+          {
+            "firstName": "Deya",
+            "lastName": "Sandoval",
+            "position": null
+          },
+          {
+            "firstName": "Liv",
+            "lastName": "Stevenson",
+            "position": null
+          },
+          {
+            "firstName": "Skye",
+            "lastName": "Stevenson",
+            "position": null
+          },
+          {
+            "firstName": "Anagha",
+            "lastName": "Tendulkar",
+            "position": null
+          },
+          {
+            "firstName": "Kira",
+            "lastName": "Tennant",
+            "position": null
+          },
+          {
+            "firstName": "Caitlyn",
+            "lastName": "Yuen",
+            "position": null
+          }
+        ]
+      },
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.hillsdaleathletics.com/girlssoccer-rosters",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity tab heading: 'VARSITY GIRLS SOCCER 2026-27' (tab content at /layout_container/show_layout_tab?layout_container_id=101183989&page_node_id=5359324&tab_element_id=303625)",
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (listed): The school’s athletics site (hillsdaleathletics.com) lists these 23 players under “VARSITY GIRLS SOCCER 2026-27”, by name and grade level; MaxPreps lists nobody."
+      }
     },
     {
       "coaches": [],
@@ -681,7 +1359,16 @@
       ],
       "players": [],
       "slug": "menlo-atherton",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.bearsathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site bearsathletics.com (Mascot Media) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26 and 2024-25. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -690,7 +1377,12 @@
       ],
       "players": [],
       "slug": "sequoia",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sequoiahs.org/athletics/winter-sports/girls-soccer: tryout week and practice info, clearance, coach contact; no roster."
+      }
     },
     {
       "coaches": [],
@@ -699,7 +1391,12 @@
       ],
       "players": [],
       "slug": "woodside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "woodsidehs.org/ATHLETICS/Winter-Sports/Girls-Soccer: 2026-27 tryout info, coaches, schedule links to MaxPreps; no roster. (woodsideathletics.com is an unrelated school.)"
+      }
     },
     {
       "coaches": [],
@@ -709,7 +1406,16 @@
       ],
       "players": [],
       "slug": "capuchino",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.capuchinoathletics.com/sport/girls-soccer/roster?team=4450266&year=2024-2025",
+        "season": "2024-25",
+        "seasonEvidence": "Girls Varsity Soccer Roster - 2024-2025 roster",
+        "listsPlayers": true,
+        "note": "Official PlayOn site. 2026-27 and 2025-26 show 'No roster'; 2024-25 is newest with players. Page has a year selector."
+      }
     },
     {
       "coaches": [],
@@ -718,7 +1424,12 @@
       ],
       "players": [],
       "slug": "el-camino-ssf",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "elcamino.ssfusd.org/athletics/teams-seasons: 'Soccer (Girls)' panel says 'Coming soon!'; no roster."
+      }
     },
     {
       "coaches": [],
@@ -728,7 +1439,12 @@
       ],
       "players": [],
       "slug": "half-moon-bay",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Official site hmbhsathletics.com (PlayOn): girls-soccer varsity roster pages for 2026-27, 2025-26, 2024-25, 2023-24 all say 'No roster'."
+      }
     },
     {
       "coaches": [],
@@ -737,7 +1453,12 @@
       ],
       "players": [],
       "slug": "jefferson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "jhs.juhsd.net/athletics/winter-sports/girls-soccer lists only varsity/JV coach headings; no roster. No separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -746,7 +1467,16 @@
       ],
       "players": [],
       "slug": "mills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.millsathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site millsathletics.com (Mascot Media) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26, 2024-25. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -756,7 +1486,16 @@
       ],
       "players": [],
       "slug": "san-mateo",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.sanmateoathletics.org/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site sanmateoathletics.org (Mascot Media, linked from smhs.smuhsd.org) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26, 2024-25. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -765,7 +1504,12 @@
       ],
       "players": [],
       "slug": "south-san-francisco",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "southcity.ssfusd.org/athletics/sports-teams lists only fall sports (winter/spring 'Coming Soon!'); athletics, coaches pages have no rosters."
+      }
     },
     {
       "coaches": [],
@@ -774,7 +1518,16 @@
       ],
       "players": [],
       "slug": "terra-nova",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.terranovasports.com/sport/girls-soccer/roster?team=7817118&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site terranovasports.com (VNN/PlayOn, linked from tnhs.juhsd.net). Girls Varsity Soccer 2026/2027 team (id 7817118) roster page https://www.terranovasports.com/sport/girls-soccer/roster?team=7817118&year=2026-2027 exists but has no players listed (empty roster)."
+      }
     },
     {
       "coaches": [],
@@ -783,7 +1536,12 @@
       ],
       "players": [],
       "slug": "westmoor",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "whs.juhsd.net/athletics lists sports and a game calendar (Girls Soccer games Dec 2026) but no team pages or rosters; only links to sportsnethost parent registration."
+      }
     },
     {
       "coaches": [],
@@ -792,7 +1550,16 @@
       ],
       "players": [],
       "slug": "aptos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.aptosathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site aptosathletics.com (linked from aptoshs.net). https://www.aptosathletics.com/sport/soccer/girls/?tab=roster shows 'Varsity Girls Soccer' with 2026-2027 selected, but the roster table is empty (other sports, e.g. girls volleyball, render rosters server-side, so it is genuinely empty)."
+      }
     },
     {
       "coaches": [],
@@ -801,7 +1568,12 @@
       ],
       "players": [],
       "slug": "harbor",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hh.sccs.net/athletics: winter section has no girls soccer page/link; no rosters (only cross country, baseball, track sites linked)."
+      }
     },
     {
       "coaches": [],
@@ -810,7 +1582,12 @@
       ],
       "players": [],
       "slug": "san-lorenzo-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hs.slvusd.org sports schedules page links Girls Soccer to a Google Doc; official slvathletics.org/soccer-girls/ shows only the 2026-27 varsity schedule (Jan-Feb '27), no roster."
+      }
     },
     {
       "coaches": [],
@@ -819,7 +1596,16 @@
       ],
       "players": [],
       "slug": "santa-cruz",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.schs.sccs.net/about-5",
+        "season": "2025-26",
+        "seasonEvidence": "2025/2026 Rosters",
+        "listsPlayers": true,
+        "note": "https://www.schs.sccs.net/about-5 (Girls Soccer page) lists coaches and links '25/26 Soccer Schedule' and '2025/2026 Rosters' (a Google Doc). Latest roster labeled 2025/2026; no 2026-27 roster."
+      }
     },
     {
       "coaches": [],
@@ -828,7 +1614,119 @@
       ],
       "players": [],
       "slug": "scotts-valley",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls",
+        "summary": "The school’s own site lists these 19 players under “2026/27 VARSITY ROSTER” on its girls soccer page, by name only; MaxPreps lists nobody.",
+        "players": [
+          {
+            "firstName": "Bella",
+            "lastName": "Agnone",
+            "position": null
+          },
+          {
+            "firstName": "Lyla",
+            "lastName": "Bradley",
+            "position": null
+          },
+          {
+            "firstName": "Vivian",
+            "lastName": "Chomentowski",
+            "position": null
+          },
+          {
+            "firstName": "Jessi",
+            "lastName": "Dunn",
+            "position": null
+          },
+          {
+            "firstName": "Lucy",
+            "lastName": "Dunton",
+            "position": null
+          },
+          {
+            "firstName": "Taylor",
+            "lastName": "Ericson",
+            "position": null
+          },
+          {
+            "firstName": "Naomi",
+            "lastName": "Eyre",
+            "position": null
+          },
+          {
+            "firstName": "Campbell",
+            "lastName": "Flores",
+            "position": null
+          },
+          {
+            "firstName": "Graysen",
+            "lastName": "Flores",
+            "position": null
+          },
+          {
+            "firstName": "Leanna",
+            "lastName": "Hinn",
+            "position": null
+          },
+          {
+            "firstName": "Kensi",
+            "lastName": "Horn",
+            "position": null
+          },
+          {
+            "firstName": "Carmella",
+            "lastName": "Iles",
+            "position": null
+          },
+          {
+            "firstName": "Brooke",
+            "lastName": "Lesniak",
+            "position": null
+          },
+          {
+            "firstName": "Lauren",
+            "lastName": "Lima",
+            "position": null
+          },
+          {
+            "firstName": "Sawyer",
+            "lastName": "McCormick",
+            "position": null
+          },
+          {
+            "firstName": "Madeline",
+            "lastName": "Pipal",
+            "position": null
+          },
+          {
+            "firstName": "Eva",
+            "lastName": "Pogrowski",
+            "position": null
+          },
+          {
+            "firstName": "Marilyn",
+            "lastName": "Talamantes",
+            "position": null
+          },
+          {
+            "firstName": "Jalina",
+            "lastName": "Watkins",
+            "position": null
+          }
+        ]
+      },
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer - Girls page, heading '2026/27 VARSITY ROSTER' (separate '2026/27 JV ROSTER' heading follows)",
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (listed): The school’s own site lists these 19 players under “2026/27 VARSITY ROSTER” on its girls soccer page, by name only; MaxPreps lists nobody."
+      }
     },
     {
       "coaches": [],
@@ -838,7 +1736,12 @@
       ],
       "players": [],
       "slug": "soquel",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "soquel.sccs.net/athletics: general athletics page with game-schedule section; no team pages or rosters. No separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -847,7 +1750,16 @@
       ],
       "players": [],
       "slug": "everett-alvarez",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.everettalvarezathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Soccer - 2026-2027",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from eahs.salinasuhsd.org; default team is Varsity Girls, school year 2026-2027."
+      }
     },
     {
       "coaches": [],
@@ -856,7 +1768,12 @@
       ],
       "players": [],
       "slug": "hollister",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hhs.sanbenitohsd.gov/athletics lists coach contacts (Girls Soccer: Coach Amber Painter) and an athletics calendar; no team roster pages. No separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -865,7 +1782,12 @@
       ],
       "players": [],
       "slug": "monterey",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "montereyhigh.mpusd.net athletics page (athletics2) has only forms/links; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -874,7 +1796,12 @@
       ],
       "players": [],
       "slug": "pacific-collegiate",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pacificcollegiate.com/program/athletics lists sports offered (Soccer - Girls V) and an athletic calendar; no rosters."
+      }
     },
     {
       "coaches": [],
@@ -883,7 +1810,12 @@
       ],
       "players": [],
       "slug": "rancho-san-juan",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "rsjhs.salinasuhsd.org athletics pages: schedules (fall/winter/spring) and a boosters SportsEngine link only; no roster pages or athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -892,7 +1824,16 @@
       ],
       "players": [],
       "slug": "salinas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.salinascowboys.com/varsity/soccer-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Soccer, Girls - Varsity - Roster; season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Home Campus site salinascowboys.com (Salinas HS, linked to salinasuhsd.org)."
+      }
     },
     {
       "coaches": [],
@@ -901,7 +1842,16 @@
       ],
       "players": [],
       "slug": "watsonville",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.watsonvilleathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site watsonvilleathletics.com (Mascot Media). https://www.watsonvilleathletics.com/sport/soccer/girls/?tab=roster shows Varsity Girls Soccer, school year 2026-2027, but roster table is empty."
+      }
     },
     {
       "coaches": [],
@@ -910,7 +1860,12 @@
       ],
       "players": [],
       "slug": "alisal",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ahs.salinasuhsd.org/for-students/athletics/winter-sports lists coaches only (Girls Soccer Varsity Head Coach: TBD); no rosters."
+      }
     },
     {
       "coaches": [],
@@ -919,7 +1874,12 @@
       ],
       "players": [],
       "slug": "carmel",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "carmelhigh.carmelunified.org/athletics (coaches directory, calendar, winter schedules) has no team rosters; booster site is a store."
+      }
     },
     {
       "coaches": [],
@@ -928,7 +1888,12 @@
       ],
       "players": [],
       "slug": "gonzales",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ghs.gonzalesusd.net homepage has no athletics/team links; no school athletics site found in search."
+      }
     },
     {
       "coaches": [],
@@ -937,7 +1902,12 @@
       ],
       "players": [],
       "slug": "monte-vista-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mvcs.org/athletics/teams-schedules: Soccer - Girls Varsity 'Roster' link points to MaxPreps (not acceptable); no roster on school domain."
+      }
     },
     {
       "coaches": [],
@@ -946,7 +1916,12 @@
       ],
       "players": [],
       "slug": "pajaro-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pvhs.pvusd.net/Programs/Athletics/Winter-Sports lists coach names/emails only (Girls Soccer: Kristian Flores); no rosters."
+      }
     },
     {
       "coaches": [],
@@ -955,7 +1930,12 @@
       ],
       "players": [],
       "slug": "soledad",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "shs.soledadusd.org: Athletics section has Sport Schedules / athletic packet / physical form only; no rosters. soledadathletics.com is a parked domain."
+      }
     },
     {
       "coaches": [],
@@ -964,7 +1944,12 @@
       ],
       "players": [],
       "slug": "stevenson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "stevensonschool.org/teams/soccer-girls/ (old athletics.stevensonschool.org redirects) has program description, head coach bio, championship history; no roster. Schedules & Scores page has no roster."
+      }
     },
     {
       "coaches": [],
@@ -973,7 +1958,12 @@
       ],
       "players": [],
       "slug": "greenfield",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "greenfieldhs.org/teams lists 'Soccer - Girls' with '0 Staff' and no link/roster."
+      }
     },
     {
       "coaches": [],
@@ -982,7 +1972,12 @@
       ],
       "players": [],
       "slug": "king-city",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "kingcityhs.org/athletic-teams and /athletics contain only navigation; no team or roster content."
+      }
     },
     {
       "coaches": [],
@@ -991,7 +1986,12 @@
       ],
       "players": [],
       "slug": "north-monterey-county",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "nmchs.nmcusd.org/athletics: coaches directory, schedules, photos, registration packet; no roster pages."
+      }
     },
     {
       "coaches": [],
@@ -1000,7 +2000,12 @@
       ],
       "players": [],
       "slug": "north-salinas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "nshs.salinasuhsd.org/for-students/athletics lists sports and season start dates only; no rosters."
+      }
     },
     {
       "coaches": [],
@@ -1009,7 +2014,16 @@
       ],
       "players": [],
       "slug": "palma",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://palmaathletics.org/sports/womens-soccer/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Girls Soccer Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site palmaathletics.org (linked from palmaschool.org). Heading says 'Girls Soccer Roster' without a level label."
+      }
     },
     {
       "coaches": [],
@@ -1018,7 +2032,12 @@
       ],
       "players": [],
       "slug": "seaside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "shs.mpusd.net/athletics-schedules links 'Girls Soccer 26 27' docx, which is a JV/Varsity schedule (no players). No roster pages."
+      }
     },
     {
       "coaches": [],
@@ -1027,7 +2046,12 @@
       ],
       "players": [],
       "slug": "anzar",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "anzar.asjusd.org/athletics lists sports offered (Girls Soccer); no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -1036,7 +2060,12 @@
       ],
       "players": [],
       "slug": "marina-mariners",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mahs.mpusd.net/athletics and /sports-schedule: no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -1045,7 +2074,12 @@
       ],
       "players": [],
       "slug": "monterey-bay-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "montereybayacademy.org homepage has no athletics/team links; Programs page (Mighty Cypress Athletics) returns 403; no roster found."
+      }
     },
     {
       "coaches": [],
@@ -1054,7 +2088,12 @@
       ],
       "players": [],
       "slug": "pacific-grove",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pghigh.pgusd.org Athletics pages (calendar, sports info, newsletter) have no rosters; links only to an old pghighschool.weebly.com site."
+      }
     },
     {
       "coaches": [],
@@ -1063,7 +2102,12 @@
       ],
       "players": [],
       "slug": "santa-catalina",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "santacatalina.org/upper-school-all-girls-/athletics/athletics-overview: overview and athletics calendar only; no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -1072,7 +2116,12 @@
       ],
       "players": [],
       "slug": "st-francis-watsonville",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "No official site found: the athletics domain listed on Wikipedia (go-sharks.net) does not resolve; sfcchs.org returns HTTP 500; searches return only MaxPreps/news."
+      }
     },
     {
       "coaches": [],
@@ -1081,7 +2130,12 @@
       ],
       "players": [],
       "slug": "york",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "york.org/athletics/winter-sports/girls-soccer shows only a schedule calendar (no events Nov 2026); no roster."
+      }
     },
     {
       "coaches": [],
@@ -1090,7 +2144,12 @@
       ],
       "players": [],
       "slug": "cristo-rey-san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "cristoreysj.org returned HTTP 503; no athletics roster page found."
+      }
     },
     {
       "coaches": [],
@@ -1099,7 +2158,12 @@
       ],
       "players": [],
       "slug": "design-tech",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "designtechhighschool.org/athletics -> dtechathletics.com/winter: Girls Soccer section has only photos and links (CIF/CCS/PSAL); no roster (other teams' 'Team Roster' links are Google Docs)."
+      }
     },
     {
       "coaches": [],
@@ -1108,7 +2172,12 @@
       ],
       "players": [],
       "slug": "kipp-san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Not checked in depth; KIPP NorCal site (kippnorcal.org) has no athletics roster pages and no school athletics site was found."
+      }
     },
     {
       "coaches": [],
@@ -1117,7 +2186,12 @@
       ],
       "players": [],
       "slug": "latino-college-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sjlcpa.org/athletics/eagle-warrior-athletics lists winter sports (Girls Soccer) only; no rosters."
+      }
     },
     {
       "coaches": [],
@@ -1126,7 +2200,12 @@
       ],
       "players": [],
       "slug": "oceana",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ohs.juhsd.net/athletics lists sports offered and links to sportsnethost registration, Instagram, BSN store; no rosters."
+      }
     },
     {
       "coaches": [],
@@ -1135,7 +2214,12 @@
       ],
       "players": [],
       "slug": "nueva",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "nuevaschool.org/school-life/athletics/usgirlssoccer: coaches, program description, old schedule; no roster."
+      }
     },
     {
       "coaches": [],
@@ -1144,7 +2228,12 @@
       ],
       "players": [],
       "slug": "thomas-more",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "thomasmoreschool.org/athletics: generic sports program descriptions and calendar; no team rosters."
+      }
     },
     {
       "coaches": [],
@@ -1153,7 +2242,12 @@
       ],
       "players": [],
       "slug": "ace-charter",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "acecharter.org (incl. ACE Charter High School page) has no athletics/team/roster pages."
+      }
     },
     {
       "coaches": [],
@@ -1162,7 +2256,12 @@
       ],
       "players": [],
       "slug": "cindy-avitia",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "alphapublicschools.org/school/cindy-avitia/ mentions winter soccer and a competitive-athletics data PDF; no rosters."
+      }
     },
     {
       "coaches": [],
@@ -1171,7 +2270,12 @@
       ],
       "players": [],
       "slug": "kipp-esperanza",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "kippnorcal.org/school/kipp-esperanza-high-school/ only mentions athletics generically; no team/roster pages."
+      }
     },
     {
       "coaches": [],
@@ -1180,7 +2284,12 @@
       ],
       "players": [],
       "slug": "kipp-navigate",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "kippnorcal.org/school/kipp-navigate-college-prep/ only mentions athletics generically; no team/roster pages."
+      }
     },
     {
       "coaches": [],
@@ -1189,7 +2298,12 @@
       ],
       "players": [],
       "slug": "summit-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "summitps.org/our-schools/summit-prep-redwood-city/summit-prep-athletic-program/ has 2025-26 competitive athletics data (Girls Soccer Varsity: 1 team) and registration info; no roster."
+      }
     },
     {
       "coaches": [],
@@ -1198,7 +2312,12 @@
       ],
       "players": [],
       "slug": "summit-shasta",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Not checked in depth; Summit Public Schools site (summitps.org) has no athletics roster pages and no school athletics site was found."
+      }
     },
     {
       "coaches": [],
@@ -1207,7 +2326,12 @@
       ],
       "players": [],
       "slug": "summit-tahoma",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "summitps.org/our-schools/summit-tahoma-san-jose/tahoma-athletic-program/ has athletics data and sport season/registration info; no roster."
+      }
     }
   ]
 }

@@ -21,7 +21,16 @@
       ],
       "players": [],
       "slug": "gunn",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.gunnathletics.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected; varsity boys basketball. 2025-26 view (selected_year=2025) shows a different 20-player list."
+      }
     },
     {
       "coaches": [],
@@ -31,7 +40,16 @@
       ],
       "players": [],
       "slug": "homestead",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.homesteadmustangs.com/sport/boys-basketball/roster?team=7813650&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official PlayOn site homesteadmustangs.com: /sport/boys-basketball/roster?team=7813650&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-26 team (team=5200849) also 'No roster'. hhs.fuhsd.org athletics page and hhsathletics.com (boosters Google Site) have no roster. homesteadathletics.com is a different (Indiana) school. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -41,7 +59,16 @@
       ],
       "players": [],
       "slug": "los-gatos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.losgatosathletics.org/sport/basketball/boys/?tab=roster",
+        "season": "2025-26",
+        "seasonEvidence": "Varsity Boys Basketball - school year selector 2025-2026",
+        "listsPlayers": true,
+        "note": "Mascot Media site. Default 2026-2027 view lists no players; selecting 2025-2026 in the page's school-year dropdown shows 13 players (2024-25 shows 17)."
+      }
     },
     {
       "coaches": [],
@@ -51,7 +78,16 @@
       ],
       "players": [],
       "slug": "lynbrook",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lynbrookvikings.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected. (lynbrookathletics.com is a PlayOn site that returns 'School Not Found'.)"
+      }
     },
     {
       "coaches": [],
@@ -135,7 +171,12 @@
         }
       ],
       "slug": "milpitas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site is a Google Site (sites.google.com/musd.org/mhs) that requires sign-in; milpitasathletics.com does not resolve; searches found no official athletics/roster page."
+      }
     },
     {
       "coaches": [],
@@ -145,7 +186,16 @@
       ],
       "players": [],
       "slug": "mountain-view",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://mvhs.mvla.net/boys-basketball",
+        "season": null,
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "School page (district domain) embeds a CIF-CCS roster widget (cifccshome.org widget, Varsity tab, school_id=869) listing 17 players; the widget shows no season label. The schedule widget on the same page defaults to a 2023-24 season, so the roster's season is unconfirmed."
+      }
     },
     {
       "coaches": [],
@@ -517,7 +567,16 @@
         }
       ],
       "slug": "palo-alto",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.palyathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Boys Basketball SCHEDULE 2026-2027",
+        "listsPlayers": true,
+        "note": "Mascot Media site."
+      }
     },
     {
       "coaches": [],
@@ -527,7 +586,12 @@
       ],
       "players": [],
       "slug": "cupertino",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "cupertinoathletics.com (PlayOn) returns 'School Not Found' for homepage and /sport/boys-basketball/roster (also via WebFetch); chs.fuhsd.org boys basketball page has no roster."
+      }
     },
     {
       "coaches": [],
@@ -537,7 +601,12 @@
       ],
       "players": [],
       "slug": "fremont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "fremonthsathletics.org/boys-basketball (official Squarespace site) shows coaches, schedule and fundraiser but no roster; fhs.fuhsd.org links only to that site."
+      }
     },
     {
       "coaches": [],
@@ -547,7 +616,12 @@
       ],
       "players": [],
       "slug": "los-altos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lahs.mvla.net/boys-basketball shows coaching staff, season details and tryout info, no roster; links point to MaxPreps for updates."
+      }
     },
     {
       "coaches": [],
@@ -583,7 +657,12 @@
         }
       ],
       "slug": "macdonald",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Kathleen MacDonald HS (Santa Clara USD): macdonald.santaclarausd.org/athletics has no team/roster pages; no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -593,7 +672,16 @@
       ],
       "players": [],
       "slug": "monta-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.matadorathletics.org/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected."
+      }
     },
     {
       "coaches": [],
@@ -653,7 +741,16 @@
         }
       ],
       "slug": "santa-clara",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.schsathletics.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected."
+      }
     },
     {
       "coaches": [],
@@ -663,7 +760,16 @@
       ],
       "players": [],
       "slug": "saratoga",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.shs-athletics.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected."
+      }
     },
     {
       "coaches": [],
@@ -672,7 +778,12 @@
       ],
       "players": [],
       "slug": "wilcox",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "wilcox.santaclarausd.org/athletics/boys-basketball (official SCUSD school page): only clearance/tryout info, coach Ruben Camacho, schedule links; no roster. Old wilcox.schoolloop.com/boysbasketball (2022-23 content per search) was unreachable (503/TLS)."
+      }
     },
     {
       "coaches": [],
@@ -682,7 +793,12 @@
       ],
       "players": [],
       "slug": "christopher",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chs.gilroyunified.org/athletics and 'CHS Coaches and Schedules' pages have no roster; no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -692,7 +808,12 @@
       ],
       "players": [],
       "slug": "evergreen-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "evergreenvalleyhigh.esuhsd.org/sports/basketball-boys (Google Site) has coach/clearance info only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -800,7 +921,12 @@
         }
       ],
       "slug": "leigh",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "leigh.cuhsd.org/apps/pages/Athletics has general athletics info and booster links, no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -809,7 +935,16 @@
       ],
       "players": [],
       "slug": "pioneer",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.pioneermustangathletics.com/sport/boys-basketball/roster?team=7815880&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "pioneermustangathletics.com (official VNN/PlayOn athletics site): roster?team=boys-basketball-7815880&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-26, 2024-25, 2023-24, 2022-23 varsity rosters also empty. pioneer.sjusd.org athletics page has no rosters. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -818,7 +953,12 @@
       ],
       "players": [],
       "slug": "santa-teresa",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "santateresahigh.esuhsd.org/athletics/teams/basketball-boys: only tryout schedule (Nov. 2) and coach contact; no roster."
+      }
     },
     {
       "coaches": [],
@@ -828,7 +968,16 @@
       ],
       "players": [],
       "slug": "westmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://westmontathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "westmontathletics.com/sport/basketball/boys/?tab=roster (Mascot Media) is the roster page with a school-year selector, but it lists no players for 2026-27, 2025-26 or 2024-25 (checked via the page's roster data endpoint)."
+      }
     },
     {
       "coaches": [],
@@ -838,7 +987,16 @@
       ],
       "players": [],
       "slug": "willow-glen",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.willowglenathletics.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected."
+      }
     },
     {
       "coaches": [],
@@ -898,7 +1056,12 @@
         }
       ],
       "slug": "branham",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "branham.cuhsd.org/apps/pages/athletics has no team or roster pages (only boosters, GoFan, clearance links)."
+      }
     },
     {
       "coaches": [],
@@ -907,7 +1070,12 @@
       ],
       "players": [],
       "slug": "independence",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "independence.esuhsd.org/Athletics redirects to sites.google.com/esuhsd.org/sixerathletics (Athletic Clearance for 2026-2027 info, coaching staff, forms); no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -917,7 +1085,16 @@
       ],
       "players": [],
       "slug": "leland",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lelandathletics.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Roster - season selector shows 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus roster page; season dropdown (2024-25, 2025-26, 2026-27) with 2026-27 selected."
+      }
     },
     {
       "coaches": [],
@@ -927,7 +1104,12 @@
       ],
       "players": [],
       "slug": "live-oak",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "liveoak.mhusd.org/athletics (and its 'Athletics Website' subpage) has no team/roster pages."
+      }
     },
     {
       "coaches": [],
@@ -937,7 +1119,12 @@
       ],
       "players": [],
       "slug": "silver-creek",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "silvercreekhigh.esuhsd.org/athletics/winter-sports has no roster; silvercreekathletics.com is a different (Dragons) school."
+      }
     },
     {
       "coaches": [],
@@ -973,7 +1160,16 @@
         }
       ],
       "slug": "sobrato",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sobratoathletics.olinesports.com/roster.php?sport=573",
+        "season": null,
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "Official Ann Sobrato athletics site (OlineSports), 'Basketball - Boys Varsity' roster with head coach Sean Tate; the page shows no season/year."
+      }
     },
     {
       "coaches": [],
@@ -982,7 +1178,12 @@
       ],
       "players": [],
       "slug": "gilroy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gilroyhs.gilroyunified.org/mustang-athletics: coach list (Boys Basketball coach Joe Te), game calendar, 2026-27 clearance notice; no roster."
+      }
     },
     {
       "coaches": [],
@@ -1114,7 +1315,12 @@
         }
       ],
       "slug": "lincoln",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lincoln.sjusd.org/extracurriculuar/athletics has no team/roster pages; lincolnathletics.com is a different (Portland) school."
+      }
     },
     {
       "coaches": [],
@@ -1123,7 +1329,12 @@
       ],
       "players": [],
       "slug": "oak-grove",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "oakgrovehigh.esuhsd.org/athletics/winter-sports has no roster (links to bval.org); oakgroveathletics.com is a different (NC) school."
+      }
     },
     {
       "coaches": [],
@@ -1132,7 +1343,22 @@
       ],
       "players": [],
       "slug": "overfelt",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "partial",
+        "checkedOn": "2026-11-28",
+        "source": "https://www.wcoathletics.com/varsity/basketball-boys/roster",
+        "summary": "The school’s athletics site (wcoathletics.com) has a 2026-27 varsity boys basketball roster with only four names so far: Edwin Gonzalez, Kinnaree Muangchanh, Keyontae Slayton and Mesihas Tillmon. MaxPreps lists nobody."
+      },
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.wcoathletics.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Official Overfelt athletics site (wcoathletics.com, HomeCampus). Page heading 'Roster' under Varsity Basketball, Boys with season dropdown selected '2026-27' (options 2024-25, 2025-26, 2026-27); print view /varsity/basketball-boys/print-rosters?selected_year=2026 shows 'Basketball, Boys' with the s…",
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (partial): The school’s athletics site (wcoathletics.com) has a 2026-27 varsity boys basketball roster with only four names so far: Edwin Gonzalez, Kinnaree Muangchanh, Keyontae Slayton and Mesihas Tillmon. MaxPreps lists nobody."
+      }
     },
     {
       "coaches": [],
@@ -1142,7 +1368,12 @@
       ],
       "players": [],
       "slug": "piedmont-hills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "piedmonthillshigh.esuhsd.org athletics-program pages (coaches, schedules) have no roster."
+      }
     },
     {
       "coaches": [],
@@ -1151,7 +1382,12 @@
       ],
       "players": [],
       "slug": "prospect",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "prospect.cuhsd.org/apps/pages/BoysBasketball: tryout schedule (Nov 3-7), coaches Mike Furlong (varsity) / Dave Chisholm (frosh-soph), 2021-2022 league champion photo header; no roster."
+      }
     },
     {
       "coaches": [],
@@ -1160,7 +1396,12 @@
       ],
       "players": [],
       "slug": "andrew-hill",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "andrewphill.esuhsd.org/Athletics/Winter-Sports has no roster."
+      }
     },
     {
       "coaches": [],
@@ -1169,7 +1410,12 @@
       ],
       "players": [],
       "slug": "del-mar",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "delmar.cuhsd.org Athletics Teams > Basketball - Boys (and teamsports coach list, varsity coach Mark Collins): general program description only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -1178,7 +1424,12 @@
       ],
       "players": [],
       "slug": "gunderson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gunderson.sjusd.org/extracurricular/athletics (and coaching-list-by-sport): coaches, summer workout schedule, game list; no roster. grizzlypride.com roster found in search belongs to Granite Bay, not Gunderson."
+      }
     },
     {
       "coaches": [],
@@ -1187,7 +1438,12 @@
       ],
       "players": [],
       "slug": "james-lick",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "jameslick.esuhsd.org athletics -> sites.google.com/esuhsd.org/james-lick-high-school/athletics/winter-sports/boys-basketball: coach Mike Cappas and BVAL schedule link only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -1197,7 +1453,12 @@
       ],
       "players": [],
       "slug": "mt-pleasant",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mtpleasant.esuhsd.org/Athletics/Winter-Sports/Basketball-Boys-and-Girls lists coaches only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -1206,7 +1467,12 @@
       ],
       "players": [],
       "slug": "san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sjhs.sjusd.org/extracurricular/athletics has no team/roster pages; no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -1216,7 +1482,12 @@
       ],
       "players": [],
       "slug": "yerba-buena",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "yerbabuena.esuhsd.org/Athletics/index.html has no roster."
+      }
     },
     {
       "coaches": [],
@@ -1636,7 +1907,12 @@
         }
       ],
       "slug": "mitty",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mitty.com/athletics/mens-basketball has program/coach info only and says rosters are in the AMHS Athletics app; mittymonarchs.com blocked (Cloudflare 403)."
+      }
     },
     {
       "coaches": [],
@@ -1646,7 +1922,16 @@
       ],
       "players": [],
       "slug": "riordan",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://riordanathletics.com/sports/mens-basketball/roster",
+        "season": "2025-26",
+        "seasonEvidence": "2025-26 Varsity Boys' Basketball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site; newest season in selector is 2025-26."
+      }
     },
     {
       "coaches": [],
@@ -1656,7 +1941,16 @@
       ],
       "players": [],
       "slug": "bellarmine",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://bcpathletics.com/sports/mens-basketball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Varsity Basketball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site."
+      }
     },
     {
       "coaches": [],
@@ -1915,6 +2209,15 @@
             "position": null
           }
         ]
+      },
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://padreathletics.com/sports/mens-basketball/roster/2026-27",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": true,
+        "note": "The page otherRosters reads (listed): The school’s athletics site lists these 19 players on its 2026-27 varsity basketball roster. MaxPreps’ 2026-27 Serra roster was emptied between the 2026-11-24 and 2026-11-28 reads (0 athletes, 4 staff). Positions are the site’s own; it gives Jordan Coney, Owen Schwalbach and Matteo Topalian no posi…"
       }
     },
     {
@@ -1925,7 +2228,16 @@
       ],
       "players": [],
       "slug": "sacred-heart-cathedral",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://shcathletics.com/sports/mens-basketball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Boys Basketball (Varsity) Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site."
+      }
     },
     {
       "coaches": [],
@@ -1935,7 +2247,16 @@
       ],
       "players": [],
       "slug": "saint-francis",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sfhsathletics.com/sports/mens-basketball/roster",
+        "season": "2025-26",
+        "seasonEvidence": "2025-26 Men's Varsity Basketball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site; newest season in selector is 2025-26."
+      }
     },
     {
       "coaches": [],
@@ -2139,7 +2460,16 @@
         }
       ],
       "slug": "st-ignatius",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://siwildcats.com/sports/mens-basketball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Men's Basketball (Varsity) Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site."
+      }
     },
     {
       "coaches": [],
@@ -2175,7 +2505,16 @@
         }
       ],
       "slug": "valley-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://gowarriors.net/sports/mens-basketball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Varsity Men's Basketball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site (linked from vcs.net athletics)."
+      }
     },
     {
       "coaches": [],
@@ -2331,7 +2670,12 @@
         }
       ],
       "slug": "crystal-springs",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "crystal.org/athletics/teams (Blackbaud) lists Boys Basketball with no team page or roster; no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -2340,7 +2684,12 @@
       ],
       "players": [],
       "slug": "eastside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "eastside.org/_studentlife/athletics.html: only lists sports offered (Boys Basketball etc.); no team or roster pages. Hudl page exists but not acceptable."
+      }
     },
     {
       "coaches": [],
@@ -2350,7 +2699,12 @@
       ],
       "players": [],
       "slug": "harker",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "harker.org Upper School athletics pages: only athletic events/schedule listings (Varsity Basketball - Boys events), no team or roster pages. No separate athletics site found (athletics.harker.org does not resolve)."
+      }
     },
     {
       "coaches": [],
@@ -2386,7 +2740,12 @@
         }
       ],
       "slug": "kings-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "tka.org/athletics/teams/team-details/~athletics-team-id/73 (Basketball - Varsity Boys): heading 'Boys Varsity Basketball Team 2025-2026', head coach and schedule only, no player list."
+      }
     },
     {
       "coaches": [],
@@ -2396,7 +2755,12 @@
       ],
       "players": [],
       "slug": "menlo",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "menloschool.org/athletics/us-boys-varsity-basketball/: About the Team, coaches, 2026-27 schedule; no roster section."
+      }
     },
     {
       "coaches": [],
@@ -2406,7 +2770,12 @@
       ],
       "players": [],
       "slug": "pinewood",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pinewood.edu/student-experience/athletics: general sports list and event calendar only, no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -2586,7 +2955,12 @@
         }
       ],
       "slug": "priory",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "prioryca.org team-detail?Team=132887 (US Varsity Boys Basketball): schedule with season selector, no roster."
+      }
     },
     {
       "coaches": [],
@@ -2790,7 +3164,12 @@
         }
       ],
       "slug": "sacred-heart-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "shschools.org z-2021-hpr-shp-team-detail?Team=144871 (SHP Boys Basketball Varsity 2026-2027): head coach and schedule only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -2946,7 +3325,16 @@
         }
       ],
       "slug": "aragon",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.aragonathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "aragonathletics.com (Mascot Media, linked from ahs.smuhsd.org) Varsity Boys Basketball roster tab has a school-year selector but lists no players for 2026-27, 2025-26 or 2024-25. ahs.smuhsd.org team page lists coaches only."
+      }
     },
     {
       "coaches": [],
@@ -2956,7 +3344,16 @@
       ],
       "players": [],
       "slug": "burlingame",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.burlingameathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "burlingameathletics.com (linked from bhs.smuhsd.org) Varsity Boys Basketball roster tab has a school-year selector but empty table for 2026-27, 2025-26, 2024-25."
+      }
     },
     {
       "coaches": [],
@@ -2965,7 +3362,16 @@
       ],
       "players": [],
       "slug": "carlmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.carlmontathletics.org/sport/boys-basketball/roster?team=boys-basketball-4450300&year=2024-2025",
+        "season": "2024-25",
+        "seasonEvidence": "Most recent varsity roster with players: 'Boys Varsity Basketball Roster' 2024-2025 (13 players).",
+        "listsPlayers": true,
+        "note": "carlmontathletics.org (official VNN/PlayOn site): roster?team=boys-basketball-7811400&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-2026 varsity (team 5198219) also 'No roster'. Latest populated varsity roster is 2024-2025."
+      }
     },
     {
       "coaches": [],
@@ -2974,7 +3380,16 @@
       ],
       "players": [],
       "slug": "half-moon-bay",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.hmbhsathletics.com/sport/boys-basketball/roster?team=7813504&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "hmbhsathletics.com (PlayOn site, linked from hmbhs.cabrillo.us): 'No roster for 2026-2027 Varsity Boys Basketball'; same message for 2025-2026 and 2024-2025."
+      }
     },
     {
       "coaches": [],
@@ -2984,7 +3399,16 @@
       ],
       "players": [],
       "slug": "hillsdale",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.hillsdaleathletics.com/boysbasketball-rosters",
+        "season": "2026-27",
+        "seasonEvidence": "VARSITY BOYS 2026-27",
+        "listsPlayers": true,
+        "note": "SportsEngine site; Varsity tab of Boy's Basketball Team Rosters page (loaded via tab)."
+      }
     },
     {
       "coaches": [],
@@ -2994,7 +3418,16 @@
       ],
       "players": [],
       "slug": "menlo-atherton",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.bearsathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "bearsathletics.com (linked from mabears.org) Varsity Boys Basketball roster tab has a school-year selector but empty table for 2026-27, 2025-26, 2024-25."
+      }
     },
     {
       "coaches": [],
@@ -3004,7 +3437,12 @@
       ],
       "players": [],
       "slug": "sequoia",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sequoiahs.org/athletics/winter-sports/boys-basketball: tryout info, coach, schedule links; no roster."
+      }
     },
     {
       "coaches": [],
@@ -3041,7 +3479,12 @@
         }
       ],
       "slug": "woodside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "woodsidehs.org/athletics/winter-sports/boys-basketball: coaches bios, 2026-27 schedules link to MaxPreps; no roster."
+      }
     },
     {
       "coaches": [],
@@ -3077,7 +3520,16 @@
         }
       ],
       "slug": "capuchino",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.capuchinoathletics.com/sport/boys-basketball/roster?team=4450259&year=2024-2025",
+        "season": "2024-25",
+        "seasonEvidence": "Boys Varsity Basketball Roster - 2024-2025 roster",
+        "listsPlayers": true,
+        "note": "capuchinoathletics.com (PlayOn site): 2026-2027 and 2025-2026 varsity pages say \"No roster for ... Varsity Boys Basketball\"; newest roster with players is 2024-2025 (players rendered from page data)."
+      }
     },
     {
       "coaches": [],
@@ -3087,7 +3539,12 @@
       ],
       "players": [],
       "slug": "el-camino-ssf",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "elcamino.ssfusd.org/athletics/teams-seasons: Basketball (Boys) section says \"Coming soon!\"; no roster or separate athletics site."
+      }
     },
     {
       "coaches": [],
@@ -3096,7 +3553,12 @@
       ],
       "players": [],
       "slug": "jefferson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "jhs.juhsd.net/athletics/winter-sports/boys-basketball: coach names (varsity/JV/freshman) only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -3132,7 +3594,16 @@
         }
       ],
       "slug": "mills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.millsathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "millsathletics.com (linked from mhs.smuhsd.org) Varsity Boys Basketball roster tab has a school-year selector but empty table for 2026-27, 2025-26, 2024-25."
+      }
     },
     {
       "coaches": [],
@@ -3142,7 +3613,16 @@
       ],
       "players": [],
       "slug": "san-mateo",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.sanmateoathletics.org/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Boys Basketball ROSTER, SCHOOL YEAR: 2026-2027",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from smhs.smuhsd.org; roster table loads for Varsity level, 2026-2027 selected."
+      }
     },
     {
       "coaches": [],
@@ -3151,7 +3631,12 @@
       ],
       "players": [],
       "slug": "south-san-francisco",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "southcity.ssfusd.org/athletics (only coaches, eligibility, tickets subpages); no team/roster pages. sfwarriorslive.com from search is suspended/unverified."
+      }
     },
     {
       "coaches": [],
@@ -3160,7 +3645,16 @@
       ],
       "players": [],
       "slug": "terra-nova",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.terranovasports.com/sport/boys-basketball/roster?team=7817115&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "terranovasports.com (PlayOn site, linked from tnhs.juhsd.net): 'No roster for 2026-2027 Varsity Boys Basketball'; same for 2025-2026 and 2024-2025."
+      }
     },
     {
       "coaches": [],
@@ -3170,7 +3664,12 @@
       ],
       "players": [],
       "slug": "westmoor",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "whs.juhsd.net/athletics: sports offered list and weekly event schedule only; no team pages or rosters; no separate athletics site linked."
+      }
     },
     {
       "coaches": [],
@@ -3374,7 +3873,16 @@
         }
       ],
       "slug": "aptos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.aptosathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "aptosathletics.com (official AHS athletics site, linked from aptoshs.net) Varsity Boys Basketball roster tab has a school-year selector but empty table for 2026-27, 2025-26, 2024-25."
+      }
     },
     {
       "coaches": [],
@@ -3383,7 +3891,12 @@
       ],
       "players": [],
       "slug": "harbor",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hh.sccs.net/athletics (Wix school site): AD contact, registration, no winter team pages; only an old boys JV page (2019-20 per search). No varsity roster."
+      }
     },
     {
       "coaches": [],
@@ -3443,7 +3956,12 @@
         }
       ],
       "slug": "san-lorenzo-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hs.slvusd.org Sports Schedules page: Basketball (Boys) links only to an external Google Sheet; no roster page on school site."
+      }
     },
     {
       "coaches": [],
@@ -3453,7 +3971,12 @@
       ],
       "players": [],
       "slug": "santa-cruz",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "schs.sccs.net/all-sports-teams: Boys Basketball links only to an external Google Doc (not a school-domain roster page); no roster on the school site."
+      }
     },
     {
       "coaches": [],
@@ -3537,7 +4060,16 @@
         }
       ],
       "slug": "scotts-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://svhs.scottsvalleyusd.org/o/svhs/page/basketball-boys",
+        "season": "2026-27",
+        "seasonEvidence": "2026/27 VARSITY ROSTER",
+        "listsPlayers": true,
+        "note": "Apptegy team page on district domain; roster is a name list under the heading."
+      }
     },
     {
       "coaches": [],
@@ -3547,7 +4079,12 @@
       ],
       "players": [],
       "slug": "soquel",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "soquel.sccs.net/athletics: general athletics info, registration and Google Docs links; no basketball team page or roster."
+      }
     },
     {
       "coaches": [],
@@ -3556,7 +4093,12 @@
       ],
       "players": [],
       "slug": "carmel",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "carmelhigh.carmelunified.org/athletics: calendar, coaches directory, practice-date PDFs, Hudl TV; no team pages or rosters, no separate athletics site."
+      }
     },
     {
       "coaches": [],
@@ -3590,7 +4132,12 @@
         }
       ],
       "slug": "hollister",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Hollister High School (formerly San Benito HS) hhs.sanbenitohsd.gov/athletics: coach contacts, event list and Google Drive schedules; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -3599,7 +4146,12 @@
       ],
       "players": [],
       "slug": "monterey",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "montereyhigh.mpusd.net/athletics2: no roster. Official athletics site mhsgodores.com/sport/basketball/boys/ returns Cloudflare 403 to automated fetch, so could not be verified; search snippet indicated its schedule tables were labeled 2025-2026."
+      }
     },
     {
       "coaches": [],
@@ -3608,7 +4160,12 @@
       ],
       "players": [],
       "slug": "pacific-grove",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pghigh.pgusd.org Athletics (Sports Info, calendar, newsletter): no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -3690,7 +4247,16 @@
         }
       ],
       "slug": "palma",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://palmaathletics.org/sports/mens-basketball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Boys Basketball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site."
+      }
     },
     {
       "coaches": [],
@@ -3699,7 +4265,16 @@
       ],
       "players": [],
       "slug": "salinas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.salinascowboys.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Basketball, Boys Varsity Roster, season selector 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "HomeCampus site linked from shs.salinasuhsd.org."
+      }
     },
     {
       "coaches": [],
@@ -3708,7 +4283,16 @@
       ],
       "players": [],
       "slug": "oakwood",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.oakwoodway.org/athletics/teams-schedules/high-school/boys-basketball",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "oakwoodway.org/athletics/teams-schedules/high-school/boys-basketball (Oakwood School, Morgan Hill): Varsity section has Schedule/Coaches/Roster panels; Coaches says 'There is no information for this team' and the Roster panel is empty. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
+      }
     },
     {
       "coaches": [],
@@ -3717,7 +4301,12 @@
       ],
       "players": [],
       "slug": "alisal",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ahs.salinasuhsd.org/for-students/athletics and winter-sports: sport list and coach contacts only; no roster or separate athletics site."
+      }
     },
     {
       "coaches": [],
@@ -3726,7 +4315,12 @@
       ],
       "players": [],
       "slug": "marina-mariners",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mahs.mpusd.net/athletics and /sports-schedule: 'Winter Sports 2026-27' Google Sheets schedule (2026-2027 Boys' Basketball Schedule) only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -3735,7 +4329,12 @@
       ],
       "players": [],
       "slug": "monte-vista-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mvcs.org/athletics/teams-schedules: Boys Basketball Varsity Roster/Schedule links all point to MaxPreps; no roster on the school site."
+      }
     },
     {
       "coaches": [],
@@ -3769,7 +4368,12 @@
         }
       ],
       "slug": "north-salinas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "nshs.salinasuhsd.org/for-students/athletics (+ athletic schedules): sports list only; no team or roster pages, no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -3778,7 +4382,12 @@
       ],
       "players": [],
       "slug": "rancho-san-juan",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "rsjhs.salinasuhsd.org/for-students/athletics/rsj-athletics and schedules: sport list only; no roster pages."
+      }
     },
     {
       "coaches": [],
@@ -4004,7 +4613,12 @@
         }
       ],
       "slug": "soledad",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "shs.soledadusd.org Athletics / Sport Schedules: 'Boys Basketball 2026-2027' links to an external Google Sheet (schedule); no roster page on school site."
+      }
     },
     {
       "coaches": [],
@@ -4013,7 +4627,16 @@
       ],
       "players": [],
       "slug": "st-francis-watsonville",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://stfrancisscp.homecampus.com/varsity/basketball-boys/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Basketball, Boys Varsity Roster, season selector 2026-27 (selected)",
+        "listsPlayers": true,
+        "note": "Official athletics site (HomeCampus) linked as Athletics from stfrancishigh.net via sharks.stfrancishigh.net; only 4 players listed so far."
+      }
     },
     {
       "coaches": [],
@@ -4047,7 +4670,16 @@
         }
       ],
       "slug": "watsonville",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.watsonvilleathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "watsonvilleathletics.com (linked from watsonvillehs.net) Varsity Boys Basketball roster tab has a school-year selector but empty table for 2026-27, 2025-26, 2024-25."
+      }
     },
     {
       "coaches": [],
@@ -4056,7 +4688,16 @@
       ],
       "players": [],
       "slug": "everett-alvarez",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.everettalvarezathletics.com/sport/basketball/boys/?tab=roster",
+        "season": "2025-26",
+        "seasonEvidence": "Varsity Boys Basketball roster tab: school year 2026-2027 returns an empty roster table; school year 2025-2026 shows 17 players (e.g. 'DAMIEN AGUILAR-REYES', grades FRESHMAN-SENIOR).",
+        "listsPlayers": true,
+        "note": "everettalvarezathletics.com (official rSchoolToday-style site) roster endpoint RefreshRosterAthleteStyle1ViewComponent/113279 for 2026-2027 (empty) and 2025-2026 (populated). eahs.salinasuhsd.org athletics has no roster; alvarezeagles.com shows 'School Not Found'. The URL opens on 2026-27, which lists nobody yet; 2025-26 is the newest season with players."
+      }
     },
     {
       "coaches": [],
@@ -4065,7 +4706,12 @@
       ],
       "players": [],
       "slug": "gonzales",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site ghs.gonzalesusd.net (Edlio) has no athletics/sports section or team pages in its navigation; web searches for a Gonzales HS (CA) athletics site and a 2026-27 boys basketball roster returned only MaxPreps/NFHS/NCSA third-party pages."
+      }
     },
     {
       "coaches": [],
@@ -4147,7 +4793,12 @@
         }
       ],
       "slug": "greenfield",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "greenfieldhs.org/teams: 'Basketball - Boys' 0 Staff' entry only; no team page or roster."
+      }
     },
     {
       "coaches": [],
@@ -4156,7 +4807,12 @@
       ],
       "players": [],
       "slug": "king-city",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site kingcityhs.org: Athletics section has Athletic Teams (https://kingcityhs.org/athletic-teams, no team content), Sport Schedules, eligibility and clearance pages; no rosters. District site smcjuhsd.org has only a coaches page. Searches found only MaxPreps/SI/NFHS."
+      }
     },
     {
       "coaches": [],
@@ -4165,7 +4821,12 @@
       ],
       "players": [],
       "slug": "north-monterey-county",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site nmchs.nmcusd.org/athletics (Finalsite): Schedules page links a boys basketball 2026-27 schedule PDF only; Coaches Directory, Registration, Photos, Custom Gear; no roster pages. Searches found only MaxPreps/SI."
+      }
     },
     {
       "coaches": [],
@@ -4174,7 +4835,12 @@
       ],
       "players": [],
       "slug": "pajaro-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site pvhs.pvusd.net Programs/Athletics (Fall/Winter/Spring Sports, Title IX): Winter Sports page lists coaches only (Eddie Marin - Boys Basketball); Title IX page gives participation counts; no roster. Searches found MaxPreps and Pajaronian news only."
+      }
     },
     {
       "coaches": [],
@@ -4183,7 +4849,12 @@
       ],
       "players": [],
       "slug": "seaside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "shs.mpusd.net/athletics and athletics-schedules: only a 'Boys Basketball Schedule 26 27' .docx; no roster."
+      }
     },
     {
       "coaches": [],
@@ -4192,7 +4863,12 @@
       ],
       "players": [],
       "slug": "stevenson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "stevensonschool.org/teams/basketball-boys/ (athletics.stevensonschool.org redirects to stevensonschool.org/athletics/): coach bio, history, alumni, no roster; schedules-scores page has no roster links."
+      }
     },
     {
       "coaches": [],
@@ -4201,7 +4877,12 @@
       ],
       "players": [],
       "slug": "anzar",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site anzar.asjusd.org/athletics: overview, eligibility, sports offered, coach list (Boys Varsity Basketball: TBD); no rosters. District asjusd.org athletics page links only to that. Searches found MaxPreps/SI/BenitoLink/sanbenito.com."
+      }
     },
     {
       "coaches": [],
@@ -4210,7 +4891,12 @@
       ],
       "players": [],
       "slug": "monterey-bay-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site montereybayacademy.org Programs > Athletics page: general description, participating schools list, athletic calendar; no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -4219,7 +4905,12 @@
       ],
       "players": [],
       "slug": "pacific-collegiate",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site pacificcollegiate.com/program/athletics and athletic-calendar: sports offered by season (Basketball - Boys & Girls JV, V), eligibility info, link to pcalathletics.org; no rosters. Searches found only MaxPreps."
+      }
     },
     {
       "coaches": [],
@@ -4228,7 +4919,12 @@
       ],
       "players": [],
       "slug": "york",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "york.org/athletics/winter-sports/boys-basketball: only a schedule calendar ('There are no events currently available'), no roster."
+      }
     },
     {
       "coaches": [],
@@ -4237,7 +4933,12 @@
       ],
       "players": [],
       "slug": "ceiba",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Official site ceibaprep.org was unreachable (503 / connection closed) on repeated tries; site: search returned no ceibaprep.org athletics pages; other searches found only MaxPreps/SI/EdJoin coach posting."
+      }
     },
     {
       "coaches": [],
@@ -4246,7 +4947,12 @@
       ],
       "players": [],
       "slug": "chartwell",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chartwell.org/athletics and /athletics/high-school-athletics: coach bios and sports list only, no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -4255,7 +4961,12 @@
       ],
       "players": [],
       "slug": "kirby",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "kirby.org/athletics/high-school-athletics: lists sports (Boys Basketball*), no team pages or rosters. kirbyathleticzone.com is Kirby HS in Memphis TN, not this school."
+      }
     },
     {
       "coaches": [],
@@ -4433,7 +5144,12 @@
         }
       ],
       "slug": "trinity-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site trinityhigh.org (athletics page trinityhigh.org/athletics/) unreachable (connection failed / HTTP 503). Search found only MaxPreps/SI/NFHS."
+      }
     },
     {
       "coaches": [],
@@ -4442,7 +5158,16 @@
       ],
       "players": [],
       "slug": "design-tech",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://docs.google.com/document/d/1t4jT0yR6D6bDNeQzhuixTovaBvyUFBSWxOEmflUKIiQ",
+        "season": "2026-27",
+        "seasonEvidence": "2026-2027 VARSITY BOYS BASKETBALL ROSTER",
+        "listsPlayers": true,
+        "note": "A Google Doc, linked as “Varsity Team Roster” from the school’s athletics site (dtechathletics.com/winter); 15 players, read 2026-11-28."
+      }
     },
     {
       "coaches": [],
@@ -4451,7 +5176,12 @@
       ],
       "players": [],
       "slug": "oceana",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "ohs.juhsd.net/athletics: general info, BSN store link and a sportsnethost parent login only; no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -4460,7 +5190,12 @@
       ],
       "players": [],
       "slug": "summit-shasta",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "summitps.org/our-schools/summit-shasta-daly-city/summit-shasta-athletic-program/: table of teams offered (Basketball Boys Varsity) only, no roster."
+      }
     },
     {
       "coaches": [],
@@ -4469,7 +5204,12 @@
       ],
       "players": [],
       "slug": "thomas-more",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "thomasmoreschool.org/athletics: short description of the basketball program, no roster."
+      }
     },
     {
       "coaches": [],
@@ -4478,7 +5218,12 @@
       ],
       "players": [],
       "slug": "basis-silicon-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "basisindependent.com/silicon-valley/sports-athletics: general sports list, no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -4487,7 +5232,12 @@
       ],
       "players": [],
       "slug": "university-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "upasv.org/athletics: coach list and list of sports (Varsity Basketball (Boys)), no roster."
+      }
     },
     {
       "coaches": [],
@@ -4496,7 +5246,12 @@
       ],
       "players": [],
       "slug": "cristo-rey-san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "cristoreysanjose.org/boys-basketball: program text, coaches and schedule headings, no roster."
+      }
     },
     {
       "coaches": [],
@@ -4505,7 +5260,16 @@
       ],
       "players": [],
       "slug": "kipp-san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.ksjcathletics.com/sport/boys-basketball/roster?team=7898350&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official athletics site (PlayOn/VNN) linked from kippnorcal.org: https://www.ksjcathletics.com/sport/boys-basketball/roster?team=7898350&year=2026-2027 shows heading 'Boys Varsity Basketball Roster 2026-2027' with only coach Josue Gil-Fernandez and the text 'No roster for 2026-2027 Varsity Boys Basketball'. Page exists but has no players."
+      }
     },
     {
       "coaches": [],
@@ -4514,7 +5278,12 @@
       ],
       "players": [],
       "slug": "nueva",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "nuevaschool.org/school-life/athletics: calendar and news only; the old team-page links (student-experience/athletics/...) return 404."
+      }
     },
     {
       "coaches": [],
@@ -4523,7 +5292,12 @@
       ],
       "players": [],
       "slug": "mountain-view-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "Official site per Wikipedia mtnviewacademy.org -> mountainviewacademy.org is behind a JavaScript bot challenge (could not be read); site: search returned no school-domain athletics pages; other results only MaxPreps/NFHS/On3."
+      }
     },
     {
       "coaches": [],
@@ -4532,7 +5306,12 @@
       ],
       "players": [],
       "slug": "north-valley-baptist",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "nvbs.org returns HTTP 403 (bot block) to both curl and fetch, so I couldn't check it. Search found only MaxPreps/SI/NFHS/NCSA."
+      }
     },
     {
       "coaches": [],
@@ -4541,7 +5320,12 @@
       ],
       "players": [],
       "slug": "kehillah",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "kehillah.org/athletics returns HTTP 403 (Bunny Shield bot challenge), so I couldn't check it. Search found only news, NFHS and Digital Scout."
+      }
     },
     {
       "coaches": [],
@@ -4550,7 +5334,12 @@
       ],
       "players": [],
       "slug": "kipp-esperanza",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "kippnorcal.org/school/kipp-esperanza-high-school/: generic 'Athletics & Extracurriculars' text, no team pages or rosters."
+      }
     },
     {
       "coaches": [],
@@ -4559,7 +5348,12 @@
       ],
       "players": [],
       "slug": "summit-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School page summitps.org/our-schools/summit-prep-redwood-city/summit-prep-athletic-program/: Title IX team counts (Basketball Boys Varsity 1), registration via AthleticClearance.com; no roster. Searches found only MaxPreps/SI."
+      }
     },
     {
       "coaches": [],
@@ -4568,7 +5362,12 @@
       ],
       "players": [],
       "slug": "pacific-bay-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site pacbay.org: navigation has High School, Middle School, Blog, Admissions, About, 26-27 calendar PDF; no athletics or roster pages. An old schoolwires athletics page (ca50000674.schoolwires.net/Page/37) is unreachable. Searches found only MaxPreps/NFHS/SI."
+      }
     },
     {
       "coaches": [],
@@ -4577,7 +5376,12 @@
       ],
       "players": [],
       "slug": "pescadero",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "District site lhpusd.com serves a bot-challenge page and pescadero.lhpusd.com doesn't resolve. Search found only news, NFHS and community event listings."
+      }
     },
     {
       "coaches": [],
@@ -4586,7 +5390,12 @@
       ],
       "players": [],
       "slug": "sf-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site sfchristianschool.org/athletics/boys-basketball/: program description and coach (Jordan Valenzuela); states 'The season schedule and results are kept on MaxPreps'; no roster on school site."
+      }
     },
     {
       "coaches": [],
@@ -4595,7 +5404,12 @@
       ],
       "players": [],
       "slug": "cindy-avitia",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School page alphapublicschools.org/school/cindy-avitia: mentions competitive sports (basketball in winter) and links a Competitive Athletics PDF; no team pages or rosters. Searches found only MaxPreps/NCSA."
+      }
     },
     {
       "coaches": [],
@@ -4604,7 +5418,12 @@
       ],
       "players": [],
       "slug": "kipp-navigate",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School page kippnorcal.org/school/kipp-navigate-college-prep/: lists extracurriculars (Girls & Boys Basketball etc.) but no athletics site link, team pages or rosters. Searches found no Navigate athletics site; only MaxPreps."
+      }
     },
     {
       "coaches": [],
@@ -4613,7 +5432,12 @@
       ],
       "players": [],
       "slug": "summit-tahoma",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "summitps.org/our-schools/summit-tahoma-san-jose/tahoma-athletic-program/: season dates and registration info for Boys' Basketball, no roster."
+      }
     },
     {
       "coaches": [],
@@ -4622,7 +5446,12 @@
       ],
       "players": [],
       "slug": "east-palo-alto-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site epaahs.org/athletics (linked from seq.org): lists '3 Seasons for 2026-2027' (Winter: Girls Soccer and Boys and Girls Basketball), athletic directors, sportsnethost registration packet; no rosters."
+      }
     },
     {
       "coaches": [],
@@ -4631,7 +5460,12 @@
       ],
       "players": [],
       "slug": "mid-peninsula",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mid-pen.org/athletics/team-pages/boys-basketball-boys: 'Winter 2026-2027 Season' team page with practice and game schedule and a MaxPreps link, but no player list."
+      }
     },
     {
       "coaches": [],
@@ -4640,7 +5474,12 @@
       ],
       "players": [],
       "slug": "stratford",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School page stratfordschools.com/.../san-jose-stratford-prep/student-life/athletics: lists high school athletic options by season (Winter: Boys Basketball); no team pages or rosters. Searches found only MaxPreps/SI."
+      }
     }
   ]
 }
