@@ -1812,7 +1812,110 @@
         }
       ],
       "slug": "serra",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://padreathletics.com/sports/mens-basketball/roster/2026-27",
+        "summary": "The school’s athletics site lists these 19 players on its 2026-27 varsity basketball roster. MaxPreps’ 2026-27 Serra roster was emptied between the 2026-11-24 and 2026-11-28 reads (0 athletes, 4 staff). Positions are the site’s own; it gives Jordan Coney, Owen Schwalbach and Matteo Topalian no position.",
+        "players": [
+          {
+            "firstName": "Payton",
+            "lastName": "Langridge",
+            "position": "forward"
+          },
+          {
+            "firstName": "Tillman",
+            "lastName": "Langridge",
+            "position": "forward"
+          },
+          {
+            "firstName": "Blake",
+            "lastName": "Baldi",
+            "position": "guard"
+          },
+          {
+            "firstName": "RJ",
+            "lastName": "Guldbech",
+            "position": "guard"
+          },
+          {
+            "firstName": "Cayden",
+            "lastName": "Carlos",
+            "position": "guard"
+          },
+          {
+            "firstName": "Timo",
+            "lastName": "Stepanenkov",
+            "position": "forward"
+          },
+          {
+            "firstName": "Luke",
+            "lastName": "De Guzman",
+            "position": "guard"
+          },
+          {
+            "firstName": "Caleb",
+            "lastName": "Bandel",
+            "position": "forward"
+          },
+          {
+            "firstName": "Rylan",
+            "lastName": "Cruz",
+            "position": "guard"
+          },
+          {
+            "firstName": "Amari",
+            "lastName": "Hill",
+            "position": "guard"
+          },
+          {
+            "firstName": "Nathan",
+            "lastName": "Miller",
+            "position": "guard"
+          },
+          {
+            "firstName": "Aiden",
+            "lastName": "Kwan",
+            "position": "guard"
+          },
+          {
+            "firstName": "Maximo",
+            "lastName": "Haas",
+            "position": "forward"
+          },
+          {
+            "firstName": "Matias",
+            "lastName": "Barcelona",
+            "position": "forward"
+          },
+          {
+            "firstName": "Sam",
+            "lastName": "McReynolds",
+            "position": "forward"
+          },
+          {
+            "firstName": "Roy",
+            "lastName": "Simpson",
+            "position": "forward"
+          },
+          {
+            "firstName": "Jordan",
+            "lastName": "Coney",
+            "position": null
+          },
+          {
+            "firstName": "Owen",
+            "lastName": "Schwalbach",
+            "position": null
+          },
+          {
+            "firstName": "Matteo",
+            "lastName": "Topalian",
+            "position": null
+          }
+        ]
+      }
     },
     {
       "coaches": [],
