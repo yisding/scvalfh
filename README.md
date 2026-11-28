@@ -1052,8 +1052,9 @@ The rules:
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
   YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/players/clubs-schema.ts`),
-  and every URL is https. One exception (owner decision, 2026-11-28): a club tie may cite a YouTube video
-  (`TIE_SOURCE_HOSTS`), such as a school team's own channel posting a player's highlight video that names
+  and every URL is https. One exception (owner decision, 2026-11-28): a club tie may cite a YouTube video, by the
+  video's own address only (`isTieSourceVideo`: `/watch?v=`, `/shorts/`, `youtu.be/`; never the home page or a
+  channel), such as a school team's own channel posting a player's highlight video that names
   her club; a club's website or record and a commitment still may not. A club's official Instagram account is linked from its page, but it lives in
   `data/field-hockey/instagram.json`, not here, and is never a source (see "Instagram accounts").
 - **`unknown` is never called current.** A club a source names without saying whether the player
@@ -2478,6 +2479,12 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   other pages had made gain the roster (Jessica Jacobson, Rucha Patil, Chayse Courtney, Kepafingo and Delfina
   Haungatau-Rios, Elle Chang, Amani Lee-Seyon). Left out: common names (Corrine Li, Natalie Baker, Yuna Kim and the
   like) and clubs with no record. `compare-club-rosters` still lists them as `class-year-differs`.
+- **Volleyball: a 2025-26 league roster makes a tie current, 2026-11-28 (owner decision, after review).** The 16 ties
+  that cite a 2026 Power League roster (the 2025-26 club season) but read unknown or past from their other pages were
+  set by that roster: 14 now read current for 2025-26, showing the roster's team, and two read past for 2025-26,
+  because a 2026-27 tie at another club is current (Brooklyn Gipson's and Abby Cardenas' Vision ties). Same review:
+  `isAnotherFormOf` compares a surname whole, so two hyphenated surnames sharing a last part never match, and a
+  middle name is the one difference allowed.
 - **MaxPreps a year behind, or ahead, 2026-11-28 (owner's request).** Where a club roster's class is one year off
   the row's grade, the tie's basis now says which side looks wrong. Most are the club's difference: an independent
   page agrees with MaxPreps' grade, or the registry's 2025-26 row shows MaxPreps moving the player up a grade.

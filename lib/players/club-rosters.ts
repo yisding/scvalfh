@@ -418,15 +418,27 @@ export function isAnotherFormOf(rowName: string, rosterName: string): boolean {
   const row = nameTokens(rowName);
   const roster = nameTokens(rosterName);
   if (row.length < 2 || roster.length < 2) return false;
-  // A hyphenated last name reads as two words in one source and one in the other: compare the last names whole.
-  const rowLast = nameKey(row.slice(1).join(' '));
-  const rosterLast = nameKey(roster.slice(1).join(' '));
-  if (rowLast !== rosterLast && row.at(-1) !== roster.at(-1)) return false;
+  if (!sameSurname(rowName, rosterName)) return false;
   const [a, b] = [row[0], roster[0]];
   if (a === b) return true;
   if (givenForms(a).has(b) || givenForms(b).has(a)) return true;
   if (Math.min(a.length, b.length) >= 3 && (a.startsWith(b) || b.startsWith(a))) return true;
   return respelled(a, b);
+}
+
+/**
+ * The same last name, compared whole: a hyphenated surname is one word ("Gklaros-Stavropoulos" is never
+ * "Papas-Stavropoulos"), and a space where the other has a hyphen changes nothing ("Gklaros Stavropoulos"). A middle
+ * name one side gives and the other leaves out is the one difference allowed ("Ranvijay Abhimanyu Sinha", "Ranvijay
+ * Sinha"): the side with one surname word must have the other side's last word.
+ */
+function sameSurname(rowName: string, rosterName: string): boolean {
+  const words = (name: string) => name.trim().split(/\s+/).slice(1).filter((w) => nameKey(w) !== '');
+  const [a, b] = [words(rowName), words(rosterName)];
+  if (a.length === 0 || b.length === 0) return false;
+  if (nameKey(a.join(' ')) === nameKey(b.join(' '))) return true;
+  const [short, long] = a.length <= b.length ? [a, b] : [b, a];
+  return short.length === 1 && long.length > 1 && nameKey(short[0]) === nameKey(long.at(-1)!);
 }
 
 /**

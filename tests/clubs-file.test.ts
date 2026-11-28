@@ -22,7 +22,7 @@ import {
   ClubsFileSchema,
   isAsOf,
   isBannedHost,
-  isTieSourceHost,
+  isTieSourceVideo,
   clubSiteKey,
   type ClubsFile,
   type ClubsView,
@@ -187,7 +187,7 @@ describe('data/field-hockey/clubs.json', () => {
     const clubUrls = new Set(allUrls({ ...raw, affiliations: [], jvAffiliations: [] }));
     for (const u of urls) {
       expect(new URL(u).protocol, u).toBe('https:');
-      if (tieUrls.has(u) && !clubUrls.has(u) && isTieSourceHost(u)) continue;
+      if (tieUrls.has(u) && !clubUrls.has(u) && isTieSourceVideo(u)) continue;
       const host = new URL(u).hostname;
       for (const banned of BANNED_HOSTS) {
         expect(host === banned || host.endsWith(`.${banned}`), u).toBe(false);
@@ -197,10 +197,15 @@ describe('data/field-hockey/clubs.json', () => {
 
   it('lets a tie cite a YouTube video, and nothing else of social media; a club record never', () => {
     const src = { kind: 'school-site', quote: 'x', statedSchool: null, statedClassYear: null, sourceDate: null } as const;
-    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://www.youtube.com/watch?v=abc' }).success).toBe(true);
-    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://youtu.be/abc' }).success).toBe(true);
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://www.youtube.com/watch?v=abcdef12' }).success).toBe(true);
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://youtu.be/abcdef12' }).success).toBe(true);
     expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://www.instagram.com/p/abc' }).success).toBe(false);
     expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://notyoutube.com/watch' }).success).toBe(true);
+    // A video's own address only: never the home page, a channel or a search.
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://www.youtube.com/shorts/abcdef12' }).success).toBe(true);
+    for (const page of ['https://www.youtube.com/', 'https://www.youtube.com/@PalmaGirlsSoccer', 'https://www.youtube.com/channel/UC123456', 'https://www.youtube.com/watch', 'https://www.youtube.com/results?search_query=x', 'https://youtu.be/']) {
+      expect(AffiliationSourceSchema.safeParse({ ...src, url: page }).success, page).toBe(false);
+    }
     expect(ClubSourceSchema.safeParse({ url: 'https://www.youtube.com/@club', what: 'x' }).success).toBe(false);
   });
 
