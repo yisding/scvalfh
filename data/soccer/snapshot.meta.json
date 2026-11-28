@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "3be4bfcdf2992687f64411e9b454488234ba5b4b79f398b930f3e561a8fd2c45",
+  "contentHash": "f86cb1a3a41a5ce30ec071cdaf57236ca65b18390aea3ef4c29edba47825bbd7",
   "counts": {
     "byLeague": {
       "bval": {
@@ -20,7 +20,7 @@
       "pal": {
         "backfilled": 0,
         "finals": 3,
-        "games": 167,
+        "games": 166,
         "leagueGames": 112,
         "teams": 16
       },
@@ -68,10 +68,10 @@
       }
     },
     "finals": 13,
-    "games": 946,
+    "games": 945,
     "leagueGames": 637,
     "mismatches": 4,
-    "pending": 6,
+    "pending": 5,
     "teams": 123
   },
   "crossCheck": {
@@ -81,7 +81,7 @@
     "conflicts": 0,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-28T04:09:48.352Z",
+  "fetchedAt": "2026-11-28T05:37:20.995Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -1007,6 +1007,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 3758-bval-hamilton scoreboard 2026-11-19",
       "rowCount": 1,
       "status": "ok"
@@ -1018,6 +1023,11 @@
     },
     {
       "label": "sblive 3758-bval-hamilton scoreboard 2026-11-23",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-18",
       "rowCount": 0,
       "status": "ok"
     },
@@ -1052,18 +1062,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive 3887-pal-bay scoreboard 2026-11-19",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
       "label": "sblive 3887-pal-bay scoreboard 2026-11-23",
       "rowCount": 0,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 3888-pal-ocean scoreboard 2026-11-19",
-      "rowCount": 1,
       "status": "ok"
     },
     {
