@@ -191,6 +191,8 @@ describe('isAnotherFormOf (a roster spelling a tie may name, owner decision 2026
     expect(isAnotherFormOf('Garren Hardy', 'Gerren Hardy')).toBe(true); // a vowel
     expect(isAnotherFormOf('Ranvijay Abhimanyu Sinha', 'Ranvijay Sinha')).toBe(true); // middle name
     expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Gklaros-Stavropoulos')).toBe(true);
+    expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Gklaros Stavropoulos')).toBe(true); // a space for the hyphen
+    expect(isAnotherFormOf('Bella Jansen-Olliges', 'Isabella Jansen-Olliges')).toBe(true);
   });
 
   it('refuses another last name, and first names that are only alike', () => {
@@ -199,6 +201,8 @@ describe('isAnotherFormOf (a roster spelling a tie may name, owner decision 2026
     expect(isAnotherFormOf('Olivia Chen', 'Alicia Chen')).toBe(false);
     expect(isAnotherFormOf('Rylan Wong', 'Dylan Wong')).toBe(false);
     expect(isAnotherFormOf('Hayden Smith', 'Jaylen Smith')).toBe(false);
+    expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Papas-Stavropoulos')).toBe(false); // a hyphenated surname is whole
+    expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Stavropoulos')).toBe(false);
     expect(isAnotherFormOf('Al Smith', 'Alexandra Smith')).toBe(false); // a short form of two letters is not one
   });
 });

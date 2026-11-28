@@ -22,7 +22,7 @@
  *   2. every membership's `club` names a club in clubs[]
  *   3. (playerId, club) is unique
  *   4. every URL is https and none is on a social-media host (BANNED_HOSTS): a website, a program
- *      or roster page, and every source, save that a tie may cite a YouTube video (TIE_SOURCE_HOSTS)
+ *      or roster page, and every source, save that a tie may cite a YouTube video (isTieSourceVideo)
  *   5. every club and every membership has at least one source
  *   6. a quote is 1-300 characters (it is kept for maintainers and never rendered)
  *   7. `asOf` takes one of five shapes (isAsOf); `sourceDate` is free text ("2025 Fall Season")
@@ -233,26 +233,34 @@ export const sourceUrl = z
 
 /**
  * The one social host a club tie may cite (owner decision, 2026-11-28): a video on YouTube, such as a school team's
- * own channel posting a player's highlight video that names her club. Never a club's website or a club record's
+ * own channel posting a player's highlight video that names her club. Only a video's own address (`/watch?v=<id>`,
+ * `/shorts/<id>`, `youtu.be/<id>`), never the site's home page or a channel. Never a club's website or a club record's
  * source, and never a commitment's (lib/players/commits-schema.ts keeps `sourceUrl`).
  */
 export const TIE_SOURCE_HOSTS = ['youtube.com', 'youtu.be'] as const;
 
-export function isTieSourceHost(url: string): boolean {
-  let host: string;
+/** Whether `url` is a YouTube video's own address (TIE_SOURCE_HOSTS): the one social-media page a tie may cite. */
+export function isTieSourceVideo(url: string): boolean {
+  let u: URL;
   try {
-    host = new URL(url).hostname.toLowerCase();
+    u = new URL(url);
   } catch {
     return false;
   }
-  return TIE_SOURCE_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+  const host = u.hostname.toLowerCase();
+  const id = /^[A-Za-z0-9_-]{6,}$/;
+  if (host === 'youtu.be') return id.test(u.pathname.slice(1));
+  if (host !== 'youtube.com' && !host.endsWith('.youtube.com')) return false;
+  if (u.pathname === '/watch') return id.test(u.searchParams.get('v') ?? '');
+  const short = /^\/shorts\/([^/]+)\/?$/.exec(u.pathname);
+  return short !== null && id.test(short[1]);
 }
 
-/** A URL a club tie cites: `sourceUrl`, except that a YouTube video may be one (TIE_SOURCE_HOSTS). */
+/** A URL a club tie cites: `sourceUrl`, except that a YouTube video may be one (isTieSourceVideo). */
 const tieSourceUrl = z
   .string()
   .refine(isHttpsUrl, 'expected an https URL')
-  .refine((v) => !isBannedHost(v) || isTieSourceHost(v), 'social media is not a source');
+  .refine((v) => !isBannedHost(v) || isTieSourceVideo(v), 'social media is not a source');
 
 const text = z.string().min(1);
 
@@ -296,7 +304,7 @@ export const ClubSchema = z.object({
 // ---------------------------------------------------------------- affiliations
 
 export const AffiliationSourceSchema = z.object({
-  /** Any page but social media's, save a YouTube video (TIE_SOURCE_HOSTS). */
+  /** Any page but social media's, save a YouTube video's own address (isTieSourceVideo). */
   url: tieSourceUrl,
   kind: z.enum(CLUB_SOURCE_KINDS),
   /** Verbatim from the page. Kept in the file so a maintainer can re-check it; never rendered. */

@@ -16,7 +16,8 @@
     "2026-11-27, on the owner's request, the three names the comparison had left on two clubs' rosters: Milpitas' Ellie Chu to Vision and Sobrato's Madison Miller to North Coast (the other roster of each name is a team two age groups younger, another player), and Notre Dame San Jose's Kitana Manalo to Tyrants as an earlier club (2025-26): the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her school's volleyball coach's program, with two NDSJ teammates), a club with no record here, its site not found.",
     "Other forms of a name, 2026-11-28 (owner decision: tie a player a club roster lists under another form of the name, when everything else agrees; a class year one off is accepted when the player is very likely the same). The league-roster rule was run with each row's first name in its other forms (isAnotherFormOf in lib/players/club-rosters.ts), each roster source naming the roster's spelling in `rosterName`. New ties (medium, current, the 2026 Power League): Giudi Cusmano (Prospect, Tropical Touch, Giuditta), Alex Fair (Menlo, ENCORE, Alexandra), Giana Brooks (Mercy Burlingame, NorStar, Gianna), Dani Pokorny (Presentation, Legend, Danielle), Bella Jansen-Olliges (Sacred Heart Prep, ENCORE, Isabella), and on JV Emerella Wang (Homestead, Red Rock, Emerelle), Alex Ferris (Homestead, Panda, Alexandra), Stella Polyzos (Sacred Heart Cathedral, Slainte, Estelle) and Camila Colorado (Notre Dame Belmont, NorStar, Camilla). Ten ties other pages had made gain the roster: Emme Liao (NorStar), Kat Minkevich, Brooklyn Gipson and Abby Cardenas (Vision), Gabi Legault (Tropical Touch), Gabriella Evans (North Coast), Bella Flynn (City Beach), Juli Pierre (Academy), Alex Dongnguyen (Red Rock) and Izzy Saavedra (SF Tremors, a 16s team a year above her class). Left out: Mia Wang (Monta Vista; Panda's Miaoqi Wang) and Izabella Martinez (Eastside; Kalani's Isabella Martinez), common names with nothing else behind them. Every cited roster was re-read live the same day.",
     "Distinctive names one class year off, 2026-11-28 (owner decision: a class year one off is accepted when the player is very likely the same; the owner asked for the distinctive volleyball names). Of the 35 rows compare-club-rosters:volleyball left only for a class year one off, 18 have names that are not common; with the class year moved by one, each passes the rest of the rule, every one a player a year younger than her team's age group (playing up). New ties (medium, current, the 2026 Power League): Kathryn Gee (Cupertino, MVVC), Tayla Yip (Homestead, SF Tremors), Anna Scaria (Milpitas, MVVC), Yulissa Ting (Leigh, Academy), Lily Jensen-Pelletier (Notre Dame Belmont, Blue Banner), Saanvi Bharadwaj (Castilleja, Red Rock), Madyson Huynh (Notre Dame San Jose, Panda), and on JV Veida Huang (Lynbrook, Panda), Janielle Fan (Saratoga, Tropical Touch) and Annabelle Burk (Christopher, North Coast). Seven ties other pages had made gain the roster: Jessica Jacobson (Academy), Rucha Patil (MVVC), Chayse Courtney (Vision), Kepafingo and Delfina Haungatau-Rios (ENCORE), Elle Chang and Amani Lee-Seyon (Academy). Left out: Corrine Li (King's Academy JV, Panda), a common name, and the rows whose names are common (Natalie Baker, Yuna Kim, Vanessa Yang, Emily Gonzalez, Ava Sanchez, Megan Henry, Maggie Williams, Sofia Zamora and others) or whose club has no record. Every cited roster was re-read live the same day.",
-    "MaxPreps a year behind, 2026-11-28 (owner's request: note where MaxPreps may not yet have updated a class year from last season). Of the players tied the same day a year younger than their team's age group, most have an independent page (Hudl, NCSA, SportsRecruits) giving the class MaxPreps' grade gives, or a 2025-26 row a grade lower, so they play up a year. Five have neither: Anna Scaria (Milpitas), Madyson Huynh (Notre Dame San Jose; only MaxPreps' own career page gives a class), and on JV Veida Huang (Lynbrook), Janielle Fan (Saratoga) and Annabelle Burk (Christopher). For them MaxPreps may still show last season's grade, and their bases say so. None carries a rosterBehind marker, which needs a page naming the school with the earlier class."
+    "MaxPreps a year behind, 2026-11-28 (owner's request: note where MaxPreps may not yet have updated a class year from last season). Of the players tied the same day a year younger than their team's age group, most have an independent page (Hudl, NCSA, SportsRecruits) giving the class MaxPreps' grade gives, or a 2025-26 row a grade lower, so they play up a year. Five have neither: Anna Scaria (Milpitas), Madyson Huynh (Notre Dame San Jose; only MaxPreps' own career page gives a class), and on JV Veida Huang (Lynbrook), Janielle Fan (Saratoga) and Annabelle Burk (Christopher). For them MaxPreps may still show last season's grade, and their bases say so. None carries a rosterBehind marker, which needs a page naming the school with the earlier class.",
+    "2026-11-28, after review (owner decision): each tie that cites a 2026 Power League roster (the 2025-26 club season) but read unknown or past from its other pages now reads current for 2025-26, showing the roster's team (14 ties: Emmeline Liao, Kat Minkevich, Jessica Jacobson, Rucha Patil, Gabriella Evans, Bella Flynn, Chayse Courtney, Kepafingo and Delfina Haungatau-Rios, Juli Pierre, Alex Dongnguyen, Amani Lee-Seyon, Isabella Saavedra and Elle Chang). Two read past for 2025-26 instead, because a 2026-27 tie at another club is current: Brooklyn Gipson's Vision tie (Legacy One since August 2026) and Abby Cardenas' Vision tie (Club 415 since October 2026), as Kitana Manalo's Tyrants tie was made past when the 2027 league showed her at SBND Elite."
   ],
   "clubs": [
     {
@@ -3261,8 +3262,8 @@
       "name": "Emmeline Liao",
       "club": "norstar-volleyball",
       "clubTeam": "NorStar 15-1",
-      "status": "unknown",
-      "asOf": "2025",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -3283,7 +3284,7 @@
           "rosterName": "Emmeline Liao"
         }
       ],
-      "basis": "Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): NorStar 15-1 (15s; the classes 2028 and 2029 its age group admits) lists 'Emmeline Liao', a short form of 'Emme Liao' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): NorStar 15-1 (15s; the classes 2028 and 2029 its age group admits) lists 'Emmeline Liao', a short form of 'Emme Liao' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's NorStar 15-1 roster lists her. It read unknown, 2025 until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p82db811305",
@@ -3429,9 +3430,9 @@
       "playerId": "p5e7eef750f",
       "name": "Kat Minkevich",
       "club": "vision-volleyball-club",
-      "clubTeam": "15 Gold 25-26",
-      "status": "unknown",
-      "asOf": "2025",
+      "clubTeam": "Vision 15 Gold",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -3452,7 +3453,7 @@
           "rosterName": "Katerina Minkevich"
         }
       ],
-      "basis": "Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 15 Gold (15s; the classes 2028 and 2029 its age group admits) lists 'Katerina Minkevich', a short form of 'Kat Minkevich' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 15 Gold (15s; the classes 2028 and 2029 its age group admits) lists 'Katerina Minkevich', a short form of 'Kat Minkevich' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Vision 15 Gold roster lists her. It read unknown, 2025 until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p38e5e89835",
@@ -5742,9 +5743,9 @@
       "playerId": "p65d1475993",
       "name": "Jessica Jacobson",
       "club": "academy-volleyball",
-      "clubTeam": "Academy West 15 HP Mike",
-      "status": "past",
-      "asOf": "2024",
+      "clubTeam": "Academy West 17 National",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -5764,7 +5765,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile is on Gunn High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 National (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Gunn High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 National (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Academy West 17 National roster lists her. It read past, 2024 until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p6631cbc0d8",
@@ -7338,9 +7339,9 @@
       "playerId": "p34a876c3c2",
       "name": "Rucha Patil",
       "club": "mountain-view-volleyball-club",
-      "clubTeam": "Girls 17 White",
-      "status": "unknown",
-      "asOf": "2025",
+      "clubTeam": "MVVC G 17 White",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -7360,7 +7361,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile is on Saratoga High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): MVVC G 17 White (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Saratoga High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): MVVC G 17 White (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's MVVC G 17 White roster lists her. It read unknown, 2025 until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p4ed69e6dc1",
@@ -9139,9 +9140,9 @@
       "playerId": "pb279fc8fc0",
       "name": "Brooklyn Gipson",
       "club": "vision-volleyball-club",
-      "clubTeam": "15 White 25-26",
-      "status": "unknown",
-      "asOf": "2025",
+      "clubTeam": "Vision 15 White",
+      "status": "past",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -9162,7 +9163,7 @@
           "rosterName": "Brooklynn Gipson"
         }
       ],
-      "basis": "Her Hudl profile is on Silver Creek High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 2 entries for this club on the page; the latest is quoted. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 15 White (15s; the classes 2028 and 2029 its age group admits) lists 'Brooklynn Gipson', a short form of 'Brooklyn Gipson' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Silver Creek High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 2 entries for this club on the page; the latest is quoted. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 15 White (15s; the classes 2028 and 2029 its age group admits) lists 'Brooklynn Gipson', a short form of 'Brooklyn Gipson' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status past, 2025-26 (the owner's decision of 2026-11-28 that a 2025-26 league roster dates a tie, as Kitana Manalo's Tyrants tie): the 2026 Power League's Vision 15 White roster dates it to the 2025-26 club season, and her legacy-one-volleyball-club tie, current as of 2026-08-31, is the 2026-27 season's. It read unknown, 2025 until then; the team shown is the roster's."
     },
     {
       "playerId": "p76077a8ec9",
@@ -9388,9 +9389,9 @@
       "playerId": "p85bf61d101",
       "name": "Gabriella Evans",
       "club": "north-coast-volleyball-club",
-      "clubTeam": "17 Orange",
-      "status": "unknown",
-      "asOf": "2025",
+      "clubTeam": "North Coast 17 Orange",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -9411,7 +9412,7 @@
           "rosterName": "Gabby Evans"
         }
       ],
-      "basis": "Her Hudl profile is on Ann Sobrato High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): North Coast 17 Orange (17s; the classes 2027 its age group admits) lists 'Gabby Evans', a nickname of 'Gabriella Evans' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Ann Sobrato High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): North Coast 17 Orange (17s; the classes 2027 its age group admits) lists 'Gabby Evans', a nickname of 'Gabriella Evans' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's North Coast 17 Orange roster lists her. It read unknown, 2025 until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p3c19b1aa91",
@@ -9769,9 +9770,9 @@
       "playerId": "pea52394ebe",
       "name": "Bella Flynn",
       "club": "city-beach-volleyball-club",
-      "clubTeam": "17-Black",
-      "status": "unknown",
-      "asOf": "2025",
+      "clubTeam": "City Beach 17-Black",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -9792,7 +9793,7 @@
           "rosterName": "Isabella Flynn"
         }
       ],
-      "basis": "Her Hudl profile is on Willow Glen High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes 2027 its age group admits) lists 'Isabella Flynn', a nickname of 'Bella Flynn' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile is on Willow Glen High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): City Beach 17-Black (17s; the classes 2027 its age group admits) lists 'Isabella Flynn', a nickname of 'Bella Flynn' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's City Beach 17-Black roster lists her. It read unknown, 2025 until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "pf37153ff61",
@@ -10254,9 +10255,9 @@
       "playerId": "p269ec98971",
       "name": "Chayse Courtney",
       "club": "vision-volleyball-club",
-      "clubTeam": "17 Gold 25-26",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "Vision 17 Gold",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -10292,7 +10293,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 17 Gold (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 17 Gold (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Vision 17 Gold roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "pfe8bdc0403",
@@ -10410,9 +10411,9 @@
       "playerId": "p7dc5d9a92b",
       "name": "Kepafingo Haungatau-Rios",
       "club": "encore-volleyball-club",
-      "clubTeam": "16 Navy",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "ENCORE 16 Navy",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -10432,7 +10433,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 Navy (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 Navy (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's ENCORE 16 Navy roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p7dc5d9a92b",
@@ -10518,9 +10519,9 @@
       "playerId": "pbca1c67458",
       "name": "Delfina Haungatau-Rios",
       "club": "encore-volleyball-club",
-      "clubTeam": "16 Navy",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "ENCORE 16 Navy",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -10540,7 +10541,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 Navy (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 Navy (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's ENCORE 16 Navy roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p8dfe57211a",
@@ -10914,9 +10915,9 @@
       "playerId": "pab347f2b61",
       "name": "Abby Cardenas",
       "club": "vision-volleyball-club",
-      "clubTeam": "16 Gold 25-26",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "Vision 16 Gold",
+      "status": "past",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -10945,7 +10946,7 @@
           "rosterName": "Abigail Cardenas"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 16 Gold (16s; the classes 2027 and 2028 its age group admits) lists 'Abigail Cardenas', a nickname of 'Abby Cardenas' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 16 Gold (16s; the classes 2027 and 2028 its age group admits) lists 'Abigail Cardenas', a nickname of 'Abby Cardenas' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status past, 2025-26 (the owner's decision of 2026-11-28 that a 2025-26 league roster dates a tie, as Kitana Manalo's Tyrants tie): the 2026 Power League's Vision 16 Gold roster dates it to the 2025-26 club season, and her club-415-volleyball tie, current as of 2026-10-06, is the 2026-27 season's. It read unknown until then; the team shown is the roster's."
     },
     {
       "playerId": "p894b3d8b26",
@@ -12371,9 +12372,9 @@
       "playerId": "pf887819b4c",
       "name": "Juli Pierre",
       "club": "academy-volleyball",
-      "clubTeam": "16 National West",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "Academy West 16 National",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -12394,7 +12395,7 @@
           "rosterName": "Juliana Pierre"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 16 National (16s; the classes 2027 and 2028 its age group admits) lists 'Juliana Pierre', a short form of 'Juli Pierre' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 16 National (16s; the classes 2027 and 2028 its age group admits) lists 'Juliana Pierre', a short form of 'Juli Pierre' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Academy West 16 National roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p0dad1e71e4",
@@ -12428,9 +12429,9 @@
       "playerId": "p923ecca0b1",
       "name": "Alex Dongnguyen",
       "club": "red-rock-volleyball",
-      "clubTeam": "Red Rock Girls RWC 15-2",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "Red Rock 15 Joey - Redwood City",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "medium",
       "sources": [
         {
@@ -12451,7 +12452,7 @@
           "rosterName": "Alexandra Dongnguyen"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Red Rock 15 Joey - Redwood City (15s; the classes 2028 and 2029 its age group admits) lists 'Alexandra Dongnguyen', a nickname of 'Alex Dongnguyen' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium. 2026-11-28: 2026 NCVA Girls Power League (the 2025-26 club season): Red Rock 15 Joey - Redwood City (15s; the classes 2028 and 2029 its age group admits) lists 'Alexandra Dongnguyen', a nickname of 'Alex Dongnguyen' as the row has it, and is added as a source on the owner's decision of the same day (a roster listing another form of the name); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Red Rock 15 Joey - Redwood City roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p1e3ab35196",
@@ -12477,9 +12478,9 @@
       "playerId": "p2a0288adba",
       "name": "Amani Lee-Seyon",
       "club": "academy-volleyball",
-      "clubTeam": "17 HP-1 West",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "Academy West 17 HP-1",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -12499,7 +12500,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 HP-1 (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 HP-1 (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Academy West 17 HP-1 roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p5899d01b0a",
@@ -12617,9 +12618,9 @@
       "playerId": "p0bc655f22e",
       "name": "Isabella Saavedra",
       "club": "sf-tremors",
-      "clubTeam": "16-1 WOLVERINES",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "SF TREMORS 16 WOLVERINES",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -12640,7 +12641,7 @@
           "rosterName": "Isabella Saavedra"
         }
       ],
-      "basis": "Her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: 2026 NCVA Girls Power League (the 2025-26 club season): SF TREMORS 16 WOLVERINES (16s; the classes 2027 and 2028 its age group admits) lists 'Isabella Saavedra'; 'Izzy Saavedra' is a nickname of 'Isabella Saavedra'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The registry already holds Izzy and Isabella Saavedra as one person. Her class of 2029 is one year younger than the classes the team's age group admits (she plays up a year). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy (data/volleyball/club-rosters.json) and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same. Added to this tie as a source; the status stays as the other pages give it."
+      "basis": "Her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: 2026 NCVA Girls Power League (the 2025-26 club season): SF TREMORS 16 WOLVERINES (16s; the classes 2027 and 2028 its age group admits) lists 'Isabella Saavedra'; 'Izzy Saavedra' is a nickname of 'Isabella Saavedra'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The registry already holds Izzy and Isabella Saavedra as one person. Her class of 2029 is one year younger than the classes the team's age group admits (she plays up a year). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy (data/volleyball/club-rosters.json) and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same. Added to this tie as a source; the status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's SF TREMORS 16 WOLVERINES roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "pff46a1d45e",
@@ -13414,9 +13415,9 @@
       "playerId": "pcf45756c29",
       "name": "Elle Chang",
       "club": "academy-volleyball",
-      "clubTeam": "15 HP Cristine",
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "Academy West 17 HP-1",
+      "status": "current",
+      "asOf": "2025-26",
       "confidence": "high",
       "sources": [
         {
@@ -13444,7 +13445,7 @@
           "sourceDate": "2025-26"
         }
       ],
-      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 HP-1 (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
+      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 HP-1 (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it. Status current for 2025-26 since 2026-11-28 (the owner's decision: a 2025-26 league roster makes a tie current, as note 3 defines it): the 2026 Power League's Academy West 17 HP-1 roster lists her. It read unknown until then, from the other pages; the team shown is now the roster's."
     },
     {
       "playerId": "p12988a9c89",
