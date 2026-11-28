@@ -333,12 +333,13 @@ describe('data/field-hockey/clubs.json', () => {
       ]);
     });
 
-    it('rests on 253 source entries on 120 distinct URLs, by kind', () => {
+    it('rests on 254 source entries on 120 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
       const sources = norcal.flatMap((a) => a.sources);
       // 2026-11-13 added two: Junali Dutta's own SportsRecruits profiles, read rendered, for her NorCal Impact tie.
-      expect(sources).toHaveLength(253);
+      // 2026-11-28 added one: SF Hawks' current-players page (already cited) for Beatrix Hom, listed there as Beatrice.
+      expect(sources).toHaveLength(254);
       expect(new Set(sources.map((s) => s.url)).size).toBe(120);
       // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
       // page with and without its trailing slash, Gabrielle Moll's MaxPreps career page under two
@@ -347,7 +348,7 @@ describe('data/field-hockey/clubs.json', () => {
       expect(new Set(sources.map((s) => page(s.url))).size).toBe(118);
       expect(countBy(sources, (s) => s.kind)).toEqual({
         sportsrecruits: 69,
-        'club-site': 49,
+        'club-site': 50,
         news: 34,
         event: 31,
         ncsa: 29,

@@ -74,7 +74,6 @@ describe('soccerClubTeamWords', () => {
       Blue: 'Blue',
       'Burlingame SC - ECNL RL G2010/11': 'ECNL RL G2010/11',
       'Burlingame SC - ECNL RL G2011/12': 'ECNL RL G2011/12',
-      'Burlingame SC 2011G Gold': 'Gold G2011',
       'Burlingame SC ECNL RL G2008/09': 'ECNL RL G2008/09',
       'Burlingame SC ECNL RL G2009/10': 'ECNL RL G2009/10',
       'Central Valley San Jose N1 G2011/12 Cobras (CA)': 'Cobras N1 G2011/12',

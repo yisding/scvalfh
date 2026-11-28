@@ -16,6 +16,7 @@ import {
   LOCAL_REGIONS,
   clubKey,
   compareClubRosters,
+  isAnotherFormOf,
   rosterName,
   rosterSource,
   teamTier,
@@ -101,13 +102,16 @@ for (const { sport, sources } of SPORTS) {
       for (const { a, s, team } of cited) {
         const label = `${a.teamSlug} / ${a.fullName} (${a.club}) cites ${team.teamName}`;
         expect(file.clubSlugs[clubKey(team)], label).toBe(a.club);
-        const named = team.players.filter((p) => nameKey(rosterName(p)) === nameKey(a.fullName));
+        // A roster that lists the player under another form of the name (lib/players/clubs-schema.ts `rosterName`) names it on the source.
+        if (s.rosterName !== undefined) expect(isAnotherFormOf(a.fullName, s.rosterName), `${label}: ${s.rosterName} is not another form of ${a.fullName}`).toBe(true);
+        const listedAs = s.rosterName ?? a.fullName;
+        const named = team.players.filter((p) => nameKey(rosterName(p)) === nameKey(listedAs));
         if (team.classYears !== undefined) {
           // A TM2Sign roster states no class year: the tie's quote names the team and the age group, then the row as
           // "Last, First". That row is the tied player's (her name as the site spells it, after NAME_SPELLINGS), and
           // the roster lists her: another player on the roster never stands in for her.
           const [last, first] = s.quote.slice(s.quote.indexOf(' | ') + 3).split(', ');
-          expect(nameKey(recaseName(`${first} ${last}`)), `${label}: the quote names another player`).toBe(nameKey(a.fullName));
+          expect(nameKey(recaseName(`${first} ${last}`)), `${label}: the quote names another player`).toBe(nameKey(listedAs));
           expect(named.length, `${label}: the roster does not list her`).toBeGreaterThan(0);
           expect(s.statedClassYear, label).toBeNull();
           expect(s.quote.startsWith(`${team.teamName} (${team.division}) | `), label).toBe(true);

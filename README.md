@@ -2450,11 +2450,26 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
 - **A nickname on the school roster, 2026-11-28 (owner's word).** Palma's Gigi Richert is the Giuliana Richert of
   Santa Cruz United FC's ECNL RL G2010/11 roster (class year 2029, which agrees with her grade); rule 1 asks for the
   same name, so the rule never matched her. The tie (current, medium) cites the roster with `rosterName` on the
-  source (`lib/players/clubs-schema.ts`): a league-roster source only, and the test of the cited rosters accepts it
-  only for the same last name and a first name the nickname table (`lib/players/nicknames.ts`) pairs with the row's.
+  source (`lib/players/clubs-schema.ts`): a league-roster source only, and the tests of the cited rosters accept it
+  only when `isAnotherFormOf` (`lib/players/club-rosters.ts`) does (below).
   The owner says she played for Monterey Surf in 2025-26: Palma girls soccer's YouTube highlight video of her names
   "Monterey Surf 2010 NPL", her class and the school, so she is tied there too (past, 2025-26, high), citing the
   video under the exception the owner made that day (a club tie may cite a YouTube video; "No social media", above).
+- **Other forms of a name, every sport, 2026-11-28 (owner decision).** A club roster that lists a player under
+  another form of the row's name ties the player when everything else the rule asks agrees, and a class year one off
+  is accepted when the player is very likely the same. Another form (`isAnotherFormOf`): the same last name, and first
+  names that are a nickname pair (`lib/players/nicknames.ts`), one the start of the other (three letters at least:
+  Ben, Benjamin), or one spelling of the other (a letter doubled or dropped, or a vowel swapped, in names of five
+  letters or more: Viviana, Vivianna; Garren, Gerren; never two names a consonant apart, Rylan and Dylan). The rule
+  was run with each row's first name in those forms; every match was checked (the registry's names for the person,
+  a basketball player's own Passport record, a second page where one was found) and every cited row re-read live.
+  Tied: soccer 7 new and 1 roster added (Kat Smith, Bella Hernandez, Viviana Pena, Citlaly Gerardo Hernandez, Juliana
+  De Leon, Stella Kougiouris and Garren Hardy, the last two one class year off; Frankie Shannon's Burlingame SC tie);
+  basketball 9 (Ani Menon, Ben Camhi, Ranvi Sinha, Tim Ofa, Nick Gklaros-Stavropoulos, Grant Coblin, Ben Wu, and Max
+  Grudin to Lakeshow and DM's Mavericks); volleyball 9 new and 10 rosters added to ties other pages had made; field
+  hockey 1 roster added (Beatrix Hom). Left out: Eli Hernandez (Live Oak JV basketball; his Passport record names
+  Ann Sobrato), Mia Wang and Izabella Martinez (volleyball; common names with nothing else behind them), and pairs that
+  are two names (Emily and Emma Garcia, Olivia and Alicia Chen). Each sport's `clubs.json` notes list them.
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the

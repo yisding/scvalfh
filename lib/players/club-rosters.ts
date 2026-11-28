@@ -65,7 +65,8 @@ import { z } from 'zod';
 
 import { slugId } from '../schema-primitives';
 import type { ClubRegion, ClubsView } from './clubs-schema';
-import { nameKey } from './name-compare';
+import { editDistance, nameKey, nameTokens } from './name-compare';
+import { givenForms } from './nicknames';
 
 /** The kind an affiliation source built from the kept copy carries (lib/players/clubs-schema.ts CLUB_SOURCE_KINDS). */
 export const LEAGUE_ROSTER_KIND = 'league-roster';
@@ -407,6 +408,39 @@ export function birthYearsFromTeamName(teamName: string): number[] | null {
 }
 
 /** "Delaney Kumer": the roster's two fields as one name. */
+/**
+ * Whether a club roster's `rosterName` is another form of a high school row's name (lib/players/clubs-schema.ts
+ * `rosterName`): the same last word, and first names that are a nickname pair (lib/players/nicknames.ts), one the
+ * start of the other ("Ben", "Benjamin"; three letters at least), or one spelling of the other (`respelled`). A middle
+ * name on either side is not compared ("Ranvijay Abhimanyu Sinha" and "Ranvijay Sinha").
+ */
+export function isAnotherFormOf(rowName: string, rosterName: string): boolean {
+  const row = nameTokens(rowName);
+  const roster = nameTokens(rosterName);
+  if (row.length < 2 || roster.length < 2) return false;
+  // A hyphenated last name reads as two words in one source and one in the other: compare the last names whole.
+  const rowLast = nameKey(row.slice(1).join(' '));
+  const rosterLast = nameKey(roster.slice(1).join(' '));
+  if (rowLast !== rosterLast && row.at(-1) !== roster.at(-1)) return false;
+  const [a, b] = [row[0], roster[0]];
+  if (a === b) return true;
+  if (givenForms(a).has(b) || givenForms(b).has(a)) return true;
+  if (Math.min(a.length, b.length) >= 3 && (a.startsWith(b) || b.startsWith(a))) return true;
+  return respelled(a, b);
+}
+
+/**
+ * One spelling of a first name for another: a letter doubled or dropped ("Viviana", "Vivianna"; "Citlaly", "Citaly")
+ * or one vowel for another ("Garren", "Gerren"), in names of five letters or more. Two names one consonant apart are
+ * two names ("Rylan", "Dylan"; "Gigi", "Gina"), and so are two letters apart ("Olivia", "Alicia").
+ */
+function respelled(a: string, b: string): boolean {
+  if (Math.min(a.length, b.length) < 5 || editDistance(a, b) !== 1) return false;
+  if (a.length !== b.length) return true;
+  const i = [...a].findIndex((c, k) => c !== b[k]);
+  return /[aeiouy]/.test(a[i]) && /[aeiouy]/.test(b[i]);
+}
+
 export const rosterName = (p: Pick<ClubRosterPlayer, 'firstName' | 'lastName'>): string => `${p.firstName} ${p.lastName}`.trim();
 
 /** What a sport changes in the comparison. */

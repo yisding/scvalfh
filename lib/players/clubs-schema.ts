@@ -316,9 +316,11 @@ export const AffiliationSourceSchema = z.object({
   classYearDiffers: z.literal(true).optional(),
   /**
    * Set by hand, on a `league-roster` source only: the name the roster lists the player under, when it is not the
-   * row's because one of the two first names is a short form of the other (lib/players/nicknames.ts: a row's "Gigi"
-   * for a roster's "Giuliana"), and the tie was made on the owner's word that they are one player (2026-11-28). The
-   * league-roster rule never makes such a match itself (its rule 1 asks for the same name).
+   * row's, and the tie was made on the owner's decision that they are one player (2026-11-28): the same last name,
+   * and a first name that is a short form of the other ("Gigi" and "Giuliana", lib/players/nicknames.ts; "Ben" and
+   * "Benjamin"), or a spelling one letter or two apart ("Viviana" and "Vivianna"). `isAnotherFormOf`
+   * (lib/players/club-rosters.ts) is the test. The league-roster rule never makes such a match itself (its rule 1
+   * asks for the same name).
    */
   rosterName: text.optional(),
 }).refine((s) => s.classYearDiffers === undefined || s.kind === 'league-roster', {
