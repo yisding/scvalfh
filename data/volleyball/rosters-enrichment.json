@@ -22,7 +22,16 @@
       ],
       "players": [],
       "slug": "gunn",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.gunnathletics.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from gunn.pausd.org."
+      }
     },
     {
       "coaches": [],
@@ -32,7 +41,12 @@
       ],
       "players": [],
       "slug": "homestead",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "hhs.fuhsd.org/student-life/athletics (season sport lists, Google Docs links only); hhsathletics.com redirects to a boosters Google Site (fundraising only). No roster."
+      }
     },
     {
       "coaches": [],
@@ -42,7 +56,16 @@
       ],
       "players": [],
       "slug": "los-gatos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Volleyball SCHEDULE 2026-2027 (school-year selector)",
+        "listsPlayers": true,
+        "note": "Mascot Media site. 2025-26 also available (16)."
+      }
     },
     {
       "coaches": [],
@@ -52,7 +75,16 @@
       ],
       "players": [],
       "slug": "lynbrook",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lynbrookvikings.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from lhs.fuhsd.org."
+      }
     },
     {
       "coaches": [],
@@ -63,7 +95,16 @@
       ],
       "players": [],
       "slug": "milpitas",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.mhstrojanathletics.com/sport/volleyball/girls/?tab=roster",
+        "season": "2025-26",
+        "seasonEvidence": "Varsity Girls Volleyball SCHEDULE 2026-2027 / school-year selector; 2025-2026 roster lists players",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from mhs.musd.org. Default 2026-27 roster is EMPTY; 15 players under 2025-2026 via selector (2024-25: 14)."
+      }
     },
     {
       "coaches": [],
@@ -73,7 +114,12 @@
       ],
       "players": [],
       "slug": "mountain-view",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mvhs.mvla.net/girls-volleyball lists coach and Varsity/JV schedule links only, no roster. mountainview.homecampus.com is a different school (El Monte Vikings)."
+      }
     },
     {
       "coaches": [],
@@ -83,7 +129,16 @@
       ],
       "players": [],
       "slug": "palo-alto",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": "Varsity Girls Volleyball SCHEDULE 2026-2027 (school-year selector)",
+        "listsPlayers": true,
+        "note": "Mascot Media site linked from paly.net."
+      }
     },
     {
       "coaches": [],
@@ -93,7 +148,16 @@
       ],
       "players": [],
       "slug": "cupertino",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls",
+        "season": "2026",
+        "seasonEvidence": "Rosters Varsity JV ... Printable Schedule updated on 8/31/26",
+        "listsPlayers": true,
+        "note": "School page on district (fuhsd.org) domain. Roster table itself has no season label; schedule on page is the 2026-27 one (updated 8/31/26, file in Athletics_26-27)."
+      }
     },
     {
       "coaches": [],
@@ -103,7 +167,12 @@
       ],
       "players": [],
       "slug": "fremont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "fremonthsathletics.org/girls-volleyball (Squarespace; coaches, schedule embed, clearance info) has no roster; links out only to MaxPreps/SCVAL."
+      }
     },
     {
       "coaches": [],
@@ -113,7 +182,12 @@
       ],
       "players": [],
       "slug": "los-altos",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lahs.mvla.net/girls-volleyball (coaches, tryout info, no roster); PlayOn site losaltossports.com/sport/girls-volleyball/roster?team=7814354 says 'No roster for 2026-2027' and only the 2026/2027 team exists."
+      }
     },
     {
       "coaches": [],
@@ -123,7 +197,16 @@
       ],
       "players": [],
       "slug": "macdonald",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://macdonald.homecampus.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Kathleen MacDonald HS; Home Campus site linked from macdonald.santaclarausd.org ('Athletics Website on Home Campus')."
+      }
     },
     {
       "coaches": [],
@@ -133,7 +216,16 @@
       ],
       "players": [],
       "slug": "monta-vista",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.matadorathletics.org/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from mvhs.fuhsd.org."
+      }
     },
     {
       "coaches": [],
@@ -143,7 +235,16 @@
       ],
       "players": [],
       "slug": "santa-clara",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.schsathletics.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site 'Santa Clara - GO BRUINS!'."
+      }
     },
     {
       "coaches": [],
@@ -153,7 +254,16 @@
       ],
       "players": [],
       "slug": "saratoga",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.shs-athletics.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from saratogahigh.org."
+      }
     },
     {
       "coaches": [],
@@ -163,7 +273,12 @@
       ],
       "players": [],
       "slug": "wilcox",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "wilcox.santaclarausd.org/athletics -> Girls Volleyball 'Learn More' goes to team Google Site sites.google.com/scusd.net/wilcoxgirlsvolleyball (Home/Events/About: coaches, 2026-27 schedule link, no roster)."
+      }
     },
     {
       "coaches": [],
@@ -173,7 +288,12 @@
       ],
       "players": [],
       "slug": "christopher",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "chs.gilroyunified.org/athletics/chs-coaches-and-schedules lists coaches only (Girls Volleyball Varsity Coach Tait Rafat); other athletics links are BSN Sideline / Instagram. No roster."
+      }
     },
     {
       "coaches": [],
@@ -183,7 +303,12 @@
       ],
       "players": [],
       "slug": "evergreen-valley",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "evergreenvalleyhigh.esuhsd.org/sports/volleyball-girls (Google Site): clearance info, coach and AD contacts, tickets link - no roster."
+      }
     },
     {
       "coaches": [],
@@ -193,7 +318,12 @@
       ],
       "players": [],
       "slug": "leigh",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "leigh.cuhsd.org/apps/pages/FallSports lists Girls Volleyball as text only; athletics page links to boosters/livestream; no roster."
+      }
     },
     {
       "coaches": [],
@@ -203,7 +333,12 @@
       ],
       "players": [],
       "slug": "pioneer",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pioneer.sjusd.org/extracurriculuar/athletics lists coaches' emails per sport (Girls Volleyball - Coach Darlene Dueck), Hudl/GoFan/MaxPreps links; no roster or athletics site."
+      }
     },
     {
       "coaches": [],
@@ -213,7 +348,12 @@
       ],
       "players": [],
       "slug": "santa-teresa",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "santateresahigh.esuhsd.org/athletics/teams/volleyball-girls: tryout notice ('girls who have been chosen for the varsity team'), clearance info - no player list."
+      }
     },
     {
       "coaches": [],
@@ -223,7 +363,16 @@
       ],
       "players": [],
       "slug": "westmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.westmontathletics.com/sport/volleyball/girls/?tab=roster",
+        "season": "2024-25",
+        "seasonEvidence": "Varsity Girls Volleyball SCHEDULE 2026-2027 / SCHOOL YEAR selector; 2024-2025 roster lists players",
+        "listsPlayers": true,
+        "note": "Mascot Media site. Default 2026-27 roster and 2025-26 roster are both EMPTY; newest roster with players is 2024-2025 (select it in the school-year dropdown)."
+      }
     },
     {
       "coaches": [],
@@ -234,7 +383,16 @@
       ],
       "players": [],
       "slug": "willow-glen",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.willowglenathletics.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls / Varsity / Roster, season selector 2026-27 selected",
+        "listsPlayers": true,
+        "note": "Official athletics site linked from wghs.sjusd.org; selector also has 2024-25, 2025-26."
+      }
     },
     {
       "coaches": [],
@@ -244,7 +402,12 @@
       ],
       "players": [],
       "slug": "branham",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "branham.cuhsd.org/apps/pages/athletics (Edlio; sport list text, boosters, GoFan) - no team or roster pages; no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -254,7 +417,12 @@
       ],
       "players": [],
       "slug": "independence",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "independence.esuhsd.org links to Google Site sites.google.com/esuhsd.org/sixerathletics: general info, coaching staff, forms; no team rosters."
+      }
     },
     {
       "coaches": [],
@@ -264,7 +432,16 @@
       ],
       "players": [],
       "slug": "leland",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.lelandathletics.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": "Volleyball, Girls Varsity ... Roster ... season dropdown 2024-25 / 2025-26 / 2026-27 (2026-27 selected)",
+        "listsPlayers": true,
+        "note": "Home Campus site linked from leland.sjusd.org."
+      }
     },
     {
       "coaches": [],
@@ -274,7 +451,12 @@
       ],
       "players": [],
       "slug": "live-oak",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "liveoak.mhusd.org/athletics: clearance, coaches, forms, BVAL, GoFan (tickets) links only; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -284,7 +466,12 @@
       ],
       "players": [],
       "slug": "silver-creek",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "silvercreekhigh.esuhsd.org/athletics/fall-sports lists Girls' Volleyball as text with clearance info; no team or roster page."
+      }
     },
     {
       "coaches": [],
@@ -294,7 +481,16 @@
       ],
       "players": [],
       "slug": "sobrato",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sobratoathletics.olinesports.com/roster.php?sport=603",
+        "season": null,
+        "seasonEvidence": "Volleyball - Girls Varsity ... Roster (Number / Name / Year / Ht/Wt / Position)",
+        "listsPlayers": true,
+        "note": "O-Line Sports site linked from sobrato.mhusd.org/student-life/athletics. Roster page shows no season; the same team's schedule page shows 2026 dates (08/07/26 onward), so it is likely the fall 2026 roster."
+      }
     },
     {
       "coaches": [],
@@ -375,7 +571,12 @@
           "capturedAt": "2026-11-14",
           "confidence": "high"
         }
-      ]
+      ],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gilroyhs.gilroyunified.org/mustang-athletics: calendar and coach list (Girls Volleyball Coach Susie MacDonald), Hudl/GoFan/BSN links; no roster."
+      }
     },
     {
       "coaches": [],
@@ -385,7 +586,12 @@
       ],
       "players": [],
       "slug": "lincoln",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "lincoln.sjusd.org/extracurriculuar/athletics: forms, coaching list (Google Sheet), BVAL link only; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -395,7 +601,12 @@
       ],
       "players": [],
       "slug": "oak-grove",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "oakgrovehigh.esuhsd.org/athletics: eligibility text, interest form, BVAL link; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -405,7 +616,16 @@
       ],
       "players": [],
       "slug": "overfelt",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://wcoathletics.com/varsity/volleyball-girls/roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site wcoathletics.com/varsity/volleyball-girls/roster (linked from school site) shows 'No Roster found!' for 2026-27, 2025-26 and 2024-25."
+      }
     },
     {
       "coaches": [],
@@ -415,7 +635,12 @@
       ],
       "players": [],
       "slug": "piedmont-hills",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "piedmonthillshigh.esuhsd.org/athletics-program (Google Site: registration, coaches, schedules, Title IX pages) - no team/roster pages."
+      }
     },
     {
       "coaches": [],
@@ -425,7 +650,12 @@
       ],
       "players": [],
       "slug": "prospect",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "prospect.cuhsd.org/apps/pages/GirlsVolleyball: lists the varsity head coach and physicals info only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -435,7 +665,12 @@
       ],
       "players": [],
       "slug": "andrew-hill",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "andrewphill.esuhsd.org/Athletics/Fall-Sports: lists Girls Volleyball by name only; no team page or roster."
+      }
     },
     {
       "coaches": [],
@@ -445,7 +680,12 @@
       ],
       "players": [],
       "slug": "del-mar",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "delmar.cuhsd.org/apps/pages/athletics (Edlio; BVAL link, boosters, KJT screening) - no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -455,7 +695,12 @@
       ],
       "players": [],
       "slug": "gunderson",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "gunderson.sjusd.org/extracurricular/athletics: handbook, forms, BVAL/Arbiter links only; no team or roster pages and no separate athletics site linked."
+      }
     },
     {
       "coaches": [],
@@ -465,7 +710,12 @@
       ],
       "players": [],
       "slug": "james-lick",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sites.google.com/esuhsd.org/james-lick-high-school/athletics/fall-sports/girls-volleyball (school site): only coach line and BVAL schedule link; no roster."
+      }
     },
     {
       "coaches": [],
@@ -475,7 +725,12 @@
       ],
       "players": [],
       "slug": "mt-pleasant",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mtpleasant.esuhsd.org/Athletics/Fall-Sports/Volleyball-Girls/index.html: page exists but has no roster content."
+      }
     },
     {
       "coaches": [],
@@ -485,7 +740,12 @@
       ],
       "players": [],
       "slug": "san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "sjhs.sjusd.org/extracurricular/athletics: physical form and Big Bone Game only; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -495,7 +755,12 @@
       ],
       "players": [],
       "slug": "yerba-buena",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "School site links 'YB Sports Page' ybsn.org (student sports-news site); https://ybsn.org/girls-volleyball-26-27 has 'Final roster' / 'ROSTER PICTURES' only as images, no text player list; yerbabuena.esuhsd.org has no roster."
+      }
     },
     {
       "coaches": [],
@@ -505,7 +770,12 @@
       ],
       "players": [],
       "slug": "mitty",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mitty.com/athletics/womens-volleyball: program info and coach; says rosters are in the Archbishop Mitty Athletics app; no roster on the website."
+      }
     },
     {
       "coaches": [],
@@ -515,7 +785,16 @@
       ],
       "players": [],
       "slug": "riordan",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://riordanathletics.com/sports/girls-volleyball/roster",
+        "season": "2026",
+        "seasonEvidence": "2026 Varsity Girls' Volleyball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site linked from riordanhs.org."
+      }
     },
     {
       "coaches": [],
@@ -525,7 +804,16 @@
       ],
       "players": [],
       "slug": "sacred-heart-cathedral",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://shcathletics.com/sports/womens-volleyball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Girls Volleyball (Varsity) Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site; older seasons labeled 2025, 2024."
+      }
     },
     {
       "coaches": [],
@@ -535,7 +823,16 @@
       ],
       "players": [],
       "slug": "saint-francis",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://sfhsathletics.com/sports/womens-volleyball/roster",
+        "season": "2026-27",
+        "seasonEvidence": "2026-2027 Women's Varsity Volleyball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site (Saint Francis Lancers, Mountain View)."
+      }
     },
     {
       "coaches": [],
@@ -545,7 +842,16 @@
       ],
       "players": [],
       "slug": "st-ignatius",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://siwildcats.com/sports/womens-volleyball/roster",
+        "season": "2026",
+        "seasonEvidence": "2026 Women's Volleyball (Varsity) Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site linked from siprep.org/athletics/teams."
+      }
     },
     {
       "coaches": [],
@@ -555,7 +861,16 @@
       ],
       "players": [],
       "slug": "valley-christian",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://gowarriors.net/sports/womens-volleyball/roster",
+        "season": "2026",
+        "seasonEvidence": "2026 Varsity Women's Volleyball Roster",
+        "listsPlayers": true,
+        "note": "Sidearm site linked from vcs.net high-school athletics page."
+      }
     },
     {
       "coaches": [],
@@ -565,7 +880,12 @@
       ],
       "players": [],
       "slug": "harker",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "harker.org upper-school athletics and athletic-events pages: schedules/news only; no team or roster pages found."
+      }
     },
     {
       "coaches": [],
@@ -575,7 +895,12 @@
       ],
       "players": [],
       "slug": "kings-academy",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "https://www.tka.org/athletics/teams/team-details/~athletics-team-id/60 'Girls Varsity Volleyball Team 2026-2027' shows coaches and record (9-9) only; no player list."
+      }
     },
     {
       "coaches": [],
@@ -585,7 +910,12 @@
       ],
       "players": [],
       "slug": "menlo",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "https://www.menloschool.org/athletics/us-girls-varsity-volleyball/ shows coaches, 2026-27 schedule/results, news; no roster."
+      }
     },
     {
       "coaches": [],
@@ -595,7 +925,12 @@
       ],
       "players": [],
       "slug": "mercy-burlingame",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "mercyhsb.com/athletics links to mercyhs.prestosports.com; every PrestoSports page (landing, wvball index, 2026-27 roster) returned a Cloudflare 403 to both curl and WebFetch, so roster could not be verified; search found none indexed."
+      }
     },
     {
       "coaches": [],
@@ -605,7 +940,12 @@
       ],
       "players": [],
       "slug": "notre-dame-belmont",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "https://www.ndhsb.org/athletics/schedules-and-results/team-details-page/~athletics-team-id/127 'Volleyball - Varsity Girls': no roster, no events."
+      }
     },
     {
       "coaches": [],
@@ -615,7 +955,16 @@
       ],
       "players": [],
       "slug": "presentation",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "found",
+        "checkedOn": "2026-11-28",
+        "url": "https://www.presentationhs.org/uploaded/website_pdfs/Athletics/26-27_Rosters/2026-27_Varsity_Volleyball_Roster.pdf",
+        "season": "2026-27",
+        "seasonEvidence": "2026-27 Varsity Volleyball Roster",
+        "listsPlayers": true,
+        "note": "School's own PDF on presentationhs.org (pres-net.com is down), linked as 'Team Roster' from https://www.presentationhs.org/athletics/schedules/volleyball ; the HTML page itself has no player list."
+      }
     },
     {
       "coaches": [],
@@ -625,7 +974,12 @@
       ],
       "players": [],
       "slug": "sacred-heart-prep",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "https://www.shschools.org/page/z-2021-hpr-shp-team-detail?Team=144890 'SHP Girls Volleyball Varsity' 2026-2027: coach, schedule, record; no roster."
+      }
     },
     {
       "coaches": [],
@@ -635,7 +989,12 @@
       ],
       "players": [],
       "slug": "castilleja",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "https://www.castilleja.org/athletics/teams/us/volleyball: varsity/JV team calendar with season selector (to 2026-2027) only; no roster."
+      }
     },
     {
       "coaches": [],
@@ -645,7 +1004,12 @@
       ],
       "players": [],
       "slug": "crystal-springs",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "crystal.org/athletics/teams lists Girls Volleyball with championship history only; no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -655,7 +1019,12 @@
       ],
       "players": [],
       "slug": "eastside",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "eastside.org/_studentlife/athletics.html lists Girls Volleyball by name only; no team page or roster."
+      }
     },
     {
       "coaches": [],
@@ -665,7 +1034,12 @@
       ],
       "players": [],
       "slug": "notre-dame-san-jose",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "www.ndsj.org unreachable from here (TLS certificate failure via curl, 503 via WebFetch); search index shows ndsj.org/student-life/volleyball with only navigation/contact, no roster; no separate athletics site found."
+      }
     },
     {
       "coaches": [],
@@ -675,7 +1049,12 @@
       ],
       "players": [],
       "slug": "pinewood",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "pinewood.edu/student-experience/athletics: overview text only (links to Instagram); no team or roster pages."
+      }
     },
     {
       "coaches": [],
@@ -685,7 +1064,12 @@
       ],
       "players": [],
       "slug": "priory",
-      "sources": []
+      "sources": [],
+      "schoolRoster": {
+        "status": "none",
+        "checkedOn": "2026-11-28",
+        "note": "prioryca.org/athletics team picker (US Girls Varsity Volleyball, Team=162033, seasons to 2026-2027): static page has no roster content; team details load by script and no player list visible."
+      }
     }
   ]
 }

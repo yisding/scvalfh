@@ -509,8 +509,14 @@ what was looked at. What a team with no MaxPreps players may say about other sou
 per team (`otherRosters`: `none`, `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list, or `listed`: a source's whole current varsity list, transcribed as
 written, which the team page shows under its own note and link in place of the empty MaxPreps list, as for
-Marina's athletics site and Newport Harbor's team site since 2026-11-26); a team without it says "we have not
-checked other public sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
+Marina's athletics site and Newport Harbor's team site since 2026-11-26, and since 2026-11-28 Serra's boys basketball
+and Sacred Heart Cathedral's, Hillsdale's and Scotts Valley's girls soccer; Overfelt basketball's four names are
+`partial`); a team without it says "we have not checked other public sources" rather than claim there are none.
+Separately, every team of the four recruiting builds records where its school publishes its own varsity roster
+(`schoolRoster`, owner decision 2026-11-28, swept that day): the page's URL, the season it shows (an older season
+or none is kept and said), whether it lists anyone yet (`listsPlayers`), or `none` with what was looked at. Of 418
+teams, 136 have a page (108 for the current season, 15 of them set up with nobody on it yet) and 282 none. It is
+where to look the day MaxPreps empties a roster; it is never rendered and never a source of names on its own. It only ever fills a blank; where a source disagrees
 with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
 other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same
 way, under the player's `conflicts`. Since 2026-11-21 a grade conflict may be marked `rosterBehind`: the cited page
