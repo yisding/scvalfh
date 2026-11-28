@@ -2488,6 +2488,17 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   Mavericks ties need no `classYearDiffers`. The other way, Brianna Paredes (Sobrato JV) is tied to OV Toros FC's
   U15G Black (class of 2030, a born-2012 team): MaxPreps' grade 10 for her looks a year ahead, since the team's four
   other Sobrato JV players are all grade 9.
+- **Club records for clubs without one, 2026-11-28 (owner's request, where it makes sense).** Every club a
+  `compare-club-rosters` match is at but which had no record was looked at, and a record was written only where a
+  tie would follow. Basketball, 7 records: Evolve Performance (Oakland), Flight Academy Basketball (Daly City), SDS
+  Unlimited (Fremont), Ronin (San Jose), F.O.A (Salinas) and East Bay Athletics (Oakland), from their Passport program
+  records (no site of their own found; owner decision 2026-11-27), and Top Flight Elite Basketball (Campbell) from
+  its own site. Each player's own Passport record was read first: 7 ties, Hagios Jerome (Bellarmine) and Kabir Bhatia
+  (Harker) high, their records naming the school, the other five medium on a hometown. No record: Team Just Respect
+  (its one match, Cupertino's Michael Wong, is a Dougherty Valley player), King Academy (a school), 209 BALLERZ and
+  Sacramento Fury (away from the schools), the six note 7 lists; in volleyball, UVAC, White Stone, SBND Elite, Lakas,
+  Bay Area Eagles and Apex (no site of their own found, again on 2026-11-28 for the first two); in soccer, 1974 Newark
+  FC (Newark, East Bay: no site of its own found), South Valley Chivas (Porterville) and Reno APEX (Nevada).
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the
