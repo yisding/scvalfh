@@ -29285,12 +29285,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "variant",
-          "name": "Jarett P"
-        }
-      ],
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -29304,8 +29299,7 @@
       ],
       "name": "Jarrett Poon",
       "names": [
-        "Jarrett Poon",
-        "Jarett P"
+        "Jarrett Poon"
       ],
       "stints": [
         {
@@ -29315,12 +29309,12 @@
           "height": null,
           "jersey": "2",
           "level": "varsity",
-          "name": "Jarett P",
+          "name": "Jarrett Poon",
           "observations": [
             {
               "grade": 11,
               "jersey": "2",
-              "name": "Jarett P",
+              "name": "Jarrett Poon",
               "src": "maxpreps-stats"
             }
           ],
@@ -29336,14 +29330,14 @@
           "height": "5'8\"",
           "jersey": "2",
           "level": "varsity",
-          "name": "Jarett P",
+          "name": "Jarrett Poon",
           "observations": [
             {
               "athleteId": "0ee25a25-ce7e-429d-a766-380e21086cca",
               "grade": 12,
               "height": "5'8\"",
               "jersey": "2",
-              "name": "Jarett P",
+              "name": "Jarrett Poon",
               "positions": [
                 "G"
               ],

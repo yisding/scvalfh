@@ -239,6 +239,11 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
     basis: "Varun Panikkar (Homestead basketball): MaxPreps' roster writes 'Pannikar'; SCVAL's official 2025-26 all-league list writes 'Panikkar'. Corrected at the site owner's request after a sweep for MaxPreps misspellings (2026-11-27); keyed to the whole name, so no one else is respelled.",
   },
   {
+    maxpreps: 'Jarett P',
+    spelled: 'Jarrett Poon',
+    basis: "Jarrett Poon (Cupertino basketball, career ima170oo9m3cc): MaxPreps lists him by first name and last initial, spelling the first name with one 'r'. His earlier MaxPreps career (novg7cg4jp0o8: Cupertino varsity, class of 2027, 2024-25) and MaxPreps' recap of the January 2025 win over Harker name him Jarrett Poon, and the team's 2026-27 scorebook writes 'Jarrett' for #2. Corrected at the site owner's request (2026-11-28); keyed to the whole name, so no one else is respelled.",
+  },
+  {
     maxpreps: 'Amelia "mimi" Scatena',
     spelled: 'Amelia "Mimi" Scatena',
     basis: 'Amelia "Mimi" Scatena (Mission Bay field hockey): a word typed without its capital, in an otherwise cased name; capitalized at the site owner\'s request (2026-11-25).',
