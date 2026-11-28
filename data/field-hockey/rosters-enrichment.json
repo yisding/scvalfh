@@ -1444,9 +1444,13 @@
         }
       ],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "The sweep read cupertinoathletics.com (PlayOn) /sport/girls-field-hockey/roster as varsity roster pages for 2026-27 back to 2021-22 that list no players; re-checked 2026-11-28, that URL answers “School Not Found”, so no roster page is recorded. The school’s own site (chs.fuhsd.org) has no field hockey roster."
+        "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+        "season": "2026",
+        "seasonEvidence": "Rosters: Varsity (no season label); the page’s schedule reads “Printable Schedule updated on 9/9/26”",
+        "listsPlayers": true,
+        "note": "The school’s own field hockey page lists 15 varsity players by name and year (read 2026-11-28). The PlayOn site cupertinoathletics.com answers “School Not Found”."
       }
     },
     {
