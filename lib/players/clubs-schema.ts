@@ -290,9 +290,19 @@ export const AffiliationSourceSchema = z.object({
    * then accepts that one year's difference for this source and no other.
    */
   classYearDiffers: z.literal(true).optional(),
+  /**
+   * Set by hand, on a `league-roster` source only: the name the roster lists the player under, when it is not the
+   * row's because one of the two first names is a short form of the other (lib/players/nicknames.ts: a row's "Gigi"
+   * for a roster's "Giuliana"), and the tie was made on the owner's word that they are one player (2026-11-28). The
+   * league-roster rule never makes such a match itself (its rule 1 asks for the same name).
+   */
+  rosterName: text.optional(),
 }).refine((s) => s.classYearDiffers === undefined || s.kind === 'league-roster', {
   message: 'only a league-roster source may differ from the roster grade',
   path: ['classYearDiffers'],
+}).refine((s) => s.rosterName === undefined || s.kind === 'league-roster', {
+  message: 'only a league-roster source may name the player otherwise',
+  path: ['rosterName'],
 });
 
 /**

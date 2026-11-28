@@ -2445,6 +2445,13 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   off; Garcia's own page ties her to Santa Cruz United), Sophia Hernandez and Emily Garcia (clubs with no record),
   Sofia Gonzalez (common name; her Hudl page disagrees too) and Summit Shasta's Scarlett Martinez (the rows are
   Mitty's player of that name). `compare-club-rosters` still lists the 11 as `class-year-differs`.
+- **A nickname on the school roster, 2026-11-28 (owner's word).** Palma's Gigi Richert is the Giuliana Richert of
+  Santa Cruz United FC's ECNL RL G2010/11 roster (class year 2029, which agrees with her grade); rule 1 asks for the
+  same name, so the rule never matched her. The tie (current, medium) cites the roster with `rosterName` on the
+  source (`lib/players/clubs-schema.ts`): a league-roster source only, and the test of the cited rosters accepts it
+  only for the same last name and a first name the nickname table (`lib/players/nicknames.ts`) pairs with the row's.
+  The owner says she played for Monterey Surf in 2025-26, but no page read names her there (its three N1 rosters on
+  GotSport Rankings, re-read that day, and her MaxPreps bio), so no Monterey Surf tie is made.
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the

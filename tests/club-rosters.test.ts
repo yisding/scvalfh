@@ -24,7 +24,8 @@ import {
   type SchoolRow,
 } from '../lib/players/club-rosters';
 import type { ClubAffiliation, ClubsFile, ClubsView } from '../lib/players/clubs-schema';
-import { nameKey } from '../lib/players/name-compare';
+import { nameKey, nameTokens } from '../lib/players/name-compare';
+import { givenForms } from '../lib/players/nicknames';
 
 const json = (rel: string): unknown => JSON.parse(readFileSync(rel, 'utf8'));
 const file = ClubRostersFileSchema.parse(json('data/soccer/club-rosters.json'));
@@ -153,7 +154,15 @@ describe('data/soccer/club-rosters.json', () => {
       const team = teamByUrl.get(s.url);
       expect(team, `${label}: ${s.url} is not a team in the kept copy`).toBeDefined();
       expect(file.clubSlugs[clubKey(team!)], label).toBe(a.club);
-      const listed = team!.players.some((p) => nameKey(rosterName(p)) === nameKey(a.fullName) && p.gradYear === s.statedClassYear);
+      // A roster that lists her under her given name where the row has its short form (or the reverse) is named on the source.
+      if (s.rosterName !== undefined) {
+        const [rowFirst, ...rowLast] = nameTokens(a.fullName);
+        const [rosterFirst, ...rosterLast] = nameTokens(s.rosterName);
+        expect(rosterLast.join(' '), `${label}: ${s.rosterName} has another last name`).toBe(rowLast.join(' '));
+        expect(givenForms(rowFirst).has(rosterFirst), `${label}: ${s.rosterName} is not a given form of ${a.fullName}`).toBe(true);
+      }
+      const listedAs = s.rosterName ?? a.fullName;
+      const listed = team!.players.some((p) => nameKey(rosterName(p)) === nameKey(listedAs) && p.gradYear === s.statedClassYear);
       expect(listed, `${label}: the kept roster of ${team!.teamName} does not list her with class year ${s.statedClassYear}`).toBe(true);
       expect(s.statedSchool).toBeNull();
       if (rosterSource(team!) === 'hudl') {
