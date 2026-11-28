@@ -41,8 +41,13 @@ const LAST_CLASS = 2030;
 const FROM = '2026-03-01';
 const NORCAL_CITIES = new Set(['Oakland', 'Alameda', 'Roseville', 'San Jose', 'San Francisco', 'Sacramento', 'Walnut Creek']);
 const DIVISIONS = new Set(['14U', '15U', '16U', '17U']);
-/** The adidas 3SSB boys sessions: national, so only the programs clubs.json has a record for are read. */
-const NATIONAL_EVENTS = new Set([11344, 11346]);
+/**
+ * The adidas 3SSB boys sessions, and (since 2026-11-28) adidas' western Jr. 3SSB and 3Stripes Gold events held away
+ * from Northern California (the West/Mountain Super Regional, the West Open Qualifier, the Gold West Open and
+ * Championships, the Open Qualifier Tip-Off and the November West Regionals): only the programs clubs.json has a
+ * record for are read. Camps (the All American Camps) are not team events and are not read.
+ */
+const NATIONAL_EVENTS = new Set([11344, 11346, 11282, 11300, 11336, 11340, 11531, 11577]);
 const GIRLS = /Hype Her|Girls/i;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
