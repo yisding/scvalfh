@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
   "commitSummary": "VAL +0 finals",
-  "contentHash": "52cbf56dd530602295228610526a61ea38fca3a57b4166a9205ba16bbca56a39",
+  "contentHash": "96cd37fbf2b544c01f5a45b466485df7c14f793c8071348161b441b5e2f5ca2e",
   "counts": {
     "byLeague": {
       "val": {
@@ -20,7 +20,7 @@
     "teams": 11
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-27T15:34:11.836Z",
+  "fetchedAt": "2026-11-28T06:36:41.329Z",
   "leagues": [
     {
       "backfilled": 0,
