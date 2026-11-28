@@ -4501,9 +4501,13 @@
         }
       ],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "District school site branham.cuhsd.org athletics/fall sports pages list coaches and links only (boosters, webstore, GoFan); no athletics site or roster page found; web searches return only MaxPreps/SI."
+        "url": "https://docs.google.com/document/d/1sipmyHSTzIoC0hW3FuhuT5qq-Hx2Tp_UlN_gF_ZG6_g/edit?usp=sharing",
+        "season": "2026-27",
+        "seasonEvidence": "BRANHAM GIRLS VARSITY FIELD HOCKEY 2026-2027 ROSTER (dated 9/11/2026)",
+        "listsPlayers": true,
+        "note": "A Google Doc, linked as the varsity roster from the school’s Fall Sports page (branham.cuhsd.org/apps/pages/fall_sports); 17 players, re-read 2026-11-28 (the source this team has cited since 2026-10-03)."
       }
     },
     {
@@ -7465,9 +7469,13 @@
         }
       ],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "lwhs.org/athletics/teams-detail-page/~athletics-team-id/136 (Field Hockey Varsity Girls) shows only the coach; roster section lists no players."
+        "url": "http://m.lwhs.org/team-detail?Team=211343",
+        "season": "2026-27",
+        "seasonEvidence": "Field Hockey - Varsity, Girls, 2026 - 2027",
+        "listsPlayers": true,
+        "note": "The school’s mobile team page (drawn by script; read in a browser 2026-11-28), 15 players; the desktop team page (lwhs.org/athletics/teams-detail-page/~athletics-team-id/136) shows only the coach."
       }
     },
     {

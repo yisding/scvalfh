@@ -42,9 +42,13 @@
       "slug": "homestead",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "Official PlayOn site homesteadmustangs.com: /sport/boys-basketball/roster?team=7813650&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-26 team (team=5200849) also 'No roster'. hhs.fuhsd.org athletics page and hhsathletics.com (boosters Google Site) have no roster. homesteadathletics.com is a different (Indiana) school."
+        "url": "https://www.homesteadmustangs.com/sport/boys-basketball/roster?team=7813650&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official PlayOn site homesteadmustangs.com: /sport/boys-basketball/roster?team=7813650&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-26 team (team=5200849) also 'No roster'. hhs.fuhsd.org athletics page and hhsathletics.com (boosters Google Site) have no roster. homesteadathletics.com is a different (Indiana) school. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -933,9 +937,13 @@
       "slug": "pioneer",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "pioneermustangathletics.com (official VNN/PlayOn athletics site): roster?team=boys-basketball-7815880&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-26, 2024-25, 2023-24, 2022-23 varsity rosters also empty. pioneer.sjusd.org athletics page has no rosters."
+        "url": "https://www.pioneermustangathletics.com/sport/boys-basketball/roster?team=7815880&year=2026-2027",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "pioneermustangathletics.com (official VNN/PlayOn athletics site): roster?team=boys-basketball-7815880&year=2026-2027 says 'No roster for 2026-2027 Varsity Boys Basketball'; 2025-26, 2024-25, 2023-24, 2022-23 varsity rosters also empty. pioneer.sjusd.org athletics page has no rosters. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -4277,9 +4285,13 @@
       "slug": "oakwood",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "oakwoodway.org/athletics/teams-schedules/high-school/boys-basketball (Oakwood School, Morgan Hill): Varsity section has Schedule/Coaches/Roster panels; Coaches says 'There is no information for this team' and the Roster panel is empty."
+        "url": "https://www.oakwoodway.org/athletics/teams-schedules/high-school/boys-basketball",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "oakwoodway.org/athletics/teams-schedules/high-school/boys-basketball (Oakwood School, Morgan Hill): Varsity section has Schedule/Coaches/Roster panels; Coaches says 'There is no information for this team' and the Roster panel is empty. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -4681,10 +4693,10 @@
         "status": "found",
         "checkedOn": "2026-11-28",
         "url": "https://www.everettalvarezathletics.com/sport/basketball/boys/?tab=roster",
-        "season": "2026-27",
+        "season": "2025-26",
         "seasonEvidence": "Varsity Boys Basketball roster tab: school year 2026-2027 returns an empty roster table; school year 2025-2026 shows 17 players (e.g. 'DAMIEN AGUILAR-REYES', grades FRESHMAN-SENIOR).",
         "listsPlayers": true,
-        "note": "everettalvarezathletics.com (official rSchoolToday-style site) roster endpoint RefreshRosterAthleteStyle1ViewComponent/113279 for 2026-2027 (empty) and 2025-2026 (populated). eahs.salinasuhsd.org athletics has no roster; alvarezeagles.com shows 'School Not Found'."
+        "note": "everettalvarezathletics.com (official rSchoolToday-style site) roster endpoint RefreshRosterAthleteStyle1ViewComponent/113279 for 2026-2027 (empty) and 2025-2026 (populated). eahs.salinasuhsd.org athletics has no roster; alvarezeagles.com shows 'School Not Found'. The URL opens on 2026-27, which lists nobody yet; 2025-26 is the newest season with players."
       }
     },
     {

@@ -42,9 +42,13 @@
       "slug": "homestead",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "Official athletics site homesteadmustangs.com (PlayOn Sites): Girls Varsity Soccer 2026/2027 roster page (/sport/200820/roster?team=7813655) has an empty player list. hhs.fuhsd.org/student-life/athletics and hhsathletics.com (booster Google Site) have no rosters."
+        "url": "https://www.homesteadmustangs.com/sport/200820/roster?team=7813655",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official athletics site homesteadmustangs.com (PlayOn Sites): Girls Varsity Soccer 2026/2027 roster page (/sport/200820/roster?team=7813655) has an empty player list. hhs.fuhsd.org/student-life/athletics and hhsathletics.com (booster Google Site) have no rosters. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -112,9 +116,13 @@
       "slug": "palo-alto",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "palyathletics.com (official Paly athletics, Bound/Mascot Media) girls soccer roster tab, Varsity, season 2026-2027: roster table (NUMBER/ATHLETES/GRADE) is empty. Same site renders other 2026-27 rosters (e.g., football), so no 2026-27 girls soccer roster is published yet."
+        "url": "https://www.palyathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "palyathletics.com (official Paly athletics, Bound/Mascot Media) girls soccer roster tab, Varsity, season 2026-2027: roster table (NUMBER/ATHLETES/GRADE) is empty. Same site renders other 2026-27 rosters (e.g., football), so no 2026-27 girls soccer roster is published yet. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -172,9 +180,13 @@
       "slug": "cupertino",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "chs.fuhsd.org/student-life/athletics/spring-sports/soccer-girls: Rosters section shows 'Varsity: Name / Year: To be determined'. The only PDF is the 2026-27 schedule. cupertinoathletics.com shows 'School Not Found'."
+        "url": "https://chs.fuhsd.org/student-life/athletics/spring-sports/soccer-girls",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "chs.fuhsd.org/student-life/athletics/spring-sports/soccer-girls: Rosters section shows 'Varsity: Name / Year: To be determined'. The only PDF is the 2026-27 schedule. cupertinoathletics.com shows 'School Not Found'. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -385,9 +397,13 @@
       "slug": "pioneer",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "Official athletics site pioneermustangathletics.com (PlayOn Sites): Girls Varsity Soccer 2026/2027 roster page (/sport/234016/roster?team=7815886) has an empty player list. pioneer.sjusd.org/extracurriculuar/athletics has only general info and links to Hudl and GoFan."
+        "url": "https://www.pioneermustangathletics.com/sport/234016/roster?team=7815886",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official athletics site pioneermustangathletics.com (PlayOn Sites): Girls Varsity Soccer 2026/2027 roster page (/sport/234016/roster?team=7815886) has an empty player list. pioneer.sjusd.org/extracurriculuar/athletics has only general info and links to Hudl and GoFan. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -399,9 +415,13 @@
       "slug": "westmont",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "westmontathletics.com (Bound) Varsity Girls Soccer roster tab, school year 2026-2027: roster table empty."
+        "url": "https://www.westmontathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "westmontathletics.com (Bound) Varsity Girls Soccer roster tab, school year 2026-2027: roster table empty. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -1033,8 +1053,8 @@
         "status": "found",
         "checkedOn": "2026-11-28",
         "url": "https://www.presentationhs.org/uploaded/2025-26/2025-26_Varsity_Soccer_Roster.pdf",
-        "season": "2026-27",
-        "seasonEvidence": "Roster link on 2026-27 soccer page points to '2025-26_Varsity_Soccer_Roster.pdf'",
+        "season": "2025-26",
+        "seasonEvidence": "The PDF is the “2025-26 Varsity Soccer Roster” (its file name and heading), linked as “Team Roster” from the soccer page.",
         "listsPlayers": true,
         "note": "presentationhs.org/athletics/schedules/soccer: Varsity 'Team Roster' section has no names, only a download link to /uploaded/2025-26/2025-26_Varsity_Soccer_Roster.pdf (2025-26)."
       }
@@ -1162,9 +1182,13 @@
       "slug": "burlingame",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "burlingameathletics.com (Bound) Varsity Girls Soccer roster tab, school year 2026-2027: roster table empty (football roster on same site is populated)."
+        "url": "https://www.burlingameathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "burlingameathletics.com (Bound) Varsity Girls Soccer roster tab, school year 2026-2027: roster table empty (football roster on same site is populated). (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -1337,9 +1361,13 @@
       "slug": "menlo-atherton",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "Official site bearsathletics.com (Mascot Media) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26 and 2024-25."
+        "url": "https://www.bearsathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site bearsathletics.com (Mascot Media) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26 and 2024-25. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -1441,9 +1469,13 @@
       "slug": "mills",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "Official site millsathletics.com (Mascot Media) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26, 2024-25."
+        "url": "https://www.millsathletics.com/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site millsathletics.com (Mascot Media) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26, 2024-25. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
@@ -1456,9 +1488,13 @@
       "slug": "san-mateo",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "Official site sanmateoathletics.org (Mascot Media, linked from smhs.smuhsd.org) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26, 2024-25."
+        "url": "https://www.sanmateoathletics.org/sport/soccer/girls/?tab=roster",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "Official site sanmateoathletics.org (Mascot Media, linked from smhs.smuhsd.org) /sport/soccer/girls/?tab=roster: roster table empty for 2026-27, 2025-26, 2024-25. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {

@@ -515,7 +515,7 @@ and Sacred Heart Cathedral's, Hillsdale's and Scotts Valley's girls soccer; Over
 Separately, every team of the four recruiting builds records where its school publishes its own varsity roster
 (`schoolRoster`, owner decision 2026-11-28, swept that day): the page's URL, the season it shows (an older season
 or none is kept and said), whether it lists anyone yet (`listsPlayers`), or `none` with what was looked at. Of 418
-teams, 136 have a page (108 for the current season, 15 of them set up with nobody on it yet) and 282 none. It is
+teams, 151 have a page (121 for the current season, 28 of them set up with nobody on it yet) and 267 none. It is
 where to look the day MaxPreps empties a roster; it is never rendered and never a source of names on its own. It only ever fills a blank; where a source disagrees
 with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
 other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same

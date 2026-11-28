@@ -184,9 +184,13 @@
       "slug": "los-altos",
       "sources": [],
       "schoolRoster": {
-        "status": "none",
+        "status": "found",
         "checkedOn": "2026-11-28",
-        "note": "lahs.mvla.net/girls-volleyball (coaches, tryout info, no roster); PlayOn site losaltossports.com/sport/girls-volleyball/roster?team=7814354 says 'No roster for 2026-2027' and only the 2026/2027 team exists."
+        "url": "https://www.losaltossports.com/sport/girls-volleyball/roster?team=7814354",
+        "season": "2026-27",
+        "seasonEvidence": null,
+        "listsPlayers": false,
+        "note": "lahs.mvla.net/girls-volleyball (coaches, tryout info, no roster); PlayOn site losaltossports.com/sport/girls-volleyball/roster?team=7814354 says 'No roster for 2026-2027' and only the 2026/2027 team exists. (The page is the school’s roster page for 2026-27, set up with nobody on it yet.)"
       }
     },
     {
