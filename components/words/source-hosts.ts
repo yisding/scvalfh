@@ -39,6 +39,9 @@ export const OUTLETS: Readonly<Record<string, { label: string; inSentence: strin
   'scval.com': { label: 'SCVAL', inSentence: 'SCVAL' },
   'sfhsathletics.com': { label: 'Saint Francis athletics', inSentence: 'Saint Francis athletics' },
   'siwildcats.com': { label: 'St. Ignatius athletics', inSentence: 'St. Ignatius athletics' },
+  // The one social host a club tie may cite (lib/players/clubs-schema.ts TIE_SOURCE_HOSTS), a video.
+  'youtube.com': { label: 'YouTube video', inSentence: 'YouTube' },
+  'youtu.be': { label: 'YouTube video', inSentence: 'YouTube' },
 };
 
 /** The host without `www.`: "flyfhc.com", "nfhca.sportsrecruits.com". Every URL here is https (the schemas). */

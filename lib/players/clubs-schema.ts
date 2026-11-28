@@ -22,7 +22,7 @@
  *   2. every membership's `club` names a club in clubs[]
  *   3. (playerId, club) is unique
  *   4. every URL is https and none is on a social-media host (BANNED_HOSTS): a website, a program
- *      or roster page, and every source
+ *      or roster page, and every source, save that a tie may cite a YouTube video (TIE_SOURCE_HOSTS)
  *   5. every club and every membership has at least one source
  *   6. a quote is 1-300 characters (it is kept for maintainers and never rendered)
  *   7. `asOf` takes one of five shapes (isAsOf); `sourceDate` is free text ("2025 Fall Season")
@@ -231,6 +231,29 @@ export const sourceUrl = z
   .refine(isHttpsUrl, 'expected an https URL')
   .refine((v) => !isBannedHost(v), 'social media is not a source');
 
+/**
+ * The one social host a club tie may cite (owner decision, 2026-11-28): a video on YouTube, such as a school team's
+ * own channel posting a player's highlight video that names her club. Never a club's website or a club record's
+ * source, and never a commitment's (lib/players/commits-schema.ts keeps `sourceUrl`).
+ */
+export const TIE_SOURCE_HOSTS = ['youtube.com', 'youtu.be'] as const;
+
+export function isTieSourceHost(url: string): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return TIE_SOURCE_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+}
+
+/** A URL a club tie cites: `sourceUrl`, except that a YouTube video may be one (TIE_SOURCE_HOSTS). */
+const tieSourceUrl = z
+  .string()
+  .refine(isHttpsUrl, 'expected an https URL')
+  .refine((v) => !isBannedHost(v) || isTieSourceHost(v), 'social media is not a source');
+
 const text = z.string().min(1);
 
 // ---------------------------------------------------------------- clubs
@@ -273,7 +296,8 @@ export const ClubSchema = z.object({
 // ---------------------------------------------------------------- affiliations
 
 export const AffiliationSourceSchema = z.object({
-  url: sourceUrl,
+  /** Any page but social media's, save a YouTube video (TIE_SOURCE_HOSTS). */
+  url: tieSourceUrl,
   kind: z.enum(CLUB_SOURCE_KINDS),
   /** Verbatim from the page. Kept in the file so a maintainer can re-check it; never rendered. */
   quote: text.max(300),
@@ -290,9 +314,21 @@ export const AffiliationSourceSchema = z.object({
    * then accepts that one year's difference for this source and no other.
    */
   classYearDiffers: z.literal(true).optional(),
+  /**
+   * Set by hand, on a `league-roster` source only: the name the roster lists the player under, when it is not the
+   * row's, and the tie was made on the owner's decision that they are one player (2026-11-28): the same last name,
+   * and a first name that is a short form of the other ("Gigi" and "Giuliana", lib/players/nicknames.ts; "Ben" and
+   * "Benjamin"), or a spelling one letter or two apart ("Viviana" and "Vivianna"). `isAnotherFormOf`
+   * (lib/players/club-rosters.ts) is the test. The league-roster rule never makes such a match itself (its rule 1
+   * asks for the same name).
+   */
+  rosterName: text.optional(),
 }).refine((s) => s.classYearDiffers === undefined || s.kind === 'league-roster', {
   message: 'only a league-roster source may differ from the roster grade',
   path: ['classYearDiffers'],
+}).refine((s) => s.rosterName === undefined || s.kind === 'league-roster', {
+  message: 'only a league-roster source may name the player otherwise',
+  path: ['rosterName'],
 });
 
 /**

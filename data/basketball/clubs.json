@@ -12,7 +12,9 @@
     "Club records added 2026-11-27 (10), for the programs the kept Passport rosters (data/basketball/club-rosters.json) matched tracked players at: Bay Area Impact, South Bay H2G, TM Basketball, SBB Rebels, Bay Area Hurricanes, Ballerz United, Bay Area Rebels, Renegades Basketball, the PVBC Mavericks and the Palo Alto Huskies, each written from the program's own site and The Passport's public program record (api.the-passport.com/api/programs/public/<n>: city and website; its director and contact fields were not recorded). No record, so their matches are not linked: South Bay Snipers (Passport record: San Jose, no website. southbaysnipers.com exists but is a GoDaddy \"Launching Soon\" page with no club content; only a Lessons.com trainer listing found.); Wolfpack Zeta (Passport record: Sunnyvale, no website. No program of this name found; wolfpackbasketball.org is a Culver City (LA) club, and a \"Wolfpack Basketball Norcal\" is Tri-Valley. Likely a team name; no club site.); All-In-Elite (Passport record says Rocklin (Sacramento area) with website Allinyouthsports.com, which redirects to an unrelated trainer (EA Sports Development); allinelite.org is a \"coming soon\" placeholder. No own site, and its city does not fit the San Jose players.); Pacifica Basketball Club (Passport record: Pacifica (401 Paloma Ave, the Oceana High School address), no website; no site found (guessed hosts do not resolve; search found nothing).); No Limit Basketball (Passport record gives only state WA, no website. nolimitbasketball.com is an Illinois club (tryouts at Dwight Township Fieldhouse), not ours; no Bay Area site found.); Fierce Basketball (fiercebasketball.com (SportsEngine) is a youth training program (private workouts, small groups, clinics) with a 408 phone, but neither it nor the Passport record (state CA only) names a city, and it lists no teams.); South Bay Reapers (Passport record: Gilroy, no website; no site found.); Cali Legends (Passport record: Seaside, no website (social media only); no site found.); Salinas Valley Kings (Passport record: Gonzales, no website (social media only); no site found.); NBC BULLS 2028 (Passport record: San Jose, no website; appears to be a single class-of-2028 team; no site found.); SF Work Hard Play Hard (Passport record: San Francisco 94134, website whphbasketball.com, which does not resolve (DNS failure); no other own site found.); Bay Area Lakers (Passport record: San Jose 95133, website field is an Instagram handle (\"https://@BAL322433\"); no site found.); Team California (The Passport public program endpoint answers 404 \"Program not found\" for 14250; no Bay Area club site of this name found.); MVP Magic (Passport record: Oakland 94705, no website; only a G365 event report names it; no site found.); MBA Triple Threat (Passport record: Gilroy, no website (social media only); Triple Threat Academy (Oakland/Alameda/San Ramon) is a different program; no site found.).",
     "League rosters, 2026-11-27 (README, \"Club rosters in the other sports\"): the boys club team rosters of the Northern California events on The Passport (G365, The Stage, Breakthrough, Strictly Hoops, For the Love of the Game, the adidas 3Stripes Gold West Regional) and the adidas 3SSB sessions, read from its public API into data/basketball/club-rosters.json (pnpm fetch-club-rosters:basketball: 667 teams, 5,685 players with class years), compared with every varsity and JV row by pnpm compare-club-rosters:basketball. For every row the league-roster rule matched (and the rows it left only for a club with no record, two clubs, or a club away from the schools), each player's own Passport record (players/by-player-number/<n>) and team history were read: a record naming the row's school makes the tie high (rule (a), the player's own record); one naming no school needs a hometown in the school's county or one bordering it (rule (b)) and is medium; one naming another high school, or a hometown farther away, rules the match out (Cupertino's Michael Wong is a Dougherty Valley player; Hollister's Derrick Jones an Overfelt one; Milpitas' Deren Cayabyab lives in Elk Grove; three SHC, SI and King's Academy names live in Oakland, Hayward, Richmond and Antioch), and a record giving no hometown links nothing (7 rows). 101 new ties (25 high, 76 medium) and 11 that other pages had made, which gain the roster; ten club records added for them (above). Not linked: 10 rows on two programs' rosters in one season, and about 80 at programs with no record.",
     "2026-11-27, the owner's decision: the area a club may be based in for a league roster to link (rule 5, LOCAL_REGIONS) is the whole Bay Area (San Francisco, the Peninsula, the South Bay, the East Bay and Marin) and the Central Coast, in every sport. Under it St. Ignatius' Noah Kirsch-Lopez and Huck Lemmer link to Lakeshow (East Bay): each player's own Passport record gives the class of 2028 and a San Francisco hometown and lists the Lakeshow team (medium). On a second decision the same day the hometown test on the player's own record (for a record that names no school) was widened to the same area: a hometown in the Bay Area (San Francisco, San Mateo, Santa Clara, Alameda, Contra Costa and Marin counties) or on the Central Coast (Santa Cruz, Monterey, San Benito), where it had been the school's county or one bordering it. It changed one tie: St. Ignatius' Anthony Otis (hometown Richmond), whose Bay City tie gains its 17U 3SGB roster and reads current. The other players it had kept out are at programs with no record here (Team California, NBC Bulls 2028, SDS Unlimited, Evolve Performance, Flight Academy, King Academy) or on two programs' rosters; Milpitas' Deren Cayabyab (Elk Grove) stays out.",
-    "2026-11-27, the owner's decision: a program with no site of its own may take The Passport's public program record (api.the-passport.com/api/programs/public/<n>: a CLUB, with its city; its director and contact fields are not recorded) as its club record. Nine of the programs note 7 lists as having no record now have one: South Bay Snipers (San Jose), Pacifica Basketball Club (Pacifica), South Bay Reapers (Gilroy), Cali Legends (Seaside), Salinas Valley Kings (Gonzales), NBC Bulls (San Jose; The Passport's NBC BULLS 2028), SF Work Hard Play Hard (San Francisco; its listed website whphbasketball.com does not resolve), MVP Magic (Oakland) and MBA Triple Threat (Gilroy), each with its teams at the events of data/basketball/club-rosters.json. Their matches, under the same tests on each player's own Passport record (note 8, widened in note 9), made 40 ties (14 high, 26 medium), every roster and record re-read the same day. Still no record: Wolfpack Zeta, All-In-Elite, No Limit Basketball, Fierce Basketball, Bay Area Lakers and Team California (note 7). The page ties note 5 lists for South Bay Snipers, South Bay Reapers and Work Hard Play Hard were not re-made."
+    "2026-11-27, the owner's decision: a program with no site of its own may take The Passport's public program record (api.the-passport.com/api/programs/public/<n>: a CLUB, with its city; its director and contact fields are not recorded) as its club record. Nine of the programs note 7 lists as having no record now have one: South Bay Snipers (San Jose), Pacifica Basketball Club (Pacifica), South Bay Reapers (Gilroy), Cali Legends (Seaside), Salinas Valley Kings (Gonzales), NBC Bulls (San Jose; The Passport's NBC BULLS 2028), SF Work Hard Play Hard (San Francisco; its listed website whphbasketball.com does not resolve), MVP Magic (Oakland) and MBA Triple Threat (Gilroy), each with its teams at the events of data/basketball/club-rosters.json. Their matches, under the same tests on each player's own Passport record (note 8, widened in note 9), made 40 ties (14 high, 26 medium), every roster and record re-read the same day. Still no record: Wolfpack Zeta, All-In-Elite, No Limit Basketball, Fierce Basketball, Bay Area Lakers and Team California (note 7). The page ties note 5 lists for South Bay Snipers, South Bay Reapers and Work Hard Play Hard were not re-made.",
+    "Other forms of a name, 2026-11-28 (owner decision: tie a player a club roster lists under another form of the name, when everything else agrees; a class year one off is accepted when the player is very likely the same). The league-roster rule was run with each row's first name in its other forms (isAnotherFormOf in lib/players/club-rosters.ts), each roster source names the roster's spelling in `rosterName`, and each player's own Passport record was read as for the other ties: Ani Menon (Monta Vista, HoopRight, Anirudh), Ben Camhi (Westmont, South Bay H2G, Benjamin), Ranvi Sinha (Leland, South Bay Snipers, Ranvijay), Nick Gklaros-Stavropoulos (Mitty, Team Lillard, Nicky), Grant Coblin (St. Ignatius, Bay City, Grantham) and Ben Wu (Pinewood, Bay Area Impact, Benjamin), medium on a Bay Area hometown; Tim Ofa (Lincoln, South Bay H2G, Timote), high, his record naming Lincoln High School; Max Grudin (Priory, as Maxwell), high, his record naming Woodside Priory, to Lakeshow (15U 3SSB, July 2026, current) and DM's Mavericks (16U, May 2026, unknown), his class year (2028, as his Hudl page says) the grade above MaxPreps' stale one, which the roster overlay already marks rosterBehind. Left out: Eli Hernandez (Live Oak JV), whose Passport record names Ann Sobrato High School. Every roster and record was read live the same day.",
+    "Club records added 2026-11-28 (the owner asked for records for clubs without one, where it makes sense): for the programs whose rosters list a tracked player the league-roster rule had left only for want of a record, each player's own Passport record was read first, and a program got a record only where a tie would follow. Evolve Performance (Oakland), Flight Academy Basketball (Daly City), SDS Unlimited (Fremont), Ronin (San Jose), F.O.A (Salinas) and East Bay Athletics (Oakland) have no site of their own (searched the same day), so their Passport program records are their club records (owner decision 2026-11-27); Top Flight Elite Basketball's is written from its own site (topflightelite.com, Campbell). Ties, one each: Hagios Jerome (Bellarmine) to Evolve Performance and Kabir Bhatia (Harker) to Ronin, high, their records naming the school; Zayden Vibat (Sacred Heart Cathedral) to Flight Academy, Kaleb Wubet (Harker) to SDS Unlimited, Ezra Vasquez (Rancho San Juan) to F.O.A, Lucas Min (BASIS Silicon Valley) to East Bay Athletics and Cyrus Bahar (Pinewood JV) to Top Flight Elite, medium on a Bay Area or Central Coast hometown. No record: Team Just Respect (San Ramon), whose one matched player, Cupertino's Michael Wong, is a Dougherty Valley player; King Academy (a school, not a club); 209 BALLERZ (Stockton) and Sacramento Fury (no city), away from the schools; and those note 7 lists (Wolfpack Zeta, All-In-Elite, No Limit, Fierce, Bay Area Lakers, Team California)."
   ],
   "clubs": [
     {
@@ -1400,6 +1402,256 @@
         }
       ],
       "checkedOn": "2026-11-27"
+    },
+    {
+      "slug": "evolve-performance",
+      "name": "Evolve Performance",
+      "shortName": null,
+      "aliases": [
+        "Evolve Performance 2026"
+      ],
+      "website": null,
+      "city": "Oakland",
+      "region": "east-bay",
+      "youth": true,
+      "description": "A sports training facility in Oakland (East Bay) whose boys travel basketball teams (15U, 16U and 17U) play Northern California events on The Passport; it has no website of its own.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys travel teams, 2025-26 club season",
+          "detail": "15U, 16U, 17U teams on The Passport's rosters at 3Stripes Gold West Regional I & II 2026; G365 Summer Slam 2026",
+          "source": "https://api.the-passport.com/api/events/11334/teams/45306/roster"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/programs/public/17566",
+          "what": "The Passport public program record (program 17566, a CLUB): city Oakland, CA; no website. No site of its own was found (searched 2026-11-28); the record is the club record (owner decision 2026-11-27)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11334",
+          "what": "The Passport event 3Stripes Gold West Regional I & II 2026 (2026-04-10, Anaheim / Ladera Ranch / Oakland / Avondale): lists the program's 15U team"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11225",
+          "what": "The Passport event G365 Summer Slam 2026 (2026-07-25, Oakland): lists the program's 16U, 17U teams"
+        }
+      ],
+      "checkedOn": "2026-11-28"
+    },
+    {
+      "slug": "flight-academy-basketball",
+      "name": "Flight Academy Basketball",
+      "shortName": null,
+      "aliases": [],
+      "website": null,
+      "city": "Daly City",
+      "region": "peninsula",
+      "youth": true,
+      "description": "A boys travel basketball program based in Daly City (the Peninsula), with 14U, 15U and 17U teams at Northern California events on The Passport; it has no website of its own.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys travel teams, 2025-26 club season",
+          "detail": "14U, 15U, 17U teams on The Passport's rosters at Breakthrough Rise to the Top Norcal 2026; G365 Gold Rush 2026",
+          "source": "https://api.the-passport.com/api/events/11159/teams/44940/roster"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/programs/public/16462",
+          "what": "The Passport public program record (program 16462, a CLUB): city Daly City, CA; no website. No site of its own was found (searched 2026-11-28); the record is the club record (owner decision 2026-11-27)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11159",
+          "what": "The Passport event Breakthrough Rise to the Top Norcal 2026 (2026-05-16, Oakland): lists the program's 14U, 15U, 17U teams"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11223",
+          "what": "The Passport event G365 Gold Rush 2026 (2026-06-06, Oakland): lists the program's 14U team"
+        }
+      ],
+      "checkedOn": "2026-11-28"
+    },
+    {
+      "slug": "sds-unlimited",
+      "name": "SDS Unlimited",
+      "shortName": null,
+      "aliases": [],
+      "website": null,
+      "city": "Fremont",
+      "region": "east-bay",
+      "youth": true,
+      "description": "A boys travel basketball program based in Fremont (East Bay), with 14U teams at Northern California events on The Passport; it has no website of its own.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys travel teams, 2025-26 club season",
+          "detail": "14U teams on The Passport's rosters at G365 Memorial Day Challenge 2026",
+          "source": "https://api.the-passport.com/api/events/11193/teams/42051/roster"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/programs/public/15143",
+          "what": "The Passport public program record (program 15143, a CLUB): city Fremont, CA; no website. No site of its own was found (searched 2026-11-28); the record is the club record (owner decision 2026-11-27)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11193",
+          "what": "The Passport event G365 Memorial Day Challenge 2026 (2026-05-23, Oakland): lists the program's 14U teams"
+        }
+      ],
+      "checkedOn": "2026-11-28"
+    },
+    {
+      "slug": "ronin-basketball",
+      "name": "Ronin",
+      "shortName": null,
+      "aliases": [],
+      "website": null,
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "A boys travel basketball program based in San Jose (South Bay), with a 15U team at Northern California events on The Passport; it has no website of its own.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys travel teams, 2026-27 club season",
+          "detail": "15U teams on The Passport's rosters at G365 Bay Breeze 2026",
+          "source": "https://api.the-passport.com/api/events/11473/teams/52185/roster"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/programs/public/18238",
+          "what": "The Passport public program record (program 18238, a CLUB): city San Jose, CA; no website. No site of its own was found (searched 2026-11-28); the record is the club record (owner decision 2026-11-27)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11473",
+          "what": "The Passport event G365 Bay Breeze 2026 (2026-10-03, Oakland): lists the program's 15U team"
+        }
+      ],
+      "checkedOn": "2026-11-28"
+    },
+    {
+      "slug": "foa-basketball",
+      "name": "F.O.A",
+      "shortName": null,
+      "aliases": [],
+      "website": null,
+      "city": "Salinas",
+      "region": "central-coast",
+      "youth": true,
+      "description": "A boys travel basketball program based in Salinas (Central Coast), with a 17U team at Northern California events on The Passport; it has no website of its own.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys travel teams, 2025-26 club season",
+          "detail": "17U teams on The Passport's rosters at G365 Summer Slam 2026",
+          "source": "https://api.the-passport.com/api/events/11225/teams/49877/roster"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/programs/public/18096",
+          "what": "The Passport public program record (program 18096, a CLUB): city Salinas, CA; no website. No site of its own was found (searched 2026-11-28); the record is the club record (owner decision 2026-11-27)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11225",
+          "what": "The Passport event G365 Summer Slam 2026 (2026-07-25, Oakland): lists the program's 17U team"
+        }
+      ],
+      "checkedOn": "2026-11-28"
+    },
+    {
+      "slug": "east-bay-athletics",
+      "name": "East Bay Athletics",
+      "shortName": null,
+      "aliases": [],
+      "website": null,
+      "city": "Oakland",
+      "region": "east-bay",
+      "youth": true,
+      "description": "A boys travel basketball program based in Oakland (East Bay), with 14U and 15U teams at Northern California events on The Passport; it has no website of its own.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys travel teams, 2026-27 club season",
+          "detail": "14U, 15U teams on The Passport's rosters at G365 King of the Town 2026; G365 The Crown 2026",
+          "source": "https://api.the-passport.com/api/events/11226/teams/47835/roster"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/programs/public/16923",
+          "what": "The Passport public program record (program 16923, a CLUB): city Oakland, CA; no website. No site of its own was found (searched 2026-11-28); the record is the club record (owner decision 2026-11-27)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11226",
+          "what": "The Passport event G365 The Crown 2026 (2026-08-08, Oakland): lists the program's 14U team"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11472",
+          "what": "The Passport event G365 King of the Town 2026 (2026-09-12, Oakland): lists the program's 14U, 15U teams"
+        }
+      ],
+      "checkedOn": "2026-11-28"
+    },
+    {
+      "slug": "top-flight-elite",
+      "name": "Top Flight Elite Basketball",
+      "shortName": null,
+      "aliases": [
+        "Top Flight Elite"
+      ],
+      "website": "https://www.topflightelite.com/",
+      "city": "Campbell",
+      "region": "south-bay",
+      "youth": true,
+      "description": "Top Flight Elite Basketball is a Bay Area AAU basketball program for boys and girls with a Campbell mailing address, which also runs a Sacramento branch and camps; its boys 14U teams play Northern California events on The Passport.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys AAU teams on The Passport, 2025-26 club season",
+          "detail": "14U teams on The Passport's rosters at G365 Sactown Swish 2026",
+          "source": "https://api.the-passport.com/api/events/11319/teams/47038/roster"
+        },
+        {
+          "name": "AAU basketball, boys and girls",
+          "detail": "Spring 2027 AAU tryouts for boys and girls",
+          "source": "https://topflightelite.leagueapps.com/events/5174393-registration-spring-2027-aau-basketball-tryouts-boys--girls"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.topflightelite.com/",
+          "what": "Home page (SportsEngine): Top Flight Elite Basketball; AAU, Top Flight Sacramento, tournaments, camps, Splash Lab Bay Area; contact address P.O. Box 1467, Campbell, CA 95009-1467"
+        },
+        {
+          "url": "https://www.topflightelite.com/page/show/5452157-aau",
+          "what": "AAU page: the program's AAU tryout calendar"
+        },
+        {
+          "url": "https://topflightelite.leagueapps.com/events/5174393-registration-spring-2027-aau-basketball-tryouts-boys--girls",
+          "what": "Registration for its Spring 2027 AAU basketball tryouts, boys and girls (linked from the home page)"
+        },
+        {
+          "url": "https://api.the-passport.com/api/programs/public/17772",
+          "what": "The Passport public program record (program 17772, a CLUB): city San Jose, CA; website topflightelite.com"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11319",
+          "what": "The Passport event G365 Sactown Swish 2026 (2026-05-30, Roseville): lists the program's 14U teams"
+        }
+      ],
+      "checkedOn": "2026-11-28"
     }
   ],
   "memberships": [
@@ -6862,6 +7114,472 @@
         }
       ],
       "basis": "Found 2026-11-27 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json): For the Love of the Game Hoppin Hoops NorCal 2026 (2026-04-03, Oakland): SF Work Hard Play Hard 15U (15U, class of 2028) lists a player of this name and class year, and no other tracked school has the name. The player's own Passport record names no school; it gives the class of 2028 and a hometown of San Francisco, CA,  in the Bay Area or on the Central Coast (the wide area of 2026-11-27), so rule (b) (class year plus a hometown in the school's area) is met with the league-roster rule (one club that season, near the schools); medium. The roster was read twice and the record once, the same day."
+    },
+    {
+      "playerId": "p428b902e43",
+      "name": "Ani Menon",
+      "club": "hoopright",
+      "clubTeam": "HoopRight 15U George",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11221/teams/41943/roster",
+          "kind": "league-roster",
+          "quote": "HoopRight 15U George (15U) | Anirudh Menon | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2025-26",
+          "rosterName": "Anirudh Menon"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/43789",
+          "kind": "other",
+          "quote": "graduationYear 2029; address Saratoga, CA",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: G365 The Mayhem 2026 (2026-03-14, Oakland): HoopRight 15U George (class year 2029) lists 'Anirudh Menon', which agrees with the row; 'Ani Menon' is a short form of 'Anirudh Menon'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/43789) names no school and gives a hometown of Saratoga, CA, in the Bay Area: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p8ab3780409",
+      "name": "Ben Camhi",
+      "club": "south-bay-h2g",
+      "clubTeam": "South Bay H2G 15U",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11334/teams/44993/roster",
+          "kind": "league-roster",
+          "quote": "South Bay H2G 15U (15U) | Benjamin Camhi | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2025-26",
+          "rosterName": "Benjamin Camhi"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/65478",
+          "kind": "other",
+          "quote": "graduationYear 2029; address Los Gatos, CA",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: 3Stripes Gold West Regional I & II 2026 (2026-04-10, Anaheim / Ladera Ranch / Oakland / Avondale): South Bay H2G 15U (class year 2029) lists 'Benjamin Camhi', which agrees with the row; 'Ben Camhi' is a short form of 'Benjamin Camhi'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/65478) names no school and gives a hometown of Los Gatos, CA, in the Bay Area: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p805b8872f9",
+      "name": "Ranvijay Abhimanyu Sinha",
+      "club": "south-bay-snipers",
+      "clubTeam": "South Bay Snipers 16U Kenny",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11222/teams/47103/roster",
+          "kind": "league-roster",
+          "quote": "South Bay Snipers 16U Kenny (16U) | Ranvijay Sinha | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2025-26",
+          "rosterName": "Ranvijay Sinha"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/77376",
+          "kind": "other",
+          "quote": "graduationYear 2028; address San Jose, CA",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: G365 NorCal Clash 2026 (2026-04-25, Oakland): South Bay Snipers 16U Kenny (class year 2028) lists 'Ranvijay Sinha', which agrees with the row; 'Ranvi Sinha' is a short form of 'Ranvijay Sinha'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/77376) names no school and gives a hometown of San Jose, CA, in the Bay Area: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "pd2e276416c",
+      "name": "Tim Ofa",
+      "club": "south-bay-h2g",
+      "clubTeam": "South Bay H2G 15U",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11334/teams/44993/roster",
+          "kind": "league-roster",
+          "quote": "South Bay H2G 15U (15U) | Timote Ofa | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2025-26",
+          "rosterName": "Timote Ofa"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/91416",
+          "kind": "other",
+          "quote": "academicInfo.school: 'Lincoln High School'; graduationYear 2029; address San Jose, CA",
+          "statedSchool": "Lincoln High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: 3Stripes Gold West Regional I & II 2026 (2026-04-10, Anaheim / Ladera Ranch / Oakland / Avondale): South Bay H2G 15U (class year 2029) lists 'Timote Ofa', which agrees with the row; 'Tim Ofa' is a short form of 'Timote Ofa'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/91416) names the school ('Lincoln High School') and a hometown of San Jose, CA: high (rule (a), the player's own record). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p1e99e4c934",
+      "name": "Nick Gklaros-Stavropoulos",
+      "club": "team-lillard",
+      "clubTeam": "Team Lillard 17U",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11346/teams/46718/roster",
+          "kind": "league-roster",
+          "quote": "Team Lillard 17U (17U) | Nicky Gklaros-Stavropoulos | Class of 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2025-26",
+          "rosterName": "Nicky Gklaros-Stavropoulos"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/42429",
+          "kind": "other",
+          "quote": "academicInfo.school: 'Blach Intermediate School'; graduationYear 2027; address Los Altos, CA",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: adidas 3SSB Boys Session III + IV (Bryan, TX + Rock Hill, SC) 2026 (2026-07-09, Rock Hill / Bryan): Team Lillard 17U (class year 2027) lists 'Nicky Gklaros-Stavropoulos', which agrees with the row; 'Nick Gklaros-Stavropoulos' is a short form of 'Nicky Gklaros-Stavropoulos'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/42429) gives a hometown of Los Altos, CA and, as its school, Blach Intermediate School, a Los Altos middle school (an entry from before high school, which names no high school): medium (rule (b)). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p60d58d9a61",
+      "name": "Grant Coblin",
+      "club": "bay-city-basketball",
+      "clubTeam": "Bay City Basketball 16U 3SGB",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11334/teams/44161/roster",
+          "kind": "league-roster",
+          "quote": "Bay City Basketball 16U 3SGB (16U) | Grantham Coblin | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2025-26",
+          "rosterName": "Grantham Coblin"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/88880",
+          "kind": "other",
+          "quote": "graduationYear 2028; address Burlingame, CA",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: 3Stripes Gold West Regional I & II 2026 (2026-04-10, Anaheim / Ladera Ranch / Oakland / Avondale): Bay City Basketball 16U 3SGB (class year 2028) lists 'Grantham Coblin', which agrees with the row; 'Grant Coblin' is a short form of 'Grantham Coblin'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/88880) names no school and gives a hometown of Burlingame, CA, in the Bay Area: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p3e09eef3f1",
+      "name": "Ben Wu",
+      "club": "bay-area-impact",
+      "clubTeam": "Bay Area Impact 15U 2030",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11227/teams/50762/roster",
+          "kind": "league-roster",
+          "quote": "Bay Area Impact 15U 2030 (15U) | Benjamin Wu | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27",
+          "rosterName": "Benjamin Wu"
+        },
+        {
+          "url": "https://api.the-passport.com/api/events/11227/teams/50763/roster",
+          "kind": "league-roster",
+          "quote": "Bay Area Impact 16U 2029 (16U) | Benjamin Wu | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27",
+          "rosterName": "Benjamin Wu"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/113875",
+          "kind": "other",
+          "quote": "graduationYear 2030; address Burlingame, CA",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: G365 Capital Clash 2026 (2026-10-24, Roseville): Bay Area Impact 15U 2030 (class year 2030) lists 'Benjamin Wu'; G365 Capital Clash 2026 (2026-10-24, Roseville): Bay Area Impact 16U 2029 (class year 2030) lists 'Benjamin Wu', which agrees with the row; 'Ben Wu' is a short form of 'Benjamin Wu'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). The player's own Passport record (players/by-player-number/113875) names no school and gives a hometown of Burlingame, CA, in the Bay Area: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p2632bde0c8",
+      "name": "Max Grudin",
+      "club": "lakeshow",
+      "clubTeam": "Lakeshow 15U 3SSB",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11346/teams/46525/roster",
+          "kind": "league-roster",
+          "quote": "Lakeshow 15U 3SSB (15U) | Maxwell Grudin | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2025-26",
+          "rosterName": "Maxwell Grudin"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/43423",
+          "kind": "other",
+          "quote": "academicInfo.school: 'Woodside Priory'; graduationYear 2028; address Menlo Park, CA",
+          "statedSchool": "Woodside Priory",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: adidas 3SSB Boys Session III + IV (Bryan, TX + Rock Hill, SC) 2026 (2026-07-09, Rock Hill / Bryan): Lakeshow 15U 3SSB (class year 2028) lists 'Maxwell Grudin'; G365 Memorial Day Challenge 2026 (2026-05-23, Oakland): DM's Mavericks 16U (class year 2028) lists 'Maxwell Grudin'; 'Max Grudin' is a short form of 'Maxwell Grudin'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). His Hudl profile (on Priory's own team) gives the class of 2028, as the Passport roster and record do. MaxPreps' 2026-27 roster still shows last season's grade (class of 2029), which the roster overlay already records as a rosterBehind grade conflict (2026-11-21), so the class of 2028 agrees with his corrected grade. The rule had left him only because his MaxPreps career page, as stale as the roster, states 2029. The player's own Passport record (players/by-player-number/43423) names the school ('Woodside Priory') and a hometown of Menlo Park, CA: high (rule (a), the player's own record). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "p2632bde0c8",
+      "name": "Max Grudin",
+      "club": "pvbc-mavericks",
+      "clubTeam": "DM's Mavericks 16U",
+      "status": "unknown",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11193/teams/48035/roster",
+          "kind": "league-roster",
+          "quote": "DM's Mavericks 16U (16U) | Maxwell Grudin | Class of 2028",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": "2025-26",
+          "rosterName": "Maxwell Grudin"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/43423",
+          "kind": "other",
+          "quote": "academicInfo.school: 'Woodside Priory'; graduationYear 2028; address Menlo Park, CA",
+          "statedSchool": "Woodside Priory",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: adidas 3SSB Boys Session III + IV (Bryan, TX + Rock Hill, SC) 2026 (2026-07-09, Rock Hill / Bryan): Lakeshow 15U 3SSB (class year 2028) lists 'Maxwell Grudin'; G365 Memorial Day Challenge 2026 (2026-05-23, Oakland): DM's Mavericks 16U (class year 2028) lists 'Maxwell Grudin'; 'Max Grudin' is a short form of 'Maxwell Grudin'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). His Hudl profile (on Priory's own team) gives the class of 2028, as the Passport roster and record do. MaxPreps' 2026-27 roster still shows last season's grade (class of 2029), which the roster overlay already records as a rosterBehind grade conflict (2026-11-21), so the class of 2028 agrees with his corrected grade. The rule had left him only because his MaxPreps career page, as stale as the roster, states 2029. The player's own Passport record (players/by-player-number/43423) names the school ('Woodside Priory') and a hometown of Menlo Park, CA: high (rule (a), the player's own record). The roster and the record were read live the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same. DM's Mavericks 16U is the team he played the G365 Memorial Day Challenge with (May 2026), before Lakeshow's 15U 3SSB team (July 2026); which he plays for now is not known, so this tie's status is unknown."
+    },
+    {
+      "playerId": "p61f2c9b29b",
+      "name": "Hagios Jerome",
+      "club": "evolve-performance",
+      "clubTeam": "Evolve Performance 2026 17U",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11225/teams/49805/roster",
+          "kind": "league-roster",
+          "quote": "Evolve Performance 2026 17U (17U) | Hagios Jerome | Class of 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/23323",
+          "kind": "other",
+          "quote": "academicInfo.school: 'Bellarmine College Prep'; graduationYear 2027; address Fremont, CA",
+          "statedSchool": "Bellarmine College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: G365 Summer Slam 2026 (2026-07-25, Oakland): Evolve Performance 2026 17U (17U, class of 2027) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/23323) names the school ('Bellarmine College Prep'), the class of 2027 and a hometown of Fremont, CA: high (rule (a), the player's own record). The roster and the record were read live the same day."
+    },
+    {
+      "playerId": "pa45af308e9",
+      "name": "Zayden Vibat",
+      "club": "flight-academy-basketball",
+      "clubTeam": "Flight Academy Basketball 17U",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11159/teams/45020/roster",
+          "kind": "league-roster",
+          "quote": "Flight Academy Basketball 17U (17U) | Zayden Vibat | Class of 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/24088",
+          "kind": "other",
+          "quote": "graduationYear 2027; address South San Francisco, CA",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: Breakthrough Rise to the Top Norcal 2026 (2026-05-16, Oakland): Flight Academy Basketball 17U (17U, class of 2027) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/24088) names no school and gives the class of 2027 and a hometown of South San Francisco, CA, in the Bay Area or on the Central Coast: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day."
+    },
+    {
+      "playerId": "pcde1c15aec",
+      "name": "Kaleb Wubet",
+      "club": "sds-unlimited",
+      "clubTeam": "SDS Unlimited 14U Gold",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11193/teams/42051/roster",
+          "kind": "league-roster",
+          "quote": "SDS Unlimited 14U Gold (14U) | Kaleb Wubet | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/26625",
+          "kind": "other",
+          "quote": "graduationYear 2030; address Fremont, CA",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: G365 Memorial Day Challenge 2026 (2026-05-23, Oakland): SDS Unlimited 14U Gold (14U, class of 2030) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/26625) names no school and gives the class of 2030 and a hometown of Fremont, CA, in the Bay Area or on the Central Coast: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day."
+    },
+    {
+      "playerId": "p88c7317a36",
+      "name": "Kabir Bhatia",
+      "club": "ronin-basketball",
+      "clubTeam": "Ronin 15U Ronin",
+      "status": "current",
+      "asOf": "2026-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11473/teams/52185/roster",
+          "kind": "league-roster",
+          "quote": "Ronin 15U Ronin (15U) | Kabir Bhatia | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2026-27"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/68705",
+          "kind": "other",
+          "quote": "academicInfo.school: 'Harker'; graduationYear 2030; address San Jose, CA",
+          "statedSchool": "Harker",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: G365 Bay Breeze 2026 (2026-10-03, Oakland): Ronin 15U Ronin (15U, class of 2030) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/68705) names the school ('Harker'), the class of 2030 and a hometown of San Jose, CA: high (rule (a), the player's own record). The roster and the record were read live the same day."
+    },
+    {
+      "playerId": "pfe02f929e1",
+      "name": "Ezra Vasquez",
+      "club": "foa-basketball",
+      "clubTeam": "F.O.A 17U",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11225/teams/49877/roster",
+          "kind": "league-roster",
+          "quote": "F.O.A 17U (17U) | Ezra Vasquez | Class of 2027",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/146033",
+          "kind": "other",
+          "quote": "graduationYear 2027; address Salinas, CA",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: G365 Summer Slam 2026 (2026-07-25, Oakland): F.O.A 17U (17U, class of 2027) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/146033) names no school and gives the class of 2027 and a hometown of Salinas, CA, in the Bay Area or on the Central Coast: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day."
+    },
+    {
+      "playerId": "p7f25d803c5",
+      "name": "Lucas Min",
+      "club": "east-bay-athletics",
+      "clubTeam": "East Bay Athletics 14U Red",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11226/teams/47835/roster",
+          "kind": "league-roster",
+          "quote": "East Bay Athletics 14U Red (14U) | Lucas Min | Class of 2029",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/41580",
+          "kind": "other",
+          "quote": "graduationYear 2029; address Santa Clara, CA",
+          "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: G365 The Crown 2026 (2026-08-08, Oakland): East Bay Athletics 14U Red (14U, class of 2029) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/41580) names no school and gives the class of 2029 and a hometown of Santa Clara, CA, in the Bay Area or on the Central Coast: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day."
+    },
+    {
+      "playerId": "pe42a0f4503",
+      "name": "Cyrus Bahar",
+      "club": "top-flight-elite",
+      "clubTeam": "Top Flight Elite 14U Red",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://api.the-passport.com/api/events/11319/teams/47038/roster",
+          "kind": "league-roster",
+          "quote": "Top Flight Elite 14U Red (14U) | Cyrus Bahar | Class of 2030",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": "2025-26"
+        },
+        {
+          "url": "https://api.the-passport.com/api/players/by-player-number/41920",
+          "kind": "other",
+          "quote": "graduationYear 2030; address San Jose, CA",
+          "statedSchool": null,
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:basketball over the kept copy (data/basketball/club-rosters.json), which had left the row for want of a club record: G365 Sactown Swish 2026 (2026-05-30, Roseville): Top Flight Elite 14U Red (14U, class of 2030) lists a player of this name and class year, and no other tracked school has the name. The program was given a record the same day (its Passport program record and its own site; the owner asked for records for the clubs without one, where it makes sense). The player's own Passport record (players/by-player-number/41920) names no school and gives the class of 2030 and a hometown of San Jose, CA, in the Bay Area or on the Central Coast: medium (rule (b), as widened 2026-11-27). The roster and the record were read live the same day."
     }
   ]
 }

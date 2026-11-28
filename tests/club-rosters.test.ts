@@ -17,6 +17,7 @@ import {
   birthYearsFromTeamName,
   clubKey,
   compareClubRosters,
+  isAnotherFormOf,
   rosterName,
   rosterSource,
   teamTier,
@@ -153,7 +154,10 @@ describe('data/soccer/club-rosters.json', () => {
       const team = teamByUrl.get(s.url);
       expect(team, `${label}: ${s.url} is not a team in the kept copy`).toBeDefined();
       expect(file.clubSlugs[clubKey(team!)], label).toBe(a.club);
-      const listed = team!.players.some((p) => nameKey(rosterName(p)) === nameKey(a.fullName) && p.gradYear === s.statedClassYear);
+      // A roster that lists her under another form of her name (a nickname's full form, a spelling) names it on the source.
+      if (s.rosterName !== undefined) expect(isAnotherFormOf(a.fullName, s.rosterName), `${label}: ${s.rosterName} is not another form of ${a.fullName}`).toBe(true);
+      const listedAs = s.rosterName ?? a.fullName;
+      const listed = team!.players.some((p) => nameKey(rosterName(p)) === nameKey(listedAs) && p.gradYear === s.statedClassYear);
       expect(listed, `${label}: the kept roster of ${team!.teamName} does not list her with class year ${s.statedClassYear}`).toBe(true);
       expect(s.statedSchool).toBeNull();
       if (rosterSource(team!) === 'hudl') {
@@ -176,6 +180,26 @@ describe('data/soccer/club-rosters.json', () => {
         }
       }
     }
+  });
+});
+
+describe('isAnotherFormOf (a roster spelling a tie may name, owner decision 2026-11-28)', () => {
+  it('takes a nickname, a short form, a slip of the pen or a middle name, with the same last name', () => {
+    expect(isAnotherFormOf('Gigi Richert', 'Giuliana Richert')).toBe(true); // nickname table
+    expect(isAnotherFormOf('Ben Camhi', 'Benjamin Camhi')).toBe(true); // short form
+    expect(isAnotherFormOf('Viviana Pena', 'Vivianna Pena')).toBe(true); // a letter doubled
+    expect(isAnotherFormOf('Garren Hardy', 'Gerren Hardy')).toBe(true); // a vowel
+    expect(isAnotherFormOf('Ranvijay Abhimanyu Sinha', 'Ranvijay Sinha')).toBe(true); // middle name
+    expect(isAnotherFormOf('Nick Gklaros-Stavropoulos', 'Nicky Gklaros-Stavropoulos')).toBe(true);
+  });
+
+  it('refuses another last name, and first names that are only alike', () => {
+    expect(isAnotherFormOf('Gigi Richert', 'Giuliana Rickert')).toBe(false);
+    expect(isAnotherFormOf('Gigi Richert', 'Gina Richert')).toBe(false);
+    expect(isAnotherFormOf('Olivia Chen', 'Alicia Chen')).toBe(false);
+    expect(isAnotherFormOf('Rylan Wong', 'Dylan Wong')).toBe(false);
+    expect(isAnotherFormOf('Hayden Smith', 'Jaylen Smith')).toBe(false);
+    expect(isAnotherFormOf('Al Smith', 'Alexandra Smith')).toBe(false); // a short form of two letters is not one
   });
 });
 

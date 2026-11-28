@@ -1052,7 +1052,9 @@ The rules:
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
   YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/players/clubs-schema.ts`),
-  and every URL is https. A club's official Instagram account is linked from its page, but it lives in
+  and every URL is https. One exception (owner decision, 2026-11-28): a club tie may cite a YouTube video
+  (`TIE_SOURCE_HOSTS`), such as a school team's own channel posting a player's highlight video that names
+  her club; a club's website or record and a commitment still may not. A club's official Instagram account is linked from its page, but it lives in
   `data/field-hockey/instagram.json`, not here, and is never a source (see "Instagram accounts").
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
@@ -2445,6 +2447,58 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   off; Garcia's own page ties her to Santa Cruz United), Sophia Hernandez and Emily Garcia (clubs with no record),
   Sofia Gonzalez (common name; her Hudl page disagrees too) and Summit Shasta's Scarlett Martinez (the rows are
   Mitty's player of that name). `compare-club-rosters` still lists the 11 as `class-year-differs`.
+- **A nickname on the school roster, 2026-11-28 (owner's word).** Palma's Gigi Richert is the Giuliana Richert of
+  Santa Cruz United FC's ECNL RL G2010/11 roster (class year 2029, which agrees with her grade); rule 1 asks for the
+  same name, so the rule never matched her. The tie (current, medium) cites the roster with `rosterName` on the
+  source (`lib/players/clubs-schema.ts`): a league-roster source only, and the tests of the cited rosters accept it
+  only when `isAnotherFormOf` (`lib/players/club-rosters.ts`) does (below).
+  The owner says she played for Monterey Surf in 2025-26: Palma girls soccer's YouTube highlight video of her names
+  "Monterey Surf 2010 NPL", her class and the school, so she is tied there too (past, 2025-26, high), citing the
+  video under the exception the owner made that day (a club tie may cite a YouTube video; "No social media", above).
+- **Other forms of a name, every sport, 2026-11-28 (owner decision).** A club roster that lists a player under
+  another form of the row's name ties the player when everything else the rule asks agrees, and a class year one off
+  is accepted when the player is very likely the same. Another form (`isAnotherFormOf`): the same last name, and first
+  names that are a nickname pair (`lib/players/nicknames.ts`), one the start of the other (three letters at least:
+  Ben, Benjamin), or one spelling of the other (a letter doubled or dropped, or a vowel swapped, in names of five
+  letters or more: Viviana, Vivianna; Garren, Gerren; never two names a consonant apart, Rylan and Dylan). The rule
+  was run with each row's first name in those forms; every match was checked (the registry's names for the person,
+  a basketball player's own Passport record, a second page where one was found) and every cited row re-read live.
+  Tied: soccer 7 new and 1 roster added (Kat Smith, Bella Hernandez, Viviana Pena, Citlaly Gerardo Hernandez, Juliana
+  De Leon, Stella Kougiouris and Garren Hardy, the last two one class year off; Frankie Shannon's Burlingame SC tie);
+  basketball 9 (Ani Menon, Ben Camhi, Ranvi Sinha, Tim Ofa, Nick Gklaros-Stavropoulos, Grant Coblin, Ben Wu, and Max
+  Grudin to Lakeshow and DM's Mavericks); volleyball 9 new and 10 rosters added to ties other pages had made; field
+  hockey 1 roster added (Beatrix Hom). Left out: Eli Hernandez (Live Oak JV basketball; his Passport record names
+  Ann Sobrato), Mia Wang and Izabella Martinez (volleyball; common names with nothing else behind them), and pairs that
+  are two names (Emily and Emma Garcia, Olivia and Alicia Chen). Each sport's `clubs.json` notes list them.
+- **Volleyball: distinctive names one class year off, 2026-11-28 (owner decision).** Of the 35 rows
+  `compare-club-rosters:volleyball` left only for a class year one off, the owner asked for the distinctive names. 18
+  were looked at; with the class year moved by one each passes the rest of the rule, every one a player a year younger
+  than her team's age group (playing up). Tied: 10 new (Kathryn Gee, Tayla Yip, Anna Scaria, Yulissa Ting, Lily
+  Jensen-Pelletier, Saanvi Bharadwaj, Madyson Huynh; on JV Veida Huang, Janielle Fan and Annabelle Burk), and 7 ties
+  other pages had made gain the roster (Jessica Jacobson, Rucha Patil, Chayse Courtney, Kepafingo and Delfina
+  Haungatau-Rios, Elle Chang, Amani Lee-Seyon). Left out: common names (Corrine Li, Natalie Baker, Yuna Kim and the
+  like) and clubs with no record. `compare-club-rosters` still lists them as `class-year-differs`.
+- **MaxPreps a year behind, or ahead, 2026-11-28 (owner's request).** Where a club roster's class is one year off
+  the row's grade, the tie's basis now says which side looks wrong. Most are the club's difference: an independent
+  page agrees with MaxPreps' grade, or the registry's 2025-26 row shows MaxPreps moving the player up a grade.
+  Where neither exists and the club's class is a year earlier, MaxPreps may still show last season's grade: soccer's
+  Ariella Edens, Milla Chow and Garren Hardy (JV), and volleyball's Anna Scaria, Madyson Huynh, Veida Huang, Janielle
+  Fan and Annabelle Burk (the last three JV). None gets a `rosterBehind` marker, which still needs a page naming the
+  school with the earlier class. Max Grudin (Priory basketball) already carried one, so his Lakeshow and DM's
+  Mavericks ties need no `classYearDiffers`. The other way, Brianna Paredes (Sobrato JV) is tied to OV Toros FC's
+  U15G Black (class of 2030, a born-2012 team): MaxPreps' grade 10 for her looks a year ahead, since the team's four
+  other Sobrato JV players are all grade 9.
+- **Club records for clubs without one, 2026-11-28 (owner's request, where it makes sense).** Every club a
+  `compare-club-rosters` match is at but which had no record was looked at, and a record was written only where a
+  tie would follow. Basketball, 7 records: Evolve Performance (Oakland), Flight Academy Basketball (Daly City), SDS
+  Unlimited (Fremont), Ronin (San Jose), F.O.A (Salinas) and East Bay Athletics (Oakland), from their Passport program
+  records (no site of their own found; owner decision 2026-11-27), and Top Flight Elite Basketball (Campbell) from
+  its own site. Each player's own Passport record was read first: 7 ties, Hagios Jerome (Bellarmine) and Kabir Bhatia
+  (Harker) high, their records naming the school, the other five medium on a hometown. No record: Team Just Respect
+  (its one match, Cupertino's Michael Wong, is a Dougherty Valley player), King Academy (a school), 209 BALLERZ and
+  Sacramento Fury (away from the schools), the six note 7 lists; in volleyball, UVAC, White Stone, SBND Elite, Lakas,
+  Bay Area Eagles and Apex (no site of their own found, again on 2026-11-28 for the first two); in soccer, 1974 Newark
+  FC (Newark, East Bay: no site of its own found), South Valley Chivas (Porterville) and Reno APEX (Nevada).
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the
