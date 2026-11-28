@@ -15,11 +15,14 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
+  AffiliationSourceSchema,
   BANNED_HOSTS,
   CLUB_REGIONS,
+  ClubSourceSchema,
   ClubsFileSchema,
   isAsOf,
   isBannedHost,
+  isTieSourceHost,
   clubSiteKey,
   type ClubsFile,
   type ClubsView,
@@ -177,16 +180,28 @@ describe('data/field-hockey/clubs.json', () => {
     expect(checked).toBeGreaterThan(0);
   });
 
-  it('links only https pages, never social media', () => {
+  it('links only https pages, never social media, save a YouTube video a tie cites (owner decision, 2026-11-28)', () => {
     const urls = allUrls(raw);
     expect(urls.length).toBeGreaterThan(raw.affiliations.length);
+    const tieUrls = new Set([...raw.affiliations, ...raw.jvAffiliations].flatMap((a) => a.sources.map((s) => s.url)));
+    const clubUrls = new Set(allUrls({ ...raw, affiliations: [], jvAffiliations: [] }));
     for (const u of urls) {
       expect(new URL(u).protocol, u).toBe('https:');
+      if (tieUrls.has(u) && !clubUrls.has(u) && isTieSourceHost(u)) continue;
       const host = new URL(u).hostname;
       for (const banned of BANNED_HOSTS) {
         expect(host === banned || host.endsWith(`.${banned}`), u).toBe(false);
       }
     }
+  });
+
+  it('lets a tie cite a YouTube video, and nothing else of social media; a club record never', () => {
+    const src = { kind: 'school-site', quote: 'x', statedSchool: null, statedClassYear: null, sourceDate: null } as const;
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://www.youtube.com/watch?v=abc' }).success).toBe(true);
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://youtu.be/abc' }).success).toBe(true);
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://www.instagram.com/p/abc' }).success).toBe(false);
+    expect(AffiliationSourceSchema.safeParse({ ...src, url: 'https://notyoutube.com/watch' }).success).toBe(true);
+    expect(ClubSourceSchema.safeParse({ url: 'https://www.youtube.com/@club', what: 'x' }).success).toBe(false);
   });
 
   it('gives every club and every affiliation a source, and keeps quotes to 300 characters', () => {

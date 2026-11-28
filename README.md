@@ -1052,7 +1052,9 @@ The rules:
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
   YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/players/clubs-schema.ts`),
-  and every URL is https. A club's official Instagram account is linked from its page, but it lives in
+  and every URL is https. One exception (owner decision, 2026-11-28): a club tie may cite a YouTube video
+  (`TIE_SOURCE_HOSTS`), such as a school team's own channel posting a player's highlight video that names
+  her club; a club's website or record and a commitment still may not. A club's official Instagram account is linked from its page, but it lives in
   `data/field-hockey/instagram.json`, not here, and is never a source (see "Instagram accounts").
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
@@ -2450,8 +2452,9 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   same name, so the rule never matched her. The tie (current, medium) cites the roster with `rosterName` on the
   source (`lib/players/clubs-schema.ts`): a league-roster source only, and the test of the cited rosters accepts it
   only for the same last name and a first name the nickname table (`lib/players/nicknames.ts`) pairs with the row's.
-  The owner says she played for Monterey Surf in 2025-26, but no page read names her there (its three N1 rosters on
-  GotSport Rankings, re-read that day, and her MaxPreps bio), so no Monterey Surf tie is made.
+  The owner says she played for Monterey Surf in 2025-26: Palma girls soccer's YouTube highlight video of her names
+  "Monterey Surf 2010 NPL", her class and the school, so she is tied there too (past, 2025-26, high), citing the
+  video under the exception the owner made that day (a club tie may cite a YouTube video; "No social media", above).
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the

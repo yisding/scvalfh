@@ -53,6 +53,7 @@ describe('soccerClubTeamWords', () => {
       '2009/10G ECRL': 'ECNL RL G2009/10',
       '2009G RL-ECNL': 'ECNL RL G2009',
       '2010 Juventus': 'Juventus G2010',
+      '2010 NPL': 'NPL G2010',
       '2010G ECNL-RL': 'ECNL RL G2010',
       '2011/2012 Girls Blue': 'Blue G2011/12',
       'AFC U13 GA': 'GA',
