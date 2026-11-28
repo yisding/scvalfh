@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-28T03:55:00.089Z",
+  "fetchedAt": "2026-11-28T06:21:59.305Z",
   "fixtures": [
     {
       "claims": {
@@ -2948,8 +2948,8 @@
             "away": {
               "city": "San Jose",
               "name": "Evergreen Valley",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 73,
               "slug": "evergreen-valley",
               "teamId": "554a6e7c-06b6-473a-9461-9f155294d249"
             },
@@ -2962,13 +2962,13 @@
             "dateKey": "2026-11-27",
             "dateLocal": "2026-11-27T19:00:00",
             "dateUtc": "2026-11-28T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Cupertino",
               "name": "Cupertino",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 62,
               "slug": "cupertino",
               "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
             },
@@ -2981,43 +2981,24 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-26T03:59:55",
+              "maxprepsModifiedOn": "2026-11-28T05:39:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "live",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7082555?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=live",
+              "goFan": "https://gofan.co/event/7082555?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-evergreen-valley-san-jose/11-27-2026/?c=b4a8ade1-a735-4117-b11e-db0a987dc901",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam2f3760545c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=live"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam2f3760545c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Cupertino High School"
             }
           },
           "ref": "b4a8ade1-a735-4117-b11e-db0a987dc901"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "b4a8ade1-a735-4117-b11e-db0a987dc901",
-              "published": {
-                "away": null,
-                "home": null
-              },
-              "scoreConflict": {
-                "note": "si.com reports Cupertino 0, Evergreen Valley 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
-                "sblive": {
-                  "away": 0,
-                  "home": 0
-                }
-              }
-            },
-            "ref": "contest:b4a8ade1-a735-4117-b11e-db0a987dc901"
-          }
-        ]
+        }
       },
       "id": "2026-11-27-evergreen-valley-at-cupertino",
       "published": [
@@ -18642,7 +18623,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-23T02:30:14",
+              "maxprepsModifiedOn": "2026-11-28T04:30:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42500,8 +42481,8 @@
             },
             "contestId": "3c19f3cc-f120-435c-a179-9c19540e5b38",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-01-08",
@@ -42519,14 +42500,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "bay",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T20:50:22",
+              "maxprepsModifiedOn": "2026-11-28T04:30:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -42539,7 +42520,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/woodside-high-school-woodside-ca/gam7a16814c12?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "QUAD"
+              "text": "Woodside High School"
             }
           },
           "ref": "3c19f3cc-f120-435c-a179-9c19540e5b38"
