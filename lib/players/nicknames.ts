@@ -32,6 +32,7 @@ export const NICKNAMES: Record<string, readonly string[]> = {
   steph: ['stephanie'], tori: ['victoria'], vicky: ['victoria'], val: ['valerie', 'valentina'], andie: ['andrea'],
   stella: ['styliani', 'estella', 'estelle'], maisy: ['margaret'], frankie: ['francine', 'frances', 'francesca'],
   gigi: ['gabriella', 'giuliana', 'gisella', 'georgina', 'virginia'],
+  nate: ['nathaniel', 'nathan'],
 };
 
 /** The full names a given name can stand for, itself included. */
