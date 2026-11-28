@@ -2478,6 +2478,16 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   other pages had made gain the roster (Jessica Jacobson, Rucha Patil, Chayse Courtney, Kepafingo and Delfina
   Haungatau-Rios, Elle Chang, Amani Lee-Seyon). Left out: common names (Corrine Li, Natalie Baker, Yuna Kim and the
   like) and clubs with no record. `compare-club-rosters` still lists them as `class-year-differs`.
+- **MaxPreps a year behind, or ahead, 2026-11-28 (owner's request).** Where a club roster's class is one year off
+  the row's grade, the tie's basis now says which side looks wrong. Most are the club's difference: an independent
+  page agrees with MaxPreps' grade, or the registry's 2025-26 row shows MaxPreps moving the player up a grade.
+  Where neither exists and the club's class is a year earlier, MaxPreps may still show last season's grade: soccer's
+  Ariella Edens, Milla Chow and Garren Hardy (JV), and volleyball's Anna Scaria, Madyson Huynh, Veida Huang, Janielle
+  Fan and Annabelle Burk (the last three JV). None gets a `rosterBehind` marker, which still needs a page naming the
+  school with the earlier class. Max Grudin (Priory basketball) already carried one, so his Lakeshow and DM's
+  Mavericks ties need no `classYearDiffers`. The other way, Brianna Paredes (Sobrato JV) is tied to OV Toros FC's
+  U15G Black (class of 2030, a born-2012 team): MaxPreps' grade 10 for her looks a year ahead, since the team's four
+  other Sobrato JV players are all grade 9.
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the
