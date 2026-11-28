@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T15:14:16.103Z",
+  "fetchedAt": "2026-11-28T03:55:00.089Z",
   "fixtures": [
     {
       "claims": {
@@ -130,72 +130,6 @@
       "published": [
         {
           "contestId": "0a84edba-5bc4-43bb-a330-df45f945f00b"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Pleasanton",
-              "name": "Amador Valley",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "db693a74-09e7-4f63-982b-d3cbb3cf138a"
-            },
-            "contestId": "875001be-1720-4f3a-b099-c73df36b39be",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T19:00:00",
-            "dateUtc": "2026-11-18T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Mateo",
-              "name": "Junípero Serra",
-              "result": null,
-              "score": null,
-              "slug": "serra",
-              "teamId": "16e16363-66d8-45af-b777-7820b3256850"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T09:01:07",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/amador-valley-pleasanton-vs-junipero-serra-san-mateo/11-17-2026/?c=875001be-1720-4f3a-b099-c73df36b39be",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Junipero Serra High School"
-            }
-          },
-          "ref": "875001be-1720-4f3a-b099-c73df36b39be"
-        }
-      },
-      "id": "2026-11-17-name:amadorvalley-at-serra",
-      "published": [
-        {
-          "contestId": "875001be-1720-4f3a-b099-c73df36b39be"
         }
       ]
     },
@@ -460,72 +394,6 @@
       "published": [
         {
           "contestId": "1c501567-6046-42f5-982e-078acb1d973c"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Palo Alto",
-              "name": "Palo Alto",
-              "result": null,
-              "score": null,
-              "slug": "palo-alto",
-              "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0"
-            },
-            "contestId": "5cbbf9ce-4f0f-4cf4-bc5b-1ec6f95de35a",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Mateo",
-              "name": "Junípero Serra",
-              "result": null,
-              "score": null,
-              "slug": "serra",
-              "teamId": "16e16363-66d8-45af-b777-7820b3256850"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T21:01:34",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088795?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/junipero-serra-san-mateo-vs-palo-alto/11-19-2026/?c=5cbbf9ce-4f0f-4cf4-bc5b-1ec6f95de35a",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Junipero Serra High School"
-            }
-          },
-          "ref": "5cbbf9ce-4f0f-4cf4-bc5b-1ec6f95de35a"
-        }
-      },
-      "id": "2026-11-19-palo-alto-at-name:juniperoserra",
-      "published": [
-        {
-          "contestId": "5cbbf9ce-4f0f-4cf4-bc5b-1ec6f95de35a"
         }
       ]
     },
@@ -3119,18 +2987,37 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "live",
             "urls": {
-              "goFan": "https://gofan.co/event/7082555?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7082555?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=live",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-evergreen-valley-san-jose/11-27-2026/?c=b4a8ade1-a735-4117-b11e-db0a987dc901",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam2f3760545c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam2f3760545c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=live"
             },
             "venue": {
               "text": "Cupertino High School"
             }
           },
           "ref": "b4a8ade1-a735-4117-b11e-db0a987dc901"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "b4a8ade1-a735-4117-b11e-db0a987dc901",
+              "published": {
+                "away": null,
+                "home": null
+              },
+              "scoreConflict": {
+                "note": "si.com reports Cupertino 0, Evergreen Valley 0; MaxPreps has not published a score, so this game stays unreported. si.com has not marked it final.",
+                "sblive": {
+                  "away": 0,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:b4a8ade1-a735-4117-b11e-db0a987dc901"
+          }
+        ]
       },
       "id": "2026-11-27-evergreen-valley-at-cupertino",
       "published": [
@@ -3146,8 +3033,8 @@
             "away": {
               "city": "San Francisco",
               "name": "Balboa",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 64,
               "slug": null,
               "teamId": "002aed14-a824-4e03-9f22-c07fd4c125c1"
             },
@@ -3160,13 +3047,13 @@
             "dateKey": "2026-11-27",
             "dateLocal": "2026-11-27T13:30:00",
             "dateUtc": "2026-11-27T21:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Daly City",
               "name": "Westmoor",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 68,
               "slug": "westmoor",
               "teamId": "d4260a64-7216-4919-8a8f-678899199df8"
             },
@@ -3179,17 +3066,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-02T00:11:34",
+              "maxprepsModifiedOn": "2026-11-28T01:09:01",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/balboa-san-francisco-vs-westmoor-daly-city/11-27-2026/?c=437e1ae9-bf87-4c46-b06f-84f9803ce670",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gamd5920129cc?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/westmoor-high-school-daly-city-ca/gamd5920129cc?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": null
@@ -3509,7 +3396,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-11T05:09:05",
+              "maxprepsModifiedOn": "2026-11-27T20:59:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3522,7 +3409,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/ann-sobrato-high-school-morgan-hill-ca/gam55fd4090c7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Ann Sobrato HS"
             }
           },
           "ref": "cb63b850-af09-43af-93ad-b4cd66049700"
@@ -3839,7 +3726,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T08:32:35",
+              "maxprepsModifiedOn": "2026-11-27T20:59:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3884,8 +3771,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-11-28",
-            "dateLocal": "2026-11-28T19:00:00",
-            "dateUtc": "2026-11-29T03:00:00Z",
+            "dateLocal": "2026-11-28T15:00:00",
+            "dateUtc": "2026-11-28T23:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -3905,7 +3792,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:14:56",
+              "maxprepsModifiedOn": "2026-11-28T00:13:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3913,12 +3800,12 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/6773588?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/live-oak-morgan-hill-vs-piedmont-hills-san-jose/11-28-2026/?c=3fd2d412-8441-4ba1-b42f-19b3ccbfafdd",
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Live Oak High School"
             }
           },
           "ref": "3fd2d412-8441-4ba1-b42f-19b3ccbfafdd"
@@ -4301,7 +4188,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:14:54",
+              "maxprepsModifiedOn": "2026-11-27T18:59:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4309,12 +4196,12 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": "https://gofan.co/event/7007567?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/junipero-serra-san-mateo-vs-terra-nova-pacifica/11-28-2026/?c=2d01db4a-2639-43d0-940f-5a24ceff8ae0",
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Junipero Serra High School"
             }
           },
           "ref": "2d01db4a-2639-43d0-940f-5a24ceff8ae0"
@@ -7337,7 +7224,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-25T09:59:27",
+              "maxprepsModifiedOn": "2026-11-27T19:59:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9876,12 +9763,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Concord",
-              "name": "Concord",
+              "city": "San Jose",
+              "name": "Valley Christian",
               "result": null,
               "score": null,
-              "slug": null,
-              "teamId": "440db106-ee2c-4b03-b64c-38385ae221fc"
+              "slug": "valley-christian",
+              "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
             },
             "contestId": "473544ea-f9e5-4527-ab60-a1a259600e00",
             "contestTypes": {
@@ -9890,33 +9777,33 @@
             },
             "countsFor": null,
             "dateKey": "2026-12-03",
-            "dateLocal": "2026-12-03T00:00:00",
-            "dateUtc": "2026-12-03T08:00:00Z",
+            "dateLocal": "2026-12-03T20:00:00",
+            "dateUtc": "2026-12-04T04:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "San Jose",
-              "name": "Valley Christian",
+              "city": "Concord",
+              "name": "Concord",
               "result": null,
               "score": null,
-              "slug": "valley-christian",
-              "teamId": "8a8c04d2-5606-44cf-9993-34db55474240"
+              "slug": null,
+              "teamId": "440db106-ee2c-4b03-b64c-38385ae221fc"
             },
             "isDateTba": false,
             "isForfeit": false,
             "isLeague": false,
             "isOt": false,
-            "isTimeTba": true,
+            "isTimeTba": false,
             "leagueDivision": null,
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-03T03:37:15",
+              "maxprepsModifiedOn": "2026-11-27T15:20:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "home",
+            "site": "neutral",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -13638,6 +13525,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Redwood City",
+              "name": "Design Tech",
+              "result": null,
+              "score": null,
+              "slug": "design-tech",
+              "teamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36"
+            },
+            "contestId": "c604fd2a-849c-4dd7-9c1d-6f8e62062cf5",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-07",
+            "dateLocal": "2026-12-07T19:00:00",
+            "dateUtc": "2026-12-08T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T18:21:33",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/7100358?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/design-tech-redwood-city-vs-terra-nova-pacifica/12-7-2026/?c=c604fd2a-849c-4dd7-9c1d-6f8e62062cf5",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gam9ca5d64e85?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "c604fd2a-849c-4dd7-9c1d-6f8e62062cf5"
+        }
+      },
+      "id": "2026-12-07-design-tech-at-terra-nova",
+      "published": [
+        {
+          "contestId": "c604fd2a-849c-4dd7-9c1d-6f8e62062cf5"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "South San Francisco",
               "name": "El Camino",
               "result": null,
@@ -17136,12 +17089,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Saratoga",
-              "name": "Saratoga",
+              "city": "Pacifica",
+              "name": "Terra Nova",
               "result": null,
               "score": null,
-              "slug": "saratoga",
-              "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
+              "slug": "terra-nova",
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
             },
             "contestId": "35662020-4e7a-4ff6-be16-5714c3dcacb1",
             "contestTypes": {
@@ -17155,12 +17108,12 @@
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "Pacifica",
-              "name": "Terra Nova",
+              "city": "Saratoga",
+              "name": "Saratoga",
               "result": null,
               "score": null,
-              "slug": "terra-nova",
-              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+              "slug": "saratoga",
+              "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -17171,12 +17124,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T04:16:06",
+              "maxprepsModifiedOn": "2026-11-28T01:49:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "home",
+            "site": "neutral",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -17184,7 +17137,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "Pirates Treasure Tourney at Harbor"
+              "text": "Pirates Treasure Tourney @ Harbor HS"
             }
           },
           "ref": "35662020-4e7a-4ff6-be16-5714c3dcacb1"
@@ -17392,6 +17345,72 @@
       "published": [
         {
           "contestId": "eade832c-fcd6-4314-aa4d-b8905a4ed4cc"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Aptos",
+              "name": "Aptos",
+              "result": null,
+              "score": null,
+              "slug": "aptos",
+              "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2"
+            },
+            "contestId": "c6d80da4-1579-4856-8ffb-0291354d9ddb",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-10",
+            "dateLocal": "2026-12-10T20:00:00",
+            "dateUtc": "2026-12-11T04:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T12:31:25",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/aptos-vs-gilroy/12-10-2026/?c=c6d80da4-1579-4856-8ffb-0291354d9ddb",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Gilroy High School"
+            }
+          },
+          "ref": "c6d80da4-1579-4856-8ffb-0291354d9ddb"
+        }
+      },
+      "id": "2026-12-10-aptos-at-gilroy",
+      "published": [
+        {
+          "contestId": "c6d80da4-1579-4856-8ffb-0291354d9ddb"
         }
       ]
     },
@@ -18192,6 +18211,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Jose",
+              "name": "Oak Grove",
+              "result": null,
+              "score": null,
+              "slug": "oak-grove",
+              "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
+            },
+            "contestId": "5bd34392-7440-465f-ac27-a0175182d1a2",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-10",
+            "dateLocal": "2026-12-10T18:30:00",
+            "dateUtc": "2026-12-11T02:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Concord",
+              "name": "Concord",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "440db106-ee2c-4b03-b64c-38385ae221fc"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T15:27:23",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/concord-vs-oak-grove-san-jose/12-10-2026/?c=5bd34392-7440-465f-ac27-a0175182d1a2",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/oak-grove-high-school-san-jose-san-jose-ca/gamcd056bef2c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Washing Fremont Tournament"
+            }
+          },
+          "ref": "5bd34392-7440-465f-ac27-a0175182d1a2"
+        }
+      },
+      "id": "2026-12-10-oak-grove-at-name:concord",
+      "published": [
+        {
+          "contestId": "5bd34392-7440-465f-ac27-a0175182d1a2"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Los Altos Hills",
               "name": "Pinewood",
               "result": null,
@@ -18456,6 +18541,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Felton",
+              "name": "San Lorenzo Valley",
+              "result": null,
+              "score": null,
+              "slug": "san-lorenzo-valley",
+              "teamId": "1b3a82da-476f-4a32-9652-c238da7764c7"
+            },
+            "contestId": "5a2e2f7b-05df-4e68-a1cf-6901d9a766bf",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-10",
+            "dateLocal": "2026-12-10T18:30:00",
+            "dateUtc": "2026-12-11T02:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Cupertino",
+              "name": "Monta Vista",
+              "result": null,
+              "score": null,
+              "slug": "monta-vista",
+              "teamId": "405614ad-a015-4270-b527-18e899c90824"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T12:29:46",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/monta-vista-cupertino-vs-san-lorenzo-valley-felton/12-10-2026/?c=5a2e2f7b-05df-4e68-a1cf-6901d9a766bf",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Gilroy High School"
+            }
+          },
+          "ref": "5a2e2f7b-05df-4e68-a1cf-6901d9a766bf"
+        }
+      },
+      "id": "2026-12-10-san-lorenzo-valley-at-monta-vista",
+      "published": [
+        {
+          "contestId": "5a2e2f7b-05df-4e68-a1cf-6901d9a766bf"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Silver Creek",
               "result": null,
@@ -18580,6 +18731,72 @@
       "published": [
         {
           "contestId": "21d20f5e-0031-48c7-890e-ae2b5cb11b35"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Campbell",
+              "name": "Westmont",
+              "result": null,
+              "score": null,
+              "slug": "westmont",
+              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+            },
+            "contestId": "e344bedb-e273-4b69-a0f4-0d9ebbaa7f17",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-10",
+            "dateLocal": "2026-12-10T17:00:00",
+            "dateUtc": "2026-12-11T01:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Morgan Hill",
+              "name": "Ann Sobrato",
+              "result": null,
+              "score": null,
+              "slug": "sobrato",
+              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T12:29:19",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-westmont-campbell/12-10-2026/?c=e344bedb-e273-4b69-a0f4-0d9ebbaa7f17",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Gilroy High School"
+            }
+          },
+          "ref": "e344bedb-e273-4b69-a0f4-0d9ebbaa7f17"
+        }
+      },
+      "id": "2026-12-10-westmont-at-sobrato",
+      "published": [
+        {
+          "contestId": "e344bedb-e273-4b69-a0f4-0d9ebbaa7f17"
         }
       ]
     },
@@ -24232,7 +24449,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-24T18:43:04",
+              "maxprepsModifiedOn": "2026-11-27T18:30:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24496,7 +24713,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-22T21:59:49",
+              "maxprepsModifiedOn": "2026-11-28T02:29:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -25156,7 +25373,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-18T15:53:59",
+              "maxprepsModifiedOn": "2026-11-27T20:29:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -25169,7 +25386,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/harker-high-school-san-jose-ca/gam989ce8341a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "The Harker School (Saratoga Campus)"
             }
           },
           "ref": "b792c309-bafd-4880-884f-f56aaa08ae65"
@@ -32381,6 +32598,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Campbell",
+              "name": "Westmont",
+              "result": null,
+              "score": null,
+              "slug": "westmont",
+              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+            },
+            "contestId": "f42385d2-5e97-451b-aeff-d7d0f561f9d5",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-28",
+            "dateLocal": "2026-12-28T00:00:00",
+            "dateUtc": "2026-12-28T08:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Palmdale",
+              "name": "Palmdale",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "91a5a0ba-1990-411a-9676-cadddbd14b7e"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": true,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T15:43:21",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/palmdale-vs-westmont-campbell/12-28-2026/?c=f42385d2-5e97-451b-aeff-d7d0f561f9d5",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Barbara Holiday Classic Game 1"
+            }
+          },
+          "ref": "f42385d2-5e97-451b-aeff-d7d0f561f9d5"
+        }
+      },
+      "id": "2026-12-28-westmont-at-name:palmdale",
+      "published": [
+        {
+          "contestId": "f42385d2-5e97-451b-aeff-d7d0f561f9d5"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Daly City",
               "name": "Westmoor",
               "result": null,
@@ -35980,7 +36263,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-09T10:21:00",
+              "maxprepsModifiedOn": "2026-11-27T15:33:04",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35993,7 +36276,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Branham  High School"
             }
           },
           "ref": "b9be41c1-5939-4f7c-9924-f68024f5f53a"
@@ -37234,7 +37517,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T10:37:14",
+              "maxprepsModifiedOn": "2026-11-27T15:58:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37247,7 +37530,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/fremont-high-school-sunnyvale-ca/gam1dfa7549b7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Fremont High School-Sunnyvale"
             }
           },
           "ref": "4d63e134-94a3-4132-b623-926074339051"
@@ -37307,8 +37590,8 @@
             },
             "contestId": "4692c6de-22ef-41ec-b3b8-931f23244d9d",
             "contestTypes": {
-              "away": 1,
-              "home": 1
+              "away": 0,
+              "home": 0
             },
             "countsFor": null,
             "dateKey": "2027-01-06",
@@ -37326,14 +37609,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": false,
+            "isLeague": true,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": null,
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T22:11:55",
+              "maxprepsModifiedOn": "2026-11-27T16:01:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37346,7 +37629,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Live Oak High School"
             }
           },
           "ref": "4692c6de-22ef-41ec-b3b8-931f23244d9d"
@@ -37399,7 +37682,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:57:27",
+              "maxprepsModifiedOn": "2026-11-27T20:01:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37412,7 +37695,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Los Gatos High School"
             }
           },
           "ref": "6ab0bbd6-aa4a-4dca-9cde-586262c724c5"
@@ -37589,7 +37872,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:57:28",
+              "maxprepsModifiedOn": "2026-11-27T20:29:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37602,7 +37885,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Palo Alto High School"
             }
           },
           "ref": "9472cb52-e91f-4f79-9eb0-d746fb2fe9a2"
@@ -37766,8 +38049,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-06",
-            "dateLocal": "2027-01-06T19:00:00",
-            "dateUtc": "2027-01-07T03:00:00Z",
+            "dateLocal": "2027-01-06T19:30:00",
+            "dateUtc": "2027-01-07T03:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -37787,7 +38070,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T20:29:53",
+              "maxprepsModifiedOn": "2026-11-27T16:00:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37800,7 +38083,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "1e921594-28e0-4796-9564-2258cf00ff45"
@@ -37952,7 +38235,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:57:27",
+              "maxprepsModifiedOn": "2026-11-27T15:59:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37965,7 +38248,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gam84c082716e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Milpitas High School"
             }
           },
           "ref": "ed906365-57ef-4cba-9119-c478faf27e67"
@@ -38025,8 +38308,8 @@
             },
             "contestId": "5cdf9261-de44-4a24-8b2c-6473f8ac2ea1",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-01-06",
@@ -38044,14 +38327,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "west-valley",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T22:23:23",
+              "maxprepsModifiedOn": "2026-11-27T15:59:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38064,7 +38347,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gam7a7803d0e2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Del Mar High School"
             }
           },
           "ref": "5cdf9261-de44-4a24-8b2c-6473f8ac2ea1"
@@ -38100,6 +38383,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-06; MaxPreps flags it non-league",
           "ref": "west-valley:2027-01-06:mt-pleasant@del-mar"
         }
       },
@@ -42506,7 +42790,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-27T09:00:28",
+              "maxprepsModifiedOn": "2026-11-27T21:29:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -44237,6 +44521,72 @@
       "published": [
         {
           "contestId": "8b8952b1-674d-4485-9f33-f7aa2a7ba99e"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Pebble Beach",
+              "name": "Stevenson",
+              "result": null,
+              "score": null,
+              "slug": "stevenson",
+              "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+            },
+            "contestId": "56794865-3fed-4abd-ad4f-b9fdf94de756",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-11",
+            "dateLocal": "2027-01-11T19:00:00",
+            "dateUtc": "2027-01-12T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:32:14",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/greenfield-vs-stevenson-pebble-beach/1-11-2027/?c=56794865-3fed-4abd-ad4f-b9fdf94de756",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "56794865-3fed-4abd-ad4f-b9fdf94de756"
+        }
+      },
+      "id": "2027-01-11-stevenson-at-greenfield",
+      "published": [
+        {
+          "contestId": "56794865-3fed-4abd-ad4f-b9fdf94de756"
         }
       ]
     },
@@ -51454,6 +51804,72 @@
       "published": [
         {
           "contestId": "3131e280-7bd8-4b03-921c-c3a8b630af69"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Watsonville",
+              "name": "Pajaro Valley",
+              "result": null,
+              "score": null,
+              "slug": "pajaro-valley",
+              "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d"
+            },
+            "contestId": "219d3cc2-b611-404c-aa8f-eb007a7766a1",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-15",
+            "dateLocal": "2027-01-15T19:00:00",
+            "dateUtc": "2027-01-16T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:33:34",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/greenfield-vs-pajaro-valley-watsonville/1-15-2027/?c=219d3cc2-b611-404c-aa8f-eb007a7766a1",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "219d3cc2-b611-404c-aa8f-eb007a7766a1"
+        }
+      },
+      "id": "2027-01-15-pajaro-valley-at-greenfield",
+      "published": [
+        {
+          "contestId": "219d3cc2-b611-404c-aa8f-eb007a7766a1"
         }
       ]
     },
@@ -58915,6 +59331,72 @@
       "published": [
         {
           "contestId": "5d0b6f5a-ae9b-4fa4-9148-c81db36a0a93"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Castroville",
+              "name": "North Monterey County",
+              "result": null,
+              "score": null,
+              "slug": "north-monterey-county",
+              "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+            },
+            "contestId": "4eb10e0a-7568-4b8e-a940-1a0415a8d2d0",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-21",
+            "dateLocal": "2027-01-21T19:00:00",
+            "dateUtc": "2027-01-22T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:35:43",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/greenfield-vs-north-monterey-county-castroville/1-21-2027/?c=4eb10e0a-7568-4b8e-a940-1a0415a8d2d0",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "4eb10e0a-7568-4b8e-a940-1a0415a8d2d0"
+        }
+      },
+      "id": "2027-01-21-north-monterey-county-at-greenfield",
+      "published": [
+        {
+          "contestId": "4eb10e0a-7568-4b8e-a940-1a0415a8d2d0"
         }
       ]
     },
@@ -70258,6 +70740,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Salinas",
+              "name": "Everett Alvarez",
+              "result": null,
+              "score": null,
+              "slug": "everett-alvarez",
+              "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0"
+            },
+            "contestId": "17525365-6fdb-4210-a48b-0cf8858e314e",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-29",
+            "dateLocal": "2027-01-29T19:00:00",
+            "dateUtc": "2027-01-30T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:37:28",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/everett-alvarez-salinas-vs-greenfield/1-29-2027/?c=17525365-6fdb-4210-a48b-0cf8858e314e",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "17525365-6fdb-4210-a48b-0cf8858e314e"
+        }
+      },
+      "id": "2027-01-29-everett-alvarez-at-greenfield",
+      "published": [
+        {
+          "contestId": "17525365-6fdb-4210-a48b-0cf8858e314e"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Evergreen Valley",
               "result": null,
@@ -75282,6 +75830,72 @@
       "published": [
         {
           "contestId": "9f29013e-4bef-4033-9df6-7c7fa2e505aa"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "contestId": "f3392cff-1076-4d13-b33d-8a41095b32e4",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-02",
+            "dateLocal": "2027-02-02T19:00:00",
+            "dateUtc": "2027-02-03T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pebble Beach",
+              "name": "Stevenson",
+              "result": null,
+              "score": null,
+              "slug": "stevenson",
+              "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:39:08",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/7096030?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/greenfield-vs-stevenson-pebble-beach/2-2-2027/?c=f3392cff-1076-4d13-b33d-8a41095b32e4",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "f3392cff-1076-4d13-b33d-8a41095b32e4"
+        }
+      },
+      "id": "2027-02-02-greenfield-at-stevenson",
+      "published": [
+        {
+          "contestId": "f3392cff-1076-4d13-b33d-8a41095b32e4"
         }
       ]
     },
@@ -83720,6 +84334,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "contestId": "a0757e15-349c-46f9-a18c-acda20a39d67",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-08",
+            "dateLocal": "2027-02-08T19:00:00",
+            "dateUtc": "2027-02-09T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Watsonville",
+              "name": "Pajaro Valley",
+              "result": null,
+              "score": null,
+              "slug": "pajaro-valley",
+              "teamId": "42da7c92-54e6-4c5a-9bd7-c62a5ff40f8d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:40:49",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/greenfield-vs-pajaro-valley-watsonville/2-8-2027/?c=a0757e15-349c-46f9-a18c-acda20a39d67",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/pajaro-valley-high-school-watsonville-ca/game7b4308cc7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "a0757e15-349c-46f9-a18c-acda20a39d67"
+        }
+      },
+      "id": "2027-02-08-greenfield-at-pajaro-valley",
+      "published": [
+        {
+          "contestId": "a0757e15-349c-46f9-a18c-acda20a39d67"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "KIPP Navigate College Prep",
               "result": null,
@@ -89160,6 +89840,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Greenfield",
+              "name": "Greenfield",
+              "result": null,
+              "score": null,
+              "slug": "greenfield",
+              "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+            },
+            "contestId": "ef7a911f-0490-4d1e-a3db-12f7cd5db392",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-12",
+            "dateLocal": "2027-02-12T19:00:00",
+            "dateUtc": "2027-02-13T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Castroville",
+              "name": "North Monterey County",
+              "result": null,
+              "score": null,
+              "slug": "north-monterey-county",
+              "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "cypress",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-27T17:42:08",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/7101484?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/greenfield-vs-north-monterey-county-castroville/2-12-2027/?c=ef7a911f-0490-4d1e-a3db-12f7cd5db392",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/north-monterey-county-high-school-castroville-ca/gam63088b9787?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "ef7a911f-0490-4d1e-a3db-12f7cd5db392"
+        }
+      },
+      "id": "2027-02-12-greenfield-at-north-monterey-county",
+      "published": [
+        {
+          "contestId": "ef7a911f-0490-4d1e-a3db-12f7cd5db392"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Gunderson",
               "result": null,
@@ -89467,7 +90213,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": "https://gofan.co/event/7105961?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7105947?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/half-moon-bay-vs-hillsdale-fighting-knights-san-mateo/2-12-2027/?c=f9806118-254f-4231-af48-5da8adaa05c7",
               "nfhsStream": null
             },

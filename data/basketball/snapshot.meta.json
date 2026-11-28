@@ -7,41 +7,41 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0 · PCAL +0 · PSAL +0",
-  "contentHash": "39ac657d10babccfd981a557eb6157987af13fe0a2aae7430edadf2774c1a5d4",
+  "contentHash": "7096c03ee208b5ee04f84b824a77ef4b8b9c62f52791a4eeef4a6d423694fe51",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 14,
-        "games": 292,
+        "games": 296,
         "leagueGames": 131,
         "teams": 26
       },
       "pal": {
         "backfilled": 0,
-        "finals": 6,
-        "games": 223,
+        "finals": 7,
+        "games": 224,
         "leagueGames": 110,
         "teams": 16
       },
       "pcal": {
         "backfilled": 0,
         "finals": 10,
-        "games": 272,
-        "leagueGames": 129,
+        "games": 279,
+        "leagueGames": 136,
         "teams": 31
       },
       "psal": {
         "backfilled": 0,
         "finals": 7,
-        "games": 266,
+        "games": 267,
         "leagueGames": 103,
         "teams": 23
       },
       "sccal": {
         "backfilled": 0,
         "finals": 4,
-        "games": 75,
+        "games": 77,
         "leagueGames": 25,
         "teams": 6
       },
@@ -62,26 +62,26 @@
       "wcal": {
         "backfilled": 0,
         "finals": 3,
-        "games": 110,
+        "games": 108,
         "leagueGames": 56,
         "teams": 8
       }
     },
-    "finals": 35,
-    "games": 1302,
-    "leagueGames": 690,
+    "finals": 36,
+    "games": 1313,
+    "leagueGames": 697,
     "mismatches": 4,
-    "pending": 11,
+    "pending": 9,
     "teams": 133
   },
   "crossCheck": {
-    "agreements": 20,
+    "agreements": 21,
     "backfilled": 0,
-    "compared": 123,
+    "compared": 103,
     "conflicts": 0,
-    "sbliveOnlyScored": 2
+    "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-11-27T15:14:16.103Z",
+  "fetchedAt": "2026-11-28T03:55:00.089Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -161,7 +161,7 @@
   "requests": {
     "maxpreps": 172,
     "official": 6,
-    "sblive": 45
+    "sblive": 44
   },
   "sources": [
     {
@@ -246,7 +246,7 @@
     },
     {
       "label": "monta-vista schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -351,7 +351,7 @@
     },
     {
       "label": "westmont schedule",
-      "rowCount": 30,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -386,12 +386,12 @@
     },
     {
       "label": "sobrato schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -401,7 +401,7 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -686,7 +686,7 @@
     },
     {
       "label": "terra-nova schedule",
-      "rowCount": 25,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -706,7 +706,7 @@
     },
     {
       "label": "aptos schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -716,7 +716,7 @@
     },
     {
       "label": "san-lorenzo-valley schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -851,7 +851,7 @@
     },
     {
       "label": "everett-alvarez schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -861,7 +861,7 @@
     },
     {
       "label": "greenfield schedule",
-      "rowCount": 18,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -871,12 +871,12 @@
     },
     {
       "label": "north-monterey-county schedule",
-      "rowCount": 8,
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "pajaro-valley schedule",
-      "rowCount": 5,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -886,7 +886,7 @@
     },
     {
       "label": "stevenson schedule",
-      "rowCount": 8,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -971,7 +971,7 @@
     },
     {
       "label": "design-tech schedule",
-      "rowCount": 27,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -1116,7 +1116,7 @@
     },
     {
       "label": "sblive 2260-pcal-gabilan scoreboard 2026-11-24",
-      "rowCount": 3,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -1156,7 +1156,7 @@
     },
     {
       "label": "sblive 2264-pal-ocean scoreboard 2026-11-24",
-      "rowCount": 3,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -1196,7 +1196,7 @@
     },
     {
       "label": "sblive 2284-sccal scoreboard 2026-11-24",
-      "rowCount": 3,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -1216,7 +1216,7 @@
     },
     {
       "label": "sblive 31322-bval-santa-teresa-north scoreboard 2026-11-24",
-      "rowCount": 2,
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1300,11 +1300,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive palo-alto games",
-      "rowCount": 22,
-      "status": "ok"
-    },
-    {
       "label": "sblive prospect games",
       "rowCount": 14,
       "status": "ok"
@@ -1331,12 +1326,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 1071,
+      "rowCount": 1072,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 191,
+      "rowCount": 195,
       "status": "ok"
     },
     {
@@ -1351,7 +1346,7 @@
     }
   ],
   "today": "2026-11-27",
-  "warnings": 24,
+  "warnings": 25,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",
