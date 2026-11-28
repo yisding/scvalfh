@@ -320,13 +320,19 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
       skipped.push(`${sport} jv-rosters-school-sites ${team.slug} is for ${team.season}, the rosters for ${season}: left out`);
       continue;
     }
-    // A name two rows of one list share (Cupertino basketball's two Ethans, first names only) is two people the
-    // name cannot tell apart: it identifies nobody, as player-index.json leaves such a name out.
-    const keyCount = new Map<string, number>();
-    for (const p of team.players) keyCount.set(nameKey(p.name), (keyCount.get(nameKey(p.name)) ?? 0) + 1);
+    // A name rows of one list share under two different numbers (Cupertino basketball's two Ethans, #15 and #22,
+    // first names only) is two people the name cannot tell apart: it identifies nobody, as player-index.json
+    // leaves such a name out. The same row written twice (Point Loma field hockey's Chloe Zakaria, no number on
+    // either) is one player, and stays.
+    const numbers = new Map<string, Set<string>>();
     for (const p of team.players) {
-      if ((keyCount.get(nameKey(p.name)) ?? 0) > 1) {
-        skipped.push(`${sport} jv-rosters-school-sites ${team.slug}: "${p.name}" is on the list more than once: left out`);
+      const set = numbers.get(nameKey(p.name)) ?? new Set<string>();
+      if (p.jersey !== null) set.add(p.jersey);
+      numbers.set(nameKey(p.name), set);
+    }
+    for (const p of team.players) {
+      if ((numbers.get(nameKey(p.name))?.size ?? 0) > 1) {
+        skipped.push(`${sport} jv-rosters-school-sites ${team.slug}: "${p.name}" is on the list under two numbers: left out`);
         continue;
       }
       sightings.push({

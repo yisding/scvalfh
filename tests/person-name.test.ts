@@ -168,6 +168,14 @@ describe('NAME_SPELLINGS', () => {
     // Another Jarett, or another player with the initial P, keeps his.
     expect(recaseNameParts({ firstName: 'Jarett', lastName: 'Smith', fullName: 'Jarett Smith' }).firstName).toBe('Jarett');
     expect(recaseNameParts({ firstName: 'Sam', lastName: 'P', fullName: 'Sam P' }).lastName).toBe('P');
+    // Only the whole name: a longer name that holds it is someone else's.
+    expect(recaseNameParts({ firstName: 'Jarett', lastName: 'P Smith', fullName: 'Jarett P Smith' })).toEqual({
+      firstName: 'Jarett',
+      lastName: 'P Smith',
+      fullName: 'Jarett P Smith',
+    });
+    expect(recaseName('Jarett P Smith')).toBe('Jarett P Smith');
+    expect(recaseName('Jarett P')).toBe('Jarrett Poon');
   });
 
   it('respells the misspellings the 2026-11-27 sweep found, each on its own row', () => {

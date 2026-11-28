@@ -59,9 +59,11 @@ function isUncased(name: string): boolean {
  * leaves a two-letter word such as "DE" as it is). Where the two sides have the same number of words, a
  * roster row's first and last names are respelled word for word along with its full name; where they do
  * not (two words joined by a hyphen: "Ann Katrin" → "Ann-Katrin"), a first or last name is respelled only
- * when it is the whole run. Curated, never guessed: an entry says who confirmed it.
+ * when it is the whole run. An entry marked `wholeName` applies only to a name that is exactly its run, never to a
+ * longer name holding it ("Jarett P" is not respelled inside a "Jarett P Smith"). Curated, never guessed: an entry
+ * says who confirmed it.
  */
-export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis: string }[] = [
+export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis: string; wholeName?: true }[] = [
   {
     maxpreps: 'Van De Braak',
     spelled: 'Van de Braak',
@@ -241,6 +243,8 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
   {
     maxpreps: 'Jarett P',
     spelled: 'Jarrett Poon',
+    // A first name and an initial: anything longer is someone else.
+    wholeName: true,
     basis: "Jarrett Poon (Cupertino basketball, career ima170oo9m3cc): MaxPreps lists him by first name and last initial, spelling the first name with one 'r'. His earlier MaxPreps career (novg7cg4jp0o8: Cupertino varsity, class of 2027, 2024-25) and MaxPreps' recap of the January 2025 win over Harker name him Jarrett Poon, and the team's 2026-27 scorebook writes 'Jarrett' for #2. Corrected at the site owner's request (2026-11-28); keyed to the whole name, so no one else is respelled.",
   },
   {
@@ -256,12 +260,13 @@ const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const wholeWords = (text: string, flags: string) =>
   new RegExp(`(?<![\\p{L}'’-])${escape(text)}(?![\\p{L}'’-])`, flags);
 
-const SPELLINGS = NAME_SPELLINGS.map(({ maxpreps, spelled }) => {
+const SPELLINGS = NAME_SPELLINGS.map(({ maxpreps, spelled, wholeName }) => {
   const from = words(maxpreps);
   const to = words(spelled);
   // Word for word where the counts agree; otherwise a part is respelled only when it is the whole run.
   const pairs = from.length === to.length ? from.map((w, i) => [w, to[i]] as const) : [];
-  return { re: wholeWords(maxpreps, 'giu'), whole: new RegExp(`^${escape(maxpreps)}$`, 'iu'), spelled, pairs };
+  const whole = new RegExp(`^${escape(maxpreps)}$`, 'iu');
+  return { re: wholeName ? whole : wholeWords(maxpreps, 'giu'), whole, spelled, pairs };
 });
 
 function respell(name: string): string {
