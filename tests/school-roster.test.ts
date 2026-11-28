@@ -20,11 +20,11 @@ describe('schoolRoster (the school’s own varsity roster page, owner decision 2
         const parsed = SchoolRosterSchema.safeParse(t.schoolRoster);
         expect(parsed.success, `${t.slug}: ${parsed.error?.issues[0]?.message ?? ''}`).toBe(true);
         if (!parsed.success || parsed.data.status !== 'found') continue;
-        const host = new URL(parsed.data.url).hostname;
-        // Never MaxPreps (the roster it stands beside), social media, or a third party's roster.
-        expect(host.endsWith('maxpreps.com'), `${t.slug}: ${host}`).toBe(false);
+        const host = new URL(parsed.data.url).hostname.toLowerCase();
+        // Never MaxPreps (the roster it stands beside), social media, or a third party's roster: the domain or one under it.
+        const onDomain = (domain: string) => host === domain || host.endsWith(`.${domain}`);
         expect(isBannedHost(parsed.data.url), `${t.slug}: ${host}`).toBe(false);
-        for (const other of ['hudl.com', 'gamechanger.io', 'teamsnap.com']) expect(host.endsWith(other), `${t.slug}: ${host}`).toBe(false);
+        for (const other of ['maxpreps.com', 'hudl.com', 'gamechanger.io', 'teamsnap.com']) expect(onDomain(other), `${t.slug}: ${host}`).toBe(false);
       }
     });
   }
