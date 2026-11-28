@@ -159,6 +159,25 @@ describe('NAME_SPELLINGS', () => {
     expect(recaseName('Leinata Tuipolotu')).toBe('Leinata Tuipolotu');
   });
 
+  it('gives a last name MaxPreps has only the initial of, on that row only (2026-11-28)', () => {
+    expect(recaseNameParts({ firstName: 'Jarett', lastName: 'P', fullName: 'Jarett P' })).toEqual({
+      firstName: 'Jarrett',
+      lastName: 'Poon',
+      fullName: 'Jarrett Poon',
+    });
+    // Another Jarett, or another player with the initial P, keeps his.
+    expect(recaseNameParts({ firstName: 'Jarett', lastName: 'Smith', fullName: 'Jarett Smith' }).firstName).toBe('Jarett');
+    expect(recaseNameParts({ firstName: 'Sam', lastName: 'P', fullName: 'Sam P' }).lastName).toBe('P');
+    // Only the whole name: a longer name that holds it is someone else's.
+    expect(recaseNameParts({ firstName: 'Jarett', lastName: 'P Smith', fullName: 'Jarett P Smith' })).toEqual({
+      firstName: 'Jarett',
+      lastName: 'P Smith',
+      fullName: 'Jarett P Smith',
+    });
+    expect(recaseName('Jarett P Smith')).toBe('Jarett P Smith');
+    expect(recaseName('Jarett P')).toBe('Jarrett Poon');
+  });
+
   it('respells the misspellings the 2026-11-27 sweep found, each on its own row', () => {
     const cases: Array<[string, string, string, string, string]> = [
       // [MaxPreps first, last, then the corrected first, last, full]

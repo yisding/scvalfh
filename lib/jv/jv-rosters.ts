@@ -76,17 +76,22 @@ export const JvSiteRosterPlayerSchema = z
 export const JvSiteRosterSchema = z
   .object({
     slug: z.string().refine((s) => getTeamBySlug(s) !== undefined, 'not a registry team slug'),
-    /** The address the list was read from (a 5 Star site's roster fragment, a Google Sheet's JSON, …). */
-    readUrl: httpUrl,
-    /** The page a reader opens to see the same list (Lick-Wilmerding's serves http only). */
-    pageUrl: httpUrl,
+    /**
+     * The address the list was read from (a 5 Star site's roster fragment, a Google Sheet's JSON, …); null, with
+     * `pageUrl`, for a list the team itself gave that no public page carries (Cupertino basketball's, from the
+     * team's scorebook): `seasonEvidence` then says where it is from, and the page names no address.
+     */
+    readUrl: httpUrl.nullable(),
+    /** The page a reader opens to see the same list (Lick-Wilmerding's serves http only); null as `readUrl` is. */
+    pageUrl: httpUrl.nullable(),
     season: z.literal('2026-27'),
     /** One sentence: how the list is known to be this season's. */
     seasonEvidence: z.string().min(1),
     checkedOn: dateKey,
     players: z.array(JvSiteRosterPlayerSchema).min(1),
   })
-  .strict();
+  .strict()
+  .refine((t) => (t.readUrl === null) === (t.pageUrl === null), 'readUrl and pageUrl are null together');
 
 export const JvSiteRostersFileSchema = z
   .object({
@@ -119,10 +124,10 @@ export type JvRosterSource = 'maxpreps' | 'school-site';
 export interface JvRoster {
   slug: TeamSlug;
   source: JvRosterSource;
-  /** The page a reader opens to see the same list. */
-  url: string;
-  /** "MaxPreps" or the school site's host ("sfhsathletics.com"). */
-  sourceLabel: string;
+  /** The page a reader opens to see the same list; null for a school's list no public page carries. */
+  url: string | null;
+  /** "MaxPreps" or the school site's host ("sfhsathletics.com"); null for a school's list no public page carries. */
+  sourceLabel: string | null;
   /** When the list was read: an ISO timestamp (MaxPreps) or a date key (a school site). */
   readAt: string;
   /** The JV players, less those on the varsity roster. */
@@ -130,7 +135,7 @@ export interface JvRoster {
   /** Players the source lists who are on the varsity roster the page shows, left off `players`. */
   onVarsity: number;
   /** The other source's list, when it has one: how many JV players it lists, less the varsity ones. */
-  other: { source: JvRosterSource; sourceLabel: string; url: string; count: number } | null;
+  other: { source: JvRosterSource; sourceLabel: string | null; url: string | null; count: number } | null;
 }
 
 function loadMaxPreps(): Rosters {
@@ -194,7 +199,7 @@ function fromSite(site: JvSiteRoster, varsity: ReturnType<typeof varsityKeys>): 
     slug: site.slug,
     source: 'school-site',
     url: site.pageUrl,
-    sourceLabel: hostOf(site.pageUrl),
+    sourceLabel: site.pageUrl === null ? null : hostOf(site.pageUrl),
     readAt: site.checkedOn,
     players,
     onVarsity: all.length - players.length,

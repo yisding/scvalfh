@@ -40,9 +40,10 @@ export interface TeamJvRosterView {
   /** The longest number on the list, in characters, to size that column. */
   numberChars: number;
   source: 'maxpreps' | 'school-site';
-  /** "MaxPreps" or the school site's host. */
-  sourceLabel: string;
-  sourceUrl: string;
+  /** "MaxPreps" or the school site's host; null for a school's own list no public page carries. */
+  sourceLabel: string | null;
+  /** null for a school's own list no public page carries: the footnote names it and nothing links. */
+  sourceUrl: string | null;
   /** "Fri Nov 6" (MaxPreps' read) or "Nov 6, 2026" (the day a school's page was read). */
   asOf: string;
   /**
@@ -50,7 +51,7 @@ export interface TeamJvRosterView {
    * footnote ("MaxPreps’ JV roster", "the JV list on palyathletics.com"), its page and how many JV
    * players it lists, less the varsity ones.
    */
-  other: { words: string; url: string; count: number } | null;
+  other: { words: string; url: string | null; count: number } | null;
   /** Players the source lists who are on the varsity roster above: not repeated (lib/jv/jv-rosters.ts). */
   onVarsity: number;
   /** The platforms the rows' profile links go to, for the footnote ("SportsRecruits"); [] when none. */
@@ -110,7 +111,12 @@ export function buildTeamJvRosterView(slug: TeamSlug): TeamJvRosterView | null {
     asOf: roster.source === 'maxpreps' ? shortDate(toLocalTimestamp(roster.readAt)) : dateWithYear(`${roster.readAt}T12:00:00`),
     other: roster.other
       ? {
-          words: roster.other.source === 'maxpreps' ? 'MaxPreps’ JV roster' : `the JV list on ${roster.other.sourceLabel}`,
+          words:
+            roster.other.source === 'maxpreps'
+              ? 'MaxPreps’ JV roster'
+              : roster.other.sourceLabel === null
+                ? `${team.name}’s own JV list`
+                : `the JV list on ${roster.other.sourceLabel}`,
           url: roster.other.url,
           count: roster.other.count,
         }

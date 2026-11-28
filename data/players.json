@@ -38,12 +38,12 @@
     "classOfConflicts": 268,
     "multiSeason": 1209,
     "multiSport": 87,
-    "nameOnly": 688,
-    "observations": 16212,
-    "players": 7962,
+    "nameOnly": 704,
+    "observations": 16228,
+    "players": 7978,
     "review": 73,
     "stintConflicts": 166,
-    "stints": 9882,
+    "stints": 9898,
     "withCareer": 7274
   },
   "notes": [
@@ -16747,6 +16747,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0ab37a5c4f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "krish",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Krish",
+      "names": [
+        "Krish"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "33",
+          "level": "jv",
+          "name": "Krish",
+          "observations": [
+            {
+              "jersey": "33",
+              "name": "Krish",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [
         {
@@ -29244,12 +29285,7 @@
       ]
     },
     {
-      "aliases": [
-        {
-          "kind": "variant",
-          "name": "Jarett P"
-        }
-      ],
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -29263,8 +29299,7 @@
       ],
       "name": "Jarrett Poon",
       "names": [
-        "Jarrett Poon",
-        "Jarett P"
+        "Jarrett Poon"
       ],
       "stints": [
         {
@@ -29274,12 +29309,12 @@
           "height": null,
           "jersey": "2",
           "level": "varsity",
-          "name": "Jarett P",
+          "name": "Jarrett Poon",
           "observations": [
             {
               "grade": 11,
               "jersey": "2",
-              "name": "Jarett P",
+              "name": "Jarrett Poon",
               "src": "maxpreps-stats"
             }
           ],
@@ -29295,14 +29330,14 @@
           "height": "5'8\"",
           "jersey": "2",
           "level": "varsity",
-          "name": "Jarett P",
+          "name": "Jarrett Poon",
           "observations": [
             {
               "athleteId": "0ee25a25-ce7e-429d-a766-380e21086cca",
               "grade": 12,
               "height": "5'8\"",
               "jersey": "2",
-              "name": "Jarett P",
+              "name": "Jarrett Poon",
               "positions": [
                 "G"
               ],
@@ -72677,6 +72712,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p2a34ccc9c7",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "caleb",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Caleb",
+      "names": [
+        "Caleb"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "0",
+          "level": "jv",
+          "name": "Caleb",
+          "observations": [
+            {
+              "jersey": "0",
+              "name": "Caleb",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -110624,6 +110700,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "poway"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3f54504a0a",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "arnav",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Arnav",
+      "names": [
+        "Arnav"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "34",
+          "level": "jv",
+          "name": "Arnav",
+          "observations": [
+            {
+              "jersey": "34",
+              "name": "Arnav",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -191810,6 +191927,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6cc100770d",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kaydan",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Kaydan",
+      "names": [
+        "Kaydan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "20",
+          "level": "jv",
+          "name": "Kaydan",
+          "observations": [
+            {
+              "jersey": "20",
+              "name": "Kaydan",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -239778,6 +239936,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p88f4488898",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "dylan",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Dylan",
+      "names": [
+        "Dylan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "24",
+          "level": "jv",
+          "name": "Dylan",
+          "observations": [
+            {
+              "jersey": "24",
+              "name": "Dylan",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -240952,6 +241151,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "poway"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p897bb6181e",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "chris",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Chris",
+      "names": [
+        "Chris"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "1",
+          "level": "jv",
+          "name": "Chris",
+          "observations": [
+            {
+              "jersey": "1",
+              "name": "Chris",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -252436,6 +252676,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8fd9122df4",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "neil",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Neil",
+      "names": [
+        "Neil"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "32",
+          "level": "jv",
+          "name": "Neil",
+          "observations": [
+            {
+              "jersey": "32",
+              "name": "Neil",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -263337,6 +263618,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "kehillah"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p9606e1be83",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sidd",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Sidd",
+      "names": [
+        "Sidd"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "2",
+          "level": "jv",
+          "name": "Sidd",
+          "observations": [
+            {
+              "jersey": "2",
+              "name": "Sidd",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -282970,6 +283292,47 @@
     },
     {
       "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa281fab153",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "nate",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Nate",
+      "names": [
+        "Nate"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "3",
+          "level": "jv",
+          "name": "Nate",
+          "observations": [
+            {
+              "jersey": "3",
+              "name": "Nate",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -292153,6 +292516,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "st-ignatius"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa7c8247382",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jt",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "JT",
+      "names": [
+        "JT"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "12",
+          "level": "jv",
+          "name": "JT",
+          "observations": [
+            {
+              "jersey": "12",
+              "name": "JT",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -307858,6 +308262,47 @@
       ]
     },
     {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb0ac9306c8",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jordan",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Jordan",
+      "names": [
+        "Jordan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "23",
+          "level": "jv",
+          "name": "Jordan",
+          "observations": [
+            {
+              "jersey": "23",
+              "name": "Jordan",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
       "aliases": [
         {
           "kind": "nickname",
@@ -310095,6 +310540,47 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "silver-creek"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb219caf15c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ben",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Ben",
+      "names": [
+        "Ben"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "4",
+          "level": "jv",
+          "name": "Ben",
+          "observations": [
+            {
+              "jersey": "4",
+              "name": "Ben",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -323506,6 +323992,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "willow-glen"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pbad43c1ed7",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ashwin",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Ashwin",
+      "names": [
+        "Ashwin"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "21",
+          "level": "jv",
+          "name": "Ashwin",
+          "observations": [
+            {
+              "jersey": "21",
+              "name": "Ashwin",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -379333,6 +379860,46 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pdbf7bf6bdf",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "harry",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Harry",
+      "names": [
+        "Harry"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Harry",
+          "observations": [
+            {
+              "name": "Harry",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pdbffd5bcf5",
       "identifiers": [
         {
@@ -404816,6 +405383,47 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pecb3acc5a6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "blain",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Blain",
+      "names": [
+        "Blain"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "5",
+          "level": "jv",
+          "name": "Blain",
+          "observations": [
+            {
+              "jersey": "5",
+              "name": "Blain",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
@@ -436212,6 +436820,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "university-sf"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pff95aef943",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "kyle",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Kyle",
+      "names": [
+        "Kyle"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "10",
+          "level": "jv",
+          "name": "Kyle",
+          "observations": [
+            {
+              "jersey": "10",
+              "name": "Kyle",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },

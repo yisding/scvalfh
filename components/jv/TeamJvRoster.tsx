@@ -9,7 +9,8 @@ import type { TeamJvRosterView } from './jv-roster-view';
  * `sx-auto` columns of hairline rows, number, name and one line of the facts that exist, a blank never printed as a guess).
  * Of its recruiting lines the club line and the profile links appear (the same Clubs and Profiles lines, from
  * data/<sport>/clubs.json's memberships, served as `jvAffiliations`, and data/player-accounts.json): commitments are for the varsity rosters. The footnote names the source
- * and when it was read, and a link under it goes there. A player on the varsity roster above is not repeated
+ * and when it was read, and a link under it goes there when the list has a public page (a school's own list that
+ * no public page carries has none). A player on the varsity roster above is not repeated
  * (lib/jv/jv-rosters.ts): the footnote counts them, and a list that is all varsity players says so in
  * place of the grid. Only a school some source lists JV players for gets this section
  * (components/jv/jv-roster-view.ts returns null otherwise).
@@ -17,16 +18,23 @@ import type { TeamJvRosterView } from './jv-roster-view';
 export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
   const { rows, showNumbers } = view;
   const hasCaptain = rows.some((r) => r.captain);
-  const sourceName = view.source === 'maxpreps' ? 'MaxPreps’ JV roster' : `${view.teamName}’s JV list on ${view.sourceLabel}`;
-  const pill = (
-    <ul className="sx-linkrow">
-      <li>
-        <ExternalLink href={view.sourceUrl} className="sx-action">
-          {view.source === 'maxpreps' ? 'MaxPreps JV roster' : `${view.sourceLabel} JV roster`}
-        </ExternalLink>
-      </li>
-    </ul>
-  );
+  const sourceName =
+    view.source === 'maxpreps'
+      ? 'MaxPreps’ JV roster'
+      : view.sourceLabel === null
+        ? `${view.teamName}’s own JV list`
+        : `${view.teamName}’s JV list on ${view.sourceLabel}`;
+  // A school's own list that no public page carries has nowhere to link.
+  const pill =
+    view.sourceUrl === null ? null : (
+      <ul className="sx-linkrow">
+        <li>
+          <ExternalLink href={view.sourceUrl} className="sx-action">
+            {view.source === 'maxpreps' ? 'MaxPreps JV roster' : `${view.sourceLabel} JV roster`}
+          </ExternalLink>
+        </li>
+      </ul>
+    );
   if (rows.length === 0) {
     return (
       <div>
@@ -81,6 +89,10 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
         <p className="m-0">
           {view.source === 'maxpreps' ? (
             <>What the coach entered on MaxPreps&rsquo; JV roster as of {view.asOf}.</>
+          ) : view.sourceLabel === null ? (
+            <>
+              {view.teamName}&rsquo;s own JV list, as of {view.asOf}.
+            </>
           ) : (
             <>
               {view.teamName}&rsquo;s own JV list on {view.sourceLabel}, as read {view.asOf}.
@@ -97,7 +109,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
         {view.other ? (
           <p className="mt-1 mb-0">
             The other list we found,{' '}
-            <ExternalLink href={view.other.url}>{view.other.words}</ExternalLink>, has{' '}
+            {view.other.url === null ? view.other.words : <ExternalLink href={view.other.url}>{view.other.words}</ExternalLink>}, has{' '}
             {view.other.count === 0
               ? 'no JV player who is not on the varsity roster'
               : view.other.count === 1
