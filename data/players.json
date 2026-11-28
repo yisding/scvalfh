@@ -73790,47 +73790,6 @@
     },
     {
       "aliases": [],
-      "classOf": 2030,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p2accff16f0",
-      "identifiers": [
-        {
-          "kind": "name",
-          "name": "harryyuejishen",
-          "sport": "basketball",
-          "team": "cupertino"
-        }
-      ],
-      "name": "Harry (Yueji) Shen",
-      "names": [
-        "Harry (Yueji) Shen"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 9,
-          "height": null,
-          "jersey": null,
-          "level": "jv",
-          "name": "Harry (Yueji) Shen",
-          "observations": [
-            {
-              "grade": 9,
-              "name": "Harry (Yueji) Shen",
-              "src": "school-jv-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "basketball",
-          "team": "cupertino"
-        }
-      ]
-    },
-    {
-      "aliases": [],
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -379894,6 +379853,46 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "mercy-burlingame"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pdbf7bf6bdf",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "harry",
+          "sport": "basketball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Harry",
+      "names": [
+        "Harry"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Harry",
+          "observations": [
+            {
+              "name": "Harry",
+              "src": "school-jv-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "cupertino"
         }
       ]
     },
