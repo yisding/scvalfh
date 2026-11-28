@@ -146,7 +146,8 @@ const NOT_CHECKED: OtherRosters = { status: 'not-checked' };
  * own or official athletics site, whether or not MaxPreps lists the team, saved so the roster can be read from the
  * school the day MaxPreps has none. `season` is the season the page shows ("2026-27", "2025-26", a single year
  * "2026"), or null when it shows none: a page for another season is kept, its season said, and is never a source of
- * players. Only `otherRosters` `listed` puts the school's names on the site. `none`: nothing was found, and `note`
+ * players. A page set up for the season with nobody on it yet is kept too (`listsPlayers` false). Only
+ * `otherRosters` `listed` puts the school's names on the site. `none`: nothing was found, and `note`
  * says what was looked at. A team with no entry has not been checked. Never rendered.
  */
 export const SchoolRosterSchema = z.discriminatedUnion('status', [
@@ -159,6 +160,8 @@ export const SchoolRosterSchema = z.discriminatedUnion('status', [
       season: z.string().regex(/^\d{4}(-\d{2})?$/, 'a season like 2026-27, or a year').nullable(),
       /** The page's own words for the season and level (its heading), or null where it gives none. */
       seasonEvidence: z.string().min(1).nullable(),
+      /** Whether the page lists players: a roster page the school has set up for the season and not filled is false. */
+      listsPlayers: z.boolean(),
       note: z.string().min(1).optional(),
     })
     .strict(),

@@ -30,12 +30,14 @@ describe('schoolRoster (the school’s own varsity roster page, owner decision 2
   }
 
   it('refuses a found page without a URL, a malformed season, and a none without a note', () => {
-    const found = { status: 'found', checkedOn: '2026-11-28', url: 'https://example.org/roster', season: '2026-27', seasonEvidence: '2026-27 Varsity' };
+    const found = { status: 'found', checkedOn: '2026-11-28', url: 'https://example.org/roster', season: '2026-27', seasonEvidence: '2026-27 Varsity', listsPlayers: true };
     expect(SchoolRosterSchema.safeParse(found).success).toBe(true);
     expect(SchoolRosterSchema.safeParse({ ...found, season: null, seasonEvidence: null }).success).toBe(true); // a page with no season
     expect(SchoolRosterSchema.safeParse({ ...found, season: '2026' }).success).toBe(true);
     expect(SchoolRosterSchema.safeParse({ ...found, season: 'Winter 2026' }).success).toBe(false);
     expect(SchoolRosterSchema.safeParse({ ...found, url: undefined }).success).toBe(false);
+    expect(SchoolRosterSchema.safeParse({ ...found, listsPlayers: false }).success).toBe(true); // set up, not yet filled
+    expect(SchoolRosterSchema.safeParse({ ...found, listsPlayers: undefined }).success).toBe(false);
     expect(SchoolRosterSchema.safeParse({ ...found, players: [] }).success).toBe(false); // never a source of names
     expect(SchoolRosterSchema.safeParse({ status: 'none', checkedOn: '2026-11-28' }).success).toBe(false);
     expect(SchoolRosterSchema.safeParse({ status: 'none', checkedOn: '2026-11-28', note: 'No athletics pages.' }).success).toBe(true);
