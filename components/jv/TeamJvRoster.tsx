@@ -17,16 +17,23 @@ import type { TeamJvRosterView } from './jv-roster-view';
 export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
   const { rows, showNumbers } = view;
   const hasCaptain = rows.some((r) => r.captain);
-  const sourceName = view.source === 'maxpreps' ? 'MaxPreps’ JV roster' : `${view.teamName}’s JV list on ${view.sourceLabel}`;
-  const pill = (
-    <ul className="sx-linkrow">
-      <li>
-        <ExternalLink href={view.sourceUrl} className="sx-action">
-          {view.source === 'maxpreps' ? 'MaxPreps JV roster' : `${view.sourceLabel} JV roster`}
-        </ExternalLink>
-      </li>
-    </ul>
-  );
+  const sourceName =
+    view.source === 'maxpreps'
+      ? 'MaxPreps’ JV roster'
+      : view.sourceLabel === null
+        ? `${view.teamName}’s own JV list`
+        : `${view.teamName}’s JV list on ${view.sourceLabel}`;
+  // A school's own list that no public page carries has nowhere to link.
+  const pill =
+    view.sourceUrl === null ? null : (
+      <ul className="sx-linkrow">
+        <li>
+          <ExternalLink href={view.sourceUrl} className="sx-action">
+            {view.source === 'maxpreps' ? 'MaxPreps JV roster' : `${view.sourceLabel} JV roster`}
+          </ExternalLink>
+        </li>
+      </ul>
+    );
   if (rows.length === 0) {
     return (
       <div>
@@ -81,6 +88,10 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
         <p className="m-0">
           {view.source === 'maxpreps' ? (
             <>What the coach entered on MaxPreps&rsquo; JV roster as of {view.asOf}.</>
+          ) : view.sourceLabel === null ? (
+            <>
+              {view.teamName}&rsquo;s own JV list, as of {view.asOf}.
+            </>
           ) : (
             <>
               {view.teamName}&rsquo;s own JV list on {view.sourceLabel}, as read {view.asOf}.
@@ -97,7 +108,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
         {view.other ? (
           <p className="mt-1 mb-0">
             The other list we found,{' '}
-            <ExternalLink href={view.other.url}>{view.other.words}</ExternalLink>, has{' '}
+            {view.other.url === null ? view.other.words : <ExternalLink href={view.other.url}>{view.other.words}</ExternalLink>}, has{' '}
             {view.other.count === 0
               ? 'no JV player who is not on the varsity roster'
               : view.other.count === 1

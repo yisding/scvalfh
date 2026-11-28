@@ -73,6 +73,12 @@ describe('data/field-hockey/jv-rosters-school-sites.json', () => {
     }
   });
 
+  it('takes a list no public page carries only with both of its addresses null', () => {
+    const t = { ...file.teams[0], readUrl: null, pageUrl: null };
+    expect(JvSiteRostersFileSchema.safeParse({ ...file, teams: [t] }).success).toBe(true);
+    expect(JvSiteRostersFileSchema.safeParse({ ...file, teams: [{ ...t, readUrl: file.teams[0].readUrl }] }).success).toBe(false);
+  });
+
   it('never guesses: names are re-cased only out of all-lower-case or all-capitals', () => {
     for (const t of file.teams) {
       for (const p of t.players) {

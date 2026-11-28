@@ -108,7 +108,8 @@ export const JvSchoolSitesInput = z.looseObject({
   teams: z.array(
     z.looseObject({
       slug: text,
-      pageUrl: text,
+      /** null for a school's own list that no public page carries. */
+      pageUrl: text.nullable(),
       /** "2026-27". */
       season: text,
       players: z.array(
@@ -319,7 +320,15 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
       skipped.push(`${sport} jv-rosters-school-sites ${team.slug} is for ${team.season}, the rosters for ${season}: left out`);
       continue;
     }
+    // A name two rows of one list share (Cupertino basketball's two Ethans, first names only) is two people the
+    // name cannot tell apart: it identifies nobody, as player-index.json leaves such a name out.
+    const keyCount = new Map<string, number>();
+    for (const p of team.players) keyCount.set(nameKey(p.name), (keyCount.get(nameKey(p.name)) ?? 0) + 1);
     for (const p of team.players) {
+      if ((keyCount.get(nameKey(p.name)) ?? 0) > 1) {
+        skipped.push(`${sport} jv-rosters-school-sites ${team.slug}: "${p.name}" is on the list more than once: left out`);
+        continue;
+      }
       sightings.push({
         ...base(team.slug, 'jv'),
         careerIds: [],
@@ -327,7 +336,7 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
         observations: [
           {
             src: 'school-jv-roster',
-            url: team.pageUrl,
+            ...(team.pageUrl !== null ? { url: team.pageUrl } : {}),
             name: p.name,
             ...(p.grade !== null ? { grade: p.grade } : {}),
             ...(p.jersey !== null ? { jersey: p.jersey } : {}),

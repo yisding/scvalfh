@@ -1,6 +1,165 @@
 {
-  "builtBy": "Nothing yet: no school athletics site has been read for a JV boys basketball roster.",
-  "capturedAt": "2026-11-10",
-  "notes": [],
-  "teams": []
+  "builtBy": "Transcribed by hand. Basketball has one JV list no athletics site publishes: Cupertino's, from the team's own scorebook.",
+  "capturedAt": "2026-11-28",
+  "notes": [
+    "A school’s own JV list, transcribed as written: name and number where given, null where not. Nothing is guessed. A name written all in capitals is re-cased the way MaxPreps roster rows are (lib/sources/person-name.ts recaseName).",
+    "The team page shows the fuller of this list and MaxPreps’ JV roster (data/basketball/jv-rosters.json), each counted without the players on the varsity roster; the school’s own list on a tie (lib/jv/jv-rosters.ts).",
+    "Cupertino (2026-11-28): the team’s scorebook page for its 2026-11-27 JV game against Evergreen Valley (MaxPreps: a 24-62 loss; the opponent’s quarter scores on the page, 25, 17, 16 and 4, add up to 62), photographed and sent to the site’s owner, lists 17 players by first name and number, as written (\"ASHWIN\" re-cased; Kyle #10, Ethan #22 and Krish #33 added at the foot of the page). The owner added Harry (Yueji) Shen, a freshman with no number yet. Two players are named Ethan (#15 and #22). No public page carries the list, so readUrl and pageUrl are null. MaxPreps’ Cupertino JV page (read 2026-11-28) lists ten players, eight of them the varsity roster’s under other numbers; the other two, Nevan Molina (#1) and Michael Cutsail (#21), are not on the scorebook, whose #1 is Chris and #21 Ashwin. Looked for full names the same day: MaxPreps has no 2025-26 JV or freshman basketball page for Cupertino, The Passport’s club rosters give no record naming Cupertino High for any of these first names, and of the 2026 football rosters (MaxPreps varsity 40, JV 18) only Krish Balamurugan, a freshman, shares a first name; that is not enough to name anyone, so the list keeps the scorebook’s first names."
+  ],
+  "teams": [
+    {
+      "checkedOn": "2026-11-28",
+      "pageUrl": null,
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "0",
+          "name": "Caleb",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "1",
+          "name": "Chris",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "2",
+          "name": "Sidd",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "3",
+          "name": "Nate",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "4",
+          "name": "Ben",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "5",
+          "name": "Blain",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "12",
+          "name": "JT",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "15",
+          "name": "Ethan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "20",
+          "name": "Kaydan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "21",
+          "name": "Ashwin",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "23",
+          "name": "Jordan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "24",
+          "name": "Dylan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "32",
+          "name": "Neil",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "34",
+          "name": "Arnav",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "10",
+          "name": "Kyle",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "22",
+          "name": "Ethan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": "33",
+          "name": "Krish",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Harry (Yueji) Shen",
+          "position": null
+        }
+      ],
+      "readUrl": null,
+      "season": "2026-27",
+      "seasonEvidence": "The team’s own scorebook page for its 2026-11-27 JV game against Evergreen Valley, which MaxPreps’ 2026-27 Cupertino JV schedule lists as a 24-62 loss; the page’s opponent quarter scores add up to 62.",
+      "slug": "cupertino"
+    }
+  ]
 }
