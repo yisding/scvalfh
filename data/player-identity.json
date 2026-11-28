@@ -1262,6 +1262,13 @@
       "name": "Theresa Berger",
       "official": "Theresa Berger",
       "basis": "Tessie is a short form of Theresa that the nickname table (lib/players/nicknames.ts) does not hold, so the rule read the two as unrelated spellings and took the 26-27 rosters' \"Tessie Berger\"; the 25-26 stat sheet gives her full name. Joined by sameAs 2026-11-22. Decided 2026-11-22."
+    },
+    {
+      "sport": "basketball",
+      "team": "cupertino",
+      "name": "Jarett P",
+      "official": "Jarrett Poon",
+      "basis": "MaxPreps lists him on the 25-26 stat sheet and the 26-27 roster as \"Jarett P\" (career ima170oo9m3cc: #2, G, 5'8\", class of 2027), a last initial only. The full name is from MaxPreps' own older career for him, \"Jarrett Poon\" (career novg7cg4jp0o8, read 2026-11-28: Cupertino varsity, class of 2027, 24 games in 24-25, none since), whose seasons do not overlap this one's; MaxPreps' recap of Cupertino's 41-40 win over Harker (January 2025) names him too. A handwritten 2026-27 Cupertino varsity scorebook roster lists #2 as \"Jarrett\". Decided 2026-11-28."
     }
   ]
 }

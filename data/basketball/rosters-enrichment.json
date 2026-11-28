@@ -582,7 +582,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-21 (the boys basketball recruiting round): 3 linked for 3 of the 8 players (1 NCSA, 2 claimed MaxPreps).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-28: the ten MaxPreps varsity rows were checked against a handwritten 2026-27 Cupertino varsity scorebook roster (a photo, not a public page, so it fills nothing): every name and number agrees (\"Nate C.\" #3 is Nathan Crawford, \"Nate L.\" #5 Nathaniel Limarga). #2, whom MaxPreps lists as \"Jarett P\", is Jarrett Poon, the name of his older MaxPreps career (novg7cg4jp0o8; data/player-identity.json `names`). Jarrett Poon and Diego Aguilar, added to MaxPreps on 2026-11-24 after the recruiting sweep, were looked for the same day by web searches of name and school (NCSA, Prep Hoops and the like): no recruiting page found. Hudl was not searched."
       ],
       "players": [],
       "slug": "cupertino",
