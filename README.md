@@ -2470,6 +2470,14 @@ pnpm compare-club-rosters --all     # every row that shares a name with a roster
   hockey 1 roster added (Beatrix Hom). Left out: Eli Hernandez (Live Oak JV basketball; his Passport record names
   Ann Sobrato), Mia Wang and Izabella Martinez (volleyball; common names with nothing else behind them), and pairs that
   are two names (Emily and Emma Garcia, Olivia and Alicia Chen). Each sport's `clubs.json` notes list them.
+- **Volleyball: distinctive names one class year off, 2026-11-28 (owner decision).** Of the 35 rows
+  `compare-club-rosters:volleyball` left only for a class year one off, the owner asked for the distinctive names. 18
+  were looked at; with the class year moved by one each passes the rest of the rule, every one a player a year younger
+  than her team's age group (playing up). Tied: 10 new (Kathryn Gee, Tayla Yip, Anna Scaria, Yulissa Ting, Lily
+  Jensen-Pelletier, Saanvi Bharadwaj, Madyson Huynh; on JV Veida Huang, Janielle Fan and Annabelle Burk), and 7 ties
+  other pages had made gain the roster (Jessica Jacobson, Rucha Patil, Chayse Courtney, Kepafingo and Delfina
+  Haungatau-Rios, Elle Chang, Amani Lee-Seyon). Left out: common names (Corrine Li, Natalie Baker, Yuna Kim and the
+  like) and clubs with no record. `compare-club-rosters` still lists them as `class-year-differs`.
 - **Players the rule had missed, 2026-11-26.** Vivian Baker (Mitty) is on Bay Area Surf's ECNL G2009/10 roster, the
   club her PrepSoccer, TopDrawerSoccer and SoccerWire pages name, but she was not linked: MVLA's ECNL G2009/10 (First
   Team Player) and G2008/09 (Club Player Pool) list her too, under the same Athlete One account (the user id in the

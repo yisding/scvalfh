@@ -14,7 +14,8 @@
     "2026-11-27, on the owner's pointer: Archbishop Mitty's Melina Gklaros-Stavropoulos to Mountain View Volleyball Club (her Prep Dig page naming school and club, and MVVC G 14 Red's 2026 Power League roster). MaxPreps misspells her surname ('Gklaros-Stavropolous'), so the kept-roster comparison had not matched her; the site respells it since the same day (lib/sources/person-name.ts NAME_SPELLINGS, the owner's correction). On the owner's word the same day: Saint Francis' Victoria Tuipulotu to Union Volleyball Academy (current; her club Hudl profile and UVA 17 Lynda's 2026 Power League roster) and Red Rock (earlier; Red Rock 15 Quinn on the 2024 Power League). A sweep of MaxPreps misspellings then corrected eleven more names in lib/sources/person-name.ts NAME_SPELLINGS; with Saratoga's Dhrishti Shah and SHC's Caylee and Chelsie Chin spelled right, the kept rosters matched them (Red Rock; SF Tremors), and Mitty's Thaïs Ettori's Vision tie gained its roster.",
     "2026-11-27, the owner's decision: for volleyball a club in the East Bay is near enough to the schools (VOLLEYBALL_LOCAL_REGIONS, lib/players/club-rosters.ts; rule 5 of the league-roster rule). The kept NCVA rosters then matched 11 more players at City Beach (Fremont) and Union Volleyball Academy: Milpitas' Katie Cao, MacDonald's Makayla and Ava Tacci and Maya Castro, Branham's Valeriya Tomkiv and Emily Lloyd, Westmont's Annalee Dang, Sobrato's Ashley Nguyen (UVA), Lincoln's Camila Zaldaña, Saint Francis' Jianna Llaneza (UVA) and Presentation's Faith Hau, each on a roster alone (medium, current for 2025-26); Teagan Cummings', Kenley Christensen's, Annabelle Gonzales' and Cierra Huynh's City Beach ties gain the roster. Each roster read again live. On a second decision the same day Marin counts too: Absolute (San Rafael) then matched SHC's Sophia Fong, SI's Cecilia Hecker and Menlo's Jamie Johnson (new, medium), and Britt Melinauskas', Eileen Pfeffer's, Neve Harlan's and Giulia McManigal's Absolute ties gain the roster.",
     "2026-11-27, on the owner's request, the three names the comparison had left on two clubs' rosters: Milpitas' Ellie Chu to Vision and Sobrato's Madison Miller to North Coast (the other roster of each name is a team two age groups younger, another player), and Notre Dame San Jose's Kitana Manalo to Tyrants as an earlier club (2025-26): the 2027 Power League lists her on SBND Elite (Sunny Ball ND Elite, her school's volleyball coach's program, with two NDSJ teammates), a club with no record here, its site not found.",
-    "Other forms of a name, 2026-11-28 (owner decision: tie a player a club roster lists under another form of the name, when everything else agrees; a class year one off is accepted when the player is very likely the same). The league-roster rule was run with each row's first name in its other forms (isAnotherFormOf in lib/players/club-rosters.ts), each roster source naming the roster's spelling in `rosterName`. New ties (medium, current, the 2026 Power League): Giudi Cusmano (Prospect, Tropical Touch, Giuditta), Alex Fair (Menlo, ENCORE, Alexandra), Giana Brooks (Mercy Burlingame, NorStar, Gianna), Dani Pokorny (Presentation, Legend, Danielle), Bella Jansen-Olliges (Sacred Heart Prep, ENCORE, Isabella), and on JV Emerella Wang (Homestead, Red Rock, Emerelle), Alex Ferris (Homestead, Panda, Alexandra), Stella Polyzos (Sacred Heart Cathedral, Slainte, Estelle) and Camila Colorado (Notre Dame Belmont, NorStar, Camilla). Ten ties other pages had made gain the roster: Emme Liao (NorStar), Kat Minkevich, Brooklyn Gipson and Abby Cardenas (Vision), Gabi Legault (Tropical Touch), Gabriella Evans (North Coast), Bella Flynn (City Beach), Juli Pierre (Academy), Alex Dongnguyen (Red Rock) and Izzy Saavedra (SF Tremors, a 16s team a year above her class). Left out: Mia Wang (Monta Vista; Panda's Miaoqi Wang) and Izabella Martinez (Eastside; Kalani's Isabella Martinez), common names with nothing else behind them. Every cited roster was re-read live the same day."
+    "Other forms of a name, 2026-11-28 (owner decision: tie a player a club roster lists under another form of the name, when everything else agrees; a class year one off is accepted when the player is very likely the same). The league-roster rule was run with each row's first name in its other forms (isAnotherFormOf in lib/players/club-rosters.ts), each roster source naming the roster's spelling in `rosterName`. New ties (medium, current, the 2026 Power League): Giudi Cusmano (Prospect, Tropical Touch, Giuditta), Alex Fair (Menlo, ENCORE, Alexandra), Giana Brooks (Mercy Burlingame, NorStar, Gianna), Dani Pokorny (Presentation, Legend, Danielle), Bella Jansen-Olliges (Sacred Heart Prep, ENCORE, Isabella), and on JV Emerella Wang (Homestead, Red Rock, Emerelle), Alex Ferris (Homestead, Panda, Alexandra), Stella Polyzos (Sacred Heart Cathedral, Slainte, Estelle) and Camila Colorado (Notre Dame Belmont, NorStar, Camilla). Ten ties other pages had made gain the roster: Emme Liao (NorStar), Kat Minkevich, Brooklyn Gipson and Abby Cardenas (Vision), Gabi Legault (Tropical Touch), Gabriella Evans (North Coast), Bella Flynn (City Beach), Juli Pierre (Academy), Alex Dongnguyen (Red Rock) and Izzy Saavedra (SF Tremors, a 16s team a year above her class). Left out: Mia Wang (Monta Vista; Panda's Miaoqi Wang) and Izabella Martinez (Eastside; Kalani's Isabella Martinez), common names with nothing else behind them. Every cited roster was re-read live the same day.",
+    "Distinctive names one class year off, 2026-11-28 (owner decision: a class year one off is accepted when the player is very likely the same; the owner asked for the distinctive volleyball names). Of the 35 rows compare-club-rosters:volleyball left only for a class year one off, 18 have names that are not common; with the class year moved by one, each passes the rest of the rule, every one a player a year younger than her team's age group (playing up). New ties (medium, current, the 2026 Power League): Kathryn Gee (Cupertino, MVVC), Tayla Yip (Homestead, SF Tremors), Anna Scaria (Milpitas, MVVC), Yulissa Ting (Leigh, Academy), Lily Jensen-Pelletier (Notre Dame Belmont, Blue Banner), Saanvi Bharadwaj (Castilleja, Red Rock), Madyson Huynh (Notre Dame San Jose, Panda), and on JV Veida Huang (Lynbrook, Panda), Janielle Fan (Saratoga, Tropical Touch) and Annabelle Burk (Christopher, North Coast). Seven ties other pages had made gain the roster: Jessica Jacobson (Academy), Rucha Patil (MVVC), Chayse Courtney (Vision), Kepafingo and Delfina Haungatau-Rios (ENCORE), Elle Chang and Amani Lee-Seyon (Academy). Left out: Corrine Li (King's Academy JV, Panda), a common name, and the rows whose names are common (Natalie Baker, Yuna Kim, Vanessa Yang, Emily Gonzalez, Ava Sanchez, Megan Henry, Maggie Williams, Sofia Zamora and others) or whose club has no record. Every cited roster was re-read live the same day."
   ],
   "clubs": [
     {
@@ -5752,9 +5753,17 @@
           "statedSchool": "Gunn High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249708/roster",
+          "kind": "league-roster",
+          "quote": "Academy West 17 National (17s) | Jacobson, Jessica",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile is on Gunn High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted."
+      "basis": "Her Hudl profile is on Gunn High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). 3 entries for this club on the page; the latest is quoted. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 National (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "p6631cbc0d8",
@@ -7340,9 +7349,17 @@
           "statedSchool": "Saratoga High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/246377/roster",
+          "kind": "league-roster",
+          "quote": "MVVC G 17 White (17s) | Patil, Rucha",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile is on Saratoga High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page."
+      "basis": "Her Hudl profile is on Saratoga High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): MVVC G 17 White (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "p4ed69e6dc1",
@@ -10264,9 +10281,17 @@
           "statedSchool": "Archbishop Mitty",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248402/roster",
+          "kind": "league-roster",
+          "quote": "Vision 17 Gold (17s) | Courtney, Chayse",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Vision 17 Gold (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "pfe8bdc0403",
@@ -10396,9 +10421,17 @@
           "statedSchool": "Archbishop Riordan High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249037/roster",
+          "kind": "league-roster",
+          "quote": "ENCORE 16 Navy (16s) | Haungatau-Rios, Kepafingo",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 Navy (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "p7dc5d9a92b",
@@ -10496,9 +10529,17 @@
           "statedSchool": "Archbishop Riordan High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249037/roster",
+          "kind": "league-roster",
+          "quote": "ENCORE 16 Navy (16s) | Haungatau-Rios, Delfina",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): ENCORE 16 Navy (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "p8dfe57211a",
@@ -12447,9 +12488,17 @@
           "statedSchool": "Pinewood High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249707/roster",
+          "kind": "league-roster",
+          "quote": "Academy West 17 HP-1 (17s) | Lee-Seyon, Amani",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 HP-1 (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "p5899d01b0a",
@@ -13384,9 +13433,17 @@
           "statedSchool": "Sacred Heart Prep",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249707/roster",
+          "kind": "league-roster",
+          "quote": "Academy West 17 HP-1 (17s) | Chang, Elle",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
         }
       ],
-      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. 2026-11-28, a league roster: 2026 NCVA Girls Power League (the 2025-26 club season): Academy West 17 HP-1 (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). Added to this tie as a source on the owner's decision of the same day (a class year one off accepted when the player is very likely the same); read from the kept copy and again on the live roster. The status stays as the other pages give it."
     },
     {
       "playerId": "p12988a9c89",
@@ -20072,6 +20129,206 @@
         }
       ],
       "basis": "Found 2026-11-28 by running the league-roster rule (lib/players/club-rosters.ts) over the kept copy with each row's first name in its other forms: 2026 NCVA Girls Power League (the 2025-26 club season): NorStar 14-Copper (14s; the classes 2029 and 2030 its age group admits) lists 'Camilla Colorado', which agrees with the row; 'Camila Colorado' is another spelling of 'Camilla Colorado'. No other tracked school has a player of either name, and no other club's roster lists one in that tier (rules 3 and 4). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy (data/volleyball/club-rosters.json) and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a club roster that lists a player under another form of the name (a nickname's full form, a short form, or a spelling a letter apart) ties the player when everything else the league-roster rule asks agrees, and a class year one off is accepted when the player is very likely the same."
+    },
+    {
+      "playerId": "pac96437c2d",
+      "name": "Kathryn Gee",
+      "club": "mountain-view-volleyball-club",
+      "clubTeam": "MVVC G 16 Black",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/246372/roster",
+          "kind": "league-roster",
+          "quote": "MVVC G 16 Black (16s) | Gee, Kathryn",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): MVVC G 16 Black (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p44eea0a49c",
+      "name": "Tayla Yip",
+      "club": "sf-tremors",
+      "clubTeam": "SF TREMORS 17 WOLVERINES",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247890/roster",
+          "kind": "league-roster",
+          "quote": "SF TREMORS 17 WOLVERINES (17s) | Yip, Tayla",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): SF TREMORS 17 WOLVERINES (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p27c1ab20f8",
+      "name": "Anna Scaria",
+      "club": "mountain-view-volleyball-club",
+      "clubTeam": "MVVC G 17 White",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/246377/roster",
+          "kind": "league-roster",
+          "quote": "MVVC G 17 White (17s) | Scaria, Anna",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): MVVC G 17 White (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p39f475c6d5",
+      "name": "Yulissa Ting",
+      "club": "academy-volleyball",
+      "clubTeam": "Academy North 17 National",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/249706/roster",
+          "kind": "league-roster",
+          "quote": "Academy North 17 National (17s) | Ting, Yulissa",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): Academy North 17 National (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "pf55cfac116",
+      "name": "Lily Jensen-Pelletier",
+      "club": "blue-banner-volleyball",
+      "clubTeam": "Blue Banner BBV 17 - Gld",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248790/roster",
+          "kind": "league-roster",
+          "quote": "Blue Banner BBV 17 - Gld (17s) | Jensen-Pelletier, Lily",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): Blue Banner BBV 17 - Gld (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p6cf5b756c9",
+      "name": "Saanvi Bharadwaj",
+      "club": "red-rock-volleyball",
+      "clubTeam": "Red Rock 17 Eric - Redwood City",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/245932/roster",
+          "kind": "league-roster",
+          "quote": "Red Rock 17 Eric - Redwood City (17s) | Bharadwaj, Saanvi",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): Red Rock 17 Eric - Redwood City (17s; the classes 2027 its age group admits) lists a player of this name. The row's class of 2028 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p9082468de4",
+      "name": "Madyson Huynh",
+      "club": "panda-volleyball-club",
+      "clubTeam": "Panda 16-2",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248747/roster",
+          "kind": "league-roster",
+          "quote": "Panda 16-2 (16s) | Huynh, Madyson",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): Panda 16-2 (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p2a66239094",
+      "name": "Veida Huang",
+      "club": "panda-volleyball-club",
+      "clubTeam": "Panda 16-2",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248747/roster",
+          "kind": "league-roster",
+          "quote": "Panda 16-2 (16s) | Huang, Veida",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): Panda 16-2 (16s; the classes 2027 and 2028 its age group admits) lists a player of this name. The row's class of 2029 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "p796746af7f",
+      "name": "Janielle Fan",
+      "club": "tropical-touch-volleyball-club",
+      "clubTeam": "Tropical Touch - 15 Teine Matalasi",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/247284/roster",
+          "kind": "league-roster",
+          "quote": "Tropical Touch - 15 Teine Matalasi (15s) | Fan, Janielle",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): Tropical Touch - 15 Teine Matalasi (15s; the classes 2028 and 2029 its age group admits) lists a player of this name. The row's class of 2030 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
+    },
+    {
+      "playerId": "pcdd31a656b",
+      "name": "Annabelle Burk",
+      "club": "north-coast-volleyball-club",
+      "clubTeam": "North Coast 15 Orange",
+      "status": "current",
+      "asOf": "2025-26",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://tm2sign.com/api/public/scheduler-teams/248997/roster",
+          "kind": "league-roster",
+          "quote": "North Coast 15 Orange (15s) | Burk, Annabelle",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2025-26"
+        }
+      ],
+      "basis": "Found 2026-11-28 by pnpm compare-club-rosters:volleyball over the kept copy (data/volleyball/club-rosters.json), where the rule had left it for its class year: 2026 NCVA Girls Power League (the 2025-26 club season): North Coast 15 Orange (15s; the classes 2028 and 2029 its age group admits) lists a player of this name. The row's class of 2030 is a year younger than those: she plays up a year, which club volleyball allows. No other tracked school has a player of the name, and no other club's roster that season lists one (the league-roster rule's rules 3-5, lib/players/club-rosters.ts, checked with the class year moved by one). A league roster alone, which names no school: medium confidence, the club's location standing in for the hometown. Read from the kept copy and again on the live roster the same day. Linked on the owner's decision of 2026-11-28: a class year one off the roster's is accepted when the player is very likely the same, here a distinctive name (the owner asked for the distinctive volleyball names)."
     }
   ]
 }
