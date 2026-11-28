@@ -487,7 +487,135 @@
       ],
       "players": [],
       "slug": "sacred-heart-cathedral",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://shcathletics.com/sports/girls-soccer/roster",
+        "summary": "The school’s athletics site (shcathletics.com) lists these 24 players on its 2026-27 Girls Soccer (Varsity) roster; MaxPreps lists nobody. Positions are the site’s own; Violet Rodriguez’s position field repeats her name, so it is left blank.",
+        "players": [
+          {
+            "firstName": "Stella",
+            "lastName": "Woo",
+            "position": "Midfield"
+          },
+          {
+            "firstName": "Ruthie (Sara)",
+            "lastName": "Latterman",
+            "position": "Midfielder"
+          },
+          {
+            "firstName": "Sophia",
+            "lastName": "Wilson",
+            "position": "Outside back"
+          },
+          {
+            "firstName": "Alice",
+            "lastName": "Forster",
+            "position": "Midfielder"
+          },
+          {
+            "firstName": "Simone",
+            "lastName": "Myers",
+            "position": "Winger/Striker"
+          },
+          {
+            "firstName": "Jordyn",
+            "lastName": "Bernabe",
+            "position": "Winger/Striker"
+          },
+          {
+            "firstName": "Amaiya",
+            "lastName": "Magan",
+            "position": "Outside back"
+          },
+          {
+            "firstName": "Tatiana",
+            "lastName": "Marta",
+            "position": "Midfield"
+          },
+          {
+            "firstName": "Margaret",
+            "lastName": "Manuel",
+            "position": "Midfield"
+          },
+          {
+            "firstName": "Lily",
+            "lastName": "Toscanini",
+            "position": "Winger"
+          },
+          {
+            "firstName": "Kali",
+            "lastName": "Ventura",
+            "position": "Defender"
+          },
+          {
+            "firstName": "Ava",
+            "lastName": "Lindner",
+            "position": "Wing/striker"
+          },
+          {
+            "firstName": "Violet",
+            "lastName": "Rodriguez",
+            "position": null
+          },
+          {
+            "firstName": "Eleanor",
+            "lastName": "Borek",
+            "position": "Center Back/CDM"
+          },
+          {
+            "firstName": "Francesca",
+            "lastName": "Rinaudo",
+            "position": "Wing/Outside back"
+          },
+          {
+            "firstName": "Contessa",
+            "lastName": "Carrizalez",
+            "position": "Defense/Defense"
+          },
+          {
+            "firstName": "Madison",
+            "lastName": "Munoz",
+            "position": "Winger/Striker"
+          },
+          {
+            "firstName": "Arden",
+            "lastName": "Dumbleton",
+            "position": "Outside back"
+          },
+          {
+            "firstName": "Sakura",
+            "lastName": "Kapla",
+            "position": "Attacking Mid/Foward"
+          },
+          {
+            "firstName": "Francesca",
+            "lastName": "Johnson",
+            "position": "Forward"
+          },
+          {
+            "firstName": "Sasha (Alexandra)",
+            "lastName": "Synanska",
+            "position": "Center Midfielder"
+          },
+          {
+            "firstName": "Whitney",
+            "lastName": "O'Reilly",
+            "position": "Goal Keeper"
+          },
+          {
+            "firstName": "Francesca",
+            "lastName": "Roland",
+            "position": "Goalie"
+          },
+          {
+            "firstName": "Jemma",
+            "lastName": "Schwind",
+            "position": "Goalie"
+          }
+        ]
+      }
     },
     {
       "coaches": [],
@@ -671,7 +799,130 @@
       ],
       "players": [],
       "slug": "hillsdale",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://www.hillsdaleathletics.com/girlssoccer-rosters",
+        "summary": "The school’s athletics site (hillsdaleathletics.com) lists these 23 players under “VARSITY GIRLS SOCCER 2026-27”, by name and grade level; MaxPreps lists nobody.",
+        "players": [
+          {
+            "firstName": "Gia",
+            "lastName": "Belforte",
+            "position": null
+          },
+          {
+            "firstName": "Milana",
+            "lastName": "Brockmeyer",
+            "position": null
+          },
+          {
+            "firstName": "Hannah",
+            "lastName": "Chan",
+            "position": null
+          },
+          {
+            "firstName": "Kaitlyn",
+            "lastName": "Chao",
+            "position": null
+          },
+          {
+            "firstName": "Marwa",
+            "lastName": "Chraibi",
+            "position": null
+          },
+          {
+            "firstName": "Kendal",
+            "lastName": "Fahey",
+            "position": null
+          },
+          {
+            "firstName": "Lucia",
+            "lastName": "Forney",
+            "position": null
+          },
+          {
+            "firstName": "Areya-Sol",
+            "lastName": "Garcia",
+            "position": null
+          },
+          {
+            "firstName": "Alyssa",
+            "lastName": "Han",
+            "position": null
+          },
+          {
+            "firstName": "Charlotte",
+            "lastName": "Hanna",
+            "position": null
+          },
+          {
+            "firstName": "Savanah",
+            "lastName": "Klemish",
+            "position": null
+          },
+          {
+            "firstName": "Sadie",
+            "lastName": "Knox",
+            "position": null
+          },
+          {
+            "firstName": "Nada",
+            "lastName": "Masri",
+            "position": null
+          },
+          {
+            "firstName": "Billie",
+            "lastName": "McCann",
+            "position": null
+          },
+          {
+            "firstName": "Ella",
+            "lastName": "Michon",
+            "position": null
+          },
+          {
+            "firstName": "Johanna",
+            "lastName": "Murillo Reyes",
+            "position": null
+          },
+          {
+            "firstName": "Alyssa",
+            "lastName": "Romersa",
+            "position": null
+          },
+          {
+            "firstName": "Deya",
+            "lastName": "Sandoval",
+            "position": null
+          },
+          {
+            "firstName": "Liv",
+            "lastName": "Stevenson",
+            "position": null
+          },
+          {
+            "firstName": "Skye",
+            "lastName": "Stevenson",
+            "position": null
+          },
+          {
+            "firstName": "Anagha",
+            "lastName": "Tendulkar",
+            "position": null
+          },
+          {
+            "firstName": "Kira",
+            "lastName": "Tennant",
+            "position": null
+          },
+          {
+            "firstName": "Caitlyn",
+            "lastName": "Yuen",
+            "position": null
+          }
+        ]
+      }
     },
     {
       "coaches": [],
@@ -828,7 +1079,110 @@
       ],
       "players": [],
       "slug": "scotts-valley",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "listed",
+        "checkedOn": "2026-11-28",
+        "source": "https://svhs.scottsvalleyusd.org/o/svhs/page/soccer-girls",
+        "summary": "The school’s own site lists these 19 players under “2026/27 VARSITY ROSTER” on its girls soccer page, by name only; MaxPreps lists nobody.",
+        "players": [
+          {
+            "firstName": "Bella",
+            "lastName": "Agnone",
+            "position": null
+          },
+          {
+            "firstName": "Lyla",
+            "lastName": "Bradley",
+            "position": null
+          },
+          {
+            "firstName": "Vivian",
+            "lastName": "Chomentowski",
+            "position": null
+          },
+          {
+            "firstName": "Jessi",
+            "lastName": "Dunn",
+            "position": null
+          },
+          {
+            "firstName": "Lucy",
+            "lastName": "Dunton",
+            "position": null
+          },
+          {
+            "firstName": "Taylor",
+            "lastName": "Ericson",
+            "position": null
+          },
+          {
+            "firstName": "Naomi",
+            "lastName": "Eyre",
+            "position": null
+          },
+          {
+            "firstName": "Campbell",
+            "lastName": "Flores",
+            "position": null
+          },
+          {
+            "firstName": "Graysen",
+            "lastName": "Flores",
+            "position": null
+          },
+          {
+            "firstName": "Leanna",
+            "lastName": "Hinn",
+            "position": null
+          },
+          {
+            "firstName": "Kensi",
+            "lastName": "Horn",
+            "position": null
+          },
+          {
+            "firstName": "Carmella",
+            "lastName": "Iles",
+            "position": null
+          },
+          {
+            "firstName": "Brooke",
+            "lastName": "Lesniak",
+            "position": null
+          },
+          {
+            "firstName": "Lauren",
+            "lastName": "Lima",
+            "position": null
+          },
+          {
+            "firstName": "Sawyer",
+            "lastName": "McCormick",
+            "position": null
+          },
+          {
+            "firstName": "Madeline",
+            "lastName": "Pipal",
+            "position": null
+          },
+          {
+            "firstName": "Eva",
+            "lastName": "Pogrowski",
+            "position": null
+          },
+          {
+            "firstName": "Marilyn",
+            "lastName": "Talamantes",
+            "position": null
+          },
+          {
+            "firstName": "Jalina",
+            "lastName": "Watkins",
+            "position": null
+          }
+        ]
+      }
     },
     {
       "coaches": [],

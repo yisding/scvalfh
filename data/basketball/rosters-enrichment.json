@@ -1132,7 +1132,13 @@
       ],
       "players": [],
       "slug": "overfelt",
-      "sources": []
+      "sources": [],
+      "otherRosters": {
+        "status": "partial",
+        "checkedOn": "2026-11-28",
+        "source": "https://www.wcoathletics.com/varsity/basketball-boys/roster",
+        "summary": "The school’s athletics site (wcoathletics.com) has a 2026-27 varsity boys basketball roster with only four names so far: Edwin Gonzalez, Kinnaree Muangchanh, Keyontae Slayton and Mesihas Tillmon. MaxPreps lists nobody."
+      }
     },
     {
       "coaches": [],
