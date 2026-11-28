@@ -29121,7 +29121,12 @@
       ]
     },
     {
-      "aliases": [],
+      "aliases": [
+        {
+          "kind": "variant",
+          "name": "Jarett P"
+        }
+      ],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -29133,8 +29138,9 @@
           "kind": "maxpreps-career"
         }
       ],
-      "name": "Jarett P",
+      "name": "Jarrett Poon",
       "names": [
+        "Jarrett Poon",
         "Jarett P"
       ],
       "stints": [
