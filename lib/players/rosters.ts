@@ -141,8 +141,35 @@ export type OtherRosters = z.infer<typeof OtherRostersSchema>;
 
 const NOT_CHECKED: OtherRosters = { status: 'not-checked' };
 
+/**
+ * Where the school itself publishes the team's varsity roster (owner decision, 2026-11-28): the page on the school's
+ * own or official athletics site, whether or not MaxPreps lists the team, saved so the roster can be read from the
+ * school the day MaxPreps has none. `season` is the season the page shows ("2026-27", "2025-26", a single year
+ * "2026"), or null when it shows none: a page for another season is kept, its season said, and is never a source of
+ * players. Only `otherRosters` `listed` puts the school's names on the site. `none`: nothing was found, and `note`
+ * says what was looked at. A team with no entry has not been checked. Never rendered.
+ */
+export const SchoolRosterSchema = z.discriminatedUnion('status', [
+  z
+    .object({
+      status: z.literal('found'),
+      checkedOn: dateKey,
+      /** The roster page (http where the site serves no https). */
+      url: httpUrl,
+      season: z.string().regex(/^\d{4}(-\d{2})?$/, 'a season like 2026-27, or a year').nullable(),
+      /** The page's own words for the season and level (its heading), or null where it gives none. */
+      seasonEvidence: z.string().min(1).nullable(),
+      note: z.string().min(1).optional(),
+    })
+    .strict(),
+  z.object({ status: z.literal('none'), checkedOn: dateKey, note: z.string().min(1) }).strict(),
+]);
+export type SchoolRoster = z.infer<typeof SchoolRosterSchema>;
+
 const OtherRostersFileSchema = z.object({
-  teams: z.array(z.object({ slug: z.string(), otherRosters: OtherRostersSchema.optional() })),
+  teams: z.array(
+    z.object({ slug: z.string(), otherRosters: OtherRostersSchema.optional(), schoolRoster: SchoolRosterSchema.optional() }),
+  ),
 });
 
 function loadOtherRosters(): Map<string, OtherRosters> {
@@ -152,6 +179,15 @@ function loadOtherRosters(): Map<string, OtherRosters> {
     readOverride(MODULE, 'SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
   );
   return new Map(file.teams.map((t) => [t.slug, t.otherRosters ?? NOT_CHECKED]));
+}
+
+function loadSchoolRosters(): Map<string, SchoolRoster> {
+  const file = validateData(
+    'rosters-enrichment schoolRoster',
+    OtherRostersFileSchema,
+    readOverride(MODULE, 'SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
+  );
+  return new Map(file.teams.flatMap((t) => (t.schoolRoster ? [[t.slug, t.schoolRoster] as const] : [])));
 }
 
 function loadRosters(): Rosters {
@@ -296,6 +332,12 @@ export function classYearAgrees(season: string, p: GradedRow, stated: number): b
 const rosters = loadRosters();
 const enrichment = loadEnrichment(rosters);
 const OTHER_ROSTERS = loadOtherRosters();
+const SCHOOL_ROSTERS = loadSchoolRosters();
+
+/** The school's own varsity roster page for the team (SchoolRosterSchema), or null when the team has not been checked. */
+export function getSchoolRoster(slug: string): SchoolRoster | null {
+  return SCHOOL_ROSTERS.get(slug) ?? null;
+}
 const BASE_BY_SLUG = new Map<string, TeamRoster>(rosters.teams.map((t) => [t.slug, t]));
 const ENRICHMENT_BY_SLUG = new Map<string, EnrichedTeam>(enrichment.teams.map((t) => [t.slug, t]));
 assertPlayerIndexSeason(rosters.season);
